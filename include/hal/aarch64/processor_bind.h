@@ -66,6 +66,8 @@
 
 #pragma warning(disable : 4703)
 
+#endif
+
 #ifndef LIBSPDM_STDINT_ALT
 #include <stdint.h>
 #else
