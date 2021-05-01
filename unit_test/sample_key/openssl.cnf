@@ -1,0 +1,14 @@
+### REF: https://www.openssl.org/docs/man1.1.1/man3/ASN1_generate_nconf.html
+
+[ v3_end ]
+basicConstraints = critical,CA:false
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+subjectAltName = otherName:1.3.6.1.4.1.412.274.1;UTF8:ACME:WIDGET:1234567890
+extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning
+
+[ v3_inter ]
+basicConstraints = CA:true
+keyUsage = cRLSign, keyCertSign, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+extendedKeyUsage = critical, serverAuth, clientAuth
