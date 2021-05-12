@@ -45,37 +45,37 @@
                         +----------------+                         // PCI DOE - PCI DOE message over PCI DOE mailbox.
    ```
 
-1) [spdm_requester_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_requester_lib.h) (follows DSP0274)
+1) [spdm_requester_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_requester_lib.h) (follows DSP0274)
 
    This library is linked for an SPDM requester.
 
-2) [spdm_responder_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_responder_lib.h) (follows DSP0274)
+2) [spdm_responder_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_responder_lib.h) (follows DSP0274)
 
    This library is linked for an SPDM responder.
 
-3) [spdm_common_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_common_lib.h) (follows DSP0274)
+3) [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h) (follows DSP0274)
 
    This library provides common services for spdm_requester_lib and spdm_responder_lib.
 
-4) [spdm_secured_message_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_secured_message_lib.h) (follows DSP0277)
+4) [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h) (follows DSP0277)
 
    This library handles the session key generation and secured messages encryption and decryption.
 
    This can be implemented in a secure environment if the session keys are considered a secret.
 
-5) [spdm_device_secret_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_device_secret_lib.h)
+5) [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h)
 
    This library handles the private key signing, PSK HMAC operation, and measurement collection.
 
    This must be implemented in a secure environment because the private key and PSK are secret.
 
-6) [spdm_crypt_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_crypt_lib.h)
+6) [spdm_crypt_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_crypt_lib.h)
 
-   This library provides SPDM related crypto function. It is based upon [cryptlib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/cryptlib.h).
+   This library provides SPDM related crypto function. It is based upon [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h).
 
 7) SpdmTransportLib
 
-7.1) [spdm_transport_mctp_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
+7.1) [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
 
    This library encodes and decodes MCTP message header.
 
@@ -84,7 +84,7 @@
 
    These two APIs encode and decode transport layer messages to or from a SPDM device.
 
-7.2) [spdm_transport_pcidoe_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_pcidoe_lib.h) (follows PCI DOE)
+7.2) [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h) (follows PCI DOE)
 
    This library encodes and decodes PCI DOE message header.
 
@@ -100,14 +100,14 @@
 
    These APIs send and receive transport layer messages to or from a SPDM device.
 
-9) [spdm_lib_config.h](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_lib_config.h) provides the configuration to the openspdm library.
+9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides the configuration to the openspdm library.
 
-10) SPDM library depends upon the [HAL library](https://github.com/DMTF/Libspdm/tree/main/libspdm/include/hal).
+10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 
-   The sample implementation can be found at [os_stub](https://github.com/DMTF/Libspdm/tree/main/libspdm/os_stub)
+   The sample implementation can be found at [os_stub](https://github.com/DMTF/libspdm/tree/main/os_stub)
 
-   10.1) [cryptlib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/cryptlib.h) provides crypto functions.
+   10.1) [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h) provides crypto functions.
 
-   10.2) [memlib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/memlib.h) provides memory operation.
+   10.2) [memlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/memlib.h) provides memory operation.
 
-   10.3) [debuglib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/debuglib.h) provides debug functions.
+   10.3) [debuglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/debuglib.h) provides debug functions.

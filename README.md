@@ -39,13 +39,13 @@
 
 5) Cryptographic algorithm support:
 
-   The SPDM lib requires [cryptolib API](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/cryptlib.h), including random number, symmetric crypto, asymmetric crypto, hash and message authentication code etc.
+   The SPDM lib requires [cryptolib API](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h), including random number, symmetric crypto, asymmetric crypto, hash and message authentication code etc.
 
    Current support algorithm: SHA-2, RSA-SSA/ECDSA, FFDHE/ECDHE, AES_GCM/ChaCha20Poly1305, HMAC.
 
-   An [mbedtls](https://tls.mbed.org/) wrapper is included in [cryptlib_mbedtls](https://github.com/DMTF/libspdm/tree/main/libspdm/os_stub/cryptlib_mbedtls).
+   An [mbedtls](https://tls.mbed.org/) wrapper is included in [cryptlib_mbedtls](https://github.com/DMTF/libspdm/tree/main/os_stub/mbedtlslib).
 
-   An [openssl](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/libspdm/os_stub/cryptlib_openssl).
+   An [openssl](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/openssllib).
 
 6) Execution context:
 
@@ -65,15 +65,15 @@
 
 2) openspdm library threat model:
 
-   The user guide can be found at [threat_model](https://github.com/DMTF/Libspdm/blob/main/libspdm/doc/threat_model.md)
+   The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md)
 
 3) openspdm library design:
 
-   The detailed design can be found at [design](https://github.com/DMTF/Libspdm/blob/main/libspdm/doc/design.md)
+   The detailed design can be found at [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md)
 
 4) openspdm user guide:
 
-   The user guide can be found at [user_guide](https://github.com/DMTF/Libspdm/blob/main/libspdm/doc/user_guide.md)
+   The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
 
 ## Prerequisit
 
@@ -112,7 +112,7 @@
 
    Use x86 command prompt for ARCH=ia32 and x64 command prompt for ARCH=x64. (TOOLCHAIN=VS2019|VS2015|CLANG)
    ```
-   cd <libspdm|spdm_emu|spdm_dump>
+   cd libspdm
    mkdir build
    cd build
    cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<toolchain> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
@@ -124,7 +124,7 @@
 
    (TOOLCHAIN=GCC|CLANG)
    ```
-   cd <libspdm|spdm_emu|spdm_dump>
+   cd libspdm
    mkdir build
    cd build
    cmake -DARCH=<x64|ia32|arm|aarch64|riscv32|riscv64|arc> -DTOOLCHAIN=<toolchain> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
@@ -134,7 +134,7 @@
 
 ## Run Test
 
-### Run [unit_test](https://github.com/DMTF/libspdm/tree/main/libspdm/unit_test)
+### Run [unit_test](https://github.com/DMTF/libspdm/tree/main/unit_test)
 
    The UnitTest output is at libspdm/build/bin.
    Open one command prompt at output dir to run `test_spdm_requester > NUL` and `test_spdm_responder > NUL`.
@@ -151,24 +151,24 @@
       [  PASSED  ] 2 test(s).
    </pre>
 
-### Run [spdm_emu](https://github.com/DMTF/spdm-emu/tree/main/spdm_emu/spdm_emu)
+### Run [spdm_emu](https://github.com/DMTF/spdm-emu)
 
    The spdm_emu output is at spdm_emu/build/bin.
    Open one command prompt at output dir to run `spdm_responder_emu` and another command prompt to run `spdm_requester_emu`.
 
-   Please refer to [spdm_emu](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/doc/spdm_emu.md) for detail.
+   Please refer to [spdm_emu](https://github.com/DMTF/spdm-emu/blob/main/doc/spdm_emu.md) for detail.
 
-### [spdm_dump](https://github.com/DMTF/spdm-dump/tree/main/spdm_dump/spdm_dump) tool
+### [spdm_dump](https://github.com/DMTF/spdm-dump) tool
 
    The tool output is at spdm_dump/build/bin. It can be used to parse the pcap file for offline analysis.
 
-   Please refer to [spdm_dump](https://github.com/DMTF/spdm-dump/blob/main/spdm_dump/doc/spdm_dump.md) for detail. 
+   Please refer to [spdm_dump](https://github.com/DMTF/spdm-dump/blob/main/doc/spdm_dump.md) for detail. 
 
 ### Other Test
 
   openspdm also supports other test such as code coverage, fuzzing, symbolic execution, model checker.
 
-  Please refer to [test](https://github.com/DMTF/libspdm/blob/main/libspdm/doc/test.md) for detail. 
+  Please refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for detail. 
 
 ## Feature not implemented yet
 

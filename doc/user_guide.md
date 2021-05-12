@@ -8,7 +8,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
 
 0. Choose proper SPDM libraries.
 
-   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_device_secret_lib.h).
+   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
    If the requester supports mutual authentication, implement spdm_requester_data_sign().
 
@@ -18,13 +18,13 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
 
    spdm_device_secret_lib must be in a secure environment.
 
-   0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_secured_message_lib.h).
+   0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h).
 
    If SPDM session key requires confidentiality, implement spdm_secured_message_lib in a secure environment.
 
-   0.3, choose a proper crypto engine [cryptlib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/cryptlib.h).
+   0.3, choose a proper crypto engine [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h).
 
-   0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_pcidoe_lib.h)
+   0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
    0.5, implement required SPDM device IO functions - spdm_device_send_message_func and spdm_device_receive_message_func. 
 
@@ -38,7 +38,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
    ```
 
    1.2, register the device io functions and transport layer functions.
-   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_pcidoe_lib.h).
+   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
 
    ```
@@ -198,7 +198,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
 
 0. Choose proper SPDM libraries.
 
-   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_device_secret_lib.h).
+   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
    If the responder supports signing, implement spdm_responder_data_sign().
 
@@ -208,13 +208,13 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
 
    spdm_device_secret_lib must be in a secure environment.
 
-   0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_secured_message_lib.h).
+   0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h).
 
    If SPDM session key requires confidentiality, implement spdm_secured_message_lib in a secure environment.
 
-   0.3, choose a proper crypto engine [cryptlib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/hal/library/cryptlib.h).
+   0.3, choose a proper crypto engine [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h).
 
-   0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_pcidoe_lib.h)
+   0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
    0.5, implement required SPDM device IO functions - spdm_device_send_message_func and spdm_device_receive_message_func. 
 
@@ -230,7 +230,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    ```
 
    1.2, register the device io functions and transport layer functions.
-   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/Libspdm/blob/main/libspdm/include/library/spdm_transport_pcidoe_lib.h).
+   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
 
    ```
