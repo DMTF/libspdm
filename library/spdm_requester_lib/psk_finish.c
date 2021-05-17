@@ -45,7 +45,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
-		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
+		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
 		return RETURN_UNSUPPORTED;
 	}
 	if (spdm_context->connection_info.connection_state <

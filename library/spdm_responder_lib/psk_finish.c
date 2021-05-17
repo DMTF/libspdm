@@ -52,7 +52,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
-		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
+		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
 		spdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_PSK_EXCHANGE, response_size, response);
