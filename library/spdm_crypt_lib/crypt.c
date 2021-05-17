@@ -2018,7 +2018,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 bash_hash_algo,
 
 	spdm_hash_all(bash_hash_algo, root_cert_buffer, root_cert_buffer_size,
 		      calc_root_cert_hash);
-	if (compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
+	if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
 			calc_root_cert_hash, hash_size) != 0) {
 		DEBUG((DEBUG_INFO,
 		       "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));

@@ -452,7 +452,7 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	if (compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
 		DEBUG((DEBUG_INFO,
 		       "!!! verify_key_exchange_hmac - FAIL !!!\n"));
 		return FALSE;
@@ -762,7 +762,7 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	if (compare_mem(hmac, hmac_data, hash_size) != 0) {
+	if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
 		DEBUG((DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
 		return FALSE;
 	}
@@ -899,7 +899,7 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	if (compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
 		DEBUG((DEBUG_INFO, "!!! verify_finish_rsp_hmac - FAIL !!!\n"));
 		return FALSE;
 	}
@@ -993,7 +993,7 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	if (compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
 		DEBUG((DEBUG_INFO,
 		       "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
 		return FALSE;
@@ -1087,7 +1087,7 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	if (compare_mem(hmac, hmac_data, hash_size) != 0) {
+	if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
 		DEBUG((DEBUG_INFO,
 		       "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
 		return FALSE;

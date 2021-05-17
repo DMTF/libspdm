@@ -370,7 +370,7 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
 			cert_chain_buffer, cert_chain_buffer_size,
 			cert_chain_buffer_hash);
 
-		if (compare_mem(digest, cert_chain_buffer_hash, hash_size) !=
+		if (const_compare_mem(digest, cert_chain_buffer_hash, hash_size) !=
 		    0) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_digests - FAIL !!!\n"));
@@ -427,7 +427,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 			       "!!! verify_peer_cert_chain_buffer - FAIL (hash size mismatch) !!!\n"));
 			return FALSE;
 		}
-		if (compare_mem((uint8 *)cert_chain_buffer +
+		if (const_compare_mem((uint8 *)cert_chain_buffer +
 					sizeof(spdm_cert_chain_t),
 				RootCertHash, hash_size) != 0) {
 			DEBUG((DEBUG_INFO,
@@ -440,7 +440,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
 			return FALSE;
 		}
-		if (compare_mem(cert_chain_buffer, cert_chain_data,
+		if (const_compare_mem(cert_chain_buffer, cert_chain_data,
 				cert_chain_buffer_size) != 0) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
@@ -541,7 +541,7 @@ boolean spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
 		       "!!! verify_certificate_chain_hash - FAIL !!!\n"));
 		return FALSE;
 	}
-	if (compare_mem(certificate_chain_hash, cert_chain_buffer_hash,
+	if (const_compare_mem(certificate_chain_hash, cert_chain_buffer_hash,
 			certificate_chain_hash_size) != 0) {
 		DEBUG((DEBUG_INFO,
 		       "!!! verify_certificate_chain_hash - FAIL !!!\n"));
