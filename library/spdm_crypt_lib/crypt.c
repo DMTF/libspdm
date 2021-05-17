@@ -1130,18 +1130,18 @@ dhe_new_by_nid_func get_spdm_dhe_new(IN uint16 dhe_named_group)
 **/
 void *spdm_dhe_new(IN uint16 dhe_named_group)
 {
-	dhe_new_by_nid_func NewFunction;
+	dhe_new_by_nid_func new_function;
 	uintn nid;
 
-	NewFunction = get_spdm_dhe_new(dhe_named_group);
-	if (NewFunction == NULL) {
+	new_function = get_spdm_dhe_new(dhe_named_group);
+	if (new_function == NULL) {
 		return NULL;
 	}
 	nid = get_spdm_dhe_nid(dhe_named_group);
 	if (nid == 0) {
 		return NULL;
 	}
-	return NewFunction(nid);
+	return new_function(nid);
 }
 
 /**
@@ -1250,12 +1250,12 @@ boolean spdm_dhe_generate_key(IN uint16 dhe_named_group, IN OUT void *context,
 			      OUT uint8 *public_key,
 			      IN OUT uintn *public_key_size)
 {
-	dhe_generate_key_func GenerateKeyFunction;
-	GenerateKeyFunction = get_spdm_dhe_generate_key(dhe_named_group);
-	if (GenerateKeyFunction == NULL) {
+	dhe_generate_key_func generate_key_function;
+	generate_key_function = get_spdm_dhe_generate_key(dhe_named_group);
+	if (generate_key_function == NULL) {
 		return FALSE;
 	}
-	return GenerateKeyFunction(context, public_key, public_key_size);
+	return generate_key_function(context, public_key, public_key_size);
 }
 
 /**
@@ -1315,12 +1315,12 @@ boolean spdm_dhe_compute_key(IN uint16 dhe_named_group, IN OUT void *context,
 			     IN uintn peer_public_size, OUT uint8 *key,
 			     IN OUT uintn *key_size)
 {
-	dhe_compute_key_func ComputeKeyFunction;
-	ComputeKeyFunction = get_spdm_dhe_compute_key(dhe_named_group);
-	if (ComputeKeyFunction == NULL) {
+	dhe_compute_key_func compute_key_function;
+	compute_key_function = get_spdm_dhe_compute_key(dhe_named_group);
+	if (compute_key_function == NULL) {
 		return FALSE;
 	}
-	return ComputeKeyFunction(context, peer_public, peer_public_size, key,
+	return compute_key_function(context, peer_public, peer_public_size, key,
 				  key_size);
 }
 

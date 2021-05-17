@@ -35,18 +35,18 @@
 intn compare_mem(IN const void *destination_buffer,
 		 IN const void *source_buffer, IN uintn length)
 {
-	volatile uint8 *PointerDst;
-	volatile uint8 *PointerSrc;
-	intn Delta;
+	volatile uint8 *pointer_dst;
+	volatile uint8 *pointer_src;
+	intn delta;
 
-	PointerDst = (uint8 *)destination_buffer;
-	PointerSrc = (uint8 *)source_buffer;
-	Delta = 0;
-	while ((length-- != 0) && (Delta == 0)) {
-		Delta = *(PointerDst++) - *(PointerSrc++);
+	pointer_dst = (uint8 *)destination_buffer;
+	pointer_src = (uint8 *)source_buffer;
+	delta = 0;
+	while ((length-- != 0) && (delta == 0)) {
+		delta = *(pointer_dst++) - *(pointer_src++);
 	}
 
-	return Delta;
+	return delta;
 }
 
 /**

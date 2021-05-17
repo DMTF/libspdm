@@ -636,17 +636,17 @@ typedef uintn *BASE_LIST;
   the module will not compile.
 
   @param   TYPE     The name of the data structure that contains the field specified by Field.
-  @param   Field    The name of the field in the data structure.
+  @param   field    The name of the field in the data structure.
 
-  @return  Offset, in bytes, of field.
+  @return  offset, in bytes, of field.
 
 **/
 #if (defined(__GNUC__) && __GNUC__ >= 4) || defined(__clang__)
-#define OFFSET_OF(TYPE, Field) ((uintn) __builtin_offsetof(TYPE, Field))
+#define OFFSET_OF(TYPE, field) ((uintn) __builtin_offsetof(TYPE, field))
 #endif
 
 #ifndef OFFSET_OF
-#define OFFSET_OF(TYPE, Field) ((uintn) & (((TYPE *)0)->Field))
+#define OFFSET_OF(TYPE, field) ((uintn) & (((TYPE *)0)->field))
 #endif
 
 /**
@@ -735,16 +735,16 @@ STATIC_ASSERT(
   used to return a pointer to a data structure of the type specified by TYPE. If the data type
   specified by TYPE does not contain the field specified by Field, then the module will not compile.
 
-  @param   Record   Pointer to the field specified by Field within a data structure of type TYPE.
+  @param   record   Pointer to the field specified by Field within a data structure of type TYPE.
   @param   TYPE     The name of the data structure type to return.  This data structure must
                     contain the field specified by Field.
-  @param   Field    The name of the field in the data structure specified by TYPE to which Record points.
+  @param   field    The name of the field in the data structure specified by TYPE to which Record points.
 
   @return  A pointer to the structure from one of it's elements.
 
 **/
-#define BASE_CR(Record, TYPE, Field)                                           \
-	((TYPE *)((char8 *)(Record)-OFFSET_OF(TYPE, Field)))
+#define BASE_CR(record, TYPE, field)                                           \
+	((TYPE *)((char8 *)(record)-OFFSET_OF(TYPE, field)))
 
 /**
   Rounds a value up to the next boundary using a specified alignment.
@@ -768,14 +768,14 @@ STATIC_ASSERT(
   This function rounds the pointer specified by Pointer to the next alignment boundary
   specified by alignment. The pointer to the aligned address is returned.
 
-  @param   Pointer    The pointer to round up.
+  @param   pointer    The pointer to round up.
   @param   alignment  The alignment boundary to use to return an aligned pointer.
 
   @return  Pointer to the aligned address.
 
 **/
-#define ALIGN_POINTER(Pointer, alignment)                                      \
-	((void *)(ALIGN_VALUE((uintn)(Pointer), (alignment))))
+#define ALIGN_POINTER(pointer, alignment)                                      \
+	((void *)(ALIGN_VALUE((uintn)(pointer), (alignment))))
 
 /**
   Rounds a value up to the next natural boundary for the current CPU.
@@ -1180,7 +1180,7 @@ void *__builtin_return_address(unsigned int level);
 /**
   Return the number of elements in an array.
 
-  @param  Array  An object of array type. Array is only used as an argument to
+  @param  array  An object of array type. Array is only used as an argument to
                  the sizeof operator, therefore Array is never evaluated. The
                  caller is responsible for ensuring that Array's type is not
                  incomplete; that is, Array must have known constant size.
@@ -1188,6 +1188,6 @@ void *__builtin_return_address(unsigned int level);
   @return The number of elements in Array. The result has type uintn.
 
 **/
-#define ARRAY_SIZE(Array) (sizeof(Array) / sizeof((Array)[0]))
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof((array)[0]))
 
 #endif

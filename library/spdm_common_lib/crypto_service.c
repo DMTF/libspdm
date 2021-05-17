@@ -400,8 +400,8 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
 	uintn hash_size;
-	uint8 *RootCertHash;
-	uintn RootCertHashSize;
+	uint8 *root_cert_hash;
+	uintn root_cert_hash_size;
 	boolean result;
 
 	result = spdm_verify_certificate_chain_buffer(
@@ -411,25 +411,25 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	RootCertHash =
+	root_cert_hash =
 		spdm_context->local_context.peer_root_cert_hash_provision;
-	RootCertHashSize =
+	root_cert_hash_size =
 		spdm_context->local_context.peer_root_cert_hash_provision_size;
 	cert_chain_data = spdm_context->local_context.peer_cert_chain_provision;
 	cert_chain_data_size =
 		spdm_context->local_context.peer_cert_chain_provision_size;
 
-	if ((RootCertHash != NULL) && (RootCertHashSize != 0)) {
+	if ((root_cert_hash != NULL) && (root_cert_hash_size != 0)) {
 		hash_size = spdm_get_hash_size(
 			spdm_context->connection_info.algorithm.bash_hash_algo);
-		if (RootCertHashSize != hash_size) {
+		if (root_cert_hash_size != hash_size) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL (hash size mismatch) !!!\n"));
 			return FALSE;
 		}
 		if (const_compare_mem((uint8 *)cert_chain_buffer +
 					sizeof(spdm_cert_chain_t),
-				RootCertHash, hash_size) != 0) {
+				root_cert_hash, hash_size) != 0) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL (root hash mismatch) !!!\n"));
 			return FALSE;

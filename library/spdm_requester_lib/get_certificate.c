@@ -89,11 +89,11 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 			SPDM_GET_CERTIFICATE;
 		spdm_request.header.param1 = slot_id;
 		spdm_request.header.param2 = 0;
-		spdm_request.Offset = (uint16)get_managed_buffer_size(
+		spdm_request.offset = (uint16)get_managed_buffer_size(
 			&certificate_chain_buffer);
 		spdm_request.length = length;
-		DEBUG((DEBUG_INFO, "request (Offset 0x%x, size 0x%x):\n",
-		       spdm_request.Offset, spdm_request.length));
+		DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
+		       spdm_request.offset, spdm_request.length));
 
 		status = spdm_send_spdm_request(spdm_context, NULL,
 						sizeof(spdm_request),
@@ -176,8 +176,8 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 			goto done;
 		}
 
-		DEBUG((DEBUG_INFO, "Certificate (Offset 0x%x, size 0x%x):\n",
-		       spdm_request.Offset, spdm_response.portion_length));
+		DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
+		       spdm_request.offset, spdm_response.portion_length));
 		internal_dump_hex(spdm_response.cert_chain,
 				  spdm_response.portion_length);
 

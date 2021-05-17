@@ -351,7 +351,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == slot_id
 	// param2 == RSVD
-	uint16 Offset;
+	uint16 offset;
 	uint16 length;
 } spdm_get_certificate_request_t;
 

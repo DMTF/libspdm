@@ -31,7 +31,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 {
 	spdm_get_certificate_request_t *spdm_request;
 	spdm_certificate_response_t *spdm_response;
-	uint16 Offset;
+	uint16 offset;
 	uint16 length;
 	uintn remainder_length;
 	uint8 slot_id;
@@ -73,13 +73,13 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	Offset = spdm_request->Offset;
+	offset = spdm_request->offset;
 	length = spdm_request->length;
 	if (length > MAX_SPDM_CERT_CHAIN_BLOCK_LEN) {
 		length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 	}
 
-	if (Offset >= spdm_context->local_context
+	if (offset >= spdm_context->local_context
 			      .local_cert_chain_provision_size[slot_id]) {
 		spdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -87,17 +87,17 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	if ((uintn)(Offset + length) >
+	if ((uintn)(offset + length) >
 	    spdm_context->local_context
 		    .local_cert_chain_provision_size[slot_id]) {
 		length = (uint16)(
 			spdm_context->local_context
 				.local_cert_chain_provision_size[slot_id] -
-			Offset);
+			offset);
 	}
 	remainder_length = spdm_context->local_context
 				   .local_cert_chain_provision_size[slot_id] -
-			   (length + Offset);
+			   (length + offset);
 
 	//
 	// Cache
@@ -129,7 +129,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	copy_mem(spdm_response + 1,
 		 (uint8 *)spdm_context->local_context
 				 .local_cert_chain_provision[slot_id] +
-			 Offset,
+			 offset,
 		 length);
 	//
 	// Cache

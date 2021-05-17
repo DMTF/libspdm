@@ -48,11 +48,11 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
 	spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
 	spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
 	spdm_request->header.param2 = 0;
-	spdm_request->Offset = (uint16)get_managed_buffer_size(
+	spdm_request->offset = (uint16)get_managed_buffer_size(
 		&spdm_context->encap_context.certificate_chain_buffer);
 	spdm_request->length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-	DEBUG((DEBUG_INFO, "request (Offset 0x%x, size 0x%x):\n",
-	       spdm_request->Offset, spdm_request->length));
+	DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
+	       spdm_request->offset, spdm_request->length));
 
 	//
 	// Cache data
@@ -138,7 +138,7 @@ return_status spdm_process_encap_response_certificate(
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	DEBUG((DEBUG_INFO, "Certificate (Offset 0x%x, size 0x%x):\n",
+	DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
 	       get_managed_buffer_size(
 		       &spdm_context->encap_context.certificate_chain_buffer),
 	       spdm_response->portion_length));
