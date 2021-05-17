@@ -159,11 +159,11 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutBuffer, m_gcm_ct, sizeof(m_gcm_ct)) != 0) {
+	if (const_compare_mem(OutBuffer, m_gcm_ct, sizeof(m_gcm_ct)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutTag, m_gcm_tag, sizeof(m_gcm_tag)) != 0) {
+	if (const_compare_mem(OutTag, m_gcm_tag, sizeof(m_gcm_tag)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -182,7 +182,7 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutBuffer, m_gcm_pt, sizeof(m_gcm_pt)) != 0) {
+	if (const_compare_mem(OutBuffer, m_gcm_pt, sizeof(m_gcm_pt)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -206,12 +206,12 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutBuffer, m_chacha20_poly1305_ct,
+	if (const_compare_mem(OutBuffer, m_chacha20_poly1305_ct,
 			sizeof(m_chacha20_poly1305_ct)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutTag, m_chacha20_poly1305_tag,
+	if (const_compare_mem(OutTag, m_chacha20_poly1305_tag,
 			sizeof(m_chacha20_poly1305_tag)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
@@ -234,7 +234,7 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(OutBuffer, m_chacha20_poly1305_pt,
+	if (const_compare_mem(OutBuffer, m_chacha20_poly1305_pt,
 			sizeof(m_chacha20_poly1305_pt)) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
@@ -259,11 +259,11 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		goto Exit;
 	}
-	if (compare_mem(OutBuffer, m_sm4_gcm_ct, sizeof(m_sm4_gcm_ct)) != 0) {
+	if (const_compare_mem(OutBuffer, m_sm4_gcm_ct, sizeof(m_sm4_gcm_ct)) != 0) {
 		my_print("[Fail]");
 		goto Exit;
 	}
-	if (compare_mem(OutTag, m_sm4_gcm_tag, sizeof(m_sm4_gcm_tag)) != 0) {
+	if (const_compare_mem(OutTag, m_sm4_gcm_tag, sizeof(m_sm4_gcm_tag)) != 0) {
 		my_print("[Fail]");
 		goto Exit;
 	}
@@ -284,7 +284,7 @@ return_status validate_crypt_aead_cipher(void)
 		my_print("[Fail]");
 		goto Exit;
 	}
-	if (compare_mem(OutBuffer, m_sm4_gcm_pt, sizeof(m_sm4_gcm_pt)) != 0) {
+	if (const_compare_mem(OutBuffer, m_sm4_gcm_pt, sizeof(m_sm4_gcm_pt)) != 0) {
 		my_print("[Fail]");
 		goto Exit;
 	}

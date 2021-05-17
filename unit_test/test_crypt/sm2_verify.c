@@ -107,7 +107,7 @@ return_status validate_crypt_sm2(void)
 		goto Exit;
 	}
 
-	if (compare_mem(key1, key2, key1_length) != 0) {
+	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);

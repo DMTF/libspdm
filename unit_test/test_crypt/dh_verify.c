@@ -97,7 +97,7 @@ return_status validate_crypt_dh(void)
 		return RETURN_ABORTED;
 	}
 
-	if (compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
+	if (const_compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
 		my_print("[Fail]");
 		dh_free(dh1);
 		dh_free(dh2);

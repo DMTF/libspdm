@@ -133,7 +133,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 		my_print("[Fail]\n");
 		goto cleanup;
 	}
-	if (compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
+	if (const_compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
 		my_print("[Fail]\n");
 		goto cleanup;
 	} else {
@@ -156,7 +156,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 		my_print("[Fail]\n");
 		goto cleanup;
 	}
-	if (compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
+	if (const_compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
 		my_print("[Fail]\n");
 		goto cleanup;
 	} else {
@@ -179,7 +179,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 		my_print("[Fail]\n");
 		goto cleanup;
 	}
-	if (compare_mem(leaf_cert, test_ca_cert, leaf_cert_len) != 0) {
+	if (const_compare_mem(leaf_cert, test_ca_cert, leaf_cert_len) != 0) {
 		my_print("[Fail]\n");
 		goto cleanup;
 	} else {

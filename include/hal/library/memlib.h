@@ -68,31 +68,6 @@ void *set_mem(OUT void *buffer, IN uintn length, IN uint8 value);
 void *zero_mem(OUT void *buffer, IN uintn length);
 
 /**
-  Compares the contents of two buffers.
-
-  This function compares length bytes of source_buffer to length bytes of destination_buffer.
-  If all length bytes of the two buffers are identical, then 0 is returned.  Otherwise, the
-  value returned is the first mismatched byte in source_buffer subtracted from the first
-  mismatched byte in destination_buffer.
-
-  If length > 0 and destination_buffer is NULL, then ASSERT().
-  If length > 0 and source_buffer is NULL, then ASSERT().
-  If length is greater than (MAX_ADDRESS - destination_buffer + 1), then ASSERT().
-  If length is greater than (MAX_ADDRESS - source_buffer + 1), then ASSERT().
-
-  @param  destination_buffer The pointer to the destination buffer to compare.
-  @param  source_buffer      The pointer to the source buffer to compare.
-  @param  length            The number of bytes to compare.
-
-  @return 0                 All length bytes of the two buffers are identical.
-  @retval Non-zero          The first mismatched byte in source_buffer subtracted from the first
-                            mismatched byte in destination_buffer.
-
-**/
-intn compare_mem(IN const void *destination_buffer,
-		 IN const void *source_buffer, IN uintn length);
-
-/**
   Compares the contents of two buffers in const time.
 
   This function compares length bytes of source_buffer to length bytes of destination_buffer.

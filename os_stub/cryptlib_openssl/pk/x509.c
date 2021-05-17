@@ -1363,7 +1363,7 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
 		}
 
 		if (oid_size == (uintn)asn1_obj->length &&
-		    compare_mem(asn1_obj->data, oid, oid_size) == 0) {
+		    const_compare_mem(asn1_obj->data, oid, oid_size) == 0) {
 			//
 			// Extension Found
 			//

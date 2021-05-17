@@ -108,7 +108,7 @@ return_status validate_crypt_ec(void)
 		return RETURN_ABORTED;
 	}
 
-	if (compare_mem(key1, key2, key1_length) != 0) {
+	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
 		ec_free(ec1);
 		ec_free(ec2);

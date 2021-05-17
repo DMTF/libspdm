@@ -43,7 +43,7 @@ return_status validate_crypt_prng(void)
 			return RETURN_ABORTED;
 		}
 
-		if (compare_mem(m_previous_random_buffer, m_random_buffer,
+		if (const_compare_mem(m_previous_random_buffer, m_random_buffer,
 				RANDOM_NUMBER_SIZE) == 0) {
 			my_print("[Fail]");
 			return RETURN_ABORTED;

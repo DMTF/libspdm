@@ -85,7 +85,7 @@ return_status validate_crypt_hmac(void)
 	free_pool(hmac_ctx);
 
 	my_print("Check value... ");
-	if (compare_mem(digest, m_hmac_sha256_digest, SHA256_DIGEST_SIZE) !=
+	if (const_compare_mem(digest, m_hmac_sha256_digest, SHA256_DIGEST_SIZE) !=
 	    0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;

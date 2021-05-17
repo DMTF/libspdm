@@ -149,7 +149,7 @@ return_status validate_crypt_rsa(void)
 		return RETURN_ABORTED;
 	}
 
-	if (compare_mem(KeyBuffer, m_rsa_n, key_size) != 0) {
+	if (const_compare_mem(KeyBuffer, m_rsa_n, key_size) != 0) {
 		my_print("[Fail]");
 		free_pool(KeyBuffer);
 		rsa_free(rsa);
@@ -190,7 +190,7 @@ return_status validate_crypt_rsa(void)
 		return RETURN_ABORTED;
 	}
 
-	if (compare_mem(KeyBuffer, m_rsa_e, key_size) != 0) {
+	if (const_compare_mem(KeyBuffer, m_rsa_e, key_size) != 0) {
 		my_print("[Fail]");
 		free_pool(KeyBuffer);
 		rsa_free(rsa);
@@ -268,7 +268,7 @@ return_status validate_crypt_rsa(void)
 	}
 
 	if (key_size != 3 ||
-	    compare_mem(KeyBuffer, m_default_public_key, 3) != 0) {
+	    const_compare_mem(KeyBuffer, m_default_public_key, 3) != 0) {
 		my_print("[Fail]");
 		free_pool(KeyBuffer);
 		rsa_free(rsa);

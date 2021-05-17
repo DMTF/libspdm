@@ -149,7 +149,7 @@ return_status validate_crypt_digest(void)
 	free_pool(hash_ctx);
 
 	my_print("Check value... ");
-	if (compare_mem(digest, m_sha256_digest, SHA256_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha256_digest, SHA256_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -161,7 +161,7 @@ return_status validate_crypt_digest(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(digest, m_sha256_digest, SHA256_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha256_digest, SHA256_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -208,7 +208,7 @@ return_status validate_crypt_digest(void)
 	free_pool(hash_ctx);
 
 	my_print("Check value... ");
-	if (compare_mem(digest, m_sha384_digest, SHA384_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha384_digest, SHA384_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -220,7 +220,7 @@ return_status validate_crypt_digest(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(digest, m_sha384_digest, SHA384_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha384_digest, SHA384_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -267,7 +267,7 @@ return_status validate_crypt_digest(void)
 	free_pool(hash_ctx);
 
 	my_print("Check value... ");
-	if (compare_mem(digest, m_sha512_digest, SHA512_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha512_digest, SHA512_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -279,7 +279,7 @@ return_status validate_crypt_digest(void)
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
-	if (compare_mem(digest, m_sha512_digest, SHA512_DIGEST_SIZE) != 0) {
+	if (const_compare_mem(digest, m_sha512_digest, SHA512_DIGEST_SIZE) != 0) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
@@ -310,7 +310,7 @@ return_status validate_crypt_digest(void)
 
 	if (status) {
 		my_print("Check value... ");
-		if (compare_mem(digest, m_sha3_256_digest,
+		if (const_compare_mem(digest, m_sha3_256_digest,
 				SHA3_256_DIGEST_SIZE) == 0) {
 			status = TRUE;
 		} else {
@@ -357,7 +357,7 @@ return_status validate_crypt_digest(void)
 
 	if (status) {
 		my_print("Check value... ");
-		if (compare_mem(digest, m_sha3_384_digest,
+		if (const_compare_mem(digest, m_sha3_384_digest,
 				SHA3_384_DIGEST_SIZE) == 0) {
 			status = TRUE;
 		} else {
@@ -404,7 +404,7 @@ return_status validate_crypt_digest(void)
 
 	if (status) {
 		my_print("Check value... ");
-		if (compare_mem(digest, m_sha3_512_digest,
+		if (const_compare_mem(digest, m_sha3_512_digest,
 				SHA3_512_DIGEST_SIZE) == 0) {
 			status = TRUE;
 		} else {
@@ -451,7 +451,7 @@ return_status validate_crypt_digest(void)
 
 	if (status) {
 		my_print("Check value... ");
-		if (compare_mem(digest, m_shake_256_digest,
+		if (const_compare_mem(digest, m_shake_256_digest,
 				SHAKE256_DIGEST_SIZE) == 0) {
 			status = TRUE;
 		} else {
@@ -482,7 +482,7 @@ return_status validate_crypt_digest(void)
 	zero_mem(digest, SM3_256_DIGEST_SIZE);
 	status = sm3_256_hash_all(m_hash_data, data_size, digest);
 	if (status) {
-		if (compare_mem(digest, m_sm3_256_digest,
+		if (const_compare_mem(digest, m_sm3_256_digest,
 				SM3_256_DIGEST_SIZE) == 0) {
 			status = TRUE;
 		} else {

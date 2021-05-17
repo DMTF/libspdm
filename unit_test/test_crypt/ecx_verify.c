@@ -104,7 +104,7 @@ return_status validate_crypt_ecx(void)
 		goto Exit;
 	}
 
-	if (compare_mem(key1, key2, key1_length) != 0) {
+	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
 		ecx_free(ecx1);
 		ecx_free(ecx2);
@@ -191,7 +191,7 @@ return_status validate_crypt_ecx(void)
 		goto Exit;
 	}
 
-	if (compare_mem(key1, key2, key1_length) != 0) {
+	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
 		ecx_free(ecx1);
 		ecx_free(ecx2);

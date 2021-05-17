@@ -1107,7 +1107,7 @@ internal_x509_find_extension_data(uint8 *start, uint8 *end, uint8 *oid,
 			break;
 		}
 
-		if (ret == 0 && compare_mem(ptr, oid, oid_size) == 0) {
+		if (ret == 0 && const_compare_mem(ptr, oid, oid_size) == 0) {
 			ptr += obj_len;
 
 			ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
@@ -1495,7 +1495,7 @@ intn x509_compare_date_time(IN void *date_time1, IN void *date_time2)
 	if (date_time1 == NULL || date_time2 == NULL) {
 		return -2;
 	}
-	if (compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
+	if (const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
 	    0) {
 		return 0;
 	}
