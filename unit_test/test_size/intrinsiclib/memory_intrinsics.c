@@ -37,11 +37,11 @@ void *memset(void *dest, int ch, size_t count)
 	// volatile to prevent the optimizer from replacing this function with
 	// the intrinsic memset()
 	//
-	volatile uint8 *Pointer;
+	volatile uint8 *pointer;
 
 	Pointer = (uint8 *)dest;
 	while (count-- != 0) {
-		*(Pointer++) = (uint8)ch;
+		*(pointer++) = (uint8)ch;
 	}
 
 	return dest;
@@ -59,22 +59,22 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
 	return (int)const_compare_mem(buf1, buf2, count);
 }
 
-intn AsciiStrCmp(IN const char8 *FirstString, IN const char8 *SecondString)
+intn ascii_strcmp(IN const char8 *first_string, IN const char8 *second_string)
 {
-	while ((*FirstString != '\0') && (*FirstString == *SecondString)) {
-		FirstString++;
-		SecondString++;
+	while ((*first_string != '\0') && (*first_string == *second_string)) {
+		first_string++;
+		second_string++;
 	}
 
-	return *FirstString - *SecondString;
+	return *first_string - *second_string;
 }
 
 int strcmp(const char *s1, const char *s2)
 {
-	return (int)AsciiStrCmp(s1, s2);
+	return (int)ascii_strcmp(s1, s2);
 }
 
-uintn ascii_str_len(IN const char8 *string)
+uintn ascii_strlen(IN const char8 *string)
 {
 	uintn length;
 
@@ -88,36 +88,36 @@ uintn ascii_str_len(IN const char8 *string)
 
 unsigned int strlen(char *s)
 {
-	return (unsigned int)ascii_str_len(s);
+	return (unsigned int)ascii_strlen(s);
 }
 
-char8 *AsciiStrStr(IN const char8 *string, IN const char8 *SearchString)
+char8 *ascii_strstr(IN const char8 *string, IN const char8 *search_string)
 {
-	const char8 *FirstMatch;
-	const char8 *SearchStringTmp;
+	const char8 *first_match;
+	const char8 *search_string_tmp;
 
-	if (*SearchString == '\0') {
+	if (*search_string == '\0') {
 		return (char8 *)string;
 	}
 
 	while (*string != '\0') {
-		SearchStringTmp = SearchString;
-		FirstMatch = string;
+		search_string_tmp = search_string;
+		first_match = string;
 
-		while ((*string == *SearchStringTmp) && (*string != '\0')) {
+		while ((*string == *search_string_tmp) && (*string != '\0')) {
 			string++;
-			SearchStringTmp++;
+			search_string_tmp++;
 		}
 
-		if (*SearchStringTmp == '\0') {
-			return (char8 *)FirstMatch;
+		if (*search_string_tmp == '\0') {
+			return (char8 *)first_match;
 		}
 
 		if (*string == '\0') {
 			return NULL;
 		}
 
-		string = FirstMatch + 1;
+		string = first_match + 1;
 	}
 
 	return NULL;
@@ -125,5 +125,5 @@ char8 *AsciiStrStr(IN const char8 *string, IN const char8 *SearchString)
 
 char *strstr(char *str1, const char *str2)
 {
-	return AsciiStrStr(str1, str2);
+	return ascii_strstr(str1, str2);
 }
