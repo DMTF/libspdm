@@ -39,7 +39,7 @@ void *memset(void *dest, int ch, size_t count)
 	//
 	volatile uint8 *pointer;
 
-	Pointer = (uint8 *)dest;
+	pointer = (uint8 *)dest;
 	while (count-- != 0) {
 		*(pointer++) = (uint8)ch;
 	}
