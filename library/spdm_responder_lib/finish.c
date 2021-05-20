@@ -119,7 +119,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	}
 
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	if (session_info->mut_auth_requested) {
 		signature_size = spdm_get_req_asym_signature_size(
 			spdm_context->connection_info.algorithm

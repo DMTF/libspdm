@@ -107,7 +107,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	dhe_key_size = spdm_get_dhe_pub_key_size(
 		spdm_context->connection_info.algorithm.dhe_named_group);
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(

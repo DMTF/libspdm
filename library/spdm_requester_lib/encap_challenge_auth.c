@@ -84,7 +84,7 @@ return_status spdm_get_encap_response_challenge_auth(
 	signature_size = spdm_get_req_asym_signature_size(
 		spdm_context->connection_info.algorithm.req_base_asym_alg);
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	measurement_summary_hash_size = 0;
 
 	total_size =

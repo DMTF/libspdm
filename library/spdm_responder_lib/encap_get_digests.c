@@ -114,7 +114,7 @@ return_status spdm_process_encap_response_digest(
 	}
 
 	digest_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	digest_count = (spdm_response_size - sizeof(spdm_digest_response_t)) /
 		       digest_size;
 	if (digest_count == 0) {

@@ -34,7 +34,7 @@ boolean spdm_calculate_th_for_exchange(
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
@@ -55,7 +55,7 @@ boolean spdm_calculate_th_for_exchange(
 		DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
 		internal_dump_hex(cert_chain_data, cert_chain_data_size);
 		spdm_hash_all(
-			spdm_context->connection_info.algorithm.bash_hash_algo,
+			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
 		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
@@ -121,7 +121,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
@@ -142,7 +142,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
 		internal_dump_hex(cert_chain_data, cert_chain_data_size);
 		spdm_hash_all(
-			spdm_context->connection_info.algorithm.bash_hash_algo,
+			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
 		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
@@ -171,7 +171,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		internal_dump_hex(mut_cert_chain_data,
 				  mut_cert_chain_data_size);
 		spdm_hash_all(
-			spdm_context->connection_info.algorithm.bash_hash_algo,
+			spdm_context->connection_info.algorithm.base_hash_algo,
 			mut_cert_chain_data, mut_cert_chain_data_size,
 			MutCertChainDataHash);
 		status = append_managed_buffer(&th_curr, MutCertChainDataHash,
@@ -229,7 +229,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_local_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -246,7 +246,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 	}
 
 	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, hash_data);
 	DEBUG((DEBUG_INFO, "th_curr hash - "));
 	internal_dump_data(hash_data, hash_size);
@@ -254,7 +254,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 
 	result = spdm_responder_data_sign(
 		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.bash_hash_algo,
+		spdm_context->connection_info.algorithm.base_hash_algo,
 		th_curr_data, th_curr_data_size, signature, &signature_size);
 	if (result) {
 		DEBUG((DEBUG_INFO, "signature - "));
@@ -288,7 +288,7 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	boolean result;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_local_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -343,7 +343,7 @@ boolean spdm_verify_key_exchange_rsp_signature(
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_peer_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -360,7 +360,7 @@ boolean spdm_verify_key_exchange_rsp_signature(
 	}
 
 	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, hash_data);
 	DEBUG((DEBUG_INFO, "th_curr hash - "));
 	internal_dump_data(hash_data, hash_size);
@@ -389,7 +389,7 @@ boolean spdm_verify_key_exchange_rsp_signature(
 
 	result = spdm_asym_verify(
 		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.bash_hash_algo, context,
+		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 	spdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
 		       context);
@@ -428,7 +428,7 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	ASSERT(hash_size == hmac_data_size);
 
 	result = spdm_get_peer_cert_chain_data(
@@ -490,7 +490,7 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 	signature_size = spdm_get_req_asym_signature_size(
 		spdm_context->connection_info.algorithm.req_base_asym_alg);
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_peer_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -515,7 +515,7 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 	}
 
 	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, hash_data);
 	DEBUG((DEBUG_INFO, "th_curr hash - "));
 	internal_dump_data(hash_data, hash_size);
@@ -523,7 +523,7 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 
 	result = spdm_requester_data_sign(
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.bash_hash_algo,
+		spdm_context->connection_info.algorithm.base_hash_algo,
 		th_curr_data, th_curr_data_size, signature, &signature_size);
 	if (result) {
 		DEBUG((DEBUG_INFO, "signature - "));
@@ -559,7 +559,7 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_peer_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -630,7 +630,7 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_local_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -655,7 +655,7 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 	}
 
 	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, hash_data);
 	DEBUG((DEBUG_INFO, "th_curr hash - "));
 	internal_dump_data(hash_data, hash_size);
@@ -685,7 +685,7 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 
 	result = spdm_req_asym_verify(
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.bash_hash_algo, context,
+		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 	spdm_req_asym_free(
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
@@ -725,7 +725,7 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	ASSERT(hmac_size == hash_size);
 
 	result = spdm_get_local_cert_chain_data(
@@ -795,7 +795,7 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	result = spdm_get_local_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
@@ -862,7 +862,7 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	ASSERT(hash_size == hmac_data_size);
 
 	result = spdm_get_peer_cert_chain_data(
@@ -930,7 +930,7 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	th_curr_data_size = sizeof(th_curr_data);
 	result = spdm_calculate_th_for_exchange(spdm_context, session_info,
@@ -975,7 +975,7 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	ASSERT(hash_size == hmac_data_size);
 
 	th_curr_data_size = sizeof(th_curr_data);
@@ -1025,7 +1025,7 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	th_curr_data_size = sizeof(th_curr_data);
 	result = spdm_calculate_th_for_finish(spdm_context, session_info, NULL,
@@ -1069,7 +1069,7 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	ASSERT(hmac_size == hash_size);
 
 	th_curr_data_size = sizeof(th_curr_data);
@@ -1127,7 +1127,7 @@ return_status spdm_calculate_th1_hash(IN void *context,
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (!session_info->use_psk) {
 		if (is_requester) {
@@ -1155,7 +1155,7 @@ return_status spdm_calculate_th1_hash(IN void *context,
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, th1_hash_data);
 	DEBUG((DEBUG_INFO, "th1 hash - "));
 	internal_dump_data(th1_hash_data, hash_size);
@@ -1197,7 +1197,7 @@ return_status spdm_calculate_th2_hash(IN void *context,
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (!session_info->use_psk) {
 		if (is_requester) {
@@ -1247,7 +1247,7 @@ return_status spdm_calculate_th2_hash(IN void *context,
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	spdm_hash_all(spdm_context->connection_info.algorithm.bash_hash_algo,
+	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
 		      th_curr_data, th_curr_data_size, th2_hash_data);
 	DEBUG((DEBUG_INFO, "th2 hash - "));
 	internal_dump_data(th2_hash_data, hash_size);

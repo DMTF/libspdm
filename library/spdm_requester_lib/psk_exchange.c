@@ -100,7 +100,7 @@ return_status try_spdm_send_receive_psk_exchange(
 			}
 		}
 		algo_size = spdm_get_hash_size(
-			spdm_context->connection_info.algorithm.bash_hash_algo);
+			spdm_context->connection_info.algorithm.base_hash_algo);
 		if (algo_size == 0) {
 			return RETURN_DEVICE_ERROR;
 		}
@@ -204,7 +204,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
 		spdm_context, TRUE, measurement_hash_type);
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (spdm_response_size <
 	    sizeof(spdm_psk_exchange_response_t) +

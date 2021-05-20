@@ -9,13 +9,13 @@
 /**
   This function returns the SPDM hash algorithm size.
 
-  @param  bash_hash_algo                  SPDM bash_hash_algo
+  @param  base_hash_algo                  SPDM base_hash_algo
 
   @return SPDM hash algorithm size.
 **/
-uint32 spdm_get_hash_size(IN uint32 bash_hash_algo)
+uint32 spdm_get_hash_size(IN uint32 base_hash_algo)
 {
-	switch (bash_hash_algo) {
+	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
 		return 32;
@@ -32,13 +32,13 @@ uint32 spdm_get_hash_size(IN uint32 bash_hash_algo)
 /**
   Return cipher ID, based upon the negotiated hash algorithm.
 
-  @param  bash_hash_algo                  SPDM bash_hash_algo
+  @param  base_hash_algo                  SPDM base_hash_algo
 
   @return hash cipher ID
 **/
-uintn get_spdm_hash_nid(IN uint32 bash_hash_algo)
+uintn get_spdm_hash_nid(IN uint32 base_hash_algo)
 {
-	switch (bash_hash_algo) {
+	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 		return CRYPTO_NID_SHA256;
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
@@ -58,13 +58,13 @@ uintn get_spdm_hash_nid(IN uint32 bash_hash_algo)
 /**
   Return hash function, based upon the negotiated hash algorithm.
 
-  @param  bash_hash_algo                  SPDM bash_hash_algo
+  @param  base_hash_algo                  SPDM base_hash_algo
 
   @return hash function
 **/
-hash_all_func get_spdm_hash_func(IN uint32 bash_hash_algo)
+hash_all_func get_spdm_hash_func(IN uint32 base_hash_algo)
 {
-	switch (bash_hash_algo) {
+	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 #if OPENSPDM_SHA256_SUPPORT == 1
 		return sha256_hash_all;
@@ -101,7 +101,7 @@ hash_all_func get_spdm_hash_func(IN uint32 bash_hash_algo)
 
   This function performs the hash of a given data buffer, and return the hash value.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  data                         Pointer to the buffer containing the data to be hashed.
   @param  data_size                     size of data buffer in bytes.
   @param  hash_value                    Pointer to a buffer that receives the hash value.
@@ -109,11 +109,11 @@ hash_all_func get_spdm_hash_func(IN uint32 bash_hash_algo)
   @retval TRUE   hash computation succeeded.
   @retval FALSE  hash computation failed.
 **/
-boolean spdm_hash_all(IN uint32 bash_hash_algo, IN const void *data,
+boolean spdm_hash_all(IN uint32 base_hash_algo, IN const void *data,
 		      IN uintn data_size, OUT uint8 *hash_value)
 {
 	hash_all_func hash_function;
-	hash_function = get_spdm_hash_func(bash_hash_algo);
+	hash_function = get_spdm_hash_func(base_hash_algo);
 	if (hash_function == NULL) {
 		return FALSE;
 	}
@@ -215,13 +215,13 @@ boolean spdm_measurement_hash_all(IN uint32 measurement_hash_algo,
 /**
   Return HMAC function, based upon the negotiated HMAC algorithm.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
 
   @return HMAC function
 **/
-hmac_all_func get_spdm_hmac_func(IN uint32 bash_hash_algo)
+hmac_all_func get_spdm_hmac_func(IN uint32 base_hash_algo)
 {
-	switch (bash_hash_algo) {
+	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 #if OPENSPDM_SHA256_SUPPORT == 1
 		return hmac_sha256_all;
@@ -258,7 +258,7 @@ hmac_all_func get_spdm_hmac_func(IN uint32 bash_hash_algo)
 
   This function performs the HMAC of a given data buffer, and return the hash value.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  data                         Pointer to the buffer containing the data to be HMACed.
   @param  data_size                     size of data buffer in bytes.
   @param  key                          Pointer to the user-supplied key.
@@ -268,12 +268,12 @@ hmac_all_func get_spdm_hmac_func(IN uint32 bash_hash_algo)
   @retval TRUE   HMAC computation succeeded.
   @retval FALSE  HMAC computation failed.
 **/
-boolean spdm_hmac_all(IN uint32 bash_hash_algo, IN const void *data,
+boolean spdm_hmac_all(IN uint32 base_hash_algo, IN const void *data,
 		      IN uintn data_size, IN const uint8 *key,
 		      IN uintn key_size, OUT uint8 *hmac_value)
 {
 	hmac_all_func hmac_function;
-	hmac_function = get_spdm_hmac_func(bash_hash_algo);
+	hmac_function = get_spdm_hmac_func(base_hash_algo);
 	if (hmac_function == NULL) {
 		return FALSE;
 	}
@@ -283,13 +283,13 @@ boolean spdm_hmac_all(IN uint32 bash_hash_algo, IN const void *data,
 /**
   Return HKDF expand function, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
 
   @return HKDF expand function
 **/
-hkdf_expand_func get_spdm_hkdf_expand_func(IN uint32 bash_hash_algo)
+hkdf_expand_func get_spdm_hkdf_expand_func(IN uint32 base_hash_algo)
 {
-	switch (bash_hash_algo) {
+	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 #if OPENSPDM_SHA256_SUPPORT == 1
 		return hkdf_sha256_expand;
@@ -324,7 +324,7 @@ hkdf_expand_func get_spdm_hkdf_expand_func(IN uint32 bash_hash_algo)
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  prk                          Pointer to the user-supplied key.
   @param  prk_size                      key size in bytes.
   @param  info                         Pointer to the application specific info.
@@ -335,12 +335,12 @@ hkdf_expand_func get_spdm_hkdf_expand_func(IN uint32 bash_hash_algo)
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_hkdf_expand(IN uint32 bash_hash_algo, IN const uint8 *prk,
+boolean spdm_hkdf_expand(IN uint32 base_hash_algo, IN const uint8 *prk,
 			 IN uintn prk_size, IN const uint8 *info,
 			 IN uintn info_size, OUT uint8 *out, IN uintn out_size)
 {
 	hkdf_expand_func hkdf_expand_function;
-	hkdf_expand_function = get_spdm_hkdf_expand_func(bash_hash_algo);
+	hkdf_expand_function = get_spdm_hkdf_expand_func(base_hash_algo);
 	if (hkdf_expand_function == NULL) {
 		return FALSE;
 	}
@@ -568,7 +568,7 @@ asym_verify_func get_spdm_asym_verify(IN uint32 base_asym_algo)
   based upon negotiated asymmetric algorithm.
 
   @param  base_asym_algo                 SPDM base_asym_algo
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  context                      Pointer to asymmetric context for signature verification.
   @param  message                      Pointer to octet message to be checked (before hash).
   @param  message_size                  size of the message in bytes.
@@ -578,7 +578,7 @@ asym_verify_func get_spdm_asym_verify(IN uint32 base_asym_algo)
   @retval  TRUE   Valid asymmetric signature.
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
-boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
+boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 			 IN void *context, IN const uint8 *message,
 			 IN uintn message_size, IN const uint8 *signature,
 			 IN uintn sig_size)
@@ -590,7 +590,7 @@ boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
 	boolean result;
 	uintn hash_nid;
 
-	hash_nid = get_spdm_hash_nid(bash_hash_algo);
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
 
 	verify_function = get_spdm_asym_verify(base_asym_algo);
@@ -598,8 +598,8 @@ boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
 		return FALSE;
 	}
 	if (need_hash) {
-		hash_size = spdm_get_hash_size(bash_hash_algo);
-		result = spdm_hash_all(bash_hash_algo, message, message_size,
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
 				       message_hash);
 		if (!result) {
 			return FALSE;
@@ -727,7 +727,7 @@ asym_sign_func get_spdm_asym_sign(IN uint32 base_asym_algo)
   is returned and sig_size is set to the required buffer size to obtain the signature.
 
   @param  base_asym_algo                 SPDM base_asym_algo
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  context                      Pointer to asymmetric context for signature generation.
   @param  message                      Pointer to octet message to be signed (before hash).
   @param  message_size                  size of the message in bytes.
@@ -739,7 +739,7 @@ asym_sign_func get_spdm_asym_sign(IN uint32 base_asym_algo)
   @retval  FALSE  signature generation failed.
   @retval  FALSE  sig_size is too small.
 **/
-boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
+boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 		       IN void *context, IN const uint8 *message,
 		       IN uintn message_size, OUT uint8 *signature,
 		       IN OUT uintn *sig_size)
@@ -751,7 +751,7 @@ boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
 	boolean result;
 	uintn hash_nid;
 
-	hash_nid = get_spdm_hash_nid(bash_hash_algo);
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
 
 	asym_sign = get_spdm_asym_sign(base_asym_algo);
@@ -759,8 +759,8 @@ boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 bash_hash_algo,
 		return FALSE;
 	}
 	if (need_hash) {
-		hash_size = spdm_get_hash_size(bash_hash_algo);
-		result = spdm_hash_all(bash_hash_algo, message, message_size,
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
 				       message_hash);
 		if (!result) {
 			return FALSE;
@@ -884,7 +884,7 @@ asym_verify_func get_spdm_req_asym_verify(IN uint16 req_base_asym_alg)
   based upon negotiated requester asymmetric algorithm.
 
   @param  req_base_asym_alg               SPDM req_base_asym_alg
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  context                      Pointer to asymmetric context for signature verification.
   @param  message                      Pointer to octet message to be checked (before hash).
   @param  message_size                  size of the message in bytes.
@@ -895,7 +895,7 @@ asym_verify_func get_spdm_req_asym_verify(IN uint16 req_base_asym_alg)
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
 boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
-			     IN uint32 bash_hash_algo, IN void *context,
+			     IN uint32 base_hash_algo, IN void *context,
 			     IN const uint8 *message, IN uintn message_size,
 			     IN const uint8 *signature, IN uintn sig_size)
 {
@@ -906,7 +906,7 @@ boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
 	boolean result;
 	uintn hash_nid;
 
-	hash_nid = get_spdm_hash_nid(bash_hash_algo);
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
 
 	verify_function = get_spdm_req_asym_verify(req_base_asym_alg);
@@ -914,8 +914,8 @@ boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
 		return FALSE;
 	}
 	if (need_hash) {
-		hash_size = spdm_get_hash_size(bash_hash_algo);
-		result = spdm_hash_all(bash_hash_algo, message, message_size,
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
 				       message_hash);
 		if (!result) {
 			return FALSE;
@@ -989,7 +989,7 @@ asym_sign_func get_spdm_req_asym_sign(IN uint16 req_base_asym_alg)
   is returned and sig_size is set to the required buffer size to obtain the signature.
 
   @param  req_base_asym_alg               SPDM req_base_asym_alg
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  context                      Pointer to asymmetric context for signature generation.
   @param  message                      Pointer to octet message to be signed (before hash).
   @param  message_size                  size of the message in bytes.
@@ -1002,7 +1002,7 @@ asym_sign_func get_spdm_req_asym_sign(IN uint16 req_base_asym_alg)
   @retval  FALSE  sig_size is too small.
 **/
 boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
-			   IN uint32 bash_hash_algo, IN void *context,
+			   IN uint32 base_hash_algo, IN void *context,
 			   IN const uint8 *message, IN uintn message_size,
 			   OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -1013,7 +1013,7 @@ boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
 	boolean result;
 	uintn hash_nid;
 
-	hash_nid = get_spdm_hash_nid(bash_hash_algo);
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
 
 	asym_sign = get_spdm_req_asym_sign(req_base_asym_alg);
@@ -1021,8 +1021,8 @@ boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
 		return FALSE;
 	}
 	if (need_hash) {
-		hash_size = spdm_get_hash_size(bash_hash_algo);
-		result = spdm_hash_all(bash_hash_algo, message, message_size,
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
 				       message_hash);
 		if (!result) {
 			return FALSE;
@@ -1970,14 +1970,14 @@ boolean spdm_verify_cert_chain_data(IN uint8 *cert_chain_data,
 /**
   This function verifies the integrity of certificate chain buffer including spdm_cert_chain_t header.
 
-  @param  bash_hash_algo                 SPDM bash_hash_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
   @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
   @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
 
   @retval TRUE  certificate chain buffer integrity verification pass.
   @retval FALSE certificate chain buffer integrity verification fail.
 **/
-boolean spdm_verify_certificate_chain_buffer(IN uint32 bash_hash_algo,
+boolean spdm_verify_certificate_chain_buffer(IN uint32 base_hash_algo,
 					     IN void *cert_chain_buffer,
 					     IN uintn cert_chain_buffer_size)
 {
@@ -1990,7 +1990,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 bash_hash_algo,
 	uint8 *leaf_cert_buffer;
 	uintn leaf_cert_buffer_size;
 
-	hash_size = spdm_get_hash_size(bash_hash_algo);
+	hash_size = spdm_get_hash_size(base_hash_algo);
 
 	if (cert_chain_buffer_size > MAX_SPDM_MESSAGE_BUFFER_SIZE) {
 		DEBUG((DEBUG_INFO,
@@ -2016,7 +2016,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 bash_hash_algo,
 		return FALSE;
 	}
 
-	spdm_hash_all(bash_hash_algo, root_cert_buffer, root_cert_buffer_size,
+	spdm_hash_all(base_hash_algo, root_cert_buffer, root_cert_buffer_size,
 		      calc_root_cert_hash);
 	if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
 			calc_root_cert_hash, hash_size) != 0) {

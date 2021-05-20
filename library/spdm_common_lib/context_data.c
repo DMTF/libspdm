@@ -181,10 +181,10 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
-			spdm_context->connection_info.algorithm.bash_hash_algo =
+			spdm_context->connection_info.algorithm.base_hash_algo =
 				*(uint32 *)data;
 		} else {
-			spdm_context->local_context.algorithm.bash_hash_algo =
+			spdm_context->local_context.algorithm.base_hash_algo =
 				*(uint32 *)data;
 		}
 		break;
@@ -483,7 +483,7 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		}
 		target_data_size = sizeof(uint32);
 		target_data =
-			&spdm_context->connection_info.algorithm.bash_hash_algo;
+			&spdm_context->connection_info.algorithm.base_hash_algo;
 		break;
 	case SPDM_DATA_DHE_NAME_GROUP:
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {

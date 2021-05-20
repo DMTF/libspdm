@@ -92,7 +92,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 
 	// remove HMAC
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (request_size != sizeof(spdm_psk_finish_request_t) + hmac_size) {
 		spdm_generate_error_response(spdm_context,

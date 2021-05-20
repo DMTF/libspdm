@@ -45,7 +45,7 @@ void test_spdm_responder_digests_case1(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -65,7 +65,7 @@ void test_spdm_responder_digests_case1(void **state)
 		response_size,
 		sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
-						   .algorithm.bash_hash_algo));
+						   .algorithm.base_hash_algo));
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_DIGESTS);
@@ -91,7 +91,7 @@ void test_spdm_responder_digests_case2(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -138,7 +138,7 @@ void test_spdm_responder_digests_case3(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -185,7 +185,7 @@ void test_spdm_responder_digests_case4(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -234,7 +234,7 @@ void test_spdm_responder_digests_case5(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -288,7 +288,7 @@ void test_spdm_responder_digests_case6(void **state)
 		SPDM_CONNECTION_STATE_NOT_STARTED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -333,7 +333,7 @@ void test_spdm_responder_digests_case7(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -380,7 +380,7 @@ void test_spdm_responder_digests_case8(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] =
 		m_local_certificate_chain;
@@ -429,7 +429,7 @@ void test_spdm_responder_digests_case9(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
 	for (index = 0; index < MAX_SPDM_SLOT_COUNT; index++) {

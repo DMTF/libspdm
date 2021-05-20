@@ -39,7 +39,7 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
   Sign an SPDM message data.
 
   @param  req_base_asym_alg               Indicates the signing algorithm.
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  message                      A pointer to a message to be signed (before hash).
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
@@ -50,7 +50,7 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
-				 IN uint32 bash_hash_algo,
+				 IN uint32 base_hash_algo,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -61,7 +61,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
   Sign an SPDM message data.
 
   @param  base_asym_algo                 Indicates the signing algorithm.
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  message                      A pointer to a message to be signed (before hash).
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
@@ -72,7 +72,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
-				 IN uint32 bash_hash_algo,
+				 IN uint32 base_hash_algo,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -82,7 +82,7 @@ boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  psk_hint                      Pointer to the user-supplied PSK Hint.
   @param  psk_hint_size                  PSK Hint size in bytes.
   @param  info                         Pointer to the application specific info.
@@ -93,7 +93,7 @@ boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
+boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 base_hash_algo,
 					      IN const uint8 *psk_hint,
 					      OPTIONAL IN uintn psk_hint_size,
 					      OPTIONAL IN const uint8 *info,
@@ -106,7 +106,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  psk_hint                      Pointer to the user-supplied PSK Hint.
   @param  psk_hint_size                  PSK Hint size in bytes.
   @param  info                         Pointer to the application specific info.
@@ -117,7 +117,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_master_secret_hkdf_expand(IN uint32 bash_hash_algo,
+boolean spdm_psk_master_secret_hkdf_expand(IN uint32 base_hash_algo,
 					   IN const uint8 *psk_hint,
 					   OPTIONAL IN uintn psk_hint_size,
 					   OPTIONAL IN const uint8 *info,

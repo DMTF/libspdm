@@ -23,7 +23,7 @@
 #include <library/memlib.h>
 #include "spdm_device_secret_lib_internal.h"
 
-boolean read_responder_root_public_certificate(IN uint32 bash_hash_algo,
+boolean read_responder_root_public_certificate(IN uint32 base_hash_algo,
 					       IN uint32 base_asym_algo,
 					       OUT void **data, OUT uintn *size,
 					       OUT void **hash,
@@ -74,7 +74,7 @@ boolean read_responder_root_public_certificate(IN uint32 bash_hash_algo,
 		return res;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
 	cert_chain = (void *)malloc(cert_chain_size);
@@ -85,7 +85,7 @@ boolean read_responder_root_public_certificate(IN uint32 bash_hash_algo,
 	cert_chain->length = (uint16)cert_chain_size;
 	cert_chain->reserved = 0;
 
-	spdm_hash_all(bash_hash_algo, file_data, file_size,
+	spdm_hash_all(base_hash_algo, file_data, file_size,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);
@@ -103,7 +103,7 @@ boolean read_responder_root_public_certificate(IN uint32 bash_hash_algo,
 	return TRUE;
 }
 
-boolean read_requester_root_public_certificate(IN uint32 bash_hash_algo,
+boolean read_requester_root_public_certificate(IN uint32 base_hash_algo,
 					       IN uint16 req_base_asym_alg,
 					       OUT void **data, OUT uintn *size,
 					       OUT void **hash,
@@ -150,7 +150,7 @@ boolean read_requester_root_public_certificate(IN uint32 bash_hash_algo,
 		return FALSE;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	res = read_input_file(file, &file_data, &file_size);
 	if (!res) {
@@ -165,7 +165,7 @@ boolean read_requester_root_public_certificate(IN uint32 bash_hash_algo,
 	}
 	cert_chain->length = (uint16)cert_chain_size;
 	cert_chain->reserved = 0;
-	spdm_hash_all(bash_hash_algo, file_data, file_size,
+	spdm_hash_all(base_hash_algo, file_data, file_size,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);
@@ -184,7 +184,7 @@ boolean read_requester_root_public_certificate(IN uint32 bash_hash_algo,
 }
 
 boolean read_responder_public_certificate_chain(
-	IN uint32 bash_hash_algo, IN uint32 base_asym_algo, OUT void **data,
+	IN uint32 base_hash_algo, IN uint32 base_asym_algo, OUT void **data,
 	OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
 	boolean res;
@@ -234,7 +234,7 @@ boolean read_responder_public_certificate_chain(
 		return res;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
 	cert_chain = (void *)malloc(cert_chain_size);
@@ -263,7 +263,7 @@ boolean read_responder_public_certificate_chain(
 		return res;
 	}
 
-	spdm_hash_all(bash_hash_algo, root_cert, root_cert_len,
+	spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);
@@ -282,7 +282,7 @@ boolean read_responder_public_certificate_chain(
 }
 
 boolean read_requester_public_certificate_chain(
-	IN uint32 bash_hash_algo, IN uint16 req_base_asym_alg, OUT void **data,
+	IN uint32 base_hash_algo, IN uint16 req_base_asym_alg, OUT void **data,
 	OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
 	boolean res;
@@ -332,7 +332,7 @@ boolean read_requester_public_certificate_chain(
 		return res;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
 	cert_chain = (void *)malloc(cert_chain_size);
@@ -361,7 +361,7 @@ boolean read_requester_public_certificate_chain(
 		return res;
 	}
 
-	spdm_hash_all(bash_hash_algo, root_cert, root_cert_len,
+	spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);
@@ -380,7 +380,7 @@ boolean read_requester_public_certificate_chain(
 }
 
 boolean read_responder_root_public_certificate_by_size(
-	IN uint32 bash_hash_algo, IN uint32 base_asym_algo, IN uint16 chain_id,
+	IN uint32 base_hash_algo, IN uint32 base_asym_algo, IN uint16 chain_id,
 	OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
 	boolean res;
@@ -422,7 +422,7 @@ boolean read_responder_root_public_certificate_by_size(
 		return res;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
 	cert_chain = (void *)malloc(cert_chain_size);
@@ -433,7 +433,7 @@ boolean read_responder_root_public_certificate_by_size(
 	cert_chain->length = (uint16)cert_chain_size;
 	cert_chain->reserved = 0;
 
-	spdm_hash_all(bash_hash_algo, file_data, file_size,
+	spdm_hash_all(base_hash_algo, file_data, file_size,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);
@@ -452,7 +452,7 @@ boolean read_responder_root_public_certificate_by_size(
 }
 
 boolean read_responder_public_certificate_chain_by_size(
-	IN uint32 bash_hash_algo, IN uint32 base_asym_algo, IN uint16 chain_id,
+	IN uint32 base_hash_algo, IN uint32 base_asym_algo, IN uint16 chain_id,
 	OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
 	boolean res;
@@ -496,7 +496,7 @@ boolean read_responder_public_certificate_chain_by_size(
 		return res;
 	}
 
-	digest_size = spdm_get_hash_size(bash_hash_algo);
+	digest_size = spdm_get_hash_size(base_hash_algo);
 
 	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
 	cert_chain = (void *)malloc(cert_chain_size);
@@ -525,7 +525,7 @@ boolean read_responder_public_certificate_chain_by_size(
 		return res;
 	}
 
-	spdm_hash_all(bash_hash_algo, root_cert, root_cert_len,
+	spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
 		      (uint8 *)(cert_chain + 1));
 	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
 		 file_data, file_size);

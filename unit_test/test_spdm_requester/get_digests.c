@@ -82,7 +82,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
 				spdm_get_hash_size(m_use_hash_algo);
@@ -114,7 +114,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
 				spdm_get_hash_size(m_use_hash_algo);
@@ -191,7 +191,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 			uintn temp_buf_size;
 
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			temp_buf_size = sizeof(spdm_digest_response_t) +
 					spdm_get_hash_size(m_use_hash_algo);
@@ -284,7 +284,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 			uintn temp_buf_size;
 
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			temp_buf_size = sizeof(spdm_digest_response_t) +
 					spdm_get_hash_size(m_use_hash_algo);
@@ -325,7 +325,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = 2;
 		spdm_response = (void *)temp_buf;
@@ -349,7 +349,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
 				spdm_get_hash_size(m_use_hash_algo);
@@ -399,7 +399,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
 				spdm_get_hash_size(m_use_hash_algo);
@@ -431,7 +431,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
 				spdm_get_hash_size(m_use_hash_algo);
@@ -466,7 +466,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn index;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		digest_count = 4;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -504,7 +504,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn index;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		digest_count = 4;
 		temp_buf_size =
@@ -547,7 +547,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = 5;
 		spdm_response = (void *)temp_buf;
@@ -571,7 +571,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_message_header_t) +
 				MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT + 1;
@@ -620,7 +620,7 @@ void test_spdm_requester_get_digests_case1(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -656,7 +656,7 @@ void test_spdm_requester_get_digests_case2(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -675,7 +675,7 @@ void test_spdm_requester_get_digests_case2(void **state)
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
-						   .algorithm.bash_hash_algo));
+						   .algorithm.base_hash_algo));
 }
 
 /**
@@ -698,7 +698,7 @@ void test_spdm_requester_get_digests_case3(void **state)
 		SPDM_CONNECTION_STATE_NOT_STARTED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -734,7 +734,7 @@ void test_spdm_requester_get_digests_case4(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -770,7 +770,7 @@ void test_spdm_requester_get_digests_case5(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -807,7 +807,7 @@ void test_spdm_requester_get_digests_case6(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -826,7 +826,7 @@ void test_spdm_requester_get_digests_case6(void **state)
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
-						   .algorithm.bash_hash_algo));
+						   .algorithm.base_hash_algo));
 }
 
 /**
@@ -849,7 +849,7 @@ void test_spdm_requester_get_digests_case7(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -888,7 +888,7 @@ void test_spdm_requester_get_digests_case8(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -924,7 +924,7 @@ void test_spdm_requester_get_digests_case9(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -943,7 +943,7 @@ void test_spdm_requester_get_digests_case9(void **state)
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
-						   .algorithm.bash_hash_algo));
+						   .algorithm.base_hash_algo));
 }
 
 /**
@@ -965,7 +965,7 @@ void test_spdm_requester_get_digests_case10(void **state)
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1001,7 +1001,7 @@ void test_spdm_requester_get_digests_case11(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1039,7 +1039,7 @@ void test_spdm_requester_get_digests_case12(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1076,7 +1076,7 @@ void test_spdm_requester_get_digests_case13(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1113,7 +1113,7 @@ void test_spdm_requester_get_digests_case14(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1150,7 +1150,7 @@ void test_spdm_requester_get_digests_case15(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1186,7 +1186,7 @@ void test_spdm_requester_get_digests_case16(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1223,7 +1223,7 @@ void test_spdm_requester_get_digests_case17(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1261,7 +1261,7 @@ void test_spdm_requester_get_digests_case18(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1298,7 +1298,7 @@ void test_spdm_requester_get_digests_case19(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1336,7 +1336,7 @@ void test_spdm_requester_get_digests_case20(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;
@@ -1374,7 +1374,7 @@ void test_spdm_requester_get_digests_case21(void **state)
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->local_context.peer_cert_chain_provision =
 		m_local_certificate_chain;

@@ -199,7 +199,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			->connection_info.algorithm.base_asym_algo =
 			m_use_asym_algo;
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.dhe_named_group =
@@ -351,7 +351,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			->connection_info.algorithm.base_asym_algo =
 			m_use_asym_algo;
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.dhe_named_group =
@@ -549,7 +549,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				->connection_info.algorithm.base_asym_algo =
 				m_use_asym_algo;
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			((spdm_context_t *)spdm_context)
 				->connection_info.algorithm.dhe_named_group =
@@ -780,7 +780,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				->connection_info.algorithm.base_asym_algo =
 				m_use_asym_algo;
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			((spdm_context_t *)spdm_context)
 				->connection_info.algorithm.dhe_named_group =
@@ -947,7 +947,7 @@ void test_spdm_requester_key_exchange_case1(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -998,7 +998,7 @@ void test_spdm_requester_key_exchange_case2(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1054,7 +1054,7 @@ void test_spdm_requester_key_exchange_case3(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1105,7 +1105,7 @@ void test_spdm_requester_key_exchange_case4(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1156,7 +1156,7 @@ void test_spdm_requester_key_exchange_case5(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1207,7 +1207,7 @@ void test_spdm_requester_key_exchange_case6(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1263,7 +1263,7 @@ void test_spdm_requester_key_exchange_case7(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1316,7 +1316,7 @@ void test_spdm_requester_key_exchange_case8(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1367,7 +1367,7 @@ void test_spdm_requester_key_exchange_case9(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;

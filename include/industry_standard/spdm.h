@@ -190,7 +190,7 @@ typedef struct {
 	uint8 measurement_specification;
 	uint8 reserved;
 	uint32 base_asym_algo;
-	uint32 bash_hash_algo;
+	uint32 base_hash_algo;
 	uint8 reserved2[12];
 	uint8 ext_asym_count;
 	uint8 ext_hash_count;
@@ -238,7 +238,7 @@ typedef struct {
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 BIT8
 
 ///
-/// SPDM NEGOTIATE_ALGORITHMS request bash_hash_algo
+/// SPDM NEGOTIATE_ALGORITHMS request base_hash_algo
 ///
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256 BIT0
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384 BIT1

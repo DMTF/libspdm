@@ -113,7 +113,7 @@ return_status spdm_generate_aead_key_and_iv(
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str5 (0x%x):\n", bin_str5_size));
 	internal_dump_hex(bin_str5, bin_str5_size);
-	ret_val = spdm_hkdf_expand(secured_message_context->bash_hash_algo,
+	ret_val = spdm_hkdf_expand(secured_message_context->base_hash_algo,
 				   major_secret, hash_size, bin_str5,
 				   bin_str5_size, key, key_length);
 	ASSERT(ret_val);
@@ -128,7 +128,7 @@ return_status spdm_generate_aead_key_and_iv(
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str6 (0x%x):\n", bin_str6_size));
 	internal_dump_hex(bin_str6, bin_str6_size);
-	ret_val = spdm_hkdf_expand(secured_message_context->bash_hash_algo,
+	ret_val = spdm_hkdf_expand(secured_message_context->base_hash_algo,
 				   major_secret, hash_size, bin_str6,
 				   bin_str6_size, iv, iv_length);
 	ASSERT(ret_val);
@@ -167,7 +167,7 @@ return_status spdm_generate_finished_key(
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str7 (0x%x):\n", bin_str7_size));
 	internal_dump_hex(bin_str7, bin_str7_size);
-	ret_val = spdm_hkdf_expand(secured_message_context->bash_hash_algo,
+	ret_val = spdm_hkdf_expand(secured_message_context->base_hash_algo,
 				   handshake_secret, hash_size, bin_str7,
 				   bin_str7_size, FinishedKey, hash_size);
 	ASSERT(ret_val);
@@ -222,7 +222,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 			secured_message_context->dhe_key_size);
 		DEBUG((DEBUG_INFO, "\n"));
 		ret_val = spdm_hmac_all(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			m_zero_filled_buffer, hash_size,
 			secured_message_context->master_secret.dhe_secret,
 			secured_message_context->dhe_key_size,
@@ -244,7 +244,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str1, bin_str1_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_handshake_secret_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str1,
 			bin_str1_size,
@@ -256,7 +256,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 		}
 	} else {
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.handshake_secret,
 			hash_size, bin_str1, bin_str1_size,
 			secured_message_context->handshake_secret
@@ -278,7 +278,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str2, bin_str2_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_handshake_secret_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str2,
 			bin_str2_size,
@@ -290,7 +290,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 		}
 	} else {
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.handshake_secret,
 			hash_size, bin_str2, bin_str2_size,
 			secured_message_context->handshake_secret
@@ -380,7 +380,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 					 &bin_str0_size);
 		ASSERT_RETURN_ERROR(status);
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.handshake_secret,
 			hash_size, bin_str0, bin_str0_size, salt1, hash_size);
 		ASSERT(ret_val);
@@ -389,7 +389,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 		DEBUG((DEBUG_INFO, "\n"));
 
 		ret_val = spdm_hmac_all(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			m_zero_filled_buffer, hash_size, salt1, hash_size,
 			secured_message_context->master_secret.master_secret);
 		ASSERT(ret_val);
@@ -409,7 +409,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str3, bin_str3_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str3,
 			bin_str3_size,
@@ -421,7 +421,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 		}
 	} else {
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.master_secret,
 			hash_size, bin_str3, bin_str3_size,
 			secured_message_context->application_secret
@@ -443,7 +443,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str4, bin_str4_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str4,
 			bin_str4_size,
@@ -455,7 +455,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 		}
 	} else {
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.master_secret,
 			hash_size, bin_str4, bin_str4_size,
 			secured_message_context->application_secret
@@ -478,7 +478,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str8, bin_str8_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str8,
 			bin_str8_size,
@@ -490,7 +490,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 		}
 	} else {
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->master_secret.master_secret,
 			hash_size, bin_str8, bin_str8_size,
 			secured_message_context->handshake_secret
@@ -578,7 +578,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 				.request_data_sequence_number;
 
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->application_secret
 				.request_data_secret,
 			hash_size, bin_str9, bin_str9_size,
@@ -627,7 +627,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 				.response_data_sequence_number;
 
 		ret_val = spdm_hkdf_expand(
-			secured_message_context->bash_hash_algo,
+			secured_message_context->base_hash_algo,
 			secured_message_context->application_secret
 				.response_data_secret,
 			hash_size, bin_str9, bin_str9_size,
@@ -776,7 +776,7 @@ spdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
 
 	secured_message_context = spdm_secured_message_context;
 	return spdm_hmac_all(
-		secured_message_context->bash_hash_algo, data, data_size,
+		secured_message_context->base_hash_algo, data, data_size,
 		secured_message_context->handshake_secret.request_finished_key,
 		secured_message_context->hash_size, hmac_value);
 }
@@ -800,7 +800,7 @@ boolean spdm_hmac_all_with_response_finished_key(
 
 	secured_message_context = spdm_secured_message_context;
 	return spdm_hmac_all(
-		secured_message_context->bash_hash_algo, data, data_size,
+		secured_message_context->base_hash_algo, data, data_size,
 		secured_message_context->handshake_secret.response_finished_key,
 		secured_message_context->hash_size, hmac_value);
 }
