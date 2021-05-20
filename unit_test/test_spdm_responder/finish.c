@@ -71,7 +71,7 @@ void test_spdm_responder_finish_case1(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -174,7 +174,7 @@ void test_spdm_responder_finish_case2(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -279,7 +279,7 @@ void test_spdm_responder_finish_case3(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -387,7 +387,7 @@ void test_spdm_responder_finish_case4(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -497,7 +497,7 @@ void test_spdm_responder_finish_case5(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -611,7 +611,7 @@ void test_spdm_responder_finish_case6(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;

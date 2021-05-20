@@ -26,7 +26,7 @@ typedef struct {
 	uint8 measurement_spec;
 	uint32 measurement_hash_algo;
 	uint32 base_asym_algo;
-	uint32 bash_hash_algo;
+	uint32 base_hash_algo;
 	uint16 dhe_named_group;
 	uint16 aead_cipher_suite;
 	uint16 req_base_asym_alg;

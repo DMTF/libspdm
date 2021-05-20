@@ -112,7 +112,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 	}
 
 	digest_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	if (slot_mask != NULL) {
 		*slot_mask = spdm_response.header.param2;
 	}

@@ -428,7 +428,7 @@ void test_spdm_requester_heartbeat_case1(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -492,7 +492,7 @@ void test_spdm_requester_heartbeat_case2(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -579,7 +579,7 @@ void test_spdm_requester_heartbeat_case3(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -666,7 +666,7 @@ void test_spdm_requester_heartbeat_case4(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -753,7 +753,7 @@ void test_spdm_requester_heartbeat_case5(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -840,7 +840,7 @@ void test_spdm_requester_heartbeat_case6(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -927,7 +927,7 @@ void test_spdm_requester_heartbeat_case7(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1016,7 +1016,7 @@ void test_spdm_requester_heartbeat_case8(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1103,7 +1103,7 @@ void test_spdm_requester_heartbeat_case9(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;

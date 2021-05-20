@@ -114,7 +114,7 @@ void test_spdm_responder_measurements_case1(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -166,7 +166,7 @@ void test_spdm_responder_measurements_case2(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -216,7 +216,7 @@ void test_spdm_responder_measurements_case3(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -267,7 +267,7 @@ void test_spdm_responder_measurements_case4(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -320,7 +320,7 @@ void test_spdm_responder_measurements_case5(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -378,7 +378,7 @@ void test_spdm_responder_measurements_case6(void **state)
 		SPDM_CONNECTION_STATE_NOT_STARTED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -428,7 +428,7 @@ void test_spdm_responder_measurements_case7(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -480,7 +480,7 @@ void test_spdm_responder_measurements_case8(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -532,7 +532,7 @@ void test_spdm_responder_measurements_case9(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -581,7 +581,7 @@ void test_spdm_responder_measurements_case10(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -639,7 +639,7 @@ void test_spdm_responder_measurements_case11(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -697,7 +697,7 @@ void test_spdm_responder_measurements_case12(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -775,7 +775,7 @@ void test_spdm_responder_measurements_case13(void **state)
 	spdm_context->local_context.capability.flags = 0;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -843,7 +843,7 @@ void test_spdm_responder_measurements_case14(void **state)
 	spdm_context->local_context.capability.flags = 0;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -900,7 +900,7 @@ void test_spdm_responder_measurements_case15(void **state)
 	spdm_context->local_context.capability.flags = 0;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -953,7 +953,7 @@ void test_spdm_responder_measurements_case16(void **state)
 	spdm_context->local_context.capability.flags = 0;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1002,7 +1002,7 @@ void test_spdm_responder_measurements_case17(void **state)
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1059,7 +1059,7 @@ void test_spdm_responder_measurements_case18(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1129,7 +1129,7 @@ void test_spdm_responder_measurements_case19(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1181,7 +1181,7 @@ void test_spdm_responder_measurements_case20(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1232,7 +1232,7 @@ void test_spdm_responder_measurements_case21(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -1285,7 +1285,7 @@ void test_spdm_responder_measurements_case22(void **state)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;

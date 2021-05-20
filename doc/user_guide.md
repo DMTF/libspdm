@@ -54,7 +54,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
 
    spdm_set_data (spdm_context, SPDM_DATA_MEASUREMENT_SPEC, &parameter, &measurement_spec, sizeof(measurement_spec));
    spdm_set_data (spdm_context, SPDM_DATA_BASE_ASYM_ALGO, &parameter, &base_asym_algo, sizeof(base_asym_algo));
-   spdm_set_data (spdm_context, SPDM_DATA_BASE_HASH_ALGO, &parameter, &bash_hash_algo, sizeof(bash_hash_algo));
+   spdm_set_data (spdm_context, SPDM_DATA_BASE_HASH_ALGO, &parameter, &base_hash_algo, sizeof(base_hash_algo));
    spdm_set_data (spdm_context, SPDM_DATA_DHE_NAME_GROUP, &parameter, &dhe_named_group, sizeof(dhe_named_group));
    spdm_set_data (spdm_context, SPDM_DATA_AEAD_CIPHER_SUITE, &parameter, &aead_cipher_suite, sizeof(aead_cipher_suite));
    spdm_set_data (spdm_context, SPDM_DATA_REQ_BASE_ASYM_ALG, &parameter, &req_base_asym_alg, sizeof(req_base_asym_alg));
@@ -247,7 +247,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    spdm_set_data (spdm_context, SPDM_DATA_MEASUREMENT_SPEC, &parameter, &measurement_spec, sizeof(measurement_spec));
    spdm_set_data (spdm_context, SPDM_DATA_MEASUREMENT_HASH_ALGO, &parameter, &measurement_hash_algo, sizeof(measurement_hash_algo));
    spdm_set_data (spdm_context, SPDM_DATA_BASE_ASYM_ALGO, &parameter, &base_asym_algo, sizeof(base_asym_algo));
-   spdm_set_data (spdm_context, SPDM_DATA_BASE_HASH_ALGO, &parameter, &bash_hash_algo, sizeof(bash_hash_algo));
+   spdm_set_data (spdm_context, SPDM_DATA_BASE_HASH_ALGO, &parameter, &base_hash_algo, sizeof(base_hash_algo));
    spdm_set_data (spdm_context, SPDM_DATA_DHE_NAME_GROUP, &parameter, &dhe_named_group, sizeof(dhe_named_group));
    spdm_set_data (spdm_context, SPDM_DATA_AEAD_CIPHER_SUITE, &parameter, &aead_cipher_suite, sizeof(aead_cipher_suite));
    spdm_set_data (spdm_context, SPDM_DATA_REQ_BASE_ASYM_ALG, &parameter, &req_base_asym_alg, sizeof(req_base_asym_alg));

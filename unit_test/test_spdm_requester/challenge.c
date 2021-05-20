@@ -106,7 +106,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			->connection_info.algorithm.base_asym_algo =
 			m_use_asym_algo;
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
@@ -182,7 +182,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			->connection_info.algorithm.base_asym_algo =
 			m_use_asym_algo;
 		((spdm_context_t *)spdm_context)
-			->connection_info.algorithm.bash_hash_algo =
+			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
@@ -299,7 +299,7 @@ return_status spdm_requester_challenge_test_receive_message(
 				->connection_info.algorithm.base_asym_algo =
 				m_use_asym_algo;
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			temp_buf_size =
 				sizeof(spdm_challenge_auth_response_t) +
@@ -436,7 +436,7 @@ return_status spdm_requester_challenge_test_receive_message(
 				->connection_info.algorithm.base_asym_algo =
 				m_use_asym_algo;
 			((spdm_context_t *)spdm_context)
-				->connection_info.algorithm.bash_hash_algo =
+				->connection_info.algorithm.base_hash_algo =
 				m_use_hash_algo;
 			temp_buf_size =
 				sizeof(spdm_challenge_auth_response_t) +
@@ -521,7 +521,7 @@ void test_spdm_requester_challenge_case1(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -564,7 +564,7 @@ void test_spdm_requester_challenge_case2(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -606,7 +606,7 @@ void test_spdm_requester_challenge_case3(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -649,7 +649,7 @@ void test_spdm_requester_challenge_case4(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -692,7 +692,7 @@ void test_spdm_requester_challenge_case5(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -735,7 +735,7 @@ void test_spdm_requester_challenge_case6(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -777,7 +777,7 @@ void test_spdm_requester_challenge_case7(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -822,7 +822,7 @@ void test_spdm_requester_challenge_case8(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;
@@ -864,7 +864,7 @@ void test_spdm_requester_challenge_case9(void **state)
 	spdm_context->transcript.message_a.buffer_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
 	spdm_context->transcript.message_c.buffer_size = 0;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		m_use_asym_algo;

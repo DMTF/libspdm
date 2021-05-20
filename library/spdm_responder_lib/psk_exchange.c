@@ -105,7 +105,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 			}
 		}
 		algo_size = spdm_get_hash_size(
-			spdm_context->connection_info.algorithm.bash_hash_algo);
+			spdm_context->connection_info.algorithm.base_hash_algo);
 		if (algo_size == 0) {
 			spdm_generate_error_response(
 				spdm_context,
@@ -149,7 +149,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
 		spdm_context, FALSE, spdm_request->header.param1);
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (request_size < sizeof(spdm_psk_exchange_request_t)) {
 		spdm_generate_error_response(spdm_context,

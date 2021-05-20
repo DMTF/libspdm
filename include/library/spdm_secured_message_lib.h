@@ -115,13 +115,13 @@ void spdm_secured_message_set_session_type(IN void *spdm_secured_message_context
   Set algorithm to an SPDM secured message context.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
-  @param  bash_hash_algo                 Indicate the negotiated bash_hash_algo for the SPDM session.
+  @param  base_hash_algo                 Indicate the negotiated base_hash_algo for the SPDM session.
   @param  dhe_named_group                Indicate the negotiated dhe_named_group for the SPDM session.
   @param  aead_cipher_suite              Indicate the negotiated aead_cipher_suite for the SPDM session.
   @param  key_schedule                  Indicate the negotiated key_schedule for the SPDM session.
 */
 void spdm_secured_message_set_algorithms(IN void *spdm_secured_message_context,
-					 IN uint32 bash_hash_algo,
+					 IN uint32 base_hash_algo,
 					 IN uint16 dhe_named_group,
 					 IN uint16 aead_cipher_suite,
 					 IN uint16 key_schedule);

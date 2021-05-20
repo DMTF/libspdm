@@ -13,7 +13,7 @@ typedef struct {
 	uint8 measurement_specification;
 	uint8 reserved;
 	uint32 base_asym_algo;
-	uint32 bash_hash_algo;
+	uint32 base_hash_algo;
 	uint8 reserved2[12];
 	uint8 ext_asym_count;
 	uint8 ext_hash_count;
@@ -82,8 +82,8 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		spdm_context->local_context.algorithm.measurement_spec;
 	spdm_request.base_asym_algo =
 		spdm_context->local_context.algorithm.base_asym_algo;
-	spdm_request.bash_hash_algo =
-		spdm_context->local_context.algorithm.bash_hash_algo;
+	spdm_request.base_hash_algo =
+		spdm_context->local_context.algorithm.base_hash_algo;
 	spdm_request.ext_asym_count = 0;
 	spdm_request.ext_hash_count = 0;
 	spdm_request.struct_table[0].alg_type =
@@ -219,7 +219,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		spdm_response.measurement_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		spdm_response.base_asym_sel;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		spdm_response.base_hash_sel;
 
 	if (spdm_is_capabilities_flag_supported(
@@ -237,7 +237,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		}
 	}
 	algo_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	if (algo_size == 0) {
 		return RETURN_SECURITY_VIOLATION;
 	}

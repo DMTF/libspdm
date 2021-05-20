@@ -116,7 +116,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	}
 
 	hmac_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	spdm_request_size =
 		sizeof(spdm_finish_request_t) + signature_size + hmac_size;
 	ptr = spdm_request.signature;

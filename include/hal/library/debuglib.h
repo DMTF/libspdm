@@ -22,9 +22,8 @@
 // Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of debug_print()
 //
 #define DEBUG_INFO 0x00000040 // Informational debug messages
-#define DEBUG_VERBOSE                                                          \
-	0x00400000 // Detailed debug messages that may                         \
-		// significantly impact boot performance
+// Detailed debug messages that may significantly impact boot performance
+#define DEBUG_VERBOSE 0x00400000
 #define DEBUG_ERROR 0x80000000 // Error
 
 /**

@@ -303,8 +303,8 @@ return_status spdm_get_response_algorithms(IN void *context,
 		spdm_context->local_context.algorithm.measurement_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		spdm_request->base_asym_algo;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
-		spdm_request->bash_hash_algo;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		spdm_request->base_hash_algo;
 	if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
 		struct_table =
 			(void *)((uintn)spdm_request +
@@ -360,8 +360,8 @@ return_status spdm_get_response_algorithms(IN void *context,
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	spdm_response->base_hash_sel = spdm_prioritize_algorithm(
 		m_hash_priority_table, ARRAY_SIZE(m_hash_priority_table),
-		spdm_context->local_context.algorithm.bash_hash_algo,
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->local_context.algorithm.base_hash_algo,
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	spdm_response->struct_table[0].alg_type =
 		SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
 	spdm_response->struct_table[0].alg_count = 0x20;
@@ -414,7 +414,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 		spdm_response->measurement_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
 		spdm_response->base_asym_sel;
-	spdm_context->connection_info.algorithm.bash_hash_algo =
+	spdm_context->connection_info.algorithm.base_hash_algo =
 		spdm_response->base_hash_sel;
 
 	if (spdm_is_capabilities_flag_supported(
@@ -438,7 +438,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 		}
 	}
 	algo_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.bash_hash_algo);
+		spdm_context->connection_info.algorithm.base_hash_algo);
 	if (algo_size == 0) {
 		spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,

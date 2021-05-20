@@ -188,7 +188,7 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
   Sign an SPDM message data.
 
   @param  req_base_asym_alg               Indicates the signing algorithm.
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  message                      A pointer to a message to be signed (before hash).
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
@@ -199,7 +199,7 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
-				 IN uint32 bash_hash_algo,
+				 IN uint32 base_hash_algo,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -221,7 +221,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
 	if (!result) {
 		return FALSE;
 	}
-	result = spdm_req_asym_sign(req_base_asym_alg, bash_hash_algo, context,
+	result = spdm_req_asym_sign(req_base_asym_alg, base_hash_algo, context,
 				    message, message_size, signature, sig_size);
 	spdm_req_asym_free(req_base_asym_alg, context);
 	free(private_pem);
@@ -233,7 +233,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
   Sign an SPDM message data.
 
   @param  base_asym_algo                 Indicates the signing algorithm.
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  message                      A pointer to a message to be signed (before hash).
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
@@ -244,7 +244,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
-				 IN uint32 bash_hash_algo,
+				 IN uint32 base_hash_algo,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -264,7 +264,7 @@ boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
 	if (!result) {
 		return FALSE;
 	}
-	result = spdm_asym_sign(base_asym_algo, bash_hash_algo, context,
+	result = spdm_asym_sign(base_asym_algo, base_hash_algo, context,
 				message, message_size, signature, sig_size);
 	spdm_asym_free(base_asym_algo, context);
 	free(private_pem);
@@ -282,7 +282,7 @@ uint8 m_bin_str0[0x11] = {
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  psk_hint                      Pointer to the user-supplied PSK Hint.
   @param  psk_hint_size                  PSK Hint size in bytes.
   @param  info                         Pointer to the application specific info.
@@ -293,7 +293,7 @@ uint8 m_bin_str0[0x11] = {
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
+boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 base_hash_algo,
 					      IN const uint8 *psk_hint,
 					      OPTIONAL IN uintn psk_hint_size,
 					      OPTIONAL IN const uint8 *info,
@@ -322,15 +322,15 @@ boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
 	dump_hex_str(psk, psk_size);
 	printf("\n");
 
-	hash_size = spdm_get_hash_size(bash_hash_algo);
+	hash_size = spdm_get_hash_size(base_hash_algo);
 
-	result = spdm_hmac_all(bash_hash_algo, m_my_zero_filled_buffer,
+	result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
 			       hash_size, psk, psk_size, handshake_secret);
 	if (!result) {
 		return result;
 	}
 
-	result = spdm_hkdf_expand(bash_hash_algo, handshake_secret, hash_size,
+	result = spdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
 				  info, info_size, out, out_size);
 	zero_mem(handshake_secret, hash_size);
 
@@ -340,7 +340,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
 
-  @param  bash_hash_algo                 Indicates the hash algorithm.
+  @param  base_hash_algo                 Indicates the hash algorithm.
   @param  psk_hint                      Pointer to the user-supplied PSK Hint.
   @param  psk_hint_size                  PSK Hint size in bytes.
   @param  info                         Pointer to the application specific info.
@@ -351,7 +351,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(IN uint32 bash_hash_algo,
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_master_secret_hkdf_expand(IN uint32 bash_hash_algo,
+boolean spdm_psk_master_secret_hkdf_expand(IN uint32 base_hash_algo,
 					   IN const uint8 *psk_hint,
 					   OPTIONAL IN uintn psk_hint_size,
 					   OPTIONAL IN const uint8 *info,
@@ -379,16 +379,16 @@ boolean spdm_psk_master_secret_hkdf_expand(IN uint32 bash_hash_algo,
 		return FALSE;
 	}
 
-	hash_size = spdm_get_hash_size(bash_hash_algo);
+	hash_size = spdm_get_hash_size(base_hash_algo);
 
-	result = spdm_hmac_all(bash_hash_algo, m_my_zero_filled_buffer,
+	result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
 			       hash_size, psk, psk_size, handshake_secret);
 	if (!result) {
 		return result;
 	}
 
 	*(uint16 *)m_bin_str0 = (uint16)hash_size;
-	result = spdm_hkdf_expand(bash_hash_algo, handshake_secret, hash_size,
+	result = spdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
 				  m_bin_str0, sizeof(m_bin_str0), salt1,
 				  hash_size);
 	zero_mem(handshake_secret, hash_size);
@@ -396,14 +396,14 @@ boolean spdm_psk_master_secret_hkdf_expand(IN uint32 bash_hash_algo,
 		return result;
 	}
 
-	result = spdm_hmac_all(bash_hash_algo, m_my_zero_filled_buffer,
+	result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
 			       hash_size, salt1, hash_size, master_secret);
 	zero_mem(salt1, hash_size);
 	if (!result) {
 		return result;
 	}
 
-	result = spdm_hkdf_expand(bash_hash_algo, master_secret, hash_size,
+	result = spdm_hkdf_expand(base_hash_algo, master_secret, hash_size,
 				  info, info_size, out, out_size);
 	zero_mem(master_secret, hash_size);
 
