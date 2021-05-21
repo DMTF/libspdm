@@ -24,7 +24,7 @@ typedef struct {
 #pragma pack()
 
 uint32 m_hash_priority_table[] = {
-#if OPENSPDM_SHA256_SUPPORT == 1
+#if OPENSPDM_SHA512_SUPPORT == 1
 	SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
 #endif
 #if OPENSPDM_SHA384_SUPPORT == 1
@@ -99,7 +99,7 @@ uint32 m_key_schedule_priority_table[] = {
 };
 
 uint32 m_measurement_hash_priority_table[] = {
-#if OPENSPDM_SHA256_SUPPORT == 1
+#if OPENSPDM_SHA512_SUPPORT == 1
 	SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512,
 #endif
 #if OPENSPDM_SHA384_SUPPORT == 1
