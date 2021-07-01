@@ -1,9 +1,7 @@
-/** @file
-  Processor or Compiler specific defines and types for IA-32 architecture.
-
-Copyright (c) 2006 - 2018, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #ifndef __PROCESSOR_BIND_H__
@@ -218,10 +216,6 @@ typedef int32 intn;
 /// A value of native width with the highest bit set.
 ///
 #define MAX_BIT 0x80000000
-///
-/// A value of native width with the two highest bits set.
-///
-#define MAX_2_BITS 0xC0000000
 
 ///
 /// Maximum legal IA-32 address.
@@ -229,46 +223,8 @@ typedef int32 intn;
 #define MAX_ADDRESS 0xFFFFFFFF
 
 ///
-/// Maximum usable address at boot time
-///
-#define MAX_ALLOC_ADDRESS MAX_ADDRESS
-
-///
-/// Maximum legal IA-32 intn and uintn values.
+/// Maximum legal IA-32 intn values.
 ///
 #define MAX_INTN ((intn)0x7FFFFFFF)
-#define MAX_UINTN ((uintn)0xFFFFFFFF)
-
-///
-/// Minimum legal IA-32 intn value.
-///
-#define MIN_INTN (((intn)-2147483647) - 1)
-
-///
-/// The stack alignment required for IA-32.
-///
-#define CPU_STACK_ALIGNMENT sizeof(uintn)
-
-///
-/// Page allocation granularity for IA-32.
-///
-#define DEFAULT_PAGE_ALLOCATION_GRANULARITY (0x1000)
-#define RUNTIME_PAGE_ALLOCATION_GRANULARITY (0x1000)
-
-/**
-  Return the pointer to the first instruction of a function given a function pointer.
-  On IA-32 CPU architectures, these two pointer values are the same,
-  so the implementation of this macro is very simple.
-
-  @param  function_pointer   A pointer to a function.
-
-  @return The pointer to the first instruction of a function given a function pointer.
-
-**/
-#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
-
-#ifndef __USER_LABEL_PREFIX__
-#define __USER_LABEL_PREFIX__ _
-#endif
 
 #endif

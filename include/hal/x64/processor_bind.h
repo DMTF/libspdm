@@ -1,9 +1,7 @@
-/** @file
-  Processor or Compiler specific defines and types x64 (Intel 64, AMD64).
-
-  Copyright (c) 2006 - 2019, Intel Corporation. All rights reserved.<BR>
-  SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #ifndef __PROCESSOR_BIND_H__
@@ -34,33 +32,6 @@
 // pragma in that case (and doing so will cause other issues).
 //
 #pragma GCC visibility push(hidden)
-#endif
-
-#if defined(__INTEL_COMPILER)
-//
-// Disable ICC's remark #869: "parameter" was never referenced warning.
-// This is legal ANSI C code so we disable the remark that is turned on with -Wall
-//
-#pragma warning(disable : 869)
-
-//
-// Disable ICC's remark #1418: external function definition with no prior declaration.
-// This is legal ANSI C code so we disable the remark that is turned on with /W4
-//
-#pragma warning(disable : 1418)
-
-//
-// Disable ICC's remark #1419: external declaration in primary source file
-// This is legal ANSI C code so we disable the remark that is turned on with /W4
-//
-#pragma warning(disable : 1419)
-
-//
-// Disable ICC's remark #593: "Variable" was set but never used.
-// This is legal ANSI C code so we disable the remark that is turned on with /W4
-//
-#pragma warning(disable : 593)
-
 #endif
 
 #if defined(_MSC_EXTENSIONS)
@@ -232,10 +203,6 @@ typedef int64 intn;
 /// A value of native width with the highest bit set.
 ///
 #define MAX_BIT 0x8000000000000000ULL
-///
-/// A value of native width with the two highest bits set.
-///
-#define MAX_2_BITS 0xC000000000000000ULL
 
 ///
 /// Maximum legal x64 address
@@ -243,46 +210,8 @@ typedef int64 intn;
 #define MAX_ADDRESS 0xFFFFFFFFFFFFFFFFULL
 
 ///
-/// Maximum usable address at boot time
-///
-#define MAX_ALLOC_ADDRESS MAX_ADDRESS
-
-///
-/// Maximum legal x64 intn and uintn values.
+/// Maximum legal x64 intn values.
 ///
 #define MAX_INTN ((intn)0x7FFFFFFFFFFFFFFFULL)
-#define MAX_UINTN ((uintn)0xFFFFFFFFFFFFFFFFULL)
-
-///
-/// Minimum legal x64 intn value.
-///
-#define MIN_INTN (((intn)-9223372036854775807LL) - 1)
-
-///
-/// The stack alignment required for x64
-///
-#define CPU_STACK_ALIGNMENT 16
-
-///
-/// Page allocation granularity for x64
-///
-#define DEFAULT_PAGE_ALLOCATION_GRANULARITY (0x1000)
-#define RUNTIME_PAGE_ALLOCATION_GRANULARITY (0x1000)
-
-/**
-  Return the pointer to the first instruction of a function given a function pointer.
-  On x64 CPU architectures, these two pointer values are the same,
-  so the implementation of this macro is very simple.
-
-  @param  function_pointer   A pointer to a function.
-
-  @return The pointer to the first instruction of a function given a function pointer.
-
-**/
-#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
-
-#ifndef __USER_LABEL_PREFIX__
-#define __USER_LABEL_PREFIX__
-#endif
 
 #endif

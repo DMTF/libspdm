@@ -1,10 +1,7 @@
-/** @file
-  Processor or Compiler specific defines and types for RISC-V
-
-  Copyright (c) 2016 - 2020, Hewlett Packard Enterprise Development LP. All rights reserved.<BR>
-
-  SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #ifndef PROCESSOR_BIND_H__
@@ -82,10 +79,6 @@ typedef int64 intn __attribute__((aligned(8)));
 /// A value of native width with the highest bit set.
 ///
 #define MAX_BIT 0x8000000000000000ULL
-///
-/// A value of native width with the two highest bits set.
-///
-#define MAX_2_BITS 0xC000000000000000ULL
 
 ///
 /// Maximum legal RV64 address
@@ -93,41 +86,8 @@ typedef int64 intn __attribute__((aligned(8)));
 #define MAX_ADDRESS 0xFFFFFFFFFFFFFFFFULL
 
 ///
-/// Maximum usable address at boot time (48 bits using 4 KB pages in Supervisor mode)
-///
-#define MAX_ALLOC_ADDRESS 0xFFFFFFFFFFFFULL
-
-///
-/// Maximum legal RISC-V intn and uintn values.
+/// Maximum legal RISC-V intn values.
 ///
 #define MAX_INTN ((intn)0x7FFFFFFFFFFFFFFFULL)
-#define MAX_UINTN ((uintn)0xFFFFFFFFFFFFFFFFULL)
-
-///
-/// The stack alignment required for RISC-V
-///
-#define CPU_STACK_ALIGNMENT 16
-
-///
-/// Page allocation granularity for RISC-V
-///
-#define DEFAULT_PAGE_ALLOCATION_GRANULARITY (0x1000)
-#define RUNTIME_PAGE_ALLOCATION_GRANULARITY (0x1000)
-
-/**
-  Return the pointer to the first instruction of a function given a function pointer.
-  On x64 CPU architectures, these two pointer values are the same,
-  so the implementation of this macro is very simple.
-
-  @param  function_pointer   A pointer to a function.
-
-  @return The pointer to the first instruction of a function given a function pointer.
-
-**/
-#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
-
-#ifndef __USER_LABEL_PREFIX__
-#define __USER_LABEL_PREFIX__
-#endif
 
 #endif
