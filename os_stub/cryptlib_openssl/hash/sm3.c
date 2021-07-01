@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  SM3 digest Wrapper Implementations over openssl.
+  SM3 digest Wrapper Implementations.
 **/
 
 #include "internal_crypt_lib.h"

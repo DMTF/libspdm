@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  Diffie-Hellman Wrapper Implementation over OpenSSL.
+  Diffie-Hellman Wrapper Implementation over.
 
   RFC 7919 - Negotiated Finite Field Diffie-Hellman Ephemeral (FFDHE) Parameters
 **/

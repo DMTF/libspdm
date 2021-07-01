@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  HMAC-SHA256 KDF Wrapper Implementation over OpenSSL.
+  HMAC-SHA256 KDF Wrapper Implementation.
 
   RFC 5869: HMAC-based Extract-and-Expand key Derivation Function (HKDF)
 **/
@@ -17,7 +17,7 @@
 /**
   Derive HMAC-based Extract-and-Expand key Derivation Function (HKDF).
 
-  @param[in]   Md               message digest.
+  @param[in]   md               message digest.
   @param[in]   key              Pointer to the user-supplied key.
   @param[in]   key_size          key size in bytes.
   @param[in]   salt             Pointer to the salt(non-secret) value.
@@ -31,7 +31,7 @@
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_extract_and_expand(IN const EVP_MD *Md, IN const uint8 *key,
+boolean hkdf_md_extract_and_expand(IN const EVP_MD *md, IN const uint8 *key,
 				   IN uintn key_size, IN const uint8 *salt,
 				   IN uintn salt_size, IN const uint8 *info,
 				   IN uintn info_size, OUT uint8 *out,
@@ -53,7 +53,7 @@ boolean hkdf_md_extract_and_expand(IN const EVP_MD *Md, IN const uint8 *key,
 
 	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
 	if (result) {
-		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, Md) > 0;
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
 	}
 	if (result) {
 		result = EVP_PKEY_CTX_set1_hkdf_salt(pkey_ctx, salt,
@@ -79,7 +79,7 @@ boolean hkdf_md_extract_and_expand(IN const EVP_MD *Md, IN const uint8 *key,
 /**
   Derive HMAC-based Extract key Derivation Function (HKDF).
 
-  @param[in]   Md               message digest.
+  @param[in]   md               message digest.
   @param[in]   key              Pointer to the user-supplied key.
   @param[in]   key_size          key size in bytes.
   @param[in]   salt             Pointer to the salt(non-secret) value.
@@ -91,7 +91,7 @@ boolean hkdf_md_extract_and_expand(IN const EVP_MD *Md, IN const uint8 *key,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_extract(IN const EVP_MD *Md, IN const uint8 *key,
+boolean hkdf_md_extract(IN const EVP_MD *md, IN const uint8 *key,
 			IN uintn key_size, IN const uint8 *salt,
 			IN uintn salt_size, OUT uint8 *prk_out,
 			IN uintn prk_out_size)
@@ -112,7 +112,7 @@ boolean hkdf_md_extract(IN const EVP_MD *Md, IN const uint8 *key,
 
 	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
 	if (result) {
-		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, Md) > 0;
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
 	}
 	if (result) {
 		result =
@@ -139,7 +139,7 @@ boolean hkdf_md_extract(IN const EVP_MD *Md, IN const uint8 *key,
 /**
   Derive SHA256 HMAC-based Expand key Derivation Function (HKDF).
 
-  @param[in]   Md               message digest.
+  @param[in]   md               message digest.
   @param[in]   prk              Pointer to the user-supplied key.
   @param[in]   prk_size          key size in bytes.
   @param[in]   info             Pointer to the application specific info.
@@ -151,7 +151,7 @@ boolean hkdf_md_extract(IN const EVP_MD *Md, IN const uint8 *key,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_expand(IN const EVP_MD *Md, IN const uint8 *prk,
+boolean hkdf_md_expand(IN const EVP_MD *md, IN const uint8 *prk,
 		       IN uintn prk_size, IN const uint8 *info,
 		       IN uintn info_size, OUT uint8 *out, IN uintn out_size)
 {
@@ -170,7 +170,7 @@ boolean hkdf_md_expand(IN const EVP_MD *Md, IN const uint8 *prk,
 
 	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
 	if (result) {
-		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, Md) > 0;
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
 	}
 	if (result) {
 		result = EVP_PKEY_CTX_hkdf_mode(

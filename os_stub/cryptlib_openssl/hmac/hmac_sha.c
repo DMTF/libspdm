@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  HMAC-SHA256 Wrapper Implementation over OpenSSL.
+  HMAC-SHA256 Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"
@@ -46,7 +46,7 @@ void hmac_md_free(IN void *hmac_md_ctx)
 
   If hmac_md_ctx is NULL, then return FALSE.
 
-  @param[in]   Md                 message digest.
+  @param[in]   md                 message digest.
   @param[out]  hmac_md_ctx      Pointer to HMAC-MD context.
   @param[in]   key                Pointer to the user-supplied key.
   @param[in]   key_size            key size in bytes.
@@ -55,7 +55,7 @@ void hmac_md_free(IN void *hmac_md_ctx)
   @retval FALSE  The key is set unsuccessfully.
 
 **/
-boolean hmac_md_set_key(IN const EVP_MD *Md, OUT void *hmac_md_ctx,
+boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
 			IN const uint8 *key, IN uintn key_size)
 {
 	//
@@ -65,7 +65,7 @@ boolean hmac_md_set_key(IN const EVP_MD *Md, OUT void *hmac_md_ctx,
 		return FALSE;
 	}
 
-	if (HMAC_Init_ex((HMAC_CTX *)hmac_md_ctx, key, (uint32)key_size, Md,
+	if (HMAC_Init_ex((HMAC_CTX *)hmac_md_ctx, key, (uint32)key_size, md,
 			 NULL) != 1) {
 		return FALSE;
 	}
@@ -200,7 +200,7 @@ boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8 *hmac_value)
 
   If this interface is not supported, then return FALSE.
 
-  @param[in]   Md          message digest.
+  @param[in]   md          message digest.
   @param[in]   data        Pointer to the buffer containing the data to be digested.
   @param[in]   data_size    size of data buffer in bytes.
   @param[in]   key         Pointer to the user-supplied key.
@@ -213,7 +213,7 @@ boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8 *hmac_value)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_md_all(IN const EVP_MD *Md, IN const void *data,
+boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
 		    IN uintn data_size, IN const uint8 *key, IN uintn key_size,
 		    OUT uint8 *hmac_value)
 {
@@ -230,7 +230,7 @@ boolean hmac_md_all(IN const EVP_MD *Md, IN const void *data,
 	if (!ret_val) {
 		goto done;
 	}
-	ret_val = (boolean)HMAC_Init_ex(ctx, key, (uint32)key_size, Md, NULL);
+	ret_val = (boolean)HMAC_Init_ex(ctx, key, (uint32)key_size, md, NULL);
 	if (!ret_val) {
 		goto done;
 	}

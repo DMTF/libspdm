@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  Edwards-Curve Wrapper Implementation over OpenSSL.
+  Edwards-Curve Wrapper Implementation.
 
   RFC 8032 - Edwards-Curve Digital signature algorithm (EdDSA)
   FIPS 186-4 - Digital signature Standard (DSS)

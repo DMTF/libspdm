@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  SHA-384 and SHA-512 digest Wrapper Implementations over OpenSSL.
+  SHA-384 and SHA-512 digest Wrapper Implementations.
 **/
 
 #include "internal_crypt_lib.h"

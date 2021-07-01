@@ -5,8 +5,7 @@
 **/
 
 /** @file
-  C Run-Time Libraries (CRT) Wrapper Implementation for OpenSSL-based
-  Cryptographic Library.
+  C Run-Time Libraries (CRT) Wrapper Implementation.
 **/
 
 #include <stdio.h>

@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  X.509 Certificate Handler Wrapper Implementation over OpenSSL.
+  X.509 Certificate Handler Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"
