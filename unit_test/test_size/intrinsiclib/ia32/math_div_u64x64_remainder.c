@@ -1,28 +1,24 @@
-/** @file
-  64-bit Math Worker Function.
-  The 32-bit versions of C compiler generate calls to library routines
-  to handle 64-bit math. These functions use non-standard calling conventions.
-
-Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include <base.h>
 
-uint64 InternalMathDivRemU64x32(IN uint64 Dividend, IN uint32 Divisor,
-				OUT uint32 *Remainder)
+uint64 internal_math_div_rem_u64x32(IN uint64 dividend, IN uint32 divisor,
+				OUT uint32 *remainder)
 {
 	_asm {
-    mov     ecx, Divisor
-    mov     eax, dword ptr [Dividend + 4]
+    mov     ecx, divisor
+    mov     eax, dword ptr [dividend + 4]
     xor     edx, edx
     div     ecx
     push    eax
-    mov     eax, dword ptr [Dividend + 0]
+    mov     eax, dword ptr [dividend + 0]
     div     ecx
-    mov     ecx, Remainder
-    jecxz   RemainderNull // abandon remainder if Remainder == NULL
+    mov     ecx, remainder
+    jecxz   RemainderNull // abandon remainder if remainder == NULL
     mov     [ecx], edx
 RemainderNull:
     pop     edx
@@ -30,19 +26,19 @@ RemainderNull:
 }
 
 __declspec(naked) uint64
-	InternalMathDivRemU64x64(IN uint64 Dividend, IN uint64 Divisor,
-				 OUT uint64 *Remainder OPTIONAL)
+	internal_math_div_rem_u64x64(IN uint64 dividend, IN uint64 divisor,
+				 OUT uint64 *remainder OPTIONAL)
 {
   _asm {
     mov     ecx, [esp + 16]             ; ecx <- divisor[32..63]
     test    ecx, ecx
-    jnz     ___DivRemU64x64              ; call _@DivRemU64x64 if Divisor > 2^32
+    jnz     ___DivRemU64x64              ; call _@DivRemU64x64 if divisor > 2^32
     mov     ecx, [esp + 20]
     jecxz   __0
     and     [ecx + 4], 0      ; zero high dword of remainder
     mov     [esp + 16], ecx             ; set up stack frame to match DivRemU64x32
 __0:
-    jmp     InternalMathDivRemU64x32
+    jmp     internal_math_div_rem_u64x32
 
 ___DivRemU64x64:
     push    ebx
@@ -65,7 +61,7 @@ __1:
     mul     [esp + 24]        ; edx:eax <- quotient * divisor[0..31]
     imul    ecx, ebx                    ; ecx <- quotient * divisor[32..63]
     add     edx, ecx                    ; edx <- (quotient * divisor)[32..63]
-    mov     ecx, [esp + 32]   ; ecx <- addr for Remainder
+    mov     ecx, [esp + 32]   ; ecx <- addr for remainder
     jc      __TooLarge                   ; product > 2^64
     cmp     edi, edx                    ; compare high 32 bits
     ja      __Correct
@@ -74,7 +70,7 @@ __1:
     jae     __Correct                    ; product <= dividend
 __TooLarge:
     dec     ebx                         ; adjust quotient by -1
-    jecxz   __Return                     ; return if Remainder == NULL
+    jecxz   __Return                     ; return if remainder == NULL
     sub     eax, [esp + 24]
     sbb     edx, [esp + 28]   ; edx:eax <- (quotient - 1) * divisor
 __Correct:
@@ -93,10 +89,10 @@ __Return:
   }
 }
 
-uint64 DivU64x64Remainder(IN uint64 Dividend, IN uint64 Divisor,
-			  OUT uint64 *Remainder OPTIONAL)
+uint64 div_u64x64_remainder(IN uint64 dividend, IN uint64 divisor,
+			  OUT uint64 *remainder OPTIONAL)
 {
-	return InternalMathDivRemU64x64(Dividend, Divisor, Remainder);
+	return internal_math_div_rem_u64x64(dividend, divisor, remainder);
 }
 
 /*
@@ -106,12 +102,11 @@ uint64 DivU64x64Remainder(IN uint64 Dividend, IN uint64 Divisor,
 __declspec(naked) void __cdecl _aulldvrm(void)
 {
 	//
-	// Wrapper Implementation over EDKII DivU64x64Reminder() routine
 	//    uint64
-	//      //    DivU64x64Remainder (
-	//      IN      uint64     Dividend,
-	//      IN      uint64     Divisor,
-	//      OUT     uint64     *Remainder  OPTIONAL
+	//      //    div_u64x64_remainder (
+	//      IN      uint64     dividend,
+	//      IN      uint64     divisor,
+	//      OUT     uint64     *remainder  OPTIONAL
 	//      )
 	//
   _asm {
@@ -121,11 +116,11 @@ __declspec(naked) void __cdecl _aulldvrm(void)
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Divisor  --|
+    ;               |--  divisor  --|
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Dividend --|
+    ;               |--  dividend --|
     ;               |               |
     ;               |---------------|
     ;               |  ReturnAddr** |
@@ -139,7 +134,7 @@ __declspec(naked) void __cdecl _aulldvrm(void)
     push esp
 
     ;
-    ; Set up the local stack for Divisor parameter
+    ; Set up the local stack for divisor parameter
     ;
     mov  eax, [esp + 28]
     push eax
@@ -147,7 +142,7 @@ __declspec(naked) void __cdecl _aulldvrm(void)
     push eax
 
     ;
-    ; Set up the local stack for Dividend parameter
+    ; Set up the local stack for dividend parameter
     ;
     mov  eax, [esp + 28]
     push eax
@@ -155,9 +150,9 @@ __declspec(naked) void __cdecl _aulldvrm(void)
     push eax
 
     ;
-    ; Call native DivU64x64Remainder of BaseLib
+    ; Call native div_u64x64_remainder of BaseLib
     ;
-    call DivU64x64Remainder
+    call div_u64x64_remainder
 
     ;
     ; Put the Reminder in EBX:ECX as return value

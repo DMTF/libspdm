@@ -1,11 +1,13 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  Diffie-Hellman Wrapper Implementation over OpenSSL.
+  Diffie-Hellman Wrapper Implementation over.
 
   RFC 7919 - Negotiated Finite Field Diffie-Hellman Ephemeral (FFDHE) Parameters
-
-Copyright (c) 2010 - 2018, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
 **/
 
 #include "internal_crypt_lib.h"

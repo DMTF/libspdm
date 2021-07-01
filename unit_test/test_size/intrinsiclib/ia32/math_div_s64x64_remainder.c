@@ -1,37 +1,33 @@
-/** @file
-  64-bit Math Worker Function.
-  The 32-bit versions of C compiler generate calls to library routines
-  to handle 64-bit math. These functions use non-standard calling conventions.
-
-Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include <base.h>
 
-uint64 InternalMathDivRemU64x64(IN uint64 Dividend, IN uint64 Divisor,
-				OUT uint64 *Remainder OPTIONAL);
+uint64 internal_math_div_rem_u64x64(IN uint64 dividend, IN uint64 divisor,
+				OUT uint64 *remainder OPTIONAL);
 
-int64 InternalMathDivRemS64x64(IN int64 Dividend, IN int64 Divisor,
-			       OUT int64 *Remainder OPTIONAL)
+int64 internal_math_div_rem_s64x64(IN int64 dividend, IN int64 divisor,
+			       OUT int64 *remainder OPTIONAL)
 {
-	int64 Quot;
+	int64 quot;
 
-	Quot = InternalMathDivRemU64x64(
-		(uint64)(Dividend >= 0 ? Dividend : -Dividend),
-		(uint64)(Divisor >= 0 ? Divisor : -Divisor),
-		(uint64 *)Remainder);
-	if (Remainder != NULL && Dividend < 0) {
-		*Remainder = -*Remainder;
+	quot = internal_math_div_rem_u64x64(
+		(uint64)(dividend >= 0 ? dividend : -dividend),
+		(uint64)(divisor >= 0 ? divisor : -divisor),
+		(uint64 *)remainder);
+	if (remainder != NULL && dividend < 0) {
+		*remainder = -*remainder;
 	}
-	return (Dividend ^ Divisor) >= 0 ? Quot : -Quot;
+	return (dividend ^ divisor) >= 0 ? quot : -quot;
 }
 
-int64 DivS64x64Remainder(IN int64 Dividend, IN int64 Divisor,
-			 OUT int64 *Remainder OPTIONAL)
+int64 div_s64x64_remainder(IN int64 dividend, IN int64 divisor,
+			 OUT int64 *remainder OPTIONAL)
 {
-	return InternalMathDivRemS64x64(Dividend, Divisor, Remainder);
+	return internal_math_div_rem_s64x64(dividend, divisor, remainder);
 }
 
 /*
@@ -41,12 +37,11 @@ int64 DivS64x64Remainder(IN int64 Dividend, IN int64 Divisor,
 __declspec(naked) void __cdecl _alldvrm(void)
 {
 	//
-	// Wrapper Implementation over EDKII DivS64x64Reminder() routine
 	//    int64
-	//      //    DivS64x64Remainder (
-	//      IN      int64     Dividend,
-	//      IN      int64     Divisor,
-	//      OUT     int64     *Remainder  OPTIONAL
+	//      //    div_s64x64_remainder (
+	//      IN      int64     dividend,
+	//      IN      int64     divisor,
+	//      OUT     int64     *remainder  OPTIONAL
 	//      )
 	//
   _asm {
@@ -56,11 +51,11 @@ __declspec(naked) void __cdecl _alldvrm(void)
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Divisor  --|
+    ;               |--  divisor  --|
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Dividend --|
+    ;               |--  dividend --|
     ;               |               |
     ;               |---------------|
     ;               |  ReturnAddr** |
@@ -74,7 +69,7 @@ __declspec(naked) void __cdecl _alldvrm(void)
     push esp
 
     ;
-    ; Set up the local stack for Divisor parameter
+    ; Set up the local stack for divisor parameter
     ;
     mov  eax, [esp + 28]
     push eax
@@ -82,7 +77,7 @@ __declspec(naked) void __cdecl _alldvrm(void)
     push eax
 
     ;
-    ; Set up the local stack for Dividend parameter
+    ; Set up the local stack for dividend parameter
     ;
     mov  eax, [esp + 28]
     push eax
@@ -90,9 +85,9 @@ __declspec(naked) void __cdecl _alldvrm(void)
     push eax
 
     ;
-    ; Call native DivS64x64Remainder of BaseLib
+    ; Call native div_s64x64_remainder of BaseLib
     ;
-    call DivS64x64Remainder
+    call div_s64x64_remainder
 
     ;
     ; Put the Reminder in EBX:ECX as return value

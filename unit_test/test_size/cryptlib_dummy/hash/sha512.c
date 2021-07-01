@@ -1,9 +1,11 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  SHA-384 and SHA-512 digest Wrapper Implementations over OpenSSL.
-
-Copyright (c) 2014 - 2016, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+  SHA-384 and SHA-512 digest Wrapper Implementations.
 **/
 
 #include "internal_crypt_lib.h"

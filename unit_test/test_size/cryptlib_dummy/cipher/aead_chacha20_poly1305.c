@@ -1,12 +1,14 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  AEAD (ChaCha20Poly1305) Wrapper Implementation over OpenSSL.
+  AEAD (ChaCha20Poly1305) Wrapper Implementation.
 
   RFC 5116 - An Interface and Algorithms for Authenticated Encryption
   RFC 8439 - ChaCha20 and Poly1305
-
-Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
 **/
 
 #include "internal_crypt_lib.h"

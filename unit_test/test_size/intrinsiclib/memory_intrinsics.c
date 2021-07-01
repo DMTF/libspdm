@@ -1,10 +1,11 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  Intrinsic Memory Routines Wrapper Implementation for OpenSSL-based
-  Cryptographic Library.
-
-Copyright (c) 2010 - 2019, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+  Intrinsic Memory Routines Wrapper Implementation.
 **/
 
 #include <base.h>

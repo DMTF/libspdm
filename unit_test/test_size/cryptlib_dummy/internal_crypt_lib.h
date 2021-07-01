@@ -1,9 +1,11 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
   Internal include file for cryptlib.
-
-Copyright (c) 2010 - 2017, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
 **/
 
 #ifndef __INTERNAL_CRYPT_LIB_H__

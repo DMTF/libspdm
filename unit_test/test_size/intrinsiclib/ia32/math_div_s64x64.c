@@ -1,17 +1,13 @@
-/** @file
-  64-bit Math Worker Function.
-  The 32-bit versions of C compiler generate calls to library routines
-  to handle 64-bit math. These functions use non-standard calling conventions.
-
-Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include <base.h>
 
-int64 DivS64x64Remainder(IN int64 Dividend, IN int64 Divisor,
-			 OUT int64 *Remainder OPTIONAL);
+int64 div_s64x64_remainder(IN int64 dividend, IN int64 divisor,
+			 OUT int64 *remainder OPTIONAL);
 
 /*
  * Divides a 64-bit signed value with a 64-bit signed value and returns
@@ -20,12 +16,11 @@ int64 DivS64x64Remainder(IN int64 Dividend, IN int64 Divisor,
 __declspec(naked) void __cdecl _alldiv(void)
 {
 	//
-	// Wrapper Implementation over EDKII DivS64x64Reminder() routine
 	//    int64
-	//      //    DivS64x64Remainder (
-	//      IN      int64     Dividend,
-	//      IN      int64     Divisor,
-	//      OUT     int64     *Remainder  OPTIONAL
+	//      //    div_s64x64_remainder (
+	//      IN      int64     dividend,
+	//      IN      int64     divisor,
+	//      OUT     int64     *remainder  OPTIONAL
 	//      )
 	//
   _asm {
@@ -35,11 +30,11 @@ __declspec(naked) void __cdecl _alldiv(void)
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Divisor  --|
+    ;               |--  divisor  --|
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--  Dividend --|
+    ;               |--  dividend --|
     ;               |               |
     ;               |---------------|
     ;               |  ReturnAddr** |
@@ -53,7 +48,7 @@ __declspec(naked) void __cdecl _alldiv(void)
     push eax
 
     ;
-    ; Set up the local stack for Divisor parameter
+    ; Set up the local stack for divisor parameter
     ;
     mov  eax, [esp + 20]
     push eax
@@ -61,7 +56,7 @@ __declspec(naked) void __cdecl _alldiv(void)
     push eax
 
     ;
-    ; Set up the local stack for Dividend parameter
+    ; Set up the local stack for dividend parameter
     ;
     mov  eax, [esp + 20]
     push eax
@@ -69,9 +64,9 @@ __declspec(naked) void __cdecl _alldiv(void)
     push eax
 
     ;
-    ; Call native DivS64x64Remainder of BaseLib
+    ; Call native div_s64x64_remainder of BaseLib
     ;
-    call DivS64x64Remainder
+    call div_s64x64_remainder
 
     ;
     ; Adjust stack

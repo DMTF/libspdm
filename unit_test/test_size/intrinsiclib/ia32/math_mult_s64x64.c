@@ -1,42 +1,38 @@
-/** @file
-  64-bit Math Worker Function.
-  The 32-bit versions of C compiler generate calls to library routines
-  to handle 64-bit math. These functions use non-standard calling conventions.
-
-Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include <base.h>
 
-uint64 InternalMathMultU64x64(IN uint64 Multiplicand, IN uint64 Multiplier)
+uint64 internal_math_mult_u64x64(IN uint64 multiplicand, IN uint64 multiplier)
 {
 	_asm {
-    mov     ebx, dword ptr [Multiplicand + 0]
-    mov     edx, dword ptr [Multiplier + 0]
+    mov     ebx, dword ptr [multiplicand + 0]
+    mov     edx, dword ptr [multiplier + 0]
     mov     ecx, ebx
     mov     eax, edx
-    imul    ebx, dword ptr [Multiplier + 4]
-    imul    edx, dword ptr [Multiplicand + 4]
+    imul    ebx, dword ptr [multiplier + 4]
+    imul    edx, dword ptr [multiplicand + 4]
     add     ebx, edx
     mul     ecx
     add     edx, ebx
 	}
 }
 
-uint64 MultU64x64(IN uint64 Multiplicand, IN uint64 Multiplier)
+uint64 mult_u64x64(IN uint64 multiplicand, IN uint64 multiplier)
 {
 	uint64 result;
 
-	result = InternalMathMultU64x64(Multiplicand, Multiplier);
+	result = internal_math_mult_u64x64(multiplicand, multiplier);
 
 	return result;
 }
 
-int64 MultS64x64(IN int64 Multiplicand, IN int64 Multiplier)
+int64 mult_s64x64(IN int64 multiplicand, IN int64 multiplier)
 {
-	return (int64)MultU64x64((uint64)Multiplicand, (uint64)Multiplier);
+	return (int64)mult_u64x64((uint64)multiplicand, (uint64)multiplier);
 }
 
 /*
@@ -46,11 +42,10 @@ int64 MultS64x64(IN int64 Multiplicand, IN int64 Multiplier)
 __declspec(naked) void __cdecl _allmul(void)
 {
 	//
-	// Wrapper Implementation over EDKII MultS64x64() routine
 	//    int64
-	//      //    MultS64x64 (
-	//      IN      int64      Multiplicand,
-	//      IN      int64      Multiplier
+	//      //    mult_s64x64 (
+	//      IN      int64      multiplicand,
+	//      IN      int64      multiplier
 	//      )
 	//
   _asm {
@@ -59,11 +54,11 @@ __declspec(naked) void __cdecl _allmul(void)
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--Multiplier --|
+    ;               |--multiplier --|
     ;               |               |
     ;               |---------------|
     ;               |               |
-    ;               |--Multiplicand-|
+    ;               |--multiplicand-|
     ;               |               |
     ;               |---------------|
     ;               |  ReturnAddr** |
@@ -71,7 +66,7 @@ __declspec(naked) void __cdecl _allmul(void)
     ;
 
     ;
-    ; Set up the local stack for Multiplicand parameter
+    ; Set up the local stack for multiplicand parameter
     ;
     mov  eax, [esp + 16]
     push eax
@@ -79,7 +74,7 @@ __declspec(naked) void __cdecl _allmul(void)
     push eax
 
     ;
-    ; Set up the local stack for Multiplier parameter
+    ; Set up the local stack for multiplier parameter
     ;
     mov  eax, [esp + 16]
     push eax
@@ -89,7 +84,7 @@ __declspec(naked) void __cdecl _allmul(void)
     ;
     ; Call native MulS64x64 of BaseLib
     ;
-    call MultS64x64
+    call mult_s64x64
 
     ;
     ; Adjust stack

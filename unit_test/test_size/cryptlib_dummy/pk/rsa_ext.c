@@ -1,5 +1,11 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  RSA Asymmetric Cipher Wrapper Implementation over OpenSSL.
+  RSA Asymmetric Cipher Wrapper Implementation.
 
   This file implements following APIs which provide more capabilities for RSA:
   1) rsa_get_key
@@ -8,10 +14,6 @@
   4) rsa_pkcs1_sign
 
   RFC 8017 - PKCS #1: RSA Cryptography Specifications version 2.2
-
-Copyright (c) 2009 - 2018, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
 **/
 
 #include "internal_crypt_lib.h"
