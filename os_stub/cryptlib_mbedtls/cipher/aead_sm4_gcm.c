@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  AEAD (SM4-GCM) Wrapper Implementation over OpenSSL.
+  AEAD (SM4-GCM) Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"

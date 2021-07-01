@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  Shang-Mi2 Asymmetric Wrapper Implementation over OpenSSL.
+  Shang-Mi2 Asymmetric Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"

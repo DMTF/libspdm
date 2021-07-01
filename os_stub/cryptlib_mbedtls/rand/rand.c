@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  Pseudorandom Number generator Wrapper Implementation over OpenSSL.
+  Pseudorandom Number generator Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"

@@ -1,10 +1,11 @@
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
+
 /** @file
-  Base Memory Allocation Routines Wrapper for Crypto library over OpenSSL
-  during PEI & DXE phases.
-
-Copyright (c) 2009 - 2017, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+  Base Memory Allocation Routines Wrapper.
 **/
 
 #include <base.h>

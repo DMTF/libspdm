@@ -5,8 +5,7 @@
 **/
 
 /** @file
-  SHA3-256/384/512 and Shake-256 digest Wrapper
-  Implementation over mbedtls.
+  SHA3-256/384/512 and Shake-256 digest Wrapper Implementation
 **/
 
 #include "internal_crypt_lib.h"

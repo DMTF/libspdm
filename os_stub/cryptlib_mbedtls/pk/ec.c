@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  Elliptic Curve Wrapper Implementation over OpenSSL.
+  Elliptic Curve Wrapper Implementation.
 
   RFC 8422 - Elliptic Curve Cryptography (ECC) Cipher Suites
   FIPS 186-4 - Digital signature Standard (DSS)

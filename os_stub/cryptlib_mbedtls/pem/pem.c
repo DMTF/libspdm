@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  PEM (Privacy Enhanced Mail) format Handler Wrapper Implementation over OpenSSL.
+  PEM (Privacy Enhanced Mail) format Handler Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"

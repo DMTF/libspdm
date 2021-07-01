@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  AEAD (ChaCha20Poly1305) Wrapper Implementation over OpenSSL.
+  AEAD (ChaCha20Poly1305) Wrapper Implementation.
 
   RFC 5116 - An Interface and Algorithms for Authenticated Encryption
   RFC 8439 - ChaCha20 and Poly1305

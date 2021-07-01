@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  RSA Asymmetric Cipher Wrapper Implementation over OpenSSL.
+  RSA Asymmetric Cipher Wrapper Implementation.
 
   This file implements following APIs which provide more capabilities for RSA:
   1) rsa_get_key

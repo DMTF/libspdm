@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  HMAC-SHA256 Wrapper Implementation over OpenSSL.
+  HMAC-SHA256 Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"
