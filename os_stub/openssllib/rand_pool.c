@@ -1,10 +1,7 @@
-/** @file
-  OpenSSL_1_1_1b doesn't implement rand_pool_* functions for UEFI.
-  The file implement these functions.
-
-  Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-  SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include "crypto/rand.h"
@@ -25,7 +22,7 @@
   @retval FALSE       Failed to request random bytes.
 
 **/
-static boolean RandGetBytes(IN uintn length, OUT uint8 *RandBuffer)
+static boolean rand_get_bytes(IN uintn length, OUT uint8 *RandBuffer)
 {
 	boolean ret;
 	uint64 temp_rand;
@@ -79,7 +76,7 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
 		buffer = rand_pool_add_begin(pool, Bytes_needed);
 
 		if (buffer != NULL) {
-			ret = RandGetBytes(Bytes_needed, buffer);
+			ret = rand_get_bytes(Bytes_needed, buffer);
 			if (FALSE == ret) {
 				rand_pool_add_end(pool, 0, 0);
 			} else {
@@ -100,7 +97,7 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
 int rand_pool_add_nonce_data(RAND_POOL *pool)
 {
 	uint8 data[16];
-	RandGetBytes(sizeof(data), data);
+	rand_get_bytes(sizeof(data), data);
 
 	return rand_pool_add(pool, (unsigned char *)&data, sizeof(data), 0);
 }
@@ -113,7 +110,7 @@ int rand_pool_add_nonce_data(RAND_POOL *pool)
 int rand_pool_add_additional_data(RAND_POOL *pool)
 {
 	uint8 data[16];
-	RandGetBytes(sizeof(data), data);
+	rand_get_bytes(sizeof(data), data);
 
 	return rand_pool_add(pool, (unsigned char *)&data, sizeof(data), 0);
 }

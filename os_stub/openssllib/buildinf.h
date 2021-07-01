@@ -1,4 +1,10 @@
-#define PLATFORM "UEFI"
-#define DATE "Fri Dec 22 01:23:45 PDT 2017"
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+**/
 
-const char *compiler_flags = "compiler: information not available from edk2";
+#define PLATFORM "LIBSPDM"
+#define DATE "Thu 07/01/2021"
+
+const char *compiler_flags = "compiler: information not available from libspdm";

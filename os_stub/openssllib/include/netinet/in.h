@@ -1,9 +1,7 @@
-/** @file
-  Include file to support building third-party standard C / BSD sockets code.
-
-  Copyright (C) 2019, Red Hat, Inc.
-
-  SPDX-License-Identifier: BSD-2-Clause-Patent
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #include <crt_support.h>
