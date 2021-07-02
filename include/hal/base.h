@@ -1,15 +1,7 @@
-/** @file
-  Root include file for Mde Package Base type modules
-
-  This is the include file for any module of type base. Base modules only use
-  types defined via this include file and can be ported easily to any
-  environment. There are a set of base libraries in the Mde Package that can
-  be used to implement base modules.
-
-Copyright (c) 2006 - 2018, Intel Corporation. All rights reserved.<BR>
-Portions copyright (c) 2008 - 2009, Apple Inc. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+/**
+    Copyright Notice:
+    Copyright 2021 DMTF. All rights reserved.
+    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
 #ifndef __BASE_H__
@@ -819,18 +811,6 @@ STATIC_ASSERT(
 
 **/
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
-
-/**
-  Return the absolute value of a signed operand.
-
-  This macro returns the absolute value of the signed operand specified by a.
-
-  @param   a        The signed operand.
-
-  @return  The absolute value of the signed operand.
-
-**/
-#define ABS(a) (((a) < 0) ? (-(a)) : (a))
 
 //
 // status codes common to all execution phases
