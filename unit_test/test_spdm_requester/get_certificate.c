@@ -48,6 +48,8 @@ return_status spdm_requester_get_certificate_test_send_message(
 		return RETURN_SUCCESS;
 	case 0xF:
 		return RETURN_SUCCESS;
+	case 0x10:
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -846,6 +848,35 @@ return_status spdm_requester_get_certificate_test_receive_message(
 	}
 		return RETURN_SUCCESS;
 
+  case 0x10:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t    spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param2 = 0;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -1599,6 +1630,65 @@ void test_spdm_requester_get_certificate_case15(void **state)
 	free(data);
 }
 
+/**
+  Test 16: receiving an unexpected ERROR message from the responder.
+  There are tests for all named codes, including some reserved ones
+  (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
+  However, for having specific test cases, it is excluded from this case:
+  Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
+  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_certificate_case16(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uintn                cert_chain_size;
+  uint8                cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+  void                 *data;
+  uintn                data_size;
+  void                 *hash;
+  uintn                hash_size;
+  uint16                error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0x10;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
+  spdm_context->local_context.peer_root_cert_hash_provision_size = hash_size;
+  spdm_context->local_context.peer_root_cert_hash_provision = hash;
+  spdm_context->local_context.peer_cert_chain_provision = NULL;
+  spdm_context->local_context.peer_cert_chain_provision_size = 0;
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->transcript.message_b.buffer_size = 0;
+
+    cert_chain_size = sizeof(cert_chain);
+    zero_mem (cert_chain, sizeof(cert_chain));
+    status = spdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
+    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    // assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+    ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+  
+  free(data);
+}
+
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1639,6 +1729,8 @@ int spdm_requester_get_certificate_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_certificate_case14),
 		// Sucessful response: get a long certificate chain
 		cmocka_unit_test(test_spdm_requester_get_certificate_case15),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_get_certificate_case16),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);

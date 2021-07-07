@@ -148,6 +148,15 @@ return_status spdm_requester_key_exchange_test_send_message(
 		}
 	}
 		return RETURN_SUCCESS;
+	case 0xA:
+		m_local_buffer_size = 0;
+		message_size = spdm_test_get_key_exchange_request_size(
+			spdm_context, (uint8 *)request + header_size,
+			request_size - header_size);
+		copy_mem(m_local_buffer, (uint8 *)request + header_size,
+			 message_size);
+		m_local_buffer_size += message_size;
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -917,6 +926,35 @@ return_status spdm_requester_key_exchange_test_receive_message(
 	}
 		return RETURN_SUCCESS;
 
+  case 0xA:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t    spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param2 = 0;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -1396,6 +1434,60 @@ void test_spdm_requester_key_exchange_case9(void **state)
 	free(data);
 }
 
+void test_spdm_requester_key_exchange_case10(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint32               session_id;
+  uint8                heartbeat_period;
+  uint8                measurement_hash[MAX_HASH_SIZE];
+  uint8                slot_id_param;
+  void                 *data;
+  uintn                data_size;
+  void                 *hash;
+  uintn                hash_size;
+  uint16               error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0xA;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo; 
+  spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
+  spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+  copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->transcript.message_a.buffer_size = 0;
+
+    heartbeat_period = 0;
+    zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = spdm_send_receive_key_exchange (spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+               0, &session_id, &heartbeat_period, &slot_id_param, measurement_hash);
+    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+
+  free(data);
+}
+
 spdm_test_context_t m_spdm_requester_key_exchange_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1424,6 +1516,8 @@ int spdm_requester_key_exchange_test_main(void)
 		cmocka_unit_test(test_spdm_requester_key_exchange_case8),
 		// SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
 		cmocka_unit_test(test_spdm_requester_key_exchange_case9),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_key_exchange_case10),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_key_exchange_test_context);

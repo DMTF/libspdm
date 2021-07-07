@@ -59,6 +59,8 @@ return_status spdm_requester_get_digests_test_send_message(
 		return RETURN_SUCCESS;
 	case 0x15:
 		return RETURN_SUCCESS;
+	case 0x16:
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -595,6 +597,35 @@ return_status spdm_requester_get_digests_test_receive_message(
 						   response);
 	}
 		return RETURN_SUCCESS;
+
+  case 0x16:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t    spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param2 = 0;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
 
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -1392,6 +1423,56 @@ void test_spdm_requester_get_digests_case21(void **state)
 			 sizeof(spdm_get_digest_request_t));
 }
 
+/**
+  Test 22: receiving an unexpected ERROR message from the responder.
+  There are tests for all named codes, including some reserved ones
+  (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
+  However, for having specific test cases, it is excluded from this case:
+  Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
+  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_digests_case22(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint8                 slot_mask;
+  uint8                 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+  uint16                error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0x16;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->local_context.peer_cert_chain_provision = m_local_certificate_chain;
+  spdm_context->local_context.peer_cert_chain_provision_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8)(0xFF));
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->transcript.message_b.buffer_size = 0;
+    
+    zero_mem (total_digest_buffer, sizeof(total_digest_buffer));
+    status = spdm_get_digest (spdm_context, &slot_mask, &total_digest_buffer);
+    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    // assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+    ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+}
+
 spdm_test_context_t m_spdm_requester_get_digests_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1444,6 +1525,8 @@ int spdm_requester_get_digests_test_main(void)
 		//cmocka_unit_test(test_spdm_requester_get_digests_case20),
 		// size of response > Max size of SPDM DIGESTS response
 		//cmocka_unit_test(test_spdm_requester_get_digests_case21),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_get_digests_case22),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_get_digests_test_context);

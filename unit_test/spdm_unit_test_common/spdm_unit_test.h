@@ -35,6 +35,23 @@ extern uint16 m_use_dhe_algo;
 extern uint16 m_use_aead_algo;
 extern uint16 m_use_key_schedule_algo;
 
+///
+/// SPDM reserved error code
+/// They are for unit test only. 
+/// Please double check if they are still reserved when a new SPDM spec is published.
+///
+#define SPDM_ERROR_CODE_RESERVED_00             0x00
+#define SPDM_ERROR_CODE_RESERVED_0D             0x0D
+#define SPDM_ERROR_CODE_RESERVED_3F             0x3F
+#define SPDM_ERROR_CODE_RESERVED_FD             0xFD
+
+#define ASSERT_INT_EQUAL_CASE(value, expected, case) {\
+      if(value != expected) {\
+        fprintf(stderr, "[ERRCODE:%02x] ", case);\
+      } \
+      assert_int_equal(value, expected);\
+    };
+
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
 typedef struct {
