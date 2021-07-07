@@ -83,6 +83,11 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 		}
 	}
 		return RETURN_SUCCESS;
+	case 0xA:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -496,6 +501,35 @@ return_status spdm_requester_finish_test_receive_message(
 		}
 	}
 		return RETURN_SUCCESS;
+
+  case 0xA:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t    spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param2 = 0;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
 
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -1146,6 +1180,72 @@ void test_spdm_requester_finish_case9(void **state)
 	free(data);
 }
 
+void test_spdm_requester_finish_case10(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint32               session_id;
+  uint8                req_slot_id_param;
+  void                 *data;
+  uintn                data_size;
+  void                 *hash;
+  uintn                hash_size;
+  spdm_session_info_t    *session_info;
+  uint16               error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0xA;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo; 
+  spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
+  spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+  copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+
+  session_id = 0xFFFFFFFF;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+  req_slot_id_param = 0;
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->transcript.message_a.buffer_size = 0;
+
+    session_info = &spdm_context->session_info[0];
+    spdm_session_info_init (spdm_context, session_info, session_id, FALSE);
+    hash_size = spdm_get_hash_size (m_use_hash_algo);
+    set_mem (m_dummy_buffer, hash_size, (uint8)(0xFF));
+    spdm_secured_message_set_response_finished_key (session_info->secured_message_context, m_dummy_buffer, hash_size);
+    spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_HANDSHAKING);
+
+    status = spdm_send_receive_finish (spdm_context, session_id, req_slot_id_param); 
+    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+
+  free(data);
+}
+
 spdm_test_context_t m_spdm_requester_finish_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1174,6 +1274,8 @@ int spdm_requester_finish_test_main(void)
 		cmocka_unit_test(test_spdm_requester_finish_case8),
 		// SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
 		cmocka_unit_test(test_spdm_requester_finish_case9),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_finish_case10),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_finish_test_context);

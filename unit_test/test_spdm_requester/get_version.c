@@ -48,6 +48,10 @@ return_status spdm_requester_get_version_test_send_message(
 		return RETURN_SUCCESS;
 	case 0xC:
 		return RETURN_SUCCESS;
+	case 0xD:
+		return RETURN_SUCCESS;
+	case 0xE:
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -346,6 +350,34 @@ return_status spdm_requester_get_version_test_receive_message(
 	}
 		return RETURN_SUCCESS;
 
+  case 0xE:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t                        spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -605,6 +637,43 @@ void test_spdm_requester_get_version_case13(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
+/**
+  Test 14: receiving an unexpected ERROR message from the responder.
+  There are tests for all named codes, including some reserved ones
+  (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
+  However, for having specific test cases, it is excluded from this case:
+  Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
+  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_version_case14(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint16                error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0xE;
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    // no additional state control is necessary as a new GET_VERSION resets the state
+    status = spdm_get_version (spdm_context);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+}
+
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -636,6 +705,8 @@ int spdm_requester_get_version_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_version_case11),
 		cmocka_unit_test(test_spdm_requester_get_version_case12),
 		cmocka_unit_test(test_spdm_requester_get_version_case13),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_get_version_case14),
 	};
 
 	setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);

@@ -355,6 +355,15 @@ return_status spdm_requester_get_measurements_test_send_message(
 			 message_size);
 		m_local_buffer_size += message_size;
 		return RETURN_SUCCESS;
+	case 0x21:
+		m_local_buffer_size = 0;
+		message_size = spdm_test_get_measurement_request_size(
+			spdm_context, (uint8 *)request + header_size,
+			request_size - header_size);
+		copy_mem(m_local_buffer, (uint8 *)request + header_size,
+			 message_size);
+		m_local_buffer_size += message_size;
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -2334,6 +2343,35 @@ return_status spdm_requester_get_measurements_test_receive_message(
 	}
 		return RETURN_SUCCESS;
 
+  case 0x21:
+  {
+    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+
+    spdm_error_response_t    spdm_response;
+
+    if(error_code <= 0xff) {
+      zero_mem (&spdm_response, sizeof(spdm_response));
+      spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+      spdm_response.header.request_response_code = SPDM_ERROR;
+      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param2 = 0;
+
+      spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    }
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+    return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -4199,6 +4237,68 @@ void test_spdm_requester_get_measurements_case32(void **state)
 	free(data);
 }
 
+/**
+  Test 33: receiving an unexpected ERROR message from the responder.
+  There are tests for all named codes, including some reserved ones
+  (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
+  However, for having specific test cases, it is excluded from this case:
+  Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
+  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_measurements_case33(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint8                number_of_block;
+  uint32               measurement_record_length;
+  uint8                measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+  uint8                request_attribute;
+  void                 *data;
+  uintn                data_size;
+  void                 *hash;
+  uintn                hash_size;
+  uint16               error_code;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0x21;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
+  spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
+  spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+  spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+  copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+  request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
+
+  error_code = SPDM_ERROR_CODE_RESERVED_00;
+  while(error_code <= 0xff) {
+    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->transcript.message_m.buffer_size = 0;
+
+    measurement_record_length = sizeof(measurement_record);
+    status = spdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
+    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
+    ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+    ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0, error_code);
+
+    error_code++;
+    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+      error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+      error_code = SPDM_ERROR_CODE_RESERVED_3F;
+    }
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+      error_code = SPDM_ERROR_CODE_RESERVED_FD;
+    }
+  }
+
+  free(data);
+}
+
 spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -4273,6 +4373,8 @@ int spdm_requester_get_measurements_test_main(void)
 		// cmocka_unit_test(test_spdm_requester_get_measurements_case31), // test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
 		// Successful response to get all measurements without signature
 		cmocka_unit_test(test_spdm_requester_get_measurements_case32),
+		// Unexpected errors
+		cmocka_unit_test(test_spdm_requester_get_measurements_case33),
 	};
 
 	setup_spdm_test_context(
