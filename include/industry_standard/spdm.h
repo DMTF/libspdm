@@ -201,6 +201,11 @@ typedef struct {
 	//spdm_negotiate_algorithms_struct_table_t  alg_struct[param1];
 } spdm_negotiate_algorithms_request_t;
 
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_10 0x40
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_11 0x80
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_10 0x08
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11 0x14
+
 typedef struct {
 	uint8 alg_type;
 	uint8 alg_count; // BIT[0:3]=ext_alg_count, BIT[4:7]=fixed_alg_byte_count
