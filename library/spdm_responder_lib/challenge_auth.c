@@ -71,6 +71,11 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 	}
+	if (!spdm_is_capabilities_flag_supported(spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
+		spdm_request->header.param2 > 0) {
+		return spdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHALLENGE, response_size, response);
+	}
+
 	spdm_request_size = request_size;
 	//
 	// Cache
