@@ -780,6 +780,56 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   free(data1);
 }
 
+/**
+  Test 14: the responder does not have measurements capabilities, but
+  receives a correct CHALLENGE message from the requester with
+  no opaque data, all measurement hashes, and slot number 0.
+  Expected behavior: the responder refuses the CHALLENGE message and produces an
+  ERROR message indicating the UnsupportedRequest.
+**/
+void test_spdm_responder_challenge_auth_case14(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uintn                response_size;
+  uint8                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  spdm_challenge_auth_response_t *spdm_response;
+  void                 *data1;
+  uintn                data_size1;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0xE;
+  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->local_context.capability.flags = 0;
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+  // spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //no measurement capability
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+  spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
+  spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
+  spdm_context->connection_info.version.spdm_version_count = 1;
+  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
+  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
+  spdm_context->local_context.local_cert_chain_provision[0] = data1;
+  spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+  spdm_context->local_context.slot_count = 1;
+  spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+  spdm_context->transcript.message_c.buffer_size = 0;
+
+  response_size = sizeof(response);
+  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size, &m_spdm_challenge_request6, &response_size, response);
+  assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal (response_size, sizeof(spdm_error_response_t));
+  spdm_response = (void *)response;
+  assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+  assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+  assert_int_equal (spdm_response->header.param2, SPDM_CHALLENGE);
+  free(data1);
+}
+
 spdm_test_context_t m_spdm_responder_challenge_auth_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
@@ -807,6 +857,7 @@ int spdm_responder_challenge_auth_test_main(void)
 		cmocka_unit_test(test_spdm_responder_challenge_auth_case11),
 		cmocka_unit_test(test_spdm_responder_challenge_auth_case12),
 		cmocka_unit_test(test_spdm_responder_challenge_auth_case13),
+		cmocka_unit_test(test_spdm_responder_challenge_auth_case14),
 	};
 
 	setup_spdm_test_context(&m_spdm_responder_challenge_auth_test_context);
