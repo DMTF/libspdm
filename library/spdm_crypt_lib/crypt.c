@@ -1385,26 +1385,6 @@ uint32 spdm_get_aead_tag_size(IN uint16 aead_cipher_suite)
 }
 
 /**
-  This function returns the SPDM AEAD algorithm block size.
-
-  @param  aead_cipher_suite              SPDM aead_cipher_suite
-
-  @return SPDM AEAD algorithm block size.
-**/
-uint32 spdm_get_aead_block_size(IN uint16 aead_cipher_suite)
-{
-	switch (aead_cipher_suite) {
-	case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
-		return 16;
-	case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
-		return 16;
-	case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
-		return 16;
-	}
-	return 0;
-}
-
-/**
   Return AEAD encryption function, based upon the negotiated AEAD algorithm.
 
   @param  aead_cipher_suite              SPDM aead_cipher_suite

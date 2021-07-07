@@ -651,15 +651,6 @@ uint32 spdm_get_aead_iv_size(IN uint16 aead_cipher_suite);
 uint32 spdm_get_aead_tag_size(IN uint16 aead_cipher_suite);
 
 /**
-  This function returns the SPDM AEAD algorithm block size.
-
-  @param  aead_cipher_suite              SPDM aead_cipher_suite
-
-  @return SPDM AEAD algorithm block size.
-**/
-uint32 spdm_get_aead_block_size(IN uint16 aead_cipher_suite);
-
-/**
   Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD),
   based upon negotiated AEAD algorithm.
 

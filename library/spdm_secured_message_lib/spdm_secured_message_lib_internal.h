@@ -50,7 +50,6 @@ typedef struct {
 	uintn dhe_key_size;
 	uintn aead_key_size;
 	uintn aead_iv_size;
-	uintn aead_block_size;
 	uintn aead_tag_size;
 	boolean use_psk;
 	spdm_session_state_t session_state;

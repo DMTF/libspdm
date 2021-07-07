@@ -127,8 +127,6 @@ void spdm_secured_message_set_algorithms(IN void *spdm_secured_message_context,
 		secured_message_context->aead_cipher_suite);
 	secured_message_context->aead_iv_size = spdm_get_aead_iv_size(
 		secured_message_context->aead_cipher_suite);
-	secured_message_context->aead_block_size = spdm_get_aead_block_size(
-		secured_message_context->aead_cipher_suite);
 	secured_message_context->aead_tag_size = spdm_get_aead_tag_size(
 		secured_message_context->aead_cipher_suite);
 }
