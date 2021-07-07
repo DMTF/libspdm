@@ -175,9 +175,11 @@ return_status spdm_get_response_algorithms(IN void *context,
 	uint32 algo_size;
 	uint8 fixed_alg_size;
 	uint8 ext_alg_count;
+	uint16 ext_alg_total_count;
 
 	spdm_context = context;
 	spdm_request = request;
+	ext_alg_total_count = 0;
 
 	if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
 		return spdm_responder_handle_response_state(
@@ -235,6 +237,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 			}
 			fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
 			ext_alg_count = struct_table->alg_count & 0xF;
+			ext_alg_total_count += ext_alg_count;
 			if (fixed_alg_size != 2) {
 				spdm_generate_error_response(
 					spdm_context,
@@ -256,6 +259,23 @@ return_status spdm_get_response_algorithms(IN void *context,
 				(void *)((uintn)struct_table +
 					 sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
 					 sizeof(uint32) * ext_alg_count);
+		}
+	}
+	ext_alg_total_count += (spdm_request->ext_asym_count + spdm_request->ext_hash_count);
+	// Algorithm count check and message size check
+	if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+		if (ext_alg_total_count > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11) {
+			return RETURN_DEVICE_ERROR;
+		}
+		if (spdm_request->length > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_11) {
+			return RETURN_DEVICE_ERROR;
+		}
+	} else {
+		if (ext_alg_total_count > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_10) {
+			return RETURN_DEVICE_ERROR;
+		}
+		if (spdm_request->length > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_10) {
+			return RETURN_DEVICE_ERROR;
 		}
 	}
 	request_size = (uintn)struct_table - (uintn)spdm_request;

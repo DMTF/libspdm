@@ -33,8 +33,8 @@ typedef struct {
 	uint8 ext_asym_sel_count;
 	uint8 ext_hash_sel_count;
 	uint16 reserved3;
-	uint32 ext_asym_sel[8];
-	uint32 ext_hash_sel[8];
+	uint32 ext_asym_sel;
+	uint32 ext_hash_sel;
 	spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
 } spdm_algorithms_response_max_t;
 #pragma pack()
@@ -149,6 +149,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	if (spdm_response_size > sizeof(spdm_response)) {
 		return RETURN_DEVICE_ERROR;
 	}
+	if (spdm_response.header.spdm_version != spdm_request.header.spdm_version){
+		return RETURN_DEVICE_ERROR;
+	}
 	if (spdm_response.ext_asym_sel_count > 1) {
 		return RETURN_DEVICE_ERROR;
 	}
@@ -241,12 +244,18 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	if (algo_size == 0) {
 		return RETURN_SECURITY_VIOLATION;
 	}
+	if ((spdm_context->connection_info.algorithm.base_hash_algo & spdm_context->local_context.algorithm.base_hash_algo) == 0) {
+		return RETURN_SECURITY_VIOLATION;
+	}
 	if (spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE, 0,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
 		algo_size = spdm_get_asym_signature_size(
 			spdm_context->connection_info.algorithm.base_asym_algo);
 		if (algo_size == 0) {
+			return RETURN_SECURITY_VIOLATION;
+		}
+		if ((spdm_context->connection_info.algorithm.base_asym_algo & spdm_context->local_context.algorithm.base_asym_algo) == 0) {
 			return RETURN_SECURITY_VIOLATION;
 		}
 	}
@@ -299,6 +308,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 			if (algo_size == 0) {
 				return RETURN_SECURITY_VIOLATION;
 			}
+			if ((spdm_context->connection_info.algorithm.dhe_named_group & spdm_context->local_context.algorithm.dhe_named_group) == 0) {
+				return RETURN_SECURITY_VIOLATION;
+			}
 		}
 		if (spdm_is_capabilities_flag_supported(
 			    spdm_context, TRUE,
@@ -314,6 +326,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 			if (algo_size == 0) {
 				return RETURN_SECURITY_VIOLATION;
 			}
+			if ((spdm_context->connection_info.algorithm.aead_cipher_suite & spdm_context->local_context.algorithm.aead_cipher_suite) == 0) {
+				return RETURN_SECURITY_VIOLATION;
+			}
 		}
 		if (spdm_is_capabilities_flag_supported(
 			    spdm_context, TRUE,
@@ -323,6 +338,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 				spdm_context->connection_info.algorithm
 					.req_base_asym_alg);
 			if (algo_size == 0) {
+				return RETURN_SECURITY_VIOLATION;
+			}
+			if ((spdm_context->connection_info.algorithm.req_base_asym_alg & spdm_context->local_context.algorithm.req_base_asym_alg) == 0) {
 				return RETURN_SECURITY_VIOLATION;
 			}
 		}
@@ -337,6 +355,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 			if (spdm_context->connection_info.algorithm
 				    .key_schedule !=
 			    SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
+				return RETURN_SECURITY_VIOLATION;
+			}
+			if ((spdm_context->connection_info.algorithm.key_schedule & spdm_context->local_context.algorithm.key_schedule) == 0) {
 				return RETURN_SECURITY_VIOLATION;
 			}
 		}
