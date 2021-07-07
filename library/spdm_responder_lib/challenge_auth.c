@@ -55,24 +55,21 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE, 0,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
-		spdm_generate_error_response(
+		return spdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_CHALLENGE, response_size, response);
-		return RETURN_SUCCESS;
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
-		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_challenge_request_t)) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 	spdm_request_size = request_size;
 	//
@@ -81,20 +78,18 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	status = spdm_append_message_c(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 
 	slot_id = spdm_request->header.param1;
 
 	if ((slot_id != 0xFF) &&
 	    (slot_id >= spdm_context->local_context.slot_count)) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 
 	signature_size = spdm_get_asym_signature_size(
@@ -123,10 +118,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_10)) {
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
 	} else {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
 	auth_attribute.slot_id = (uint8)(slot_id & 0xF);
@@ -173,10 +167,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	result = spdm_generate_measurement_summary_hash(
 		spdm_context, FALSE, spdm_request->header.param2, ptr);
 	if (!result) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 	ptr += measurement_summary_hash_size;
 
@@ -193,18 +186,16 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	status = spdm_append_message_c(spdm_context, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		return spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
-		return RETURN_SUCCESS;
 	}
 	result = spdm_generate_challenge_auth_signature(spdm_context, FALSE,
 							ptr);
 	if (!result) {
-		spdm_generate_error_response(
+		return spdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_CHALLENGE_AUTH, response_size, response);
-		return RETURN_SUCCESS;
 	}
 	ptr += signature_size;
 
