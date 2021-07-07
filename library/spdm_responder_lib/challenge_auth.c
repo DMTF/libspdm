@@ -116,34 +116,43 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	zero_mem(response, *response_size);
 	spdm_response = response;
 
-	if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
+	if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11 &&
+		spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-	} else {
+	} else if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
+		spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_10)) {
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+	} else {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
 	}
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
 	auth_attribute.slot_id = (uint8)(slot_id & 0xF);
-	auth_attribute.reserved = 0;
-	auth_attribute.basic_mut_auth_req = 0;
-	if (spdm_is_capabilities_flag_supported(
-		    spdm_context, FALSE,
-		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
-		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP) &&
-	    spdm_is_capabilities_flag_supported(
-		    spdm_context, FALSE,
-		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0) &&
-	    (spdm_is_capabilities_flag_supported(
-		     spdm_context, FALSE,
-		     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0) ||
-	     spdm_is_capabilities_flag_supported(
-		     spdm_context, FALSE,
-		     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
-		auth_attribute.basic_mut_auth_req =
-			spdm_context->local_context.basic_mut_auth_requested;
-	}
-	if (auth_attribute.basic_mut_auth_req != 0) {
-		spdm_init_basic_mut_auth_encap_state(
-			context, auth_attribute.basic_mut_auth_req);
+	if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
+		auth_attribute.reserved = 0;
+		auth_attribute.basic_mut_auth_req = 0;
+		if (spdm_is_capabilities_flag_supported(
+			    spdm_context, FALSE,
+			    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
+			    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP) &&
+		    spdm_is_capabilities_flag_supported(
+			    spdm_context, FALSE,
+			    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0) &&
+		    (spdm_is_capabilities_flag_supported(
+			     spdm_context, FALSE,
+			     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0) ||
+		     spdm_is_capabilities_flag_supported(
+			     spdm_context, FALSE,
+			     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
+			auth_attribute.basic_mut_auth_req =
+				spdm_context->local_context.basic_mut_auth_requested;
+		}
+		if (auth_attribute.basic_mut_auth_req != 0) {
+			spdm_init_basic_mut_auth_encap_state(
+				context, auth_attribute.basic_mut_auth_req);
+		}
 	}
 
 	spdm_response->header.param1 = *(uint8 *)&auth_attribute;

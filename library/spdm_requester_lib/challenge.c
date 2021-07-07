@@ -118,6 +118,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	if (spdm_response_size < sizeof(spdm_message_header_t)) {
 		return RETURN_DEVICE_ERROR;
 	}
+	if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+		return RETURN_DEVICE_ERROR;
+	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, NULL, &spdm_context->transcript.message_c,
@@ -138,7 +141,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		return RETURN_DEVICE_ERROR;
 	}
 	*(uint8 *)&auth_attribute = spdm_response.header.param1;
-	if (slot_id == 0xFF) {
+	if (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
 		if (auth_attribute.slot_id != 0xF) {
 			return RETURN_DEVICE_ERROR;
 		}
@@ -146,7 +149,8 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 			return RETURN_DEVICE_ERROR;
 		}
 	} else {
-		if (auth_attribute.slot_id != slot_id) {
+		if ((spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_11 && auth_attribute.slot_id != slot_id) ||
+		    (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && *(uint8 *)&auth_attribute != slot_id)) {
 			return RETURN_DEVICE_ERROR;
 		}
 		if (spdm_response.header.param2 != (1 << slot_id)) {
