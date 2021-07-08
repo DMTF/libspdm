@@ -11,7 +11,6 @@
 #include "internal_crypt_lib.h"
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-#include <crypto/asn1.h>
 #include <openssl/asn1.h>
 #include <openssl/rsa.h>
 
@@ -981,6 +980,7 @@ return_status x509_get_signature_algorithm(IN const uint8 *cert,
 	X509 *x509_cert;
 	int nid;
 	ASN1_OBJECT *asn1_obj;
+	uintn obj_length;
 
 	//
 	// Check input parameters.
@@ -1015,15 +1015,16 @@ return_status x509_get_signature_algorithm(IN const uint8 *cert,
 		goto done;
 	}
 
-	if (*oid_size < (uintn)asn1_obj->length) {
-		*oid_size = asn1_obj->length;
+	obj_length = OBJ_length(asn1_obj);
+	if (*oid_size < obj_length) {
+		*oid_size = obj_length;
 		status = RETURN_BUFFER_TOO_SMALL;
 		goto done;
 	}
 	if (oid != NULL) {
-		copy_mem(oid, asn1_obj->data, asn1_obj->length);
+		copy_mem(oid, OBJ_get0_data(asn1_obj), obj_length);
 	}
-	*oid_size = asn1_obj->length;
+	*oid_size = obj_length;
 	status = RETURN_SUCCESS;
 
 done:
@@ -1314,6 +1315,8 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
 	ASN1_OBJECT *asn1_obj;
 	ASN1_OCTET_STRING *asn1_oct;
 	X509_EXTENSION *ext;
+	uintn obj_length;
+	uintn oct_length;
 
 	status = RETURN_INVALID_PARAMETER;
 
@@ -1362,8 +1365,11 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
 			continue;
 		}
 
-		if (oid_size == (uintn)asn1_obj->length &&
-		    const_compare_mem(asn1_obj->data, oid, oid_size) == 0) {
+		obj_length = OBJ_length(asn1_obj);
+		oct_length = ASN1_STRING_length(asn1_oct);
+
+		if (oid_size == obj_length &&
+		    const_compare_mem(OBJ_get0_data(asn1_obj), oid, oid_size) == 0) {
 			//
 			// Extension Found
 			//
@@ -1372,16 +1378,16 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
 		}
 	}
 	if (status == RETURN_SUCCESS) {
-		if (*extension_data_size < (uintn)asn1_oct->length) {
-			*extension_data_size = asn1_oct->length;
+		if (*extension_data_size < oct_length) {
+			*extension_data_size = oct_length;
 			status = RETURN_BUFFER_TOO_SMALL;
 			goto cleanup;
 		}
 		if (oid != NULL) {
-			copy_mem(extension_data, asn1_oct->data,
+			copy_mem(extension_data, ASN1_STRING_get0_data(asn1_oct),
 				 asn1_oct->length);
 		}
-		*extension_data_size = asn1_oct->length;
+		*extension_data_size = oct_length;
 		status = RETURN_SUCCESS;
 	}
 
