@@ -110,6 +110,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
         SET(CMAKE_AR gcc-ar)
 
+        if(NOT CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 9.3)
+                SET(CMAKE_C_ARCHIVE_FINISH true)
+        endif()
+
         SET(CMAKE_LINKER gcc)
         SET(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie --coverage -lgcov -fprofile-arcs -ftest-coverage" )
 
