@@ -16,6 +16,12 @@ SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" 
 
 SET(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
 
+#
+# OpenSSL specific compiled libraries.
+#
+SET(COMPILED_LIBCRYPTO_PATH ${COMPILED_LIBCRYPTO_PATH} CACHE STRING "Optionally provide a path to libcrypto" FORCE)
+SET(COMPILED_LIBSSL_PATH ${COMPILED_LIBSSL_PATH} CACHE STRING "Optionally provide a path to libssl" FORCE)
+
 if(ARCH STREQUAL "x64")
     MESSAGE("ARCH = x64")
 elseif(ARCH STREQUAL "ia32")
@@ -96,6 +102,29 @@ elseif(CRYPTO STREQUAL "openssl")
     MESSAGE("CRYPTO = openssl")
 else()
     MESSAGE(FATAL_ERROR "Unkown CRYPTO")
+endif()
+
+if(ENABLE_BINARY_BUILD STREQUAL "1")
+    if(NOT CRYPTO STREQUAL "Openssl")
+        MESSAGE(FATAL_ERROR "enabling binary build not supported for non-Openssl")
+    endif()
+
+    if(NOT COMPILED_LIBCRYPTO_PATH)
+        MESSAGE(FATAL_ERROR "enabling binary build requires path to libcrypto.")
+    endif()
+
+    if(NOT COMPILED_LIBSSL_PATH)
+        MESSAGE(FATAL_ERROR "enabling binary build requires path to libssl.")
+    endif()
+
+    MESSAGE("ENABLE_BINARY_BUILD=1")
+    MESSAGE("COMPILED_LIBCRYPTO_PATH=${COMPILED_LIBCRYPTO_PATH}")
+    MESSAGE("COMPILED_LIBSSL_PATH=${COMPILED_LIBSSL_PATH}")
+
+    SET(CRYPTO_LIB_PATHS ${COMPILED_LIBCRYPTO_PATH} ${COMPILED_LIBSSL_PATH})
+else()
+    SET(CRYPTO_LIB_PATHS ${CRYPTO}lib)
+    MESSAGE("ENABLE_BINARY_BUILD=0; Building ${CRYPTO} library from source.")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -404,10 +433,6 @@ elseif(TOOLCHAIN STREQUAL "VS2019")
     endif()
 endif()
 
-if(OPENSSL_PATH)
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LIBPATH:${OPENSSL_PATH}") 
-endif()
-
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
@@ -428,13 +453,18 @@ endif()
 
 if(CRYPTO STREQUAL "mbedtls")
     ADD_SUBDIRECTORY(os_stub/cryptlib_mbedtls)
-    ADD_SUBDIRECTORY(os_stub/mbedtlslib)
 elseif(CRYPTO STREQUAL "openssl")
     ADD_SUBDIRECTORY(os_stub/cryptlib_openssl)
-    if(NOT DEFINED OPENSSL_PATH)
+endif()
+
+if(NOT ENABLE_BINARY_BUILD STREQUAL "1")
+    if(CRYPTO STREQUAL "mbedtls")
+        ADD_SUBDIRECTORY(os_stub/mbedtlslib)
+    elseif(CRYPTO STREQUAL "openssl")
         ADD_SUBDIRECTORY(os_stub/openssllib)
     endif()
 endif()
+
     ADD_SUBDIRECTORY(library/spdm_common_lib)
     ADD_SUBDIRECTORY(library/spdm_requester_lib)
     ADD_SUBDIRECTORY(library/spdm_responder_lib)
