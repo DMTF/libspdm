@@ -45,15 +45,18 @@ return_status spdm_responder_handle_response_state(IN void *context,
 					  SPDM_CONNECTION_STATE_NOT_STARTED);
 		return RETURN_SUCCESS;
 	case SPDM_RESPONSE_STATE_NOT_READY:
-		spdm_context->cache_spdm_request_size =
-			spdm_context->last_spdm_request_size;
-		copy_mem(spdm_context->cache_spdm_request,
-			 spdm_context->last_spdm_request,
-			 spdm_context->last_spdm_request_size);
-		spdm_context->error_data.rd_exponent = 1;
-		spdm_context->error_data.rd_tm = 1;
-		spdm_context->error_data.request_code = request_code;
-		spdm_context->error_data.token = spdm_context->current_token++;
+		//do not update ErrorData if a previous request has not been completed
+		if(request_code != SPDM_RESPOND_IF_READY) {
+			spdm_context->cache_spdm_request_size =
+				spdm_context->last_spdm_request_size;
+			copy_mem(spdm_context->cache_spdm_request,
+				spdm_context->last_spdm_request,
+				spdm_context->last_spdm_request_size);
+			spdm_context->error_data.rd_exponent = 1;
+			spdm_context->error_data.rd_tm = 1;
+			spdm_context->error_data.request_code = request_code;
+			spdm_context->error_data.token = spdm_context->current_token++;
+		}
 		spdm_generate_extended_error_response(
 			spdm_context, SPDM_ERROR_CODE_RESPONSE_NOT_READY, 0,
 			sizeof(spdm_error_data_response_not_ready_t),

@@ -37,7 +37,8 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
 	spdm_context = context;
 	spdm_request = request;
 
-	if (spdm_context->response_state == SPDM_RESPONSE_STATE_NEED_RESYNC) {
+	if (spdm_context->response_state == SPDM_RESPONSE_STATE_NEED_RESYNC ||
+	    spdm_context->response_state == SPDM_RESPONSE_STATE_NOT_READY) {
 		return spdm_responder_handle_response_state(
 			spdm_context, spdm_request->request_response_code,
 			response_size, response);
