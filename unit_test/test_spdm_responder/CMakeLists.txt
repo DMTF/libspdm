@@ -23,6 +23,7 @@ SET(src_test_spdm_responder
     certificate.c
     challenge_auth.c
     measurements.c
+    respond_if_ready.c
     key_exchange.c
     finish.c
     psk_exchange.c

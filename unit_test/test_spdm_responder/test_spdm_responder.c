@@ -14,6 +14,7 @@ int spdm_responder_digests_test_main(void);
 int spdm_responder_certificate_test_main(void);
 int spdm_responder_challenge_auth_test_main(void);
 int spdm_responder_measurements_test_main(void);
+int spdm_responder_respond_if_ready_test_main (void);
 int spdm_responder_key_exchange_test_main(void);
 int spdm_responder_finish_test_main(void);
 int spdm_responder_psk_exchange_test_main(void);
@@ -36,6 +37,8 @@ int main(void)
 	spdm_responder_challenge_auth_test_main();
 
 	spdm_responder_measurements_test_main();
+
+	spdm_responder_respond_if_ready_test_main ();
 
 	spdm_responder_key_exchange_test_main();
 
