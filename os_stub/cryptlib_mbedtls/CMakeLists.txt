@@ -19,8 +19,7 @@ SET(src_cryptlib_mbedtls
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
-    hash/sha256.c
-    hash/sha512.c
+    hash/sha.c
     hash/sha3.c
     hash/sm3.c
     hmac/hmac_sha.c

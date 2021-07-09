@@ -11,14 +11,25 @@
 #include "internal_crypt_lib.h"
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SM3 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SM3-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SM3 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sm3_256_new() returns NULL.
 
 **/
-uintn sm3_256_get_context_size(void)
+void *sm3_256_new(void)
 {
-	return 0;
+  return NULL;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sm3_256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sm3_256_free(IN void *sm3_256_ctx)
+{
 }
 
 /**

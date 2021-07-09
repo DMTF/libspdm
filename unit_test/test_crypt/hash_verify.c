@@ -100,7 +100,6 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8
 **/
 return_status validate_crypt_digest(void)
 {
-	uintn ctx_size;
 	void *hash_ctx;
 	uintn data_size;
 	uint8 digest[MAX_DIGEST_SIZE];
@@ -115,8 +114,7 @@ return_status validate_crypt_digest(void)
 	// SHA256 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha256_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha256_new();
 	if (hash_ctx == NULL) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
@@ -126,7 +124,7 @@ return_status validate_crypt_digest(void)
 	status = sha256_init(hash_ctx);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha256_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -134,7 +132,7 @@ return_status validate_crypt_digest(void)
 	status = sha256_update(hash_ctx, m_hash_data, data_size);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha256_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -142,11 +140,11 @@ return_status validate_crypt_digest(void)
 	status = sha256_final(hash_ctx, digest);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha256_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
-	free_pool(hash_ctx);
+	sha256_free(hash_ctx);
 
 	my_print("Check value... ");
 	if (const_compare_mem(digest, m_sha256_digest, SHA256_DIGEST_SIZE) != 0) {
@@ -174,8 +172,7 @@ return_status validate_crypt_digest(void)
 	// SHA384 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha384_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha384_new();
 	if (hash_ctx == NULL) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
@@ -185,7 +182,7 @@ return_status validate_crypt_digest(void)
 	status = sha384_init(hash_ctx);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha384_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -193,7 +190,7 @@ return_status validate_crypt_digest(void)
 	status = sha384_update(hash_ctx, m_hash_data, data_size);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha384_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -201,11 +198,11 @@ return_status validate_crypt_digest(void)
 	status = sha384_final(hash_ctx, digest);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha384_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
-	free_pool(hash_ctx);
+	sha384_free(hash_ctx);
 
 	my_print("Check value... ");
 	if (const_compare_mem(digest, m_sha384_digest, SHA384_DIGEST_SIZE) != 0) {
@@ -233,8 +230,7 @@ return_status validate_crypt_digest(void)
 	// SHA512 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha512_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha512_new();
 	if (hash_ctx == NULL) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
@@ -244,7 +240,7 @@ return_status validate_crypt_digest(void)
 	status = sha512_init(hash_ctx);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha512_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -252,7 +248,7 @@ return_status validate_crypt_digest(void)
 	status = sha512_update(hash_ctx, m_hash_data, data_size);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha512_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
@@ -260,11 +256,11 @@ return_status validate_crypt_digest(void)
 	status = sha512_final(hash_ctx, digest);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(hash_ctx);
+		sha512_free(hash_ctx);
 		return RETURN_ABORTED;
 	}
 
-	free_pool(hash_ctx);
+	sha512_free(hash_ctx);
 
 	my_print("Check value... ");
 	if (const_compare_mem(digest, m_sha512_digest, SHA512_DIGEST_SIZE) != 0) {
@@ -291,8 +287,7 @@ return_status validate_crypt_digest(void)
 	// SHA3_256 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha3_256_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha3_256_new();
 	if (hash_ctx != NULL) {
 		my_print("Init... ");
 		status = sha3_256_init(hash_ctx);
@@ -319,7 +314,7 @@ return_status validate_crypt_digest(void)
 	}
 
 	if (hash_ctx != NULL) {
-		free_pool(hash_ctx);
+		sha3_256_free(hash_ctx);
 	}
 
 	if (status) {
@@ -338,8 +333,7 @@ return_status validate_crypt_digest(void)
 	// SHA3_384 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha3_384_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha3_384_new();
 	if (hash_ctx != NULL) {
 		my_print("Init... ");
 		status = sha3_384_init(hash_ctx);
@@ -366,7 +360,7 @@ return_status validate_crypt_digest(void)
 	}
 
 	if (hash_ctx != NULL) {
-		free_pool(hash_ctx);
+		sha3_384_free(hash_ctx);
 	}
 
 	if (status) {
@@ -385,8 +379,7 @@ return_status validate_crypt_digest(void)
 	// SHA3_512 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = sha3_512_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = sha3_512_new();
 	if (hash_ctx != NULL) {
 		my_print("Init... ");
 		status = sha3_512_init(hash_ctx);
@@ -413,7 +406,7 @@ return_status validate_crypt_digest(void)
 	}
 
 	if (hash_ctx != NULL) {
-		free_pool(hash_ctx);
+		sha3_512_free(hash_ctx);
 	}
 
 	if (status) {
@@ -432,8 +425,7 @@ return_status validate_crypt_digest(void)
 	// SHAKE256 digest Validation
 	//
 	zero_mem(digest, MAX_DIGEST_SIZE);
-	ctx_size = shake256_get_context_size();
-	hash_ctx = allocate_pool(ctx_size);
+	hash_ctx = shake256_new();
 	if (hash_ctx != NULL) {
 		my_print("Init... ");
 		status = shake256_init(hash_ctx);
@@ -460,7 +452,7 @@ return_status validate_crypt_digest(void)
 	}
 
 	if (hash_ctx != NULL) {
-		free_pool(hash_ctx);
+		shake256_free(hash_ctx);
 	}
 
 	if (status) {

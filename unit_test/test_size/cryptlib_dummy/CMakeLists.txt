@@ -14,8 +14,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_size/cryptlib_dummy
 SET(src_cryptlib_dummy
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
-    hash/sha256.c
-    hash/sha512.c
+    hash/sha.c
     hmac/hmac_sha.c
     kdf/hkdf.c
     pem/pem.c

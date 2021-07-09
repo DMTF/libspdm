@@ -9,20 +9,38 @@
 **/
 
 #include "internal_crypt_lib.h"
-#include "crypto/sm3.h"
+#include <openssl/evp.h>
+
+void *hash_md_new(void);
+void hash_md_free(IN  void *md_ctx);
+boolean hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
+boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
+boolean hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
+boolean hash_md_final(IN void *md_ctx, OUT void *hash_value);
+boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
+			  OUT uint8 *hash_value);
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SM3 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SM3-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SM3 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sm3_256_new() returns NULL.
 
 **/
-uintn sm3_256_get_context_size(void)
+void *sm3_256_new(void)
 {
-	//
-	// Retrieves openssl SM3 context size
-	//
-	return (uintn)(sizeof(SM3_CTX));
+  return hash_md_new();
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sm3_256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sm3_256_free(IN void *sm3_256_ctx)
+{
+  hash_md_free(sm3_256_ctx);
 }
 
 /**
@@ -39,18 +57,7 @@ uintn sm3_256_get_context_size(void)
 **/
 boolean sm3_256_init(OUT void *sm3_context)
 {
-	//
-	// Check input parameters.
-	//
-	if (sm3_context == NULL) {
-		return FALSE;
-	}
-
-	//
-	// openssl SM3 context Initialization
-	//
-	sm3_init((SM3_CTX *)sm3_context);
-	return TRUE;
+  return hash_md_init (EVP_sm3(), sm3_context);
 }
 
 /**
@@ -70,16 +77,7 @@ boolean sm3_256_init(OUT void *sm3_context)
 **/
 boolean sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
 {
-	//
-	// Check input parameters.
-	//
-	if (sm3_context == NULL || new_sm3_context == NULL) {
-		return FALSE;
-	}
-
-	copy_mem(new_sm3_context, sm3_context, sizeof(SM3_CTX));
-
-	return TRUE;
+	return hash_md_duplicate (sm3_context, new_sm3_context);
 }
 
 /**
@@ -103,26 +101,7 @@ boolean sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
 boolean sm3_256_update(IN OUT void *sm3_context, IN const void *data,
 		       IN uintn data_size)
 {
-	//
-	// Check input parameters.
-	//
-	if (sm3_context == NULL) {
-		return FALSE;
-	}
-
-	//
-	// Check invalid parameters, in case that only DataLength was checked in openssl
-	//
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-
-	//
-	// openssl SM3 hash Update
-	//
-	sm3_update((SM3_CTX *)sm3_context, data, data_size);
-
-	return TRUE;
+	return hash_md_update (sm3_context, data, data_size);
 }
 
 /**
@@ -147,19 +126,7 @@ boolean sm3_256_update(IN OUT void *sm3_context, IN const void *data,
 **/
 boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
 {
-	//
-	// Check input parameters.
-	//
-	if (sm3_context == NULL || hash_value == NULL) {
-		return FALSE;
-	}
-
-	//
-	// openssl SM3 hash Finalization
-	//
-	sm3_final(hash_value, (SM3_CTX *)sm3_context);
-
-	return TRUE;
+	return hash_md_final (sm3_context, hash_value);
 }
 
 /**
@@ -183,26 +150,5 @@ boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
 boolean sm3_256_hash_all(IN const void *data, IN uintn data_size,
 			 OUT uint8 *hash_value)
 {
-	SM3_CTX ctx;
-
-	//
-	// Check input parameters.
-	//
-	if (hash_value == NULL) {
-		return FALSE;
-	}
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-
-	//
-	// SM3 hash Computation.
-	//
-	sm3_init(&ctx);
-
-	sm3_update(&ctx, data, data_size);
-
-	sm3_final(hash_value, &ctx);
-
-	return TRUE;
+  return hash_md_hash_all (EVP_sm3(), data, data_size, hash_value);
 }

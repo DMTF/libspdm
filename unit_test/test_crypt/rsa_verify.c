@@ -92,7 +92,6 @@ return_status validate_crypt_rsa(void)
 	void *rsa;
 	uint8 hash_value[SHA256_DIGEST_SIZE];
 	uintn hash_size;
-	uintn ctx_size;
 	void *sha256_ctx;
 	uint8 *signature;
 	uintn sig_size;
@@ -356,8 +355,7 @@ return_status validate_crypt_rsa(void)
 	my_print("hash Original message ... ");
 	hash_size = SHA256_DIGEST_SIZE;
 	zero_mem(hash_value, hash_size);
-	ctx_size = sha256_get_context_size();
-	sha256_ctx = allocate_pool(ctx_size);
+	sha256_ctx = sha256_new();
 	if (sha256_ctx == NULL) {
 		my_print("[Fail]");
 		rsa_free(rsa);
@@ -367,7 +365,7 @@ return_status validate_crypt_rsa(void)
 	status = sha256_init(sha256_ctx);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(sha256_ctx);
+		sha256_free(sha256_ctx);
 		rsa_free(rsa);
 		return RETURN_ABORTED;
 	}
@@ -376,7 +374,7 @@ return_status validate_crypt_rsa(void)
 			       ascii_str_len(m_rsa_sign_data));
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(sha256_ctx);
+		sha256_free(sha256_ctx);
 		rsa_free(rsa);
 		return RETURN_ABORTED;
 	}
@@ -384,12 +382,12 @@ return_status validate_crypt_rsa(void)
 	status = sha256_final(sha256_ctx, hash_value);
 	if (!status) {
 		my_print("[Fail]");
-		free_pool(sha256_ctx);
+		sha256_free(sha256_ctx);
 		rsa_free(rsa);
 		return RETURN_ABORTED;
 	}
 
-	free_pool(sha256_ctx);
+	sha256_free(sha256_ctx);
 
 	//
 	// Sign RSA PKCS#1-encoded signature
