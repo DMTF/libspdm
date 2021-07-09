@@ -9,71 +9,65 @@
 **/
 
 #include "internal_crypt_lib.h"
-#include <crypto/evp.h>
 #include <openssl/evp.h>
-#include <crypto/evp/evp_local.h>
 
-///
-/// HashAll need a buffer to store hash context
-/// This size is enough to hold all sha3 hash context
-///
-#define INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE 1024
+void *hash_md_new(void);
+void hash_md_free(IN  void *md_ctx);
+boolean hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
+boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
+boolean hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
+boolean hash_md_final(IN void *md_ctx, OUT void *hash_value);
+boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
+			  OUT uint8 *hash_value);
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-256 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-256 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_256_new() returns NULL.
 
 **/
-uintn sha3_256_get_context_size(void)
+void *sha3_256_new(void)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-
-	evp_md = EVP_sha3_256();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (uintn)(md_st->ctx_size + sizeof(struct evp_md_ctx_st));
+  return hash_md_new();
 }
 
 /**
-  Initializes user-supplied memory pointed by sha3_256Context as SHA3-256 hash context for
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha3_256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_256_free(IN void *sha3_256_ctx)
+{
+  hash_md_free(sha3_256_ctx);
+}
+
+/**
+  Initializes user-supplied memory pointed by sha3_256_context as SHA3-256 hash context for
   subsequent use.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
 
-  @param[out]  sha3_256Context  Pointer to SHA3-256 context being initialized.
+  @param[out]  sha3_256_context  Pointer to SHA3-256 context being initialized.
 
   @retval TRUE   SHA3-256 context initialization succeeded.
   @retval FALSE  SHA3-256 context initialization failed.
 
 **/
-boolean sha3_256_init(OUT void *sha3_256Context)
+boolean sha3_256_init(OUT void *sha3_256_context)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	evp_md = EVP_sha3_256();
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_256Context;
-	md_ctx->md_data =
-		(uint8 *)sha3_256Context + sizeof(struct evp_md_ctx_st);
-	md_ctx->digest = evp_md;
-	md_ctx->engine = NULL;
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->init(md_ctx);
+  return hash_md_init (EVP_sha3_256(), sha3_256_context);
 }
 
 /**
   Makes a copy of an existing SHA3-256 context.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
   If new_sha3_256_context is NULL, then return FALSE.
   If this interface is not supported, then return FALSE.
 
-  @param[in]  sha3_256Context     Pointer to SHA3-256 context being copied.
+  @param[in]  sha3_256_context     Pointer to SHA3-256 context being copied.
   @param[out] new_sha3_256_context  Pointer to new SHA3-256 context.
 
   @retval TRUE   SHA3-256 context copy succeeded.
@@ -81,17 +75,10 @@ boolean sha3_256_init(OUT void *sha3_256Context)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean sha3_256_duplicate(IN const void *sha3_256Context,
+boolean sha3_256_duplicate(IN const void *sha3_256_context,
 			   OUT void *new_sha3_256_context)
 {
-	uintn ctx_size;
-	if (sha3_256Context == NULL || new_sha3_256_context == NULL) {
-		return FALSE;
-	}
-
-	ctx_size = sha3_256_get_context_size();
-	copy_mem(new_sha3_256_context, sha3_256Context, ctx_size);
-	return TRUE;
+	return hash_md_duplicate (sha3_256_context, new_sha3_256_context);
 }
 
 /**
@@ -102,9 +89,9 @@ boolean sha3_256_duplicate(IN const void *sha3_256Context,
   SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be finalized
   by sha3_256_final(). Behavior with invalid context is undefined.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
 
-  @param[in, out]  sha3_256Context  Pointer to the SHA3-256 context.
+  @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
   @param[in]       data           Pointer to the buffer containing the data to be hashed.
   @param[in]       data_size       size of data buffer in bytes.
 
@@ -112,19 +99,10 @@ boolean sha3_256_duplicate(IN const void *sha3_256Context,
   @retval FALSE  SHA3-256 data digest failed.
 
 **/
-boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
+boolean sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
 			IN uintn data_size)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_256Context;
-
-	evp_md = EVP_sha3_256();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->update(md_ctx, data, (size_t)data_size);
+	return hash_md_update (sha3_256_context, data, data_size);
 }
 
 /**
@@ -136,10 +114,10 @@ boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
   SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be
   finalized by sha3_256_final(). Behavior with invalid SHA3-256 context is undefined.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
   If hash_value is NULL, then return FALSE.
 
-  @param[in, out]  sha3_256Context  Pointer to the SHA3-256 context.
+  @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
   @param[out]      hash_value      Pointer to a buffer that receives the SHA3-256 digest
                                   value (256 / 8 bytes).
 
@@ -147,18 +125,9 @@ boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
   @retval FALSE  SHA3-256 digest computation failed.
 
 **/
-boolean sha3_256_final(IN OUT void *sha3_256Context, OUT uint8 *hash_value)
+boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8 *hash_value)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_256Context;
-
-	evp_md = EVP_sha3_256();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->final(md_ctx, hash_value);
+	return hash_md_final (sha3_256_context, hash_value);
 }
 
 /**
@@ -182,36 +151,30 @@ boolean sha3_256_final(IN OUT void *sha3_256Context, OUT uint8 *hash_value)
 boolean sha3_256_hash_all(IN const void *data, IN uintn data_size,
 			  OUT uint8 *hash_value)
 {
-	boolean status;
-	uint8 hash_context[INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE];
-
-	zero_mem(hash_context, INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE);
-	status = sha3_256_init(hash_context);
-	if (status) {
-		status = sha3_256_update(hash_context, data, data_size);
-	}
-	if (status) {
-		status = sha3_256_final(hash_context, hash_value);
-	}
-
-	return status;
+  return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-384 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-384 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-384 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_384_new() returns NULL.
 
 **/
-uintn sha3_384_get_context_size(void)
+void *sha3_384_new(void)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
+  return hash_md_new();
+}
 
-	evp_md = EVP_sha3_384();
-	md_st = (struct evp_md_st *)evp_md;
+/**
+  Release the specified HASH_CTX context.
 
-	return (uintn)(md_st->ctx_size + sizeof(struct evp_md_ctx_st));
+  @param[in]  sha3_384_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_384_free(IN void *sha3_384_ctx)
+{
+  hash_md_free(sha3_384_ctx);
 }
 
 /**
@@ -228,20 +191,7 @@ uintn sha3_384_get_context_size(void)
 **/
 boolean sha3_384_init(OUT void *sha3_384_context)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	evp_md = EVP_sha3_384();
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_384_context;
-	md_ctx->md_data =
-		(uint8 *)sha3_384_context + sizeof(struct evp_md_ctx_st);
-	md_ctx->digest = evp_md;
-	md_ctx->engine = NULL;
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->init(md_ctx);
+  return hash_md_init (EVP_sha3_384(), sha3_384_context);
 }
 
 /**
@@ -262,14 +212,7 @@ boolean sha3_384_init(OUT void *sha3_384_context)
 boolean sha3_384_duplicate(IN const void *sha3_384_context,
 			   OUT void *new_sha3_384_context)
 {
-	uintn ctx_size;
-	if (sha3_384_context == NULL || new_sha3_384_context == NULL) {
-		return FALSE;
-	}
-
-	ctx_size = sha3_384_get_context_size();
-	copy_mem(new_sha3_384_context, sha3_384_context, ctx_size);
-	return TRUE;
+	return hash_md_duplicate (sha3_384_context, new_sha3_384_context);
 }
 
 /**
@@ -293,16 +236,7 @@ boolean sha3_384_duplicate(IN const void *sha3_384_context,
 boolean sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
 			IN uintn data_size)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_384_context;
-
-	evp_md = EVP_sha3_384();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->update(md_ctx, data, (size_t)data_size);
+	return hash_md_update (sha3_384_context, data, data_size);
 }
 
 /**
@@ -327,16 +261,7 @@ boolean sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
 **/
 boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8 *hash_value)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_384_context;
-
-	evp_md = EVP_sha3_384();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->final(md_ctx, hash_value);
+	return hash_md_final (sha3_384_context, hash_value);
 }
 
 /**
@@ -360,36 +285,30 @@ boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8 *hash_value)
 boolean sha3_384_hash_all(IN const void *data, IN uintn data_size,
 			  OUT uint8 *hash_value)
 {
-	boolean status;
-	uint8 hash_context[INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE];
-
-	zero_mem(hash_context, INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE);
-	status = sha3_384_init(hash_context);
-	if (status) {
-		status = sha3_384_update(hash_context, data, data_size);
-	}
-	if (status) {
-		status = sha3_384_final(hash_context, hash_value);
-	}
-
-	return status;
+  return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA3-512 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-512 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA3-512 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_512_new() returns NULL.
 
 **/
-uintn sha3_512_get_context_size(void)
+void *sha3_512_new(void)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
+  return hash_md_new();
+}
 
-	evp_md = EVP_sha3_512();
-	md_st = (struct evp_md_st *)evp_md;
+/**
+  Release the specified HASH_CTX context.
 
-	return (uintn)(md_st->ctx_size + sizeof(struct evp_md_ctx_st));
+  @param[in]  sha3_512_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_512_free(IN void *sha3_512_ctx)
+{
+  hash_md_free(sha3_512_ctx);
 }
 
 /**
@@ -406,20 +325,7 @@ uintn sha3_512_get_context_size(void)
 **/
 boolean sha3_512_init(OUT void *sha3_512_context)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	evp_md = EVP_sha3_512();
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_512_context;
-	md_ctx->md_data =
-		(uint8 *)sha3_512_context + sizeof(struct evp_md_ctx_st);
-	md_ctx->digest = evp_md;
-	md_ctx->engine = NULL;
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->init(md_ctx);
+  return hash_md_init (EVP_sha3_512(), sha3_512_context);
 }
 
 /**
@@ -440,14 +346,7 @@ boolean sha3_512_init(OUT void *sha3_512_context)
 boolean sha3_512_duplicate(IN const void *sha3_512_context,
 			   OUT void *new_sha3_512_context)
 {
-	uintn ctx_size;
-	if (sha3_512_context == NULL || new_sha3_512_context == NULL) {
-		return FALSE;
-	}
-
-	ctx_size = sha3_512_get_context_size();
-	copy_mem(new_sha3_512_context, sha3_512_context, ctx_size);
-	return TRUE;
+	return hash_md_duplicate (sha3_512_context, new_sha3_512_context);
 }
 
 /**
@@ -471,16 +370,7 @@ boolean sha3_512_duplicate(IN const void *sha3_512_context,
 boolean sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
 			IN uintn data_size)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_512_context;
-
-	evp_md = EVP_sha3_512();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->update(md_ctx, data, (size_t)data_size);
+	return hash_md_update (sha3_512_context, data, data_size);
 }
 
 /**
@@ -505,16 +395,7 @@ boolean sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
 **/
 boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8 *hash_value)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)sha3_512_context;
-
-	evp_md = EVP_sha3_512();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->final(md_ctx, hash_value);
+	return hash_md_final (sha3_512_context, hash_value);
 }
 
 /**
@@ -538,36 +419,30 @@ boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8 *hash_value)
 boolean sha3_512_hash_all(IN const void *data, IN uintn data_size,
 			  OUT uint8 *hash_value)
 {
-	boolean status;
-	uint8 hash_context[INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE];
-
-	zero_mem(hash_context, INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE);
-	status = sha3_512_init(hash_context);
-	if (status) {
-		status = sha3_512_update(hash_context, data, data_size);
-	}
-	if (status) {
-		status = sha3_512_final(hash_context, hash_value);
-	}
-
-	return status;
+  return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHAKE256 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHAKE-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SHAKE256 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, shake256_new() returns NULL.
 
 **/
-uintn shake256_get_context_size(void)
+void *shake256_new(void)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
+  return hash_md_new();
+}
 
-	evp_md = EVP_shake256();
-	md_st = (struct evp_md_st *)evp_md;
+/**
+  Release the specified HASH_CTX context.
 
-	return (uintn)(md_st->ctx_size + sizeof(struct evp_md_ctx_st));
+  @param[in]  shake256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void shake256_free(IN void *shake256_ctx)
+{
+  hash_md_free(shake256_ctx);
 }
 
 /**
@@ -584,20 +459,7 @@ uintn shake256_get_context_size(void)
 **/
 boolean shake256_init(OUT void *shake256_context)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	evp_md = EVP_shake256();
-
-	md_ctx = (struct evp_md_ctx_st *)shake256_context;
-	md_ctx->md_data =
-		(uint8 *)shake256_context + sizeof(struct evp_md_ctx_st);
-	md_ctx->digest = evp_md;
-	md_ctx->engine = NULL;
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->init(md_ctx);
+  return hash_md_init (EVP_shake256(), shake256_context);
 }
 
 /**
@@ -618,14 +480,7 @@ boolean shake256_init(OUT void *shake256_context)
 boolean shake256_duplicate(IN const void *shake256_context,
 			   OUT void *new_shake256_context)
 {
-	uintn ctx_size;
-	if (shake256_context == NULL || new_shake256_context == NULL) {
-		return FALSE;
-	}
-
-	ctx_size = shake256_get_context_size();
-	copy_mem(new_shake256_context, shake256_context, ctx_size);
-	return TRUE;
+	return hash_md_duplicate (shake256_context, new_shake256_context);
 }
 
 /**
@@ -649,16 +504,7 @@ boolean shake256_duplicate(IN const void *shake256_context,
 boolean shake256_update(IN OUT void *shake256_context, IN const void *data,
 			IN uintn data_size)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)shake256_context;
-
-	evp_md = EVP_shake256();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->update(md_ctx, data, (size_t)data_size);
+	return hash_md_update (shake256_context, data, data_size);
 }
 
 /**
@@ -683,16 +529,7 @@ boolean shake256_update(IN OUT void *shake256_context, IN const void *data,
 **/
 boolean shake256_final(IN OUT void *shake256_context, OUT uint8 *hash_value)
 {
-	const EVP_MD *evp_md;
-	struct evp_md_st *md_st;
-	struct evp_md_ctx_st *md_ctx;
-
-	md_ctx = (struct evp_md_ctx_st *)shake256_context;
-
-	evp_md = EVP_shake256();
-	md_st = (struct evp_md_st *)evp_md;
-
-	return (boolean)md_st->final(md_ctx, hash_value);
+	return hash_md_final (shake256_context, hash_value);
 }
 
 /**
@@ -716,17 +553,5 @@ boolean shake256_final(IN OUT void *shake256_context, OUT uint8 *hash_value)
 boolean shake256_hash_all(IN const void *data, IN uintn data_size,
 			  OUT uint8 *hash_value)
 {
-	boolean status;
-	uint8 hash_context[INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE];
-
-	zero_mem(hash_context, INTERNAL_MAX_CONTEXT_SIZE_FOR_HASHALL_USE);
-	status = shake256_init(hash_context);
-	if (status) {
-		status = shake256_update(hash_context, data, data_size);
-	}
-	if (status) {
-		status = shake256_final(hash_context, hash_value);
-	}
-
-	return status;
+  return hash_md_hash_all (EVP_shake256(), data, data_size, hash_value);
 }

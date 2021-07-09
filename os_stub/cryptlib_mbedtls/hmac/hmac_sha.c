@@ -39,6 +39,7 @@ void *hmac_md_new(void)
 void hmac_md_free(IN void *hmac_md_ctx)
 {
 	mbedtls_md_free(hmac_md_ctx);
+	free_pool (hmac_md_ctx);
 }
 
 /**

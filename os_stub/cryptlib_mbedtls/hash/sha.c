@@ -5,24 +5,244 @@
 **/
 
 /** @file
-  SHA-384 and SHA-512 digest Wrapper Implementations.
+  SHA-256/384/512 digest Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/sha.h>
+#include <mbedtls/sha256.h>
+#include <mbedtls/sha512.h>
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-384 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA256 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-384 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha256_new() returns NULL.
 
 **/
-uintn sha384_get_context_size(void)
+void *sha256_new(void)
 {
-	//
-	// Retrieves OpenSSL SHA-384 context size
-	//
-	return (uintn)(sizeof(SHA512_CTX));
+	void *hmac_md_ctx;
+
+	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha256_context));
+	if (hmac_md_ctx == NULL) {
+		return NULL;
+	}
+
+	return hmac_md_ctx;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha256_free(IN void *sha256_ctx)
+{
+	mbedtls_sha256_free(sha256_ctx);
+	free_pool (sha256_ctx);
+}
+
+/**
+  Initializes user-supplied memory pointed by sha256_context as SHA-256 hash context for
+  subsequent use.
+
+  If sha256_context is NULL, then return FALSE.
+
+  @param[out]  sha256_context  Pointer to SHA-256 context being initialized.
+
+  @retval TRUE   SHA-256 context initialization succeeded.
+  @retval FALSE  SHA-256 context initialization failed.
+
+**/
+boolean sha256_init(OUT void *sha256_context)
+{
+	int32 ret;
+
+	if (sha256_context == NULL) {
+		return FALSE;
+	}
+
+	mbedtls_sha256_init(sha256_context);
+
+	ret = mbedtls_sha256_starts_ret(sha256_context, FALSE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+  Makes a copy of an existing SHA-256 context.
+
+  If sha256_context is NULL, then return FALSE.
+  If new_sha256_context is NULL, then return FALSE.
+
+  @param[in]  sha256_context     Pointer to SHA-256 context being copied.
+  @param[out] new_sha256_context  Pointer to new SHA-256 context.
+
+  @retval TRUE   SHA-256 context copy succeeded.
+  @retval FALSE  SHA-256 context copy failed.
+
+**/
+boolean sha256_duplicate(IN const void *sha256_context,
+			 OUT void *new_sha256_context)
+{
+	if (sha256_context == NULL || new_sha256_context == NULL) {
+		return FALSE;
+	}
+
+	mbedtls_sha256_clone(new_sha256_context, sha256_context);
+
+	return TRUE;
+}
+
+/**
+  Digests the input data and updates SHA-256 context.
+
+  This function performs SHA-256 digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  SHA-256 context should be already correctly initialized by sha256_init(), and should not be finalized
+  by sha256_final(). Behavior with invalid context is undefined.
+
+  If sha256_context is NULL, then return FALSE.
+
+  @param[in, out]  sha256_context  Pointer to the SHA-256 context.
+  @param[in]       data           Pointer to the buffer containing the data to be hashed.
+  @param[in]       data_size       size of data buffer in bytes.
+
+  @retval TRUE   SHA-256 data digest succeeded.
+  @retval FALSE  SHA-256 data digest failed.
+
+**/
+boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
+		      IN uintn data_size)
+{
+	int32 ret;
+
+	if (sha256_context == NULL) {
+		return FALSE;
+	}
+
+	if (data == NULL && data_size != 0) {
+		return FALSE;
+	}
+	if (data_size > INT_MAX) {
+		return FALSE;
+	}
+
+	ret = mbedtls_sha256_update_ret(sha256_context, data, data_size);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+  Completes computation of the SHA-256 digest value.
+
+  This function completes SHA-256 hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the SHA-256 context cannot
+  be used again.
+  SHA-256 context should be already correctly initialized by sha256_init(), and should not be
+  finalized by sha256_final(). Behavior with invalid SHA-256 context is undefined.
+
+  If sha256_context is NULL, then return FALSE.
+  If hash_value is NULL, then return FALSE.
+
+  @param[in, out]  sha256_context  Pointer to the SHA-256 context.
+  @param[out]      hash_value      Pointer to a buffer that receives the SHA-256 digest
+                                  value (32 bytes).
+
+  @retval TRUE   SHA-256 digest computation succeeded.
+  @retval FALSE  SHA-256 digest computation failed.
+
+**/
+boolean sha256_final(IN OUT void *sha256_context, OUT uint8 *hash_value)
+{
+	int32 ret;
+
+	if (sha256_context == NULL || hash_value == NULL) {
+		return FALSE;
+	}
+
+	ret = mbedtls_sha256_finish_ret(sha256_context, hash_value);
+	mbedtls_sha256_free(sha256_context);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+  Computes the SHA-256 message digest of a input data buffer.
+
+  This function performs the SHA-256 message digest of a given data buffer, and places
+  the digest value into the specified memory.
+
+  If this interface is not supported, then return FALSE.
+
+  @param[in]   data        Pointer to the buffer containing the data to be hashed.
+  @param[in]   data_size    size of data buffer in bytes.
+  @param[out]  hash_value   Pointer to a buffer that receives the SHA-256 digest
+                           value (32 bytes).
+
+  @retval TRUE   SHA-256 digest computation succeeded.
+  @retval FALSE  SHA-256 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean sha256_hash_all(IN const void *data, IN uintn data_size,
+			OUT uint8 *hash_value)
+{
+	int32 ret;
+
+	if (hash_value == NULL) {
+		return FALSE;
+	}
+	if (data == NULL && data_size != 0) {
+		return FALSE;
+	}
+	if (data_size > INT_MAX) {
+		return FALSE;
+	}
+
+	ret = mbedtls_sha256_ret(data, data_size, hash_value, FALSE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+  Allocates and initializes one HASH_CTX context for subsequent SHA384 use.
+
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha384_new() returns NULL.
+
+**/
+void *sha384_new(void)
+{
+	void *hmac_md_ctx;
+
+	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
+	if (hmac_md_ctx == NULL) {
+		return NULL;
+	}
+
+	return hmac_md_ctx;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha384_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha384_free(IN void *sha384_ctx)
+{
+	mbedtls_sha512_free(sha384_ctx);
+	free_pool (sha384_ctx);
 }
 
 /**
@@ -39,17 +259,19 @@ uintn sha384_get_context_size(void)
 **/
 boolean sha384_init(OUT void *sha384_context)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha384_context == NULL) {
 		return FALSE;
 	}
 
-	//
-	// OpenSSL SHA-384 context Initialization
-	//
-	return (boolean)(SHA384_Init((SHA512_CTX *)sha384_context));
+	mbedtls_sha512_init(sha384_context);
+
+	ret = mbedtls_sha512_starts_ret(sha384_context, TRUE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -70,14 +292,11 @@ boolean sha384_init(OUT void *sha384_context)
 boolean sha384_duplicate(IN const void *sha384_context,
 			 OUT void *new_sha384_context)
 {
-	//
-	// Check input parameters.
-	//
 	if (sha384_context == NULL || new_sha384_context == NULL) {
 		return FALSE;
 	}
 
-	copy_mem(new_sha384_context, sha384_context, sizeof(SHA512_CTX));
+	mbedtls_sha512_clone(new_sha384_context, sha384_context);
 
 	return TRUE;
 }
@@ -103,25 +322,24 @@ boolean sha384_duplicate(IN const void *sha384_context,
 boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 		      IN uintn data_size)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha384_context == NULL) {
 		return FALSE;
 	}
 
-	//
-	// Check invalid parameters, in case that only DataLength was checked in OpenSSL
-	//
 	if (data == NULL && data_size != 0) {
 		return FALSE;
 	}
+	if (data_size > INT_MAX) {
+		return FALSE;
+	}
 
-	//
-	// OpenSSL SHA-384 hash Update
-	//
-	return (boolean)(
-		SHA384_Update((SHA512_CTX *)sha384_context, data, data_size));
+	ret = mbedtls_sha512_update_ret(sha384_context, data, data_size);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -146,18 +364,18 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 **/
 boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha384_context == NULL || hash_value == NULL) {
 		return FALSE;
 	}
 
-	//
-	// OpenSSL SHA-384 hash Finalization
-	//
-	return (boolean)(
-		SHA384_Final(hash_value, (SHA512_CTX *)sha384_context));
+	ret = mbedtls_sha512_finish_ret(sha384_context, hash_value);
+	mbedtls_sha512_free(sha384_context);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -181,38 +399,54 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
 			OUT uint8 *hash_value)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (hash_value == NULL) {
 		return FALSE;
 	}
 	if (data == NULL && data_size != 0) {
 		return FALSE;
 	}
-
-	//
-	// OpenSSL SHA-384 hash Computation.
-	//
-	if (SHA384(data, data_size, hash_value) == NULL) {
+	if (data_size > INT_MAX) {
 		return FALSE;
-	} else {
-		return TRUE;
 	}
+
+	ret = mbedtls_sha512_ret(data, data_size, hash_value, TRUE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-512 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA512 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-512 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha512_new() returns NULL.
 
 **/
-uintn sha512_get_context_size(void)
+void *sha512_new(void)
 {
-	//
-	// Retrieves OpenSSL SHA-512 context size
-	//
-	return (uintn)(sizeof(SHA512_CTX));
+	void *hmac_md_ctx;
+
+	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
+	if (hmac_md_ctx == NULL) {
+		return NULL;
+	}
+
+	return hmac_md_ctx;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha512_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha512_free(IN void *sha512_ctx)
+{
+	mbedtls_sha512_free(sha512_ctx);
+	free_pool (sha512_ctx);
 }
 
 /**
@@ -229,17 +463,19 @@ uintn sha512_get_context_size(void)
 **/
 boolean sha512_init(OUT void *sha512_context)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha512_context == NULL) {
 		return FALSE;
 	}
 
-	//
-	// OpenSSL SHA-512 context Initialization
-	//
-	return (boolean)(SHA512_Init((SHA512_CTX *)sha512_context));
+	mbedtls_sha512_init(sha512_context);
+
+	ret = mbedtls_sha512_starts_ret(sha512_context, FALSE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -260,14 +496,11 @@ boolean sha512_init(OUT void *sha512_context)
 boolean sha512_duplicate(IN const void *sha512_context,
 			 OUT void *new_sha512_context)
 {
-	//
-	// Check input parameters.
-	//
 	if (sha512_context == NULL || new_sha512_context == NULL) {
 		return FALSE;
 	}
 
-	copy_mem(new_sha512_context, sha512_context, sizeof(SHA512_CTX));
+	mbedtls_sha512_clone(new_sha512_context, sha512_context);
 
 	return TRUE;
 }
@@ -293,25 +526,24 @@ boolean sha512_duplicate(IN const void *sha512_context,
 boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 		      IN uintn data_size)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha512_context == NULL) {
 		return FALSE;
 	}
 
-	//
-	// Check invalid parameters, in case that only DataLength was checked in OpenSSL
-	//
 	if (data == NULL && data_size != 0) {
 		return FALSE;
 	}
+	if (data_size > INT_MAX) {
+		return FALSE;
+	}
 
-	//
-	// OpenSSL SHA-512 hash Update
-	//
-	return (boolean)(
-		SHA512_Update((SHA512_CTX *)sha512_context, data, data_size));
+	ret = mbedtls_sha512_update_ret(sha512_context, data, data_size);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -336,18 +568,18 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 **/
 boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (sha512_context == NULL || hash_value == NULL) {
 		return FALSE;
 	}
 
-	//
-	// OpenSSL SHA-512 hash Finalization
-	//
-	return (boolean)(
-		SHA384_Final(hash_value, (SHA512_CTX *)sha512_context));
+	ret = mbedtls_sha512_finish_ret(sha512_context, hash_value);
+	mbedtls_sha512_free(sha512_context);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }
 
 /**
@@ -371,22 +603,21 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
 			OUT uint8 *hash_value)
 {
-	//
-	// Check input parameters.
-	//
+	int32 ret;
+
 	if (hash_value == NULL) {
 		return FALSE;
 	}
 	if (data == NULL && data_size != 0) {
 		return FALSE;
 	}
-
-	//
-	// OpenSSL SHA-512 hash Computation.
-	//
-	if (SHA512(data, data_size, hash_value) == NULL) {
+	if (data_size > INT_MAX) {
 		return FALSE;
-	} else {
-		return TRUE;
 	}
+
+	ret = mbedtls_sha512_ret(data, data_size, hash_value, FALSE);
+	if (ret != 0) {
+		return FALSE;
+	}
+	return TRUE;
 }

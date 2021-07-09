@@ -11,29 +11,40 @@
 #include "internal_crypt_lib.h"
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-256 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-256 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_256_new() returns NULL.
 
 **/
-uintn sha3_256_get_context_size(void)
+void *sha3_256_new(void)
 {
-	return 0;
+  return NULL;
 }
 
 /**
-  Initializes user-supplied memory pointed by sha3_256Context as SHA3-256 hash context for
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha3_256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_256_free(IN void *sha3_256_ctx)
+{
+}
+
+/**
+  Initializes user-supplied memory pointed by sha3_256_context as SHA3-256 hash context for
   subsequent use.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
 
-  @param[out]  sha3_256Context  Pointer to SHA3-256 context being initialized.
+  @param[out]  sha3_256_context  Pointer to SHA3-256 context being initialized.
 
   @retval TRUE   SHA3-256 context initialization succeeded.
   @retval FALSE  SHA3-256 context initialization failed.
 
 **/
-boolean sha3_256_init(OUT void *sha3_256Context)
+boolean sha3_256_init(OUT void *sha3_256_context)
 {
 	return FALSE;
 }
@@ -41,11 +52,11 @@ boolean sha3_256_init(OUT void *sha3_256Context)
 /**
   Makes a copy of an existing SHA3-256 context.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
   If new_sha3_256_context is NULL, then return FALSE.
   If this interface is not supported, then return FALSE.
 
-  @param[in]  sha3_256Context     Pointer to SHA3-256 context being copied.
+  @param[in]  sha3_256_context     Pointer to SHA3-256 context being copied.
   @param[out] new_sha3_256_context  Pointer to new SHA3-256 context.
 
   @retval TRUE   SHA3-256 context copy succeeded.
@@ -53,7 +64,7 @@ boolean sha3_256_init(OUT void *sha3_256Context)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean sha3_256_duplicate(IN const void *sha3_256Context,
+boolean sha3_256_duplicate(IN const void *sha3_256_context,
 			   OUT void *new_sha3_256_context)
 {
 	return FALSE;
@@ -67,9 +78,9 @@ boolean sha3_256_duplicate(IN const void *sha3_256Context,
   SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be finalized
   by sha3_256_final(). Behavior with invalid context is undefined.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
 
-  @param[in, out]  sha3_256Context  Pointer to the SHA3-256 context.
+  @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
   @param[in]       data           Pointer to the buffer containing the data to be hashed.
   @param[in]       data_size       size of data buffer in bytes.
 
@@ -77,7 +88,7 @@ boolean sha3_256_duplicate(IN const void *sha3_256Context,
   @retval FALSE  SHA3-256 data digest failed.
 
 **/
-boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
+boolean sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
 			IN uintn data_size)
 {
 	return FALSE;
@@ -92,10 +103,10 @@ boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
   SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be
   finalized by sha3_256_final(). Behavior with invalid SHA3-256 context is undefined.
 
-  If sha3_256Context is NULL, then return FALSE.
+  If sha3_256_context is NULL, then return FALSE.
   If hash_value is NULL, then return FALSE.
 
-  @param[in, out]  sha3_256Context  Pointer to the SHA3-256 context.
+  @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
   @param[out]      hash_value      Pointer to a buffer that receives the SHA3-256 digest
                                   value (256 / 8 bytes).
 
@@ -103,7 +114,7 @@ boolean sha3_256_update(IN OUT void *sha3_256Context, IN const void *data,
   @retval FALSE  SHA3-256 digest computation failed.
 
 **/
-boolean sha3_256_final(IN OUT void *sha3_256Context, OUT uint8 *hash_value)
+boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8 *hash_value)
 {
 	return FALSE;
 }
@@ -133,14 +144,25 @@ boolean sha3_256_hash_all(IN const void *data, IN uintn data_size,
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA-384 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-384 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA-384 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_384_new() returns NULL.
 
 **/
-uintn sha3_384_get_context_size(void)
+void *sha3_384_new(void)
 {
-	return 0;
+  return NULL;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha3_384_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_384_free(IN void *sha3_384_ctx)
+{
 }
 
 /**
@@ -255,14 +277,25 @@ boolean sha3_384_hash_all(IN const void *data, IN uintn data_size,
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHA3-512 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHA3-512 use.
 
-  @return  The size, in bytes, of the context buffer required for SHA3-512 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, sha3_512_new() returns NULL.
 
 **/
-uintn sha3_512_get_context_size(void)
+void *sha3_512_new(void)
 {
-	return 0;
+  return NULL;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  sha3_512_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void sha3_512_free(IN void *sha3_512_ctx)
+{
 }
 
 /**
@@ -377,14 +410,25 @@ boolean sha3_512_hash_all(IN const void *data, IN uintn data_size,
 }
 
 /**
-  Retrieves the size, in bytes, of the context buffer required for SHAKE256 hash operations.
+  Allocates and initializes one HASH_CTX context for subsequent SHAKE-256 use.
 
-  @return  The size, in bytes, of the context buffer required for SHAKE256 hash operations.
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, shake256_new() returns NULL.
 
 **/
-uintn shake256_get_context_size(void)
+void *shake256_new(void)
 {
-	return 0;
+  return NULL;
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param[in]  shake256_ctx  Pointer to the HASH_CTX context to be released.
+
+**/
+void shake256_free(IN void *shake256_ctx)
+{
 }
 
 /**
