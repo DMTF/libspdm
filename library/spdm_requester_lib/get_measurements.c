@@ -312,16 +312,19 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 
 		reset_managed_buffer(&spdm_context->transcript.message_m);
 	} else {
-		//
-		// nonce is absent if there is not signature
-		//
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
 			    measurement_record_data_length + sizeof(uint16)) {
 			return RETURN_DEVICE_ERROR;
 		}
 		ptr = measurement_record_data + measurement_record_data_length;
-
+		
+		nonce = ptr;
+		DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
+		internal_dump_data(nonce, SPDM_NONCE_SIZE);
+		DEBUG((DEBUG_INFO, "\n"));
+		ptr += SPDM_NONCE_SIZE;
+		
 		opaque_length = *(uint16 *)ptr;
 		if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 			return RETURN_SECURITY_VIOLATION;
@@ -330,13 +333,14 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
-			    measurement_record_data_length + sizeof(uint16) +
-			    opaque_length) {
+			    measurement_record_data_length + SPDM_NONCE_SIZE + 
+				sizeof(uint16) + opaque_length) {
 			return RETURN_DEVICE_ERROR;
 		}
 		spdm_response_size = sizeof(spdm_measurements_response_t) +
 				     measurement_record_data_length +
-				     sizeof(uint16) + opaque_length;
+					 SPDM_NONCE_SIZE + sizeof(uint16) +
+				     opaque_length;
 		status = spdm_append_message_m(spdm_context, &spdm_response,
 					       spdm_response_size);
 		if (RETURN_ERROR(status)) {

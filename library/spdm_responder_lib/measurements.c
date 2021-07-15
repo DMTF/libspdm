@@ -70,12 +70,15 @@ void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
 	uintn measurment_no_sig_size;
 
 	measurment_no_sig_size =
-		sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16) +
 		spdm_context->local_context.opaque_measurement_rsp_size;
 	ASSERT(response_message_size > measurment_no_sig_size);
 	ptr = (void *)((uint8 *)response_message + response_message_size -
 		       measurment_no_sig_size);
 
+	spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+	ptr += SPDM_NONCE_SIZE;
+	
 	*(uint16 *)ptr =
 		(uint16)spdm_context->local_context.opaque_measurement_rsp_size;
 	ptr += sizeof(uint16);
@@ -268,7 +271,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_context->local_context.opaque_measurement_rsp_size +
 		signature_size;
 	measurment_no_sig_size =
-		sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16) +
 		spdm_context->local_context.opaque_measurement_rsp_size;
 
 	switch (spdm_request->header.param2) {
