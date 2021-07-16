@@ -400,9 +400,15 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				return RETURN_DEVICE_ERROR;
 			}
 			if (measurement_block_header->index == 0 ||
-			    measurement_block_header->index >
-				    *number_of_blocks) {
+				measurement_block_header->index == 0xFF) {	
 				return RETURN_DEVICE_ERROR;
+			}
+			if (measurement_operation !=
+				SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
+				if (measurement_block_header->index != 
+						measurement_operation) {	
+					return RETURN_DEVICE_ERROR;
+				}
 			}
 			if (measurement_block_count > *number_of_blocks) {
 				return RETURN_DEVICE_ERROR;

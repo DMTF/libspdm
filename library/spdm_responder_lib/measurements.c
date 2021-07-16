@@ -447,26 +447,26 @@ return_status spdm_get_response_measurements(IN void *context,
 		break;
 
 	default:
-		if (spdm_request->header.param2 <= device_measurement_count) {
-			measurment_record_size = 0;
-			cached_measurment_block = (void *)device_measurement;
-			for (index = 0; index < device_measurement_count;
-			     index++) {
-				measurment_block_size =
-					sizeof(spdm_measurement_block_dmtf_t) +
-					cached_measurment_block
-						->Measurement_block_dmtf_header
-						.dmtf_spec_measurement_value_size;
-				if (index + 1 == spdm_request->header.param2) {
-					measurment_record_size =
-						measurment_block_size;
-					break;
-				}
-				cached_measurment_block =
-					(void *)((uintn)cached_measurment_block +
-						 measurment_block_size);
+		measurment_record_size = 0;
+		cached_measurment_block = (void *)device_measurement;
+		for (index = 0; index < device_measurement_count;
+				index++) {
+			measurment_block_size =
+				sizeof(spdm_measurement_block_dmtf_t) +
+				cached_measurment_block
+					->Measurement_block_dmtf_header
+					.dmtf_spec_measurement_value_size;
+			if (cached_measurment_block->Measurement_block_common_header.index == 
+				spdm_request->header.param2) {
+				measurment_record_size =
+					measurment_block_size;
+				break;
 			}
-
+			cached_measurment_block =
+				(void *)((uintn)cached_measurment_block +
+						measurment_block_size);
+		}
+		if (index != device_measurement_count ) {
 			spdm_response_size =
 				sizeof(spdm_measurements_response_t) +
 				measurment_record_size;
@@ -501,28 +501,9 @@ return_status spdm_get_response_measurements(IN void *context,
 				(uint32)measurment_record_size);
 
 			measurment_block = (void *)(spdm_response + 1);
-			cached_measurment_block = (void *)device_measurement;
-			for (index = 0; index < device_measurement_count;
-			     index++) {
-				measurment_block_size =
-					sizeof(spdm_measurement_block_dmtf_t) +
-					cached_measurment_block
-						->Measurement_block_dmtf_header
-						.dmtf_spec_measurement_value_size;
-				if (index + 1 == spdm_request->header.param2) {
-					copy_mem(measurment_block,
-						 cached_measurment_block,
-						 measurment_block_size);
-					measurment_block
-						->Measurement_block_common_header
-						.index =
-						1; // always set to 1, since we only have 1 block.
-					break;
-				}
-				cached_measurment_block =
-					(void *)((uintn)cached_measurment_block +
-						 measurment_block_size);
-			}
+			copy_mem(measurment_block,
+					cached_measurment_block,
+					measurment_block_size);
 
 			if ((spdm_request->header.param1 &
 			     SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
@@ -568,6 +549,7 @@ return_status spdm_get_response_measurements(IN void *context,
 					spdm_response_size);
 			}
 		} else {
+			//Block not found
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
 				0, response_size, response);
