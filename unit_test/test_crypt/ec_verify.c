@@ -21,9 +21,9 @@ return_status validate_crypt_ec(void)
 	uintn public1_length;
 	uint8 public2[66 * 2];
 	uintn public2_length;
-	uint8 key1[32];
+	uint8 key1[66];
 	uintn key1_length;
-	uint8 key2[32];
+	uint8 key2[66];
 	uintn key2_length;
 	uint8 hash_value[SHA256_DIGEST_SIZE];
 	uintn hash_size;
@@ -45,14 +45,14 @@ return_status validate_crypt_ec(void)
 	// Generate & Initialize EC context
 	//
 	my_print("- Context1 ... ");
-	ec1 = ec_new_by_nid(CRYPTO_NID_SECP256R1);
+	ec1 = ec_new_by_nid(CRYPTO_NID_SECP384R1);
 	if (ec1 == NULL) {
 		my_print("[Fail]");
 		return RETURN_ABORTED;
 	}
 
 	my_print("Context2 ... ");
-	ec2 = ec_new_by_nid(CRYPTO_NID_SECP256R1);
+	ec2 = ec_new_by_nid(CRYPTO_NID_SECP384R1);
 	if (ec2 == NULL) {
 		my_print("[Fail]");
 		ec_free(ec1);
@@ -64,7 +64,7 @@ return_status validate_crypt_ec(void)
 	//
 	my_print("Generate key1 ... ");
 	status = ec_generate_key(ec1, public1, &public1_length);
-	if (!status) {
+	if (!status || public1_length != 48 * 2) {
 		my_print("[Fail]");
 		ec_free(ec1);
 		ec_free(ec2);
@@ -73,7 +73,7 @@ return_status validate_crypt_ec(void)
 
 	my_print("Generate key2 ... ");
 	status = ec_generate_key(ec2, public2, &public2_length);
-	if (!status) {
+	if (!status || public2_length != 48 * 2) {
 		my_print("[Fail]");
 		ec_free(ec1);
 		ec_free(ec2);
@@ -83,7 +83,7 @@ return_status validate_crypt_ec(void)
 	my_print("Compute key1 ... ");
 	status = ec_compute_key(ec1, public2, public2_length, key1,
 				&key1_length);
-	if (!status) {
+	if (!status || key1_length != 48) {
 		my_print("[Fail]");
 		ec_free(ec1);
 		ec_free(ec2);
@@ -93,7 +93,94 @@ return_status validate_crypt_ec(void)
 	my_print("Compute key2 ... ");
 	status = ec_compute_key(ec2, public1, public1_length, key2,
 				&key2_length);
-	if (!status) {
+	if (!status || key2_length != 48) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Compare Keys ... ");
+	if (key1_length != key2_length) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	}
+
+	if (const_compare_mem(key1, key2, key1_length) != 0) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	} else {
+		my_print("[Pass]\n");
+	}
+
+	ec_free(ec1);
+	ec_free(ec2);
+
+	//
+	// Initialize key length
+	//
+	public1_length = sizeof(public1);
+	public2_length = sizeof(public2);
+	key1_length = sizeof(key1);
+	key2_length = sizeof(key2);
+
+	//
+	// Generate & Initialize EC context
+	//
+	my_print("- Context1 ... ");
+	ec1 = ec_new_by_nid(CRYPTO_NID_SECP521R1);
+	if (ec1 == NULL) {
+		my_print("[Fail]");
+		return RETURN_ABORTED;
+	}
+
+	my_print("Context2 ... ");
+	ec2 = ec_new_by_nid(CRYPTO_NID_SECP521R1);
+	if (ec2 == NULL) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		return RETURN_ABORTED;
+	}
+
+	//
+	// Verify EC-DH
+	//
+	my_print("Generate key1 ... ");
+	status = ec_generate_key(ec1, public1, &public1_length);
+	if (!status || public1_length != 66 * 2) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Generate key2 ... ");
+	status = ec_generate_key(ec2, public2, &public2_length);
+	if (!status || public2_length != 66 * 2) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Compute key1 ... ");
+	status = ec_compute_key(ec1, public2, public2_length, key1,
+				&key1_length);
+	if (!status || key1_length != 66) {
+		my_print("[Fail]");
+		ec_free(ec1);
+		ec_free(ec2);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Compute key2 ... ");
+	status = ec_compute_key(ec2, public1, public1_length, key2,
+				&key2_length);
+	if (!status || key2_length != 66) {
 		my_print("[Fail]");
 		ec_free(ec1);
 		ec_free(ec2);

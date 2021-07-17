@@ -21,12 +21,12 @@ return_status validate_crypt_sm2(void)
 	uintn public1_length;
 	uint8 public2[66 * 2];
 	uintn public2_length;
-	uint8 key1[32];
+	uint8 key1[66];
 	uintn key1_length;
-	uint8 key2[32];
+	uint8 key2[66];
 	uintn key2_length;
 	uint8 message[] = "Sm2Test";
-	uint8 signature[32 * 2];
+	uint8 signature[66 * 2];
 	uintn sig_size;
 	boolean status;
 
@@ -63,7 +63,7 @@ return_status validate_crypt_sm2(void)
 	//
 	my_print("Generate key1 ... ");
 	status = sm2_generate_key(Sm2_1, public1, &public1_length);
-	if (!status) {
+	if (!status || public1_length != 32 * 2) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);
@@ -72,7 +72,7 @@ return_status validate_crypt_sm2(void)
 
 	my_print("Generate key2 ... ");
 	status = sm2_generate_key(Sm2_2, public2, &public2_length);
-	if (!status) {
+	if (!status || public2_length != 32 * 2) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);
@@ -82,7 +82,7 @@ return_status validate_crypt_sm2(void)
 	my_print("Compute key1 ... ");
 	status = sm2_compute_key(Sm2_1, public2, public2_length, key1,
 				 &key1_length);
-	if (!status) {
+	if (!status || key1_length != 32) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);
@@ -92,7 +92,7 @@ return_status validate_crypt_sm2(void)
 	my_print("Compute key2 ... ");
 	status = sm2_compute_key(Sm2_2, public1, public1_length, key2,
 				 &key2_length);
-	if (!status) {
+	if (!status || key2_length != 32) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);

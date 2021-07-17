@@ -53,7 +53,7 @@ return_status validate_crypt_dh(void)
 
 	my_print("Generate key1 ... ");
 	status = dh_generate_key(dh1, ff_public_key1, &ff_public_key1_length);
-	if (!status || ff_public_key1_length > sizeof(ff_public_key1)) {
+	if (!status || ff_public_key1_length != 256) {
 		my_print("[Fail]");
 		dh_free(dh1);
 		dh_free(dh2);
@@ -62,7 +62,7 @@ return_status validate_crypt_dh(void)
 
 	my_print("Generate key2 ... ");
 	status = dh_generate_key(dh2, ff_public_key2, &ff_public_key2_length);
-	if (!status || ff_public_key2_length > sizeof(ff_public_key2)) {
+	if (!status || ff_public_key2_length != 256) {
 		my_print("[Fail]");
 		dh_free(dh1);
 		dh_free(dh2);
@@ -72,7 +72,7 @@ return_status validate_crypt_dh(void)
 	my_print("Compute key1 ... ");
 	status = dh_compute_key(dh1, ff_public_key2, ff_public_key2_length,
 				ff_key1, &ff_key1_length);
-	if (!status) {
+	if (!status || ff_key1_length != 256) {
 		my_print("[Fail]");
 		dh_free(dh1);
 		dh_free(dh2);
@@ -82,7 +82,7 @@ return_status validate_crypt_dh(void)
 	my_print("Compute key2 ... ");
 	status = dh_compute_key(dh2, ff_public_key1, ff_public_key1_length,
 				ff_key2, &ff_key2_length);
-	if (!status) {
+	if (!status || ff_key2_length != 256) {
 		my_print("[Fail]");
 		dh_free(dh1);
 		dh_free(dh2);

@@ -330,9 +330,9 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
   If key is NULL, then return FALSE.
   If key_size is not large enough, then return FALSE.
 
-  For P-256, the peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
-  For P-384, the peer_public_size is 96. first 48-byte is X, second 48-byte is Y.
-  For P-521, the peer_public_size is 132. first 66-byte is X, second 66-byte is Y.
+  For P-256, the peer_public_size is 64. first 32-byte is X, second 32-byte is Y. The key_size is 32.
+  For P-384, the peer_public_size is 96. first 48-byte is X, second 48-byte is Y. The key_size is 48.
+  For P-521, the peer_public_size is 132. first 66-byte is X, second 66-byte is Y. The key_size is 66.
 
   @param[in, out]  ec_context          Pointer to the EC context.
   @param[in]       peer_public         Pointer to the peer's public X,Y.

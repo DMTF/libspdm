@@ -264,9 +264,9 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
   If key is NULL, then return FALSE.
   If key_size is not large enough, then return FALSE.
 
-  For FFDHE2048, the peer_public_size is 256.
-  For FFDHE3072, the peer_public_size is 384.
-  For FFDHE4096, the peer_public_size is 512.
+  For FFDHE2048, the peer_public_size and key_size is 256.
+  For FFDHE3072, the peer_public_size and key_size is 384.
+  For FFDHE4096, the peer_public_size and key_size is 512.
 
   @param[in, out]  dh_context          Pointer to the DH context.
   @param[in]       peer_public_key      Pointer to the peer's public key.
@@ -286,6 +286,8 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 {
 	BIGNUM *bn;
 	intn size;
+	DH *dh;
+	uintn final_key_size;
 
 	//
 	// Check input parameters.
@@ -304,19 +306,35 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 		return FALSE;
 	}
 
-	size = DH_compute_key(key, bn, dh_context);
-	if (size < 0) {
+	dh = (DH *)dh_context;
+	switch (DH_size(dh)) {
+	case 256:
+		final_key_size = 256;
+		break;
+	case 384:
+		final_key_size = 384;
+		break;
+	case 512:
+		final_key_size = 512;
+		break;
+	default:
+		return FALSE;
+	}
+	if (*key_size < final_key_size) {
+		*key_size = final_key_size;
 		BN_free(bn);
 		return FALSE;
 	}
 
-	if (*key_size < (uintn)size) {
-		*key_size = size;
-		BN_free(bn);
+	size = DH_compute_key_padded(key, bn, dh_context);
+	BN_free(bn);
+	if (size < 0) {
+		return FALSE;
+	}
+	if ((uintn)size != final_key_size) {
 		return FALSE;
 	}
 
 	*key_size = size;
-	BN_free(bn);
 	return TRUE;
 }

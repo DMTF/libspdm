@@ -2704,9 +2704,9 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
   If key_size is not large enough, then return FALSE.
   If this interface is not supported, then return FALSE.
 
-  For FFDHE2048, the peer_public_size is 256.
-  For FFDHE3072, the peer_public_size is 384.
-  For FFDHE4096, the peer_public_size is 512.
+  For FFDHE2048, the peer_public_size and key_size is 256.
+  For FFDHE3072, the peer_public_size and key_size is 384.
+  For FFDHE4096, the peer_public_size and key_size is 512.
 
   @param[in, out]  dh_context          Pointer to the DH context.
   @param[in]       peer_public_key      Pointer to the peer's public key.
@@ -2847,9 +2847,9 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public_key,
   If key is NULL, then return FALSE.
   If key_size is not large enough, then return FALSE.
 
-  For P-256, the peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
-  For P-384, the peer_public_size is 96. first 48-byte is X, second 48-byte is Y.
-  For P-521, the peer_public_size is 132. first 66-byte is X, second 66-byte is Y.
+  For P-256, the peer_public_size is 64. first 32-byte is X, second 32-byte is Y. The key_size is 32.
+  For P-384, the peer_public_size is 96. first 48-byte is X, second 48-byte is Y. The key_size is 48.
+  For P-521, the peer_public_size is 132. first 66-byte is X, second 66-byte is Y. The key_size is 66.
 
   @param[in, out]  ec_context          Pointer to the EC context.
   @param[in]       peer_public         Pointer to the peer's public X,Y.
@@ -3283,7 +3283,7 @@ boolean sm2_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
   If key is NULL, then return FALSE.
   If key_size is not large enough, then return FALSE.
 
-  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
+  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y. The key_size is 32.
 
   @param[in, out]  sm2_context         Pointer to the sm2 context.
   @param[in]       peer_public         Pointer to the peer's public X,Y.

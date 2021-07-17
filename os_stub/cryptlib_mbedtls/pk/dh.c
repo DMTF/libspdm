@@ -273,6 +273,9 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 		       IN OUT uintn *key_size)
 {
 	int32 ret;
+	mbedtls_dhm_context *ctx;
+	uintn return_size;
+	uintn dh_key_size;
 
 	//
 	// Check input parameters.
@@ -285,6 +288,28 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 	if (peer_public_key_size > INT_MAX) {
 		return FALSE;
 	}
+	
+	ctx = dh_context;
+	switch (mbedtls_mpi_size(&ctx->P)) {
+	case 256:
+		dh_key_size = 256;
+		break;
+	case 384:
+		dh_key_size = 384;
+		break;
+	case 512:
+		dh_key_size = 512;
+		break;
+	default:
+		return FALSE;
+	}
+	if (peer_public_key_size != dh_key_size) {
+		return FALSE;
+	}
+	if (*key_size < dh_key_size) {
+		return FALSE;
+	}
+	*key_size = dh_key_size;
 
 	ret = mbedtls_dhm_read_public(dh_context, peer_public_key,
 				      peer_public_key_size);
@@ -292,10 +317,15 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 		return FALSE;
 	}
 
-	ret = mbedtls_dhm_calc_secret(dh_context, key, *key_size, key_size,
+	return_size = 0;
+	ret = mbedtls_dhm_calc_secret(dh_context, key, *key_size, &return_size,
 				      myrand, NULL);
 	if (ret != 0) {
 		return FALSE;
+	}
+	if (return_size < dh_key_size) {
+        copy_mem(key + dh_key_size - return_size, key, return_size);
+        zero_mem(key, dh_key_size - return_size);
 	}
 
 	return TRUE;

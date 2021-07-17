@@ -138,7 +138,7 @@ boolean sm2_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
   If key is NULL, then return FALSE.
   If key_size is not large enough, then return FALSE.
 
-  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
+  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y. The key_size is 32.
 
   @param[in, out]  sm2_context         Pointer to the sm2 context.
   @param[in]       peer_public         Pointer to the peer's public X,Y.
