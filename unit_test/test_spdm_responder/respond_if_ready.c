@@ -488,7 +488,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_get_measurements_request.nonce);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request4_size, &m_spdm_respond_if_ready_request4, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_measurements_response_t) + sizeof(uint16));
+  assert_int_equal (response_size, sizeof(spdm_measurements_response_t) + sizeof(uint16) + SPDM_NONCE_SIZE);
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
   assert_int_equal (spdm_response->header.param1, MEASUREMENT_BLOCK_NUMBER);
