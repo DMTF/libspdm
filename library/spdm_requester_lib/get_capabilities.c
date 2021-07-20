@@ -55,6 +55,11 @@ boolean spdm_check_response_flag_compability(IN uint32 capabilities_flag,
 		if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
 			return FALSE;
 		}
+        //Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared
+        if ((encrypt_cap == 0 && mac_cap == 0) &&
+            handshake_in_the_clear_cap != 0) {
+            return FALSE;
+        }
 		//PSK_cap set and encrypt_cap+mac_cap cleared
 		if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
 			return FALSE;
@@ -65,11 +70,6 @@ boolean spdm_check_response_flag_compability(IN uint32 capabilities_flag,
 		}
 		//Handshake_in_the_clear_cap set and key_ex_cap cleared
 		if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
-			return FALSE;
-		}
-		//Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared
-		if ((encrypt_cap == 0 && mac_cap == 0) &&
-		    handshake_in_the_clear_cap != 0) {
 			return FALSE;
 		}
 		//Pub_key_id_cap set and cert_cap set
