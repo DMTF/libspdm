@@ -36,7 +36,7 @@ void internal_dump_hex(IN uint8 *data, IN uintn size);
   This function concatenates binary data, which is used as info in HKDF expand later.
 
   @param  label                        An ascii string label for the spdm_bin_concat.
-  @param  label_size                    The size in bytes of the ASCII string label, including the NULL terminator.
+  @param  label_size                    The size in bytes of the ASCII string label, not including NULL terminator.
   @param  context                      A pre-defined hash value as the context for the spdm_bin_concat.
   @param  length                       16 bits length for the spdm_bin_concat.
   @param  hash_size                     The size in bytes of the context hash.
