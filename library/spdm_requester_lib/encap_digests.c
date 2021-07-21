@@ -63,18 +63,6 @@ return_status spdm_get_encap_response_digest(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	//
-	// Cache
-	//
-	status = spdm_append_message_mut_b(spdm_context, spdm_request,
-					   request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-			response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
@@ -105,9 +93,20 @@ return_status spdm_get_encap_response_digest(IN void *context,
 	//
 	// Cache
 	//
+	status = spdm_append_message_mut_b(spdm_context, spdm_request,
+					   request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_encap_error_response(
+			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	status = spdm_append_message_mut_b(spdm_context, spdm_response,
 					   *response_size);
 	if (RETURN_ERROR(status)) {
+		shrink_managed_buffer(&spdm_context->transcript.message_mut_b,
+						request_size);
 		spdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);

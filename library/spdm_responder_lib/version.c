@@ -115,6 +115,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	status = spdm_append_message_a(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
+		reset_managed_buffer(&spdm_context->transcript.message_a);
 		spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);

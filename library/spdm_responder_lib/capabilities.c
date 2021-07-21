@@ -121,6 +121,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 	uintn spdm_request_size;
 	spdm_capabilities_response *spdm_response;
 	spdm_context_t *spdm_context;
+	return_status status;
 
 	spdm_context = context;
 	spdm_request = request;
@@ -166,9 +167,15 @@ return_status spdm_get_response_capabilities(IN void *context,
 	//
 	// Cache
 	//
-	append_managed_buffer(&spdm_context->transcript.message_a, spdm_request,
+	status = append_managed_buffer(&spdm_context->transcript.message_a, spdm_request,
 			      spdm_request_size);
 
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+						response_size, response);
+		return RETURN_SUCCESS;
+	}
 	ASSERT(*response_size >= sizeof(spdm_capabilities_response));
 	*response_size = sizeof(spdm_capabilities_response);
 	zero_mem(response, *response_size);
@@ -188,9 +195,17 @@ return_status spdm_get_response_capabilities(IN void *context,
 	//
 	// Cache
 	//
-	append_managed_buffer(&spdm_context->transcript.message_a,
+	status = append_managed_buffer(&spdm_context->transcript.message_a,
 			      spdm_response, *response_size);
 
+	if (RETURN_ERROR(status)) {
+		shrink_managed_buffer(&spdm_context->transcript.message_a,
+						 spdm_request_size);
+		spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+						response_size, response);
+		return RETURN_SUCCESS;
+	}
 	if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
 		spdm_context->connection_info.capability.ct_exponent =
 			spdm_request->ct_exponent;
