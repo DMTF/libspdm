@@ -477,6 +477,15 @@ void spdm_reset_message_mut_c(IN void *spdm_context);
 void spdm_reset_message_m(IN void *spdm_context);
 
 /**
+  Reset managed buffer in SPDM context according to request code.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  spdm_request                The SPDM request code.
+*/
+void spdm_reset_managed_buffer_via_request(IN void *context,
+			       IN uint8 request_code);
+
+/**
   Append message A cache in SPDM context.
 
   @param  spdm_context                  A pointer to the SPDM context.

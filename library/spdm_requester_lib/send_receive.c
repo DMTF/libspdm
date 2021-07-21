@@ -170,7 +170,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
 {
 	spdm_session_info_t *session_info;
 	spdm_session_state_t session_state;
-
+	spdm_message_header_t *spdm_request;
 	if ((session_id != NULL) &&
 	    spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
@@ -189,6 +189,9 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
 			session_id = NULL;
 		}
 	}
+
+	spdm_request = request;
+	spdm_reset_managed_buffer_via_request(spdm_context,spdm_request->request_response_code);
 
 	return spdm_send_request(spdm_context, session_id, FALSE, request_size,
 				 request);

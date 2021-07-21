@@ -363,6 +363,7 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
 		get_response_func =
 			spdm_get_response_func_via_last_request(spdm_context);
 		if (get_response_func != NULL) {
+			spdm_reset_managed_buffer_via_request(spdm_context,spdm_request->request_response_code);
 			status = get_response_func(
 				spdm_context,
 				spdm_context->last_spdm_request_size,
