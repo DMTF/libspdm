@@ -1015,7 +1015,7 @@ void test_spdm_requester_get_digests_case10(void **state)
 
 /**
   Test 11: a request message is successfully sent but a failure occurs during the receiving of the response message
-  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received (managed buffer not shrinked)
+  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
 **/
 void test_spdm_requester_get_digests_case11(void **state)
 {
@@ -1047,7 +1047,7 @@ void test_spdm_requester_get_digests_case11(void **state)
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-			 sizeof(spdm_get_digest_request_t));
+			 0);
 }
 
 /**
@@ -1090,7 +1090,7 @@ void test_spdm_requester_get_digests_case12(void **state)
 
 /**
   Test 13: a request message is successfully sent but the request_response_code from the response message is different than the code of SPDM_DIGESTS
-  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received (managed buffer not shrinked)
+  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received 
 **/
 void test_spdm_requester_get_digests_case13(void **state)
 {
@@ -1122,12 +1122,12 @@ void test_spdm_requester_get_digests_case13(void **state)
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-			 sizeof(spdm_get_digest_request_t));
+			 0);
 }
 
 /**
   Test 14: a request message is successfully sent but the number of digests in the response message is equal to zero
-  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
+  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received
 **/
 void test_spdm_requester_get_digests_case14(void **state)
 {
@@ -1159,12 +1159,12 @@ void test_spdm_requester_get_digests_case14(void **state)
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-			 sizeof(spdm_get_digest_request_t));
+			 0);
 }
 
 /**
   Test 15: a request message is successfully sent but it cannot be appended to the internal cache since the internal cache is full
-  Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION
+  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR
 **/
 void test_spdm_requester_get_digests_case15(void **state)
 {
@@ -1174,6 +1174,7 @@ void test_spdm_requester_get_digests_case15(void **state)
 	uint8 slot_mask;
 	uint8 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
 
+	
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xF;
@@ -1195,7 +1196,7 @@ void test_spdm_requester_get_digests_case15(void **state)
 	zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -1307,7 +1308,7 @@ void test_spdm_requester_get_digests_case18(void **state)
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-			 sizeof(spdm_get_digest_request_t));
+			 0);
 }
 
 /**

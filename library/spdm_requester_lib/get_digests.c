@@ -73,15 +73,6 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache data
-	//
-	status = spdm_append_message_b(spdm_context, &spdm_request,
-				       sizeof(spdm_request));
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));
 	status = spdm_receive_spdm_response(
@@ -134,9 +125,17 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 	//
 	// Cache data
 	//
+	status = spdm_append_message_b(spdm_context, &spdm_request,
+				       sizeof(spdm_request));
+	if (RETURN_ERROR(status)) {
+		return RETURN_SECURITY_VIOLATION;
+	}
+
 	status = spdm_append_message_b(spdm_context, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {
+		shrink_managed_buffer(&spdm_context->transcript.message_b,
+								sizeof(spdm_request));
 		return RETURN_SECURITY_VIOLATION;
 	}
 

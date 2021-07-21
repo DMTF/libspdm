@@ -3770,7 +3770,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-			 sizeof(spdm_message_header_t));
+			 0);
 	free(data);
 }
 
@@ -3885,7 +3885,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-			 sizeof(spdm_get_measurements_request_t));
+			 0);
 	free(data);
 }
 
@@ -3943,7 +3943,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-			 sizeof(spdm_get_measurements_request_t));
+			 0);
 	free(data);
 }
 
