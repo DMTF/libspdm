@@ -245,9 +245,10 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		dhe_context);
 	if (!result) {
+		//Genearte key fail
 		spdm_free_session_id(spdm_context, session_id);
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -257,9 +258,10 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	result = spdm_generate_measurement_summary_hash(
 		spdm_context, FALSE, spdm_request->header.param1, ptr);
 	if (!result) {
+		//Genearte hash fail
 		spdm_free_session_id(spdm_context, session_id);
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -314,8 +316,9 @@ return_status spdm_get_response_key_exchange(IN void *context,
 					 th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
+		//Genearte hash fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -323,8 +326,9 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		session_info->secured_message_context, th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
+		//Genearte key fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -339,10 +343,11 @@ return_status spdm_get_response_key_exchange(IN void *context,
 							     session_info, ptr);
 		if (!result) {
 			spdm_free_session_id(spdm_context, session_id);
+			//Genearte hmac fail
 			spdm_generate_error_response(
 				spdm_context,
-				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-				SPDM_KEY_EXCHANGE_RSP, response_size, response);
+				SPDM_ERROR_CODE_UNSPECIFIED,
+				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
 		status = spdm_append_message_k(session_info, ptr, hmac_size);

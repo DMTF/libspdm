@@ -200,9 +200,10 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	result = spdm_generate_challenge_auth_signature(spdm_context, FALSE,
 							ptr);
 	if (!result) {
+		//Genearte sig fail
 		return spdm_generate_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_CHALLENGE_AUTH, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 	}
 	ptr += signature_size;
 

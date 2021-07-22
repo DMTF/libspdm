@@ -242,9 +242,10 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	result = spdm_generate_measurement_summary_hash(
 		spdm_context, FALSE, spdm_request->header.param1, ptr);
 	if (!result) {
+		//Genearte hash fail
 		spdm_free_session_id(spdm_context, session_id);
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -277,8 +278,9 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 					 th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
+		//Genearte hash fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -286,8 +288,9 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		session_info->secured_message_context, th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
+		//Genearte key fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -296,9 +299,10 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 						     ptr);
 	if (!result) {
 		spdm_free_session_id(spdm_context, session_id);
+		//Genearte hmac fail
 		spdm_generate_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_PSK_EXCHANGE_RSP, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	status = spdm_append_message_k(session_info, ptr, hmac_size);
@@ -325,16 +329,18 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		status = spdm_calculate_th2_hash(spdm_context, session_info,
 						 FALSE, th2_hash_data);
 		if (RETURN_ERROR(status)) {
+			//Genearte hash fail
 			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
 		status = spdm_generate_session_data_key(
 			session_info->secured_message_context, th2_hash_data);
 		if (RETURN_ERROR(status)) {
+			//Genearte key fail
 			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}

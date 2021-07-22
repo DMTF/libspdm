@@ -156,16 +156,18 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_calculate_th2_hash(spdm_context, session_info, FALSE,
 					 th2_hash_data);
 	if (RETURN_ERROR(status)) {
+		//Genearte hash fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	status = spdm_generate_session_data_key(
 		session_info->secured_message_context, th2_hash_data);
 	if (RETURN_ERROR(status)) {
+		//Genearte key fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}

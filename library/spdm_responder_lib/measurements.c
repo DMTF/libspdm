@@ -515,10 +515,11 @@ return_status spdm_get_response_measurements(IN void *context,
 			spdm_context, spdm_response,
 			spdm_response_size);
 		if (RETURN_ERROR(status)) {
+			//Genearte sig fail
 			spdm_generate_error_response(
 				spdm_context,
-				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-				SPDM_GET_MEASUREMENTS,
+				SPDM_ERROR_CODE_UNSPECIFIED,
+				0,
 				response_size, response);
 			reset_managed_buffer(
 				&spdm_context->transcript

@@ -146,9 +146,10 @@ return_status spdm_get_encap_response_challenge_auth(
 	result =
 		spdm_generate_challenge_auth_signature(spdm_context, TRUE, ptr);
 	if (!result) {
+		//Genearte sig fail
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_CHALLENGE_AUTH, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	ptr += signature_size;
