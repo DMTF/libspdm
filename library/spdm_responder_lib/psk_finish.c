@@ -104,8 +104,9 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_append_message_f(session_info, request,
 				       request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -134,8 +135,9 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		session_info, (uint8 *)request + request_size - hmac_size,
 		hmac_size);
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -143,8 +145,9 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_append_message_f(session_info, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}

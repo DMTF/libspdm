@@ -157,8 +157,9 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_append_message_f(session_info, request,
 				       sizeof(spdm_finish_request_t));
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -178,8 +179,9 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			(uint8 *)request + sizeof(spdm_finish_request_t),
 			signature_size);
 		if (RETURN_ERROR(status)) {
+			//Append message fail
 			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
@@ -202,8 +204,9 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 					       sizeof(spdm_finish_request_t),
 				       hmac_size);
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -228,8 +231,9 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_append_message_f(session_info, spdm_response,
 				       sizeof(spdm_finish_response_t));
 	if (RETURN_ERROR(status)) {
+		//Append message fail
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -254,8 +258,9 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			(uint8 *)spdm_response + sizeof(spdm_finish_request_t),
 			hmac_size);
 		if (RETURN_ERROR(status)) {
+			//Append message fail
 			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
