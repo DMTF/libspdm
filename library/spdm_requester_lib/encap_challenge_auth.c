@@ -76,7 +76,7 @@ return_status spdm_get_encap_response_challenge_auth(
 					   request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -139,7 +139,7 @@ return_status spdm_get_encap_response_challenge_auth(
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -147,8 +147,8 @@ return_status spdm_get_encap_response_challenge_auth(
 		spdm_generate_challenge_auth_signature(spdm_context, TRUE, ptr);
 	if (!result) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_CHALLENGE_AUTH, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	ptr += signature_size;

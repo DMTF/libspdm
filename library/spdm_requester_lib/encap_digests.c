@@ -70,7 +70,7 @@ return_status spdm_get_encap_response_digest(IN void *context,
 					   request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -109,7 +109,7 @@ return_status spdm_get_encap_response_digest(IN void *context,
 					   *response_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
