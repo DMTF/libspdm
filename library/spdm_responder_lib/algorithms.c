@@ -291,7 +291,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -423,7 +423,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}

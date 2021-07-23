@@ -259,7 +259,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_append_message_m(spdm_context, spdm_request, request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -535,8 +535,8 @@ return_status spdm_get_response_measurements(IN void *context,
 				if (RETURN_ERROR(status)) {
 					spdm_generate_error_response(
 						spdm_context,
-						SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-						SPDM_GET_MEASUREMENTS,
+						SPDM_ERROR_CODE_UNSPECIFIED,
+						0,
 						response_size, response);
 					reset_managed_buffer(
 						&spdm_context->transcript
@@ -571,7 +571,7 @@ return_status spdm_get_response_measurements(IN void *context,
 					       *response_size);
 		if (RETURN_ERROR(status)) {
 			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			reset_managed_buffer(
 				&spdm_context->transcript.message_m);
