@@ -66,6 +66,8 @@ void test_spdm_responder_certificate_case1(void **state)
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
 	spdm_context->local_context.slot_count = 1;
+	spdm_context->transcript.message_m.buffer_size =
+		spdm_context->transcript.message_m.max_buffer_size;
 
 	response_size = sizeof(response);
 	status = spdm_get_response_certificate(
@@ -82,6 +84,8 @@ void test_spdm_responder_certificate_case1(void **state)
 			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 	assert_int_equal(spdm_response->remainder_length,
 			 data_size - MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+					0);
 	free(data);
 }
 

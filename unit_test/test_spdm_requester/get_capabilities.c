@@ -772,6 +772,9 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 	spdm_test_context->case_id = 0x2;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
+	spdm_context->transcript.message_m.buffer_size =
+						spdm_context->transcript.message_m.max_buffer_size;
+
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -781,6 +784,7 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 			 0);
 	assert_int_equal(spdm_context->connection_info.capability.flags,
 			 DEFAULT_CAPABILITY_FLAG);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 }
 
 void test_spdm_requester_get_capabilities_case3(void **state)

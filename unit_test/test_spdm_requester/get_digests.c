@@ -697,6 +697,8 @@ void test_spdm_requester_get_digests_case2(void **state)
 		(uint8)(0xFF));
 	spdm_context->transcript.message_b.buffer_size = 0;
 
+	spdm_context->transcript.message_m.buffer_size =
+							spdm_context->transcript.message_m.max_buffer_size;
 	zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
@@ -707,6 +709,7 @@ void test_spdm_requester_get_digests_case2(void **state)
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
 						   .algorithm.base_hash_algo));
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 }
 
 /**

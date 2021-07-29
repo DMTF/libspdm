@@ -65,6 +65,8 @@ return_status spdm_requester_heartbeat_test_send_message(IN void *spdm_context,
 		return RETURN_SUCCESS;
 	case 0xA:
 		return RETURN_SUCCESS;
+	case 0xB:
+		return RETURN_SUCCESS;	
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -426,7 +428,38 @@ return_status spdm_requester_heartbeat_test_receive_message(
     }
   }
     return RETURN_SUCCESS;
+	case 0xB: {
+		spdm_heartbeat_response_t *spdm_response;
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+		uint32 session_id;
+		spdm_session_info_t *session_info;
 
+		session_id = 0xFFFFFFFF;
+		temp_buf_size = sizeof(spdm_heartbeat_response_t);
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code =
+			SPDM_HEARTBEAT_ACK;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+
+		spdm_transport_test_encode_message(spdm_context, &session_id,
+						   FALSE, FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+		session_info = spdm_get_session_info_via_session_id(
+			spdm_context, session_id);
+		if (session_info == NULL) {
+			return RETURN_DEVICE_ERROR;
+		}
+		/* WALKAROUND: If just use single context to encode message and then decode message */
+		((spdm_secured_message_context_t
+			  *)(session_info->secured_message_context))
+			->application_secret.response_data_sequence_number--;
+	}
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -1261,6 +1294,108 @@ void test_spdm_requester_heartbeat_case10(void **state) {
   free(data);
 }
 
+void test_spdm_requester_heartbeat_case11(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xb;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+	zero_mem(m_local_psk_hint, 32);
+	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
+		 sizeof(TEST_PSK_HINT_STRING));
+	spdm_context->local_context.psk_hint_size =
+		sizeof(TEST_PSK_HINT_STRING);
+	spdm_context->local_context.psk_hint = m_local_psk_hint;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_ESTABLISHED);
+	set_mem(m_dummy_key_buffer,
+		((spdm_secured_message_context_t
+			  *)(session_info->secured_message_context))
+			->aead_key_size,
+		(uint8)(0xFF));
+	spdm_secured_message_set_response_data_encryption_key(
+		session_info->secured_message_context, m_dummy_key_buffer,
+		((spdm_secured_message_context_t
+			  *)(session_info->secured_message_context))
+			->aead_key_size);
+	set_mem(m_dummy_salt_buffer,
+		((spdm_secured_message_context_t
+			  *)(session_info->secured_message_context))
+			->aead_iv_size,
+		(uint8)(0xFF));
+	spdm_secured_message_set_response_data_salt(
+		session_info->secured_message_context, m_dummy_salt_buffer,
+		((spdm_secured_message_context_t
+			  *)(session_info->secured_message_context))
+			->aead_iv_size);
+	((spdm_secured_message_context_t *)(session_info
+						    ->secured_message_context))
+		->application_secret.response_data_sequence_number = 0;
+	spdm_context->transcript.message_m.buffer_size =
+		spdm_context->transcript.message_m.max_buffer_size;
+	spdm_context->transcript.message_b.buffer_size =
+							spdm_context->transcript.message_b.max_buffer_size;
+	spdm_context->transcript.message_c.buffer_size =
+							spdm_context->transcript.message_c.max_buffer_size;
+	spdm_context->transcript.message_mut_b.buffer_size =
+							spdm_context->transcript.message_mut_b.max_buffer_size;
+	spdm_context->transcript.message_mut_c.buffer_size =
+							spdm_context->transcript.message_mut_c.max_buffer_size;
+
+	status = spdm_heartbeat(spdm_context, session_id);
+	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
+	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
+	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+	free(data);
+}
+
 spdm_test_context_t m_spdm_requester_heartbeat_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1291,6 +1426,9 @@ int spdm_requester_heartbeat_test_main(void)
 		cmocka_unit_test(test_spdm_requester_heartbeat_case9),
 		// Unexpected errors
 		cmocka_unit_test(test_spdm_requester_heartbeat_case10),
+		// Buffer reset
+		cmocka_unit_test(test_spdm_requester_heartbeat_case11),
+	
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_heartbeat_test_context);
