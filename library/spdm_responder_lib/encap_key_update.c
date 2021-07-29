@@ -60,6 +60,10 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
 
 	spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
 	spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	if (spdm_context->encap_context.last_encap_request_header
 		    .request_response_code != SPDM_KEY_UPDATE) {
 		spdm_request->header.param1 =
@@ -137,6 +141,7 @@ return_status spdm_process_encap_response_key_update(
 
 	spdm_request =
 		(void *)&spdm_context->encap_context.last_encap_request_header;
+
 	spdm_response = encap_response;
 	spdm_response_size = encap_response_size;
 

@@ -63,6 +63,9 @@ return_status spdm_get_encap_response_digest(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 

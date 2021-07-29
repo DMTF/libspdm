@@ -54,6 +54,9 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
 	DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
 	       spdm_request->offset, spdm_request->length));
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	//
 	// Cache data
 	//

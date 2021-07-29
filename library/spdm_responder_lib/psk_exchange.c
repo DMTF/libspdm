@@ -221,6 +221,9 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	spdm_response->rsp_session_id = rsp_session_id;
 	spdm_response->reserved = 0;
 

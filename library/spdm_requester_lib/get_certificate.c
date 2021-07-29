@@ -57,6 +57,8 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+							SPDM_GET_CERTIFICATE);
 	if ((spdm_context->connection_info.connection_state !=
 	     SPDM_CONNECTION_STATE_NEGOTIATED) &&
 	    (spdm_context->connection_info.connection_state !=

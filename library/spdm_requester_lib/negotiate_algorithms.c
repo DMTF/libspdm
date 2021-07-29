@@ -59,6 +59,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	uint8 fixed_alg_size;
 	uint8 ext_alg_count;
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+									SPDM_NEGOTIATE_ALGORITHMS);
+	
 	if (spdm_context->connection_info.connection_state !=
 	    SPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
 		return RETURN_UNSUPPORTED;
@@ -106,6 +109,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	spdm_request.struct_table[3].alg_count = 0x20;
 	spdm_request.struct_table[3].alg_supported =
 		spdm_context->local_context.algorithm.key_schedule;
+
 	status = spdm_send_spdm_request(spdm_context, NULL, spdm_request.length,
 					&spdm_request);
 	if (RETURN_ERROR(status)) {

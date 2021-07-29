@@ -105,6 +105,9 @@ return_status spdm_get_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	if ((uintn)(offset + length) >
 	    spdm_context->local_context
 		    .local_cert_chain_provision_size[slot_id]) {

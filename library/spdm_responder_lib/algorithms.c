@@ -179,6 +179,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 
 	spdm_context = context;
 	spdm_request = request;
+
 	ext_alg_total_count = 0;
 
 	if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
@@ -283,6 +284,9 @@ return_status spdm_get_response_algorithms(IN void *context,
 		return RETURN_DEVICE_ERROR;
 	}
 	spdm_request_size = request_size;
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size >= sizeof(spdm_algorithms_response_mine_t));
 	*response_size = sizeof(spdm_algorithms_response_mine_t);

@@ -51,6 +51,8 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+										SPDM_GET_DIGESTS);
 	if (spdm_context->connection_info.connection_state !=
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;

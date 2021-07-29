@@ -165,6 +165,9 @@ return_status spdm_get_response_capabilities(IN void *context,
 	}
 	spdm_request_size = request_size;
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	ASSERT(*response_size >= sizeof(spdm_capabilities_response));
 	*response_size = sizeof(spdm_capabilities_response);
 	zero_mem(response, *response_size);

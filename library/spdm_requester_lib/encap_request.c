@@ -217,9 +217,12 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 		spdm_get_encapsulated_request_request->header.param2 = 0;
 		spdm_request_size =
 			sizeof(spdm_get_encapsulated_request_request_t);
+		spdm_reset_message_buffer_via_request_code(spdm_context,
+							spdm_get_encapsulated_request_request->header.request_response_code);
 		status = spdm_send_spdm_request(
 			spdm_context, session_id, spdm_request_size,
 			spdm_get_encapsulated_request_request);
+
 		if (RETURN_ERROR(status)) {
 			return RETURN_DEVICE_ERROR;
 		}

@@ -381,6 +381,9 @@ return_status spdm_get_response_encapsulated_request(
 		return RETURN_SUCCESS;
 	}
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	ASSERT(*response_size > sizeof(spdm_encapsulated_request_response_t));
 	zero_mem(response, *response_size);
 
@@ -518,6 +521,9 @@ return_status spdm_get_response_encapsulated_response_ack(
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
 
 	status = spdm_process_encapsulated_response(
 		context, encap_response_size, encap_response,

@@ -74,6 +74,10 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 			response_size, response);
 	}
 	spdm_request_size = request_size;
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	//
 	// Cache
 	//
