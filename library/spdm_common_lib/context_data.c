@@ -1035,6 +1035,42 @@ void spdm_init_context(IN void *context)
 }
 
 /**
+  Reset an SPDM context.
+
+  The size in bytes of the spdm_context can be returned by spdm_get_context_size.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+*/
+void spdm_reset_context(IN void *context)
+{
+	spdm_context_t *spdm_context;
+	uintn index;
+
+	spdm_context = context;
+	//Clear all info about last connection
+	zero_mem(&spdm_context->connection_info.capability, sizeof(spdm_device_capability_t));
+	zero_mem(&spdm_context->connection_info.algorithm, sizeof(spdm_device_algorithm_t));
+	zero_mem(&spdm_context->last_spdm_error, sizeof(spdm_error_struct_t));
+	zero_mem(&spdm_context->encap_context, sizeof(spdm_encap_context_t));
+	spdm_context->connection_info.local_used_cert_chain_buffer_size = 0;
+	spdm_context->connection_info.local_used_cert_chain_buffer = NULL;
+	spdm_context->cache_spdm_request_size = 0;
+	spdm_context->retry_times = MAX_SPDM_REQUEST_RETRY_TIMES;
+	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+	spdm_context->current_token = 0;
+	spdm_context->last_spdm_request_session_id = INVALID_SESSION_ID;
+	spdm_context->last_spdm_request_session_id_valid = FALSE;
+	spdm_context->last_spdm_request_size = 0;
+	spdm_context->encap_context.certificate_chain_buffer.max_buffer_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+	for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++)
+	{
+		spdm_session_info_init(spdm_context,
+							&spdm_context->session_info[index],
+							INVALID_SESSION_ID,
+							FALSE);
+	}
+}
+/**
   Return the size in bytes of the SPDM context.
 
   @return the size in bytes of the SPDM context.

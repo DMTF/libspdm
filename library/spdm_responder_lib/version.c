@@ -89,6 +89,8 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 		return RETURN_SUCCESS;
 	}
 
+	spdm_reset_context(spdm_context);
+
 	ASSERT(*response_size >= sizeof(spdm_version_response_mine_t));
 	*response_size =
 		sizeof(spdm_version_response) +
