@@ -42,6 +42,9 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 	spdm_request.header.request_response_code = SPDM_GET_VERSION;
 	spdm_request.header.param1 = 0;
 	spdm_request.header.param2 = 0;
+
+	spdm_reset_context(spdm_context);
+
 	status = spdm_send_spdm_request(spdm_context, NULL,
 					sizeof(spdm_request), &spdm_request);
 	if (RETURN_ERROR(status)) {

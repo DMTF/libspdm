@@ -272,6 +272,15 @@ void spdm_set_last_spdm_error_struct(IN void *spdm_context,
 void spdm_init_context(IN void *spdm_context);
 
 /**
+  Reset an SPDM context.
+
+  The size in bytes of the spdm_context can be returned by spdm_get_context_size.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+*/
+void spdm_reset_context(IN void *context);
+
+/**
   Return the size in bytes of the SPDM context.
 
   @return the size in bytes of the SPDM context.
