@@ -77,6 +77,8 @@ return_status try_spdm_send_receive_psk_exchange(
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+								SPDM_PSK_EXCHANGE);
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;

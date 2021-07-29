@@ -147,6 +147,9 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	opaque_key_exchange_rsp_size =
 		spdm_get_opaque_data_version_selection_data_size(spdm_context);
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	if (spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,

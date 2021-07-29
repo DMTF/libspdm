@@ -634,6 +634,59 @@ void spdm_reset_message_m(IN void *context)
 }
 
 /**
+  Reset message buffer in SPDM context according to request code.
+
+  @param  spdm_context               	A pointer to the SPDM context.
+  @param  spdm_request               	The SPDM request code.
+*/
+void spdm_reset_message_buffer_via_request_code(IN void *context,
+			       IN uint8 request_code)
+{
+	spdm_context_t *spdm_context;
+
+	spdm_context = context;
+	/**
+	  Any request other than SPDM_GET_MEASUREMENTS resets L1/L2
+	*/
+	if (request_code != SPDM_GET_MEASUREMENTS) {
+		reset_managed_buffer(&spdm_context->transcript.message_m);
+	}
+	/**
+	  If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE 
+	  or PSK_FINISH or KEY_UPDATE or HEARTBEAT or GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE 
+	  or END_SESSSION request(s) and skipped CHALLENGE completion, M1 and M2 are reset to null.
+	*/
+	switch (request_code)
+	{
+	case SPDM_KEY_EXCHANGE:
+	case SPDM_GET_MEASUREMENTS:
+	case SPDM_FINISH:
+	case SPDM_PSK_EXCHANGE:
+	case SPDM_PSK_FINISH:
+	case SPDM_KEY_UPDATE:
+	case SPDM_HEARTBEAT:
+	case SPDM_GET_ENCAPSULATED_REQUEST:
+	case SPDM_END_SESSION:
+		if (spdm_context->connection_info.connection_state <
+			SPDM_CONNECTION_STATE_AUTHENTICATED) {
+			reset_managed_buffer(&spdm_context->transcript.message_b);
+			reset_managed_buffer(&spdm_context->transcript.message_c);
+			reset_managed_buffer(&spdm_context->transcript.message_mut_b);
+			reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+		}
+		break;
+	case SPDM_DELIVER_ENCAPSULATED_RESPONSE:
+		if (spdm_context->connection_info.connection_state <
+			SPDM_CONNECTION_STATE_AUTHENTICATED) {
+			reset_managed_buffer(&spdm_context->transcript.message_b);
+			reset_managed_buffer(&spdm_context->transcript.message_c);
+		}
+		break;
+	default:
+		break;
+	}
+}
+/**
   Append message A cache in SPDM context.
 
   @param  spdm_context                  A pointer to the SPDM context.
