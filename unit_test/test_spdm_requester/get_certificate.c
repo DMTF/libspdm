@@ -964,6 +964,8 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
+	spdm_context->transcript.message_m.buffer_size =
+							spdm_context->transcript.message_m.max_buffer_size;
 	cert_chain_size = sizeof(cert_chain);
 	zero_mem(cert_chain, sizeof(cert_chain));
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
@@ -973,6 +975,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	free(data);
 }
 
