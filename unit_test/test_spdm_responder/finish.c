@@ -122,9 +122,9 @@ void test_spdm_responder_finish_case1(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request1,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -224,9 +224,9 @@ void test_spdm_responder_finish_case2(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request2,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request2,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -330,9 +330,9 @@ void test_spdm_responder_finish_case3(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request1,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -438,9 +438,9 @@ void test_spdm_responder_finish_case4(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request1,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -548,9 +548,9 @@ void test_spdm_responder_finish_case5(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request1,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -662,9 +662,9 @@ void test_spdm_responder_finish_case6(void **state)
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 		      cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_finish_request1,
 			      sizeof(spdm_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),

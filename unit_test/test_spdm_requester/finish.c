@@ -155,9 +155,9 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 		// session_transcript.message_k is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
+		append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 				      m_local_buffer_size);
 		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -224,9 +224,9 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 		// session_transcript.message_k is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
+		append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 				      m_local_buffer_size);
 		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -345,10 +345,10 @@ return_status spdm_requester_finish_test_receive_message(
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash,
 					      hash_size);
 			// session_transcript.message_k is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
+			append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			set_mem(response_finished_key, MAX_HASH_SIZE,
 				(uint8)(0xFF));
@@ -481,10 +481,10 @@ return_status spdm_requester_finish_test_receive_message(
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash,
 					      hash_size);
 			// session_transcript.message_k is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
+			append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			set_mem(response_finished_key, MAX_HASH_SIZE,
 				(uint8)(0xFF));

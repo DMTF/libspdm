@@ -242,7 +242,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
+		append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 				      m_local_buffer_size);
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
@@ -357,7 +357,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
+		append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 				      m_local_buffer_size);
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
@@ -526,7 +526,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
+			append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			spdm_hash_all(m_use_hash_algo,
 				      get_managed_buffer(&th_curr),
@@ -715,7 +715,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
+			append_managed_buffer(spdm_context, &th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			spdm_hash_all(m_use_hash_algo,
 				      get_managed_buffer(&th_curr),
