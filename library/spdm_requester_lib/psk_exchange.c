@@ -195,7 +195,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	//
 	// Cache session data
 	//
-	status = spdm_append_message_k(session_info, &spdm_request,
+	status = spdm_append_message_k(spdm_context, session_info, &spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -247,7 +247,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
 	ptr += spdm_response.opaque_length;
 
-	status = spdm_append_message_k(session_info, &spdm_response,
+	status = spdm_append_message_k(spdm_context, session_info, &spdm_response,
 				       spdm_response_size - hmac_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, *session_id);
@@ -281,7 +281,7 @@ return_status try_spdm_send_receive_psk_exchange(
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_k(session_info, verify_data, hmac_size);
+	status = spdm_append_message_k(spdm_context, session_info, verify_data, hmac_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, *session_id);
 		return RETURN_SECURITY_VIOLATION;

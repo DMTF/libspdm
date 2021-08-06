@@ -649,7 +649,7 @@ return_status spdm_append_message_a(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_a,
+	return append_managed_buffer(NULL, &spdm_context->transcript.message_a,
 				     message, message_size);
 }
 
@@ -669,8 +669,9 @@ return_status spdm_append_message_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_b,
-				     message, message_size);
+
+	return append_managed_buffer(context, &spdm_context->transcript.message_b,
+						message, message_size);
 }
 
 /**
@@ -689,8 +690,9 @@ return_status spdm_append_message_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_c,
-				     message, message_size);
+
+	return append_managed_buffer(context, &spdm_context->transcript.message_c,
+					message, message_size);
 }
 
 /**
@@ -709,7 +711,8 @@ return_status spdm_append_message_mut_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_mut_b,
+
+	return append_managed_buffer(context, &spdm_context->transcript.message_mut_b,
 				     message, message_size);
 }
 
@@ -729,8 +732,9 @@ return_status spdm_append_message_mut_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_mut_c,
-				     message, message_size);
+	
+	return append_managed_buffer(context, &spdm_context->transcript.message_mut_c,
+				     	message, message_size);
 }
 
 /**
@@ -749,13 +753,15 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-	return append_managed_buffer(&spdm_context->transcript.message_m,
-				     message, message_size);
+
+	return append_managed_buffer(context, &spdm_context->transcript.message_m,
+						message, message_size);
 }
 
 /**
   Append message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
@@ -763,13 +769,15 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_k(IN void *session_info, IN void *message,
+return_status spdm_append_message_k(IN void *context, IN void *session_info, IN void *message,
 				    IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
+
 	return append_managed_buffer(
+		context,
 		&spdm_session_info->session_transcript.message_k, message,
 		message_size);
 }
@@ -777,6 +785,7 @@ return_status spdm_append_message_k(IN void *session_info, IN void *message,
 /**
   Append message F cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
@@ -784,13 +793,15 @@ return_status spdm_append_message_k(IN void *session_info, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_f(IN void *session_info, IN void *message,
+return_status spdm_append_message_f(IN void *context, IN void *session_info, IN void *message,
 				    IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
+
 	return append_managed_buffer(
+		context,
 		&spdm_session_info->session_transcript.message_f, message,
 		message_size);
 }
@@ -980,6 +991,7 @@ void spdm_init_context(IN void *context)
 	spdm_context = context;
 	zero_mem(spdm_context, sizeof(spdm_context_t));
 	spdm_context->version = spdm_context_struct_VERSION;
+	#ifndef USE_TRANSCRIPT_HASH
 	spdm_context->transcript.message_a.max_buffer_size =
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
 	spdm_context->transcript.message_b.max_buffer_size =
@@ -992,6 +1004,20 @@ void spdm_init_context(IN void *context)
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
 	spdm_context->transcript.message_m.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+	#else
+	spdm_context->transcript.message_a.max_buffer_size =
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+	spdm_context->transcript.message_b.max_buffer_size =
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE;
+	spdm_context->transcript.message_c.max_buffer_size =
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE;
+	spdm_context->transcript.message_mut_b.max_buffer_size =
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE;
+	spdm_context->transcript.message_mut_c.max_buffer_size =
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE;
+	spdm_context->transcript.message_m.max_buffer_size =
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE;
+	#endif
 	spdm_context->retry_times = MAX_SPDM_REQUEST_RETRY_TIMES;
 	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
 	spdm_context->current_token = 0;

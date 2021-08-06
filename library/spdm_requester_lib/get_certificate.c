@@ -181,7 +181,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		internal_dump_hex(spdm_response.cert_chain,
 				  spdm_response.portion_length);
 
-		status = append_managed_buffer(&certificate_chain_buffer,
+		status = append_managed_buffer(NULL, &certificate_chain_buffer,
 					       spdm_response.cert_chain,
 					       spdm_response.portion_length);
 		if (RETURN_ERROR(status)) {

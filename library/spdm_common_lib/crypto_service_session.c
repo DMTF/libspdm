@@ -28,22 +28,30 @@ boolean spdm_calculate_th_for_exchange(
 	uint8 cert_chain_data_hash[MAX_HASH_SIZE];
 	uint32 hash_size;
 	return_status status;
+	#ifdef USE_TRANSCRIPT_HASH
+	hash_managed_buffer_t th_curr;
+	#else
 	large_managed_buffer_t th_curr;
-
+	#endif
 	spdm_context = context;
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
+	#ifdef USE_TRANSCRIPT_HASH
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE);
+	#else
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	#endif
 
 	DEBUG((DEBUG_INFO, "message_a data :\n"));
 	internal_dump_hex(
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
@@ -58,7 +66,7 @@ boolean spdm_calculate_th_for_exchange(
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
+		status = append_managed_buffer(context, &th_curr, cert_chain_data_hash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -71,6 +79,7 @@ boolean spdm_calculate_th_for_exchange(
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_k));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_k),
 		get_managed_buffer_size(
@@ -115,22 +124,30 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 	uint8 MutCertChainDataHash[MAX_HASH_SIZE];
 	uint32 hash_size;
 	return_status status;
+	#ifdef USE_TRANSCRIPT_HASH
+	hash_managed_buffer_t th_curr;
+	#else
 	large_managed_buffer_t th_curr;
-
+	#endif
 	spdm_context = context;
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
+	#ifdef USE_TRANSCRIPT_HASH
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE);
+	#else
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	#endif
 
 	DEBUG((DEBUG_INFO, "message_a data :\n"));
 	internal_dump_hex(
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
@@ -145,7 +162,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
+		status = append_managed_buffer(context, &th_curr, cert_chain_data_hash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -158,6 +175,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_k));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_k),
 		get_managed_buffer_size(
@@ -174,7 +192,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			mut_cert_chain_data, mut_cert_chain_data_size,
 			MutCertChainDataHash);
-		status = append_managed_buffer(&th_curr, MutCertChainDataHash,
+		status = append_managed_buffer(context, &th_curr, MutCertChainDataHash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -187,6 +205,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_f));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_f),
 		get_managed_buffer_size(
