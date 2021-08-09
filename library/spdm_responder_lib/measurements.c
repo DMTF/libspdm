@@ -252,18 +252,6 @@ return_status spdm_get_response_measurements(IN void *context,
 	}
 	ASSERT(device_measurement_count <= MAX_SPDM_MEASUREMENT_BLOCK_COUNT);
 
-	//
-	// Cache
-	//
-	status =
-		spdm_append_message_m(spdm_context, spdm_request, request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	measurment_sig_size =
@@ -317,25 +305,9 @@ return_status spdm_get_response_measurements(IN void *context,
 						spdm_context,
 						SPDM_ERROR_CODE_INVALID_REQUEST,
 						0, response_size, response);
-					reset_managed_buffer(
-						&spdm_context->transcript
-							 .message_m);
 					return RETURN_SUCCESS;
 				}
 				spdm_response->header.param2 = slot_id_param;
-			}
-			status = spdm_create_measurement_signature(
-				spdm_context, spdm_response,
-				spdm_response_size);
-			if (RETURN_ERROR(status)) {
-				spdm_generate_error_response(
-					spdm_context,
-					SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-					SPDM_GET_MEASUREMENTS, response_size,
-					response);
-				reset_managed_buffer(
-					&spdm_context->transcript.message_m);
-				return RETURN_SUCCESS;
 			}
 		} else {
 			spdm_create_measurement_opaque(spdm_context,
@@ -419,25 +391,9 @@ return_status spdm_get_response_measurements(IN void *context,
 						spdm_context,
 						SPDM_ERROR_CODE_INVALID_REQUEST,
 						0, response_size, response);
-					reset_managed_buffer(
-						&spdm_context->transcript
-							 .message_m);
 					return RETURN_SUCCESS;
 				}
 				spdm_response->header.param2 = slot_id_param;
-			}
-			status = spdm_create_measurement_signature(
-				spdm_context, spdm_response,
-				spdm_response_size);
-			if (RETURN_ERROR(status)) {
-				spdm_generate_error_response(
-					spdm_context,
-					SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-					SPDM_GET_MEASUREMENTS, response_size,
-					response);
-				reset_managed_buffer(
-					&spdm_context->transcript.message_m);
-				return RETURN_SUCCESS;
 			}
 		} else {
 			spdm_create_measurement_opaque(spdm_context,
@@ -521,27 +477,10 @@ return_status spdm_get_response_measurements(IN void *context,
 							SPDM_ERROR_CODE_INVALID_REQUEST,
 							0, response_size,
 							response);
-						reset_managed_buffer(
-							&spdm_context->transcript
-								 .message_m);
 						return RETURN_SUCCESS;
 					}
 					spdm_response->header.param2 =
 						slot_id_param;
-				}
-				status = spdm_create_measurement_signature(
-					spdm_context, spdm_response,
-					spdm_response_size);
-				if (RETURN_ERROR(status)) {
-					spdm_generate_error_response(
-						spdm_context,
-						SPDM_ERROR_CODE_UNSPECIFIED,
-						0,
-						response_size, response);
-					reset_managed_buffer(
-						&spdm_context->transcript
-							 .message_m);
-					return RETURN_SUCCESS;
 				}
 			} else {
 				spdm_create_measurement_opaque(
@@ -553,19 +492,42 @@ return_status spdm_get_response_measurements(IN void *context,
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
 				0, response_size, response);
-			reset_managed_buffer(
-				&spdm_context->transcript.message_m);
 			return RETURN_SUCCESS;
 		}
 		break;
 	}
+
+	status = spdm_append_message_m(
+			spdm_context, spdm_request,
+			request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_UNSPECIFIED, 0,
+						response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	if ((spdm_request->header.param1 &
 	     SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
 	    0) {
-		//
-		// Reset
-		//
-		reset_managed_buffer(&spdm_context->transcript.message_m);
+
+		status = spdm_create_measurement_signature(
+			spdm_context, spdm_response,
+			spdm_response_size);
+		if (RETURN_ERROR(status)) {
+			spdm_generate_error_response(
+				spdm_context,
+				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+				SPDM_GET_MEASUREMENTS,
+				response_size, response);
+			reset_managed_buffer(
+				&spdm_context->transcript
+						.message_m);
+			return RETURN_SUCCESS;
+		}
+		//reset
+		reset_managed_buffer(
+			&spdm_context->transcript.message_m);
 	} else {
 		status = spdm_append_message_m(spdm_context, spdm_response,
 					       *response_size);

@@ -1343,7 +1343,7 @@ void test_spdm_requester_challenge_case7(void **state)
   Test 8: the requester is setup correctly (see Test 2), but receives an ERROR
   message indicating the ResponseNotReady status of the responder.
   Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and the "C"
-  buffer stores only the request.
+  buffer stores nothing.
 **/
 void test_spdm_requester_challenge_case8(void **state)
 {
@@ -1388,7 +1388,7 @@ void test_spdm_requester_challenge_case8(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-	assert_int_equal (spdm_context->transcript.message_c.buffer_size, 4 + SPDM_NONCE_SIZE);
+	assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
 	free(data);
 }
 

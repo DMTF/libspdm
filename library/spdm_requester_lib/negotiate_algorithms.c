@@ -112,15 +112,6 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache data
-	//
-	status = spdm_append_message_a(spdm_context, &spdm_request,
-				       spdm_request.length);
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));
 	status = spdm_receive_spdm_response(
@@ -132,8 +123,6 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		return RETURN_DEVICE_ERROR;
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
-		shrink_managed_buffer(&spdm_context->transcript.message_a,
-				      spdm_request.length);
 		status = spdm_handle_simple_error_response(
 			spdm_context, spdm_response.header.param1);
 		if (RETURN_ERROR(status)) {
@@ -210,6 +199,12 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	//
 	// Cache data
 	//
+	status = spdm_append_message_a(spdm_context, &spdm_request,
+				       spdm_request.length);
+	if (RETURN_ERROR(status)) {
+		return RETURN_SECURITY_VIOLATION;
+	}
+
 	status = spdm_append_message_a(spdm_context, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {

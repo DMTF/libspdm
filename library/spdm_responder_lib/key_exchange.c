@@ -184,15 +184,6 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_k(session_info, request, request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	spdm_response->rsp_session_id = rsp_session_id;
 
 	spdm_response->mut_auth_requested = 0;
@@ -276,6 +267,15 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		spdm_context->local_context
 			.local_cert_chain_provision_size[slot_id];
+
+	status = spdm_append_message_k(session_info, request, request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_free_session_id(spdm_context, session_id);
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
 
 	status = spdm_append_message_k(session_info, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);

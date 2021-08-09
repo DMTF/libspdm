@@ -223,19 +223,6 @@ return_status try_spdm_send_receive_key_exchange(
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache session data
-	//
-	status = spdm_append_message_k(session_info, &spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
-		spdm_secured_message_dhe_free(
-			spdm_context->connection_info.algorithm.dhe_named_group,
-			dhe_context);
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
@@ -312,6 +299,19 @@ return_status try_spdm_send_receive_key_exchange(
 			     dhe_key_size + measurement_summary_hash_size +
 			     sizeof(uint16) + opaque_length + signature_size +
 			     hmac_size;
+
+	//
+	// Cache session data
+	//
+	status = spdm_append_message_k(session_info, &spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_free_session_id(spdm_context, *session_id);
+		spdm_secured_message_dhe_free(
+			spdm_context->connection_info.algorithm.dhe_named_group,
+			dhe_context);
+		return RETURN_SECURITY_VIOLATION;
+	}
 
 	status = spdm_append_message_k(session_info, &spdm_response,
 				       spdm_response_size - signature_size -
