@@ -221,15 +221,6 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_k(session_info, request, request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	spdm_response->rsp_session_id = rsp_session_id;
 	spdm_response->reserved = 0;
 
@@ -259,6 +250,16 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	ASSERT_RETURN_ERROR(status);
 	ptr += opaque_psk_exchange_rsp_size;
 
+
+	status = spdm_append_message_k(session_info, request, request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_free_session_id(spdm_context, session_id);
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
+	
 	status = spdm_append_message_k(session_info, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {

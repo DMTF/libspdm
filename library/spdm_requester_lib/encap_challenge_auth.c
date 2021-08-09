@@ -69,18 +69,6 @@ return_status spdm_get_encap_response_challenge_auth(
 		return RETURN_SUCCESS;
 	}
 
-	//
-	// Cache
-	//
-	status = spdm_append_message_mut_c(spdm_context, spdm_request,
-					   request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
-			response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	signature_size = spdm_get_req_asym_signature_size(
 		spdm_context->connection_info.algorithm.req_base_asym_alg);
 	hash_size = spdm_get_hash_size(
@@ -135,9 +123,19 @@ return_status spdm_get_encap_response_challenge_auth(
 	//
 	// Calc Sign
 	//
+	status = spdm_append_message_mut_c(spdm_context, spdm_request,
+					   request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_encap_error_response(
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+			response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	status = spdm_append_message_mut_c(spdm_context, spdm_response,
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
+		reset_managed_buffer(&spdm_context->transcript.message_mut_c);
 		spdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);

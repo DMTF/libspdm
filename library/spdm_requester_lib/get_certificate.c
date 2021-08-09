@@ -103,16 +103,6 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 			goto done;
 		}
 
-		//
-		// Cache data
-		//
-		status = spdm_append_message_b(spdm_context, &spdm_request,
-					       sizeof(spdm_request));
-		if (RETURN_ERROR(status)) {
-			status = RETURN_SECURITY_VIOLATION;
-			goto done;
-		}
-
 		spdm_response_size = sizeof(spdm_response);
 		zero_mem(&spdm_response, sizeof(spdm_response));
 		status = spdm_receive_spdm_response(spdm_context, NULL,
@@ -129,8 +119,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		if (spdm_response.header.request_response_code == SPDM_ERROR) {
 			status = spdm_handle_error_response_main(
 				spdm_context, NULL,
-				&spdm_context->transcript.message_b,
-				sizeof(spdm_request), &spdm_response_size,
+				NULL, 0, &spdm_response_size,
 				&spdm_response, SPDM_GET_CERTIFICATE,
 				SPDM_CERTIFICATE,
 				sizeof(spdm_certificate_response_max_t));
@@ -169,6 +158,12 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		//
 		// Cache data
 		//
+		status = spdm_append_message_b(spdm_context, &spdm_request,
+					       sizeof(spdm_request));
+		if (RETURN_ERROR(status)) {
+			status = RETURN_SECURITY_VIOLATION;
+			goto done;
+		}
 		status = spdm_append_message_b(spdm_context, &spdm_response,
 					       spdm_response_size);
 		if (RETURN_ERROR(status)) {
