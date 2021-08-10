@@ -77,16 +77,6 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	}
 
 	spdm_request_size = request_size;
-	//
-	// Cache
-	//
-	status = spdm_append_message_c(spdm_context, spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		return spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-	}
 
 	slot_id = spdm_request->header.param1;
 
@@ -127,6 +117,10 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 	}
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
+
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
 	auth_attribute.slot_id = (uint8)(slot_id & 0xF);
 	if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
@@ -173,7 +167,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_context, FALSE, spdm_request->header.param2, ptr);
 	if (!result) {
 		return spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 	}
 	ptr += measurement_summary_hash_size;
@@ -188,19 +182,29 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	//
 	// Calc Sign
 	//
+	status = spdm_append_message_c(spdm_context, spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	status = spdm_append_message_c(spdm_context, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
+		reset_managed_buffer(&spdm_context->transcript.message_c);
 		return spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 	}
 	result = spdm_generate_challenge_auth_signature(spdm_context, FALSE,
 							ptr);
 	if (!result) {
 		return spdm_generate_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_CHALLENGE_AUTH, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 	}
 	ptr += signature_size;
 

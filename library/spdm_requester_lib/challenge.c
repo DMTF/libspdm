@@ -61,6 +61,8 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	spdm_challenge_auth_response_attribute_t auth_attribute;
 
 	spdm_context = context;
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+									SPDM_CHALLENGE);
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE, 0,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
@@ -99,15 +101,6 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache data
-	//
-	status = spdm_append_message_c(spdm_context, &spdm_request,
-				       sizeof(spdm_request));
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));
 	status = spdm_receive_spdm_response(
@@ -123,8 +116,8 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
-			spdm_context, NULL, &spdm_context->transcript.message_c,
-			sizeof(spdm_request), &spdm_response_size,
+			spdm_context, NULL, 
+			NULL, 0, &spdm_response_size,
 			&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
 			sizeof(spdm_challenge_auth_response_max_t));
 		if (RETURN_ERROR(status)) {
@@ -213,7 +206,14 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		return RETURN_SECURITY_VIOLATION;
 	}
 	ptr += sizeof(uint16);
-
+	//
+	// Cache data
+	//
+	status = spdm_append_message_c(spdm_context, &spdm_request,
+				       sizeof(spdm_request));
+	if (RETURN_ERROR(status)) {
+		return RETURN_SECURITY_VIOLATION;
+	}
 	if (spdm_response_size <
 	    sizeof(spdm_challenge_auth_response_t) + hash_size +
 		    SPDM_NONCE_SIZE + measurement_summary_hash_size +

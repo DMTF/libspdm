@@ -1,4 +1,4 @@
-# This openspdm is a sample implementation for the DMTF [SPDM](https://www.dmtf.org/standards/pmci) specification
+# libspdm is a sample implementation that follows the DMTF [SPDM](https://www.dmtf.org/standards/pmci) specification
 
 ## Feature
 

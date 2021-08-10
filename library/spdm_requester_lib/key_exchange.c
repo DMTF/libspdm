@@ -81,6 +81,8 @@ return_status try_spdm_send_receive_key_exchange(
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+									SPDM_KEY_EXCHANGE);
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;
@@ -223,19 +225,6 @@ return_status try_spdm_send_receive_key_exchange(
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache session data
-	//
-	status = spdm_append_message_k(session_info, &spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
-		spdm_secured_message_dhe_free(
-			spdm_context->connection_info.algorithm.dhe_named_group,
-			dhe_context);
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
@@ -312,6 +301,19 @@ return_status try_spdm_send_receive_key_exchange(
 			     dhe_key_size + measurement_summary_hash_size +
 			     sizeof(uint16) + opaque_length + signature_size +
 			     hmac_size;
+
+	//
+	// Cache session data
+	//
+	status = spdm_append_message_k(session_info, &spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_free_session_id(spdm_context, *session_id);
+		spdm_secured_message_dhe_free(
+			spdm_context->connection_info.algorithm.dhe_named_group,
+			dhe_context);
+		return RETURN_SECURITY_VIOLATION;
+	}
 
 	status = spdm_append_message_k(session_info, &spdm_response,
 				       spdm_response_size - signature_size -

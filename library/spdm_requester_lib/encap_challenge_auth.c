@@ -69,17 +69,8 @@ return_status spdm_get_encap_response_challenge_auth(
 		return RETURN_SUCCESS;
 	}
 
-	//
-	// Cache
-	//
-	status = spdm_append_message_mut_c(spdm_context, spdm_request,
-					   request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-			response_size, response);
-		return RETURN_SUCCESS;
-	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
 
 	signature_size = spdm_get_req_asym_signature_size(
 		spdm_context->connection_info.algorithm.req_base_asym_alg);
@@ -135,11 +126,21 @@ return_status spdm_get_encap_response_challenge_auth(
 	//
 	// Calc Sign
 	//
+	status = spdm_append_message_mut_c(spdm_context, spdm_request,
+					   request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_encap_error_response(
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+			response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	status = spdm_append_message_mut_c(spdm_context, spdm_response,
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
+		reset_managed_buffer(&spdm_context->transcript.message_mut_c);
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -147,8 +148,8 @@ return_status spdm_get_encap_response_challenge_auth(
 		spdm_generate_challenge_auth_signature(spdm_context, TRUE, ptr);
 	if (!result) {
 		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_CHALLENGE_AUTH, response_size, response);
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	ptr += signature_size;

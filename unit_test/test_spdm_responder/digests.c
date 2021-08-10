@@ -54,6 +54,8 @@ void test_spdm_responder_digests_case1(void **state)
 	set_mem(m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE,
 		(uint8)(0xFF));
 	spdm_context->local_context.slot_count = 1;
+	spdm_context->transcript.message_m.buffer_size =
+		spdm_context->transcript.message_m.max_buffer_size;
 
 	response_size = sizeof(response);
 	status = spdm_get_response_digests(spdm_context,
@@ -69,6 +71,8 @@ void test_spdm_responder_digests_case1(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_DIGESTS);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+					0);
 }
 
 /**
@@ -315,7 +319,7 @@ void test_spdm_responder_digests_case6(void **state)
 
 /**
   Test 7: receives a valid GET_DIGESTS request message from Requester, but the request message cannot be appended to the internal cache since the internal cache is full
-  Expected Behavior: produces an ERROR response message with error code = InvalidRequest
+  Expected Behavior: produces an ERROR response message with error code = Unspecified
 **/
 void test_spdm_responder_digests_case7(void **state)
 {
@@ -356,13 +360,13 @@ void test_spdm_responder_digests_case7(void **state)
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_INVALID_REQUEST);
+			 SPDM_ERROR_CODE_UNSPECIFIED);
 	assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
   Test 8: receives a valid GET_DIGESTS request message from Requester, but the response message cannot be appended to the internal cache since the internal cache is full
-  Expected Behavior: produces an ERROR response message with error code = InvalidRequest
+  Expected Behavior: produces an ERROR response message with error code = Unspecified
 **/
 void test_spdm_responder_digests_case8(void **state)
 {
@@ -404,7 +408,7 @@ void test_spdm_responder_digests_case8(void **state)
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_INVALID_REQUEST);
+			 SPDM_ERROR_CODE_UNSPECIFIED);
 	assert_int_equal(spdm_response->header.param2, 0);
 }
 

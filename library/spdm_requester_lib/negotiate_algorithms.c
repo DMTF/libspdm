@@ -59,6 +59,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	uint8 fixed_alg_size;
 	uint8 ext_alg_count;
 
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+									SPDM_NEGOTIATE_ALGORITHMS);
+	
 	if (spdm_context->connection_info.connection_state !=
 	    SPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
 		return RETURN_UNSUPPORTED;
@@ -106,19 +109,11 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	spdm_request.struct_table[3].alg_count = 0x20;
 	spdm_request.struct_table[3].alg_supported =
 		spdm_context->local_context.algorithm.key_schedule;
+
 	status = spdm_send_spdm_request(spdm_context, NULL, spdm_request.length,
 					&spdm_request);
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
-	}
-
-	//
-	// Cache data
-	//
-	status = spdm_append_message_a(spdm_context, &spdm_request,
-				       spdm_request.length);
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
 	}
 
 	spdm_response_size = sizeof(spdm_response);
@@ -132,8 +127,6 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		return RETURN_DEVICE_ERROR;
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
-		shrink_managed_buffer(&spdm_context->transcript.message_a,
-				      spdm_request.length);
 		status = spdm_handle_simple_error_response(
 			spdm_context, spdm_response.header.param1);
 		if (RETURN_ERROR(status)) {
@@ -210,6 +203,12 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	//
 	// Cache data
 	//
+	status = spdm_append_message_a(spdm_context, &spdm_request,
+				       spdm_request.length);
+	if (RETURN_ERROR(status)) {
+		return RETURN_SECURITY_VIOLATION;
+	}
+
 	status = spdm_append_message_a(spdm_context, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {

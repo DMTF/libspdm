@@ -179,6 +179,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 
 	spdm_context = context;
 	spdm_request = request;
+
 	ext_alg_total_count = 0;
 
 	if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
@@ -284,17 +285,8 @@ return_status spdm_get_response_algorithms(IN void *context,
 	}
 	spdm_request_size = request_size;
 
-	//
-	// Cache
-	//
-	status = spdm_append_message_a(spdm_context, spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size >= sizeof(spdm_algorithms_response_mine_t));
 	*response_size = sizeof(spdm_algorithms_response_mine_t);
@@ -416,17 +408,6 @@ return_status spdm_get_response_algorithms(IN void *context,
 			ARRAY_SIZE(m_key_schedule_priority_table),
 			spdm_context->local_context.algorithm.key_schedule,
 			spdm_context->connection_info.algorithm.key_schedule);
-	//
-	// Cache
-	//
-	status = spdm_append_message_a(spdm_context, spdm_response,
-				       *response_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
 
 	spdm_context->connection_info.algorithm.measurement_spec =
 		spdm_response->measurement_specification_sel;
@@ -557,6 +538,24 @@ return_status spdm_get_response_algorithms(IN void *context,
 		spdm_context->connection_info.algorithm.req_base_asym_alg = 0;
 		spdm_context->connection_info.algorithm.key_schedule = 0;
 	}
+	status = spdm_append_message_a(spdm_context, spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
+
+	status = spdm_append_message_a(spdm_context, spdm_response,
+				       *response_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	spdm_set_connection_state(spdm_context,
 				  SPDM_CONNECTION_STATE_NEGOTIATED);
 

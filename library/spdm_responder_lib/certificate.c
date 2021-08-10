@@ -74,17 +74,6 @@ return_status spdm_get_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 	spdm_request_size = request_size;
-	//
-	// Cache
-	//
-	status = spdm_append_message_b(spdm_context, spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
 
 	if (spdm_context->local_context.local_cert_chain_provision == NULL) {
 		spdm_generate_error_response(
@@ -115,6 +104,9 @@ return_status spdm_get_response_certificate(IN void *context,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
+
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+						spdm_request->header.request_response_code);
 
 	if ((uintn)(offset + length) >
 	    spdm_context->local_context
@@ -151,11 +143,20 @@ return_status spdm_get_response_certificate(IN void *context,
 	//
 	// Cache
 	//
+	status = spdm_append_message_b(spdm_context, spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
+					     response_size, response);
+		return RETURN_SUCCESS;
+	}
+
 	status = spdm_append_message_b(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}

@@ -77,6 +77,8 @@ return_status try_spdm_send_receive_psk_exchange(
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+								SPDM_PSK_EXCHANGE);
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;
@@ -192,15 +194,6 @@ return_status try_spdm_send_receive_psk_exchange(
 		return RETURN_DEVICE_ERROR;
 	}
 
-	//
-	// Cache session data
-	//
-	status = spdm_append_message_k(session_info, &spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
-	}
-
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
 		spdm_context, TRUE, measurement_hash_type);
 	hmac_size = spdm_get_hash_size(
@@ -246,6 +239,15 @@ return_status try_spdm_send_receive_psk_exchange(
 	ptr += spdm_response.context_length;
 
 	ptr += spdm_response.opaque_length;
+
+	//
+	// Cache session data
+	//
+	status = spdm_append_message_k(session_info, &spdm_request,
+				       spdm_request_size);
+	if (RETURN_ERROR(status)) {
+		return RETURN_SECURITY_VIOLATION;
+	}
 
 	status = spdm_append_message_k(session_info, &spdm_response,
 				       spdm_response_size - hmac_size);

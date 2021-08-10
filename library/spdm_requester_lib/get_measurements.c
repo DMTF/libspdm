@@ -78,6 +78,8 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
+	spdm_reset_message_buffer_via_request_code(spdm_context,
+									SPDM_GET_MEASUREMENTS);
 	if (session_id == NULL) {
 		if (spdm_context->connection_info.connection_state <
 		    SPDM_CONNECTION_STATE_AUTHENTICATED) {
@@ -152,19 +154,11 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	} else {
 		spdm_request_size = sizeof(spdm_request.header);
 	}
+
 	status = spdm_send_spdm_request(spdm_context, session_id,
 					spdm_request_size, &spdm_request);
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
-	}
-
-	//
-	// Cache data
-	//
-	status = spdm_append_message_m(spdm_context, &spdm_request,
-				       spdm_request_size);
-	if (RETURN_ERROR(status)) {
-		return RETURN_SECURITY_VIOLATION;
 	}
 
 	spdm_response_size = sizeof(spdm_response);
@@ -180,7 +174,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, session_id,
-			&spdm_context->transcript.message_m, spdm_request_size,
+			NULL, 0,
 			&spdm_response_size, &spdm_response,
 			SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
 			sizeof(spdm_measurements_response_max_t));
@@ -282,6 +276,15 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				     measurement_record_data_length +
 				     SPDM_NONCE_SIZE + sizeof(uint16) +
 				     opaque_length + signature_size;
+		//
+		// Cache data
+		//
+		status = spdm_append_message_m(spdm_context, &spdm_request,
+						spdm_request_size);
+		if (RETURN_ERROR(status)) {
+			return RETURN_SECURITY_VIOLATION;
+		}
+
 		status = spdm_append_message_m(spdm_context, &spdm_response,
 					       spdm_response_size -
 						       signature_size);
@@ -341,6 +344,15 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				     measurement_record_data_length +
 					 SPDM_NONCE_SIZE + sizeof(uint16) +
 				     opaque_length;
+		//
+		// Cache data
+		//
+		status = spdm_append_message_m(spdm_context, &spdm_request,
+						spdm_request_size);
+		if (RETURN_ERROR(status)) {
+			return RETURN_SECURITY_VIOLATION;
+		}
+
 		status = spdm_append_message_m(spdm_context, &spdm_response,
 					       spdm_response_size);
 		if (RETURN_ERROR(status)) {
