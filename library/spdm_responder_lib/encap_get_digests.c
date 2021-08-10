@@ -146,7 +146,7 @@ return_status spdm_process_encap_response_digest(
 	}
 
 	result = spdm_verify_peer_digests(spdm_context, digest,
-					  digest_count * digest_size);
+					  digest_count);
 	if (!result) {
 		return RETURN_SECURITY_VIOLATION;
 	}
