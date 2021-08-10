@@ -87,7 +87,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 			->connection_info.algorithm.base_hash_algo =
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_digest_response_t) +
-				spdm_get_hash_size(m_use_hash_algo);
+				spdm_get_hash_size(m_use_hash_algo) * MAX_SPDM_SLOT_COUNT;
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -98,9 +98,12 @@ return_status spdm_requester_get_digests_test_receive_message(
 			(uint8)(0xFF));
 
 		digest = (void *)(spdm_response + 1);
+		//send all eight certchains digest
+		//but only No.7 is right
+		digest += spdm_get_hash_size(m_use_hash_algo) * (MAX_SPDM_SLOT_COUNT - 2);
 		spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
 			      MAX_SPDM_MESSAGE_BUFFER_SIZE, &digest[0]);
-		spdm_response->header.param2 |= (1 << 0);
+		spdm_response->header.param2 |= (0xFF << 0);
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, temp_buf_size,
@@ -708,7 +711,7 @@ void test_spdm_requester_get_digests_case2(void **state)
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
-						   .algorithm.base_hash_algo));
+						   .algorithm.base_hash_algo) * MAX_SPDM_SLOT_COUNT);
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 }
 
