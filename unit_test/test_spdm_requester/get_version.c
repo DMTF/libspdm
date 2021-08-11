@@ -52,6 +52,8 @@ return_status spdm_requester_get_version_test_send_message(
 		return RETURN_SUCCESS;
 	case 0xE:
 		return RETURN_SUCCESS;
+    case 0xF:
+        return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -378,6 +380,27 @@ return_status spdm_requester_get_version_test_receive_message(
   }
     return RETURN_SUCCESS;
 
+    case 0xF: {
+        spdm_version_response_mine_t spdm_response;
+
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 1;
+        spdm_response.version_number_entry[0].minor_version = 1;
+        spdm_response.version_number_entry[1].major_version = 2;
+        spdm_response.version_number_entry[1].minor_version = 2;
+
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+           FALSE, sizeof(spdm_response),
+           &spdm_response,
+           response_size, response);
+    }
+        return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -457,7 +480,7 @@ void test_spdm_requester_get_version_case4(void **state)
 
 /**
   Test 5: receiving an Busy ERROR message correct VERSION message from the responder.
-  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+  Expected behavior: client returns a status of RETURN_NO_RESPONSE.
 **/
 void test_spdm_requester_get_version_case5(void **state)
 {
@@ -674,6 +697,25 @@ void test_spdm_requester_get_version_case14(void **state) {
   }
 }
 
+/**
+  Test 15: receiving a correct VERSION message with available version 1.1 and 2.2,
+  the requester have one compatible versions with the responder.
+  Expected behavior: client returns a status of RETURN_SUCCESS.
+**/
+void test_spdm_requester_get_version_case15(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_SUCCESS);
+}
+
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -701,12 +743,14 @@ int spdm_requester_get_version_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_version_case9),
 		// Successful response
 		cmocka_unit_test(test_spdm_requester_get_version_case10),
-		// Successful response + device error
+        // device error due to no compatible versions
 		cmocka_unit_test(test_spdm_requester_get_version_case11),
 		cmocka_unit_test(test_spdm_requester_get_version_case12),
 		cmocka_unit_test(test_spdm_requester_get_version_case13),
 		// Unexpected errors
 		cmocka_unit_test(test_spdm_requester_get_version_case14),
+        // successful response (only one compatible version)
+        cmocka_unit_test(test_spdm_requester_get_version_case15),
 	};
 
 	setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);

@@ -286,12 +286,12 @@ void test_spdm_responder_version_case7(void **state)
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x6;
+    spdm_test_context->case_id = 0x7;
 
 	response_size = sizeof(response);
 	status = spdm_get_response_version(spdm_context,
-					   m_spdm_get_version_request3_size,
-					   &m_spdm_get_version_request3,
+					   m_spdm_get_version_request4_size,
+					   &m_spdm_get_version_request4,
 					   &response_size, response);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -308,6 +308,41 @@ spdm_test_context_t m_spdm_responder_version_test_context = {
 	FALSE,
 };
 
+/**
+  Test 8: receiving a correct GET_VERSION from the requester, but the responder requires
+  processing encap with the requester.
+  Expected behavior: the requester resets the communication upon receiving the GET_VERSION
+  message. A valid VERSION message is produced.
+**/
+void test_spdm_responder_version_case8(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_version_response *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+
+    response_size = sizeof(response);
+    status = spdm_get_response_version(spdm_context,
+        m_spdm_get_version_request1_size,
+        &m_spdm_get_version_request1,
+        &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size,
+        sizeof(spdm_version_response) +
+        DEFAULT_SPDM_VERSION_ENTRY_COUNT *
+        sizeof(spdm_version_number_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_VERSION);
+    assert_int_equal(spdm_context->response_state, SPDM_RESPONSE_STATE_NORMAL);
+}
+
 int spdm_responder_version_test_main(void)
 {
 	const struct CMUnitTest spdm_responder_version_tests[] = {
@@ -322,6 +357,11 @@ int spdm_responder_version_test_main(void)
 		cmocka_unit_test(test_spdm_responder_version_case5),
 		// Invalid request
 		cmocka_unit_test(test_spdm_responder_version_case6),
+        // Invalid request, issue https://github.com/DMTF/libspdm/issues/40
+        // It was marked as invalid test, so comment this case first
+        // cmocka_unit_test(test_spdm_responder_version_case7),
+        // response_state: SPDM_RESPONSE_STATE_PROCESSING_ENCAP
+        cmocka_unit_test(test_spdm_responder_version_case8),
 	};
 
 	setup_spdm_test_context(&m_spdm_responder_version_test_context);
