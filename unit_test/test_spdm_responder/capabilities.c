@@ -142,7 +142,7 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request8 = {
 	0x00, //reserved
 	0x01, //ct_exponent
 	0x0000, //reserved, 2 bytes
-	(0x100000 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+	(0x20000 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
 	 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
 	 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
 	 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -391,6 +391,52 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request18 = {
 };
 uintn m_spdm_get_capabilities_request18_size =
 	sizeof(m_spdm_get_capabilities_request18);
+
+spdm_get_capabilities_request m_spdm_get_capabilities_request19 = {
+    {
+        SPDM_MESSAGE_VERSION_11,
+        SPDM_GET_CAPABILITIES,
+    }, //header
+    0x00, //reserved
+    0x01, //ct_exponent
+    0x0000, //reserved, 2 bytes
+    (0x800 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
+};
+uintn m_spdm_get_capabilities_request19_size =
+    sizeof(m_spdm_get_capabilities_request19);
+
+spdm_get_capabilities_request m_spdm_get_capabilities_request20 = {
+    {
+        SPDM_MESSAGE_VERSION_11,
+        SPDM_GET_CAPABILITIES,
+    }, //header
+    0x00, //reserved
+    0x01, //ct_exponent
+    0x0000, //reserved, 2 bytes
+    (0xc00 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
+};
+uintn m_spdm_get_capabilities_request20_size =
+    sizeof(m_spdm_get_capabilities_request20);
 
 void test_spdm_responder_capabilities_case1(void **state)
 {
@@ -1087,6 +1133,101 @@ void test_spdm_responder_capabilities_case22(void **state)
 			 SPDM_CAPABILITIES);
 }
 
+void test_spdm_responder_capabilities_case23(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_capabilities_response *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    response_size = sizeof(response);
+    status = spdm_get_response_capabilities(
+        spdm_context, m_spdm_get_capabilities_request19_size,
+        &m_spdm_get_capabilities_request19, &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(m_spdm_get_capabilities_request19.header.spdm_version,
+             spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+}
+
+void test_spdm_responder_capabilities_case24(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_capabilities_response *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x18;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    response_size = sizeof(response);
+    status = spdm_get_response_capabilities(
+        spdm_context, m_spdm_get_capabilities_request20_size,
+        &m_spdm_get_capabilities_request20, &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(m_spdm_get_capabilities_request20.header.spdm_version,
+             spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+}
+
+void test_spdm_responder_capabilities_case25(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_capabilities_response *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x19;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    response_size = sizeof(response);
+    status = spdm_get_response_capabilities(
+        spdm_context, m_spdm_get_capabilities_request4_size,
+        &m_spdm_get_capabilities_request4, &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
+             spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_REQUEST_IN_FLIGHT);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->response_state,
+             SPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+}
+
 spdm_test_context_t m_spdm_responder_capabilities_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
@@ -1111,13 +1252,13 @@ int spdm_responder_capabilities_test_main(void)
 		cmocka_unit_test(test_spdm_responder_capabilities_case7),
 		// V1.1 Success case, all possible flags set
 		cmocka_unit_test(test_spdm_responder_capabilities_case8),
-		// Requester capabilities flag bit 0 is set. reserved value should ne ignored
+		// Requester capabilities flag bit 0 is set. reserved value should be ignored
 		cmocka_unit_test(test_spdm_responder_capabilities_case9),
 		// meas_cap is set (meas_cap shall be cleared)
 		cmocka_unit_test(test_spdm_responder_capabilities_case10),
 		// meas_fresh_cap is set (meas_fresh_cap shall be cleared)
 		cmocka_unit_test(test_spdm_responder_capabilities_case11),
-		// Requester capabilities flag byte 2 bit 1 is set. reserved value should ne ignored
+		// Requester capabilities flag byte 2 bit 1 is set. reserved value should be ignored
 		cmocka_unit_test(test_spdm_responder_capabilities_case12),
 		// pub_key_id_cap and cert_cap set (flags are mutually exclusive)
 		cmocka_unit_test(test_spdm_responder_capabilities_case13),
@@ -1139,6 +1280,13 @@ int spdm_responder_capabilities_test_main(void)
 		cmocka_unit_test(test_spdm_responder_capabilities_case21),
 		// cert_cap cleared and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)
 		cmocka_unit_test(test_spdm_responder_capabilities_case22),
+        // psk_cap set to 10b, it is reserved.
+        cmocka_unit_test(test_spdm_responder_capabilities_case23),
+        // psk cap set to 11b, it is reserved.
+        cmocka_unit_test(test_spdm_responder_capabilities_case24),
+        // response_state: SPDM_RESPONSE_STATE_PROCESSING_ENCAP
+        cmocka_unit_test(test_spdm_responder_capabilities_case25),
+
 	};
 
 	setup_spdm_test_context(&m_spdm_responder_capabilities_test_context);

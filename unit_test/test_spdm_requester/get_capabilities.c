@@ -478,12 +478,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
 		spdm_response.header.param2 = 0;
 		spdm_response.ct_exponent = 0;
 		spdm_response.flags =
-			DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-			(0xFFFFFFFF ^
-			 (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
+			DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, sizeof(spdm_response),
@@ -551,8 +546,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
 			(0xFFFFFFFF ^
 			 (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
 			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
+			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT));
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, sizeof(spdm_response),
@@ -637,11 +632,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
 		spdm_response.header.param2 = 0;
 		spdm_response.ct_exponent = 0;
 		spdm_response.flags =
-			DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-			(0xFFFFFFFF ^
-			 (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
-			  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP));
+			DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, sizeof(spdm_response),
@@ -1452,25 +1443,25 @@ int spdm_requester_get_capabilities_test_main(void)
 		// from this point forward, tests are performed with version 1.1
 		// Requester sends all flags set and receives successful response with all flags set
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case16),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap set, and key_ex_cap and psk_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags encrypt_cap set, and key_ex_cap and psk_cap cleared
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case17),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap set and mac_cap cleared, and key_ex_cap and psk_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags psk_cap set to 3 which is reserved.
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case18),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap cleared and mac_cap set, and key_ex_cap and psk_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags mac_cap set, and key_ex_cap and psk_cap cleared
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case19),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap cleared and mac_cap cleared, and key_ex_cap and psk_cap set
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags encrypt_cap cleared and mac_cap cleared, and key_ex_cap set
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case20),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap cleared, and key_ex_cap set and psk_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags encrypt_cap cleared and mac_cap cleared, handshake_in_the_clear_cap set
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case21),
-		// Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap cleared, and key_ex_cap cleared and psk_cap set
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags encrypt_cap and mac_cap cleared, and psk_cap set
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case22),
-		// Requester sends all flags set and receives successful response with flags mut_auth_cap set, and encap_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags mut_auth_cap set, and encap_cap cleared
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case23),
-		// Requester sends all flags set and receives successful response with flags handshake_in_the_clear_cap set, and key_ex_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags handshake_in_the_clear_cap set, and key_ex_cap cleared
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case24),
-		// Requester sends all flags set and receives successful response with flags handshake_in_the_clear_cap set, and encrypt_cap and mac_cap cleared
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags meas_cap set to 3 which is reserved.
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case25),
-		// Requester sends all flags set and receives successful response with flags pub_key_id_cap set, and cert_cap set
+		// Requester sends all flags set and receives DEVICE_ERROR response with flags pub_key_id_cap set, and cert_cap set
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case26),
 		// Requester sends all flags set and receives response with get_capabilities request code (wrong response code)
 		cmocka_unit_test(test_spdm_requester_get_capabilities_case27),
