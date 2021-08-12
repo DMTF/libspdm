@@ -56,6 +56,7 @@ void test_spdm_responder_psk_finish_case1(void **state)
 	uint8 request_finished_key[MAX_HASH_SIZE];
 	spdm_session_info_t *session_info;
 	uint32 session_id;
+	uint8 hmac_buffer[MAX_HASH_SIZE];
 	uint32 hash_size;
 	uint32 hmac_size;
 
@@ -120,12 +121,16 @@ void test_spdm_responder_psk_finish_case1(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	spdm_append_message_f(spdm_context, session_info, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&session_info->session_transcript.message_f),
+			      get_managed_buffer_size(&session_info->session_transcript.message_f));
+  	reset_managed_buffer(&session_info->session_transcript.message_f);
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 		      get_managed_buffer_size(&th_curr), request_finished_key,
-		      hash_size, ptr);
+		      hash_size, hmac_buffer);
+	copy_mem(ptr, hmac_buffer, hmac_size);
 	m_spdm_psk_finish_request1_size =
 		sizeof(spdm_psk_finish_request_t) + hmac_size;
 	response_size = sizeof(response);
@@ -218,7 +223,7 @@ void test_spdm_responder_psk_finish_case2(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request2,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_psk_finish_request2,
 			      sizeof(spdm_psk_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -320,7 +325,7 @@ void test_spdm_responder_psk_finish_case3(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -425,7 +430,7 @@ void test_spdm_responder_psk_finish_case4(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -532,7 +537,7 @@ void test_spdm_responder_psk_finish_case5(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -643,7 +648,7 @@ void test_spdm_responder_psk_finish_case6(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	append_managed_buffer(spdm_context, &th_curr, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -746,8 +751,11 @@ void test_spdm_responder_psk_finish_case7(void **state)
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	// transcript.message_a size is 0
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
+	spdm_append_message_f(spdm_context, session_info, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&session_info->session_transcript.message_f),
+			      get_managed_buffer_size(&session_info->session_transcript.message_f));
+  	reset_managed_buffer(&session_info->session_transcript.message_f);
 
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;

@@ -971,10 +971,12 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	free(data);
 }
@@ -1154,10 +1156,12 @@ void test_spdm_requester_get_certificate_case6(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1293,10 +1297,12 @@ void test_spdm_requester_get_certificate_case9(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1342,10 +1348,12 @@ void test_spdm_requester_get_certificate_case10(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1396,10 +1404,12 @@ void test_spdm_requester_get_certificate_case11(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1453,10 +1463,12 @@ void test_spdm_requester_get_certificate_case12(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1507,10 +1519,12 @@ void test_spdm_requester_get_certificate_case13(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifndef USE_TRANSCRIPT_HASH
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
 				 data_size);
+	#endif
 	free(data);
 }
 
@@ -1566,11 +1580,13 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	// It may fail because the spdm does not support too many messages.
 	//assert_int_equal (status, RETURN_SUCCESS);
 	if (status == RETURN_SUCCESS) {
+	#ifndef USE_TRANSCRIPT_HASH
 		assert_int_equal(
 			spdm_context->transcript.message_b.buffer_size,
 			sizeof(spdm_get_certificate_request_t) * count +
 				sizeof(spdm_certificate_response_t) * count +
 				data_size);
+	#endif
 	}
 	free(data);
 }

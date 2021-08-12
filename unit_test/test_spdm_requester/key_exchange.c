@@ -13,7 +13,7 @@
 
 static uintn m_local_buffer_size;
 static uint8 m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-
+static large_managed_buffer_t message_k;
 static GLOBAL_REMOVE_IF_UNREFERENCED uint8 m_zero_filled_buffer[64];
 
 uintn spdm_test_get_key_exchange_request_size(IN void *spdm_context,
@@ -72,64 +72,19 @@ return_status spdm_requester_key_exchange_test_send_message(
 	case 0x1:
 		return RETURN_DEVICE_ERROR;
 	case 0x2:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x3:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x4:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x5:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x6:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x7:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x8:
 		m_local_buffer_size = 0;
 		message_size = spdm_test_get_key_exchange_request_size(
 			spdm_context, (uint8 *)request + header_size,
 			request_size - header_size);
+		init_managed_buffer(&message_k, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &message_k, (uint8 *)request + header_size,
+			 message_size);
 		copy_mem(m_local_buffer, (uint8 *)request + header_size,
 			 message_size);
 		m_local_buffer_size += message_size;
@@ -141,6 +96,9 @@ return_status spdm_requester_key_exchange_test_send_message(
 			message_size = spdm_test_get_key_exchange_request_size(
 				spdm_context, (uint8 *)request + header_size,
 				request_size - header_size);
+			init_managed_buffer(&message_k, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			append_managed_buffer(spdm_context, &message_k, (uint8 *)request + header_size,
+				 message_size);
 			copy_mem(m_local_buffer, (uint8 *)request + header_size,
 				 message_size);
 			m_local_buffer_size += message_size;
@@ -149,19 +107,14 @@ return_status spdm_requester_key_exchange_test_send_message(
 	}
 		return RETURN_SUCCESS;
 	case 0xA:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_key_exchange_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xB:
 		m_local_buffer_size = 0;
 		message_size = spdm_test_get_key_exchange_request_size(
 			spdm_context, (uint8 *)request + header_size,
 			request_size - header_size);
+		init_managed_buffer(&message_k, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &message_k, (uint8 *)request + header_size,
+			 message_size);
 		copy_mem(m_local_buffer, (uint8 *)request + header_size,
 			 message_size);
 		m_local_buffer_size += message_size;
@@ -270,12 +223,12 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		read_responder_public_certificate_chain(m_use_hash_algo,
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_k, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-		       m_local_buffer_size));
-		internal_dump_hex(m_local_buffer, m_local_buffer_size);
+		       get_managed_buffer_size(&message_k)));
+		internal_dump_hex(get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 		cert_buffer =
 			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -284,9 +237,9 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-		append_managed_buffer(&th_curr, m_local_buffer,
-				      m_local_buffer_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
@@ -294,11 +247,14 @@ return_status spdm_requester_key_exchange_test_receive_message(
 					 get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
-		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
-			 signature_size);
-		m_local_buffer_size += signature_size;
-		append_managed_buffer(&th_curr, ptr, signature_size);
+		append_managed_buffer(spdm_context, &message_k, ptr,
+					signature_size);
 		ptr += signature_size;
+
+		reset_managed_buffer(&th_curr);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      THCurrHashData);
@@ -422,12 +378,12 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		read_responder_public_certificate_chain(m_use_hash_algo,
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_k, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-		       m_local_buffer_size));
-		internal_dump_hex(m_local_buffer, m_local_buffer_size);
+		       get_managed_buffer_size(&message_k)));
+		internal_dump_hex(get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 		cert_buffer =
 			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -436,9 +392,9 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-		append_managed_buffer(&th_curr, m_local_buffer,
-				      m_local_buffer_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
@@ -446,11 +402,14 @@ return_status spdm_requester_key_exchange_test_receive_message(
 					 get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
-		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
-			 signature_size);
-		m_local_buffer_size += signature_size;
-		append_managed_buffer(&th_curr, ptr, signature_size);
+		append_managed_buffer(spdm_context, &message_k, ptr,
+					signature_size);
 		ptr += signature_size;
+
+		reset_managed_buffer(&th_curr);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      THCurrHashData);
@@ -619,82 +578,69 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
 			ptr += sizeof(uint16);
 			spdm_build_opaque_data_version_selection_data(
-				spdm_context, &opaque_key_exchange_rsp_size,
-				ptr);
+				spdm_context, &opaque_key_exchange_rsp_size, ptr);
 			ptr += opaque_key_exchange_rsp_size;
-			read_responder_public_certificate_chain(
-				m_use_hash_algo, m_use_asym_algo, &data,
-				&data_size, NULL, NULL);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
+			read_responder_public_certificate_chain(m_use_hash_algo,
+								m_use_asym_algo, &data,
+								&data_size, NULL, NULL);
+			append_managed_buffer(spdm_context, &message_k, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
 			DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-			       m_local_buffer_size));
-			internal_dump_hex(m_local_buffer, m_local_buffer_size);
-			init_managed_buffer(&th_curr,
-					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
+				get_managed_buffer_size(&message_k)));
+			internal_dump_hex(get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			cert_buffer =
+				(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
 			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
-			spdm_hash_all(m_use_hash_algo, cert_buffer,
-				      cert_buffer_size, cert_buffer_hash);
+				data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+			spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+					cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
-					      hash_size);
-			append_managed_buffer(&th_curr, m_local_buffer,
-					      m_local_buffer_size);
-			spdm_hash_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      hash_data);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr), hash_data);
 			free(data);
-			spdm_responder_data_sign(
-				m_use_asym_algo, m_use_hash_algo,
-				get_managed_buffer(&th_curr),
-				get_managed_buffer_size(&th_curr), ptr,
-				&signature_size);
-			copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
-				 signature_size);
-			m_local_buffer_size += signature_size;
-			append_managed_buffer(&th_curr, ptr, signature_size);
+			spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+						get_managed_buffer(&th_curr),
+						get_managed_buffer_size(&th_curr), ptr,
+						&signature_size);
+			append_managed_buffer(spdm_context, &message_k, ptr,
+						signature_size);
 			ptr += signature_size;
-			spdm_hash_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      THCurrHashData);
+
+			reset_managed_buffer(&th_curr);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr),
+					THCurrHashData);
 			bin_str0_size = sizeof(bin_str0);
-			spdm_bin_concat(BIN_STR_0_LABEL,
-					sizeof(BIN_STR_0_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str0,
+			spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
+					NULL, (uint16)hash_size, hash_size, bin_str0,
 					&bin_str0_size);
-			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer,
-				      hash_size, final_key, final_key_size,
-				      handshake_secret);
+			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer, hash_size,
+					final_key, final_key_size, handshake_secret);
 			bin_str2_size = sizeof(bin_str2);
-			spdm_bin_concat(BIN_STR_2_LABEL,
-					sizeof(BIN_STR_2_LABEL) - 1,
-					THCurrHashData, (uint16)hash_size,
-					hash_size, bin_str2, &bin_str2_size);
-			spdm_hkdf_expand(m_use_hash_algo, handshake_secret,
-					 hash_size, bin_str2, bin_str2_size,
-					 response_handshake_secret, hash_size);
+			spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
+					THCurrHashData, (uint16)hash_size, hash_size,
+					bin_str2, &bin_str2_size);
+			spdm_hkdf_expand(m_use_hash_algo, handshake_secret, hash_size,
+					bin_str2, bin_str2_size,
+					response_handshake_secret, hash_size);
 			bin_str7_size = sizeof(bin_str7);
-			spdm_bin_concat(BIN_STR_7_LABEL,
-					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+			spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
+					NULL, (uint16)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
-			spdm_hkdf_expand(m_use_hash_algo,
-					 response_handshake_secret, hash_size,
-					 bin_str7, bin_str7_size,
-					 response_finished_key, hash_size);
-			spdm_hmac_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      response_finished_key, hash_size, ptr);
+			spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
+					hash_size, bin_str7, bin_str7_size,
+					response_finished_key, hash_size);
+			spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr),
+					response_finished_key, hash_size, ptr);
 			ptr += hmac_size;
 
 			spdm_transport_test_encode_message(
@@ -850,82 +796,69 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
 			ptr += sizeof(uint16);
 			spdm_build_opaque_data_version_selection_data(
-				spdm_context, &opaque_key_exchange_rsp_size,
-				ptr);
+				spdm_context, &opaque_key_exchange_rsp_size, ptr);
 			ptr += opaque_key_exchange_rsp_size;
-			read_responder_public_certificate_chain(
-				m_use_hash_algo, m_use_asym_algo, &data,
-				&data_size, NULL, NULL);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
+			read_responder_public_certificate_chain(m_use_hash_algo,
+								m_use_asym_algo, &data,
+								&data_size, NULL, NULL);
+			append_managed_buffer(spdm_context, &message_k, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
 			DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-			       m_local_buffer_size));
-			internal_dump_hex(m_local_buffer, m_local_buffer_size);
-			init_managed_buffer(&th_curr,
-					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
+				get_managed_buffer_size(&message_k)));
+			internal_dump_hex(get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			cert_buffer =
+				(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
 			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
-			spdm_hash_all(m_use_hash_algo, cert_buffer,
-				      cert_buffer_size, cert_buffer_hash);
+				data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+			spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+					cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
-					      hash_size);
-			append_managed_buffer(&th_curr, m_local_buffer,
-					      m_local_buffer_size);
-			spdm_hash_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      hash_data);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr), hash_data);
 			free(data);
-			spdm_responder_data_sign(
-				m_use_asym_algo, m_use_hash_algo,
-				get_managed_buffer(&th_curr),
-				get_managed_buffer_size(&th_curr), ptr,
-				&signature_size);
-			copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
-				 signature_size);
-			m_local_buffer_size += signature_size;
-			append_managed_buffer(&th_curr, ptr, signature_size);
+			spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+						get_managed_buffer(&th_curr),
+						get_managed_buffer_size(&th_curr), ptr,
+						&signature_size);
+			append_managed_buffer(spdm_context, &message_k, ptr,
+						signature_size);
 			ptr += signature_size;
-			spdm_hash_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      THCurrHashData);
+
+			reset_managed_buffer(&th_curr);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+						get_managed_buffer_size(&message_k));
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr),
+					THCurrHashData);
 			bin_str0_size = sizeof(bin_str0);
-			spdm_bin_concat(BIN_STR_0_LABEL,
-					sizeof(BIN_STR_0_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str0,
+			spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
+					NULL, (uint16)hash_size, hash_size, bin_str0,
 					&bin_str0_size);
-			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer,
-				      hash_size, final_key, final_key_size,
-				      handshake_secret);
+			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer, hash_size,
+					final_key, final_key_size, handshake_secret);
 			bin_str2_size = sizeof(bin_str2);
-			spdm_bin_concat(BIN_STR_2_LABEL,
-					sizeof(BIN_STR_2_LABEL) - 1,
-					THCurrHashData, (uint16)hash_size,
-					hash_size, bin_str2, &bin_str2_size);
-			spdm_hkdf_expand(m_use_hash_algo, handshake_secret,
-					 hash_size, bin_str2, bin_str2_size,
-					 response_handshake_secret, hash_size);
+			spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
+					THCurrHashData, (uint16)hash_size, hash_size,
+					bin_str2, &bin_str2_size);
+			spdm_hkdf_expand(m_use_hash_algo, handshake_secret, hash_size,
+					bin_str2, bin_str2_size,
+					response_handshake_secret, hash_size);
 			bin_str7_size = sizeof(bin_str7);
-			spdm_bin_concat(BIN_STR_7_LABEL,
-					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+			spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
+					NULL, (uint16)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
-			spdm_hkdf_expand(m_use_hash_algo,
-					 response_handshake_secret, hash_size,
-					 bin_str7, bin_str7_size,
-					 response_finished_key, hash_size);
-			spdm_hmac_all(m_use_hash_algo,
-				      get_managed_buffer(&th_curr),
-				      get_managed_buffer_size(&th_curr),
-				      response_finished_key, hash_size, ptr);
+			spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
+					hash_size, bin_str7, bin_str7_size,
+					response_finished_key, hash_size);
+			spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+					get_managed_buffer_size(&th_curr),
+					response_finished_key, hash_size, ptr);
 			ptr += hmac_size;
 
 			spdm_transport_test_encode_message(
@@ -1051,12 +984,12 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		read_responder_public_certificate_chain(m_use_hash_algo,
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_k, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-		       m_local_buffer_size));
-		internal_dump_hex(m_local_buffer, m_local_buffer_size);
+		       get_managed_buffer_size(&message_k)));
+		internal_dump_hex(get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 		cert_buffer =
 			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1065,9 +998,9 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-		append_managed_buffer(&th_curr, m_local_buffer,
-				      m_local_buffer_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
@@ -1075,11 +1008,14 @@ return_status spdm_requester_key_exchange_test_receive_message(
 					 get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
-		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
-			 signature_size);
-		m_local_buffer_size += signature_size;
-		append_managed_buffer(&th_curr, ptr, signature_size);
+		append_managed_buffer(spdm_context, &message_k, ptr,
+					signature_size);
 		ptr += signature_size;
+
+		reset_managed_buffer(&th_curr);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_k),
+					get_managed_buffer_size(&message_k));
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      THCurrHashData);

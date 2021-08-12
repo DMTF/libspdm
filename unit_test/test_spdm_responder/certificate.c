@@ -62,6 +62,7 @@ void test_spdm_responder_certificate_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
+	spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
 	spdm_context->local_context.local_cert_chain_provision[0] = data;
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
@@ -923,6 +924,7 @@ void test_spdm_responder_certificate_case12(void **state)
 			break;
 		}
 	}
+	#ifndef USE_TRANSCRIPT_HASH
 	if (spdm_response != NULL) {
 		if (spdm_response->header.request_response_code ==
 		    SPDM_CERTIFICATE) {
@@ -934,6 +936,7 @@ void test_spdm_responder_certificate_case12(void **state)
 					data_size);
 		}
 	}
+	#endif
 	free(data);
 }
 

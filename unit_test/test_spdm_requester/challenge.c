@@ -7,9 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
-static uintn m_local_buffer_size;
-static uint8 m_local_buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
-
+static small_managed_buffer_t message_c;
+static large_managed_buffer_t th_curr;
 return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
 							 IN uintn request_size,
 							 IN void *request,
@@ -17,53 +16,32 @@ return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
 {
 	spdm_test_context_t *spdm_test_context;
 	uint8 *ptr;
-
 	spdm_test_context = get_spdm_test_context();
 	ptr = (uint8 *)request;
 	switch (spdm_test_context->case_id) {
 	case 0x1:
 		return RETURN_DEVICE_ERROR;
 	case 0x2:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x3:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x4:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x5:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x6:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x7:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x8:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
+		init_managed_buffer(&message_c, MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE);
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		append_managed_buffer(spdm_context, &message_c, &ptr[1], request_size - 1);
 		return RETURN_SUCCESS;
 	case 0x9: {
 		static uintn sub_index = 0;
 		if (sub_index == 0) {
-			m_local_buffer_size = 0;
-			copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-			m_local_buffer_size += (request_size - 1);
+			init_managed_buffer(&message_c, MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE);
+			((spdm_context_t *)spdm_context)
+				->connection_info.algorithm.base_hash_algo =
+				m_use_hash_algo;
+			append_managed_buffer(spdm_context, &message_c, &ptr[1], request_size - 1);
 			sub_index++;
 		}
 	}
@@ -79,9 +57,11 @@ return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
 	case 0x12:
 	case 0x13:
 	case 0x14:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
+		init_managed_buffer(&message_c, MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE);
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		append_managed_buffer(spdm_context, &message_c, &ptr[1], request_size - 1);
 		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -151,20 +131,24 @@ return_status spdm_requester_challenge_test_receive_message(
 		// ptr += spdm_get_hash_size (m_use_hash_algo);
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_c, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
-		       m_local_buffer_size));
-		internal_dump_hex(m_local_buffer, m_local_buffer_size);
-		spdm_hash_all(m_use_hash_algo, m_local_buffer,
-			      m_local_buffer_size, hash_data);
+		       get_managed_buffer_size(&message_c)));
+		internal_dump_hex(get_managed_buffer(&message_c),
+			 get_managed_buffer_size(&message_c));
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+			 get_managed_buffer_size(&message_c));
+		reset_managed_buffer(&message_c);
+		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		      get_managed_buffer_size(&th_curr), hash_data);
 		DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
 		       spdm_get_hash_size(m_use_hash_algo)));
-		internal_dump_hex(m_local_buffer, m_local_buffer_size);
+		internal_dump_hex(hash_data, spdm_get_hash_size(m_use_hash_algo));
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -227,14 +211,24 @@ return_status spdm_requester_challenge_test_receive_message(
 		// ptr += spdm_get_hash_size (m_use_hash_algo);
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_c, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-		spdm_hash_all(m_use_hash_algo, m_local_buffer,
-			      m_local_buffer_size, hash_data);
+		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
+		       get_managed_buffer_size(&message_c)));
+		internal_dump_hex(get_managed_buffer(&message_c),
+			 get_managed_buffer_size(&message_c));
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+			 get_managed_buffer_size(&message_c));
+		reset_managed_buffer(&message_c);
+		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		      get_managed_buffer_size(&th_curr), hash_data);
+		DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
+		       spdm_get_hash_size(m_use_hash_algo)));
+		internal_dump_hex(hash_data, spdm_get_hash_size(m_use_hash_algo));
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -344,23 +338,28 @@ return_status spdm_requester_challenge_test_receive_message(
 			spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 			ptr += SPDM_NONCE_SIZE;
 			// zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
-			// ptr += spdm_get_hash_size (m_use_hash_algo);
+				// ptr += spdm_get_hash_size (m_use_hash_algo);
 			*(uint16 *)ptr = 0;
 			ptr += sizeof(uint16);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
-			spdm_hash_all(m_use_hash_algo, m_local_buffer,
-				      m_local_buffer_size, hash_data);
-			sig_size =
-				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
-						 m_use_hash_algo,
-						 m_local_buffer,
-						 m_local_buffer_size, ptr,
-						 &sig_size);
+			append_managed_buffer(spdm_context, &message_c, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
+			DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
+				get_managed_buffer_size(&message_c)));
+			internal_dump_hex(get_managed_buffer(&message_c),
+				get_managed_buffer_size(&message_c));
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+				get_managed_buffer_size(&message_c));
+			reset_managed_buffer(&message_c);
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+				get_managed_buffer_size(&th_curr), hash_data);
+			DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
+				spdm_get_hash_size(m_use_hash_algo)));
+			internal_dump_hex(hash_data, spdm_get_hash_size(m_use_hash_algo));
+			sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+			spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+						get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+						ptr, &sig_size);
 			ptr += sig_size;
 
 			spdm_transport_test_encode_message(
@@ -484,20 +483,21 @@ return_status spdm_requester_challenge_test_receive_message(
 			// ptr += spdm_get_hash_size (m_use_hash_algo);
 			*(uint16 *)ptr = 0;
 			ptr += sizeof(uint16);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
-			spdm_hash_all(m_use_hash_algo, m_local_buffer,
-				      m_local_buffer_size, hash_data);
-			sig_size =
-				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
-						 m_use_hash_algo,
-						 m_local_buffer,
-						 m_local_buffer_size, ptr,
-						 &sig_size);
+			append_managed_buffer(spdm_context, &message_c, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+				get_managed_buffer_size(&message_c));
+			reset_managed_buffer(&message_c);
+			spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+				get_managed_buffer_size(&th_curr), hash_data);
+			DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
+				spdm_get_hash_size(m_use_hash_algo)));
+			internal_dump_hex(hash_data, spdm_get_hash_size(m_use_hash_algo));
+			sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+			spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+						get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+						ptr, &sig_size);
 			ptr += sig_size;
 
 			spdm_transport_test_encode_message(
@@ -543,14 +543,24 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+			(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+			get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			get_managed_buffer_size(&th_curr), hash_data);
+	DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
+			spdm_get_hash_size(m_use_hash_algo)));
+	internal_dump_hex(hash_data, spdm_get_hash_size(m_use_hash_algo));
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+					get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+					Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -609,14 +619,21 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -658,14 +675,21 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size; 
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -707,14 +731,21 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -756,14 +787,21 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -804,17 +842,22 @@ return_status spdm_requester_challenge_test_receive_message(
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 8;
-    Ptr += sizeof(uint16);
-    copy_mem (Ptr, "openspdm", 8);
-    Ptr += 8;
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+    // Ptr += spdm_get_hash_size (m_use_hash_algo)
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -856,15 +899,19 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    spdm_hash_all (m_use_hash_algo, hash_data, spdm_get_hash_size (m_use_hash_algo), hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, hash_data, spdm_get_hash_size (m_use_hash_algo), Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }
@@ -906,14 +953,21 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
-    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
-    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
-    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
-    Ptr += sig_size;
+	*(uint16 *)Ptr = 0;
+	Ptr += sizeof(uint16);
+	append_managed_buffer(spdm_context, &message_c, spdm_response,
+		(uintn)Ptr - (uintn)spdm_response);
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_c),
+		get_managed_buffer_size(&message_c));
+	reset_managed_buffer(&message_c);
+	spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+		get_managed_buffer_size(&th_curr), hash_data);
+	sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
+	spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+				get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
+				Ptr, &sig_size);
+	Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
   }

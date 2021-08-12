@@ -703,12 +703,19 @@ void test_spdm_requester_get_digests_case2(void **state)
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(
+		spdm_context->transcript.message_b.buffer_size,
+			spdm_get_hash_size(spdm_context->connection_info
+						   .algorithm.base_hash_algo));
+	#else
 	assert_int_equal(
 		spdm_context->transcript.message_b.buffer_size,
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
 						   .algorithm.base_hash_algo));
+	#endif
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 }
 
@@ -855,12 +862,19 @@ void test_spdm_requester_get_digests_case6(void **state)
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(
+		spdm_context->transcript.message_b.buffer_size,
+			spdm_get_hash_size(spdm_context->connection_info
+						   .algorithm.base_hash_algo));
+	#else
 	assert_int_equal(
 		spdm_context->transcript.message_b.buffer_size,
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
 						   .algorithm.base_hash_algo));
+	#endif
 }
 
 /**
@@ -972,12 +986,19 @@ void test_spdm_requester_get_digests_case9(void **state)
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(
+		spdm_context->transcript.message_b.buffer_size,
+			spdm_get_hash_size(spdm_context->connection_info
+						   .algorithm.base_hash_algo));
+	#else
 	assert_int_equal(
 		spdm_context->transcript.message_b.buffer_size,
 		sizeof(spdm_get_digest_request_t) +
 			sizeof(spdm_digest_response_t) +
 			spdm_get_hash_size(spdm_context->connection_info
 						   .algorithm.base_hash_algo));
+	#endif
 }
 
 /**

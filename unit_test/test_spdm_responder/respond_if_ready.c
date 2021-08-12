@@ -652,9 +652,13 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   cert_buffer_size = data_size - (sizeof(spdm_cert_chain_t) + hash_size);
   spdm_hash_all (m_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
   // Transcript.MessageA size is 0
-  append_managed_buffer (&th_curr, cert_buffer_hash, hash_size);
+  append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
   // SessionTranscript.MessageK is 0 
-  append_managed_buffer (&th_curr, (uint8 *)&m_spdm_finish_request, sizeof(spdm_finish_request_t));
+	spdm_append_message_f(spdm_context, session_info, (uint8 *)&m_spdm_finish_request,
+			      sizeof(spdm_finish_request_t));
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&session_info->session_transcript.message_f),
+			      get_managed_buffer_size(&session_info->session_transcript.message_f));
+	reset_managed_buffer(&session_info->session_transcript.message_f);
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
 
@@ -842,8 +846,12 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   ptr = m_spdm_psk_finish_request.verify_data;
   init_managed_buffer (&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
   // Transcript.MessageA size is 0
-  // SessionTranscript.MessageK is 0 
-  append_managed_buffer (&th_curr, (uint8 *)&m_spdm_psk_finish_request, sizeof(spdm_psk_finish_request_t));
+  // SessionTranscript.MessageK is 0
+  spdm_append_message_f(spdm_context, session_info, (uint8 *)&m_spdm_psk_finish_request,
+			      sizeof(spdm_psk_finish_request_t));
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&session_info->session_transcript.message_f),
+			      get_managed_buffer_size(&session_info->session_transcript.message_f));
+  reset_managed_buffer(&session_info->session_transcript.message_f);
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
 

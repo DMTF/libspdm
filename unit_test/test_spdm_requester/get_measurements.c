@@ -12,7 +12,7 @@
 
 static uintn m_local_buffer_size;
 static uint8 m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-
+static large_managed_buffer_t message_m;
 uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
 					     IN void *buffer,
 					     IN uintn buffer_size)
@@ -72,67 +72,21 @@ return_status spdm_requester_get_measurements_test_send_message(
 	case 0x1:
 		return RETURN_DEVICE_ERROR;
 	case 0x2:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x3:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x4:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x5:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x6:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x7:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x8:
 		m_local_buffer_size = 0;
 		message_size = spdm_test_get_measurement_request_size(
 			spdm_context, (uint8 *)request + header_size,
 			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
+		init_managed_buffer(&message_m, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		append_managed_buffer(spdm_context, &message_m, (uint8 *)request + header_size, message_size);
 		return RETURN_SUCCESS;
 	case 0x9: {
 		static uintn sub_index = 0;
@@ -141,228 +95,48 @@ return_status spdm_requester_get_measurements_test_send_message(
 			message_size = spdm_test_get_measurement_request_size(
 				spdm_context, (uint8 *)request + header_size,
 				request_size - header_size);
-			copy_mem(m_local_buffer, (uint8 *)request + header_size,
-				 message_size);
-			m_local_buffer_size += message_size;
+			init_managed_buffer(&message_m, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			((spdm_context_t *)spdm_context)
+				->connection_info.algorithm.base_hash_algo =
+				m_use_hash_algo;
+			append_managed_buffer(spdm_context, &message_m, (uint8 *)request + header_size, message_size);
 			sub_index++;
 		}
 	}
 		return RETURN_SUCCESS;
 	case 0xA:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xB:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xC:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xD:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xE:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0xF:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x10:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x11:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x12:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x13:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x14:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x15:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x16:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x17:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x18:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x19:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1A:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1B:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1C:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1D:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1E:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x1F:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x20:
-		m_local_buffer_size = 0;
-		message_size = spdm_test_get_measurement_request_size(
-			spdm_context, (uint8 *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
-		return RETURN_SUCCESS;
 	case 0x21:
 		m_local_buffer_size = 0;
 		message_size = spdm_test_get_measurement_request_size(
 			spdm_context, (uint8 *)request + header_size,
 			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8 *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
+		init_managed_buffer(&message_m, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		append_managed_buffer(spdm_context, &message_m, (uint8 *)request + header_size, message_size);
 		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -440,9 +214,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -523,9 +300,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -655,11 +435,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			ptr += SPDM_NONCE_SIZE;
 			*(uint16 *)ptr = 0;
 			ptr += sizeof(uint16);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
+			append_managed_buffer(spdm_context, &message_m, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
+			copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+				get_managed_buffer_size(&message_m));
+			m_local_buffer_size = get_managed_buffer_size(&message_m);
+			reset_managed_buffer(&message_m);
 			DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 			       m_local_buffer_size));
 			internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -805,11 +586,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			ptr += SPDM_NONCE_SIZE;
 			*(uint16 *)ptr = 0;
 			ptr += sizeof(uint16);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response,
-				 (uintn)ptr - (uintn)spdm_response);
-			m_local_buffer_size +=
-				((uintn)ptr - (uintn)spdm_response);
+			append_managed_buffer(spdm_context, &message_m, spdm_response,
+				(uintn)ptr - (uintn)spdm_response);
+			copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+				get_managed_buffer_size(&message_m));
+			m_local_buffer_size = get_managed_buffer_size(&message_m);
+			reset_managed_buffer(&message_m);
 			DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 			       m_local_buffer_size));
 			internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1048,9 +830,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1183,9 +968,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1266,9 +1054,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		*(uint16 *)ptr = 0;
 		ptr += sizeof(uint16);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1805,9 +1596,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += opaque_size_test;
 
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1898,9 +1692,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		set_mem(ptr, opaque_size_test - MissingBytes, 255);
 		ptr += (opaque_size_test - MissingBytes);
 
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -1990,9 +1787,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		set_mem(ptr, opaque_size_test - MissingBytes, 255);
 		ptr += (opaque_size_test - MissingBytes);
 
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -2080,9 +1880,12 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += (opaque_size_test);
 
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_m, spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
-		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+		copy_mem(m_local_buffer, get_managed_buffer(&message_m),
+			 get_managed_buffer_size(&message_m));
+		m_local_buffer_size = get_managed_buffer_size(&message_m);
+		reset_managed_buffer(&message_m);
 		DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
 		       m_local_buffer_size));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
@@ -2924,10 +2727,15 @@ void test_spdm_requester_get_measurements_case10(void **state)
 		0, &number_of_blocks, NULL, NULL);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(number_of_blocks, 4);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
 				 SPDM_NONCE_SIZE + sizeof(uint16));
+	#endif
 	free(data);
 }
 
@@ -2980,6 +2788,10 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -2987,6 +2799,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE + sizeof(uint16));
+	#endif
 	free(data);
 }
 
@@ -3401,10 +3214,15 @@ void test_spdm_requester_get_measurements_case18(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
 				 LARGE_MEASUREMENT_SIZE);
+	#endif
 	free(data);
 }
 
@@ -3634,6 +3452,10 @@ void test_spdm_requester_get_measurements_case22(void **state)
 					      measurement_record);
 		// It may fail due to transcript.message_m overflow
 		if (status == RETURN_SUCCESS) {
+			#ifdef USE_TRANSCRIPT_HASH
+			assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 	spdm_get_hash_size(m_use_hash_algo));
+			#else
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				NumberOfMessages *
@@ -3644,6 +3466,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 						 m_use_measurement_hash_algo) +
 					 SPDM_NONCE_SIZE +
 					 sizeof(uint16)));
+			#endif
 		} else {
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
@@ -3706,6 +3529,10 @@ void test_spdm_requester_get_measurements_case23(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -3714,6 +3541,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE + 
 				 sizeof(uint16) + MAX_SPDM_OPAQUE_DATA_SIZE);
+	#endif
 	free(data);
 }
 
@@ -4059,6 +3887,10 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4068,6 +3900,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				 SPDM_NONCE_SIZE +
 				 sizeof(uint16) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2 - 1);
+	#endif
 	free(data);
 }
 
@@ -4120,6 +3953,10 @@ void test_spdm_requester_get_measurements_case30(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4128,6 +3965,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 					 m_use_measurement_hash_algo) +
 				 sizeof(uint16) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2);
+	#endif
 	free(data);
 }
 
@@ -4183,6 +4021,10 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4190,6 +4032,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 sizeof(uint16) + MAX_UINT16);
+	#endif
 	free(data);
 }
 
@@ -4243,6 +4086,10 @@ void test_spdm_requester_get_measurements_case32(void **state)
 		0, &number_of_block, &measurement_record_length,
 		measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(m_use_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4250,6 +4097,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 				      spdm_get_measurement_hash_size(
 					      m_use_measurement_hash_algo)) +
 				 sizeof(uint16) + SPDM_NONCE_SIZE);
+	#endif
 	free(data);
 }
 

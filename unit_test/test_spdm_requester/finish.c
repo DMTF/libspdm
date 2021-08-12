@@ -8,9 +8,7 @@
 #include <spdm_requester_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
-static uintn m_local_buffer_size;
-static uint8 m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-
+static large_managed_buffer_t message_f[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 uint8 m_dummy_buffer[MAX_HASH_SIZE];
 
 void spdm_secured_message_set_response_finished_key(
@@ -39,59 +37,37 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 	case 0x1:
 		return RETURN_DEVICE_ERROR;
 	case 0x2:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x3:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x4:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x5:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x6:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x7:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0x8:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
+		init_managed_buffer(&message_f, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &message_f,
+				&ptr[1], sizeof(spdm_finish_request_t));
+		append_managed_buffer(spdm_context, &message_f,
+				&ptr[1] + sizeof(spdm_finish_request_t), request_size - 1 - sizeof(spdm_finish_request_t));
 		return RETURN_SUCCESS;
 	case 0x9: {
 		static uintn sub_index = 0;
 		if (sub_index == 0) {
-			m_local_buffer_size = 0;
-			copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-			m_local_buffer_size += (request_size - 1);
+			init_managed_buffer(&message_f, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			append_managed_buffer(spdm_context, &message_f,
+					&ptr[1], sizeof(spdm_finish_request_t));
+			append_managed_buffer(spdm_context, &message_f,
+					&ptr[1] + sizeof(spdm_finish_request_t), request_size - 1 - sizeof(spdm_finish_request_t));
 			sub_index++;
 		}
 	}
 		return RETURN_SUCCESS;
 	case 0xA:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
-		return RETURN_SUCCESS;
 	case 0xB:
-		m_local_buffer_size = 0;
-		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
-		m_local_buffer_size += (request_size - 1);
+		init_managed_buffer(&message_f, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		append_managed_buffer(spdm_context, &message_f,
+				&ptr[1], sizeof(spdm_finish_request_t));
+		append_managed_buffer(spdm_context, &message_f,
+				&ptr[1] + sizeof(spdm_finish_request_t), request_size - 1 - sizeof(spdm_finish_request_t));
 		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -146,9 +122,13 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		ptr = (void *)(spdm_response + 1);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_f, spdm_response,
 			 sizeof(spdm_finish_response_t));
-		m_local_buffer_size += sizeof(spdm_finish_response_t);
+			 							DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
+		       get_managed_buffer_size(&message_f)));
+		internal_dump_hex(get_managed_buffer(&message_f),
+				       get_managed_buffer_size(&message_f));
+					   
 		read_responder_public_certificate_chain(m_use_hash_algo,
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
@@ -160,10 +140,10 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 		// session_transcript.message_k is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
-				      m_local_buffer_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_f),
+				      get_managed_buffer_size(&message_f));
 		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
@@ -215,9 +195,8 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		ptr = (void *)(spdm_response + 1);
-		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+		append_managed_buffer(spdm_context, &message_f, spdm_response,
 			 sizeof(spdm_finish_response_t));
-		m_local_buffer_size += sizeof(spdm_finish_response_t);
 		read_responder_public_certificate_chain(m_use_hash_algo,
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
@@ -229,10 +208,10 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
-		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 		// session_transcript.message_k is 0
-		append_managed_buffer(&th_curr, m_local_buffer,
-				      m_local_buffer_size);
+		append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_f),
+				      get_managed_buffer_size(&message_f));
 		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
@@ -334,27 +313,28 @@ return_status spdm_requester_finish_test_receive_message(
 			spdm_response->header.param1 = 0;
 			spdm_response->header.param2 = 0;
 			ptr = (void *)(spdm_response + 1);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response, sizeof(spdm_finish_response_t));
-			m_local_buffer_size += sizeof(spdm_finish_response_t);
-			read_responder_public_certificate_chain(
-				m_use_hash_algo, m_use_asym_algo, &data,
-				&data_size, NULL, NULL);
-			init_managed_buffer(&th_curr,
-					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
+			append_managed_buffer(spdm_context, &message_f, spdm_response,
+				sizeof(spdm_finish_response_t));
+		
+							DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
+		       get_managed_buffer_size(&message_f)));
+		internal_dump_hex(get_managed_buffer(&message_f),
+		       get_managed_buffer_size(&message_f));
+			read_responder_public_certificate_chain(m_use_hash_algo,
+								m_use_asym_algo, &data,
+								&data_size, NULL, NULL);
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			cert_buffer =
+				(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
 			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
-			spdm_hash_all(m_use_hash_algo, cert_buffer,
-				      cert_buffer_size, cert_buffer_hash);
+				data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+			spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+					cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
-					      hash_size);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 			// session_transcript.message_k is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
-					      m_local_buffer_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_f),
+						get_managed_buffer_size(&message_f));
 			set_mem(response_finished_key, MAX_HASH_SIZE,
 				(uint8)(0xFF));
 			spdm_hmac_all(m_use_hash_algo,
@@ -470,27 +450,23 @@ return_status spdm_requester_finish_test_receive_message(
 			spdm_response->header.param1 = 0;
 			spdm_response->header.param2 = 0;
 			ptr = (void *)(spdm_response + 1);
-			copy_mem(&m_local_buffer[m_local_buffer_size],
-				 spdm_response, sizeof(spdm_finish_response_t));
-			m_local_buffer_size += sizeof(spdm_finish_response_t);
-			read_responder_public_certificate_chain(
-				m_use_hash_algo, m_use_asym_algo, &data,
-				&data_size, NULL, NULL);
-			init_managed_buffer(&th_curr,
-					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
+			append_managed_buffer(spdm_context, &message_f, spdm_response,
+				sizeof(spdm_finish_response_t));
+			read_responder_public_certificate_chain(m_use_hash_algo,
+								m_use_asym_algo, &data,
+								&data_size, NULL, NULL);
+			init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+			cert_buffer =
+				(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
 			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
-			spdm_hash_all(m_use_hash_algo, cert_buffer,
-				      cert_buffer_size, cert_buffer_hash);
+				data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+			spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+					cert_buffer_hash);
 			// transcript.message_a size is 0
-			append_managed_buffer(&th_curr, cert_buffer_hash,
-					      hash_size);
+			append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 			// session_transcript.message_k is 0
-			append_managed_buffer(&th_curr, m_local_buffer,
-					      m_local_buffer_size);
+			append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_f),
+						get_managed_buffer_size(&message_f));
 			set_mem(response_finished_key, MAX_HASH_SIZE,
 				(uint8)(0xFF));
 			spdm_hmac_all(m_use_hash_algo,
@@ -573,9 +549,8 @@ return_status spdm_requester_finish_test_receive_message(
 	spdm_response->header.param1 = 0;
 	spdm_response->header.param2 = 0;
 	ptr = (void *)(spdm_response + 1);
-	copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+	append_managed_buffer(spdm_context, &message_f, spdm_response,
 			sizeof(spdm_finish_response_t));
-	m_local_buffer_size += sizeof(spdm_finish_response_t);
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -587,10 +562,10 @@ return_status spdm_requester_finish_test_receive_message(
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 				cert_buffer_hash);
 	// transcript.message_a size is 0
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+	append_managed_buffer(spdm_context, &th_curr, cert_buffer_hash, hash_size);
 	// session_transcript.message_k is 0
-	append_managed_buffer(&th_curr, m_local_buffer,
-					m_local_buffer_size);
+	append_managed_buffer(spdm_context, &th_curr, get_managed_buffer(&message_f),
+					get_managed_buffer_size(&message_f));
 	set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr),

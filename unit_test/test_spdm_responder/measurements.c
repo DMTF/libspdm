@@ -140,11 +140,16 @@ void test_spdm_responder_measurements_case1(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->header.param1,
 			 MEASUREMENT_BLOCK_NUMBER);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request1_size +
 				 sizeof(spdm_measurements_response_t) +
 				 SPDM_NONCE_SIZE +
 				 sizeof(uint16));
+	#endif
 }
 
 /**
@@ -610,6 +615,10 @@ void test_spdm_responder_measurements_case10(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_MEASUREMENTS);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request6_size +
 				 sizeof(spdm_measurements_response_t) +
@@ -617,6 +626,7 @@ void test_spdm_responder_measurements_case10(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) + SPDM_NONCE_SIZE +
 				 sizeof(uint16));
+	#endif
 }
 
 /**
@@ -731,6 +741,10 @@ void test_spdm_responder_measurements_case12(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->number_of_blocks,
 			 MEASUREMENT_BLOCK_NUMBER);
+	#ifdef USE_TRANSCRIPT_HASH
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+			 spdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
+	#else
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request7_size +
 				 sizeof(spdm_measurements_response_t) +
@@ -741,6 +755,7 @@ void test_spdm_responder_measurements_case12(void **state)
 				 (sizeof(spdm_measurement_block_dmtf_t) +
 				  MEASUREMENT_MANIFEST_SIZE) + SPDM_NONCE_SIZE +
 				 sizeof(uint16));
+	#endif
 }
 
 /**
@@ -1322,6 +1337,11 @@ void test_spdm_responder_measurements_case22(void **state)
 					spdm_get_measurement_hash_size(
 						m_use_measurement_hash_algo) + SPDM_NONCE_SIZE +
 					sizeof(uint16));
+			#ifdef USE_TRANSCRIPT_HASH
+			assert_int_equal(
+				spdm_context->transcript.message_m.buffer_size,
+			 	spdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
+			#else
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				NumberOfMessages *
@@ -1331,6 +1351,7 @@ void test_spdm_responder_measurements_case22(void **state)
 					 spdm_get_measurement_hash_size(
 						 m_use_measurement_hash_algo) + SPDM_NONCE_SIZE +
 					 sizeof(uint16)));
+			#endif
 		} else {
 			assert_int_equal(
 				spdm_response->header.request_response_code,
