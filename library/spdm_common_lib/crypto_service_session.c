@@ -28,22 +28,30 @@ boolean spdm_calculate_th_for_exchange(
 	uint8 cert_chain_data_hash[MAX_HASH_SIZE];
 	uint32 hash_size;
 	return_status status;
+	#ifdef USE_TRANSCRIPT_HASH
+	hash_managed_buffer_t th_curr;
+	#else
 	large_managed_buffer_t th_curr;
-
+	#endif
 	spdm_context = context;
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
+	#ifdef USE_TRANSCRIPT_HASH
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE);
+	#else
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	#endif
 
 	DEBUG((DEBUG_INFO, "message_a data :\n"));
 	internal_dump_hex(
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
@@ -58,7 +66,7 @@ boolean spdm_calculate_th_for_exchange(
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
+		status = append_managed_buffer(context, &th_curr, cert_chain_data_hash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -71,6 +79,7 @@ boolean spdm_calculate_th_for_exchange(
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_k));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_k),
 		get_managed_buffer_size(
@@ -115,22 +124,30 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 	uint8 MutCertChainDataHash[MAX_HASH_SIZE];
 	uint32 hash_size;
 	return_status status;
+	#ifdef USE_TRANSCRIPT_HASH
+	hash_managed_buffer_t th_curr;
+	#else
 	large_managed_buffer_t th_curr;
-
+	#endif
 	spdm_context = context;
 	session_info = spdm_session_info;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
+	#ifdef USE_TRANSCRIPT_HASH
+	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE);
+	#else
 	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	#endif
 
 	DEBUG((DEBUG_INFO, "message_a data :\n"));
 	internal_dump_hex(
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&spdm_context->transcript.message_a),
 		get_managed_buffer_size(&spdm_context->transcript.message_a));
@@ -145,7 +162,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_data, cert_chain_data_size,
 			cert_chain_data_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_data_hash,
+		status = append_managed_buffer(context, &th_curr, cert_chain_data_hash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -158,6 +175,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_k));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_k),
 		get_managed_buffer_size(
@@ -174,7 +192,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			mut_cert_chain_data, mut_cert_chain_data_size,
 			MutCertChainDataHash);
-		status = append_managed_buffer(&th_curr, MutCertChainDataHash,
+		status = append_managed_buffer(context, &th_curr, MutCertChainDataHash,
 					       hash_size);
 		if (RETURN_ERROR(status)) {
 			return FALSE;
@@ -187,6 +205,7 @@ boolean spdm_calculate_th_for_finish(IN void *context,
 		get_managed_buffer_size(
 			&session_info->session_transcript.message_f));
 	status = append_managed_buffer(
+		context,
 		&th_curr,
 		get_managed_buffer(&session_info->session_transcript.message_f),
 		get_managed_buffer_size(
@@ -223,7 +242,11 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 	boolean result;
 	uintn signature_size;
 	uint32 hash_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	signature_size = spdm_get_asym_signature_size(
@@ -283,7 +306,11 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
 	uint32 hash_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 	boolean result;
 
@@ -339,7 +366,11 @@ boolean spdm_verify_key_exchange_rsp_signature(
 	uint8 *cert_buffer;
 	uintn cert_buffer_size;
 	void *context;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -424,7 +455,11 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -484,7 +519,11 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 	boolean result;
 	uintn signature_size;
 	uint32 hash_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	signature_size = spdm_get_req_asym_signature_size(
@@ -555,7 +594,11 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uint8 *mut_cert_chain_data;
 	uintn mut_cert_chain_data_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -626,7 +669,11 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 	uint8 *mut_cert_buffer;
 	uintn mut_cert_buffer_size;
 	void *context;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -721,7 +768,11 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uintn mut_cert_chain_data_size;
 	uintn hash_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -791,7 +842,11 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn mut_cert_chain_data_size;
 	uint32 hash_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -858,7 +913,11 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 	uint8 *mut_cert_chain_data;
 	uintn mut_cert_chain_data_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -926,7 +985,11 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uint8 hmac_data[MAX_HASH_SIZE];
 	uint32 hash_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -971,7 +1034,11 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 	uintn hash_size;
 	uint8 calc_hmac_data[MAX_HASH_SIZE];
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -1021,7 +1088,11 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
 	uintn hash_size;
 	uint8 calc_hmac_data[MAX_HASH_SIZE];
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -1065,7 +1136,11 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
 	uint8 hmac_data[MAX_HASH_SIZE];
 	uint32 hash_size;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	hash_size = spdm_get_hash_size(
@@ -1117,7 +1192,11 @@ return_status spdm_calculate_th1_hash(IN void *context,
 	uintn cert_chain_data_size;
 	spdm_session_info_t *session_info;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	spdm_context = context;
@@ -1187,7 +1266,11 @@ return_status spdm_calculate_th2_hash(IN void *context,
 	uintn mut_cert_chain_data_size;
 	spdm_session_info_t *session_info;
 	boolean result;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 th_curr_data[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn th_curr_data_size;
 
 	spdm_context = context;

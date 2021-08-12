@@ -575,6 +575,7 @@ return_status spdm_append_message_m(IN void *spdm_context, IN void *message,
 /**
   Append message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
@@ -582,12 +583,13 @@ return_status spdm_append_message_m(IN void *spdm_context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_k(IN void *spdm_session_info,
+return_status spdm_append_message_k(IN void *spdm_context, IN void *spdm_session_info,
 				    IN void *message, IN uintn message_size);
 
 /**
   Append message F cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
@@ -595,7 +597,7 @@ return_status spdm_append_message_k(IN void *spdm_session_info,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_f(IN void *spdm_session_info,
+return_status spdm_append_message_f(IN void *context, IN void *spdm_session_info,
 				    IN void *message, IN uintn message_size);
 
 /**

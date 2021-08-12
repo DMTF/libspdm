@@ -187,15 +187,15 @@ return_status spdm_get_response_capabilities(IN void *context,
 	//
 	// Cache
 	//
-	status = append_managed_buffer(&spdm_context->transcript.message_a, spdm_request,
-			      spdm_request_size);
+	status = spdm_append_message_a(spdm_context,
+				  spdm_request, spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
 						SPDM_ERROR_CODE_UNSPECIFIED, 0,
 						response_size, response);
 		return RETURN_SUCCESS;
 	}
-	status = append_managed_buffer(&spdm_context->transcript.message_a,
+	status = spdm_append_message_a(spdm_context,
 			      spdm_response, *response_size);
 
 	if (RETURN_ERROR(status)) {

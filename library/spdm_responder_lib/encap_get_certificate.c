@@ -149,6 +149,7 @@ return_status spdm_process_encap_response_certificate(
 			  spdm_response->portion_length);
 
 	status = append_managed_buffer(
+		NULL,
 		&spdm_context->encap_context.certificate_chain_buffer,
 		(void *)(spdm_response + 1), spdm_response->portion_length);
 	if (RETURN_ERROR(status)) {

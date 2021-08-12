@@ -78,7 +78,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 		spdm_context->connection_info.algorithm.base_hash_algo);
 	spdm_request_size = sizeof(spdm_finish_request_t) + hmac_size;
 
-	status = spdm_append_message_f(session_info, (uint8 *)&spdm_request,
+	status = spdm_append_message_f(spdm_context, session_info, (uint8 *)&spdm_request,
 				       spdm_request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -87,7 +87,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 	spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
 					    spdm_request.verify_data);
 
-	status = spdm_append_message_f(session_info,
+	status = spdm_append_message_f(spdm_context, session_info,
 				       (uint8 *)&spdm_request +
 					       spdm_request_size - hmac_size,
 				       hmac_size);
@@ -129,7 +129,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 		return RETURN_DEVICE_ERROR;
 	}
 
-	status = spdm_append_message_f(session_info, &spdm_response,
+	status = spdm_append_message_f(spdm_context, session_info, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;

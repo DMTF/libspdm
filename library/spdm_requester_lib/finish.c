@@ -123,7 +123,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		sizeof(spdm_finish_request_t) + signature_size + hmac_size;
 	ptr = spdm_request.signature;
 
-	status = spdm_append_message_f(session_info, (uint8 *)&spdm_request,
+	status = spdm_append_message_f(spdm_context, session_info, (uint8 *)&spdm_request,
 				       sizeof(spdm_finish_request_t));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -134,7 +134,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		if (!result) {
 			return RETURN_SECURITY_VIOLATION;
 		}
-		status = spdm_append_message_f(session_info, ptr,
+		status = spdm_append_message_f(spdm_context, session_info, ptr,
 					       signature_size);
 		if (RETURN_ERROR(status)) {
 			return RETURN_SECURITY_VIOLATION;
@@ -147,7 +147,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_f(session_info, ptr, hmac_size);
+	status = spdm_append_message_f(spdm_context, session_info, ptr, hmac_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
 	}
@@ -172,7 +172,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
 			&session_info->session_transcript.message_f,
-			spdm_request_size, &spdm_response_size, &spdm_response,
+			session_info->session_transcript.message_f.buffer_size, &spdm_response_size, &spdm_response,
 			SPDM_FINISH, SPDM_FINISH_RSP,
 			sizeof(spdm_finish_response_mine_t));
 		if (RETURN_ERROR(status)) {
@@ -194,7 +194,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		return RETURN_DEVICE_ERROR;
 	}
 
-	status = spdm_append_message_f(session_info, &spdm_response,
+	status = spdm_append_message_f(spdm_context, session_info, &spdm_response,
 				       sizeof(spdm_finish_response_t));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -214,6 +214,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		}
 
 		status = spdm_append_message_f(
+			spdm_context,
 			session_info,
 			(uint8 *)&spdm_response +
 				sizeof(spdm_finish_response_t),

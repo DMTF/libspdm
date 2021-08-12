@@ -120,6 +120,14 @@ typedef struct {
 	uint8 buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
+#ifdef USE_TRANSCRIPT_HASH
+typedef struct {
+	uintn max_buffer_size;
+	uintn buffer_size;
+	uint8 buffer[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+} hash_managed_buffer_t;
+#endif
+
 typedef struct {
 	//
 	// signature = Sign(SK, hash(M1))
@@ -135,10 +143,17 @@ typedef struct {
 	// MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)
 	//
 	small_managed_buffer_t message_a;
+	#ifndef USE_TRANSCRIPT_HASH
 	large_managed_buffer_t message_b;
 	small_managed_buffer_t message_c;
 	large_managed_buffer_t message_mut_b;
 	small_managed_buffer_t message_mut_c;
+	#else
+	hash_managed_buffer_t message_b;
+	hash_managed_buffer_t message_c;
+	hash_managed_buffer_t message_mut_b;
+	hash_managed_buffer_t message_mut_c;
+	#endif
 	//
 	// signature = Sign(SK, hash(L1))
 	// Verify(PK, hash(L2), signature)
@@ -146,7 +161,11 @@ typedef struct {
 	// L1/L2 = Concatenate (M)
 	// M = Concatenate (GET_MEASUREMENT, MEASUREMENT\signature)
 	//
+	#ifndef USE_TRANSCRIPT_HASH
 	large_managed_buffer_t message_m;
+	#else
+	hash_managed_buffer_t message_m;
+	#endif
 } spdm_transcript_t;
 
 typedef struct {
@@ -181,8 +200,13 @@ typedef struct {
 	// CM = mutual certificate chain *
 	// F  = Concatenate (FINISH request, FINISH response)
 	//
+	#ifndef USE_TRANSCRIPT_HASH
 	large_managed_buffer_t message_k;
 	large_managed_buffer_t message_f;
+	#else
+	hash_managed_buffer_t message_k;
+	hash_managed_buffer_t message_f;
+	#endif
 	//
 	// TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
 	// K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)
@@ -338,7 +362,7 @@ void internal_dump_hex(IN uint8 *data, IN uintn size);
 
 /**
   Append a new data buffer to the managed buffer.
-
+  @param  context                  		A pointer to the SPDM context, context should be NULL if do not need append th hash.
   @param  managed_buffer_t                The managed buffer to be appended.
   @param  buffer                       The address of the data buffer to be appended to the managed buffer.
   @param  buffer_size                   The size in bytes of the data buffer to be appended to the managed buffer.
@@ -346,7 +370,7 @@ void internal_dump_hex(IN uint8 *data, IN uintn size);
   @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
   @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
 **/
-return_status append_managed_buffer(IN OUT void *managed_buffer_t,
+return_status append_managed_buffer(IN void *context, IN OUT void *managed_buffer_t,
 				    IN void *buffer, IN uintn buffer_size);
 
 /**

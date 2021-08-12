@@ -162,11 +162,18 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 	return_status status;
 	uint32 hash_size;
 	uint8 hash_data[MAX_HASH_SIZE];
+	#ifdef USE_TRANSCRIPT_HASH
+	hash_managed_buffer_t m1m2;
+	#else
 	large_managed_buffer_t m1m2;
-
+	#endif
 	spdm_context = context;
 
+	#ifdef USE_TRANSCRIPT_HASH
+	init_managed_buffer(&m1m2, MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE);
+	#else
 	init_managed_buffer(&m1m2, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+	#endif
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
@@ -179,6 +186,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			get_managed_buffer_size(
 				&spdm_context->transcript.message_mut_b));
 		status = append_managed_buffer(
+			context,
 			&m1m2,
 			get_managed_buffer(
 				&spdm_context->transcript.message_mut_b),
@@ -195,6 +203,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			get_managed_buffer_size(
 				&spdm_context->transcript.message_mut_c));
 		status = append_managed_buffer(
+			context,
 			&m1m2,
 			get_managed_buffer(
 				&spdm_context->transcript.message_mut_c),
@@ -220,6 +229,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			get_managed_buffer_size(
 				&spdm_context->transcript.message_a));
 		status = append_managed_buffer(
+			context,
 			&m1m2,
 			get_managed_buffer(&spdm_context->transcript.message_a),
 			get_managed_buffer_size(
@@ -234,6 +244,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			get_managed_buffer_size(
 				&spdm_context->transcript.message_b));
 		status = append_managed_buffer(
+			context,
 			&m1m2,
 			get_managed_buffer(&spdm_context->transcript.message_b),
 			get_managed_buffer_size(
@@ -248,6 +259,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			get_managed_buffer_size(
 				&spdm_context->transcript.message_c));
 		status = append_managed_buffer(
+			context,
 			&m1m2,
 			get_managed_buffer(&spdm_context->transcript.message_c),
 			get_managed_buffer_size(
@@ -469,7 +481,11 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 {
 	boolean result;
 	uintn signature_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn m1m2_buffer_size;
 
 	m1m2_buffer_size = sizeof(m1m2_buffer);
@@ -573,7 +589,11 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 	void *context;
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn m1m2_buffer_size;
 
 	m1m2_buffer_size = sizeof(m1m2_buffer);
@@ -866,7 +886,11 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 	void *context;
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE];
+	#else
 	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	#endif
 	uintn l1l2_buffer_size;
 
 	l1l2_buffer_size = sizeof(l1l2_buffer);

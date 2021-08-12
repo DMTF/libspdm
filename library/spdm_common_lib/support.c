@@ -93,15 +93,15 @@ uint32 spdm_write_uint24(IN uint8 *buffer, IN uint32 value)
 
 /**
   Append a new data buffer to the managed buffer.
-
-  @param  managed_buffer_t                The managed buffer to be appended.
-  @param  buffer                       The address of the data buffer to be appended to the managed buffer.
+  @param  context                  		A pointer to the SPDM context, context should be NULL if do not need append th hash.
+  @param  managed_buffer_t              The managed buffer to be appended.
+  @param  buffer                       	The address of the data buffer to be appended to the managed buffer.
   @param  buffer_size                   The size in bytes of the data buffer to be appended to the managed buffer.
 
   @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
   @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
 **/
-return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
+return_status append_managed_buffer(IN void *context, IN OUT void *m_buffer, IN void *buffer,
 				    IN uintn buffer_size)
 {
 	managed_buffer_t *managed_buffer;
@@ -116,27 +116,79 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
 	}
 	ASSERT(buffer != NULL);
 	ASSERT(buffer_size != 0);
+
+	#ifdef USE_TRANSCRIPT_HASH
+		ASSERT((managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+		   (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
-	ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
-	if (buffer_size >
-	    managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
-		// Do not ASSERT here, because command processor will append message from external.
-		DEBUG((DEBUG_ERROR,
-		       "append_managed_buffer 0x%x fail, rest 0x%x only\n",
-		       (uint32)buffer_size,
-		       (uint32)(managed_buffer->max_buffer_size -
-				managed_buffer->buffer_size)));
-		return RETURN_BUFFER_TOO_SMALL;
-	}
-	ASSERT(buffer_size <=
-	       managed_buffer->max_buffer_size - managed_buffer->buffer_size);
+	#endif
 
-	copy_mem((uint8 *)(managed_buffer + 1) + managed_buffer->buffer_size,
-		 buffer, buffer_size);
-	managed_buffer->buffer_size += buffer_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	spdm_context_t *spdm_context;
+	uint32 hash_size;
+	uint8 hash_data[MAX_HASH_SIZE];
+
+	if(context != NULL)
+	{
+		spdm_context = context;
+		hash_size = spdm_get_hash_size(
+			spdm_context->connection_info.algorithm.base_hash_algo);
+
+		if(hash_size >
+			managed_buffer->max_buffer_size - managed_buffer->buffer_size){
+			DEBUG((DEBUG_ERROR,
+				"buffer has not enough space to calculate th hash\n"));
+			return RETURN_BUFFER_TOO_SMALL;
+		}
+		spdm_hash_all(
+			spdm_context->connection_info.algorithm.base_hash_algo,
+			buffer, buffer_size, hash_data);
+
+		if(managed_buffer->buffer_size != 0){
+			copy_mem((uint8 *)(managed_buffer + 1) + managed_buffer->buffer_size,
+								hash_data, hash_size);
+			spdm_hash_all(
+				spdm_context->connection_info.algorithm.base_hash_algo,
+				get_managed_buffer(managed_buffer),
+				get_managed_buffer_size(managed_buffer),
+				hash_data);
+		}
+		zero_mem(managed_buffer + 1, managed_buffer->buffer_size);
+		copy_mem((uint8 *)(managed_buffer + 1), hash_data, hash_size);
+		managed_buffer->buffer_size = hash_size;
+	}
+	else
+	{
+	#endif
+		(void *)context;
+		ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
+		if (buffer_size >
+			managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
+			// Do not ASSERT here, because command processor will append message from external.
+			DEBUG((DEBUG_ERROR,
+				"append_managed_buffer 0x%x fail, rest 0x%x only\n",
+				(uint32)buffer_size,
+				(uint32)(managed_buffer->max_buffer_size -
+					managed_buffer->buffer_size)));
+			return RETURN_BUFFER_TOO_SMALL;
+		}
+		ASSERT(buffer_size <=
+			managed_buffer->max_buffer_size - managed_buffer->buffer_size);
+
+		copy_mem((uint8 *)(managed_buffer + 1) + managed_buffer->buffer_size,
+			buffer, buffer_size);
+		managed_buffer->buffer_size += buffer_size;
+	#ifdef USE_TRANSCRIPT_HASH
+	}
+	#endif
 	return RETURN_SUCCESS;
 }
 
@@ -159,11 +211,19 @@ return_status shrink_managed_buffer(IN OUT void *m_buffer, IN uintn buffer_size)
 		return RETURN_SUCCESS;
 	}
 	ASSERT(buffer_size != 0);
+	#ifdef USE_TRANSCRIPT_HASH
+		ASSERT((managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+		   (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
-	ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
+	#endif
 	if (buffer_size > managed_buffer->buffer_size) {
 		return RETURN_BUFFER_TOO_SMALL;
 	}
@@ -187,10 +247,19 @@ void reset_managed_buffer(IN OUT void *m_buffer)
 
 	managed_buffer = m_buffer;
 
+	#ifdef USE_TRANSCRIPT_HASH
+		ASSERT((managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+		   (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#endif
 	managed_buffer->buffer_size = 0;
 	zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
 }
@@ -208,10 +277,19 @@ uintn get_managed_buffer_size(IN OUT void *m_buffer)
 
 	managed_buffer = m_buffer;
 
+	#ifdef USE_TRANSCRIPT_HASH
+		ASSERT((managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+		   (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#endif
 	return managed_buffer->buffer_size;
 }
 
@@ -228,10 +306,19 @@ void *get_managed_buffer(IN OUT void *m_buffer)
 
 	managed_buffer = m_buffer;
 
+	#ifdef USE_TRANSCRIPT_HASH
+		ASSERT((managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+		   (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#endif
 	return (managed_buffer + 1);
 }
 
@@ -247,8 +334,14 @@ void init_managed_buffer(IN OUT void *m_buffer, IN uintn max_buffer_size)
 
 	managed_buffer = m_buffer;
 
+	#ifdef USE_TRANSCRIPT_HASH
+	ASSERT((max_buffer_size == MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+	       (max_buffer_size == MAX_SPDM_MESSAGE_HASH_BUFFER_SIZE) ||
+		   (max_buffer_size == MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#else
 	ASSERT((max_buffer_size == MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (max_buffer_size == MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
+	#endif
 
 	managed_buffer->max_buffer_size = max_buffer_size;
 	reset_managed_buffer(m_buffer);
