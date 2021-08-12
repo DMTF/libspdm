@@ -13,6 +13,7 @@ SET(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 ri
 SET(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 CLANG LIBFUZZER Linux: GCC ARM_GCC AARCH64_GCC RISCV32_GCC RISCV64_GCC ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
 SET(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
 SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
+SET(USE_TRANSCRIPT_HASH ${USETH} CACHE STRING "Use hash transcript or not: 1 0" FORCE)
 
 SET(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
 
@@ -102,6 +103,14 @@ elseif(CRYPTO STREQUAL "openssl")
     MESSAGE("CRYPTO = openssl")
 else()
     MESSAGE(FATAL_ERROR "Unkown CRYPTO")
+endif()
+
+if(USE_TRANSCRIPT_HASH STREQUAL "1")
+    MESSAGE("Use transcript hash")
+elseif(USE_TRANSCRIPT_HASH STREQUAL "0")
+    MESSAGE("Use transcript self")
+else()
+    MESSAGE(FATAL_ERROR "Unkown USETH")
 endif()
 
 if(ENABLE_BINARY_BUILD STREQUAL "1")
@@ -463,6 +472,9 @@ if(NOT ENABLE_BINARY_BUILD STREQUAL "1")
     elseif(CRYPTO STREQUAL "openssl")
         ADD_SUBDIRECTORY(os_stub/openssllib)
     endif()
+endif()
+if(USE_TRANSCRIPT_HASH STREQUAL "1")
+    ADD_DEFINITIONS(-DUSE_TRANSCRIPT_HASH)
 endif()
 
     ADD_SUBDIRECTORY(library/spdm_common_lib)
