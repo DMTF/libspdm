@@ -246,7 +246,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		&device_measurement_size);
 	if (!ret) {
 		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
+					     SPDM_ERROR_CODE_UNSPECIFIED,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
 	}
@@ -520,7 +520,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		if (RETURN_ERROR(status)) {
 			spdm_generate_error_response(
 				spdm_context,
-				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+				SPDM_ERROR_CODE_UNSPECIFIED,
 				SPDM_GET_MEASUREMENTS,
 				response_size, response);
 			reset_managed_buffer(
