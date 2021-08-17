@@ -400,6 +400,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
 	uintn hash_size;
+	uintn certificates_size;
 	uint8 *root_cert_hash;
 	uintn root_cert_hash_size;
 	boolean result;
@@ -418,10 +419,12 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 	cert_chain_data = spdm_context->local_context.peer_cert_chain_provision;
 	cert_chain_data_size =
 		spdm_context->local_context.peer_cert_chain_provision_size;
+	hash_size = spdm_get_hash_size(
+		spdm_context->connection_info.algorithm.base_hash_algo);
+	certificates_size =
+		cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - hash_size;
 
 	if ((root_cert_hash != NULL) && (root_cert_hash_size != 0)) {
-		hash_size = spdm_get_hash_size(
-			spdm_context->connection_info.algorithm.base_hash_algo);
 		if (root_cert_hash_size != hash_size) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL (hash size mismatch) !!!\n"));
@@ -435,15 +438,31 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 			return FALSE;
 		}
 	} else if ((cert_chain_data != NULL) && (cert_chain_data_size != 0)) {
-		if (cert_chain_data_size != cert_chain_buffer_size) {
+		if (cert_chain_data_size == cert_chain_buffer_size) {
+			if (const_compare_mem(cert_chain_buffer, cert_chain_data,
+				cert_chain_data_size) != 0) {
+				DEBUG((DEBUG_INFO,
+						"!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
+				return FALSE;
+			}
+		} else if (cert_chain_data_size > cert_chain_buffer_size) {
+			if (const_compare_mem(cert_chain_buffer, cert_chain_data,
+				sizeof(spdm_cert_chain_t) + hash_size) != 0) {
+				DEBUG((DEBUG_INFO,
+						"!!! verify_peer_cert_chain_buffer_header - FAIL !!!\n"));
+				return FALSE;
+			}
+			if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + hash_size,
+				cert_chain_data + cert_chain_data_size - certificates_size,
+				certificates_size) != 0) {
+				DEBUG((DEBUG_INFO,
+						"!!! verify_peer_cert_chain_buffer_without_root - FAIL !!!\n"));
+				return FALSE;
+			}
+			DEBUG((DEBUG_INFO, "!!! verify_peer_cert_chain_buffer_without_root - PASS !!!\n"));
+		} else {
 			DEBUG((DEBUG_INFO,
-			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
-			return FALSE;
-		}
-		if (const_compare_mem(cert_chain_buffer, cert_chain_data,
-				cert_chain_buffer_size) != 0) {
-			DEBUG((DEBUG_INFO,
-			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
+					"!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
 			return FALSE;
 		}
 	}

@@ -56,6 +56,7 @@ typedef struct {
 	uintn peer_root_cert_hash_provision_size;
 	//
 	// Peer CertificateChain
+	// Always should start with peer root cert
 	//
 	void *peer_cert_chain_provision;
 	uintn peer_cert_chain_provision_size;

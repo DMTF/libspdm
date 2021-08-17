@@ -1963,10 +1963,9 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 base_hash_algo,
 {
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
-	uint8 *root_cert_buffer;
-	uintn root_cert_buffer_size;
+	uint8 *first_cert_buffer;
+	uintn first_cert_buffer_size;
 	uintn hash_size;
-	uint8 calc_root_cert_hash[MAX_HASH_SIZE];
 	uint8 *leaf_cert_buffer;
 	uintn leaf_cert_buffer_size;
 
@@ -1989,23 +1988,14 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 base_hash_algo,
 	cert_chain_data_size =
 		cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - hash_size;
 	if (!x509_get_cert_from_cert_chain(
-		    cert_chain_data, cert_chain_data_size, 0, &root_cert_buffer,
-		    &root_cert_buffer_size)) {
+		    cert_chain_data, cert_chain_data_size, 0, &first_cert_buffer,
+		    &first_cert_buffer_size)) {
 		DEBUG((DEBUG_INFO,
 		       "!!! VerifyCertificateChainBuffer - FAIL (get root certificate failed)!!!\n"));
 		return FALSE;
 	}
 
-	spdm_hash_all(base_hash_algo, root_cert_buffer, root_cert_buffer_size,
-		      calc_root_cert_hash);
-	if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
-			calc_root_cert_hash, hash_size) != 0) {
-		DEBUG((DEBUG_INFO,
-		       "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
-		return FALSE;
-	}
-
-	if (!x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
+	if (!x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
 				    cert_chain_data, cert_chain_data_size)) {
 		DEBUG((DEBUG_INFO,
 		       "!!! VerifyCertificateChainBuffer - FAIL (cert chain verify failed)!!!\n"));
