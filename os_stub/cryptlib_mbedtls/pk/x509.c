@@ -210,7 +210,9 @@ boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
 {
 	mbedtls_x509_crt crt;
 	int32 ret;
+	boolean status;
 
+	status = FALSE;
 	if (cert == NULL) {
 		return FALSE;
 	}
@@ -223,12 +225,13 @@ boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
 		if (cert_subject != NULL) {
 			copy_mem(cert_subject, crt.subject_raw.p,
 				 crt.subject_raw.len);
+			status = TRUE;
 		}
 		*subject_size = crt.subject_raw.len;
 	}
 	mbedtls_x509_crt_free(&crt);
 
-	return ret == 0;
+	return status;
 }
 
 return_status
@@ -877,53 +880,46 @@ cleanup:
   Retrieve the issuer bytes from one X.509 certificate.
 
   If cert is NULL, then return FALSE.
-  If CertIssuerSize is NULL, then return FALSE.
+  If issuer_size is NULL, then return FALSE.
   If this interface is not supported, then return FALSE.
 
   @param[in]      cert         Pointer to the DER-encoded X509 certificate.
   @param[in]      cert_size     size of the X509 certificate in bytes.
-  @param[out]     CertIssuer  Pointer to the retrieved certificate subject bytes.
-  @param[in, out] CertIssuerSize  The size in bytes of the CertIssuer buffer on input,
-                               and the size of buffer returned cert_subject on output.
+  @param[out]     cert_issuer  Pointer to the retrieved certificate subject bytes.
+  @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
+                               and the size of buffer returned cert_issuer on output.
 
   @retval  TRUE   The certificate issuer retrieved successfully.
-  @retval  FALSE  Invalid certificate, or the CertIssuerSize is too small for the result.
-                  The CertIssuerSize will be updated with the required size.
+  @retval  FALSE  Invalid certificate, or the issuer_size is too small for the result.
+                  The issuer_size will be updated with the required size.
   @retval  FALSE  This interface is not supported.
 
 **/
 boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
-			     OUT uint8 *CertIssuer,
-			     IN OUT uintn *CertIssuerSize)
+			     OUT uint8 *cert_issuer,
+			     IN OUT uintn *issuer_size)
 {
 	mbedtls_x509_crt crt;
 	int32 ret;
 	boolean status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
-
 	status = FALSE;
+	if (cert == NULL) {
+		return status;
+	}
 
 	mbedtls_x509_crt_init(&crt);
 
 	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
 	if (ret == 0) {
-		if (*CertIssuerSize < crt.serial.len) {
-			*CertIssuerSize = crt.serial.len;
-			status = FALSE;
-			goto cleanup;
+		if (cert_issuer != NULL) {
+			copy_mem(cert_issuer, crt.issuer_raw.p,
+				 crt.issuer_raw.len);
+			status = TRUE;
 		}
-		if (CertIssuer != NULL) {
-			copy_mem(CertIssuer, crt.serial.p, crt.serial.len);
-		}
-		*CertIssuerSize = crt.serial.len;
-		status = TRUE;
+		*issuer_size = crt.subject_raw.len;
 	}
-
-cleanup:
 	mbedtls_x509_crt_free(&crt);
 
 	return status;

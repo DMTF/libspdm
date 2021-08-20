@@ -2202,24 +2202,24 @@ return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
   Retrieve the issuer bytes from one X.509 certificate.
 
   If cert is NULL, then return FALSE.
-  If CertIssuerSize is NULL, then return FALSE.
+  If issuer_size is NULL, then return FALSE.
   If this interface is not supported, then return FALSE.
 
   @param[in]      cert         Pointer to the DER-encoded X509 certificate.
   @param[in]      cert_size     size of the X509 certificate in bytes.
-  @param[out]     CertIssuer  Pointer to the retrieved certificate subject bytes.
-  @param[in, out] CertIssuerSize  The size in bytes of the CertIssuer buffer on input,
-                               and the size of buffer returned cert_subject on output.
+  @param[out]     cert_issuer  Pointer to the retrieved certificate subject bytes.
+  @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
+                               and the size of buffer returned cert_issuer on output.
 
   @retval  TRUE   The certificate issuer retrieved successfully.
-  @retval  FALSE  Invalid certificate, or the CertIssuerSize is too small for the result.
-                  The CertIssuerSize will be updated with the required size.
+  @retval  FALSE  Invalid certificate, or the issuer_size is too small for the result.
+                  The issuer_size will be updated with the required size.
   @retval  FALSE  This interface is not supported.
 
 **/
 boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
-			     OUT uint8 *CertIssuer,
-			     IN OUT uintn *CertIssuerSize);
+			     OUT uint8 *cert_issuer,
+			     IN OUT uintn *issuer_size);
 
 /**
   Retrieve the issuer common name (CN) string from one X.509 certificate.
