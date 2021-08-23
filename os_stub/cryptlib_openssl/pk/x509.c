@@ -853,9 +853,9 @@ boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
 	res = FALSE;
 
 	//
-	// Retrieve subject name from certificate object.
+	// Retrieve issuer name from certificate object.
 	//
-	x509_name = X509_get_subject_name(x509_cert);
+	x509_name = X509_get_issuer_name(x509_cert);
 	if (x509_name == NULL) {
 		goto done;
 	}

@@ -210,25 +210,35 @@ boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
 {
 	mbedtls_x509_crt crt;
 	int32 ret;
+	boolean status;
 
 	if (cert == NULL) {
 		return FALSE;
 	}
+
+	status = FALSE;
 
 	mbedtls_x509_crt_init(&crt);
 
 	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
 	if (ret == 0) {
+		if (*subject_size < crt.subject_raw.len) {
+			*subject_size = crt.subject_raw.len;
+			status = FALSE;
+			goto cleanup;
+		}
 		if (cert_subject != NULL) {
-			copy_mem(cert_subject, crt.subject_raw.p,
-				 crt.subject_raw.len);
+			copy_mem(cert_subject, crt.subject_raw.p, crt.subject_raw.len);
 		}
 		*subject_size = crt.subject_raw.len;
+		status = TRUE;
 	}
+
+cleanup:
 	mbedtls_x509_crt_free(&crt);
 
-	return ret == 0;
+	return status;
 }
 
 return_status
@@ -911,15 +921,15 @@ boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
 	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
 	if (ret == 0) {
-		if (*issuer_size < crt.serial.len) {
-			*issuer_size = crt.serial.len;
+		if (*issuer_size < crt.issuer_raw.len) {
+			*issuer_size = crt.issuer_raw.len;
 			status = FALSE;
 			goto cleanup;
 		}
 		if (cert_issuer != NULL) {
-			copy_mem(cert_issuer, crt.serial.p, crt.serial.len);
+			copy_mem(cert_issuer, crt.issuer_raw.p, crt.issuer_raw.len);
 		}
-		*issuer_size = crt.serial.len;
+		*issuer_size = crt.issuer_raw.len;
 		status = TRUE;
 	}
 
