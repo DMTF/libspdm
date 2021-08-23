@@ -56,13 +56,177 @@ uintn get_spdm_hash_nid(IN uint32 base_hash_algo)
 }
 
 /**
+  Return hash init function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash init function
+**/
+hash_init_func get_spdm_hash_init_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_init;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_init;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_init;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+
+/**
+  Return hash duplicate function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash duplicate function
+**/
+hash_duplicate_func get_spdm_hash_duplicate_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return hash update function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash update function
+**/
+hash_update_func get_spdm_hash_update_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+/**
+  Return hash final function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash final function
+**/
+hash_final_func get_spdm_hash_final_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
   Return hash function, based upon the negotiated hash algorithm.
 
   @param  base_hash_algo                  SPDM base_hash_algo
 
   @return hash function
 **/
-hash_all_func get_spdm_hash_func(IN uint32 base_hash_algo)
+hash_all_func get_spdm_hash_all_func(IN uint32 base_hash_algo)
 {
 	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -97,6 +261,106 @@ hash_all_func get_spdm_hash_func(IN uint32 base_hash_algo)
 }
 
 /**
+  Initializes user-supplied memory pointed by hash_context as hash context for
+  subsequent use.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  hash_context                   Pointer to hash context being initialized.
+
+  @retval TRUE   Hash context initialization succeeded.
+  @retval FALSE  Hash context initialization failed.
+**/
+boolean spdm_hash_init(IN uint32 base_hash_algo, OUT void *hash_context)
+{
+	hash_init_func hash_function;
+	hash_function = get_spdm_hash_init_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return FALSE;
+	}
+	return hash_function(hash_context);
+}
+
+/**
+  Makes a copy of an existing hash context.
+
+  If hash_ctx is NULL, then return FALSE.
+  If new_hash_ctx is NULL, then return FALSE.
+
+  @param[in]  hash_ctx     Pointer to hash context being copied.
+  @param[out] new_hash_ctx  Pointer to new hash context.
+
+  @retval TRUE   hash context copy succeeded.
+  @retval FALSE  hash context copy failed.
+
+**/
+boolean spdm_hash_duplicate(IN uint32 base_hash_algo,
+			  IN const void *hash_ctx, OUT void *new_hash_ctx)
+{
+	hash_duplicate_func hash_function;
+	hash_function = get_spdm_hash_duplicate_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return FALSE;
+	}
+	return hash_function(hash_ctx, new_hash_ctx);
+}
+
+/**
+  Digests the input data and updates hash context.
+
+  This function performs hash digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  Hash context should be already correctly initialized by hash_init(), and should not be finalized
+  by hash_final(). Behavior with invalid context is undefined.
+
+  If hash_context is NULL, then return FALSE.
+
+  @param[in, out]  hash_context   Pointer to the MD context.
+  @param[in]       data           Pointer to the buffer containing the data to be hashed.
+  @param[in]       data_size      Size of data buffer in bytes.
+
+  @retval TRUE   hash data digest succeeded.
+  @retval FALSE  hash data digest failed.
+**/
+boolean spdm_hash_update(IN uint32 base_hash_algo, IN OUT void *hash_context,
+			  IN const void *data, IN uintn data_size)
+{
+	hash_update_func hash_function;
+	hash_function = get_spdm_hash_update_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return FALSE;
+	}
+	return hash_function(hash_context, data, data_size);
+}
+
+/**
+  Completes computation of the hash digest value.
+
+  This function completes hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the hash context cannot
+  be used again.
+  hash context should be already correctly initialized by hash_init(), and should not be
+  finalized by hash_final(). Behavior with invalid hash context is undefined.
+
+  If hash_context is NULL, then return FALSE.
+  If hash_value is NULL, then return FALSE.
+
+  @param[in, out]  hash_context    Pointer to the hash context.
+  @param[out]      hash_value      Pointer to a buffer that receives the hash digest value.
+
+  @retval TRUE   hash digest computation succeeded.
+  @retval FALSE  hash digest computation failed.
+**/
+boolean spdm_hash_final(IN uint32 base_hash_algo, IN OUT void *hash_context, OUT uint8 *hash_value)
+{
+	hash_final_func hash_function;
+	hash_function = get_spdm_hash_final_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return FALSE;
+	}
+	return hash_function(hash_context, hash_value);
+}
+
+/**
   Computes the hash of a input data buffer, based upon the negotiated hash algorithm.
 
   This function performs the hash of a given data buffer, and return the hash value.
@@ -113,7 +377,7 @@ boolean spdm_hash_all(IN uint32 base_hash_algo, IN const void *data,
 		      IN uintn data_size, OUT uint8 *hash_value)
 {
 	hash_all_func hash_function;
-	hash_function = get_spdm_hash_func(base_hash_algo);
+	hash_function = get_spdm_hash_all_func(base_hash_algo);
 	if (hash_function == NULL) {
 		return FALSE;
 	}
@@ -213,13 +477,176 @@ boolean spdm_measurement_hash_all(IN uint32 measurement_hash_algo,
 }
 
 /**
-  Return HMAC function, based upon the negotiated HMAC algorithm.
+  Return HMAC init function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC init function
+**/
+hmac_set_key_func get_spdm_hmac_init_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_set_key;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_set_key;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_set_key;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return HMAC duplicate function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC duplicate function
+**/
+hmac_duplicate_func get_spdm_hmac_duplicate_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_duplicate;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return HMAC update function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC update function
+**/
+hmac_update_func get_spdm_hmac_update_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_update;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+/**
+  Return HMAC final function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC final function
+**/
+hmac_final_func get_spdm_hmac_final_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_final;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return HMAC all function, based upon the negotiated HMAC algorithm.
 
   @param  base_hash_algo                 SPDM base_hash_algo
 
   @return HMAC function
 **/
-hmac_all_func get_spdm_hmac_func(IN uint32 base_hash_algo)
+hmac_all_func get_spdm_hmac_all_func(IN uint32 base_hash_algo)
 {
 	switch (base_hash_algo) {
 	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -254,6 +681,115 @@ hmac_all_func get_spdm_hmac_func(IN uint32 base_hash_algo)
 }
 
 /**
+  Set user-supplied key for subsequent use. It must be done before any
+  calling to hmac_update().
+
+  If hmac_ctx is NULL, then return FALSE.
+
+  @param[out]  hmac_ctx  Pointer to HMAC context.
+  @param[in]   key                Pointer to the user-supplied key.
+  @param[in]   key_size            key size in bytes.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+
+**/
+boolean spdm_hmac_init(IN uint32 base_hash_algo,
+			  OUT void *hmac_ctx, IN const uint8 *key,
+		      IN uintn key_size)
+{
+	hmac_set_key_func hmac_function;
+	hmac_function = get_spdm_hmac_init_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return FALSE;
+	}
+	return hmac_function(hmac_ctx, key, key_size);
+}
+
+/**
+  Makes a copy of an existing HMAC context.
+
+  If hmac_ctx is NULL, then return FALSE.
+  If new_hmac_ctx is NULL, then return FALSE.
+
+  @param[in]  hmac_ctx     Pointer to HMAC context being copied.
+  @param[out] new_hmac_ctx  Pointer to new HMAC context.
+
+  @retval TRUE   HMAC context copy succeeded.
+  @retval FALSE  HMAC context copy failed.
+
+**/
+boolean spdm_hmac_duplicate(IN uint32 base_hash_algo,
+			  IN const void *hmac_ctx, OUT void *new_hmac_ctx)
+{
+	hmac_duplicate_func hmac_function;
+	hmac_function = get_spdm_hmac_duplicate_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return FALSE;
+	}
+	return hmac_function(hmac_ctx, new_hmac_ctx);
+}
+
+/**
+  Digests the input data and updates HMAC context.
+
+  This function performs HMAC digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  HMAC context should be initialized by hmac_new(), and should not be finalized
+  by hmac_final(). Behavior with invalid context is undefined.
+
+  If hmac_ctx is NULL, then return FALSE.
+
+  @param[in, out]  hmac_ctx Pointer to the HMAC context.
+  @param[in]       data              Pointer to the buffer containing the data to be digested.
+  @param[in]       data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC data digest succeeded.
+  @retval FALSE  HMAC data digest failed.
+
+**/
+boolean spdm_hmac_update(IN uint32 base_hash_algo,
+			  OUT void *hmac_ctx, IN const void *data,
+			   IN uintn data_size)
+{
+	hmac_update_func hmac_function;
+	hmac_function = get_spdm_hmac_update_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return FALSE;
+	}
+	return hmac_function(hmac_ctx, data, data_size);
+}
+
+/**
+  Completes computation of the HMAC digest value.
+
+  This function completes HMAC hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the HMAC context cannot
+  be used again.
+
+  If hmac_ctx is NULL, then return FALSE.
+  If hmac_value is NULL, then return FALSE.
+
+  @param[in, out]  hmac_ctx  Pointer to the HMAC context.
+  @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
+                                      value (32 bytes).
+
+  @retval TRUE   HMAC digest computation succeeded.
+  @retval FALSE  HMAC digest computation failed.
+
+**/
+boolean spdm_hmac_final(IN uint32 base_hash_algo,
+			  OUT void *hmac_ctx,  OUT uint8 *hmac_value)
+{
+	hmac_final_func hmac_function;
+	hmac_function = get_spdm_hmac_final_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return FALSE;
+	}
+	return hmac_function(hmac_ctx, hmac_value);
+}
+
+/**
   Computes the HMAC of a input data buffer, based upon the negotiated HMAC algorithm.
 
   This function performs the HMAC of a given data buffer, and return the hash value.
@@ -273,7 +809,7 @@ boolean spdm_hmac_all(IN uint32 base_hash_algo, IN const void *data,
 		      IN uintn key_size, OUT uint8 *hmac_value)
 {
 	hmac_all_func hmac_function;
-	hmac_function = get_spdm_hmac_func(base_hash_algo);
+	hmac_function = get_spdm_hmac_all_func(base_hash_algo);
 	if (hmac_function == NULL) {
 		return FALSE;
 	}
