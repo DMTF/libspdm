@@ -1664,9 +1664,6 @@ boolean spdm_x509_certificate_check(IN const uint8 *cert, IN uintn cert_size)
 	// 4. issuer_name
 	asn1_buffer_len = 0;
 	status = x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
-	if (status && asn1_buffer_len == 0) {
-		goto cleanup;
-	}
 	if (asn1_buffer_len <= 0) {
 		status = FALSE;
 		goto cleanup;
@@ -1675,9 +1672,6 @@ boolean spdm_x509_certificate_check(IN const uint8 *cert, IN uintn cert_size)
 	// 5. subject_name
 	asn1_buffer_len = 0;
 	status = x509_get_subject_name(cert, cert_size, NULL, &asn1_buffer_len);
-	if (status && asn1_buffer_len == 0) {
-		goto cleanup;
-	}
 	if (asn1_buffer_len <= 0) {
 		status = FALSE;
 		goto cleanup;
@@ -1711,6 +1705,7 @@ boolean spdm_x509_certificate_check(IN const uint8 *cert, IN uintn cert_size)
 	value = 0;
 	ret = x509_get_extended_key_usage(cert, cert_size, NULL, &value);
 	if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
+		status = FALSE;
 		goto cleanup;
 	}
 
