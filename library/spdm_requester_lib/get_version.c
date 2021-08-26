@@ -122,8 +122,7 @@ boolean spdm_negotiate_connection_version(IN OUT void *context, IN spdm_version_
 	}
 
 	if (ver_available == TRUE) {
-		spdm_context->connection_info.version.spdm_version_count = 1;
-		copy_mem(spdm_context->connection_info.version.spdm_version,
+		copy_mem(&(spdm_context->connection_info.version),
 			req_ver_set + req_index,
 			sizeof(spdm_version_number_t));
 		return TRUE;

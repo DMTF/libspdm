@@ -78,9 +78,9 @@ void test_spdm_responder_challenge_auth_case1(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -147,9 +147,9 @@ void test_spdm_responder_challenge_auth_case2(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -211,9 +211,9 @@ void test_spdm_responder_challenge_auth_case3(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -276,9 +276,9 @@ void test_spdm_responder_challenge_auth_case4(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -343,9 +343,9 @@ void test_spdm_responder_challenge_auth_case5(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -415,9 +415,9 @@ void test_spdm_responder_challenge_auth_case6(void **state)
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
 		m_use_measurement_hash_algo;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data1,
 						&data_size1, NULL, NULL);
@@ -471,9 +471,9 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -519,9 +519,9 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -567,9 +567,9 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[1] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[1] = data_size1;
@@ -615,9 +615,9 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -663,9 +663,9 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -713,9 +713,9 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -762,9 +762,9 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
@@ -812,9 +812,9 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
   spdm_context->local_context.local_cert_chain_provision[0] = data1;
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;

@@ -76,15 +76,14 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
-			spdm_context->connection_info.version
-				.spdm_version_count = (uint8)(
-				data_size / sizeof(spdm_version_number_t));
-			copy_mem(spdm_context->connection_info.version
-					 .spdm_version,
+			if ((uint8)(data_size /sizeof(spdm_version_number_t)) != 1) {
+				/* Only have one connected version */
+				return RETURN_INVALID_PARAMETER;
+			}
+			copy_mem(
+				 &(spdm_context->connection_info.version),
 				 data,
-				 spdm_context->connection_info.version
-						 .spdm_version_count *
-					 sizeof(spdm_version_number_t));
+				 sizeof(spdm_version_number_t));
 		} else {
 			spdm_context->local_context.version.spdm_version_count =
 				(uint8)(data_size /
@@ -431,11 +430,9 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = spdm_context->connection_info.version
-					   .spdm_version_count *
-				   sizeof(spdm_version_number_t);
+		target_data_size = sizeof(spdm_version_number_t);
 		target_data =
-			spdm_context->connection_info.version.spdm_version;
+			&(spdm_context->connection_info.version);
 		break;
 	case SPDM_DATA_SECURED_MESSAGE_VERSION:
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
@@ -879,25 +876,19 @@ return_status spdm_append_message_f(IN void *session_info, IN void *message,
 boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
 				  IN uint8 version)
 {
-	uintn index;
 	uint8 major_version;
 	uint8 minor_version;
 
 	major_version = ((version >> 4) & 0xF);
 	minor_version = (version & 0xF);
 
-	for (index = 0;
-	     index < spdm_context->connection_info.version.spdm_version_count;
-	     index++) {
-		if ((major_version ==
-		     spdm_context->connection_info.version.spdm_version[index]
-			     .major_version) &&
-		    (minor_version ==
-		     spdm_context->connection_info.version.spdm_version[index]
-			     .minor_version)) {
-			return TRUE;
-		}
+	if ((major_version ==
+			spdm_context->connection_info.version.major_version) &&
+		(minor_version ==
+			spdm_context->connection_info.version.minor_version)) {
+		return TRUE;
 	}
+
 	return FALSE;
 }
 
