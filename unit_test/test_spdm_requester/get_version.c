@@ -604,8 +604,6 @@ void test_spdm_requester_get_version_case10(void **state)
 
 	status = spdm_get_version(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(
-		spdm_context->connection_info.version.spdm_version_count, 2);
 }
 
 /**
@@ -732,9 +730,9 @@ void test_spdm_requester_get_version_case15(void **state)
 	status = spdm_get_version(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(
-		spdm_context->connection_info.version.spdm_version[0].major_version, 1);
+		spdm_context->connection_info.version.major_version, 1);
 	assert_int_equal(
-		spdm_context->connection_info.version.spdm_version[0].minor_version, 1);
+		spdm_context->connection_info.version.minor_version, 1);
 }
 
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {

@@ -3011,9 +3011,9 @@ void test_spdm_requester_get_measurements_case12(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xC;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3068,9 +3068,9 @@ void test_spdm_requester_get_measurements_case13(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xD;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3125,9 +3125,9 @@ void test_spdm_requester_get_measurements_case14(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xE;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3182,9 +3182,9 @@ void test_spdm_requester_get_measurements_case15(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xF;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3240,9 +3240,9 @@ void test_spdm_requester_get_measurements_case16(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x10;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3309,9 +3309,9 @@ void test_spdm_requester_get_measurements_case17(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x11;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3370,9 +3370,9 @@ void test_spdm_requester_get_measurements_case18(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x12;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3429,9 +3429,9 @@ void test_spdm_requester_get_measurements_case19(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x13;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3485,9 +3485,9 @@ void test_spdm_requester_get_measurements_case20(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x14;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3541,9 +3541,9 @@ void test_spdm_requester_get_measurements_case21(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x15;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3599,9 +3599,9 @@ void test_spdm_requester_get_measurements_case22(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x16;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3675,9 +3675,9 @@ void test_spdm_requester_get_measurements_case23(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x17;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3738,9 +3738,9 @@ void test_spdm_requester_get_measurements_case24(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x18;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3795,9 +3795,9 @@ void test_spdm_requester_get_measurements_case25(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x19;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3852,9 +3852,9 @@ void test_spdm_requester_get_measurements_case26(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x1A;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3910,9 +3910,9 @@ void test_spdm_requester_get_measurements_case27(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x1B;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -3969,9 +3969,9 @@ void test_spdm_requester_get_measurements_case28(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x1C;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -4028,9 +4028,9 @@ void test_spdm_requester_get_measurements_case29(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x1D;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
@@ -4152,9 +4152,9 @@ void test_spdm_requester_get_measurements_case31(void **state)
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x1F;
-	spdm_context->connection_info.version.spdm_version_count = 1;
-	spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-	spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+	
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
