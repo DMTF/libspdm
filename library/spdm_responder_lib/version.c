@@ -128,14 +128,6 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 		return RETURN_SUCCESS;
 	}
 
-	spdm_context->connection_info.version.spdm_version_count =
-		spdm_context->local_context.version.spdm_version_count;
-	copy_mem(
-		spdm_context->connection_info.version.spdm_version,
-		spdm_context->local_context.version.spdm_version,
-		sizeof(spdm_version_number_t) *
-			spdm_context->local_context.version.spdm_version_count);
-
 	spdm_set_connection_state(spdm_context,
 				  SPDM_CONNECTION_STATE_AFTER_VERSION);
 
