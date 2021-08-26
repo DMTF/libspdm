@@ -164,6 +164,9 @@ return_status spdm_encode_secured_message(
 				sequence_number;
 		}
 		break;
+	default:
+		ASSERT(FALSE);
+		return RETURN_UNSUPPORTED;
 	}
 
 	record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
@@ -438,6 +441,9 @@ return_status spdm_decode_secured_message(
 				sequence_number;
 		}
 		break;
+	default:
+		ASSERT(FALSE);
+		return RETURN_UNSUPPORTED;
 	}
 
 	record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
