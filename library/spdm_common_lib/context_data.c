@@ -1133,3 +1133,14 @@ uintn spdm_get_context_size(void)
 	return sizeof(spdm_context_t) +
 	       spdm_secured_message_get_context_size() * MAX_SPDM_SESSION_COUNT;
 }
+
+/**
+  Return the SPDMversion field of the version number struct.
+
+  @return the SPDMversion of the version number struct.
+**/
+uint8 spdm_get_version_from_version_number(IN spdm_version_number_t ver)
+{
+	return (uint8)(ver.major_version << 4 |
+				   ver.minor_version);
+}

@@ -15,6 +15,122 @@ typedef struct {
 } spdm_version_response_max_t;
 #pragma pack()
 
+
+/**
+  Compare SPDMversion feild of spdm_version_number_t.
+
+  @param  spdm_context				A pointer to the SPDM context.
+  @param  first_ver					First version number.
+  @param  seccond_ver				Second version number.
+
+  @retval TRUE               		First version is not lower than seccond version.
+  @retval FALSE					    First version is lower than seccond version.
+*/
+boolean spdm_version_number_compare(IN spdm_version_number_t first_ver, IN spdm_version_number_t seccond_ver)
+{
+	uint8 first_version;
+	uint8 seccond_version;
+
+	first_version = spdm_get_version_from_version_number(first_ver);
+	seccond_version = spdm_get_version_from_version_number(seccond_ver);
+	return (first_version >= seccond_version);
+}
+
+/**
+  Sort SPDMversion in ascending order.
+
+  @param  spdm_context				A pointer to the SPDM context.
+  @param  ver_set					A pointer to the version set.
+  @param  ver_num					Version number.
+*/
+void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
+{
+	uintn index;
+	uintn index_sort;
+	uintn index_min;
+	spdm_version_number_t version;
+
+	/* Select sort */
+	if (ver_num > 1) {
+		for (index_sort = 0; index_sort < ver_num; index_sort++) {
+			index_min = index_sort;
+			for (index = index_sort + 1; index < ver_num; index++) {
+				/* if ver_ser[index_min] higher than ver_set[index] */
+				if (spdm_version_number_compare(ver_set[index_min], ver_set[index])) {
+					index_min = index;
+				}
+			}
+			/* swap ver_ser[index_min] and ver_set[index_sort] */
+			version = ver_set[index_sort];
+            ver_set[index_sort] = ver_set[index_min];
+			ver_set[index_min] = version;
+		}
+	}
+}
+/**
+  Negotiate SPDMversion for connection.
+  ver_set is the local version set of requester, res_ver_set is the version set of responder.
+
+  @param  spdm_context				A pointer to the SPDM context.
+  @param  req_ver_set				A pointer to the requester version set.
+  @param  req_ver_num				Version number of requester.
+  @param  res_ver_set				A pointer to the responder version set.
+  @param  res_ver_num				Version number of responder.
+
+  @retval TRUE               		Negotiation successfully, connect version be saved to context.
+  @retval FALSE					    Negotiation failed.
+*/
+boolean spdm_negotiate_connection_version(IN OUT void *context, IN spdm_version_number_t *req_ver_set, IN uintn req_ver_num,
+									   	IN spdm_version_number_t *res_ver_set, IN uintn res_ver_num)
+{
+	uint8 req_version;
+	uint8 res_version;
+	boolean ver_available;
+	intn req_index;
+	intn res_index;
+	spdm_context_t *spdm_context;
+
+	if (req_ver_set == NULL || req_ver_num == 0) {
+		return FALSE;
+	}
+	if (res_ver_set == NULL || res_ver_num == 0) {
+		return FALSE;
+	}
+
+	spdm_context = context;
+	ver_available = FALSE;
+	spdm_version_number_sort(req_ver_set, req_ver_num);
+	spdm_version_number_sort(res_ver_set, res_ver_num);
+	/**
+  	  Find highest same version and make req_index point to it.
+	  If not found, ver_available will be FALSE.
+	**/
+	for (req_index = req_ver_num - 1; req_index >= 0; req_index--) {
+		req_version = spdm_get_version_from_version_number(req_ver_set[req_index]);
+		res_index = res_ver_num - 1;
+		res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
+		while (res_index != 0 && res_version > req_version) {
+			res_index--;
+			res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
+		}
+		if (req_version == res_version) {
+			ver_available = TRUE;
+			DEBUG((DEBUG_INFO,"connection ver: %x \n",req_version));
+			break;
+		}
+	}
+
+	if (ver_available == TRUE) {
+		spdm_context->connection_info.version.spdm_version_count = 1;
+		copy_mem(spdm_context->connection_info.version.spdm_version,
+			req_ver_set + req_index,
+			sizeof(spdm_version_number_t));
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
 /**
   This function sends GET_VERSION and receives VERSION.
 
@@ -26,14 +142,10 @@ typedef struct {
 return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 {
 	return_status status;
+	boolean result;
 	spdm_get_version_request_t spdm_request;
 	spdm_version_response_max_t spdm_response;
 	uintn spdm_response_size;
-	uintn index;
-	uint8 version;
-	uint8 compatible_version_count;
-	spdm_version_number_t
-		compatible_version_number_entry[MAX_SPDM_VERSION_COUNT];
 
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_NOT_STARTED;
@@ -101,6 +213,14 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 	spdm_response_size = sizeof(spdm_version_response) +
 			     spdm_response.version_number_entry_count *
 				     sizeof(spdm_version_number_t);
+
+	result = spdm_negotiate_connection_version(spdm_context, spdm_context->local_context.version.spdm_version,
+									spdm_context->local_context.version.spdm_version_count,
+									spdm_response.version_number_entry,
+									spdm_response.version_number_entry_count);
+	if (result != TRUE) {
+		return RETURN_DEVICE_ERROR;
+	}
 	//
 	// Cache data
 	//
@@ -115,32 +235,6 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 		reset_managed_buffer(&spdm_context->transcript.message_a);
 		return RETURN_SECURITY_VIOLATION;
 	}
-	compatible_version_count = 0;
-
-	zero_mem(&compatible_version_number_entry,
-		 sizeof(compatible_version_number_entry));
-	for (index = 0; index < spdm_response.version_number_entry_count;
-	     index++) {
-		version = (uint8)(
-			(spdm_response.version_number_entry[index].major_version
-			 << 4) |
-			spdm_response.version_number_entry[index].minor_version);
-
-		if (version == SPDM_MESSAGE_VERSION_11 ||
-		    version == SPDM_MESSAGE_VERSION_10) {
-			compatible_version_number_entry[compatible_version_count] =
-				spdm_response.version_number_entry[index];
-			compatible_version_count++;
-		}
-	}
-	if (compatible_version_count == 0) {
-		return RETURN_DEVICE_ERROR;
-	}
-	spdm_context->connection_info.version.spdm_version_count =
-		compatible_version_count;
-	copy_mem(spdm_context->connection_info.version.spdm_version,
-		 compatible_version_number_entry,
-		 sizeof(spdm_version_number_t) * compatible_version_count);
 
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;

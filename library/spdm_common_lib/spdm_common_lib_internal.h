@@ -925,4 +925,12 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
 						IN uintn data_in_size,
 						IN void *data_in);
 
+/**
+  Return the SPDMversion field of the version number struct.
+
+  @param  ver				Spdm version number struct.
+
+  @return the SPDMversion of the version number struct.
+**/
+uint8 spdm_get_version_from_version_number(IN spdm_version_number_t ver);
 #endif

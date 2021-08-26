@@ -7,6 +7,36 @@
 #include "spdm_responder_lib_internal.h"
 
 /**
+  This function checks the compability of the received SPDM version,
+  if received version is valid, subsequent spdm communication will follow this version.
+
+  @param  spdm_context           	   A pointer to the SPDM context.
+  @param  version                      The SPMD message version.
+
+
+  @retval True                         The received SPDM version is valid.
+  @retval False                        The received SPDM version is invalid.
+**/
+boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8 version)
+{
+	uint8 local_ver;
+	uintn index;
+
+	for (index = 0; 
+		index < spdm_context->local_context.version.spdm_version_count; 
+		index++) {
+		local_ver = spdm_get_version_from_version_number(
+						spdm_context->local_context.version.spdm_version[index]);
+		if (local_ver == version) {
+			spdm_context->connection_info.version.spdm_version[0].major_version = version >> 4;
+			spdm_context->connection_info.version.spdm_version[0].minor_version = version;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+/**
   This function checks the compability of the received CAPABILITES flag.
   Some flags are mutually inclusive/exclusive.
 
@@ -137,6 +167,14 @@ return_status spdm_get_response_capabilities(IN void *context,
 		spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
+		return RETURN_SUCCESS;
+	}
+
+	if (!spdm_check_request_version_compability(
+			spdm_context, spdm_request->header.spdm_version)) {
+		spdm_generate_error_response(spdm_context,
+					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 
