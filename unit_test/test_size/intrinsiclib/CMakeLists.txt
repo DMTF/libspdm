@@ -4,6 +4,10 @@ if(TOOLCHAIN MATCHES "VS")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /GL-")
 endif()
 
+if(TOOLCHAIN MATCHES "CLANG")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-library-redeclaration")
+endif()
+
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
