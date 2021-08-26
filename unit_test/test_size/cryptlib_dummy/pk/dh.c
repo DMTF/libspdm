@@ -25,7 +25,7 @@
 void *dh_new_by_nid(IN uintn nid)
 {
 	ASSERT(FALSE);
-	return FALSE;
+	return NULL;
 }
 
 /**
