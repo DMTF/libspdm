@@ -1443,9 +1443,9 @@ void test_spdm_requester_negotiate_algorithms_case23(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x17;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1484,9 +1484,9 @@ void test_spdm_requester_negotiate_algorithms_case24(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x18;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1524,9 +1524,9 @@ void test_spdm_requester_negotiate_algorithms_case25(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x19;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1564,9 +1564,9 @@ void test_spdm_requester_negotiate_algorithms_case26(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1A;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1604,9 +1604,9 @@ void test_spdm_requester_negotiate_algorithms_case27(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1B;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1644,9 +1644,9 @@ void test_spdm_requester_negotiate_algorithms_case28(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1C;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1684,9 +1684,9 @@ void test_spdm_requester_negotiate_algorithms_case29(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1D;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1724,9 +1724,9 @@ void test_spdm_requester_negotiate_algorithms_case30(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1E;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
@@ -1764,9 +1764,9 @@ void test_spdm_requester_negotiate_algorithms_case31(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1F;
-  spdm_context->connection_info.version.spdm_version_count = 1;
-  spdm_context->connection_info.version.spdm_version[0].major_version = 1;
-  spdm_context->connection_info.version.spdm_version[0].minor_version = 1;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;

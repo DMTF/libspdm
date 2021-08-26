@@ -28,8 +28,8 @@ boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, 
 		local_ver = spdm_get_version_from_version_number(
 						spdm_context->local_context.version.spdm_version[index]);
 		if (local_ver == version) {
-			spdm_context->connection_info.version.spdm_version[0].major_version = version >> 4;
-			spdm_context->connection_info.version.spdm_version[0].minor_version = version;
+			spdm_context->connection_info.version.major_version = version >> 4;
+			spdm_context->connection_info.version.minor_version = version;
 			return TRUE;
 		}
 	}
