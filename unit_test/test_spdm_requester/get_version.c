@@ -52,6 +52,8 @@ return_status spdm_requester_get_version_test_send_message(
 		return RETURN_SUCCESS;
 	case 0xE:
 		return RETURN_SUCCESS;
+	case 0xF:
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -378,6 +380,33 @@ return_status spdm_requester_get_version_test_receive_message(
   }
     return RETURN_SUCCESS;
 
+	case 0xF: {
+		spdm_version_response_mine_t spdm_response;
+
+		zero_mem(&spdm_response, sizeof(spdm_response));
+		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+		spdm_response.header.request_response_code = SPDM_VERSION;
+		spdm_response.header.param1 = 0;
+		spdm_response.header.param2 = 0;
+		spdm_response.version_number_entry_count = 5;
+		spdm_response.version_number_entry[0].major_version = 4;
+		spdm_response.version_number_entry[0].minor_version = 2;
+		spdm_response.version_number_entry[1].major_version = 5;
+		spdm_response.version_number_entry[1].minor_version = 2;
+		spdm_response.version_number_entry[2].major_version = 1;
+		spdm_response.version_number_entry[2].minor_version = 2;
+		spdm_response.version_number_entry[3].major_version = 1;
+		spdm_response.version_number_entry[3].minor_version = 1;
+		spdm_response.version_number_entry[4].major_version = 1;
+		spdm_response.version_number_entry[4].minor_version = 0;
+
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, sizeof(spdm_response),
+						   &spdm_response,
+						   response_size, response);
+	}
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -674,6 +703,40 @@ void test_spdm_requester_get_version_case14(void **state) {
   }
 }
 
+/**
+  Test 15: receiving a VERSION message with unordered vesion list.
+  Requester list:5.5, 4.5, 0.9, 1.0, 1.1
+  Responder list:4.2, 5.2, 1.2, 1.1, 1.0
+  Expected behavior: client returns a status of RETURN_SUCCESS and right negotiated version 1.1.
+**/
+void test_spdm_requester_get_version_case15(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xF;
+	spdm_context->local_context.version.spdm_version_count = 5;
+	spdm_context->local_context.version.spdm_version[0].major_version = 5;
+	spdm_context->local_context.version.spdm_version[0].minor_version = 5;
+	spdm_context->local_context.version.spdm_version[1].major_version = 4;
+	spdm_context->local_context.version.spdm_version[1].minor_version = 5;
+	spdm_context->local_context.version.spdm_version[2].major_version = 0;
+	spdm_context->local_context.version.spdm_version[2].minor_version = 9;
+	spdm_context->local_context.version.spdm_version[3].major_version = 1;
+	spdm_context->local_context.version.spdm_version[3].minor_version = 0;
+	spdm_context->local_context.version.spdm_version[4].major_version = 1;
+	spdm_context->local_context.version.spdm_version[4].minor_version = 1;
+	status = spdm_get_version(spdm_context);
+	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(
+		spdm_context->connection_info.version.spdm_version[0].major_version, 1);
+	assert_int_equal(
+		spdm_context->connection_info.version.spdm_version[0].minor_version, 1);
+}
+
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -707,6 +770,8 @@ int spdm_requester_get_version_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_version_case13),
 		// Unexpected errors
 		cmocka_unit_test(test_spdm_requester_get_version_case14),
+		// Successful response for unordered version set
+		cmocka_unit_test(test_spdm_requester_get_version_case15),
 	};
 
 	setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);
