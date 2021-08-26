@@ -21,8 +21,9 @@ boolean need_session_info_for_data(IN spdm_data_type_t data_type)
 	case SPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
 	case SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
 		return TRUE;
+	default:
+		return FALSE;
 	}
-	return FALSE;
 }
 
 /**
