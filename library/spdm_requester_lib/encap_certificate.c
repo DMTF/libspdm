@@ -57,19 +57,20 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	if (spdm_context->local_context.local_cert_chain_provision == NULL) {
-		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_GET_CERTIFICATE, response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	slot_id = spdm_request->header.param1;
 
 	if (slot_id >= spdm_context->local_context.slot_count) {
 		spdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
+		return RETURN_SUCCESS;
+	}
+
+	if (spdm_context->local_context
+					  .local_cert_chain_provision[slot_id] == NULL) {
+		spdm_generate_encap_error_response(
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 

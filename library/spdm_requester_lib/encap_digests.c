@@ -56,13 +56,6 @@ return_status spdm_get_encap_response_digest(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	if (spdm_context->local_context.local_cert_chain_provision == NULL) {
-		spdm_generate_encap_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-			SPDM_GET_DIGESTS, response_size, response);
-		return RETURN_SUCCESS;
-	}
-
 	spdm_reset_message_buffer_via_request_code(spdm_context,
 						spdm_request->header.request_response_code);
 
@@ -89,6 +82,13 @@ return_status spdm_get_encap_response_digest(IN void *context,
 	digest = (void *)(spdm_response + 1);
 	for (index = 0; index < spdm_context->local_context.slot_count;
 	     index++) {
+		if (spdm_context->local_context
+						  .local_cert_chain_provision[index] == NULL) {
+			spdm_generate_encap_error_response(
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+				0, response_size, response);
+			return RETURN_SUCCESS;
+		}
 		spdm_response->header.param2 |= (1 << index);
 		spdm_generate_cert_chain_hash(spdm_context, index,
 					      &digest[hash_size * index]);
