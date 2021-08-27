@@ -499,13 +499,13 @@ boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  digest                       The digest data buffer.
-  @param  digest_size                   size in bytes of the digest data buffer.
+  @param  digest_count                   size of the digest data buffer.
 
   @retval TRUE  digest verification pass.
   @retval FALSE digest verification fail.
 **/
 boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
-				 IN void *digest, IN uintn digest_size);
+				 IN void *digest, IN uintn digest_count);
 
 /**
   This function verifies peer certificate chain buffer including spdm_cert_chain_t header.

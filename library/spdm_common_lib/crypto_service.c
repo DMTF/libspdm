@@ -345,18 +345,20 @@ boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  digest                       The digest data buffer.
-  @param  digest_size                   size in bytes of the digest data buffer.
+  @param  digest_count                   size of the digest data buffer.
 
   @retval TRUE  digest verification pass.
   @retval FALSE digest verification fail.
 **/
 boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
-				 IN void *digest, IN uintn digest_size)
+				 IN void *digest, IN uintn digest_count)
 {
 	uintn hash_size;
+	uint8 *hash_buffer;
 	uint8 cert_chain_buffer_hash[MAX_HASH_SIZE];
 	uint8 *cert_chain_buffer;
 	uintn cert_chain_buffer_size;
+	uintn index;
 
 	cert_chain_buffer =
 		spdm_context->local_context.peer_cert_chain_provision;
@@ -365,21 +367,28 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
 	if ((cert_chain_buffer != NULL) && (cert_chain_buffer_size != 0)) {
 		hash_size = spdm_get_hash_size(
 			spdm_context->connection_info.algorithm.base_hash_algo);
+		hash_buffer = digest;
+
 		spdm_hash_all(
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			cert_chain_buffer, cert_chain_buffer_size,
 			cert_chain_buffer_hash);
 
-		if (const_compare_mem(digest, cert_chain_buffer_hash, hash_size) !=
-		    0) {
-			DEBUG((DEBUG_INFO,
-			       "!!! verify_peer_digests - FAIL !!!\n"));
-			return FALSE;
+		for (index = 0; index < digest_count; index++)
+		{
+			if (const_compare_mem(hash_buffer, cert_chain_buffer_hash, hash_size) == 0) {
+				DEBUG((DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
+				return TRUE;
+			}
+			hash_buffer += hash_size;
 		}
+
+		DEBUG((DEBUG_INFO,
+		       "!!! verify_peer_digests - FAIL !!!\n"));
+		return FALSE;
+	} else {
+		DEBUG((DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
 	}
-
-	DEBUG((DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
-
 	return TRUE;
 }
 

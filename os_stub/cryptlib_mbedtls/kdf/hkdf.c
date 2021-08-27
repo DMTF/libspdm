@@ -155,6 +155,9 @@ boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8 *prk,
 	case MBEDTLS_MD_SHA512:
 		md_size = SHA512_DIGEST_SIZE;
 		break;
+	default:
+		ASSERT(FALSE);
+		return FALSE;
 	}
 	if (prk_size != md_size) {
 		return FALSE;

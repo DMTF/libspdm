@@ -145,8 +145,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 	}
 
 	result = spdm_verify_peer_digests(
-		spdm_context, spdm_response.digest,
-		spdm_response_size - sizeof(spdm_digest_response_t));
+		spdm_context, spdm_response.digest, digest_count);
 	if (!result) {
 		spdm_context->error_state =
 			SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;

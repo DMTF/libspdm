@@ -164,7 +164,7 @@ boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
 void *hmac_sha384_new(void)
 {
 	ASSERT(FALSE);
-	return FALSE;
+	return NULL;
 }
 
 /**
@@ -316,7 +316,7 @@ boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
 void *hmac_sha512_new(void)
 {
 	ASSERT(FALSE);
-	return FALSE;
+	return NULL;
 }
 
 /**

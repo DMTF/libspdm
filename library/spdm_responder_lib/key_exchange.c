@@ -294,7 +294,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	if (!result) {
 		spdm_free_session_id(spdm_context, session_id);
 		spdm_generate_error_response(
-			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			SPDM_KEY_EXCHANGE_RSP, response_size, response);
 		return RETURN_SUCCESS;
 	}

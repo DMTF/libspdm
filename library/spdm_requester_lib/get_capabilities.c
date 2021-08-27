@@ -67,11 +67,11 @@ boolean spdm_check_response_flag_compability(IN uint32 capabilities_flag,
 		if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
 			return FALSE;
 		}
-		//Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared
-		if ((encrypt_cap == 0 && mac_cap == 0) &&
-		    handshake_in_the_clear_cap != 0) {
-			return FALSE;
-		}
+		//Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
+		//It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
+		//"Handshake_in_the_clear_cap set and key_ex_cap cleared" in above if statement,
+		//so we don't add new if statement.
+
 		//Pub_key_id_cap set and cert_cap set
 		if (pub_key_id_cap != 0 && cert_cap != 0) {
 			return FALSE;

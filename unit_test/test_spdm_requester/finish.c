@@ -93,6 +93,51 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
 		m_local_buffer_size += (request_size - 1);
 		return RETURN_SUCCESS;
+	case 0xC:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0xD:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0xE:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0xF:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0x10:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0x11:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0x12:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0x13:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
+	case 0x14:
+		m_local_buffer_size = 0;
+		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+		m_local_buffer_size += (request_size - 1);
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -605,11 +650,638 @@ return_status spdm_requester_finish_test_receive_message(
 	}
 		return RETURN_SUCCESS;
 
+	case 0xC: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, m_local_buffer,
+				      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0xD: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, m_local_buffer,
+				      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0xE: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		//wrong response code
+		spdm_response->header.request_response_code = SPDM_FINISH;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, m_local_buffer,
+				      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0xF: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, m_local_buffer,
+				      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0x10: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.req_base_asym_alg =
+			m_use_req_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		read_requester_public_certificate_chain(m_use_hash_algo,
+							m_use_req_asym_algo, &data,
+							&data_size, NULL, NULL);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      req_cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, req_cert_buffer_hash,
+			      hash_size);
+		append_managed_buffer(&th_curr, m_local_buffer,
+			      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0x11: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hmac_size;
+		uint8 *ptr;
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.req_base_asym_alg =
+			m_use_req_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		set_mem(ptr, hmac_size, (uint8)(0x00)); //all-zero MAC
+		ptr += hmac_size;
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0x12: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 zero_data[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.req_base_asym_alg =
+			m_use_req_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + hmac_size;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(zero_data, hash_size, (uint8)(0x00));
+		spdm_hmac_all(m_use_hash_algo, zero_data, hash_size,
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size;
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0x13: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.req_base_asym_alg =
+			m_use_req_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + 
+			      2*hmac_size; // 2x HMAC size
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		read_requester_public_certificate_chain(m_use_hash_algo,
+							m_use_req_asym_algo, &data,
+							&data_size, NULL, NULL);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      req_cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, req_cert_buffer_hash,
+			      hash_size);
+		append_managed_buffer(&th_curr, m_local_buffer,
+			      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		copy_mem(ptr, ptr + hmac_size, hmac_size); // 2x HMAC size
+		ptr += 2*hmac_size;
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
+	case 0x14: {
+		spdm_finish_response_t *spdm_response;
+		uint32 hash_size;
+		uint32 hmac_size;
+		uint8 *ptr;
+		void *data;
+		uintn data_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		large_managed_buffer_t th_curr;
+		uint8 response_finished_key[MAX_HASH_SIZE];
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_asym_algo =
+			m_use_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.req_base_asym_alg =
+			m_use_req_asym_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.base_hash_algo =
+			m_use_hash_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.dhe_named_group =
+			m_use_dhe_algo;
+		((spdm_context_t *)spdm_context)
+			->connection_info.algorithm.measurement_hash_algo =
+			m_use_measurement_hash_algo;
+		hash_size = spdm_get_hash_size(m_use_hash_algo);
+		hmac_size = spdm_get_hash_size(m_use_hash_algo);
+		temp_buf_size = sizeof(spdm_finish_response_t) + 
+			      hmac_size/2;// half HMAC size
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_response->header.request_response_code = SPDM_FINISH_RSP;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		ptr = (void *)(spdm_response + 1);
+		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
+			 sizeof(spdm_finish_response_t));
+		m_local_buffer_size += sizeof(spdm_finish_response_t);
+		read_responder_public_certificate_chain(m_use_hash_algo,
+							m_use_asym_algo, &data,
+							&data_size, NULL, NULL);
+		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      cert_buffer_hash);
+		read_requester_public_certificate_chain(m_use_hash_algo,
+							m_use_req_asym_algo, &data,
+							&data_size, NULL, NULL);
+		cert_buffer =
+			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
+		cert_buffer_size =
+			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
+			      req_cert_buffer_hash);
+		// transcript.message_a size is 0
+		append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+		// session_transcript.message_k is 0
+		append_managed_buffer(&th_curr, req_cert_buffer_hash,
+			      hash_size);
+		append_managed_buffer(&th_curr, m_local_buffer,
+			      m_local_buffer_size);
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
+			      get_managed_buffer_size(&th_curr),
+			      response_finished_key, hash_size, ptr);
+		ptr += hmac_size/2; // half HMAC size
+		set_mem(ptr, hmac_size/2, (uint8) 0x00);
+		free(data);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+	}
+		return RETURN_SUCCESS;
+
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
 }
 
+/**
+  Test 1: when no FINISH_RSP message is received, and the client returns a
+  device error.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
 void test_spdm_requester_finish_case1(void **state)
 {
 	return_status status;
@@ -680,6 +1352,12 @@ void test_spdm_requester_finish_case1(void **state)
 	free(data);
 }
 
+/**
+  Test 2: receiving a correct FINISH_RSP message with only MAC (no 
+  mutual authentication) and 'handshake in the clear'.
+  Expected behavior: client returns a Status of RETURN_SUCCESS and 
+  session is established.
+**/
 void test_spdm_requester_finish_case2(void **state)
 {
 	return_status status;
@@ -754,6 +1432,11 @@ void test_spdm_requester_finish_case2(void **state)
 	free(data);
 }
 
+/**
+  Test 3: requester state has not been negotiated, as if GET_VERSION, GET_CAPABILITIES and
+  NEGOTIATE_ALGORITHMS had not been exchanged.
+  Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
+**/
 void test_spdm_requester_finish_case3(void **state)
 {
 	return_status status;
@@ -824,6 +1507,11 @@ void test_spdm_requester_finish_case3(void **state)
 	free(data);
 }
 
+/**
+  Test 4: the requester is setup correctly (see Test 2), but receives an ERROR
+  message indicating InvalidParameters.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
 void test_spdm_requester_finish_case4(void **state)
 {
 	return_status status;
@@ -894,6 +1582,11 @@ void test_spdm_requester_finish_case4(void **state)
 	free(data);
 }
 
+/**
+  Test 5: the requester is setup correctly (see Test 2), but receives an ERROR
+  message indicating the Busy status of the responder.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
 void test_spdm_requester_finish_case5(void **state)
 {
 	return_status status;
@@ -964,6 +1657,12 @@ void test_spdm_requester_finish_case5(void **state)
 	free(data);
 }
 
+/**
+  Test 6: the requester is setup correctly (see Test 2), but, on the first try,
+  receiving a Busy ERROR message, and on retry, receiving a correct FINISH_RSP
+  message with only MAC (no mutual authentication).
+  Expected behavior: client returns a Status of RETURN_SUCCESS.
+**/
 void test_spdm_requester_finish_case6(void **state)
 {
 	return_status status;
@@ -1038,6 +1737,12 @@ void test_spdm_requester_finish_case6(void **state)
 	free(data);
 }
 
+/**
+  Test 7: the requester is setup correctly (see Test 2), but receives an ERROR
+  message indicating the RequestResynch status of the responder.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the 
+  communication is reset to expect a new GET_VERSION message.
+**/
 void test_spdm_requester_finish_case7(void **state)
 {
 	return_status status;
@@ -1110,6 +1815,11 @@ void test_spdm_requester_finish_case7(void **state)
 	free(data);
 }
 
+/**
+  Test 8: the requester is setup correctly (see Test 2), but receives an ERROR
+  message indicating the ResponseNotReady status of the responder.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR,.
+**/
 void test_spdm_requester_finish_case8(void **state)
 {
 	return_status status;
@@ -1180,6 +1890,12 @@ void test_spdm_requester_finish_case8(void **state)
 	free(data);
 }
 
+/**
+  Test 9: the requester is setup correctly (see Test 2), but, on the first try,
+  receiving a ResponseNotReady ERROR message, and on retry, receiving a correct
+  FINISH_RSP message with only MAC (no mutual authentication).
+  Expected behavior: client returns a Status of RETURN_SUCCESS.
+**/
 void test_spdm_requester_finish_case9(void **state)
 {
 	return_status status;
@@ -1254,6 +1970,14 @@ void test_spdm_requester_finish_case9(void **state)
 	free(data);
 }
 
+/**
+  Test 10: receiving an unexpected ERROR message from the responder.
+  There are tests for all named codes, including some reserved ones
+  (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
+  However, for having specific test cases, it is excluded from this case:
+  Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
+  Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+**/
 void test_spdm_requester_finish_case10(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -1411,6 +2135,753 @@ void test_spdm_requester_finish_case11(void **state)
 	free(data);
 }
 
+/**
+  Test 12: requester is not setup correctly to support key exchange
+  (no capabilities). The responder would attempt to return a correct
+  FINISH_RSP message.
+  Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
+**/
+void test_spdm_requester_finish_case12(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xC;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags = 0;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags = 0;
+	// no key exchange capabilities (requester)
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	req_slot_id_param = 0;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_UNSUPPORTED);
+	free(data);
+}
+
+/**
+  Test 13: requester is not setup correctly to accept key exchange and
+  finish at this point (at least NEGOTIATE_ALGORITHMS is required, if
+  the public key was provisioned before the key exchange). The 
+  responder would attempt to return a correct FINISH_RSP message.
+  Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
+**/
+void test_spdm_requester_finish_case13(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xD;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	req_slot_id_param = 0;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_UNSUPPORTED);
+	free(data);
+}
+
+/**
+  Test 14: receiving an incorrect FINISH_RSP message, with wrong response
+  code, but all other field correct.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_finish_case14(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xE;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	req_slot_id_param = 0;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_DEVICE_ERROR);
+	free(data);
+}
+
+/**
+  Test 15: requester is not setup correctly by not initializing a
+  session during KEY_EXCHANGE. The responder would attempt to 
+  return a correct FINISH_RSP message.
+  Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
+**/
+void test_spdm_requester_finish_case15(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0xF;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_NOT_STARTED);
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	req_slot_id_param = 0;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_UNSUPPORTED);
+	free(data);
+}
+
+/**
+  Test 16: receiving a correct FINISH_RSP message with a correct MAC, 
+  mutual authentication and 'handshake in the clear'.
+  Expected behavior: client returns a Status of RETURN_SUCCESS and 
+  session is established.
+**/
+void test_spdm_requester_finish_case16(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x10;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	req_slot_id_param = 0;
+	read_requester_public_certificate_chain(m_use_hash_algo,
+						m_use_req_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->local_context.
+	      local_cert_chain_provision_size[req_slot_id_param] = data_size;
+	spdm_context->local_context.
+	      local_cert_chain_provision[req_slot_id_param] = data;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+	session_info->mut_auth_requested = 1;
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.slot_count = 1;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(
+		spdm_secured_message_get_session_state(
+			spdm_context->session_info[0].secured_message_context),
+		SPDM_SESSION_STATE_ESTABLISHED);
+	free(data);
+}
+
+/**
+  Test 17: receiving a FINISH_RSP message with an incorrect MAC 
+  (all-zero), mutual authentication, and 'handshake in the clear'.
+  Expected behavior: client returns a Status of RETURN_SECURITY_VIOLATION.
+**/
+void test_spdm_requester_finish_case17(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x11;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	req_slot_id_param = 0;
+	read_requester_public_certificate_chain(m_use_hash_algo,
+						m_use_req_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->local_context.
+	      local_cert_chain_provision_size[req_slot_id_param] = data_size;
+	spdm_context->local_context.
+	      local_cert_chain_provision[req_slot_id_param] = data;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+	session_info->mut_auth_requested = 1;
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.slot_count = 1;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	free(data);
+}
+
+/**
+  Test 18: receiving a FINISH_RSP message with an incorrect MAC
+  (arbitrary), mutual authentication, and 'handshake in the clear'.
+  Expected behavior: client returns a Status of RETURN_SECURITY_VIOLATION.
+**/
+void test_spdm_requester_finish_case18(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x12;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	req_slot_id_param = 0;
+	read_requester_public_certificate_chain(m_use_hash_algo,
+						m_use_req_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->local_context.
+	      local_cert_chain_provision_size[req_slot_id_param] = data_size;
+	spdm_context->local_context.
+	      local_cert_chain_provision[req_slot_id_param] = data;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+	session_info->mut_auth_requested = 1;
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.slot_count = 1;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	free(data);
+}
+
+/**
+  Test 19: receiving a FINISH_RSP message with an incorrect MAC size (a
+  correct MAC repeated twice), mutual authentication, and 'handshake in 
+  the clear'.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_finish_case19(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x13;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	req_slot_id_param = 0;
+	read_requester_public_certificate_chain(m_use_hash_algo,
+						m_use_req_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->local_context.
+	      local_cert_chain_provision_size[req_slot_id_param] = data_size;
+	spdm_context->local_context.
+	      local_cert_chain_provision[req_slot_id_param] = data;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+	session_info->mut_auth_requested = 1;
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.slot_count = 1;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_DEVICE_ERROR);
+	free(data);
+}
+
+/**
+  Test 20: receiving a FINISH_RSP message an incorrect MAC size (only the
+  correct first half of the MAC), mutual authentication, and 'handshake 
+  in the clear'.
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_finish_case20(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uint32 session_id;
+	uint8 req_slot_id_param;
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	spdm_session_info_t *session_info;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x14;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
+	spdm_context->connection_info.algorithm.dhe_named_group =
+		m_use_dhe_algo;
+	spdm_context->connection_info.algorithm.aead_cipher_suite =
+		m_use_aead_algo;
+	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+		data_size;
+	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+		 data, data_size);
+
+	req_slot_id_param = 0;
+	read_requester_public_certificate_chain(m_use_hash_algo,
+						m_use_req_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	spdm_context->local_context.
+	      local_cert_chain_provision_size[req_slot_id_param] = data_size;
+	spdm_context->local_context.
+	      local_cert_chain_provision[req_slot_id_param] = data;
+
+	session_id = 0xFFFFFFFF;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	spdm_secured_message_set_response_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_HANDSHAKING);
+	session_info->mut_auth_requested = 1;
+
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+	spdm_context->local_context.slot_count = 1;
+	status = spdm_send_receive_finish(spdm_context, session_id,
+					  req_slot_id_param);
+	assert_int_equal(status, RETURN_DEVICE_ERROR);
+	free(data);
+}
+
 spdm_test_context_t m_spdm_requester_finish_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1443,6 +2914,19 @@ int spdm_requester_finish_test_main(void)
 		cmocka_unit_test(test_spdm_requester_finish_case10),
 		// Buffer reset
 		cmocka_unit_test(test_spdm_requester_finish_case11),
+		// No correct setup
+		cmocka_unit_test(test_spdm_requester_finish_case12),
+		cmocka_unit_test(test_spdm_requester_finish_case13),
+		cmocka_unit_test(test_spdm_requester_finish_case14),
+		cmocka_unit_test(test_spdm_requester_finish_case15),
+		// Successful response
+		cmocka_unit_test(test_spdm_requester_finish_case16),
+		// Response with invalid MAC
+		cmocka_unit_test(test_spdm_requester_finish_case17),
+		cmocka_unit_test(test_spdm_requester_finish_case18),
+		// Response with invalid MAC size
+		cmocka_unit_test(test_spdm_requester_finish_case19),
+		cmocka_unit_test(test_spdm_requester_finish_case20),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_finish_test_context);
