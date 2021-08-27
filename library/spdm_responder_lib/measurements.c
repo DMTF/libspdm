@@ -514,10 +514,10 @@ return_status spdm_get_response_measurements(IN void *context,
 	     SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
 	    0) {
 
-		ret = spdm_create_measurement_signature(
+		status = spdm_create_measurement_signature(
 			spdm_context, spdm_response,
 			spdm_response_size);
-		if (!ret) {
+		if (RETURN_ERROR(status)) {
 			spdm_generate_error_response(
 				spdm_context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
