@@ -310,6 +310,11 @@ typedef struct {
 	// Register for the retry times when receive "BUSY" Error response (requester only)
 	//
 	uint8 retry_times;
+
+	//
+	// Opaque context data for use by application
+	//
+	void *opaque_context_data_ptr;
 } spdm_context_t;
 
 /**

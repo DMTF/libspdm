@@ -106,7 +106,11 @@ typedef enum {
 	SPDM_DATA_SESSION_USE_PSK,
 	SPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
 	SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
-
+	//
+	// Opaque data that can be used by the application
+	// during callback functions such spdm_device_send_message_func.
+	//
+	SPDM_DATA_OPAQUE_CONTEXT_DATA,
 	//
 	// MAX
 	//

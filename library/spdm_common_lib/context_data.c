@@ -51,6 +51,10 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 	uint8 slot_id;
 	uint8 mut_auth_requested;
 
+	if (!context || !data || data_type >= SPDM_DATA_MAX) {
+		return RETURN_INVALID_PARAMETER;
+	}
+
 	spdm_context = context;
 
 	if (need_session_info_for_data(data_type)) {
@@ -361,6 +365,12 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		}
 		session_info->end_session_attributes = *(uint8 *)data;
 		break;
+	case SPDM_DATA_OPAQUE_CONTEXT_DATA:
+		if (data_size != sizeof(void *) || *(void **)data == NULL) {
+			return RETURN_INVALID_PARAMETER;
+		}
+		spdm_context->opaque_context_data_ptr = *(void **)data;
+		break;
 	default:
 		return RETURN_UNSUPPORTED;
 		break;
@@ -397,6 +407,10 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 	void *target_data;
 	uint32 session_id;
 	spdm_session_info_t *session_info;
+
+	if (!context || !data || !data_size || data_type >= SPDM_DATA_MAX) {
+		return RETURN_INVALID_PARAMETER;
+	}
 
 	spdm_context = context;
 
@@ -540,6 +554,10 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 	case SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
 		target_data_size = sizeof(uint8);
 		target_data = &session_info->end_session_attributes;
+		break;
+	case SPDM_DATA_OPAQUE_CONTEXT_DATA:
+		target_data_size = sizeof(void *);
+		target_data = &spdm_context->opaque_context_data_ptr;
 		break;
 	default:
 		return RETURN_UNSUPPORTED;
