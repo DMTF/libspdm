@@ -493,6 +493,7 @@ endif()
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
     ADD_SUBDIRECTORY(unit_test/test_size/intrinsiclib)
     ADD_SUBDIRECTORY(unit_test/test_size/malloclib_null)
+    ADD_SUBDIRECTORY(unit_test/test_spdm_common)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(ARCH STREQUAL "x64")
