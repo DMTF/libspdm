@@ -275,6 +275,13 @@ boolean spdm_secured_message_dhe_compute_key(
 	IN OUT void *spdm_secured_message_context);
 
 /**
+  This function used to clear handshake secret.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+**/
+void spdm_clear_handshake_secret(IN void *spdm_secured_message_context);
+
+/**
   Computes the HMAC of a input data buffer, with request_finished_key.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.

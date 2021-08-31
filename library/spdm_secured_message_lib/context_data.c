@@ -63,6 +63,11 @@ void spdm_secured_message_set_session_state(
 
 	secured_message_context = spdm_secured_message_context;
 	secured_message_context->session_state = session_state;
+
+	if (session_state == SPDM_SESSION_STATE_ESTABLISHED) {
+		/* session handshake key should be zeroized after handshake phase. */
+		spdm_clear_handshake_secret(secured_message_context);
+	}
 }
 
 /**

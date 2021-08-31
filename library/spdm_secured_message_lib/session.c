@@ -657,6 +657,23 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 }
 
 /**
+  This function used to clear handshake secret.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+**/
+void spdm_clear_handshake_secret(IN void *spdm_secured_message_context)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+
+	zero_mem(secured_message_context->master_secret.handshake_secret,
+			MAX_HASH_SIZE);
+	zero_mem(&(secured_message_context->handshake_secret),
+			sizeof(spdm_session_info_struct_handshake_secret_t));
+}
+
+/**
   This function activates the update of SPDM DataKey for a session.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
