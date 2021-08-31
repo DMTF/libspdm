@@ -729,6 +729,18 @@ void spdm_get_random_number(IN uintn size, OUT uint8 *rand);
 boolean spdm_x509_certificate_check(IN const uint8 *cert, IN uintn cert_size);
 
 /**
+  Return certificate is root cert or not.
+  Certificate is considered as a root certificate if the subjectname equal issuername.
+
+  @param[in]  cert            Pointer to the DER-encoded certificate data.
+  @param[in]  cert_size        The size of certificate data in bytes.
+
+  @retval  TRUE   Certificate is self-signed.
+  @retval  FALSE  Certificate is not self-signed.
+**/
+boolean spdm_is_root_certificate(IN const uint8 *cert, IN uintn cert_size);
+
+/**
   Retrieve the SubjectAltName from SubjectAltName Bytes.
 
   @param[in]      buffer           Pointer to subjectAltName oct bytes.
