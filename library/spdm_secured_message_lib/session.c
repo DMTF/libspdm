@@ -337,6 +337,8 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	secured_message_context->handshake_secret
 		.response_handshake_sequence_number = 0;
 
+	zero_mem(secured_message_context->master_secret.dhe_secret,
+		MAX_DHE_KEY_SIZE);
 	return RETURN_SUCCESS;
 }
 
