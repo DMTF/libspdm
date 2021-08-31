@@ -2266,6 +2266,45 @@ cleanup:
 	return status;
 }
 
+/**
+  Return certificate is root cert or not.
+  Certificate is considered as a root certificate if the subjectname equal issuername.
+
+  @param[in]  cert            Pointer to the DER-encoded certificate data.
+  @param[in]  cert_size        The size of certificate data in bytes.
+
+  @retval  TRUE   Certificate is self-signed.
+  @retval  FALSE  Certificate is not self-signed.
+**/
+boolean spdm_is_root_certificate(IN const uint8 *cert, IN uintn cert_size)
+{
+	uint8 issuer_name[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+	uintn issuer_name_len;
+	uint8 subject_name[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+	uintn subject_name_len;
+
+	if (cert == NULL || cert_size == 0) {
+		return FALSE;
+	}
+
+	// 1. issuer_name
+	issuer_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+	x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
+
+	// 2. subject_name
+	subject_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+	x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
+
+	if (issuer_name_len != subject_name_len) {
+		return FALSE;
+	}
+	if (const_compare_mem(issuer_name, subject_name, issuer_name_len) != 0){
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 static const uint8 m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
 /**
@@ -2527,13 +2566,17 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 base_hash_algo,
 		return FALSE;
 	}
 
-	spdm_hash_all(base_hash_algo, root_cert_buffer, root_cert_buffer_size,
-		      calc_root_cert_hash);
-	if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
-			calc_root_cert_hash, hash_size) != 0) {
+	if (spdm_is_root_certificate(root_cert_buffer, root_cert_buffer_size)) {
+		spdm_hash_all(base_hash_algo, root_cert_buffer, root_cert_buffer_size,
+				calc_root_cert_hash);
+		if (const_compare_mem((uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
+				calc_root_cert_hash, hash_size) != 0) {
+			DEBUG((DEBUG_INFO,
+				"!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
+			return FALSE;
+		}
 		DEBUG((DEBUG_INFO,
-		       "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
-		return FALSE;
+				"!!! VerifyCertificateChainBuffer - PASS (cert root hash match) !!!\n"));
 	}
 
 	if (!x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
