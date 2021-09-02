@@ -56,6 +56,8 @@ typedef struct {
 	uintn peer_root_cert_provision_size;
 	//
 	// Peer CertificateChain
+	// Whether it contains the root certificate or not,
+	// it should be equal to the one returned from peer by get_certificate
 	//
 	void *peer_cert_chain_provision;
 	uintn peer_cert_chain_provision_size;

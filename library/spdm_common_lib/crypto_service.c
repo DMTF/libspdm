@@ -412,6 +412,8 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 	uintn root_cert_size;
 	uint8 root_cert_hash[MAX_HASH_SIZE];
 	uintn root_cert_hash_size;
+	uint8 *received_root_cert;
+	uintn received_root_cert_size;
 	boolean result;
 
 	result = spdm_verify_certificate_chain_buffer(
@@ -441,7 +443,28 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 			       "!!! verify_peer_cert_chain_buffer - FAIL (root hash mismatch) !!!\n"));
 			return FALSE;
 		}
+
+		x509_get_cert_from_cert_chain(
+		    (uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
+			cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
+			0, &received_root_cert, &received_root_cert_size);
+		if (spdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
+			if (const_compare_mem(received_root_cert, root_cert, root_cert_size) != 0) {
+				DEBUG((DEBUG_INFO,
+					"!!! verify_peer_cert_chain_buffer - FAIL (root cert mismatch) !!!\n"));
+				return FALSE;
+			}
+		} else {
+			if (!x509_verify_cert(received_root_cert, received_root_cert_size,
+					root_cert, root_cert_size)) {
+				DEBUG((DEBUG_INFO,
+					"!!! verify_peer_cert_chain_buffer - FAIL (received root cert verify failed)!!!\n"));
+				return FALSE;
+			}
+		}
 	} else if ((cert_chain_data != NULL) && (cert_chain_data_size != 0)) {
+		// Whether it contains the root certificate or not,
+		// it should be equal to the one provisioned in trusted environment
 		if (cert_chain_data_size != cert_chain_buffer_size) {
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
