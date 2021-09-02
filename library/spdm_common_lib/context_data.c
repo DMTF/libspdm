@@ -253,10 +253,10 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		}
 		spdm_context->response_state = *(uint32 *)data;
 		break;
-	case SPDM_DATA_PEER_PUBLIC_ROOT_CERT_HASH:
-		spdm_context->local_context.peer_root_cert_hash_provision_size =
+	case SPDM_DATA_PEER_PUBLIC_ROOT_CERT:
+		spdm_context->local_context.peer_root_cert_provision_size =
 			data_size;
-		spdm_context->local_context.peer_root_cert_hash_provision =
+		spdm_context->local_context.peer_root_cert_provision =
 			data;
 		break;
 	case SPDM_DATA_PEER_PUBLIC_CERT_CHAIN:
