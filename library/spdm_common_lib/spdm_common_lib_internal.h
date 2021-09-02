@@ -50,10 +50,10 @@ typedef struct {
 	// My provisioned certificate (for slot_id - 0xFF, default 0)
 	uint8 provisioned_slot_id;
 	//
-	// Peer Root Certificate hash
+	// Peer Root Certificate
 	//
-	void *peer_root_cert_hash_provision;
-	uintn peer_root_cert_hash_provision_size;
+	void *peer_root_cert_provision;
+	uintn peer_root_cert_provision_size;
 	//
 	// Peer CertificateChain
 	//

@@ -65,7 +65,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
    if (!DeployCertChain) {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT_HASH, &parameter, peer_root_cert_hash, peer_root_cert_hash_size);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    } else {
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
    }
@@ -267,7 +267,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
    if (!DeployCertChain) {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT_HASH, &parameter, peer_root_cert_hash, peer_root_cert_hash_size);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    } else {
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
    }

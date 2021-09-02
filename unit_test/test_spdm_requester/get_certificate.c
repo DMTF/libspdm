@@ -897,6 +897,8 @@ void test_spdm_requester_get_certificate_case1(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -908,9 +910,12 @@ void test_spdm_requester_get_certificate_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -941,6 +946,8 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -953,11 +960,19 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+		DEBUG((DEBUG_INFO, "root cert data :\n"));
+		internal_dump_hex(
+			root_cert,
+			get_managed_buffer_size(
+				&spdm_context->transcript.message_mut_b));
 	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
 		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -994,6 +1009,8 @@ void test_spdm_requester_get_certificate_case3(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1005,9 +1022,12 @@ void test_spdm_requester_get_certificate_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1038,6 +1058,8 @@ void test_spdm_requester_get_certificate_case4(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1049,9 +1071,12 @@ void test_spdm_requester_get_certificate_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1082,6 +1107,8 @@ void test_spdm_requester_get_certificate_case5(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1093,9 +1120,12 @@ void test_spdm_requester_get_certificate_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1126,6 +1156,8 @@ void test_spdm_requester_get_certificate_case6(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1138,11 +1170,14 @@ void test_spdm_requester_get_certificate_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
 	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
 		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1176,6 +1211,8 @@ void test_spdm_requester_get_certificate_case7(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1187,9 +1224,12 @@ void test_spdm_requester_get_certificate_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1222,6 +1262,8 @@ void test_spdm_requester_get_certificate_case8(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1233,9 +1275,12 @@ void test_spdm_requester_get_certificate_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1265,6 +1310,8 @@ void test_spdm_requester_get_certificate_case9(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1277,11 +1324,14 @@ void test_spdm_requester_get_certificate_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
 	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
 		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1315,6 +1365,8 @@ void test_spdm_requester_get_certificate_case10(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1327,10 +1379,13 @@ void test_spdm_requester_get_certificate_case10(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
 	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
 		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-	spdm_context->local_context.peer_root_cert_hash_provision_size = 0;
-	spdm_context->local_context.peer_root_cert_hash_provision = NULL;
+	spdm_context->local_context.peer_root_cert_provision_size = 0;
+	spdm_context->local_context.peer_root_cert_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision = data;
 	spdm_context->local_context.peer_cert_chain_provision_size = data_size;
 	spdm_context->transcript.message_b.buffer_size = 0;
@@ -1364,6 +1419,8 @@ void test_spdm_requester_get_certificate_case11(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1378,9 +1435,12 @@ void test_spdm_requester_get_certificate_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1404,7 +1464,7 @@ void test_spdm_requester_get_certificate_case11(void **state)
 }
 
 /**
-  Test 12: Normal procedure, but the retrieved root certificate hash does not match
+  Test 12: Normal procedure, but the retrieved root certificate does not match
   Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
 **/
 void test_spdm_requester_get_certificate_case12(void **state)
@@ -1418,6 +1478,8 @@ void test_spdm_requester_get_certificate_case12(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1431,13 +1493,16 @@ void test_spdm_requester_get_certificate_case12(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	// arbitrarily changes the root certificate hash on purpose
-	if (hash != NULL) {
-		((uint8 *)hash)[0]++;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	// arbitrarily changes the root certificate on purpose
+	if (root_cert != NULL) {
+		((uint8 *)root_cert)[0]++;
 	}
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1475,6 +1540,8 @@ void test_spdm_requester_get_certificate_case13(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1489,9 +1556,12 @@ void test_spdm_requester_get_certificate_case13(void **state)
 	read_responder_public_certificate_chain_by_size(
 		m_use_hash_algo, m_use_asym_algo, TEST_CERT_SMALL, &data,
 		&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1529,6 +1599,8 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 	uint16 get_cert_length;
 
@@ -1547,9 +1619,12 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1590,6 +1665,8 @@ void test_spdm_requester_get_certificate_case15(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
 	uintn count;
 
 	spdm_test_context = *state;
@@ -1604,9 +1681,12 @@ void test_spdm_requester_get_certificate_case15(void **state)
 	read_responder_public_certificate_chain_by_size(
 		m_use_hash_algo, m_use_asym_algo, TEST_CERT_MAXUINT16, &data,
 		&data_size, &hash, &hash_size);
-	spdm_context->local_context.peer_root_cert_hash_provision_size =
-		hash_size;
-	spdm_context->local_context.peer_root_cert_hash_provision = hash;
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1651,6 +1731,8 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                 *root_cert;
+  uintn                root_cert_size;
   uint16                error_code;
 
   spdm_test_context = *state;
@@ -1658,8 +1740,11 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   spdm_test_context->case_id = 0x10;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->local_context.peer_root_cert_hash_provision_size = hash_size;
-  spdm_context->local_context.peer_root_cert_hash_provision = hash;
+  x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+					data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+					&root_cert, &root_cert_size);
+  spdm_context->local_context.peer_root_cert_provision_size = root_cert_size;
+  spdm_context->local_context.peer_root_cert_provision = root_cert;
   spdm_context->local_context.peer_cert_chain_provision = NULL;
   spdm_context->local_context.peer_cert_chain_provision_size = 0;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
