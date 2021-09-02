@@ -50,6 +50,10 @@ return_status spdm_requester_get_certificate_test_send_message(
 		return RETURN_SUCCESS;
 	case 0x10:
 		return RETURN_SUCCESS;
+	case 0x11:
+		return RETURN_SUCCESS;
+	case 0x12:
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -877,6 +881,222 @@ return_status spdm_requester_get_certificate_test_receive_message(
   }
     return RETURN_SUCCESS;
 
+	case 0x11: {
+		spdm_certificate_response_t *spdm_response;
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+		uint16 portion_length;
+		uint16 remainder_length;
+		uintn count;
+		static uintn calling_index = 0;
+
+		uint8 *leaf_cert_buffer;
+		uintn leaf_cert_buffer_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uintn hash_size;
+		uint8 cert_chain_without_root[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn cert_chain_without_root_size;
+		void *root_cert_data;
+		uintn root_cert_size;
+
+		if (m_local_certificate_chain == NULL) {
+			read_responder_public_certificate_chain(
+				m_use_hash_algo, m_use_asym_algo,
+				&m_local_certificate_chain,
+				&m_local_certificate_chain_size, NULL, NULL);
+			if (m_local_certificate_chain == NULL) {
+				return RETURN_OUT_OF_RESOURCES;
+			}
+			// read root certificate size
+			read_responder_root_public_certificate(
+				m_use_hash_algo, m_use_asym_algo,
+				&root_cert_data,
+				&root_cert_size, NULL, NULL);
+			// load certificate
+			hash_size = spdm_get_hash_size(m_use_hash_algo);
+			root_cert_size = root_cert_size -
+					  sizeof(spdm_cert_chain_t) - hash_size;
+			cert_buffer = (uint8 *)m_local_certificate_chain +
+				      sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
+			cert_buffer_size = m_local_certificate_chain_size -
+					   sizeof(spdm_cert_chain_t) -
+					   hash_size - root_cert_size;
+			DEBUG((DEBUG_INFO,
+				       "root_cert_size %d \n",root_cert_size));
+			if (!x509_get_cert_from_cert_chain(
+				    cert_buffer, cert_buffer_size, -1,
+				    &leaf_cert_buffer,
+				    &leaf_cert_buffer_size)) {
+				DEBUG((DEBUG_INFO,
+				       "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+				return RETURN_DEVICE_ERROR;
+			}
+		}
+		copy_mem(cert_chain_without_root,
+			 m_local_certificate_chain,
+			 sizeof(spdm_cert_chain_t) + hash_size);
+		copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
+			 cert_buffer,
+			 cert_buffer_size);
+		cert_chain_without_root_size = m_local_certificate_chain_size - root_cert_size;
+		count = (cert_chain_without_root_size +
+			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN + 1) /
+			MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+		if (calling_index != count - 1) {
+			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+			remainder_length =
+				(uint16)(cert_chain_without_root_size -
+					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
+						 (calling_index + 1));
+		} else {
+			portion_length = (uint16)(
+				cert_chain_without_root_size -
+				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
+			remainder_length = 0;
+		}
+
+		temp_buf_size =
+			sizeof(spdm_certificate_response_t) + portion_length;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+		spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		spdm_response->portion_length = portion_length;
+		spdm_response->remainder_length = remainder_length;
+		// send certchain without root
+		copy_mem(spdm_response + 1,
+			 (uint8 *)cert_chain_without_root +
+				 MAX_SPDM_CERT_CHAIN_BLOCK_LEN * calling_index,
+			 portion_length);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+
+		calling_index++;
+		if (calling_index == count) {
+			calling_index = 0;
+			free(m_local_certificate_chain);
+			free(root_cert_data);
+			m_local_certificate_chain = NULL;
+			m_local_certificate_chain_size = 0;
+		}
+	}
+		return RETURN_SUCCESS;
+
+	case 0x12: {
+		spdm_certificate_response_t *spdm_response;
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+		uint16 portion_length;
+		uint16 remainder_length;
+		uintn count;
+		static uintn calling_index = 0;
+
+		uint8 *leaf_cert_buffer;
+		uintn leaf_cert_buffer_size;
+		uint8 *cert_buffer;
+		uintn cert_buffer_size;
+		uintn hash_size;
+		uint8 cert_chain_without_root[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn cert_chain_without_root_size;
+		void *root_cert_data;
+		uintn root_cert_size;
+
+		if (m_local_certificate_chain == NULL) {
+			read_responder_public_certificate_chain(
+				m_use_hash_algo, m_use_asym_algo,
+				&m_local_certificate_chain,
+				&m_local_certificate_chain_size, NULL, NULL);
+			if (m_local_certificate_chain == NULL) {
+				return RETURN_OUT_OF_RESOURCES;
+			}
+			// read root certificate size
+			read_responder_root_public_certificate(
+				m_use_hash_algo, m_use_asym_algo,
+				&root_cert_data,
+				&root_cert_size, NULL, NULL);
+			// load certificate
+			hash_size = spdm_get_hash_size(m_use_hash_algo);
+			root_cert_size = root_cert_size -
+					  sizeof(spdm_cert_chain_t) - hash_size;
+			cert_buffer = (uint8 *)m_local_certificate_chain +
+				      sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
+			cert_buffer_size = m_local_certificate_chain_size -
+					   sizeof(spdm_cert_chain_t) -
+					   hash_size - root_cert_size;
+			DEBUG((DEBUG_INFO,
+				       "root_cert_size %d \n",root_cert_size));
+			if (!x509_get_cert_from_cert_chain(
+				    cert_buffer, cert_buffer_size, -1,
+				    &leaf_cert_buffer,
+				    &leaf_cert_buffer_size)) {
+				DEBUG((DEBUG_INFO,
+				       "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+				return RETURN_DEVICE_ERROR;
+			}
+			// tamper certificate signature on purpose
+			// arbitrarily change the last byte of the certificate signature
+			cert_buffer[cert_buffer_size - 1]++;
+		}
+		copy_mem(cert_chain_without_root,
+			 m_local_certificate_chain,
+			 sizeof(spdm_cert_chain_t) + hash_size);
+		copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
+			 cert_buffer,
+			 cert_buffer_size);
+		cert_chain_without_root_size = m_local_certificate_chain_size - root_cert_size;
+		count = (cert_chain_without_root_size +
+			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN + 1) /
+			MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+		if (calling_index != count - 1) {
+			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+			remainder_length =
+				(uint16)(cert_chain_without_root_size -
+					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
+						 (calling_index + 1));
+		} else {
+			portion_length = (uint16)(
+				cert_chain_without_root_size -
+				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
+			remainder_length = 0;
+		}
+
+		temp_buf_size =
+			sizeof(spdm_certificate_response_t) + portion_length;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+		spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		spdm_response->portion_length = portion_length;
+		spdm_response->remainder_length = remainder_length;
+		// send certchain without root
+		copy_mem(spdm_response + 1,
+			 (uint8 *)cert_chain_without_root +
+				 MAX_SPDM_CERT_CHAIN_BLOCK_LEN * calling_index,
+			 portion_length);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+
+		calling_index++;
+		if (calling_index == count) {
+			calling_index = 0;
+			free(m_local_certificate_chain);
+			free(root_cert_data);
+			m_local_certificate_chain = NULL;
+			m_local_certificate_chain_size = 0;
+		}
+	}
+		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -1777,6 +1997,106 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   free(data);
 }
 
+/**
+  Test 17: Normal case, get a certificate chain start not with root cert. Validates certificate by using a prelaoded chain.
+  Expected Behavior: receives the correct number of Certificate messages
+**/
+void test_spdm_requester_get_certificate_case17(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uintn cert_chain_size;
+	uint8 cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	uintn count;
+	uint8 *root_cert;
+	uintn root_cert_size;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x11;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
+		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+	spdm_context->local_context.peer_root_cert_provision_size = root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
+	spdm_context->local_context.peer_cert_chain_provision = NULL;
+	spdm_context->local_context.peer_cert_chain_provision_size = 0;
+	spdm_context->transcript.message_b.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+
+	cert_chain_size = sizeof(cert_chain);
+	zero_mem(cert_chain, sizeof(cert_chain));
+	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
+				      cert_chain);
+	assert_int_equal(status, RETURN_SUCCESS);
+	free(data);
+}
+
+/**
+  Test 18: Fail case, get a certificate chain start not with root cert and with wrong signature. Validates certificate by using a prelaoded chain.
+  Expected Behavior: receives the correct number of Certificate messages
+**/
+void test_spdm_requester_get_certificate_case18(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uintn cert_chain_size;
+	uint8 cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	uintn count;
+	uint8 *root_cert;
+	uintn root_cert_size;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x12;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain((uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+						data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+						&root_cert, &root_cert_size);
+	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
+		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+	spdm_context->local_context.peer_root_cert_provision_size = root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
+	spdm_context->local_context.peer_cert_chain_provision = NULL;
+	spdm_context->local_context.peer_cert_chain_provision_size = 0;
+	spdm_context->transcript.message_b.buffer_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+
+	cert_chain_size = sizeof(cert_chain);
+	zero_mem(cert_chain, sizeof(cert_chain));
+	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
+				      cert_chain);
+	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+	free(data);
+}
+
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -1819,6 +2139,10 @@ int spdm_requester_get_certificate_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_certificate_case15),
 		// Unexpected errors
 		cmocka_unit_test(test_spdm_requester_get_certificate_case16),
+		// Sucessful response: get a certificate chain not start with root cert.
+		cmocka_unit_test(test_spdm_requester_get_certificate_case17),
+		// Fail response: get a certificate chain not start with root cert but with wrong signature.
+		cmocka_unit_test(test_spdm_requester_get_certificate_case18),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);
