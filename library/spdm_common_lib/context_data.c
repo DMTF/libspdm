@@ -67,6 +67,8 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		if (session_info == NULL) {
 			return RETURN_INVALID_PARAMETER;
 		}
+	} else {
+		session_info = NULL;
 	}
 
 	switch (data_type) {
@@ -423,6 +425,8 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (session_info == NULL) {
 			return RETURN_INVALID_PARAMETER;
 		}
+	} else {
+		session_info = NULL;
 	}
 
 	switch (data_type) {
