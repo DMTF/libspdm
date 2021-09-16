@@ -283,6 +283,7 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
 	spdm_message_header_t *spdm_response;
 
 	spdm_context = context;
+	status = RETURN_UNSUPPORTED;
 
 	if (spdm_context->last_spdm_error.error_code != 0) {
 		//
