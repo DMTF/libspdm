@@ -198,8 +198,8 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
 	//
 	// Clear Cache
 	//
-	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
-	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+	spdm_reset_message_mut_b(spdm_context);
+	spdm_reset_message_mut_c(spdm_context);
 
 	//
 	// Possible Sequence:
@@ -252,8 +252,8 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
 	//
 	// Clear Cache
 	//
-	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
-	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+	spdm_reset_message_mut_b(spdm_context);
+	spdm_reset_message_mut_c(spdm_context);
 
 	//
 	// Possible Sequence:
@@ -308,8 +308,8 @@ void spdm_init_key_update_encap_state(IN void *context)
 	spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
 	spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
-	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+	spdm_reset_message_mut_b(spdm_context);
+	spdm_reset_message_mut_c(spdm_context);
 
 	zero_mem(spdm_context->encap_context.request_op_code_sequence,
 		 sizeof(spdm_context->encap_context.request_op_code_sequence));

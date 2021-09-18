@@ -174,8 +174,8 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		}
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
-			&session_info->session_transcript.message_f,
-			spdm_request_size, &spdm_response_size, &spdm_response,
+			NULL,
+			0, &spdm_response_size, &spdm_response,
 			SPDM_FINISH, SPDM_FINISH_RSP,
 			sizeof(spdm_finish_response_mine_t));
 		if (RETURN_ERROR(status)) {

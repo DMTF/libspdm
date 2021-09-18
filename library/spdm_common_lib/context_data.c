@@ -598,7 +598,15 @@ void spdm_reset_message_b(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_context->transcript.message_b);
+#else
+	if (spdm_context->transcript.digest_context_m1m2 != NULL) {
+		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2);
+		spdm_context->transcript.digest_context_m1m2 = NULL;
+	}
+#endif
 }
 
 /**
@@ -611,7 +619,15 @@ void spdm_reset_message_c(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_context->transcript.message_c);
+#else
+	if (spdm_context->transcript.digest_context_m1m2 != NULL) {
+		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2);
+		spdm_context->transcript.digest_context_m1m2 = NULL;
+	}
+#endif
 }
 
 /**
@@ -624,7 +640,15 @@ void spdm_reset_message_mut_b(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
+#else
+	if (spdm_context->transcript.digest_context_mut_m1m2 != NULL) {
+		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_mut_m1m2);
+		spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+	}
+#endif
 }
 
 /**
@@ -637,7 +661,15 @@ void spdm_reset_message_mut_c(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+#else
+	if (spdm_context->transcript.digest_context_mut_m1m2 != NULL) {
+		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_mut_m1m2);
+		spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+	}
+#endif
 }
 
 /**
@@ -650,7 +682,15 @@ void spdm_reset_message_m(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_context->transcript.message_m);
+#else
+	if (spdm_context->transcript.digest_context_l1l2 != NULL) {
+		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_l1l2);
+		spdm_context->transcript.digest_context_l1l2 = NULL;
+	}
+#endif
 }
 
 /**
@@ -682,7 +722,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context,
 	  Any request other than SPDM_GET_MEASUREMENTS resets L1/L2
 	*/
 	if (request_code != SPDM_GET_MEASUREMENTS) {
-		reset_managed_buffer(&spdm_context->transcript.message_m);
+		spdm_reset_message_m(spdm_context);
 	}
 	/**
 	  If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE 
@@ -702,17 +742,17 @@ void spdm_reset_message_buffer_via_request_code(IN void *context,
 	case SPDM_END_SESSION:
 		if (spdm_context->connection_info.connection_state <
 			SPDM_CONNECTION_STATE_AUTHENTICATED) {
-			reset_managed_buffer(&spdm_context->transcript.message_b);
-			reset_managed_buffer(&spdm_context->transcript.message_c);
-			reset_managed_buffer(&spdm_context->transcript.message_mut_b);
-			reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+			spdm_reset_message_b(spdm_context);
+			spdm_reset_message_c(spdm_context);
+			spdm_reset_message_mut_b(spdm_context);
+			spdm_reset_message_mut_c(spdm_context);
 		}
 		break;
 	case SPDM_DELIVER_ENCAPSULATED_RESPONSE:
 		if (spdm_context->connection_info.connection_state <
 			SPDM_CONNECTION_STATE_AUTHENTICATED) {
-			reset_managed_buffer(&spdm_context->transcript.message_b);
-			reset_managed_buffer(&spdm_context->transcript.message_c);
+			spdm_reset_message_b(spdm_context);
+			spdm_reset_message_c(spdm_context);
 		}
 		break;
 	default:
@@ -755,8 +795,24 @@ return_status spdm_append_message_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(&spdm_context->transcript.message_b,
 				     message, message_size);
+#else
+	if (spdm_context->transcript.digest_context_m1m2 == NULL) {
+		spdm_context->transcript.digest_context_m1m2 = spdm_hash_new (
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2);
+		spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2,
+			get_managed_buffer(&spdm_context->transcript.message_a),
+			get_managed_buffer_size(&spdm_context->transcript.message_a));
+	}
+	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+		spdm_context->transcript.digest_context_m1m2, message, message_size) ?
+		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#endif
 }
 
 /**
@@ -775,8 +831,24 @@ return_status spdm_append_message_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(&spdm_context->transcript.message_c,
 				     message, message_size);
+#else
+	if (spdm_context->transcript.digest_context_m1m2 == NULL) {
+		spdm_context->transcript.digest_context_m1m2 = spdm_hash_new (
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2);
+		spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_m1m2,
+			get_managed_buffer(&spdm_context->transcript.message_a),
+			get_managed_buffer_size(&spdm_context->transcript.message_a));
+	}
+	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+		spdm_context->transcript.digest_context_m1m2, message, message_size) ?
+		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#endif
 }
 
 /**
@@ -795,8 +867,20 @@ return_status spdm_append_message_mut_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(&spdm_context->transcript.message_mut_b,
 				     message, message_size);
+#else
+	if (spdm_context->transcript.digest_context_mut_m1m2 == NULL) {
+		spdm_context->transcript.digest_context_mut_m1m2 = spdm_hash_new (
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_mut_m1m2);
+	}
+	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+		spdm_context->transcript.digest_context_mut_m1m2, message, message_size) ?
+		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#endif
 }
 
 /**
@@ -815,8 +899,20 @@ return_status spdm_append_message_mut_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(&spdm_context->transcript.message_mut_c,
 				     message, message_size);
+#else
+	if (spdm_context->transcript.digest_context_mut_m1m2 == NULL) {
+		spdm_context->transcript.digest_context_mut_m1m2 = spdm_hash_new (
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_mut_m1m2);
+	}
+	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+		spdm_context->transcript.digest_context_mut_m1m2, message, message_size) ?
+		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#endif
 }
 
 /**
@@ -835,8 +931,20 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(&spdm_context->transcript.message_m,
 				     message, message_size);
+#else
+	if (spdm_context->transcript.digest_context_l1l2 == NULL) {
+		spdm_context->transcript.digest_context_l1l2 = spdm_hash_new (
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_l1l2);
+	}
+	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+		spdm_context->transcript.digest_context_l1l2, message, message_size) ?
+		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#endif
 }
 
 /**
@@ -1062,6 +1170,7 @@ void spdm_init_context(IN void *context)
 	spdm_context->version = spdm_context_struct_VERSION;
 	spdm_context->transcript.message_a.max_buffer_size =
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_b.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
 	spdm_context->transcript.message_c.max_buffer_size =
@@ -1072,6 +1181,7 @@ void spdm_init_context(IN void *context)
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
 	spdm_context->transcript.message_m.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+#endif
 	spdm_context->retry_times = MAX_SPDM_REQUEST_RETRY_TIMES;
 	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
 	spdm_context->current_token = 0;

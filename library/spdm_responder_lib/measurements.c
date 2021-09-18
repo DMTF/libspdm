@@ -523,14 +523,11 @@ return_status spdm_get_response_measurements(IN void *context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				SPDM_GET_MEASUREMENTS,
 				response_size, response);
-			reset_managed_buffer(
-				&spdm_context->transcript
-						.message_m);
+			spdm_reset_message_m(spdm_context);
 			return RETURN_SUCCESS;
 		}
 		//reset
-		reset_managed_buffer(
-			&spdm_context->transcript.message_m);
+		spdm_reset_message_m(spdm_context);
 	} else {
 		status = spdm_append_message_m(spdm_context, spdm_response,
 					       *response_size);
@@ -538,8 +535,7 @@ return_status spdm_get_response_measurements(IN void *context,
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
-			reset_managed_buffer(
-				&spdm_context->transcript.message_m);
+			spdm_reset_message_m(spdm_context);
 			return RETURN_SUCCESS;
 		}
 	}

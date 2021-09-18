@@ -102,8 +102,8 @@ return_status spdm_process_encap_response_digest(
 	}
 	if (spdm_response->header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_encap_error_response_main(
-			spdm_context, &spdm_context->transcript.message_mut_b,
-			spdm_context->encap_context.last_encap_request_size,
+			spdm_context, NULL,
+			0,
 			spdm_response->header.param1);
 		if (RETURN_ERROR(status)) {
 			return status;

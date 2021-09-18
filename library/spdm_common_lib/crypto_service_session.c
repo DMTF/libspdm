@@ -255,7 +255,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 	result = spdm_responder_data_sign(
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
-		th_curr_data, th_curr_data_size, signature, &signature_size);
+		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 	if (result) {
 		DEBUG((DEBUG_INFO, "signature - "));
 		internal_dump_data(signature, signature_size);
@@ -531,7 +531,7 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 	result = spdm_requester_data_sign(
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
 		spdm_context->connection_info.algorithm.base_hash_algo,
-		th_curr_data, th_curr_data_size, signature, &signature_size);
+		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 	if (result) {
 		DEBUG((DEBUG_INFO, "signature - "));
 		internal_dump_data(signature, signature_size);

@@ -138,7 +138,7 @@ return_status spdm_get_encap_response_challenge_auth(
 	status = spdm_append_message_mut_c(spdm_context, spdm_response,
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
-		reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+		spdm_reset_message_mut_c(spdm_context);
 		spdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);

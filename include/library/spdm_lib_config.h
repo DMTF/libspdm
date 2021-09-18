@@ -25,6 +25,9 @@
 #define MAX_SPDM_SESSION_STATE_CALLBACK_NUM 4
 #define MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM 4
 
+// If cache transcript data or transcript hash
+//#define RECORD_TRANSCRIPT_DATA 1
+
 //
 // Crypto Configuation
 // In each category, at least one should be selected.
