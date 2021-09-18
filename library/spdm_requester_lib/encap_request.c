@@ -186,8 +186,8 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 	//
 	// Cache
 	//
-	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
-	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
+	spdm_reset_message_mut_b(spdm_context);
+	spdm_reset_message_mut_c(spdm_context);
 
 	if (session_id == NULL) {
 		spdm_context->last_spdm_request_session_id_valid = FALSE;

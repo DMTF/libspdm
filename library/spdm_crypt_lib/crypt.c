@@ -56,6 +56,88 @@ uintn get_spdm_hash_nid(IN uint32 base_hash_algo)
 }
 
 /**
+  Return hash new function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash new function
+**/
+hash_new_func get_spdm_hash_new_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return hash free function, based upon the negotiated hash algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return hash free function
+**/
+hash_free_func get_spdm_hash_free_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return sha256_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return sha384_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return sha512_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
   Return hash init function, based upon the negotiated hash algorithm.
 
   @param  base_hash_algo                  SPDM base_hash_algo
@@ -258,6 +340,40 @@ hash_all_func get_spdm_hash_all_func(IN uint32 base_hash_algo)
 	}
 	ASSERT(FALSE);
 	return NULL;
+}
+
+/**
+  Allocates and initializes one HASH_CTX context for subsequent hash use.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, spdm_hash_new() returns NULL.
+**/
+void *spdm_hash_new(IN uint32 base_hash_algo)
+{
+	hash_new_func hash_function;
+	hash_function = get_spdm_hash_new_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return NULL;
+	}
+	return hash_function();
+}
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  hash_context                   Pointer to the HASH_CTX context to be released.
+**/
+void spdm_hash_free(IN uint32 base_hash_algo, IN void *hash_context)
+{
+	hash_free_func hash_function;
+	hash_function = get_spdm_hash_free_func(base_hash_algo);
+	if (hash_function == NULL) {
+		return ;
+	}
+	hash_function(hash_context);
 }
 
 /**
@@ -1149,6 +1265,46 @@ boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 }
 
 /**
+  Verifies the asymmetric signature,
+  based upon negotiated asymmetric algorithm.
+
+  @param  base_asym_algo                 SPDM base_asym_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature verification.
+  @param  message_hash                      Pointer to octet message hash to be checked (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to asymmetric signature to be verified.
+  @param  sig_size                      size of signature in bytes.
+
+  @retval  TRUE   Valid asymmetric signature.
+  @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+**/
+boolean spdm_asym_verify_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+			 IN void *context, IN const uint8 *message_hash,
+			 IN uintn hash_size, IN const uint8 *signature,
+			 IN uintn sig_size)
+{
+	asym_verify_func verify_function;
+	boolean need_hash;
+	uintn hash_nid;
+
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
+	need_hash = spdm_asym_func_need_hash(base_asym_algo);
+
+	verify_function = get_spdm_asym_verify(base_asym_algo);
+	if (verify_function == NULL) {
+		return FALSE;
+	}
+	if (need_hash) {
+		return verify_function(context, hash_nid, message_hash,
+				       hash_size, signature, sig_size);
+	} else {
+		ASSERT(FALSE);
+		return FALSE;
+	}
+}
+
+/**
   Return asymmetric GET_PRIVATE_KEY_FROM_PEM function, based upon the asymmetric algorithm.
 
   @param  base_asym_algo                 SPDM base_asym_algo
@@ -1310,6 +1466,50 @@ boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 }
 
 /**
+  Carries out the signature generation.
+
+  If the signature buffer is too small to hold the contents of signature, FALSE
+  is returned and sig_size is set to the required buffer size to obtain the signature.
+
+  @param  base_asym_algo                 SPDM base_asym_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature generation.
+  @param  message_hash                      Pointer to octet message hash to be signed (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to buffer to receive signature.
+  @param  sig_size                      On input, the size of signature buffer in bytes.
+                                       On output, the size of data returned in signature buffer in bytes.
+
+  @retval  TRUE   signature successfully generated.
+  @retval  FALSE  signature generation failed.
+  @retval  FALSE  sig_size is too small.
+**/
+boolean spdm_asym_sign_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+		       IN void *context, IN const uint8 *message_hash,
+		       IN uintn hash_size, OUT uint8 *signature,
+		       IN OUT uintn *sig_size)
+{
+	asym_sign_func asym_sign;
+	boolean need_hash;
+	uintn hash_nid;
+
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
+	need_hash = spdm_asym_func_need_hash(base_asym_algo);
+
+	asym_sign = get_spdm_asym_sign(base_asym_algo);
+	if (asym_sign == NULL) {
+		return FALSE;
+	}
+	if (need_hash) {
+		return asym_sign(context, hash_nid, message_hash, hash_size,
+				 signature, sig_size);
+	} else {
+		ASSERT (FALSE);
+		return FALSE;
+	}
+}
+
+/**
   This function returns the SPDM requester asymmetric algorithm size.
 
   @param  req_base_asym_alg               SPDM req_base_asym_alg
@@ -1465,6 +1665,46 @@ boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
 }
 
 /**
+  Verifies the asymmetric signature,
+  based upon negotiated requester asymmetric algorithm.
+
+  @param  req_base_asym_alg               SPDM req_base_asym_alg
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature verification.
+  @param  message_hash                      Pointer to octet message hash to be checked (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to asymmetric signature to be verified.
+  @param  sig_size                      size of signature in bytes.
+
+  @retval  TRUE   Valid asymmetric signature.
+  @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+**/
+boolean spdm_req_asym_verify_hash(IN uint16 req_base_asym_alg,
+			     IN uint32 base_hash_algo, IN void *context,
+			     IN const uint8 *message_hash, IN uintn hash_size,
+			     IN const uint8 *signature, IN uintn sig_size)
+{
+	asym_verify_func verify_function;
+	boolean need_hash;
+	uintn hash_nid;
+
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
+	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
+
+	verify_function = get_spdm_req_asym_verify(req_base_asym_alg);
+	if (verify_function == NULL) {
+		return FALSE;
+	}
+	if (need_hash) {
+		return verify_function(context, hash_nid, message_hash,
+				       hash_size, signature, sig_size);
+	} else {
+		ASSERT (FALSE);
+		return FALSE;
+	}
+}
+
+/**
   Return asymmetric GET_PRIVATE_KEY_FROM_PEM function, based upon the asymmetric algorithm.
 
   @param  req_base_asym_alg               SPDM req_base_asym_alg
@@ -1568,6 +1808,50 @@ boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
 	} else {
 		return asym_sign(context, hash_nid, message, message_size,
 				 signature, sig_size);
+	}
+}
+
+/**
+  Carries out the signature generation.
+
+  If the signature buffer is too small to hold the contents of signature, FALSE
+  is returned and sig_size is set to the required buffer size to obtain the signature.
+
+  @param  req_base_asym_alg               SPDM req_base_asym_alg
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature generation.
+  @param  message_hash                      Pointer to octet message hash to be signed (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to buffer to receive signature.
+  @param  sig_size                      On input, the size of signature buffer in bytes.
+                                       On output, the size of data returned in signature buffer in bytes.
+
+  @retval  TRUE   signature successfully generated.
+  @retval  FALSE  signature generation failed.
+  @retval  FALSE  sig_size is too small.
+**/
+boolean spdm_req_asym_sign_hash(IN uint16 req_base_asym_alg,
+			   IN uint32 base_hash_algo, IN void *context,
+			   IN const uint8 *message_hash, IN uintn hash_size,
+			   OUT uint8 *signature, IN OUT uintn *sig_size)
+{
+	asym_sign_func asym_sign;
+	boolean need_hash;
+	uintn hash_nid;
+
+	hash_nid = get_spdm_hash_nid(base_hash_algo);
+	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
+
+	asym_sign = get_spdm_req_asym_sign(req_base_asym_alg);
+	if (asym_sign == NULL) {
+		return FALSE;
+	}
+	if (need_hash) {
+		return asym_sign(context, hash_nid, message_hash, hash_size,
+				 signature, sig_size);
+	} else {
+		ASSERT (FALSE);
+		return FALSE;
 	}
 }
 

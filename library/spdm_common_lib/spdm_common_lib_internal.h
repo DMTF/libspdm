@@ -122,7 +122,6 @@ typedef struct {
 	uint8 buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
-typedef struct {
 	//
 	// signature = Sign(SK, hash(M1))
 	// Verify(PK, hash(M2), signature)
@@ -136,19 +135,26 @@ typedef struct {
 	// MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)
 	// MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)
 	//
-	small_managed_buffer_t message_a;
-	large_managed_buffer_t message_b;
-	small_managed_buffer_t message_c;
-	large_managed_buffer_t message_mut_b;
-	small_managed_buffer_t message_mut_c;
-	//
 	// signature = Sign(SK, hash(L1))
 	// Verify(PK, hash(L2), signature)
 	//
 	// L1/L2 = Concatenate (M)
 	// M = Concatenate (GET_MEASUREMENT, MEASUREMENT\signature)
 	//
+typedef struct {
+	// the message_a must be plan text because we do not know the algorithm yet.
+	small_managed_buffer_t message_a;
+#if RECORD_TRANSCRIPT_DATA
+	large_managed_buffer_t message_b;
+	small_managed_buffer_t message_c;
+	large_managed_buffer_t message_mut_b;
+	small_managed_buffer_t message_mut_c;
 	large_managed_buffer_t message_m;
+#else
+	void                   *digest_context_m1m2;
+	void                   *digest_context_mut_m1m2;
+	void                   *digest_context_l1l2;
+#endif
 } spdm_transcript_t;
 
 typedef struct {
@@ -189,7 +195,7 @@ typedef struct {
 	// TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
 	// K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)
 	//
-	// TH for PSK_FINISH response HMAC: Concatenate (A, K, PF)
+	// TH for PSK_FINISH response HMAC: Concatenate (A, K, F)
 	// K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)
 	// F  = Concatenate (PSK_FINISH request\verify_data)
 	//
@@ -450,6 +456,7 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 				    IN uint32 requester_capabilities_flag,
 				    IN uint32 responder_capabilities_flag);
 
+#if RECORD_TRANSCRIPT_DATA
 /*
   This function calculates m1m2.
 
@@ -463,7 +470,23 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 			    IN OUT uintn *m1m2_buffer_size,
 			    OUT void *m1m2_buffer);
+#else
+/*
+  This function calculates m1m2 hash.
 
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  is_mut                        Indicate if this is from mutual authentication.
+  @param  m1m2_hash_size               size in bytes of the m1m2 hash
+  @param  m1m2_hash                   The buffer to store the m1m2 hash
+
+  @retval RETURN_SUCCESS  m1m2 is calculated.
+*/
+boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
+			    IN OUT uintn *m1m2_hash_size,
+			    OUT void *m1m2_hash);
+#endif
+
+#if RECORD_TRANSCRIPT_DATA
 /*
   This function calculates l1l2.
 
@@ -475,6 +498,19 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 */
 boolean spdm_calculate_l1l2(IN void *context, IN OUT uintn *l1l2_buffer_size,
 			    OUT void *l1l2_buffer);
+#else
+/*
+  This function calculates l1l2 hash.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  l1l2_hash_size               size in bytes of the l1l2 hash
+  @param  l1l2_hash                   The buffer to store the l1l2 hash
+
+  @retval RETURN_SUCCESS  l1l2 is calculated.
+*/
+boolean spdm_calculate_l1l2_hash(IN void *context, IN OUT uintn *l1l2_hash_size,
+			    OUT void *l1l2_hash);
+#endif
 
 /**
   This function generates the certificate chain hash.

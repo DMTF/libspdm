@@ -18,9 +18,23 @@
 #define MAX_DHE_KEY_SIZE 512
 #define MAX_ASYM_KEY_SIZE 512
 #define MAX_HASH_SIZE 64
-#define MAX_HASH_CONTEXT_SIZE 256
 #define MAX_AEAD_KEY_SIZE 32
 #define MAX_AEAD_IV_SIZE 12
+
+/**
+  Allocates and initializes one HASH_CTX context for subsequent hash use.
+
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, hash_new_func() returns NULL.
+**/
+typedef void * (*hash_new_func)();
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param  hash_context                   Pointer to the HASH_CTX context to be released.
+**/
+typedef void (*hash_free_func)(IN void *hash_context);
 
 /**
   Initializes user-supplied memory pointed by hash_context as hash context for
@@ -414,6 +428,24 @@ typedef boolean (*aead_decrypt_func)(
 uint32 spdm_get_hash_size(IN uint32 base_hash_algo);
 
 /**
+  Allocates and initializes one HASH_CTX context for subsequent hash use.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+
+  @return  Pointer to the HASH_CTX context that has been initialized.
+           If the allocations fails, spdm_hash_new() returns NULL.
+**/
+void *spdm_hash_new(IN uint32 base_hash_algo);
+
+/**
+  Release the specified HASH_CTX context.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  hash_context                   Pointer to the HASH_CTX context to be released.
+**/
+void spdm_hash_free(IN uint32 base_hash_algo, IN void *hash_context);
+
+/**
   Initializes user-supplied memory pointed by hash_context as hash context for
   subsequent use.
 
@@ -693,6 +725,26 @@ boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 			 IN uintn sig_size);
 
 /**
+  Verifies the asymmetric signature,
+  based upon negotiated asymmetric algorithm.
+
+  @param  base_asym_algo                 SPDM base_asym_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature verification.
+  @param  message_hash                      Pointer to octet message hash to be checked (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to asymmetric signature to be verified.
+  @param  sig_size                      size of signature in bytes.
+
+  @retval  TRUE   Valid asymmetric signature.
+  @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+**/
+boolean spdm_asym_verify_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+			 IN void *context, IN const uint8 *message_hash,
+			 IN uintn hash_size, IN const uint8 *signature,
+			 IN uintn sig_size);
+
+/**
   Retrieve the Private key from the password-protected PEM key data.
 
   @param  base_asym_algo                 SPDM base_asym_algo
@@ -733,6 +785,30 @@ boolean spdm_asym_get_private_key_from_pem(IN uint32 base_asym_algo,
 boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 		       IN void *context, IN const uint8 *message,
 		       IN uintn message_size, OUT uint8 *signature,
+		       IN OUT uintn *sig_size);
+
+/**
+  Carries out the signature generation.
+
+  If the signature buffer is too small to hold the contents of signature, FALSE
+  is returned and sig_size is set to the required buffer size to obtain the signature.
+
+  @param  base_asym_algo                 SPDM base_asym_algo
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature generation.
+  @param  message_hash                      Pointer to octet message hash to be signed (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to buffer to receive signature.
+  @param  sig_size                      On input, the size of signature buffer in bytes.
+                                       On output, the size of data returned in signature buffer in bytes.
+
+  @retval  TRUE   signature successfully generated.
+  @retval  FALSE  signature generation failed.
+  @retval  FALSE  sig_size is too small.
+**/
+boolean spdm_asym_sign_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+		       IN void *context, IN const uint8 *message_hash,
+		       IN uintn hash_size, OUT uint8 *signature,
 		       IN OUT uintn *sig_size);
 
 /**
@@ -792,6 +868,26 @@ boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
 			     IN const uint8 *signature, IN uintn sig_size);
 
 /**
+  Verifies the asymmetric signature,
+  based upon negotiated requester asymmetric algorithm.
+
+  @param  req_base_asym_alg               SPDM req_base_asym_alg
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature verification.
+  @param  message_hash                      Pointer to octet message hash to be checked (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to asymmetric signature to be verified.
+  @param  sig_size                      size of signature in bytes.
+
+  @retval  TRUE   Valid asymmetric signature.
+  @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+**/
+boolean spdm_req_asym_verify_hash(IN uint16 req_base_asym_alg,
+			     IN uint32 base_hash_algo, IN void *context,
+			     IN const uint8 *message_hash, IN uintn hash_size,
+			     IN const uint8 *signature, IN uintn sig_size);
+
+/**
   Retrieve the Private key from the password-protected PEM key data.
 
   @param  req_base_asym_alg               SPDM req_base_asym_alg
@@ -832,6 +928,30 @@ boolean spdm_req_asym_get_private_key_from_pem(IN uint16 req_base_asym_alg,
 boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
 			   IN uint32 base_hash_algo, IN void *context,
 			   IN const uint8 *message, IN uintn message_size,
+			   OUT uint8 *signature, IN OUT uintn *sig_size);
+
+/**
+  Carries out the signature generation.
+
+  If the signature buffer is too small to hold the contents of signature, FALSE
+  is returned and sig_size is set to the required buffer size to obtain the signature.
+
+  @param  req_base_asym_alg               SPDM req_base_asym_alg
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  context                      Pointer to asymmetric context for signature generation.
+  @param  message_hash                      Pointer to octet message hash to be signed (after hash).
+  @param  hash_size                  size of the hash in bytes.
+  @param  signature                    Pointer to buffer to receive signature.
+  @param  sig_size                      On input, the size of signature buffer in bytes.
+                                       On output, the size of data returned in signature buffer in bytes.
+
+  @retval  TRUE   signature successfully generated.
+  @retval  FALSE  signature generation failed.
+  @retval  FALSE  sig_size is too small.
+**/
+boolean spdm_req_asym_sign_hash(IN uint16 req_base_asym_alg,
+			   IN uint32 base_hash_algo, IN void *context,
+			   IN const uint8 *message_hash, IN uintn hash_size,
 			   OUT uint8 *signature, IN OUT uintn *sig_size);
 
 /**

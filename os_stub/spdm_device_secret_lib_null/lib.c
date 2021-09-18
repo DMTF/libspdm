@@ -40,7 +40,8 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
 
   @param  req_base_asym_alg               Indicates the signing algorithm.
   @param  base_hash_algo                 Indicates the hash algorithm.
-  @param  message                      A pointer to a message to be signed (before hash).
+  @param  is_data_hash                   Indicate the message type. TRUE: raw message before hash, FALSE: message hash.
+  @param  message                      A pointer to a message to be signed.
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
   @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
@@ -50,7 +51,7 @@ boolean spdm_measurement_collection(IN uint8 measurement_specification,
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
-				 IN uint32 base_hash_algo,
+				 IN uint32 base_hash_algo, IN boolean is_data_hash,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -62,7 +63,8 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
 
   @param  base_asym_algo                 Indicates the signing algorithm.
   @param  base_hash_algo                 Indicates the hash algorithm.
-  @param  message                      A pointer to a message to be signed (before hash).
+  @param  is_data_hash                   Indicate the message type. TRUE: raw message before hash, FALSE: message hash.
+  @param  message                      A pointer to a message to be signed.
   @param  message_size                  The size in bytes of the message to be signed.
   @param  signature                    A pointer to a destination buffer to store the signature.
   @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
@@ -72,7 +74,7 @@ boolean spdm_requester_data_sign(IN uint16 req_base_asym_alg,
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(IN uint32 base_asym_algo,
-				 IN uint32 base_hash_algo,
+				 IN uint32 base_hash_algo, IN boolean is_data_hash,
 				 IN const uint8 *message, IN uintn message_size,
 				 OUT uint8 *signature, IN OUT uintn *sig_size)
 {

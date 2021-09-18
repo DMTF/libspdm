@@ -81,9 +81,9 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	//
 	// Cache
 	//
-	reset_managed_buffer(&spdm_context->transcript.message_a);
-	reset_managed_buffer(&spdm_context->transcript.message_b);
-	reset_managed_buffer(&spdm_context->transcript.message_c);
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	status = spdm_append_message_a(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
@@ -121,7 +121,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	status = spdm_append_message_a(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
-		reset_managed_buffer(&spdm_context->transcript.message_a);
+		spdm_reset_message_a(spdm_context);
 		spdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
