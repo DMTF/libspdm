@@ -141,39 +141,6 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
 }
 
 /**
-  Shrink the size of the managed buffer.
-
-  @param  managed_buffer_t                The managed buffer to be shrinked.
-  @param  buffer_size                   The size in bytes of the size of the buffer to be shrinked.
-
-  @retval RETURN_SUCCESS               The managed buffer is shrinked.
-  @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be shrinked.
-**/
-return_status shrink_managed_buffer(IN OUT void *m_buffer, IN uintn buffer_size)
-{
-	managed_buffer_t *managed_buffer;
-
-	managed_buffer = m_buffer;
-
-	if (buffer_size == 0) {
-		return RETURN_SUCCESS;
-	}
-	ASSERT(buffer_size != 0);
-	ASSERT((managed_buffer->max_buffer_size ==
-		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
-	       (managed_buffer->max_buffer_size ==
-		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
-	ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
-	if (buffer_size > managed_buffer->buffer_size) {
-		return RETURN_BUFFER_TOO_SMALL;
-	}
-	ASSERT(buffer_size <= managed_buffer->buffer_size);
-
-	managed_buffer->buffer_size -= buffer_size;
-	return RETURN_SUCCESS;
-}
-
-/**
   Reset the managed buffer.
   The buffer_size is reset to 0.
   The max_buffer_size is unchanged.

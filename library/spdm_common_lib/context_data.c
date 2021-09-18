@@ -650,6 +650,19 @@ void spdm_reset_message_m(IN void *context)
 }
 
 /**
+  Reset message F cache in SPDM context.
+
+  @param  spdm_session_info              A pointer to the SPDM session context.
+**/
+void spdm_reset_message_f(IN void *session_info)
+{
+	spdm_session_info_t *spdm_session_info;
+
+	spdm_session_info = session_info;
+	reset_managed_buffer(&spdm_session_info->session_transcript.message_f);
+}
+
+/**
   Reset message buffer in SPDM context according to request code.
 
   @param  spdm_context               	A pointer to the SPDM context.

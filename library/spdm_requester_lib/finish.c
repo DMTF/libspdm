@@ -169,6 +169,9 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		return RETURN_DEVICE_ERROR;
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
+		if (spdm_response.header.param1 != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+			spdm_reset_message_f (session_info);
+		}
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
 			&session_info->session_transcript.message_f,

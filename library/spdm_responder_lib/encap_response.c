@@ -575,13 +575,5 @@ return_status spdm_handle_encap_error_response_main(
 	// According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.
 	// RESPONSE_NOT_READY should not be sent by requester. No need to check it.
 	//
-
-	//
-	// No need to shrink message_mut_b and message_mut_c, because any error will terminate the ENCAP MUT AUTH.
-	// The sequence is fixed in CHALLENG_AUTH or KEY_EXCHANGE_RSP, the responder cannot issue encap request again.
-	// If the requester restarts the mutual auth via CHALLENG or KEY_EXCHANGE, the encap will also restart.
-	// Do it here just to align with requester.
-	//
-	shrink_managed_buffer(m_buffer, shrink_buffer_size);
 	return RETURN_DEVICE_ERROR;
 }

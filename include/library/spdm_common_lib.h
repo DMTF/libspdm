@@ -490,6 +490,13 @@ void spdm_reset_message_mut_c(IN void *spdm_context);
 void spdm_reset_message_m(IN void *spdm_context);
 
 /**
+  Reset message F cache in SPDM context.
+
+  @param  spdm_session_info              A pointer to the SPDM session context.
+**/
+void spdm_reset_message_f(IN void *spdm_session_info);
+
+/**
   Reset message buffer in SPDM context according to request code.
 
   @param  spdm_context                A pointer to the SPDM context.
