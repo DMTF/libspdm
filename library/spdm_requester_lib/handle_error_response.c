@@ -188,7 +188,6 @@ return_status spdm_handle_error_response_main(
 	spdm_response = response;
 	ASSERT(spdm_response->request_response_code == SPDM_ERROR);
 	if (spdm_response->param1 != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
-		shrink_managed_buffer(m_buffer, shrink_buffer_size);
 		return spdm_handle_simple_error_response(spdm_context,
 							 spdm_response->param1);
 	} else {

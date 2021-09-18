@@ -357,18 +357,6 @@ return_status append_managed_buffer(IN OUT void *managed_buffer_t,
 				    IN void *buffer, IN uintn buffer_size);
 
 /**
-  Shrink the size of the managed buffer.
-
-  @param  managed_buffer_t                The managed buffer to be shrinked.
-  @param  buffer_size                   The size in bytes of the size of the buffer to be shrinked.
-
-  @retval RETURN_SUCCESS               The managed buffer is shrinked.
-  @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be shrinked.
-**/
-return_status shrink_managed_buffer(IN OUT void *managed_buffer_t,
-				    IN uintn buffer_size);
-
-/**
   Reset the managed buffer.
   The buffer_size is reset to 0.
   The max_buffer_size is unchanged.
