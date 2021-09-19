@@ -214,13 +214,6 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 			     spdm_response.version_number_entry_count *
 				     sizeof(spdm_version_number_t);
 
-	result = spdm_negotiate_connection_version(spdm_context, spdm_context->local_context.version.spdm_version,
-									spdm_context->local_context.version.spdm_version_count,
-									spdm_response.version_number_entry,
-									spdm_response.version_number_entry_count);
-	if (result != TRUE) {
-		return RETURN_DEVICE_ERROR;
-	}
 	//
 	// Cache data
 	//
@@ -234,6 +227,19 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 	if (RETURN_ERROR(status)) {
 		reset_managed_buffer(&spdm_context->transcript.message_a);
 		return RETURN_SECURITY_VIOLATION;
+	}
+
+	//
+	// spdm_negotiate_connection_version will change the spdm_response.
+	// It must be done after append_message_a.
+	//
+	result = spdm_negotiate_connection_version(spdm_context, spdm_context->local_context.version.spdm_version,
+									spdm_context->local_context.version.spdm_version_count,
+									spdm_response.version_number_entry,
+									spdm_response.version_number_entry_count);
+	if (result != TRUE) {
+		spdm_reset_message_a(spdm_context);
+		return RETURN_DEVICE_ERROR;
 	}
 
 	spdm_context->connection_info.connection_state =
