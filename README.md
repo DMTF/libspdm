@@ -55,7 +55,7 @@
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
-## Document
+## Documents
 
 1) Presentation
 
@@ -75,19 +75,29 @@
 
    The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
 
-## Prerequisit
+## Prerequisits
 
-### Build Tool
+### Build Tools for Windows
 
-1) [Visual Studio](https://visualstudio.microsoft.com/) (VS2015 or VS2019)
+1) Compiler (Choose one)
 
-2) [GCC](https://gcc.gnu.org/) (above GCC5)
+	a) [Visual Studio 2019](https://visualstudio.microsoft.com/) 
+	b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
+	c) [LLVM](https://llvm.org/) (LLVM9)
+Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
 
-3) [LLVM](https://llvm.org/) (LLVM9)
+2) [cmake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
-   Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
+### Build Tools for Linux
 
-4) [cmake](https://cmake.org/).
+1) Compiler (Choose one)
+
+	a) [GCC](https://gcc.gnu.org/) (above GCC5)
+	b) [LLVM](https://llvm.org/) (LLVM9) 
+		Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
+
+2) [cmake](https://cmake.org/).
+
 
 ### Crypto library
 
@@ -108,28 +118,45 @@
    To get a full buildable repo, please use `git submodule update --init`.
    If there is an update for submodules, please use `git submodule update`.
 
-### Windows Build with CMake
+### Windows Builds
+   For ia32 builds, use a `x86 Native Tools Command Prompt for Visual Studio...` command prompt.
+   For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt. 
 
-   Use x86 command prompt for ARCH=ia32 and x64 command prompt for ARCH=x64. (TOOLCHAIN=VS2019|VS2015|CLANG)
+   General build steps: (Note the `..` at the end of the cmake command). 
    ```
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<toolchain> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2019|VS2015|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    nmake copy_sample_key
    nmake
    ```
 
-### Linux Build with CMake
+   Example cmake commands: (Note the `..` at the end of the cmake command). 
+   ```
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=openssl ..
+   
+   cmake -G"NMake Makefiles" -DARCH=ia32 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   
+   ```
 
-   (TOOLCHAIN=GCC|CLANG)
+### Linux Builds
+General build steps: (Note the `..` at the end of the cmake command). 
+  
    ```
    cd libspdm
    mkdir build
    cd build
-   cmake -DARCH=<x64|ia32|arm|aarch64|riscv32|riscv64|arc> -DTOOLCHAIN=<toolchain> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -DARCH=<x64|ia32|arm|aarch64|riscv32|riscv64|arc> -DTOOLCHAIN=<GCC|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    make copy_sample_key
    make
+   ```
+Example cmake commands: (Note the `..` at the end of the cmake command). 
+   ```
+   cmake -G"NMake Makefiles" -DARCH=arm -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
+   
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=CLANG-DTARGET=Release -DCRYPTO=mbedtls ..
+   
    ```
 
 ## Run Test
@@ -151,6 +178,9 @@
       [  PASSED  ] 2 test(s).
    </pre>
 
+   Note: You MUST use a command prompt with the current working directory at libspdm/build/bin when running ULTs or they may fail.
+   Eg. Don't run the ULT from libsdpm/build directory by calling "bin/test_spdm_responder > NULL"
+   
 ### Run [spdm_emu](https://github.com/DMTF/spdm-emu)
 
    The spdm_emu output is at spdm_emu/build/bin.
@@ -170,12 +200,11 @@
 
   Please refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for detail. 
 
-## Feature not implemented yet
+## Features not implemented yet
 
 1) Please refer to [issues](https://github.com/DMTF/libspdm/issues) for detail
 
-## Known limitation
+## Known limitations
 This package is only the sample code to show the concept.
 It does not have a full validation such as robustness functional test and fuzzing test. It does not meet the production quality yet.
-Any codes including the API definition, the libary and the drivers are subject to change.
-
+Any codes including the API definition, the library and the drivers are subject to change.
