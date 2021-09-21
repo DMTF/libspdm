@@ -6,6 +6,15 @@
 
 #include "spdm_requester_lib_internal.h"
 
+#pragma pack(1)
+
+typedef struct {
+	spdm_message_header_t header;
+	uint8 dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+} spdm_key_update_response_mine_t;
+
+#pragma pack()
+
 /**
   This function sends KEY_UPDATE
   to update keys for an SPDM Session.
@@ -16,17 +25,19 @@
   @param  session_id                    The session ID of the session.
   @param  single_direction              TRUE means the operation is UPDATE_KEY.
                                        FALSE means the operation is UPDATE_ALL_KEYS.
+  @param  key_updated                   TRUE means the operation is to verify key(s).
+                                       FALSE means the operation is to update and verify key(s).
 
   @retval RETURN_SUCCESS               The keys of the session are updated.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_key_update(IN void *context, IN uint32 session_id,
-			      IN boolean single_direction)
+return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
+			      IN boolean single_direction, IN OUT boolean *key_updated)
 {
 	return_status status;
 	spdm_key_update_request_t spdm_request;
-	spdm_key_update_response_t spdm_response;
+	spdm_key_update_response_mine_t spdm_response;
 	uintn spdm_response_size;
 	spdm_key_update_action_t action;
 	spdm_context_t *spdm_context;
@@ -64,80 +75,116 @@ return_status spdm_key_update(IN void *context, IN uint32 session_id,
 		action = SPDM_KEY_UPDATE_ACTION_ALL;
 	}
 
-	//
-	// Update key
-	//
-	spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-	spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
-	if (single_direction) {
-		spdm_request.header.param1 =
-			SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-	} else {
-		spdm_request.header.param1 =
-			SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
-	}
-	spdm_request.header.param2 = 0;
-	spdm_get_random_number(sizeof(spdm_request.header.param2),
-			       &spdm_request.header.param2);
+	if(!(*key_updated)) {
+		//
+		// Update key
+		//
+		spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+		spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
+		if (single_direction) {
+			spdm_request.header.param1 =
+				SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+		} else {
+			spdm_request.header.param1 =
+				SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+		}
+		spdm_request.header.param2 = 0;
+		spdm_get_random_number(sizeof(spdm_request.header.param2),
+				       &spdm_request.header.param2);
 
-	// Create new key
-	if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+		// Create new key
+		if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+			DEBUG((DEBUG_INFO,
+			       "spdm_create_update_session_data_key[%x] Responder\n",
+			       session_id));
+			spdm_create_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_RESPONDER);
+		}
+
+		status = spdm_send_spdm_request(spdm_context, &session_id,
+						sizeof(spdm_request), &spdm_request);
+		if (RETURN_ERROR(status)) {
+			return RETURN_DEVICE_ERROR;
+		}
+
+		spdm_response_size = sizeof(spdm_response);
+		zero_mem(&spdm_response, sizeof(spdm_response));
+		status = spdm_receive_spdm_response(
+			spdm_context, &session_id, &spdm_response_size, &spdm_response);
+
+		if (RETURN_ERROR(status) || 
+		    spdm_response_size < sizeof(spdm_message_header_t)) {
+			if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+				DEBUG((DEBUG_INFO,
+				       "spdm_activate_update_session_data_key[%x] Responder old\n",
+				       session_id));
+				spdm_activate_update_session_data_key(
+					session_info->secured_message_context,
+					SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+			}
+			return RETURN_DEVICE_ERROR;
+		}
+
+		if (spdm_response.header.request_response_code == SPDM_ERROR) {
+			status = spdm_handle_error_response_main(
+				spdm_context, &session_id,
+				&session_info->session_transcript.message_f,
+				sizeof(spdm_request), &spdm_response_size, &spdm_response,
+				SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
+				sizeof(spdm_key_update_response_mine_t));
+			if (RETURN_ERROR(status)) {
+				if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+					DEBUG((DEBUG_INFO,
+					       "spdm_activate_update_session_data_key[%x] Responder old\n",
+					       session_id));
+					spdm_activate_update_session_data_key(
+						session_info->secured_message_context,
+						SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+				}
+				return status;
+			}
+		}
+
+		if ((spdm_response.header.request_response_code != 
+		    SPDM_KEY_UPDATE_ACK) ||
+		    (spdm_response.header.param1 != spdm_request.header.param1) ||
+		    (spdm_response.header.param2 != spdm_request.header.param2)) {
+			if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+				DEBUG((DEBUG_INFO,
+				       "spdm_activate_update_session_data_key[%x] Responder old\n",
+				       session_id));
+				spdm_activate_update_session_data_key(
+					session_info->secured_message_context,
+					SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+			}
+			return RETURN_DEVICE_ERROR;
+		}
+
+		if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+			DEBUG((DEBUG_INFO,
+			       "spdm_activate_update_session_data_key[%x] Responder new\n",
+			       session_id, SPDM_KEY_UPDATE_ACTION_RESPONDER));
+			spdm_activate_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+		}
+
 		DEBUG((DEBUG_INFO,
-		       "spdm_create_update_session_data_key[%x] Responder\n",
+		       "spdm_create_update_session_data_key[%x] Requester\n",
 		       session_id));
 		spdm_create_update_session_data_key(
 			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_RESPONDER);
-	}
-
-	status = spdm_send_spdm_request(spdm_context, &session_id,
-					sizeof(spdm_request), &spdm_request);
-	if (RETURN_ERROR(status)) {
-		return RETURN_DEVICE_ERROR;
-	}
-
-	spdm_response_size = sizeof(spdm_response);
-	zero_mem(&spdm_response, sizeof(spdm_response));
-	status = spdm_receive_spdm_response(
-		spdm_context, &session_id, &spdm_response_size, &spdm_response);
-	if (RETURN_ERROR(status) ||
-	    (spdm_response_size != sizeof(spdm_key_update_response_t)) ||
-	    (spdm_response.header.request_response_code !=
-	     SPDM_KEY_UPDATE_ACK) ||
-	    (spdm_response.header.param1 != spdm_request.header.param1) ||
-	    (spdm_response.header.param2 != spdm_request.header.param2)) {
-		if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
-			DEBUG((DEBUG_INFO,
-			       "spdm_activate_update_session_data_key[%x] Responder old\n",
-			       session_id));
-			spdm_activate_update_session_data_key(
-				session_info->secured_message_context,
-				SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
-		}
-		return RETURN_DEVICE_ERROR;
-	}
-
-	if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+			SPDM_KEY_UPDATE_ACTION_REQUESTER);
 		DEBUG((DEBUG_INFO,
-		       "spdm_activate_update_session_data_key[%x] Responder new\n",
-		       session_id, SPDM_KEY_UPDATE_ACTION_RESPONDER));
+		       "spdm_activate_update_session_data_key[%x] Requester new\n",
+		       session_id));
 		spdm_activate_update_session_data_key(
 			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+			SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
 	}
 
-	DEBUG((DEBUG_INFO,
-	       "spdm_create_update_session_data_key[%x] Requester\n",
-	       session_id));
-	spdm_create_update_session_data_key(
-		session_info->secured_message_context,
-		SPDM_KEY_UPDATE_ACTION_REQUESTER);
-	DEBUG((DEBUG_INFO,
-	       "spdm_activate_update_session_data_key[%x] Requester new\n",
-	       session_id));
-	spdm_activate_update_session_data_key(
-		session_info->secured_message_context,
-		SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+	*key_updated = TRUE;
 
 	//
 	// Verify key
@@ -160,10 +207,28 @@ return_status spdm_key_update(IN void *context, IN uint32 session_id,
 	zero_mem(&spdm_response, sizeof(spdm_response));
 	status = spdm_receive_spdm_response(
 		spdm_context, &session_id, &spdm_response_size, &spdm_response);
-	if (RETURN_ERROR(status) ||
-	    (spdm_response_size != sizeof(spdm_key_update_response_t)) ||
-	    (spdm_response.header.request_response_code !=
-	     SPDM_KEY_UPDATE_ACK) ||
+
+	if (RETURN_ERROR(status) || 
+	    spdm_response_size < sizeof(spdm_message_header_t)) {
+		DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
+		return RETURN_DEVICE_ERROR;
+	}
+
+	if (spdm_response.header.request_response_code == SPDM_ERROR) {
+		status = spdm_handle_error_response_main(
+			spdm_context, &session_id,
+			&session_info->session_transcript.message_f,
+			sizeof(spdm_request), &spdm_response_size, &spdm_response,
+			SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
+			sizeof(spdm_key_update_response_mine_t));
+		if (RETURN_ERROR(status)) {
+			DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
+			return status;
+		}
+	}
+
+	if ((spdm_response.header.request_response_code != 
+	    SPDM_KEY_UPDATE_ACK) ||
 	    (spdm_response.header.param1 != spdm_request.header.param1) ||
 	    (spdm_response.header.param2 != spdm_request.header.param2)) {
 		DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
@@ -172,4 +237,26 @@ return_status spdm_key_update(IN void *context, IN uint32 session_id,
 	DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
 
 	return RETURN_SUCCESS;
+}
+
+return_status spdm_key_update(IN void *context, IN uint32 session_id,
+			      IN boolean single_direction)
+{
+	spdm_context_t *spdm_context;
+	uintn retry;
+	return_status status;
+	boolean key_updated;
+
+	spdm_context = context;
+	key_updated = FALSE;
+	retry = spdm_context->retry_times;
+	do {
+		status = try_spdm_key_update(context, session_id,
+						      single_direction, &key_updated);
+		if (RETURN_NO_RESPONSE != status) {
+			return status;
+		}
+	} while (retry-- != 0);
+
+	return status;
 }
