@@ -35,6 +35,8 @@ typedef struct {
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
 
   @retval RETURN_SUCCESS               The challenge auth is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -42,7 +44,9 @@ typedef struct {
 **/
 return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 				 IN uint8 measurement_hash_type,
-				 OUT void *measurement_hash)
+				 OUT void *measurement_hash,
+				 OUT void *requester_nonce OPTIONAL,
+				 OUT void *responder_nonce OPTIONAL)
 {
 	return_status status;
 	boolean result;
@@ -97,6 +101,10 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	DEBUG((DEBUG_INFO, "ClientNonce - "));
 	internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
 	DEBUG((DEBUG_INFO, "\n"));
+	if (requester_nonce != NULL) {
+		copy_mem (requester_nonce, spdm_request.nonce, SPDM_NONCE_SIZE);
+	}
+
 	status = spdm_send_spdm_request(spdm_context, NULL,
 					sizeof(spdm_request), &spdm_request);
 	if (RETURN_ERROR(status)) {
@@ -194,6 +202,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	internal_dump_data(nonce, SPDM_NONCE_SIZE);
 	DEBUG((DEBUG_INFO, "\n"));
 	ptr += SPDM_NONCE_SIZE;
+	if (responder_nonce != NULL) {
+		copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
+	}
 
 	measurement_summary_hash = ptr;
 	ptr += measurement_summary_hash_size;
@@ -308,7 +319,52 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
 	do {
 		status = try_spdm_challenge(spdm_context, slot_id,
 					    measurement_hash_type,
-					    measurement_hash);
+					    measurement_hash, NULL, NULL);
+		if (RETURN_NO_RESPONSE != status) {
+			return status;
+		}
+	} while (retry-- != 0);
+
+	return status;
+}
+
+/**
+  This function sends CHALLENGE
+  to authenticate the device based upon the key in one slot.
+
+  This function verifies the signature in the challenge auth.
+
+  If basic mutual authentication is requested from the responder,
+  this function also perform the basic mutual authentication.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  slot_id                      The number of slot for the challenge.
+  @param  measurement_hash_type          The type of the measurement hash.
+  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+
+  @retval RETURN_SUCCESS               The challenge auth is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
+			     IN uint8 measurement_hash_type,
+			     OUT void *measurement_hash,
+			     OUT void *requester_nonce OPTIONAL,
+			     OUT void *responder_nonce OPTIONAL)
+{
+	spdm_context_t *spdm_context;
+	uintn retry;
+	return_status status;
+
+	spdm_context = context;
+	retry = spdm_context->retry_times;
+	do {
+		status = try_spdm_challenge(spdm_context, slot_id,
+					    measurement_hash_type,
+					    measurement_hash,
+						requester_nonce, responder_nonce);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
 		}

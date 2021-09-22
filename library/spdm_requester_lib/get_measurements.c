@@ -38,6 +38,8 @@ typedef struct {
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
   @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
 
   @retval RETURN_SUCCESS               The measurement is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -49,7 +51,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				       IN uint8 slot_id_param,
 				       OUT uint8 *number_of_blocks,
 				       IN OUT uint32 *measurement_record_length,
-				       OUT void *measurement_record)
+				       OUT void *measurement_record,
+				       OUT void *requester_nonce OPTIONAL,
+				       OUT void *responder_nonce OPTIONAL)
 {
 	boolean result;
 	return_status status;
@@ -151,10 +155,17 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
 		DEBUG((DEBUG_INFO, "\n"));
 		spdm_request.SlotIDParam = slot_id_param;
+
+		if (requester_nonce != NULL) {
+			copy_mem (requester_nonce, spdm_request.nonce, SPDM_NONCE_SIZE);
+		}
 	} else {
 		spdm_request_size = sizeof(spdm_request.header);
-	}
 
+		if (requester_nonce != NULL) {
+			zero_mem (requester_nonce, SPDM_NONCE_SIZE);
+		}
+	}
 	status = spdm_send_spdm_request(spdm_context, session_id,
 					spdm_request_size, &spdm_request);
 	if (RETURN_ERROR(status)) {
@@ -254,6 +265,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		internal_dump_data(nonce, SPDM_NONCE_SIZE);
 		DEBUG((DEBUG_INFO, "\n"));
 		ptr += SPDM_NONCE_SIZE;
+		if (responder_nonce != NULL) {
+			copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
+		}
 
 		opaque_length = *(uint16 *)ptr;
 		if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
@@ -314,13 +328,16 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 			return RETURN_DEVICE_ERROR;
 		}
 		ptr = measurement_record_data + measurement_record_data_length;
-		
+
 		nonce = ptr;
 		DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
 		internal_dump_data(nonce, SPDM_NONCE_SIZE);
 		DEBUG((DEBUG_INFO, "\n"));
 		ptr += SPDM_NONCE_SIZE;
-		
+		if (responder_nonce != NULL) {
+			copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
+		}
+
 		opaque_length = *(uint16 *)ptr;
 		if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 			return RETURN_SECURITY_VIOLATION;
@@ -433,6 +450,28 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	return RETURN_SUCCESS;
 }
 
+/**
+  This function sends GET_MEASUREMENT
+  to get measurement from the device.
+
+  If the signature is requested, this function verifies the signature of the measurement.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+                                       If session_id is NULL, it is a normal message.
+                                       If session_id is NOT NULL, it is a secured message.
+  @param  request_attribute             The request attribute of the request message.
+  @param  measurement_operation         The measurement operation of the request message.
+  @param  slot_id                      The number of slot for the certificate chain.
+  @param  number_of_blocks               The number of blocks of the measurement record.
+  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+                                       On output, indicate the size in bytes of the measurement record.
+  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+
+  @retval RETURN_SUCCESS               The measurement is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
 return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				   IN uint8 request_attribute,
 				   IN uint8 measurement_operation,
@@ -451,7 +490,60 @@ return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		status = try_spdm_get_measurement(
 			spdm_context, session_id, request_attribute,
 			measurement_operation, slot_id_param, number_of_blocks,
-			measurement_record_length, measurement_record);
+			measurement_record_length, measurement_record, NULL, NULL);
+		if (RETURN_NO_RESPONSE != status) {
+			return status;
+		}
+	} while (retry-- != 0);
+
+	return status;
+}
+
+/**
+  This function sends GET_MEASUREMENT
+  to get measurement from the device.
+
+  If the signature is requested, this function verifies the signature of the measurement.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+                                       If session_id is NULL, it is a normal message.
+                                       If session_id is NOT NULL, it is a secured message.
+  @param  request_attribute             The request attribute of the request message.
+  @param  measurement_operation         The measurement operation of the request message.
+  @param  slot_id                      The number of slot for the certificate chain.
+  @param  number_of_blocks               The number of blocks of the measurement record.
+  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+                                       On output, indicate the size in bytes of the measurement record.
+  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+
+  @retval RETURN_SUCCESS               The measurement is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
+				   IN uint8 request_attribute,
+				   IN uint8 measurement_operation,
+				   IN uint8 slot_id_param,
+				   OUT uint8 *number_of_blocks,
+				   IN OUT uint32 *measurement_record_length,
+				   OUT void *measurement_record,
+				   OUT void *requester_nonce OPTIONAL,
+				   OUT void *responder_nonce OPTIONAL) {
+	spdm_context_t *spdm_context;
+	uintn retry;
+	return_status status;
+
+	spdm_context = context;
+	retry = spdm_context->retry_times;
+	do {
+		status = try_spdm_get_measurement(
+			spdm_context, session_id, request_attribute,
+			measurement_operation, slot_id_param, number_of_blocks,
+			measurement_record_length, measurement_record,
+			requester_nonce, responder_nonce);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
 		}
