@@ -19,6 +19,7 @@ int spdm_requester_finish_test_main(void);
 int spdm_requester_psk_exchange_test_main(void);
 int spdm_requester_psk_finish_test_main(void);
 int spdm_requester_heartbeat_test_main(void);
+int spdm_requester_key_update_test_main(void);
 int spdm_requester_end_session_test_main(void);
 
 int main(void)
@@ -70,6 +71,10 @@ int main(void)
 	}
 
 	if (spdm_requester_heartbeat_test_main() != 0) {
+		return_value = 1;
+	}
+
+	if (spdm_requester_key_update_test_main() != 0) {
 		return_value = 1;
 	}
 

@@ -28,6 +28,7 @@ SET(src_test_spdm_requester
     psk_exchange.c
     psk_finish.c
     heartbeat.c
+    key_update.c
     end_session.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
