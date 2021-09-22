@@ -475,13 +475,17 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
   @param  spdm_context                  A pointer to the SPDM context.
   @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
   @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
 
   @retval TRUE  Peer certificate chain buffer verification passed.
   @retval FALSE Peer certificate chain buffer verification failed.
 **/
 boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 					   IN void *cert_chain_buffer,
-					   IN uintn cert_chain_buffer_size)
+					   IN uintn cert_chain_buffer_size,
+					   OUT void **trust_anchor OPTIONAL,
+					   OUT uintn *trust_anchor_size OPTIONAL)
 {
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
@@ -539,6 +543,12 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 				return FALSE;
 			}
 		}
+		if (trust_anchor != NULL) {
+			*trust_anchor = root_cert;
+		}
+		if (trust_anchor_size != NULL) {
+			*trust_anchor_size = root_cert_size;
+		}
 	} else if ((cert_chain_data != NULL) && (cert_chain_data_size != 0)) {
 		// Whether it contains the root certificate or not,
 		// it should be equal to the one provisioned in trusted environment
@@ -552,6 +562,13 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 			DEBUG((DEBUG_INFO,
 			       "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
 			return FALSE;
+		}
+		if (trust_anchor != NULL) {
+			*trust_anchor = cert_chain_data + sizeof(spdm_cert_chain_t) +
+				spdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+		}
+		if (trust_anchor_size != NULL) {
+			*trust_anchor_size = cert_chain_data_size;
 		}
 	}
 

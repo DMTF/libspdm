@@ -123,6 +123,34 @@ return_status spdm_get_certificate(IN void *spdm_context, IN uint8 slot_id,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+                                       On output, indicate the size in bytes of the certificate chain.
+  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+
+  @retval RETURN_SUCCESS               The certificate chain is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
+				   IN OUT uintn *cert_chain_size,
+				   OUT void *cert_chain,
+				   OUT void **trust_anchor OPTIONAL,
+				   OUT uintn *trust_anchor_size OPTIONAL);
+
+/**
+  This function sends GET_CERTIFICATE
+  to get certificate chain in one slot from device.
+
+  This function verify the integrity of the certificate chain.
+  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+
+  If the peer root certificate hash is deployed,
+  this function also verifies the digest with the root hash in the certificate chain.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  slot_id                      The number of slot for the certificate chain.
   @param  length                       MAX_SPDM_CERT_CHAIN_BLOCK_LEN.
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
@@ -137,6 +165,37 @@ return_status spdm_get_certificate_choose_length(IN void *spdm_context,
 						 IN uint16 length,
 						 IN OUT uintn *cert_chain_size,
 						 OUT void *cert_chain);
+
+/**
+  This function sends GET_CERTIFICATE
+  to get certificate chain in one slot from device.
+
+  This function verify the integrity of the certificate chain.
+  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+
+  If the peer root certificate hash is deployed,
+  this function also verifies the digest with the root hash in the certificate chain.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  slot_id                      The number of slot for the certificate chain.
+  @param  length                       MAX_SPDM_CERT_CHAIN_BLOCK_LEN.
+  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+                                       On output, indicate the size in bytes of the certificate chain.
+  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+
+  @retval RETURN_SUCCESS               The certificate chain is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_get_certificate_choose_length_ex(IN void *context,
+						 IN uint8 slot_id,
+						 IN uint16 length,
+						 IN OUT uintn *cert_chain_size,
+						 OUT void *cert_chain,
+						 OUT void **trust_anchor OPTIONAL,
+						 OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
   This function sends CHALLENGE

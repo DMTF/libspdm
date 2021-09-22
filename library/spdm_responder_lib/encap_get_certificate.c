@@ -166,7 +166,8 @@ return_status spdm_process_encap_response_certificate(
 		get_managed_buffer(
 			&spdm_context->encap_context.certificate_chain_buffer),
 		get_managed_buffer_size(
-			&spdm_context->encap_context.certificate_chain_buffer));
+			&spdm_context->encap_context.certificate_chain_buffer),
+		NULL, NULL);
 	if (!result) {
 		spdm_context->encap_context.error_state =
 			SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
