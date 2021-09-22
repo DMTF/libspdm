@@ -229,6 +229,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	status = spdm_append_message_c(spdm_context, &spdm_response,
 				       spdm_response_size - signature_size);
 	if (RETURN_ERROR(status)) {
+		reset_managed_buffer(&spdm_context->transcript.message_c);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
@@ -243,6 +244,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	result = spdm_verify_challenge_auth_signature(
 		spdm_context, TRUE, signature, signature_size);
 	if (!result) {
+		reset_managed_buffer(&spdm_context->transcript.message_c);
 		spdm_context->error_state =
 			SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
 		return RETURN_SECURITY_VIOLATION;
@@ -262,6 +264,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		       "spdm_challenge - spdm_encapsulated_request - %p\n",
 		       status));
 		if (RETURN_ERROR(status)) {
+			reset_managed_buffer(&spdm_context->transcript.message_c);
 			spdm_context->error_state =
 				SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
 			return RETURN_SECURITY_VIOLATION;
