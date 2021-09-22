@@ -660,8 +660,8 @@ void *spdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_info                  The SPDM session ID.
-  @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
-  @param  cert_chain_data_size            size in bytes of the certitiface chain data.
+  @param  cert_chain_buffer                Certitiface chain buffer with spdm_cert_chain_t header.
+  @param  cert_chain_buffer_size            size in bytes of the certitiface chain buffer.
   @param  th_data_buffer_size             size in bytes of the th_data_buffer
   @param  th_data_buffer                 The buffer to store the th_data_buffer
 
@@ -669,7 +669,7 @@ void *spdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
 */
 boolean spdm_calculate_th_for_exchange(
 	IN void *spdm_context, IN void *spdm_session_info,
-	IN uint8 *cert_chain_data, OPTIONAL IN uintn cert_chain_data_size,
+	IN uint8 *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
 	OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
 
 /*
@@ -677,10 +677,10 @@ boolean spdm_calculate_th_for_exchange(
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_info                  The SPDM session ID.
-  @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
-  @param  cert_chain_data_size            size in bytes of the certitiface chain data.
-  @param  mut_cert_chain_data             Certitiface chain data without spdm_cert_chain_t header in mutual authentication.
-  @param  mut_cert_chain_data_size         size in bytes of the certitiface chain data in mutual authentication.
+  @param  cert_chain_buffer                Certitiface chain buffer with spdm_cert_chain_t header.
+  @param  cert_chain_buffer_size            size in bytes of the certitiface chain buffer.
+  @param  mut_cert_chain_buffer             Certitiface chain buffer with spdm_cert_chain_t header in mutual authentication.
+  @param  mut_cert_chain_buffer_size         size in bytes of the certitiface chain buffer in mutual authentication.
   @param  th_data_buffer_size             size in bytes of the th_data_buffer
   @param  th_data_buffer                 The buffer to store the th_data_buffer
 
@@ -688,10 +688,10 @@ boolean spdm_calculate_th_for_exchange(
 */
 boolean spdm_calculate_th_for_finish(IN void *spdm_context,
 				     IN void *spdm_session_info,
-				     IN uint8 *cert_chain_data,
-				     OPTIONAL IN uintn cert_chain_data_size,
-				     OPTIONAL IN uint8 *mut_cert_chain_data,
-				     OPTIONAL IN uintn mut_cert_chain_data_size,
+				     IN uint8 *cert_chain_buffer,
+				     OPTIONAL IN uintn cert_chain_buffer_size,
+				     OPTIONAL IN uint8 *mut_cert_chain_buffer,
+				     OPTIONAL IN uintn mut_cert_chain_buffer_size,
 				     OPTIONAL IN OUT uintn *th_data_buffer_size,
 				     OUT void *th_data_buffer);
 
