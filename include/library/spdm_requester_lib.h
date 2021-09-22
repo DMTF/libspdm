@@ -220,6 +220,32 @@ return_status spdm_challenge(IN void *spdm_context, IN uint8 slot_id,
 			     OUT void *measurement_hash);
 
 /**
+  This function sends CHALLENGE
+  to authenticate the device based upon the key in one slot.
+
+  This function verifies the signature in the challenge auth.
+
+  If basic mutual authentication is requested from the responder,
+  this function also perform the basic mutual authentication.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  slot_id                      The number of slot for the challenge.
+  @param  measurement_hash_type          The type of the measurement hash.
+  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+
+  @retval RETURN_SUCCESS               The challenge auth is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
+			     IN uint8 measurement_hash_type,
+			     OUT void *measurement_hash,
+			     OUT void *requester_nonce OPTIONAL,
+			     OUT void *responder_nonce OPTIONAL);
+
+/**
   This function sends GET_MEASUREMENT
   to get measurement from the device.
 
@@ -248,6 +274,40 @@ return_status spdm_get_measurement(IN void *spdm_context, IN uint32 *session_id,
 				   OUT uint8 *number_of_blocks,
 				   IN OUT uint32 *measurement_record_length,
 				   OUT void *measurement_record);
+
+/**
+  This function sends GET_MEASUREMENT
+  to get measurement from the device.
+
+  If the signature is requested, this function verifies the signature of the measurement.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+                                       If session_id is NULL, it is a normal message.
+                                       If session_id is NOT NULL, it is a secured message.
+  @param  request_attribute             The request attribute of the request message.
+  @param  measurement_operation         The measurement operation of the request message.
+  @param  slot_id                      The number of slot for the certificate chain.
+  @param  number_of_blocks               The number of blocks of the measurement record.
+  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+                                       On output, indicate the size in bytes of the measurement record.
+  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+
+  @retval RETURN_SUCCESS               The measurement is got successfully.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
+				   IN uint8 request_attribute,
+				   IN uint8 measurement_operation,
+				   IN uint8 slot_id_param,
+				   OUT uint8 *number_of_blocks,
+				   IN OUT uint32 *measurement_record_length,
+				   OUT void *measurement_record,
+				   OUT void *requester_nonce OPTIONAL,
+				   OUT void *responder_nonce OPTIONAL);
 
 /**
   This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
