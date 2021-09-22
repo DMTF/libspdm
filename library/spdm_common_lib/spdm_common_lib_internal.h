@@ -520,13 +520,17 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
   @param  spdm_context                  A pointer to the SPDM context.
   @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
   @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
 
   @retval TRUE  Peer certificate chain buffer verification passed.
   @retval FALSE Peer certificate chain buffer verification failed.
 **/
 boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 					   IN void *cert_chain_buffer,
-					   IN uintn cert_chain_buffer_size);
+					   IN uintn cert_chain_buffer_size,
+					   OUT void **trust_anchor OPTIONAL,
+					   OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
   This function generates the challenge signature based upon m1m2 for authentication.
