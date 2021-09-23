@@ -2579,11 +2579,16 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32 base_hash_algo,
 				"!!! VerifyCertificateChainBuffer - PASS (cert root hash match) !!!\n"));
 	}
 
-	if (!x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
-				    cert_chain_data, cert_chain_data_size)) {
-		DEBUG((DEBUG_INFO,
-		       "!!! VerifyCertificateChainBuffer - FAIL (cert chain verify failed)!!!\n"));
-		return FALSE;
+	//If the number of certificates in the certificate chain is more than 1,
+	//other certificates need to be verified. 
+	if (cert_chain_data_size > first_cert_buffer_size) {
+		if (!x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
+						cert_chain_data + first_cert_buffer_size,
+						cert_chain_data_size - first_cert_buffer_size)) {
+			DEBUG((DEBUG_INFO,
+				"!!! VerifyCertificateChainBuffer - FAIL (cert chain verify failed)!!!\n"));
+			return FALSE;
+		}
 	}
 
 	if (!x509_get_cert_from_cert_chain(
