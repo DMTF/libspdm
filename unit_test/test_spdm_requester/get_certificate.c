@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 static void *m_local_certificate_chain;
 static uintn m_local_certificate_chain_size;
 
@@ -2178,3 +2180,5 @@ int spdm_requester_get_certificate_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP

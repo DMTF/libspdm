@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 static uintn m_local_buffer_size;
 static uint8 m_local_buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
 
@@ -2009,3 +2011,5 @@ int spdm_requester_challenge_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CHALLEGE

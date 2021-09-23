@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_responder_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 // #define TEST_DEBUG
 #ifdef TEST_DEBUG
 #define TEST_DEBUG_PRINT(format, ...) printf(format, ##__VA_ARGS__)
@@ -1007,3 +1009,5 @@ int spdm_responder_certificate_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP

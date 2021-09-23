@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_responder_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 spdm_challenge_request_t m_spdm_challenge_request1 = {
 	{ SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
 	  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
@@ -874,3 +876,5 @@ int spdm_responder_challenge_auth_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP

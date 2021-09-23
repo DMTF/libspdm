@@ -47,4 +47,8 @@
 #define OPENSPDM_SHA384_SUPPORT 1
 #define OPENSPDM_SHA512_SUPPORT 1
 
+// Enable(1)\Disable(0) optional capabilities here.
+#define SPDM_ENABLE_CAPABILITY_CERT_CAP 1
+#define SPDM_ENABLE_CAPABILITY_CHAL_CAP 1
+
 #endif

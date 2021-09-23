@@ -161,10 +161,15 @@ return_status spdm_get_response_algorithms(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 return_status spdm_get_response_digests(IN void *spdm_context,
 					IN uintn request_size, IN void *request,
 					IN OUT uintn *response_size,
 					OUT void *response);
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Process the SPDM GET_CERTIFICATE request and return the response.
@@ -183,11 +188,16 @@ return_status spdm_get_response_digests(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 return_status spdm_get_response_certificate(IN void *spdm_context,
 					    IN uintn request_size,
 					    IN void *request,
 					    IN OUT uintn *response_size,
 					    OUT void *response);
+
+#endif // ENABLE_SPDM_GET_CERTIFICATE
 
 /**
   Process the SPDM CHALLENGE request and return the response.
@@ -206,11 +216,16 @@ return_status spdm_get_response_certificate(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 return_status spdm_get_response_challenge_auth(IN void *spdm_context,
 					       IN uintn request_size,
 					       IN void *request,
 					       IN OUT uintn *response_size,
 					       OUT void *response);
+
+#endif // #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
   Process the SPDM GET_MEASUREMENT request and return the response.
@@ -467,9 +482,13 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 return_status spdm_process_encap_response_digest(
 	IN spdm_context_t *spdm_context, IN uintn encap_response_size,
 	IN void *encap_response, OUT boolean *need_continue);
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Get the SPDM encapsulated GET_CERTIFICATE request.

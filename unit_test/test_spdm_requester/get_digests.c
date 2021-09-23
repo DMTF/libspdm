@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 static uint8 m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
 return_status spdm_requester_get_digests_test_send_message(
@@ -1586,3 +1588,5 @@ int spdm_requester_get_digests_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
