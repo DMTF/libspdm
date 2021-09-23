@@ -124,6 +124,7 @@ spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request11 = {
 };
 uintn m_spdm_respond_if_ready_request11_size = sizeof(spdm_message_header_t);
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 spdm_get_digest_request_t    m_spdm_get_digest_request = {
   {
     SPDM_MESSAGE_VERSION_11,
@@ -146,6 +147,10 @@ spdm_get_certificate_request_t    m_spdm_get_certificate_request = {
 };
 uintn m_spdm_get_certificate_request_size = sizeof(m_spdm_get_certificate_request);
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 spdm_challenge_request_t    m_spdm_challenge_request = {
   {
     SPDM_MESSAGE_VERSION_11,
@@ -155,6 +160,9 @@ spdm_challenge_request_t    m_spdm_challenge_request = {
   },
 };
 uintn m_spdm_challenge_request_size = sizeof(m_spdm_challenge_request);
+
+#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 
 spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   {
@@ -265,6 +273,7 @@ static void spdm_secured_message_set_request_finished_key(
 		 key, secured_message_context->hash_size);
 }
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 1: receiving a correct RESPOND_IF_READY from the requester, after a 
   GET_DIGESTS could not be processed.
@@ -317,12 +326,17 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_DIGESTS);
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Test 2: receiving a correct RESPOND_IF_READY from the requester, after a 
   GET_CERTIFICATE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid CERTIFICATE
   response message.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 void test_spdm_responder_respond_if_ready_case2(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -376,12 +390,15 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   free(data);
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Test 3: receiving a correct RESPOND_IF_READY from the requester, after a 
   CHALLENGE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid CHALLENGE_AUTH
   response message.
 **/
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 void test_spdm_responder_respond_if_ready_case3(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -438,6 +455,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   assert_int_equal (spdm_response->header.param2, 1 << 0);
   free(data);
 }
+#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
   Test 4: receiving a correct RESPOND_IF_READY from the requester, after a 
@@ -869,6 +887,8 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Test 9: receiving a RESPOND_IF_READY message larger than specified (more parameters 
   than the header), after a GET_DIGESTS could not be processed.
@@ -918,6 +938,9 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   assert_int_equal (spdm_response->header.param2, 0);
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 10: receiving a correct RESPOND_IF_READY from the requester, but the responder is in
   a Busy state.
@@ -968,6 +991,9 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   assert_int_equal (spdm_context->response_state, SPDM_RESPONSE_STATE_BUSY);
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 11: receiving a correct RESPOND_IF_READY from the requester, but the responder requires
   resynchronization with the requester.
@@ -1017,6 +1043,10 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   assert_int_equal (spdm_response->header.param2, 0);
   assert_int_equal (spdm_context->response_state, SPDM_RESPONSE_STATE_NEED_RESYNC);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 12: receiving a correct RESPOND_IF_READY from the requester, but the responder could not
@@ -1072,6 +1102,10 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   assert_int_equal (error_data->token, MY_TEST_TOKEN);
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Test 13: receiving a correct RESPOND_IF_READY from the requester, with the correct original
   request code, but with a token different from the expected.
@@ -1120,7 +1154,9 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 14: receiving a correct RESPOND_IF_READY from the requester, with the correct token, 
   but with a request code different from the expected.
@@ -1169,6 +1205,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
   SPDM_TEST_CONTEXT_SIGNATURE,
@@ -1178,20 +1215,30 @@ spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
 int spdm_responder_respond_if_ready_test_main(void) {
   const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
     // Success Case
+    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case1),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case2),
+    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case3),
+    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case8),
+
+    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case9),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case10),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case11),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case12),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case13),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case14),
+    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
   };
 
   setup_spdm_test_context (&m_spdm_responder_respond_if_ready_test_context);

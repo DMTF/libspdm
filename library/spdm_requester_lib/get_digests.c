@@ -15,6 +15,8 @@ typedef struct {
 
 #pragma pack()
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   This function sends GET_DIGEST
   to get all digest of the certificate chains from device.
@@ -200,3 +202,5 @@ return_status spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 
 	return status;
 }
+
+#endif SPDM_ENABLE_CAPABILITY_CERT_CAP

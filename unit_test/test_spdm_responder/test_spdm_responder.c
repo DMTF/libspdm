@@ -10,9 +10,16 @@
 int spdm_responder_version_test_main(void);
 int spdm_responder_capabilities_test_main(void);
 int spdm_responder_algorithms_test_main(void);
+
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 int spdm_responder_digests_test_main(void);
 int spdm_responder_certificate_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 int spdm_responder_challenge_auth_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 int spdm_responder_measurements_test_main(void);
 int spdm_responder_respond_if_ready_test_main (void);
 int spdm_responder_key_exchange_test_main(void);
@@ -38,6 +45,7 @@ int main(void)
 		return_value = 1;
 	}
 
+	#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 	if (spdm_responder_digests_test_main() != 0) {
 		return_value = 1;
 	}
@@ -45,10 +53,13 @@ int main(void)
 	if (spdm_responder_certificate_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 	if (spdm_responder_challenge_auth_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 	if (spdm_responder_measurements_test_main() != 0) {
 		return_value = 1;

@@ -227,11 +227,15 @@ return_status spdm_get_encap_response_digest(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 return_status spdm_get_encap_response_certificate(IN void *context,
 						  IN uintn request_size,
 						  IN void *request,
 						  IN OUT uintn *response_size,
 						  OUT void *response);
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Process the SPDM encapsulated CHALLENGE request and return the response.

@@ -34,6 +34,9 @@ spdm_authentication(IN void *context, OUT uint8 *slot_mask,
 {
 	return_status status;
 
+        status = RETURN_SUCCESS;
+
+	#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 	status = spdm_get_digest(context, slot_mask, total_digest_buffer);
 	if (RETURN_ERROR(status)) {
 		return status;
@@ -46,13 +49,16 @@ spdm_authentication(IN void *context, OUT uint8 *slot_mask,
 			return status;
 		}
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 	status = spdm_challenge(context, slot_id, measurement_hash_type,
 				measurement_hash);
 	if (RETURN_ERROR(status)) {
 		return status;
 	}
-	return RETURN_SUCCESS;
+	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+	return status;
 }
 
 /**

@@ -15,9 +15,16 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
 	{ SPDM_GET_VERSION, spdm_get_response_version },
 	{ SPDM_GET_CAPABILITIES, spdm_get_response_capabilities },
 	{ SPDM_NEGOTIATE_ALGORITHMS, spdm_get_response_algorithms },
+
+	#if SPDM_ENABLE_CAPABILITY_CERT_CAP
 	{ SPDM_GET_DIGESTS, spdm_get_response_digests },
 	{ SPDM_GET_CERTIFICATE, spdm_get_response_certificate },
+	#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+	#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 	{ SPDM_CHALLENGE, spdm_get_response_challenge_auth },
+	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 	{ SPDM_GET_MEASUREMENTS, spdm_get_response_measurements },
 	{ SPDM_KEY_EXCHANGE, spdm_get_response_key_exchange },
 	{ SPDM_PSK_EXCHANGE, spdm_get_response_psk_exchange },

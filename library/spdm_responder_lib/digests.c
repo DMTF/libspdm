@@ -6,6 +6,8 @@
 
 #include "spdm_responder_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Process the SPDM GET_DIGESTS request and return the response.
 
@@ -149,3 +151,5 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 
 	return RETURN_SUCCESS;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP

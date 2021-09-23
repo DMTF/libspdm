@@ -20,6 +20,8 @@ typedef struct {
 
 #pragma pack()
 
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 /**
   This function sends CHALLENGE
   to authenticate the device based upon the key in one slot.
@@ -311,3 +313,5 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
 
 	return status;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP

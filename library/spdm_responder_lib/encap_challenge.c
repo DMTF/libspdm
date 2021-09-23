@@ -6,6 +6,8 @@
 
 #include "spdm_responder_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
 /**
   Get the SPDM encapsulated CHALLENGE request.
 
@@ -236,3 +238,5 @@ return_status spdm_process_encap_response_challenge_auth(
 
 	return RETURN_SUCCESS;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP

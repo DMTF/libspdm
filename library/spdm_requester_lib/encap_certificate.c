@@ -6,6 +6,8 @@
 
 #include "spdm_requester_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 /**
   Process the SPDM encapsulated GET_CERTIFICATE request and return the response.
 
@@ -146,3 +148,5 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 
 	return RETURN_SUCCESS;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP

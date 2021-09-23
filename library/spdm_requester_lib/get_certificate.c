@@ -6,6 +6,8 @@
 
 #include "spdm_requester_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+
 #pragma pack(1)
 
 typedef struct {
@@ -301,3 +303,5 @@ return_status spdm_get_certificate_choose_length(IN void *context,
 
 	return status;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
