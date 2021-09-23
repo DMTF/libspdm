@@ -198,10 +198,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -267,10 +265,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -387,11 +383,8 @@ return_status spdm_requester_finish_test_receive_message(
 				&data_size, NULL, NULL);
 			init_managed_buffer(&th_curr,
 					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
-			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
+			cert_buffer = (uint8 *)data;
+			cert_buffer_size = data_size;
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
@@ -523,11 +516,8 @@ return_status spdm_requester_finish_test_receive_message(
 				&data_size, NULL, NULL);
 			init_managed_buffer(&th_curr,
 					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data +
-				      sizeof(spdm_cert_chain_t) + hash_size;
-			cert_buffer_size =
-				data_size -
-				(sizeof(spdm_cert_chain_t) + hash_size);
+			cert_buffer = (uint8 *)data;
+			cert_buffer_size = data_size;
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
 			// transcript.message_a size is 0
@@ -625,10 +615,8 @@ return_status spdm_requester_finish_test_receive_message(
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-	cert_buffer =
-		(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-	cert_buffer_size =
-		data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+	cert_buffer = (uint8 *)data;
+	cert_buffer_size = data_size;
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 				cert_buffer_hash);
 	// transcript.message_a size is 0
@@ -694,10 +682,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -763,10 +749,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -833,10 +817,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -902,10 +884,8 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -975,19 +955,15 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -1149,19 +1125,15 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
 		// transcript.message_a size is 0
@@ -1235,19 +1207,15 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer =
-			(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-		cert_buffer_size =
-			data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+		cert_buffer = (uint8 *)data;
+		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
 		// transcript.message_a size is 0

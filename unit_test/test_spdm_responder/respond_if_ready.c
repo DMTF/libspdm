@@ -648,8 +648,8 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   hmac_size = spdm_get_hash_size (m_use_hash_algo);
   ptr = m_spdm_finish_request.signature;
   init_managed_buffer (&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-  cert_buffer = (uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size;
-  cert_buffer_size = data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+  cert_buffer = (uint8 *)data;
+  cert_buffer_size = data_size;
   spdm_hash_all (m_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
   // Transcript.MessageA size is 0
   append_managed_buffer (&th_curr, cert_buffer_hash, hash_size);
