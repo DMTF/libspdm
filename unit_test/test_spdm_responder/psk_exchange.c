@@ -80,7 +80,7 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -104,8 +104,10 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	ptr += m_spdm_psk_exchange_request1.context_length;
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_psk_exchange_req_size, ptr);
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
+#endif
 	ptr += opaque_psk_exchange_req_size;
 	response_size = sizeof(response);
 	status = spdm_get_response_psk_exchange(
@@ -120,8 +122,10 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_PSK_EXCHANGE_RSP);
 	assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
+#endif
 	free(data1);
 }
 
@@ -169,7 +173,7 @@ void test_spdm_responder_psk_exchange_case2(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -254,7 +258,7 @@ void test_spdm_responder_psk_exchange_case3(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -340,7 +344,7 @@ void test_spdm_responder_psk_exchange_case4(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -428,7 +432,7 @@ void test_spdm_responder_psk_exchange_case5(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -520,7 +524,7 @@ void test_spdm_responder_psk_exchange_case6(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -604,7 +608,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -628,10 +632,9 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	ptr += m_spdm_psk_exchange_request1.context_length;
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_psk_exchange_req_size, ptr);
-	spdm_context->transcript.message_m.buffer_size =
-		spdm_context->transcript.message_m.max_buffer_size;
 	ptr += opaque_psk_exchange_req_size;
 
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -642,6 +645,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 							spdm_context->transcript.message_mut_b.max_buffer_size;
 	spdm_context->transcript.message_mut_c.buffer_size =
 							spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
 
 	response_size = sizeof(response);
 	status = spdm_get_response_psk_exchange(
@@ -655,13 +659,13 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_PSK_EXCHANGE_RSP);
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-					0);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#endif
 
 	free(data1);
 }

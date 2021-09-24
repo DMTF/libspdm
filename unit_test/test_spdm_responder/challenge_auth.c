@@ -89,9 +89,11 @@ void test_spdm_responder_challenge_auth_case1(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -110,8 +112,10 @@ void test_spdm_responder_challenge_auth_case1(void **state)
 			 SPDM_CHALLENGE_AUTH);
 	assert_int_equal(spdm_response->header.param1, 0);
 	assert_int_equal(spdm_response->header.param2, 1 << 0);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
+#endif
 	free(data1);
 }
 
@@ -158,7 +162,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -222,7 +226,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -287,7 +291,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -354,7 +358,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -426,7 +430,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
 	spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -479,7 +483,7 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -527,7 +531,7 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -575,7 +579,7 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[1] = data_size1;
   spdm_context->local_context.slot_count = 2;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -623,7 +627,7 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -672,7 +676,7 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 8;
   spdm_context->local_context.opaque_challenge_auth_rsp = m_opaque_challenge_auth_rsp;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -721,7 +725,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -770,7 +774,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
@@ -820,7 +824,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
   spdm_context->local_context.slot_count = 1;
   spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);

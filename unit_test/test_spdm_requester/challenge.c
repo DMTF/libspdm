@@ -164,7 +164,7 @@ return_status spdm_requester_challenge_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -234,7 +234,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			      m_local_buffer_size, hash_data);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -358,7 +358,7 @@ return_status spdm_requester_challenge_test_receive_message(
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_responder_data_sign(m_use_asym_algo,
 						 m_use_hash_algo,
-						 m_local_buffer,
+						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
 						 &sig_size);
 			ptr += sig_size;
@@ -495,7 +495,7 @@ return_status spdm_requester_challenge_test_receive_message(
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_responder_data_sign(m_use_asym_algo,
 						 m_use_hash_algo,
-						 m_local_buffer,
+						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
 						 &sig_size);
 			ptr += sig_size;
@@ -549,7 +549,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -615,7 +615,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -664,7 +664,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -713,7 +713,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -762,7 +762,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -813,7 +813,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -863,7 +863,7 @@ return_status spdm_requester_challenge_test_receive_message(
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     spdm_hash_all (m_use_hash_algo, hash_data, spdm_get_hash_size (m_use_hash_algo), hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, hash_data, spdm_get_hash_size (m_use_hash_algo), Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, hash_data, spdm_get_hash_size (m_use_hash_algo), Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -912,7 +912,7 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -980,9 +980,9 @@ void test_spdm_requester_challenge_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1001,7 +1001,9 @@ void test_spdm_requester_challenge_case1(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1040,9 +1042,9 @@ void test_spdm_requester_challenge_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1100,9 +1102,9 @@ void test_spdm_requester_challenge_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1121,7 +1123,9 @@ void test_spdm_requester_challenge_case3(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1153,9 +1157,9 @@ void test_spdm_requester_challenge_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1174,7 +1178,9 @@ void test_spdm_requester_challenge_case4(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1206,9 +1212,9 @@ void test_spdm_requester_challenge_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1227,7 +1233,9 @@ void test_spdm_requester_challenge_case5(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1259,9 +1267,9 @@ void test_spdm_requester_challenge_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1312,9 +1320,9 @@ void test_spdm_requester_challenge_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1335,7 +1343,9 @@ void test_spdm_requester_challenge_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1367,9 +1377,9 @@ void test_spdm_requester_challenge_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1388,7 +1398,9 @@ void test_spdm_requester_challenge_case8(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -1421,9 +1433,9 @@ void test_spdm_requester_challenge_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
-	spdm_context->transcript.message_b.buffer_size = 0;
-	spdm_context->transcript.message_c.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
+	spdm_reset_message_b(spdm_context);
+	spdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1470,9 +1482,9 @@ void test_spdm_requester_challenge_case10(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   // spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1484,7 +1496,9 @@ void test_spdm_requester_challenge_case10(void **state) {
   zero_mem (measurement_hash, sizeof(measurement_hash));
   status = spdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
   assert_int_equal (status, RETURN_UNSUPPORTED);
+#if RECORD_TRANSCRIPT_DATA
   assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
+#endif
   free(data);
 }
 
@@ -1510,9 +1524,9 @@ void test_spdm_requester_challenge_case11(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1550,9 +1564,9 @@ void test_spdm_requester_challenge_case12(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1591,9 +1605,9 @@ void test_spdm_requester_challenge_case13(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1631,9 +1645,9 @@ void test_spdm_requester_challenge_case14(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1672,9 +1686,9 @@ void test_spdm_requester_challenge_case15(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1719,9 +1733,9 @@ void test_spdm_requester_challenge_case16(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1766,9 +1780,9 @@ void test_spdm_requester_challenge_case17(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1814,9 +1828,9 @@ void test_spdm_requester_challenge_case18(void **state) {
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1861,9 +1875,9 @@ void test_spdm_requester_challenge_case19(void **state) {
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_context->transcript.message_a.buffer_size = 0;
-  spdm_context->transcript.message_b.buffer_size = 0;
-  spdm_context->transcript.message_c.buffer_size = 0;
+  spdm_reset_message_a(spdm_context);
+  spdm_reset_message_b(spdm_context);
+  spdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1913,16 +1927,18 @@ void test_spdm_requester_challenge_case20(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->transcript.message_b.buffer_size = 0;
-    spdm_context->transcript.message_c.buffer_size = 0;
+    spdm_reset_message_a(spdm_context);
+    spdm_reset_message_b(spdm_context);
+    spdm_reset_message_c(spdm_context);
 
     zero_mem (measurement_hash, sizeof(measurement_hash));
     status = spdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
-    // assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+#if RECORD_TRANSCRIPT_DATA
+    // assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_c.buffer_size, 0, error_code);
+#endif
 
     error_code++;
     if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6

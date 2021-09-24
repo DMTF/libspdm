@@ -772,9 +772,10 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 	spdm_test_context->case_id = 0x2;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 						spdm_context->transcript.message_m.max_buffer_size;
-
+#endif
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -784,7 +785,9 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 			 0);
 	assert_int_equal(spdm_context->connection_info.capability.flags,
 			 DEFAULT_CAPABILITY_FLAG);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 }
 
 void test_spdm_requester_get_capabilities_case3(void **state)
@@ -1134,7 +1137,7 @@ void test_spdm_requester_get_capabilities_case19(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1158,7 +1161,7 @@ void test_spdm_requester_get_capabilities_case20(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1182,7 +1185,7 @@ void test_spdm_requester_get_capabilities_case21(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1206,7 +1209,7 @@ void test_spdm_requester_get_capabilities_case22(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1230,7 +1233,7 @@ void test_spdm_requester_get_capabilities_case23(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1254,7 +1257,7 @@ void test_spdm_requester_get_capabilities_case24(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1278,7 +1281,7 @@ void test_spdm_requester_get_capabilities_case25(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1302,7 +1305,7 @@ void test_spdm_requester_get_capabilities_case26(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1326,7 +1329,7 @@ void test_spdm_requester_get_capabilities_case27(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1348,7 +1351,7 @@ void test_spdm_requester_get_capabilities_case28(void **state)
 	spdm_context->connection_info.version.minor_version = 1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	spdm_context->local_context.capability.ct_exponent = 0;
 	spdm_context->local_context.capability.flags =
@@ -1374,7 +1377,7 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_VERSION;
-    reset_managed_buffer(&spdm_context->transcript.message_a);
+    spdm_reset_message_a(spdm_context);
 
     status = spdm_get_capabilities (spdm_context);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);

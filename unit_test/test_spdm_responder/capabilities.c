@@ -406,8 +406,10 @@ void test_spdm_responder_capabilities_case1(void **state)
 	spdm_test_context->case_id = 0x1;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
 	response_size = sizeof(response);
 	status = spdm_get_response_capabilities(
@@ -420,8 +422,10 @@ void test_spdm_responder_capabilities_case1(void **state)
 			 spdm_response->header.spdm_version);
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_CAPABILITIES);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
+#endif
 }
 
 void test_spdm_responder_capabilities_case2(void **state)
@@ -948,7 +952,7 @@ void test_spdm_responder_capabilities_case18(void **state)
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
 
-	reset_managed_buffer(&spdm_context->transcript.message_a);
+	spdm_reset_message_a(spdm_context);
 
 	response_size = sizeof(response);
 	status = spdm_get_response_capabilities(

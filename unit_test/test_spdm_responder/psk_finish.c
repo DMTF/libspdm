@@ -96,7 +96,7 @@ void test_spdm_responder_psk_finish_case1(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -200,7 +200,7 @@ void test_spdm_responder_psk_finish_case2(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -307,7 +307,7 @@ void test_spdm_responder_psk_finish_case3(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -418,7 +418,7 @@ void test_spdm_responder_psk_finish_case4(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -531,7 +531,7 @@ void test_spdm_responder_psk_finish_case5(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -650,7 +650,7 @@ void test_spdm_responder_psk_finish_case6(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -753,7 +753,7 @@ void test_spdm_responder_psk_finish_case7(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -786,6 +786,7 @@ void test_spdm_responder_psk_finish_case7(void **state)
 	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request1,
 			      sizeof(spdm_psk_finish_request_t));
 
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -796,6 +797,7 @@ void test_spdm_responder_psk_finish_case7(void **state)
 							spdm_context->transcript.message_mut_b.max_buffer_size;
 	spdm_context->transcript.message_mut_c.buffer_size =
 							spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
 
 	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -813,11 +815,13 @@ void test_spdm_responder_psk_finish_case7(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_PSK_FINISH_RSP);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#endif
 	 
 	free(data1);
 }

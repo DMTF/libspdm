@@ -54,8 +54,10 @@ void test_spdm_responder_digests_case1(void **state)
 	set_mem(m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE,
 		(uint8)(0xFF));
 	spdm_context->local_context.slot_count = 1;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
 	response_size = sizeof(response);
 	status = spdm_get_response_digests(spdm_context,
@@ -71,8 +73,10 @@ void test_spdm_responder_digests_case1(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_DIGESTS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
+#endif
 }
 
 /**
@@ -348,20 +352,26 @@ void test_spdm_responder_digests_case7(void **state)
 	spdm_context->local_context.slot_count = 1;
 
 	response_size = sizeof(response);
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_b.buffer_size =
 		spdm_context->transcript.message_b.max_buffer_size;
+#endif
 	status = spdm_get_response_digests(spdm_context,
 					   m_spdm_get_digests_request1_size,
 					   &m_spdm_get_digests_request1,
 					   &response_size, response);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(response_size, sizeof(spdm_error_response_t));
+#endif
 	spdm_response = (void *)response;
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_UNSPECIFIED);
 	assert_int_equal(spdm_response->header.param2, 0);
+#endif
 }
 
 /**
@@ -395,21 +405,27 @@ void test_spdm_responder_digests_case8(void **state)
 	spdm_context->local_context.slot_count = 1;
 
 	response_size = sizeof(response);
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_b.buffer_size =
 		spdm_context->transcript.message_b.max_buffer_size -
 		sizeof(spdm_get_digest_request_t);
+#endif
 	status = spdm_get_response_digests(spdm_context,
 					   m_spdm_get_digests_request1_size,
 					   &m_spdm_get_digests_request1,
 					   &response_size, response);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(response_size, sizeof(spdm_error_response_t));
+#endif
 	spdm_response = (void *)response;
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_UNSPECIFIED);
 	assert_int_equal(spdm_response->header.param2, 0);
+#endif
 }
 
 /**
@@ -445,7 +461,7 @@ void test_spdm_responder_digests_case9(void **state)
 	spdm_context->local_context.slot_count = 0;
 
 	response_size = sizeof(response);
-	spdm_context->transcript.message_b.buffer_size = 0;
+	spdm_reset_message_b(spdm_context);
 	status = spdm_get_response_digests(spdm_context,
 					   m_spdm_get_digests_request1_size,
 					   &m_spdm_get_digests_request1,
