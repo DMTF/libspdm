@@ -59,6 +59,8 @@ void test_spdm_responder_certificate_case1(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -66,8 +68,10 @@ void test_spdm_responder_certificate_case1(void **state)
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
 	spdm_context->local_context.slot_count = 1;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
 	response_size = sizeof(response);
 	status = spdm_get_response_certificate(
@@ -84,8 +88,10 @@ void test_spdm_responder_certificate_case1(void **state)
 			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 	assert_int_equal(spdm_response->remainder_length,
 			 data_size - MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
+#endif
 	free(data);
 }
 
@@ -111,6 +117,8 @@ void test_spdm_responder_certificate_case2(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -157,6 +165,8 @@ void test_spdm_responder_certificate_case3(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -204,6 +214,8 @@ void test_spdm_responder_certificate_case4(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -253,6 +265,8 @@ void test_spdm_responder_certificate_case5(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -306,6 +320,8 @@ void test_spdm_responder_certificate_case6(void **state)
 		SPDM_CONNECTION_STATE_NOT_STARTED;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -360,6 +376,8 @@ void test_spdm_responder_certificate_case7(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -379,7 +397,7 @@ void test_spdm_responder_certificate_case7(void **state)
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		reset_managed_buffer(&spdm_context->transcript.message_b);
+		spdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -438,6 +456,8 @@ void test_spdm_responder_certificate_case8(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -458,7 +478,7 @@ void test_spdm_responder_certificate_case8(void **state)
 		m_spdm_get_certificate_request3.offset = test_offsets[i];
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		reset_managed_buffer(&spdm_context->transcript.message_b);
+		spdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -541,6 +561,8 @@ void test_spdm_responder_certificate_case9(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -565,8 +587,7 @@ void test_spdm_responder_certificate_case9(void **state)
 			m_spdm_get_certificate_request3.offset = test_sizes[j];
 
 			// reseting an internal buffer to avoid overflow and prevent tests to succeed
-			reset_managed_buffer(
-				&spdm_context->transcript.message_b);
+			spdm_reset_message_b(spdm_context);
 			response_size = sizeof(response);
 			status = spdm_get_response_certificate(
 				spdm_context,
@@ -653,6 +674,8 @@ void test_spdm_responder_certificate_case10(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 
 	m_spdm_get_certificate_request3.length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 
@@ -680,7 +703,7 @@ void test_spdm_responder_certificate_case10(void **state)
 				m_spdm_get_certificate_request3.length);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		reset_managed_buffer(&spdm_context->transcript.message_b);
+		spdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -764,6 +787,8 @@ void test_spdm_responder_certificate_case11(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 
 	m_spdm_get_certificate_request3.length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 	m_spdm_get_certificate_request3.offset = 0;
@@ -789,7 +814,7 @@ void test_spdm_responder_certificate_case11(void **state)
 				m_spdm_get_certificate_request3.length);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		reset_managed_buffer(&spdm_context->transcript.message_b);
+		spdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -866,6 +891,8 @@ void test_spdm_responder_certificate_case12(void **state)
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
@@ -882,7 +909,7 @@ void test_spdm_responder_certificate_case12(void **state)
 		m_spdm_get_certificate_request3.length;
 
 	// reseting an internal buffer to avoid overflow and prevent tests to succeed
-	reset_managed_buffer(&spdm_context->transcript.message_b);
+	spdm_reset_message_b(spdm_context);
 
 	spdm_response = NULL;
 	for (uintn offset = 0; offset < data_size; offset++) {
@@ -926,12 +953,14 @@ void test_spdm_responder_certificate_case12(void **state)
 	if (spdm_response != NULL) {
 		if (spdm_response->header.request_response_code ==
 		    SPDM_CERTIFICATE) {
+#if RECORD_TRANSCRIPT_DATA
 			assert_int_equal(
 				spdm_context->transcript.message_b.buffer_size,
 				sizeof(spdm_get_certificate_request_t) * count +
 					sizeof(spdm_certificate_response_t) *
 						count +
 					data_size);
+#endif
 		}
 	}
 	free(data);

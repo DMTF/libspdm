@@ -453,7 +453,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -536,7 +536,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -672,7 +672,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_responder_data_sign(m_use_asym_algo,
 						 m_use_hash_algo,
-						 m_local_buffer,
+						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
 						 &sig_size);
 			ptr += sig_size;
@@ -822,7 +822,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_responder_data_sign(m_use_asym_algo,
 						 m_use_hash_algo,
-						 m_local_buffer,
+						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
 						 &sig_size);
 			ptr += sig_size;
@@ -1196,7 +1196,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -1279,7 +1279,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -1818,7 +1818,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -1910,7 +1910,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -2002,7 +2002,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -2092,7 +2092,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 m_local_buffer, m_local_buffer_size,
+					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
 
@@ -2418,7 +2418,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2440,7 +2440,9 @@ void test_spdm_requester_get_measurements_case1(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2472,7 +2474,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2494,7 +2496,9 @@ void test_spdm_requester_get_measurements_case2(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2526,7 +2530,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2548,7 +2552,9 @@ void test_spdm_requester_get_measurements_case3(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2580,7 +2586,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2602,7 +2608,9 @@ void test_spdm_requester_get_measurements_case4(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2634,7 +2642,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2656,7 +2664,9 @@ void test_spdm_requester_get_measurements_case5(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2688,7 +2698,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2710,7 +2720,9 @@ void test_spdm_requester_get_measurements_case6(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2742,7 +2754,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2766,7 +2778,9 @@ void test_spdm_requester_get_measurements_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2798,7 +2812,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2851,7 +2865,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2873,7 +2887,9 @@ void test_spdm_requester_get_measurements_case9(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2903,7 +2919,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2924,10 +2940,12 @@ void test_spdm_requester_get_measurements_case10(void **state)
 		0, &number_of_blocks, NULL, NULL);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(number_of_blocks, 4);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
 				 SPDM_NONCE_SIZE + sizeof(uint16));
+#endif
 	free(data);
 }
 
@@ -2959,7 +2977,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2980,6 +2998,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -2987,6 +3006,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE + sizeof(uint16));
+#endif
 	free(data);
 }
 
@@ -3021,7 +3041,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3043,7 +3063,9 @@ void test_spdm_requester_get_measurements_case12(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -3078,7 +3100,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3100,7 +3122,9 @@ void test_spdm_requester_get_measurements_case13(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -3135,7 +3159,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3157,7 +3181,9 @@ void test_spdm_requester_get_measurements_case14(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -3192,7 +3218,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3214,7 +3240,9 @@ void test_spdm_requester_get_measurements_case15(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -3267,7 +3295,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 
 	for (int i = 0; i < sizeof(SlotIDs) / sizeof(SlotIDs[0]); i++) {
 		measurement_record_length = sizeof(measurement_record);
-		spdm_context->transcript.message_m.buffer_size = 0;
+		spdm_reset_message_m(spdm_context);
 		status = spdm_get_measurement(spdm_context, NULL,
 					      request_attribute, 1, SlotIDs[i],
 					      &number_of_block,
@@ -3275,16 +3303,20 @@ void test_spdm_requester_get_measurements_case16(void **state)
 					      measurement_record);
 		if (SlotIDs[i] == ALTERNATIVE_DEFAULT_SLOT_ID) {
 			assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
+#endif
 		} else if (SlotIDs[i] == 0xF) {
 			assert_int_equal(status, RETURN_INVALID_PARAMETER);
 		} else {
 			assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if RECORD_TRANSCRIPT_DATA
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
+#endif
 		}
 	}
 	free(data);
@@ -3319,7 +3351,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3343,8 +3375,10 @@ void test_spdm_requester_get_measurements_case17(void **state)
 			SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
 			0, &number_of_blocks, NULL, NULL);
 		assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 		assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 				 0);
+#endif
 	}
 	free(data);
 }
@@ -3380,7 +3414,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3401,10 +3435,12 @@ void test_spdm_requester_get_measurements_case18(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
 				 LARGE_MEASUREMENT_SIZE);
+#endif
 	free(data);
 }
 
@@ -3439,7 +3475,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3460,7 +3496,9 @@ void test_spdm_requester_get_measurements_case19(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+// #if RECORD_TRANSCRIPT_DATA
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
+// #endif
 	free(data);
 }
 
@@ -3495,7 +3533,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3516,7 +3554,9 @@ void test_spdm_requester_get_measurements_case20(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+// #if RECORD_TRANSCRIPT_DATA
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
+// #endif
 	free(data);
 }
 
@@ -3551,7 +3591,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3572,7 +3612,9 @@ void test_spdm_requester_get_measurements_case21(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+// #if RECORD_TRANSCRIPT_DATA
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
+// #endif
 	free(data);
 }
 
@@ -3609,7 +3651,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3634,6 +3676,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 					      measurement_record);
 		// It may fail due to transcript.message_m overflow
 		if (status == RETURN_SUCCESS) {
+#if RECORD_TRANSCRIPT_DATA
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				NumberOfMessages *
@@ -3644,10 +3687,13 @@ void test_spdm_requester_get_measurements_case22(void **state)
 						 m_use_measurement_hash_algo) +
 					 SPDM_NONCE_SIZE +
 					 sizeof(uint16)));
+#endif
 		} else {
+#if RECORD_TRANSCRIPT_DATA
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
+#endif
 			break;
 		}
 	}
@@ -3685,7 +3731,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3706,6 +3752,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -3714,6 +3761,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE + 
 				 sizeof(uint16) + MAX_SPDM_OPAQUE_DATA_SIZE);
+#endif
 	free(data);
 }
 
@@ -3748,7 +3796,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3769,8 +3817,10 @@ void test_spdm_requester_get_measurements_case24(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
+#endif
 	free(data);
 }
 
@@ -3805,7 +3855,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3827,7 +3877,9 @@ void test_spdm_requester_get_measurements_case25(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -3862,7 +3914,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3884,8 +3936,10 @@ void test_spdm_requester_get_measurements_case26(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
+#endif
 	free(data);
 }
 
@@ -3920,7 +3974,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3942,8 +3996,10 @@ void test_spdm_requester_get_measurements_case27(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
+#endif
 	free(data);
 }
 
@@ -3979,7 +4035,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4002,8 +4058,10 @@ void test_spdm_requester_get_measurements_case28(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 ExpectedBufferSize);
+#endif
 	free(data);
 }
 
@@ -4038,7 +4096,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4059,6 +4117,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4068,6 +4127,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				 SPDM_NONCE_SIZE +
 				 sizeof(uint16) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2 - 1);
+#endif
 	free(data);
 }
 
@@ -4099,7 +4159,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4120,6 +4180,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4128,6 +4189,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 					 m_use_measurement_hash_algo) +
 				 sizeof(uint16) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2);
+#endif
 	free(data);
 }
 
@@ -4162,7 +4224,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4183,6 +4245,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4190,6 +4253,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 sizeof(uint16) + MAX_UINT16);
+#endif
 	free(data);
 }
 
@@ -4221,7 +4285,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_m.buffer_size = 0;
+	spdm_reset_message_m(spdm_context);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4243,6 +4307,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 		0, &number_of_block, &measurement_record_length,
 		measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4250,6 +4315,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 				      spdm_get_measurement_hash_size(
 					      m_use_measurement_hash_algo)) +
 				 sizeof(uint16) + SPDM_NONCE_SIZE);
+#endif
 	free(data);
 }
 
@@ -4291,14 +4357,16 @@ void test_spdm_requester_get_measurements_case33(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->transcript.message_m.buffer_size = 0;
+    spdm_reset_message_m(spdm_context);
 
     measurement_record_length = sizeof(measurement_record);
     status = spdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
-    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+#if RECORD_TRANSCRIPT_DATA
+    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0, error_code);
+#endif
 
     error_code++;
     if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6

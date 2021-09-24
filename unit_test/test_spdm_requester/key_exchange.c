@@ -289,7 +289,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 get_managed_buffer(&th_curr),
+					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
 		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -439,7 +439,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 get_managed_buffer(&th_curr),
+					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
 		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -647,7 +647,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			free(data);
 			spdm_responder_data_sign(
 				m_use_asym_algo, m_use_hash_algo,
-				get_managed_buffer(&th_curr),
+				FALSE, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr), ptr,
 				&signature_size);
 			copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -875,7 +875,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			free(data);
 			spdm_responder_data_sign(
 				m_use_asym_algo, m_use_hash_algo,
-				get_managed_buffer(&th_curr),
+				FALSE, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr), ptr,
 				&signature_size);
 			copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -1060,7 +1060,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
 		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
-					 get_managed_buffer(&th_curr),
+					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
 		copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -1131,7 +1131,7 @@ void test_spdm_requester_key_exchange_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1182,7 +1182,7 @@ void test_spdm_requester_key_exchange_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1238,7 +1238,7 @@ void test_spdm_requester_key_exchange_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1289,7 +1289,7 @@ void test_spdm_requester_key_exchange_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1340,7 +1340,7 @@ void test_spdm_requester_key_exchange_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1391,7 +1391,7 @@ void test_spdm_requester_key_exchange_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1447,7 +1447,7 @@ void test_spdm_requester_key_exchange_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1500,7 +1500,7 @@ void test_spdm_requester_key_exchange_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1551,7 +1551,7 @@ void test_spdm_requester_key_exchange_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1611,7 +1611,7 @@ void test_spdm_requester_key_exchange_case10(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->transcript.message_a.buffer_size = 0;
+    spdm_reset_message_a(spdm_context);
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -1661,7 +1661,7 @@ void test_spdm_requester_key_exchange_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1672,6 +1672,7 @@ void test_spdm_requester_key_exchange_case11(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -1682,7 +1683,7 @@ void test_spdm_requester_key_exchange_case11(void **state)
 							spdm_context->transcript.message_mut_b.max_buffer_size;
 	spdm_context->transcript.message_mut_c.buffer_size =
 							spdm_context->transcript.message_mut_c.max_buffer_size;
-
+#endif
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1698,11 +1699,13 @@ void test_spdm_requester_key_exchange_case11(void **state)
 		spdm_secured_message_get_session_state(
 			spdm_context->session_info[0].secured_message_context),
 		SPDM_SESSION_STATE_HANDSHAKING);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#endif
 	free(data);
 }
 

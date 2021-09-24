@@ -1283,7 +1283,7 @@ void test_spdm_requester_finish_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1359,7 +1359,7 @@ void test_spdm_requester_finish_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1438,7 +1438,7 @@ void test_spdm_requester_finish_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1513,7 +1513,7 @@ void test_spdm_requester_finish_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1588,7 +1588,7 @@ void test_spdm_requester_finish_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1664,7 +1664,7 @@ void test_spdm_requester_finish_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1744,7 +1744,7 @@ void test_spdm_requester_finish_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1821,7 +1821,7 @@ void test_spdm_requester_finish_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1897,7 +1897,7 @@ void test_spdm_requester_finish_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1984,7 +1984,7 @@ void test_spdm_requester_finish_case10(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init (spdm_context, session_info, session_id, FALSE);
@@ -2045,7 +2045,7 @@ void test_spdm_requester_finish_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2076,6 +2076,7 @@ void test_spdm_requester_finish_case11(void **state)
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 	req_slot_id_param = 0;
+#if RECORD_TRANSCRIPT_DATA
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -2086,6 +2087,7 @@ void test_spdm_requester_finish_case11(void **state)
 							spdm_context->transcript.message_mut_b.max_buffer_size;
 	spdm_context->transcript.message_mut_c.buffer_size =
 							spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
 
 	status = spdm_send_receive_finish(spdm_context, session_id,
 					  req_slot_id_param);
@@ -2094,12 +2096,14 @@ void test_spdm_requester_finish_case11(void **state)
 		spdm_secured_message_get_session_state(
 			spdm_context->session_info[0].secured_message_context),
 		SPDM_SESSION_STATE_ESTABLISHED);
+#if RECORD_TRANSCRIPT_DATA
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#endif
 	free(data);
 }
 
@@ -2143,7 +2147,7 @@ void test_spdm_requester_finish_case12(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2220,7 +2224,7 @@ void test_spdm_requester_finish_case13(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2295,7 +2299,7 @@ void test_spdm_requester_finish_case14(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2371,7 +2375,7 @@ void test_spdm_requester_finish_case15(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2447,7 +2451,7 @@ void test_spdm_requester_finish_case16(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2538,7 +2542,7 @@ void test_spdm_requester_finish_case17(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2625,7 +2629,7 @@ void test_spdm_requester_finish_case18(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2713,7 +2717,7 @@ void test_spdm_requester_finish_case19(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -2801,7 +2805,7 @@ void test_spdm_requester_finish_case20(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_context->transcript.message_a.buffer_size = 0;
+	spdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
