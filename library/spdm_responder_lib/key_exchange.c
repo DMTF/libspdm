@@ -90,6 +90,22 @@ return_status spdm_get_response_key_exchange(IN void *context,
 			return RETURN_SUCCESS;
 		}
 	}
+	if (!spdm_is_capabilities_flag_supported(
+			spdm_context, FALSE,
+			0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
+			spdm_request->header.param1 > 0) {
+		spdm_generate_error_response(
+			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+			SPDM_KEY_EXCHANGE, response_size, response);
+		return RETURN_SUCCESS;
+	}
+	if (spdm_request->header.param1 != 0 && spdm_request->header.param1 != 1 &&
+		spdm_request->header.param1 != 0xFF) {
+		spdm_generate_error_response(
+			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+			0, response_size, response);
+			return RETURN_SUCCESS;
+	}
 
 	slot_id = spdm_request->header.param2;
 	if ((slot_id != 0xFF) &&
