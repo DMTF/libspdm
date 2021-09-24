@@ -75,6 +75,12 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_request->header.param2 > 0) {
 		return spdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHALLENGE, response_size, response);
 	}
+	if (spdm_request->header.param2 != 0 && spdm_request->header.param2 != 1 &&
+		spdm_request->header.param2 != 0xFF) {
+		return spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_INVALID_REQUEST,
+						0, response_size, response);
+	}
 
 	spdm_request_size = request_size;
 
