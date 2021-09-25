@@ -140,17 +140,17 @@ return_status spdm_generate_aead_key_and_iv(
 }
 
 /**
-  This function generates SPDM FinishedKey for a session.
+  This function generates SPDM finished_key for a session.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
   @param  handshake_secret              The handshake secret.
-  @param  FinishedKey                  The buffer to store the finished key.
+  @param  finished_key                  The buffer to store the finished key.
 
-  @retval RETURN_SUCCESS  SPDM FinishedKey for a session is generated.
+  @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
 **/
 return_status spdm_generate_finished_key(
 	IN spdm_secured_message_context_t *secured_message_context,
-	IN uint8 *handshake_secret, OUT uint8 *FinishedKey)
+	IN uint8 *handshake_secret, OUT uint8 *finished_key)
 {
 	return_status status;
 	boolean ret_val;
@@ -169,10 +169,10 @@ return_status spdm_generate_finished_key(
 	internal_dump_hex(bin_str7, bin_str7_size);
 	ret_val = spdm_hkdf_expand(secured_message_context->base_hash_algo,
 				   handshake_secret, hash_size, bin_str7,
-				   bin_str7_size, FinishedKey, hash_size);
+				   bin_str7_size, finished_key, hash_size);
 	ASSERT(ret_val);
-	DEBUG((DEBUG_INFO, "FinishedKey (0x%x) - ", hash_size));
-	internal_dump_data(FinishedKey, hash_size);
+	DEBUG((DEBUG_INFO, "finished_key (0x%x) - ", hash_size));
+	internal_dump_data(finished_key, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
 	return RETURN_SUCCESS;
@@ -339,6 +339,8 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 
 	zero_mem(secured_message_context->master_secret.dhe_secret,
 		MAX_DHE_KEY_SIZE);
+	
+	secured_message_context->finished_key_ready = TRUE;
 	return RETURN_SUCCESS;
 }
 
@@ -776,6 +778,128 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
 }
 
 /**
+  Allocates and initializes one HMAC context for subsequent use, with request_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+
+  @return Pointer to the HMAC context that has been initialized.
+**/
+void *
+spdm_hmac_new_with_request_finished_key(
+	IN void *spdm_secured_message_context)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_new(secured_message_context->base_hash_algo);
+}
+
+/**
+  Release the specified HMAC context, with request_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx                   Pointer to the HMAC context to be released.
+**/
+void spdm_hmac_free_with_request_finished_key(
+	IN void *spdm_secured_message_context, IN void *hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	spdm_hmac_free(secured_message_context->base_hash_algo, hmac_ctx);
+}
+
+/**
+  Set request_finished_key for subsequent use. It must be done before any
+  calling to hmac_update().
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx  Pointer to HMAC context.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+**/
+boolean spdm_hmac_init_with_request_finished_key(
+	IN void *spdm_secured_message_context, OUT void *hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_init(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		secured_message_context->handshake_secret.request_finished_key,
+		secured_message_context->hash_size);
+}
+
+/**
+  Makes a copy of an existing HMAC context, with request_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  new_hmac_ctx  Pointer to new HMAC context.
+
+  @retval TRUE   HMAC context copy succeeded.
+  @retval FALSE  HMAC context copy failed.
+**/
+boolean spdm_hmac_duplicate_with_request_finished_key(
+	IN void *spdm_secured_message_context,
+	IN const void *hmac_ctx, OUT void *new_hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_duplicate(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		new_hmac_ctx);
+}
+
+/**
+  Digests the input data and updates HMAC context, with request_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  data              Pointer to the buffer containing the data to be digested.
+  @param  data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC data digest succeeded.
+  @retval FALSE  HMAC data digest failed.
+**/
+boolean spdm_hmac_update_with_request_finished_key(
+	IN void *spdm_secured_message_context,
+	OUT void *hmac_ctx, IN const void *data,
+	IN uintn data_size)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_update(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		data, data_size);
+}
+
+/**
+  Completes computation of the HMAC digest value, with request_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
+
+  @retval TRUE   HMAC data digest succeeded.
+  @retval FALSE  HMAC data digest failed.
+**/
+boolean spdm_hmac_final_with_request_finished_key(
+	IN void *spdm_secured_message_context,
+	OUT void *hmac_ctx,  OUT uint8 *hmac_value)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_final(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		hmac_value);
+}
+
+/**
   Computes the HMAC of a input data buffer, with request_finished_key.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
@@ -798,6 +922,128 @@ spdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
 		secured_message_context->base_hash_algo, data, data_size,
 		secured_message_context->handshake_secret.request_finished_key,
 		secured_message_context->hash_size, hmac_value);
+}
+
+/**
+  Allocates and initializes one HMAC context for subsequent use, with response_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+
+  @return Pointer to the HMAC context that has been initialized.
+**/
+void *
+spdm_hmac_new_with_response_finished_key(
+	IN void *spdm_secured_message_context)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_new(secured_message_context->base_hash_algo);
+}
+
+/**
+  Release the specified HMAC context, with response_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx                   Pointer to the HMAC context to be released.
+**/
+void spdm_hmac_free_with_response_finished_key(
+	IN void *spdm_secured_message_context, IN void *hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	spdm_hmac_free(secured_message_context->base_hash_algo, hmac_ctx);
+}
+
+/**
+  Set response_finished_key for subsequent use. It must be done before any
+  calling to hmac_update().
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx  Pointer to HMAC context.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+**/
+boolean spdm_hmac_init_with_response_finished_key(
+	IN void *spdm_secured_message_context, OUT void *hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_init(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		secured_message_context->handshake_secret.response_finished_key,
+		secured_message_context->hash_size);
+}
+
+/**
+  Makes a copy of an existing HMAC context, with response_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  new_hmac_ctx  Pointer to new HMAC context.
+
+  @retval TRUE   HMAC context copy succeeded.
+  @retval FALSE  HMAC context copy failed.
+**/
+boolean spdm_hmac_duplicate_with_response_finished_key(
+	IN void *spdm_secured_message_context,
+	IN const void *hmac_ctx, OUT void *new_hmac_ctx)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_duplicate(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		new_hmac_ctx);
+}
+
+/**
+  Digests the input data and updates HMAC context, with response_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  data              Pointer to the buffer containing the data to be digested.
+  @param  data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC data digest succeeded.
+  @retval FALSE  HMAC data digest failed.
+**/
+boolean spdm_hmac_update_with_response_finished_key(
+	IN void *spdm_secured_message_context,
+	OUT void *hmac_ctx, IN const void *data,
+	IN uintn data_size)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_update(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		data, data_size);
+}
+
+/**
+  Completes computation of the HMAC digest value, with response_finished_key.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+  @param  hmac_ctx     Pointer to HMAC context being copied.
+  @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
+
+  @retval TRUE   HMAC data digest succeeded.
+  @retval FALSE  HMAC data digest failed.
+**/
+boolean spdm_hmac_final_with_response_finished_key(
+	IN void *spdm_secured_message_context,
+	OUT void *hmac_ctx,  OUT uint8 *hmac_value)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return spdm_hmac_final(
+		secured_message_context->base_hash_algo, hmac_ctx,
+		hmac_value);
 }
 
 /**

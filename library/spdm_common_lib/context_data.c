@@ -694,16 +694,105 @@ void spdm_reset_message_m(IN void *context)
 }
 
 /**
-  Reset message F cache in SPDM context.
+  Reset message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
 **/
-void spdm_reset_message_f(IN void *session_info)
+void spdm_reset_message_k(IN void *context, IN void *session_info)
 {
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
+#if RECORD_TRANSCRIPT_DATA
+	reset_managed_buffer(&spdm_session_info->session_transcript.message_k);
+#else
+	{
+		spdm_context_t *spdm_context;
+		void *secured_message_context;
+	
+		spdm_context = context;
+		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+
+		reset_managed_buffer(&spdm_session_info->session_transcript.temp_message_k);
+
+		if (spdm_session_info->session_transcript.digest_context_th != NULL) {
+			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th);
+			spdm_session_info->session_transcript.digest_context_th = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL) {
+			spdm_hmac_free_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th);
+			spdm_session_info->session_transcript.hmac_rsp_context_th = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_req_context_th != NULL) {
+			spdm_hmac_free_with_request_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th);
+			spdm_session_info->session_transcript.hmac_req_context_th = NULL;
+		}
+		if (spdm_session_info->session_transcript.digest_context_th_backup != NULL) {
+			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th_backup);
+			spdm_session_info->session_transcript.digest_context_th_backup = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_rsp_context_th_backup != NULL) {
+			spdm_hmac_free_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th_backup);
+			spdm_session_info->session_transcript.hmac_rsp_context_th_backup = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_req_context_th_backup != NULL) {
+			spdm_hmac_free_with_request_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th_backup);
+			spdm_session_info->session_transcript.hmac_req_context_th_backup = NULL;
+		}
+		spdm_session_info->session_transcript.finished_key_ready = FALSE;
+	}
+#endif
+}
+
+/**
+  Reset message F cache in SPDM context.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  spdm_session_info              A pointer to the SPDM session context.
+**/
+void spdm_reset_message_f(IN void *context, IN void *session_info)
+{
+	spdm_session_info_t *spdm_session_info;
+
+	spdm_session_info = session_info;
+#if RECORD_TRANSCRIPT_DATA
 	reset_managed_buffer(&spdm_session_info->session_transcript.message_f);
+#else
+	{
+		spdm_context_t *spdm_context;
+		void *secured_message_context;
+	
+		spdm_context = context;
+		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+
+		if (spdm_session_info->session_transcript.digest_context_th != NULL) {
+			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th);
+			spdm_session_info->session_transcript.digest_context_th = spdm_session_info->session_transcript.digest_context_th_backup;
+			spdm_session_info->session_transcript.digest_context_th_backup = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL) {
+			spdm_hmac_free_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th);
+			spdm_session_info->session_transcript.hmac_rsp_context_th = spdm_session_info->session_transcript.hmac_rsp_context_th_backup;
+			spdm_session_info->session_transcript.hmac_rsp_context_th_backup = NULL;
+		}
+		if (spdm_session_info->session_transcript.hmac_req_context_th != NULL) {
+			spdm_hmac_free_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th);
+			spdm_session_info->session_transcript.hmac_req_context_th = spdm_session_info->session_transcript.hmac_req_context_th_backup;
+			spdm_session_info->session_transcript.hmac_req_context_th_backup = NULL;
+		}
+		spdm_session_info->session_transcript.message_f_initialized = FALSE;
+	}
+#endif
 }
 
 /**
@@ -950,43 +1039,274 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
 /**
   Append message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
+  @param  is_requester                  Indicate of the key generation for a requester or a responder.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_k(IN void *session_info, IN void *message,
-				    IN uintn message_size)
+return_status spdm_append_message_k(IN void *context, IN void *session_info,
+            IN boolean is_requester, IN void *message, IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(
 		&spdm_session_info->session_transcript.message_k, message,
 		message_size);
+#else
+	{
+		spdm_context_t *spdm_context;
+		void *secured_message_context;
+		uint8 *cert_chain_buffer;
+		uintn cert_chain_buffer_size;
+		boolean result;
+		uint8 cert_chain_buffer_hash[MAX_HASH_SIZE];
+		uint32 hash_size;
+		boolean finished_key_ready;
+
+		spdm_context = context;
+		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		finished_key_ready = spdm_secured_message_is_finished_key_ready(secured_message_context);
+
+		if (spdm_session_info->session_transcript.digest_context_th == NULL) {
+			if (!spdm_session_info->use_psk) {
+				if (is_requester) {
+					result = spdm_get_peer_cert_chain_buffer(
+						spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+				} else {
+					result = spdm_get_local_cert_chain_buffer(
+						spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+				}
+				if (!result) {
+					return FALSE;
+				}
+				hash_size = spdm_get_hash_size(
+					spdm_context->connection_info.algorithm.base_hash_algo);
+				spdm_hash_all(
+					spdm_context->connection_info.algorithm.base_hash_algo,
+					cert_chain_buffer, cert_chain_buffer_size,
+					cert_chain_buffer_hash);
+			}
+		}
+
+		//
+		// prepare digest_context_th
+		//
+		if (spdm_session_info->session_transcript.digest_context_th == NULL) {
+			spdm_session_info->session_transcript.digest_context_th = spdm_hash_new (
+				spdm_context->connection_info.algorithm.base_hash_algo);
+			spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th);
+			spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th,
+				get_managed_buffer(&spdm_context->transcript.message_a),
+				get_managed_buffer_size(&spdm_context->transcript.message_a));
+			append_managed_buffer(
+				&spdm_session_info->session_transcript.temp_message_k,
+				get_managed_buffer(&spdm_context->transcript.message_a),
+				get_managed_buffer_size(&spdm_context->transcript.message_a));
+			if (!spdm_session_info->use_psk) {
+				spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+					spdm_session_info->session_transcript.digest_context_th,
+					cert_chain_buffer_hash, hash_size);
+				append_managed_buffer(
+					&spdm_session_info->session_transcript.temp_message_k,
+					cert_chain_buffer_hash, hash_size);
+			}
+		}
+		spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_session_info->session_transcript.digest_context_th, message, message_size);
+		if (!finished_key_ready) {
+			append_managed_buffer(
+				&spdm_session_info->session_transcript.temp_message_k, message, message_size);
+		}
+
+		//
+		// append message only if finished_key is NOT ready.
+		//
+		if (!finished_key_ready) {
+			return RETURN_SUCCESS;
+		}
+
+		//
+		// prepare hmac_rsp_context_th
+		//
+		if (spdm_session_info->session_transcript.hmac_rsp_context_th == NULL) {
+			spdm_session_info->session_transcript.hmac_rsp_context_th = spdm_hmac_new_with_response_finished_key (
+				secured_message_context);
+			spdm_hmac_init_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th);
+			spdm_hmac_update_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th,
+				get_managed_buffer(&spdm_session_info->session_transcript.temp_message_k),
+				get_managed_buffer_size(&spdm_session_info->session_transcript.temp_message_k));
+		}
+		spdm_hmac_update_with_response_finished_key (secured_message_context,
+			spdm_session_info->session_transcript.hmac_rsp_context_th, message, message_size);
+
+		//
+		// prepare hmac_req_context_th
+		//
+		if (spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
+			spdm_session_info->session_transcript.hmac_req_context_th = spdm_hmac_new_with_request_finished_key (
+				secured_message_context);
+			spdm_hmac_init_with_request_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th);
+			spdm_hmac_update_with_request_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th,
+				get_managed_buffer(&spdm_session_info->session_transcript.temp_message_k),
+				get_managed_buffer_size(&spdm_session_info->session_transcript.temp_message_k));
+		}
+		spdm_hmac_update_with_request_finished_key (secured_message_context,
+			spdm_session_info->session_transcript.hmac_req_context_th, message, message_size);
+		return RETURN_SUCCESS;
+	}
+#endif
 }
 
 /**
   Append message F cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
+  @param  is_requester                  Indicate of the key generation for a requester or a responder.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_f(IN void *session_info, IN void *message,
-				    IN uintn message_size)
+return_status spdm_append_message_f(IN void *context, IN void *session_info, 
+            IN boolean is_requester, IN void *message, IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
+#if RECORD_TRANSCRIPT_DATA
 	return append_managed_buffer(
 		&spdm_session_info->session_transcript.message_f, message,
 		message_size);
+#else
+	{
+		spdm_context_t *spdm_context;
+		void *secured_message_context;
+		uint8 *mut_cert_chain_buffer;
+		uintn mut_cert_chain_buffer_size;
+		boolean result;
+		uint8 mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
+		uint32 hash_size;
+		boolean finished_key_ready;
+
+		spdm_context = context;
+		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		finished_key_ready = spdm_secured_message_is_finished_key_ready(secured_message_context);
+		ASSERT (finished_key_ready);
+
+		if (!spdm_session_info->session_transcript.message_f_initialized) {
+			if (spdm_session_info->session_transcript.digest_context_th == NULL ||
+          spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
+          spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
+				// trigger message_k to initialize.
+				spdm_append_message_k (context, session_info, is_requester, NULL, 0);
+			}
+
+			if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+				if (is_requester) {
+					result = spdm_get_local_cert_chain_buffer(
+						spdm_context,
+						(void **)&mut_cert_chain_buffer,
+						&mut_cert_chain_buffer_size);
+				} else {
+					result = spdm_get_peer_cert_chain_buffer(
+						spdm_context,
+						(void **)&mut_cert_chain_buffer,
+						&mut_cert_chain_buffer_size);
+				}
+				if (!result) {
+					return RETURN_UNSUPPORTED;
+				}
+
+				hash_size = spdm_get_hash_size(
+					spdm_context->connection_info.algorithm.base_hash_algo);
+				spdm_hash_all(
+					spdm_context->connection_info.algorithm.base_hash_algo,
+					mut_cert_chain_buffer, mut_cert_chain_buffer_size,
+					mut_cert_chain_buffer_hash);
+			}
+
+			//
+			// It is first time call, backup current message_k context
+			//
+			ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
+			spdm_session_info->session_transcript.digest_context_th_backup = spdm_hash_new (
+				spdm_context->connection_info.algorithm.base_hash_algo);
+			spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_th,
+				spdm_session_info->session_transcript.digest_context_th_backup);
+
+			ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
+			spdm_session_info->session_transcript.hmac_rsp_context_th_backup = spdm_hmac_new_with_response_finished_key (
+				secured_message_context);
+			spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_rsp_context_th,
+				spdm_session_info->session_transcript.hmac_rsp_context_th_backup);
+
+			ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
+			spdm_session_info->session_transcript.hmac_req_context_th_backup = spdm_hmac_new_with_request_finished_key (
+				secured_message_context);
+			spdm_hmac_duplicate_with_request_finished_key (secured_message_context,
+				spdm_session_info->session_transcript.hmac_req_context_th,
+				spdm_session_info->session_transcript.hmac_req_context_th_backup);
+		}
+
+		//
+		// prepare digest_context_th
+		//
+		ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
+		if (!spdm_session_info->session_transcript.message_f_initialized) {
+			if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+				spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+					spdm_session_info->session_transcript.digest_context_th, mut_cert_chain_buffer_hash, hash_size);
+			}
+		}
+		spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_session_info->session_transcript.digest_context_th, message, message_size);
+
+		//
+		// prepare hmac_rsp_context_th
+		//
+		ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
+		if (!spdm_session_info->session_transcript.message_f_initialized) {
+			if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+				spdm_hmac_update_with_response_finished_key (secured_message_context,
+					spdm_session_info->session_transcript.hmac_rsp_context_th, mut_cert_chain_buffer_hash, hash_size);
+			}
+		}
+		spdm_hmac_update_with_response_finished_key (secured_message_context,
+			spdm_session_info->session_transcript.hmac_rsp_context_th, message, message_size);
+
+		//
+		// prepare hmac_req_context_th
+		//
+		ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
+		if (!spdm_session_info->session_transcript.message_f_initialized) {
+			if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+				spdm_hmac_update_with_request_finished_key (secured_message_context,
+					spdm_session_info->session_transcript.hmac_req_context_th, mut_cert_chain_buffer_hash, hash_size);
+			}
+		}
+		spdm_hmac_update_with_request_finished_key (secured_message_context,
+			spdm_session_info->session_transcript.hmac_req_context_th, message, message_size);
+
+		spdm_session_info->session_transcript.message_f_initialized = TRUE;
+		return RETURN_SUCCESS;
+	}
+#endif
 }
 
 /**

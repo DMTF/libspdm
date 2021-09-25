@@ -50,6 +50,23 @@ void spdm_secured_message_set_use_psk(IN void *spdm_secured_message_context,
 }
 
 /**
+  Return if finished_key is ready.
+
+  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+
+  @retval TRUE  finished_key is ready.
+  @retval FALSE finished_key is not ready.
+*/
+boolean
+spdm_secured_message_is_finished_key_ready(IN void *spdm_secured_message_context)
+{
+	spdm_secured_message_context_t *secured_message_context;
+
+	secured_message_context = spdm_secured_message_context;
+	return secured_message_context->finished_key_ready;
+}
+
+/**
   Set session_state to an SPDM secured message context.
 
   @param  spdm_secured_message_context    A pointer to the SPDM secured message context.

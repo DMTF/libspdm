@@ -120,6 +120,21 @@ typedef boolean (*hash_all_func)(IN const void *data, IN uintn data_size,
 				 OUT uint8 *hash_value);
 
 /**
+  Allocates and initializes one HMAC context for subsequent hash use.
+
+  @return  Pointer to the HMAC context that has been initialized.
+           If the allocations fails, hmac_new_func() returns NULL.
+**/
+typedef void * (*hmac_new_func)();
+
+/**
+  Release the specified HMAC context.
+
+  @param  hmac_ctx                   Pointer to the HMAC context to be released.
+**/
+typedef void (*hmac_free_func)(IN void *hmac_ctx);
+
+/**
   Set user-supplied key for subsequent use. It must be done before any
   calling to hmac_update().
 
@@ -185,7 +200,7 @@ typedef boolean (*hmac_update_func)(IN OUT void *hmac_ctx, IN const void *data,
 
   @param[in, out]  hmac_ctx  Pointer to the HMAC context.
   @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
-                                      value (32 bytes).
+                                      value.
 
   @retval TRUE   HMAC digest computation succeeded.
   @retval FALSE  HMAC digest computation failed.
@@ -514,6 +529,24 @@ boolean spdm_hash_update(IN uint32 base_hash_algo, IN OUT void *hash_context,
 boolean spdm_hash_final(IN uint32 base_hash_algo, IN OUT void *hash_context, OUT uint8 *hash_value);
 
 /**
+  Allocates and initializes one HMAC context for subsequent use.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+
+  @return  Pointer to the HMAC context that has been initialized.
+           If the allocations fails, spdm_hash_new() returns NULL.
+**/
+void *spdm_hmac_new(IN uint32 base_hash_algo);
+
+/**
+  Release the specified HMAC context.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  hmac_ctx                   Pointer to the HMAC context to be released.
+**/
+void spdm_hmac_free(IN uint32 base_hash_algo, IN void *hmac_ctx);
+
+/**
   Set user-supplied key for subsequent use. It must be done before any
   calling to hmac_update().
 
@@ -579,7 +612,7 @@ boolean spdm_hmac_update(IN uint32 base_hash_algo,
 
   @param[in, out]  hmac_ctx  Pointer to the HMAC context.
   @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
-                                      value (32 bytes).
+                                      value.
 
   @retval TRUE   HMAC digest computation succeeded.
   @retval FALSE  HMAC digest computation failed.

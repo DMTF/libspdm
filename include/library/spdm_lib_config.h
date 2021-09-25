@@ -19,7 +19,8 @@
 #define MAX_SPDM_CERT_CHAIN_BLOCK_LEN 1024
 
 #define MAX_SPDM_MESSAGE_BUFFER_SIZE 0x1200
-#define MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE 0x100
+#define MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE 0x100  // to hold message_a before negotiate
+#define MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 // to hold message_k before finished_key is ready
 
 #define MAX_SPDM_REQUEST_RETRY_TIMES 3
 #define MAX_SPDM_SESSION_STATE_CALLBACK_NUM 4

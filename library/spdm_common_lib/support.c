@@ -119,6 +119,8 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
 	ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
 	if (buffer_size >
@@ -157,6 +159,8 @@ void reset_managed_buffer(IN OUT void *m_buffer)
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
 	managed_buffer->buffer_size = 0;
 	zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
@@ -178,6 +182,8 @@ uintn get_managed_buffer_size(IN OUT void *m_buffer)
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
 	return managed_buffer->buffer_size;
 }
@@ -198,6 +204,8 @@ void *get_managed_buffer(IN OUT void *m_buffer)
 	ASSERT((managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
 	       (managed_buffer->max_buffer_size ==
+		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+	       (managed_buffer->max_buffer_size ==
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
 	return (managed_buffer + 1);
 }
@@ -215,6 +223,7 @@ void init_managed_buffer(IN OUT void *m_buffer, IN uintn max_buffer_size)
 	managed_buffer = m_buffer;
 
 	ASSERT((max_buffer_size == MAX_SPDM_MESSAGE_BUFFER_SIZE) ||
+	       (max_buffer_size == MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE) ||
 	       (max_buffer_size == MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE));
 
 	managed_buffer->max_buffer_size = max_buffer_size;
