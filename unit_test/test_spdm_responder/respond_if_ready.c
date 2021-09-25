@@ -263,6 +263,7 @@ static void spdm_secured_message_set_request_finished_key(
 	ASSERT(key_size == secured_message_context->hash_size);
 	copy_mem(secured_message_context->handshake_secret.request_finished_key,
 		 key, secured_message_context->hash_size);
+	secured_message_context->finished_key_ready = TRUE;
 }
 
 /**
@@ -831,7 +832,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_context->last_spdm_request_session_id_valid = TRUE;
   spdm_context->last_spdm_request_session_id = session_id;
   session_info = &spdm_context->session_info[0];
-  spdm_session_info_init (spdm_context, session_info, session_id, FALSE);
+  spdm_session_info_init (spdm_context, session_info, session_id, TRUE);
   hash_size = spdm_get_hash_size (m_use_hash_algo);
   set_mem (dummy_buffer, hash_size, (uint8)(0xFF));
   spdm_secured_message_set_request_finished_key (session_info->secured_message_context, dummy_buffer, hash_size);
