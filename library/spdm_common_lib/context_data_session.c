@@ -60,10 +60,15 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
 		session_info->secured_message_context,
 		spdm_context->local_context.psk_hint,
 		spdm_context->local_context.psk_hint_size);
+#if RECORD_TRANSCRIPT_DATA
 	session_info->session_transcript.message_k.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
 	session_info->session_transcript.message_f.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+#else
+	session_info->session_transcript.temp_message_k.max_buffer_size =
+		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE;
+#endif
 }
 
 /**

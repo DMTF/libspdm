@@ -104,7 +104,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	spdm_reset_message_buffer_via_request_code(spdm_context,
 						spdm_request->header.request_response_code);
 
-	status = spdm_append_message_f(session_info, request,
+	status = spdm_append_message_f(spdm_context, session_info, FALSE, request,
 				       request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
@@ -134,7 +134,8 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		return RETURN_SUCCESS;
 	}
 	status = spdm_append_message_f(
-		session_info, (uint8 *)request + request_size - hmac_size,
+		spdm_context, session_info, FALSE,
+		(uint8 *)request + request_size - hmac_size,
 		hmac_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
@@ -143,7 +144,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_f(session_info, spdm_response,
+	status = spdm_append_message_f(spdm_context, session_info, FALSE, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,

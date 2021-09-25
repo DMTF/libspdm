@@ -305,7 +305,7 @@ return_status try_spdm_send_receive_key_exchange(
 	//
 	// Cache session data
 	//
-	status = spdm_append_message_k(session_info, &spdm_request,
+	status = spdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, *session_id);
@@ -315,7 +315,7 @@ return_status try_spdm_send_receive_key_exchange(
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_k(session_info, &spdm_response,
+	status = spdm_append_message_k(spdm_context, session_info, TRUE, &spdm_response,
 				       spdm_response_size - signature_size -
 					       hmac_size);
 	if (RETURN_ERROR(status)) {
@@ -342,7 +342,7 @@ return_status try_spdm_send_receive_key_exchange(
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_k(session_info, signature, signature_size);
+	status = spdm_append_message_k(spdm_context, session_info, TRUE, signature, signature_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, *session_id);
 		spdm_secured_message_dhe_free(
@@ -398,7 +398,7 @@ return_status try_spdm_send_receive_key_exchange(
 		}
 		ptr += hmac_size;
 
-		status = spdm_append_message_k(session_info, verify_data,
+		status = spdm_append_message_k(spdm_context, session_info, TRUE, verify_data,
 					       hmac_size);
 		if (RETURN_ERROR(status)) {
 			spdm_free_session_id(spdm_context, *session_id);

@@ -593,6 +593,88 @@ boolean spdm_measurement_hash_all(IN uint32 measurement_hash_algo,
 }
 
 /**
+  Return HMAC new function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC new function
+**/
+hmac_new_func get_spdm_hmac_new_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_new;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
+  Return HMAC free function, based upon the negotiated HMAC algorithm.
+
+  @param  base_hash_algo                  SPDM base_hash_algo
+
+  @return HMAC free function
+**/
+hmac_free_func get_spdm_hmac_free_func(IN uint32 base_hash_algo)
+{
+	switch (base_hash_algo) {
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if OPENSPDM_SHA256_SUPPORT == 1
+		return hmac_sha256_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if OPENSPDM_SHA384_SUPPORT == 1
+		return hmac_sha384_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if OPENSPDM_SHA512_SUPPORT == 1
+		return hmac_sha512_free;
+#else
+		ASSERT(FALSE);
+		break;
+#endif
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+	case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+		ASSERT(FALSE);
+		break;
+	}
+	ASSERT(FALSE);
+	return NULL;
+}
+
+/**
   Return HMAC init function, based upon the negotiated HMAC algorithm.
 
   @param  base_hash_algo                  SPDM base_hash_algo
@@ -797,6 +879,40 @@ hmac_all_func get_spdm_hmac_all_func(IN uint32 base_hash_algo)
 }
 
 /**
+  Allocates and initializes one HMAC context for subsequent use.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+
+  @return  Pointer to the HMAC context that has been initialized.
+           If the allocations fails, spdm_hash_new() returns NULL.
+**/
+void *spdm_hmac_new(IN uint32 base_hash_algo)
+{
+	hmac_new_func hmac_function;
+	hmac_function = get_spdm_hmac_new_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return FALSE;
+	}
+	return hmac_function();
+}
+
+/**
+  Release the specified HMAC context.
+
+  @param  base_hash_algo                 SPDM base_hash_algo
+  @param  hmac_ctx                   Pointer to the HMAC context to be released.
+**/
+void spdm_hmac_free(IN uint32 base_hash_algo, IN void *hmac_ctx)
+{
+	hmac_free_func hmac_function;
+	hmac_function = get_spdm_hmac_free_func(base_hash_algo);
+	if (hmac_function == NULL) {
+		return ;
+	}
+	hmac_function(hmac_ctx);
+}
+
+/**
   Set user-supplied key for subsequent use. It must be done before any
   calling to hmac_update().
 
@@ -888,7 +1004,7 @@ boolean spdm_hmac_update(IN uint32 base_hash_algo,
 
   @param[in, out]  hmac_ctx  Pointer to the HMAC context.
   @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
-                                      value (32 bytes).
+                                      value.
 
   @retval TRUE   HMAC digest computation succeeded.
   @retval FALSE  HMAC digest computation failed.

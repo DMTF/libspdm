@@ -119,6 +119,12 @@ typedef struct {
 typedef struct {
 	uintn max_buffer_size;
 	uintn buffer_size;
+	uint8 buffer[MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE];
+} medium_managed_buffer_t;
+
+typedef struct {
+	uintn max_buffer_size;
+	uintn buffer_size;
 	uint8 buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
@@ -157,7 +163,6 @@ typedef struct {
 #endif
 } spdm_transcript_t;
 
-typedef struct {
 	//
 	// TH for KEY_EXCHANGE response signature: Concatenate (A, Ct, K)
 	// Ct = certificate chain
@@ -189,8 +194,6 @@ typedef struct {
 	// CM = mutual certificate chain *
 	// F  = Concatenate (FINISH request, FINISH response)
 	//
-	large_managed_buffer_t message_k;
-	large_managed_buffer_t message_f;
 	//
 	// TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
 	// K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)
@@ -210,6 +213,23 @@ typedef struct {
 	// K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)
 	// F  = Concatenate (PSK_FINISH request, PSK_FINISH response)
 	//
+typedef struct {
+#if RECORD_TRANSCRIPT_DATA
+	large_managed_buffer_t message_k;
+	large_managed_buffer_t message_f;
+#else
+	// the message_k must be plan text because we do not know the finished_key yet.
+	medium_managed_buffer_t temp_message_k;
+	boolean                message_f_initialized;
+	boolean                finished_key_ready;
+	void                   *digest_context_th;
+	void                   *hmac_rsp_context_th;
+	void                   *hmac_req_context_th;
+	// this is back up for message F reset.
+	void                   *digest_context_th_backup;
+	void                   *hmac_rsp_context_th_backup;
+	void                   *hmac_req_context_th_backup;
+#endif
 } spdm_session_transcript_t;
 
 typedef struct {

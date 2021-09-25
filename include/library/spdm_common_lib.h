@@ -490,11 +490,20 @@ void spdm_reset_message_mut_c(IN void *spdm_context);
 void spdm_reset_message_m(IN void *spdm_context);
 
 /**
-  Reset message F cache in SPDM context.
+  Reset message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
 **/
-void spdm_reset_message_f(IN void *spdm_session_info);
+void spdm_reset_message_k(IN void *context, IN void *spdm_session_info);
+
+/**
+  Reset message F cache in SPDM context.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  spdm_session_info              A pointer to the SPDM session context.
+**/
+void spdm_reset_message_f(IN void *context, IN void *spdm_session_info);
 
 /**
   Reset message buffer in SPDM context according to request code.
@@ -586,28 +595,32 @@ return_status spdm_append_message_m(IN void *spdm_context, IN void *message,
 /**
   Append message K cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
+  @param  is_requester                  Indicate of the key generation for a requester or a responder.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_k(IN void *spdm_session_info,
-				    IN void *message, IN uintn message_size);
+return_status spdm_append_message_k(IN void *context, IN void *spdm_session_info,
+            IN boolean is_requester, IN void *message, IN uintn message_size);
 
 /**
   Append message F cache in SPDM context.
 
+  @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
+  @param  is_requester                  Indicate of the key generation for a requester or a responder.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_f(IN void *spdm_session_info,
-				    IN void *message, IN uintn message_size);
+return_status spdm_append_message_f(IN void *context, IN void *spdm_session_info,
+            IN boolean is_requester, IN void *message, IN uintn message_size);
 
 /**
   This function gets the session info via session ID.
@@ -662,6 +675,7 @@ void *spdm_assign_session_id(IN void *spdm_context, IN uint32 session_id,
 **/
 void *spdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
 
+#if RECORD_TRANSCRIPT_DATA
 /*
   This function calculates current TH data with message A and message K.
 
@@ -678,7 +692,37 @@ boolean spdm_calculate_th_for_exchange(
 	IN void *spdm_context, IN void *spdm_session_info,
 	IN uint8 *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
 	OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
+#else
+/*
+  This function calculates current TH hash with message A and message K.
 
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  The SPDM session ID.
+  @param  th_hash_buffer_size             size in bytes of the th_hash_buffer
+  @param  th_hash_buffer                 The buffer to store the th_hash_buffer
+
+  @retval RETURN_SUCCESS  current TH hash is calculated.
+*/
+boolean spdm_calculate_th_hash_for_exchange(
+	IN void *context, IN void *spdm_session_info,
+	OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer);
+
+/*
+  This function calculates current TH hmac with message A and message K, with response finished_key.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  The SPDM session ID.
+  @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
+  @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
+
+  @retval RETURN_SUCCESS  current TH hmac is calculated.
+*/
+boolean spdm_calculate_th_hmac_for_exchange_rsp(
+	IN void *context, IN void *spdm_session_info, IN boolean is_requester,
+	OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer);
+#endif
+
+#if RECORD_TRANSCRIPT_DATA
 /*
   This function calculates current TH data with message A, message K and message F.
 
@@ -701,6 +745,52 @@ boolean spdm_calculate_th_for_finish(IN void *spdm_context,
 				     OPTIONAL IN uintn mut_cert_chain_buffer_size,
 				     OPTIONAL IN OUT uintn *th_data_buffer_size,
 				     OUT void *th_data_buffer);
+#else
+/*
+  This function calculates current TH hash with message A, message K and message F.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  The SPDM session ID.
+  @param  th_hash_buffer_size             size in bytes of the th_hash_buffer
+  @param  th_hash_buffer                 The buffer to store the th_hash_buffer
+
+  @retval RETURN_SUCCESS  current TH hash is calculated.
+*/
+boolean spdm_calculate_th_hash_for_finish(IN void *spdm_context,
+				     IN void *spdm_session_info,
+				     OPTIONAL IN OUT uintn *th_hash_buffer_size,
+				     OUT void *th_hash_buffer);
+
+/*
+  This function calculates current TH hmac with message A, message K and message F, with response finished_key.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  The SPDM session ID.
+  @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
+  @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
+
+  @retval RETURN_SUCCESS  current TH hmac is calculated.
+*/
+boolean spdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
+				     IN void *spdm_session_info,
+				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+				     OUT void *th_hmac_buffer);
+
+/*
+  This function calculates current TH hmac with message A, message K and message F, with request finished_key.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  The SPDM session ID.
+  @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
+  @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
+
+  @retval RETURN_SUCCESS  current TH hmac is calculated.
+*/
+boolean spdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
+				     IN void *spdm_session_info,
+				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+				     OUT void *th_hmac_buffer);
+#endif
 
 /*
   This function calculates th1 hash.
