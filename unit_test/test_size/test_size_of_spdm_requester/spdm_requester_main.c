@@ -6,6 +6,10 @@
 
 #include "spdm_requester.h"
 
+#if defined(_MSC_EXTENSIONS)
+#pragma optimize("", off)
+#endif
+
 void spdm_dispatch(void)
 {
 	void *spdm_context;

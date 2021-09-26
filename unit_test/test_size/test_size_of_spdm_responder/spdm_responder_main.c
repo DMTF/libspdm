@@ -6,6 +6,13 @@
 
 #include "spdm_responder.h"
 
+//
+// Disable optimization to avoid code removal with VS2019.
+//
+#if defined(_MSC_EXTENSIONS)
+#pragma optimize("", off)
+#endif
+
 void spdm_dispatch(void)
 {
 	void *spdm_context;
