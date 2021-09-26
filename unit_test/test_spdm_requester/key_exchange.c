@@ -1142,6 +1142,8 @@ void test_spdm_requester_key_exchange_case1(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1193,6 +1195,8 @@ void test_spdm_requester_key_exchange_case2(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1249,6 +1253,8 @@ void test_spdm_requester_key_exchange_case3(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1300,6 +1306,8 @@ void test_spdm_requester_key_exchange_case4(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1351,6 +1359,8 @@ void test_spdm_requester_key_exchange_case5(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1402,6 +1412,8 @@ void test_spdm_requester_key_exchange_case6(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1458,6 +1470,8 @@ void test_spdm_requester_key_exchange_case7(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1511,6 +1525,8 @@ void test_spdm_requester_key_exchange_case8(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1562,6 +1578,8 @@ void test_spdm_requester_key_exchange_case9(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
 		 data, data_size);
 
@@ -1606,6 +1624,8 @@ void test_spdm_requester_key_exchange_case10(void **state) {
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo; 
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
@@ -1672,6 +1692,8 @@ void test_spdm_requester_key_exchange_case11(void **state)
 		m_use_aead_algo;
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		data_size;
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =

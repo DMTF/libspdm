@@ -530,7 +530,8 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-  
+	spdm_context->connection_info.algorithm.key_schedule =
+		m_use_key_schedule_algo;
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
