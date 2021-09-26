@@ -49,6 +49,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	return_status status;
 	uintn opaque_key_exchange_rsp_size;
 	uint8 th1_hash_data[64];
+	uint32 algo_size;
 
 	spdm_context = context;
 	spdm_request = request;
@@ -75,7 +76,51 @@ return_status spdm_get_response_key_exchange(IN void *context,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
 	}
-
+	{
+		// Double check if algorithm has been provisioned, because ALGORITHM might be skipped.
+		if (spdm_is_capabilities_flag_supported(
+			    spdm_context, TRUE, 0,
+			    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+			if (spdm_context->connection_info.algorithm
+				    .measurement_spec !=
+			    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+				spdm_generate_error_response(
+					spdm_context,
+					SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+					SPDM_PSK_EXCHANGE, response_size,
+					response);
+				return RETURN_SUCCESS;
+			}
+			algo_size = spdm_get_measurement_hash_size(
+				spdm_context->connection_info.algorithm
+					.measurement_hash_algo);
+			if (algo_size == 0) {
+				spdm_generate_error_response(
+					spdm_context,
+					SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+					SPDM_PSK_EXCHANGE, response_size,
+					response);
+				return RETURN_SUCCESS;
+			}
+		}
+		algo_size = spdm_get_hash_size(
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		if (algo_size == 0) {
+			spdm_generate_error_response(
+				spdm_context,
+				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+				SPDM_PSK_EXCHANGE, response_size, response);
+			return RETURN_SUCCESS;
+		}
+		if (spdm_context->connection_info.algorithm.key_schedule !=
+		    SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
+			spdm_generate_error_response(
+				spdm_context,
+				SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+				SPDM_PSK_EXCHANGE, response_size, response);
+			return RETURN_SUCCESS;
+		}
+	}
 	if (spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,

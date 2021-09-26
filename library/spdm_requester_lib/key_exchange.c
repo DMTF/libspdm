@@ -74,6 +74,7 @@ return_status try_spdm_send_receive_key_exchange(
 	spdm_session_info_t *session_info;
 	uintn opaque_key_exchange_req_size;
 	uint8 th1_hash_data[64];
+	uint32 algo_size;
 
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
@@ -87,7 +88,33 @@ return_status try_spdm_send_receive_key_exchange(
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;
 	}
-
+	{
+		// Double check if algorithm has been provisioned, because ALGORITHM might be skipped.
+		if (spdm_is_capabilities_flag_supported(
+			    spdm_context, TRUE, 0,
+			    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+			if (spdm_context->connection_info.algorithm
+				    .measurement_spec !=
+			    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+				return RETURN_DEVICE_ERROR;
+			}
+			algo_size = spdm_get_measurement_hash_size(
+				spdm_context->connection_info.algorithm
+					.measurement_hash_algo);
+			if (algo_size == 0) {
+				return RETURN_DEVICE_ERROR;
+			}
+		}
+		algo_size = spdm_get_hash_size(
+			spdm_context->connection_info.algorithm.base_hash_algo);
+		if (algo_size == 0) {
+			return RETURN_DEVICE_ERROR;
+		}
+		if (spdm_context->connection_info.algorithm.key_schedule !=
+		    SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
+			return RETURN_DEVICE_ERROR;
+		}
+	}
 	if ((slot_id >= MAX_SPDM_SLOT_COUNT) && (slot_id != 0xFF)) {
 		return RETURN_INVALID_PARAMETER;
 	}
