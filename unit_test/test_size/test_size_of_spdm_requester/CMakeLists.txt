@@ -3,11 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -Wl,-n,-q,--gc-sections -Wl,--entry,ModuleEntryPoint")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(TOOLCHIAN MATCHES "VS")
-        SET(CMAKE_EXE_LINKER_FLAGS "/DLL /ENTRY:ModuleEntryPoint /NOLOGO /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER /NODEFAULTLIB /IGNORE:4086 /MAP /OPT:REF")
-    else()
-        SET(CMAKE_EXE_LINKER_FLAGS "/DLL /ENTRY:ModuleEntryPoint /NOLOGO /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER /NODEFAULTLIB /IGNORE:4086 /OPT:REF")
-    endif()
+    SET(CMAKE_EXE_LINKER_FLAGS "/DLL /ENTRY:ModuleEntryPoint /NOLOGO /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER /NODEFAULTLIB /IGNORE:4086 /MAP /OPT:REF")
 endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_size/test_size_of_spdm_requester
@@ -29,10 +25,11 @@ SET(test_size_of_spdm_requester_LIBRARY
     debuglib
     spdm_requester_lib
     spdm_common_lib
-    cryptstublib_dummy
-    ${CRYPTO_LIB_PATHS}
-    rnglib
-    cryptlib_${CRYPTO}
+#    cryptstublib_dummy
+#    ${CRYPTO_LIB_PATHS}
+#    rnglib
+#    cryptlib_${CRYPTO}
+    cryptlib_dummy
     malloclib_null
     spdm_crypt_lib
     spdm_secured_message_lib
@@ -48,10 +45,11 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_requester_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>
-                   $<TARGET_OBJECTS:cryptstublib_dummy>
-                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
-                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+#                   $<TARGET_OBJECTS:cryptstublib_dummy>
+#                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
+#                   $<TARGET_OBJECTS:rnglib>
+#                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+                   $<TARGET_OBJECTS:cryptlib_dummy>
                    $<TARGET_OBJECTS:malloclib_null>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
