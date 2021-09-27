@@ -75,7 +75,7 @@
 
    The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
 
-## Prerequisits
+## Prerequisites
 
 ### Build Tools for Windows
 
