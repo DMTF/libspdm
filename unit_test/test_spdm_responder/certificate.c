@@ -68,7 +68,7 @@ void test_spdm_responder_certificate_case1(void **state)
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
 	spdm_context->local_context.slot_count = 1;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
 #endif
@@ -88,7 +88,7 @@ void test_spdm_responder_certificate_case1(void **state)
 			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 	assert_int_equal(spdm_response->remainder_length,
 			 data_size - MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
 #endif
@@ -953,7 +953,7 @@ void test_spdm_responder_certificate_case12(void **state)
 	if (spdm_response != NULL) {
 		if (spdm_response->header.request_response_code ==
 		    SPDM_CERTIFICATE) {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_b.buffer_size,
 				sizeof(spdm_get_certificate_request_t) * count +

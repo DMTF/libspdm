@@ -144,7 +144,7 @@ boolean spdm_get_local_cert_chain_data(IN void *context,
 	return TRUE;
 }
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates m1m2.
 
@@ -316,7 +316,7 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
 }
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates l1l2.
 
@@ -576,7 +576,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 {
 	boolean result;
 	uintn signature_size;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn m1m2_buffer_size;
 #else
@@ -584,7 +584,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 	uintn m1m2_hash_size;
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	m1m2_buffer_size = sizeof(m1m2_buffer);
 	result = spdm_calculate_m1m2(spdm_context, is_requester,
 				     &m1m2_buffer_size, &m1m2_buffer);
@@ -601,7 +601,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 		signature_size = spdm_get_req_asym_signature_size(
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_requester_data_sign(
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
@@ -619,7 +619,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 	} else {
 		signature_size = spdm_get_asym_signature_size(
 			spdm_context->connection_info.algorithm.base_asym_algo);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_responder_data_sign(
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -708,7 +708,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 	void *context;
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn m1m2_buffer_size;
 #else
@@ -716,7 +716,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 	uintn m1m2_hash_size;
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	m1m2_buffer_size = sizeof(m1m2_buffer);
 	result = spdm_calculate_m1m2(spdm_context, !is_requester,
 				     &m1m2_buffer_size, &m1m2_buffer);
@@ -753,7 +753,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 			return FALSE;
 		}
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_asym_verify(
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -778,7 +778,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 			return FALSE;
 		}
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_req_asym_verify(
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
@@ -990,7 +990,7 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 {
 	uintn signature_size;
 	boolean result;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn l1l2_buffer_size;
 #else
@@ -998,7 +998,7 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 	uintn l1l2_hash_size;
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	l1l2_buffer_size = sizeof(l1l2_buffer);
 	result = spdm_calculate_l1l2(spdm_context, &l1l2_buffer_size,
 				     l1l2_buffer);
@@ -1013,7 +1013,7 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_responder_data_sign(
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1047,7 +1047,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 	void *context;
 	uint8 *cert_chain_data;
 	uintn cert_chain_data_size;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn l1l2_buffer_size;
 #else
@@ -1055,7 +1055,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 	uintn l1l2_hash_size;
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	l1l2_buffer_size = sizeof(l1l2_buffer);
 	result = spdm_calculate_l1l2(spdm_context, &l1l2_buffer_size,
 				     l1l2_buffer);
@@ -1091,7 +1091,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_asym_verify(
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,

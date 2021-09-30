@@ -2440,7 +2440,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2496,7 +2496,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2552,7 +2552,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2608,7 +2608,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2664,7 +2664,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2720,7 +2720,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2778,7 +2778,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2887,7 +2887,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -2940,7 +2940,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 		0, &number_of_blocks, NULL, NULL);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(number_of_blocks, 4);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -2998,7 +2998,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -3063,7 +3063,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -3122,7 +3122,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -3181,7 +3181,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -3240,7 +3240,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -3303,7 +3303,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 					      measurement_record);
 		if (SlotIDs[i] == ALTERNATIVE_DEFAULT_SLOT_ID) {
 			assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
@@ -3312,7 +3312,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 			assert_int_equal(status, RETURN_INVALID_PARAMETER);
 		} else {
 			assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
@@ -3375,7 +3375,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
 			SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
 			0, &number_of_blocks, NULL, NULL);
 		assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 				 0);
 #endif
@@ -3435,7 +3435,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -3496,7 +3496,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if RECORD_TRANSCRIPT_DATA
+// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
 // #endif
 	free(data);
@@ -3554,7 +3554,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if RECORD_TRANSCRIPT_DATA
+// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
 // #endif
 	free(data);
@@ -3612,7 +3612,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if RECORD_TRANSCRIPT_DATA
+// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	// assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
 // #endif
 	free(data);
@@ -3676,7 +3676,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 					      measurement_record);
 		// It may fail due to transcript.message_m overflow
 		if (status == RETURN_SUCCESS) {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				NumberOfMessages *
@@ -3689,7 +3689,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 					 sizeof(uint16)));
 #endif
 		} else {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);
@@ -3752,7 +3752,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -3817,7 +3817,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
 #endif
@@ -3877,7 +3877,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
@@ -3936,7 +3936,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
 #endif
@@ -3996,7 +3996,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 0);
 #endif
@@ -4058,7 +4058,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 ExpectedBufferSize);
 #endif
@@ -4117,7 +4117,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4180,7 +4180,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4245,7 +4245,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				      &measurement_record_length,
 				      measurement_record);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4307,7 +4307,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 		0, &number_of_block, &measurement_record_length,
 		measurement_record);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
@@ -4363,7 +4363,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
     status = spdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0, error_code);
 #endif

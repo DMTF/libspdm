@@ -675,7 +675,7 @@ void *spdm_assign_session_id(IN void *spdm_context, IN uint32 session_id,
 **/
 void *spdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates current TH data with message A and message K.
 
@@ -722,7 +722,7 @@ boolean spdm_calculate_th_hmac_for_exchange_rsp(
 	OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer);
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates current TH data with message A, message K and message F.
 

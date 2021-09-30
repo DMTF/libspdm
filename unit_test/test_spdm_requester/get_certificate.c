@@ -1147,7 +1147,7 @@ void test_spdm_requester_get_certificate_case1(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 	free(data);
@@ -1200,7 +1200,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 #endif
@@ -1209,7 +1209,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1264,7 +1264,7 @@ void test_spdm_requester_get_certificate_case3(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 	free(data);
@@ -1315,7 +1315,7 @@ void test_spdm_requester_get_certificate_case4(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 	free(data);
@@ -1366,7 +1366,7 @@ void test_spdm_requester_get_certificate_case5(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 	free(data);
@@ -1420,7 +1420,7 @@ void test_spdm_requester_get_certificate_case6(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1476,7 +1476,7 @@ void test_spdm_requester_get_certificate_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 	free(data);
@@ -1578,7 +1578,7 @@ void test_spdm_requester_get_certificate_case9(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1634,7 +1634,7 @@ void test_spdm_requester_get_certificate_case10(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1695,7 +1695,7 @@ void test_spdm_requester_get_certificate_case11(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1759,7 +1759,7 @@ void test_spdm_requester_get_certificate_case12(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1820,7 +1820,7 @@ void test_spdm_requester_get_certificate_case13(void **state)
 	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
 				      cert_chain);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
@@ -1886,7 +1886,7 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	// It may fail because the spdm does not support too many messages.
 	//assert_int_equal (status, RETURN_SUCCESS);
 	if (status == RETURN_SUCCESS) {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		assert_int_equal(
 			spdm_context->transcript.message_b.buffer_size,
 			sizeof(spdm_get_certificate_request_t) * count +
@@ -1951,7 +1951,7 @@ void test_spdm_requester_get_certificate_case15(void **state)
 	// It may fail because the spdm does not support too long message.
 	//assert_int_equal (status, RETURN_SUCCESS);
 	if (status == RETURN_SUCCESS) {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		assert_int_equal(
 			spdm_context->transcript.message_b.buffer_size,
 			sizeof(spdm_get_certificate_request_t) * count +
@@ -2008,7 +2008,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
     status = spdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     // assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
 #endif
