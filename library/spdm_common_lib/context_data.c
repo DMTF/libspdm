@@ -1215,10 +1215,16 @@ return_status spdm_append_message_f(IN void *context, IN void *session_info,
 		ASSERT (finished_key_ready);
 
 		if (!spdm_session_info->session_transcript.message_f_initialized) {
+			//
+			// digest_context_th might be NULL in unit test, where message_k is hardcoded.
+			// hmac_{rsp,req}_context_th might be NULL in real case, because
+			//   after finished_key_ready is generated, no one trigger spdm_append_message_k.
+			// trigger message_k to initialize by using zero length message_k, no impact to hash or HMAC.
+			//   only temp_message_k is appended.
+			//
 			if (spdm_session_info->session_transcript.digest_context_th == NULL ||
-          spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
-          spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
-				// trigger message_k to initialize.
+				spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
+				spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
 				spdm_append_message_k (context, session_info, is_requester, NULL, 0);
 			}
 
@@ -1248,6 +1254,7 @@ return_status spdm_append_message_f(IN void *context, IN void *session_info,
 
 			//
 			// It is first time call, backup current message_k context
+			// this backup will be used in reset_message_f.
 			//
 			ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
 			spdm_session_info->session_transcript.digest_context_th_backup = spdm_hash_new (
