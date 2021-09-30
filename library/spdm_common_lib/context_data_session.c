@@ -62,12 +62,12 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
 		spdm_context->local_context.psk_hint_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	session_info->session_transcript.message_k.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(session_info->session_transcript.message_k.buffer);
 	session_info->session_transcript.message_f.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(session_info->session_transcript.message_f.buffer);
 #else
 	session_info->session_transcript.temp_message_k.max_buffer_size =
-		MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE;
+		sizeof(session_info->session_transcript.temp_message_k.buffer);
 #endif
 }
 

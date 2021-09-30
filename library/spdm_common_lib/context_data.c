@@ -1489,18 +1489,18 @@ void spdm_init_context(IN void *context)
 	zero_mem(spdm_context, sizeof(spdm_context_t));
 	spdm_context->version = spdm_context_struct_VERSION;
 	spdm_context->transcript.message_a.max_buffer_size =
-		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_a.buffer);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_b.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_b.buffer);
 	spdm_context->transcript.message_c.max_buffer_size =
-		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_c.buffer);
 	spdm_context->transcript.message_mut_b.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_mut_b.buffer);
 	spdm_context->transcript.message_mut_c.max_buffer_size =
-		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_mut_c.buffer);
 	spdm_context->transcript.message_m.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(spdm_context->transcript.message_m.buffer);
 #endif
 	spdm_context->retry_times = MAX_SPDM_REQUEST_RETRY_TIMES;
 	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
@@ -1527,7 +1527,7 @@ void spdm_init_context(IN void *context)
 	spdm_context->local_context.secured_message_version.spdm_version[0]
 		.update_version_number = 0;
 	spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
-		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+		sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
 	secured_message_context = (void *)((uintn)(spdm_context + 1));
 	SecuredMessageContextSize = spdm_secured_message_get_context_size();
@@ -1571,7 +1571,8 @@ void spdm_reset_context(IN void *context)
 	spdm_context->last_spdm_request_session_id = INVALID_SESSION_ID;
 	spdm_context->last_spdm_request_session_id_valid = FALSE;
 	spdm_context->last_spdm_request_size = 0;
-	spdm_context->encap_context.certificate_chain_buffer.max_buffer_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+	spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
+		sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 	for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++)
 	{
 		spdm_session_info_init(spdm_context,
