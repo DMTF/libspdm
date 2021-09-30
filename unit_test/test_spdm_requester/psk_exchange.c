@@ -1528,7 +1528,7 @@ void test_spdm_requester_psk_exchange_case11(void **state)
 	spdm_context->local_context.psk_hint_size =
 		sizeof(TEST_PSK_HINT_STRING);
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -1553,7 +1553,7 @@ void test_spdm_requester_psk_exchange_case11(void **state)
 		spdm_secured_message_get_session_state(
 			spdm_context->session_info[0].secured_message_context),
 		SPDM_SESSION_STATE_HANDSHAKING);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);

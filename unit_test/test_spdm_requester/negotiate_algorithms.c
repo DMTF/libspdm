@@ -968,7 +968,7 @@ void test_spdm_requester_negotiate_algorithms_case1(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
@@ -992,7 +992,7 @@ void test_spdm_requester_negotiate_algorithms_case2(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size,
 			 sizeof(spdm_negotiate_algorithms_request_t) +
 				 sizeof(spdm_algorithms_response_t));
@@ -1018,7 +1018,7 @@ void test_spdm_requester_negotiate_algorithms_case3(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
@@ -1042,7 +1042,7 @@ void test_spdm_requester_negotiate_algorithms_case4(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
@@ -1066,7 +1066,7 @@ void test_spdm_requester_negotiate_algorithms_case5(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
@@ -1090,7 +1090,7 @@ void test_spdm_requester_negotiate_algorithms_case6(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size,
 			 sizeof(spdm_negotiate_algorithms_request_t) +
 				 sizeof(spdm_algorithms_response_t));
@@ -1118,7 +1118,7 @@ void test_spdm_requester_negotiate_algorithms_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
@@ -1163,7 +1163,7 @@ void test_spdm_requester_negotiate_algorithms_case9(void **state)
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if RECORD_TRANSCRIPT_DATA
+// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	//  assert_int_equal (spdm_context->transcript.message_a.buffer_size, sizeof(spdm_negotiate_algorithms_request_t) + sizeof(spdm_algorithms_response_t));
 // #endif
 }
@@ -1489,7 +1489,7 @@ void test_spdm_requester_negotiate_algorithms_case23(void **state) {
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SUCCESS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
   assert_int_equal (spdm_context->transcript.message_a.buffer_size, sizeof(spdm_negotiate_algorithms_request_t) + 4*sizeof(spdm_negotiate_algorithms_common_struct_table_t) + sizeof(spdm_algorithms_response_spdm11_t));
 #endif
 }

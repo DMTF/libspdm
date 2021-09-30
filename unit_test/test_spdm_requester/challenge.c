@@ -1001,7 +1001,7 @@ void test_spdm_requester_challenge_case1(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1123,7 +1123,7 @@ void test_spdm_requester_challenge_case3(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1178,7 +1178,7 @@ void test_spdm_requester_challenge_case4(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1233,7 +1233,7 @@ void test_spdm_requester_challenge_case5(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1343,7 +1343,7 @@ void test_spdm_requester_challenge_case7(void **state)
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1398,7 +1398,7 @@ void test_spdm_requester_challenge_case8(void **state)
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
 		measurement_hash);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
 #endif
 	free(data);
@@ -1496,7 +1496,7 @@ void test_spdm_requester_challenge_case10(void **state) {
   zero_mem (measurement_hash, sizeof(measurement_hash));
   status = spdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
   assert_int_equal (status, RETURN_UNSUPPORTED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
   assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
 #endif
   free(data);
@@ -1935,7 +1935,7 @@ void test_spdm_requester_challenge_case20(void **state) {
     status = spdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     // assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_c.buffer_size, 0, error_code);
 #endif

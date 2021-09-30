@@ -598,7 +598,7 @@ void spdm_reset_message_b(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_context->transcript.message_b);
 #else
 	if (spdm_context->transcript.digest_context_m1m2 != NULL) {
@@ -619,7 +619,7 @@ void spdm_reset_message_c(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_context->transcript.message_c);
 #else
 	if (spdm_context->transcript.digest_context_m1m2 != NULL) {
@@ -640,7 +640,7 @@ void spdm_reset_message_mut_b(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_context->transcript.message_mut_b);
 #else
 	if (spdm_context->transcript.digest_context_mut_m1m2 != NULL) {
@@ -661,7 +661,7 @@ void spdm_reset_message_mut_c(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_context->transcript.message_mut_c);
 #else
 	if (spdm_context->transcript.digest_context_mut_m1m2 != NULL) {
@@ -682,7 +682,7 @@ void spdm_reset_message_m(IN void *context)
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_context->transcript.message_m);
 #else
 	if (spdm_context->transcript.digest_context_l1l2 != NULL) {
@@ -704,7 +704,7 @@ void spdm_reset_message_k(IN void *context, IN void *session_info)
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_session_info->session_transcript.message_k);
 #else
 	{
@@ -762,7 +762,7 @@ void spdm_reset_message_f(IN void *context, IN void *session_info)
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	reset_managed_buffer(&spdm_session_info->session_transcript.message_f);
 #else
 	{
@@ -884,7 +884,7 @@ return_status spdm_append_message_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(&spdm_context->transcript.message_b,
 				     message, message_size);
 #else
@@ -920,7 +920,7 @@ return_status spdm_append_message_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(&spdm_context->transcript.message_c,
 				     message, message_size);
 #else
@@ -956,7 +956,7 @@ return_status spdm_append_message_mut_b(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(&spdm_context->transcript.message_mut_b,
 				     message, message_size);
 #else
@@ -988,7 +988,7 @@ return_status spdm_append_message_mut_c(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(&spdm_context->transcript.message_mut_c,
 				     message, message_size);
 #else
@@ -1020,7 +1020,7 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
 	spdm_context_t *spdm_context;
 
 	spdm_context = context;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(&spdm_context->transcript.message_m,
 				     message, message_size);
 #else
@@ -1054,7 +1054,7 @@ return_status spdm_append_message_k(IN void *context, IN void *session_info,
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(
 		&spdm_session_info->session_transcript.message_k, message,
 		message_size);
@@ -1187,7 +1187,7 @@ return_status spdm_append_message_f(IN void *context, IN void *session_info,
 	spdm_session_info_t *spdm_session_info;
 
 	spdm_session_info = session_info;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return append_managed_buffer(
 		&spdm_session_info->session_transcript.message_f, message,
 		message_size);
@@ -1490,7 +1490,7 @@ void spdm_init_context(IN void *context)
 	spdm_context->version = spdm_context_struct_VERSION;
 	spdm_context->transcript.message_a.max_buffer_size =
 		MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_b.max_buffer_size =
 		MAX_SPDM_MESSAGE_BUFFER_SIZE;
 	spdm_context->transcript.message_c.max_buffer_size =

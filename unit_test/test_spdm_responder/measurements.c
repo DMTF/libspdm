@@ -140,7 +140,7 @@ void test_spdm_responder_measurements_case1(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->header.param1,
 			 MEASUREMENT_BLOCK_NUMBER);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request1_size +
 				 sizeof(spdm_measurements_response_t) +
@@ -195,7 +195,7 @@ void test_spdm_responder_measurements_case2(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -248,7 +248,7 @@ void test_spdm_responder_measurements_case3(void **state)
 	assert_int_equal(spdm_response->header.param2, 0);
 	assert_int_equal(spdm_context->response_state,
 			 SPDM_RESPONSE_STATE_BUSY);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -302,7 +302,7 @@ void test_spdm_responder_measurements_case4(void **state)
 	assert_int_equal(spdm_response->header.param2, 0);
 	assert_int_equal(spdm_context->response_state,
 			 SPDM_RESPONSE_STATE_NEED_RESYNC);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -362,7 +362,7 @@ void test_spdm_responder_measurements_case5(void **state)
 	assert_int_equal(spdm_context->response_state,
 			 SPDM_RESPONSE_STATE_NOT_READY);
 	assert_int_equal(error_data->request_code, SPDM_GET_MEASUREMENTS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -415,7 +415,7 @@ void test_spdm_responder_measurements_case6(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -469,7 +469,7 @@ void test_spdm_responder_measurements_case7(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->header.param1,
 			 MEASUREMENT_BLOCK_NUMBER);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -524,7 +524,7 @@ void test_spdm_responder_measurements_case8(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_MEASUREMENTS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -575,7 +575,7 @@ void test_spdm_responder_measurements_case9(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -628,7 +628,7 @@ void test_spdm_responder_measurements_case10(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_MEASUREMENTS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request6_size +
 				 sizeof(spdm_measurements_response_t) +
@@ -695,7 +695,7 @@ void test_spdm_responder_measurements_case11(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->number_of_blocks,
 			 MEASUREMENT_BLOCK_NUMBER);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -753,7 +753,7 @@ void test_spdm_responder_measurements_case12(void **state)
 			 SPDM_MEASUREMENTS);
 	assert_int_equal(spdm_response->number_of_blocks,
 			 MEASUREMENT_BLOCK_NUMBER);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 m_spdm_get_measurements_request7_size +
 				 sizeof(spdm_measurements_response_t) +
@@ -830,7 +830,7 @@ void test_spdm_responder_measurements_case13(void **state)
 		assert_int_equal(spdm_response->header.param1,
 				 SPDM_ERROR_CODE_INVALID_REQUEST);
 		assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 				 0);
 #endif
@@ -900,7 +900,7 @@ void test_spdm_responder_measurements_case14(void **state)
 		assert_int_equal(spdm_response->header.param1,
 				 SPDM_ERROR_CODE_INVALID_REQUEST);
 		assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 				 0);
 #endif
@@ -957,7 +957,7 @@ void test_spdm_responder_measurements_case15(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1010,7 +1010,7 @@ void test_spdm_responder_measurements_case16(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1066,7 +1066,7 @@ void test_spdm_responder_measurements_case17(void **state)
 	assert_int_equal(
 		spdm_response->header.param2,
 		m_spdm_get_measurements_request10.header.request_response_code);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1135,7 +1135,7 @@ void test_spdm_responder_measurements_case18(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_MEASUREMENTS);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	assert_int_equal(m_spdm_get_measurements_request11.SlotIDParam,
@@ -1194,7 +1194,7 @@ void test_spdm_responder_measurements_case19(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1248,7 +1248,7 @@ void test_spdm_responder_measurements_case20(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1300,7 +1300,7 @@ void test_spdm_responder_measurements_case21(void **state)
 	assert_int_equal(spdm_response->header.param1,
 			 SPDM_ERROR_CODE_INVALID_REQUEST);
 	assert_int_equal(spdm_response->header.param2, 0);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1364,7 +1364,7 @@ void test_spdm_responder_measurements_case22(void **state)
 					spdm_get_measurement_hash_size(
 						m_use_measurement_hash_algo) + SPDM_NONCE_SIZE +
 					sizeof(uint16));
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				NumberOfMessages *
@@ -1379,7 +1379,7 @@ void test_spdm_responder_measurements_case22(void **state)
 			assert_int_equal(
 				spdm_response->header.request_response_code,
 				SPDM_ERROR);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 			assert_int_equal(
 				spdm_context->transcript.message_m.buffer_size,
 				0);

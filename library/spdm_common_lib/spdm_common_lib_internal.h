@@ -150,7 +150,7 @@ typedef struct {
 typedef struct {
 	// the message_a must be plan text because we do not know the algorithm yet.
 	small_managed_buffer_t message_a;
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	large_managed_buffer_t message_b;
 	small_managed_buffer_t message_c;
 	large_managed_buffer_t message_mut_b;
@@ -214,7 +214,7 @@ typedef struct {
 	// F  = Concatenate (PSK_FINISH request, PSK_FINISH response)
 	//
 typedef struct {
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	large_managed_buffer_t message_k;
 	large_managed_buffer_t message_f;
 #else
@@ -476,7 +476,7 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 				    IN uint32 requester_capabilities_flag,
 				    IN uint32 responder_capabilities_flag);
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates m1m2.
 
@@ -506,7 +506,7 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
 			    OUT void *m1m2_hash);
 #endif
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
   This function calculates l1l2.
 

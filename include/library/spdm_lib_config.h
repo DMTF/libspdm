@@ -27,7 +27,7 @@
 #define MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM 4
 
 // If cache transcript data or transcript hash
-//#define RECORD_TRANSCRIPT_DATA 1
+#define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
 
 //
 // Crypto Configuation

@@ -568,7 +568,7 @@ void test_spdm_responder_end_session_case7(void **state)
 	spdm_secured_message_set_session_state(
 		session_info->secured_message_context,
 		SPDM_SESSION_STATE_ESTABLISHED);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -591,7 +591,7 @@ void test_spdm_responder_end_session_case7(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_END_SESSION_ACK);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);

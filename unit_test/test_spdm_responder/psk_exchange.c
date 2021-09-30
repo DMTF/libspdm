@@ -104,7 +104,7 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	ptr += m_spdm_psk_exchange_request1.context_length;
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_psk_exchange_req_size, ptr);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
 #endif
@@ -122,7 +122,7 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_PSK_EXCHANGE_RSP);
 	assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 					0);
 #endif
@@ -634,7 +634,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 		spdm_context, &opaque_psk_exchange_req_size, ptr);
 	ptr += opaque_psk_exchange_req_size;
 
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 							spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -659,7 +659,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_response = (void *)response;
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_PSK_EXCHANGE_RSP);
-#if RECORD_TRANSCRIPT_DATA
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
