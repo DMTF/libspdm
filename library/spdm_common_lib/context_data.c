@@ -1122,12 +1122,19 @@ return_status spdm_append_message_k(IN void *context, IN void *session_info,
 		spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
 			spdm_session_info->session_transcript.digest_context_th, message, message_size);
 		if (!finished_key_ready) {
+			//
+			// append message only if finished_key is NOT ready.
+			//
 			append_managed_buffer(
 				&spdm_session_info->session_transcript.temp_message_k, message, message_size);
 		}
 
 		//
-		// append message only if finished_key is NOT ready.
+		// Above action is to calculate HASH for message_k.
+		// However, we cannot use similar way to calculate HMAC. (chicken-egg problem)
+		// HMAC need finished_key, and finished_key calculation need message_k.
+		// If the finished_key is NOT ready, then we cannot calculate HMAC. We have to cache to temp_message_k and stop here.
+		// If the finished_key is ready, then we can start calculating HMAC. No need to cache temp_message_k.
 		//
 		if (!finished_key_ready) {
 			return RETURN_SUCCESS;
