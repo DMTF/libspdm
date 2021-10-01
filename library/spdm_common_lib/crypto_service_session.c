@@ -304,9 +304,12 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -452,9 +455,12 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, calc_hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -595,9 +601,12 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_request_finished_key(
+	result = spdm_hmac_all_with_request_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, calc_hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -770,9 +779,12 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_request_finished_key(
+	result = spdm_hmac_all_with_request_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -839,9 +851,12 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -907,9 +922,12 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, calc_hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -955,9 +973,12 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -1001,9 +1022,12 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_response_finished_key(
+	result = spdm_hmac_all_with_response_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, calc_hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -1050,9 +1074,12 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_request_finished_key(
+	result = spdm_hmac_all_with_request_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, calc_hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "th_curr hmac - "));
 	internal_dump_data(calc_hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -1095,9 +1122,12 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	spdm_hmac_all_with_request_finished_key(
+	result = spdm_hmac_all_with_request_finished_key(
 		session_info->secured_message_context, th_curr_data,
 		th_curr_data_size, hmac_data);
+	if (!result) {
+		return FALSE;
+	}
 	DEBUG((DEBUG_INFO, "Calc th_curr hmac - "));
 	internal_dump_data(hmac_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
