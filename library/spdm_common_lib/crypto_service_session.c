@@ -489,11 +489,13 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_responder_data_sign(
+		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
 	result = spdm_responder_data_sign(
+		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		TRUE, hash_data, hash_size, signature, &signature_size);
@@ -657,11 +659,13 @@ boolean spdm_verify_key_exchange_rsp_signature(
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_asym_verify(
+		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 #else
 	result = spdm_asym_verify_hash(
+		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		hash_data, hash_size, sign_data, sign_data_size);
@@ -818,11 +822,13 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_requester_data_sign(
+		spdm_context->connection_info.version, SPDM_FINISH,
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
 	result = spdm_requester_data_sign(
+		spdm_context->connection_info.version, SPDM_FINISH,
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		TRUE, hash_data, hash_size, signature, &signature_size);
@@ -1015,11 +1021,13 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_req_asym_verify(
+		spdm_context->connection_info.version, SPDM_FINISH,
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 #else
 	result = spdm_req_asym_verify_hash(
+		spdm_context->connection_info.version, SPDM_FINISH,
 		spdm_context->connection_info.algorithm.req_base_asym_alg,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		hash_data, hash_size, sign_data, sign_data_size);

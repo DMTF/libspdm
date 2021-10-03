@@ -752,7 +752,9 @@ void spdm_asym_free(IN uint32 base_asym_algo, IN void *context);
   @retval  TRUE   Valid asymmetric signature.
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
-boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+boolean spdm_asym_verify(
+			 IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			 IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 			 IN void *context, IN const uint8 *message,
 			 IN uintn message_size, IN const uint8 *signature,
 			 IN uintn sig_size);
@@ -772,7 +774,9 @@ boolean spdm_asym_verify(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
   @retval  TRUE   Valid asymmetric signature.
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
-boolean spdm_asym_verify_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+boolean spdm_asym_verify_hash(
+			 IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			 IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 			 IN void *context, IN const uint8 *message_hash,
 			 IN uintn hash_size, IN const uint8 *signature,
 			 IN uintn sig_size);
@@ -815,7 +819,9 @@ boolean spdm_asym_get_private_key_from_pem(IN uint32 base_asym_algo,
   @retval  FALSE  signature generation failed.
   @retval  FALSE  sig_size is too small.
 **/
-boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+boolean spdm_asym_sign(
+		       IN spdm_version_number_t spdm_version, IN uint8 op_code,
+		       IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 		       IN void *context, IN const uint8 *message,
 		       IN uintn message_size, OUT uint8 *signature,
 		       IN OUT uintn *sig_size);
@@ -839,7 +845,9 @@ boolean spdm_asym_sign(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
   @retval  FALSE  signature generation failed.
   @retval  FALSE  sig_size is too small.
 **/
-boolean spdm_asym_sign_hash(IN uint32 base_asym_algo, IN uint32 base_hash_algo,
+boolean spdm_asym_sign_hash(
+		       IN spdm_version_number_t spdm_version, IN uint8 op_code,
+		       IN uint32 base_asym_algo, IN uint32 base_hash_algo,
 		       IN void *context, IN const uint8 *message_hash,
 		       IN uintn hash_size, OUT uint8 *signature,
 		       IN OUT uintn *sig_size);
@@ -895,7 +903,9 @@ void spdm_req_asym_free(IN uint16 req_base_asym_alg, IN void *context);
   @retval  TRUE   Valid asymmetric signature.
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
-boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
+boolean spdm_req_asym_verify(
+			     IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			     IN uint16 req_base_asym_alg,
 			     IN uint32 base_hash_algo, IN void *context,
 			     IN const uint8 *message, IN uintn message_size,
 			     IN const uint8 *signature, IN uintn sig_size);
@@ -915,7 +925,9 @@ boolean spdm_req_asym_verify(IN uint16 req_base_asym_alg,
   @retval  TRUE   Valid asymmetric signature.
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
-boolean spdm_req_asym_verify_hash(IN uint16 req_base_asym_alg,
+boolean spdm_req_asym_verify_hash(
+			     IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			     IN uint16 req_base_asym_alg,
 			     IN uint32 base_hash_algo, IN void *context,
 			     IN const uint8 *message_hash, IN uintn hash_size,
 			     IN const uint8 *signature, IN uintn sig_size);
@@ -958,7 +970,9 @@ boolean spdm_req_asym_get_private_key_from_pem(IN uint16 req_base_asym_alg,
   @retval  FALSE  signature generation failed.
   @retval  FALSE  sig_size is too small.
 **/
-boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
+boolean spdm_req_asym_sign(
+			   IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			   IN uint16 req_base_asym_alg,
 			   IN uint32 base_hash_algo, IN void *context,
 			   IN const uint8 *message, IN uintn message_size,
 			   OUT uint8 *signature, IN OUT uintn *sig_size);
@@ -982,7 +996,9 @@ boolean spdm_req_asym_sign(IN uint16 req_base_asym_alg,
   @retval  FALSE  signature generation failed.
   @retval  FALSE  sig_size is too small.
 **/
-boolean spdm_req_asym_sign_hash(IN uint16 req_base_asym_alg,
+boolean spdm_req_asym_sign_hash(
+			   IN spdm_version_number_t spdm_version, IN uint8 op_code,
+			   IN uint16 req_base_asym_alg,
 			   IN uint32 base_hash_algo, IN void *context,
 			   IN const uint8 *message_hash, IN uintn hash_size,
 			   OUT uint8 *signature, IN OUT uintn *sig_size);
@@ -1110,7 +1126,8 @@ uint32 spdm_get_aead_tag_size(IN uint16 aead_cipher_suite);
   @retval TRUE   AEAD authenticated encryption succeeded.
   @retval FALSE  AEAD authenticated encryption failed.
 **/
-boolean spdm_aead_encryption(IN uint16 aead_cipher_suite, IN const uint8 *key,
+boolean spdm_aead_encryption(IN spdm_version_number_t secured_message_version,
+			     IN uint16 aead_cipher_suite, IN const uint8 *key,
 			     IN uintn key_size, IN const uint8 *iv,
 			     IN uintn iv_size, IN const uint8 *a_data,
 			     IN uintn a_data_size, IN const uint8 *data_in,
@@ -1139,7 +1156,8 @@ boolean spdm_aead_encryption(IN uint16 aead_cipher_suite, IN const uint8 *key,
   @retval TRUE   AEAD authenticated decryption succeeded.
   @retval FALSE  AEAD authenticated decryption failed.
 **/
-boolean spdm_aead_decryption(IN uint16 aead_cipher_suite, IN const uint8 *key,
+boolean spdm_aead_decryption(IN spdm_version_number_t secured_message_version,
+			     IN uint16 aead_cipher_suite, IN const uint8 *key,
 			     IN uintn key_size, IN const uint8 *iv,
 			     IN uintn iv_size, IN const uint8 *a_data,
 			     IN uintn a_data_size, IN const uint8 *data_in,
