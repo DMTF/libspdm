@@ -1037,6 +1037,16 @@ return_status spdm_append_message_m(IN void *context, IN void *message,
 			spdm_context->connection_info.algorithm.base_hash_algo);
 		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
 			spdm_context->transcript.digest_context_l1l2);
+		if ((spdm_context->connection_info.version.major_version >= 1) ||
+			(spdm_context->connection_info.version.minor_version >= 2)) {
+			//
+			// Need append VCA since 1.2 script
+			//
+			spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_context->transcript.digest_context_m1m2,
+				get_managed_buffer(&spdm_context->transcript.message_a),
+				get_managed_buffer_size(&spdm_context->transcript.message_a));
+		}
 	}
 	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
 		spdm_context->transcript.digest_context_l1l2, message, message_size) ?

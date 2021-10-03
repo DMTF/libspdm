@@ -108,6 +108,11 @@ typedef struct {
 	uint16 major_version : 4;
 } spdm_version_number_t;
 
+#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.2.0"
+#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) - 1)
+
+#define SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE 100
+
 ///
 /// SPDM GET_CAPABILITIES request
 ///
@@ -433,6 +438,11 @@ typedef struct {
 
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
 
+#define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT "\0\0\0\0responder-challenge_auth signing"
+#define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
+#define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT "\0\0\0\0requester-challenge_auth signing"
+#define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
+
 ///
 /// SPDM GET_MEASUREMENTS request
 ///
@@ -522,6 +532,9 @@ typedef struct {
 	//uint8                opaque_data[opaque_length];
 	//uint8                signature[key_size];
 } spdm_measurements_response_t;
+
+#define SPDM_MEASUREMENTS_SIGN_CONTEXT "\0\0\0\0\0\0responder-measurements signing"
+#define SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE (sizeof(SPDM_MEASUREMENTS_SIGN_CONTEXT) - 1)
 
 ///
 /// SPDM ERROR response
@@ -660,6 +673,9 @@ typedef struct {
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST BIT1
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS BIT2
 
+#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT "\0\0responder-key_exchange_rsp signing"
+#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE (sizeof(SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT) - 1)
+
 ///
 /// SPDM FINISH request
 ///
@@ -685,6 +701,9 @@ typedef struct {
 	// param2 == RSVD
 	//uint8                verify_data[H];
 } spdm_finish_response_t;
+
+#define SPDM_FINISH_SIGN_CONTEXT "\0\0\0\0\0\0\0\0\0\0\0\0requester-finish signing"
+#define SPDM_FINISH_SIGN_CONTEXT_SIZE (sizeof(SPDM_FINISH_SIGN_CONTEXT) - 1)
 
 ///
 /// SPDM PSK_EXCHANGE request
