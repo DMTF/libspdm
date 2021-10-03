@@ -244,6 +244,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str1, bin_str1_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_handshake_secret_hkdf_expand(
+			secured_message_context->version,
 			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str1,
@@ -278,6 +279,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str2, bin_str2_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_handshake_secret_hkdf_expand(
+			secured_message_context->version,
 			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str2,
@@ -413,6 +415,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str3, bin_str3_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
+			secured_message_context->version,
 			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str3,
@@ -447,6 +450,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str4, bin_str4_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
+			secured_message_context->version,
 			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str4,
@@ -482,6 +486,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	internal_dump_hex(bin_str8, bin_str8_size);
 	if (secured_message_context->use_psk) {
 		ret_val = spdm_psk_master_secret_hkdf_expand(
+			secured_message_context->version,
 			secured_message_context->base_hash_algo,
 			secured_message_context->psk_hint,
 			secured_message_context->psk_hint_size, bin_str8,

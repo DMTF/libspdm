@@ -52,6 +52,8 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
 		session_info->secured_message_context, session_type);
 	spdm_secured_message_set_algorithms(
 		session_info->secured_message_context,
+		spdm_context->connection_info.version,
+		spdm_context->connection_info.secured_message_version,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		spdm_context->connection_info.algorithm.aead_cipher_suite,

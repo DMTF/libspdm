@@ -620,6 +620,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 				.req_base_asym_alg);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_requester_data_sign(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -627,6 +628,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 			&signature_size);
 #else
 		result = spdm_requester_data_sign(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -638,12 +640,14 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 			spdm_context->connection_info.algorithm.base_asym_algo);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_responder_data_sign(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			FALSE, m1m2_buffer, m1m2_buffer_size, signature,
 			&signature_size);
 #else
 		result = spdm_responder_data_sign(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			TRUE, m1m2_hash, m1m2_hash_size, signature,
@@ -772,12 +776,14 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_asym_verify(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			context, m1m2_buffer, m1m2_buffer_size, sign_data,
 			sign_data_size);
 #else
 		result = spdm_asym_verify_hash(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm.base_asym_algo,
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			context, m1m2_hash, m1m2_hash_size, sign_data,
@@ -797,6 +803,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 		result = spdm_req_asym_verify(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -804,6 +811,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 			sign_data_size);
 #else
 		result = spdm_req_asym_verify_hash(
+			spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
 			spdm_context->connection_info.algorithm
 				.req_base_asym_alg,
 			spdm_context->connection_info.algorithm.base_hash_algo,
@@ -903,6 +911,7 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 		// get all measurement data
 		device_measurement_size = sizeof(device_measurement);
 		ret = spdm_measurement_collection(
+			spdm_context->connection_info.version,
 			spdm_context->connection_info.algorithm.measurement_spec,
 			spdm_context->connection_info.algorithm
 				.measurement_hash_algo,
@@ -1032,11 +1041,13 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 		spdm_context->connection_info.algorithm.base_asym_algo);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_responder_data_sign(
+		spdm_context->connection_info.version, SPDM_MEASUREMENTS,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		FALSE, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
 #else
 	result = spdm_responder_data_sign(
+		spdm_context->connection_info.version, SPDM_MEASUREMENTS,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo,
 		TRUE, l1l2_hash, l1l2_hash_size, signature, &signature_size);
@@ -1110,11 +1121,13 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	result = spdm_asym_verify(
+		spdm_context->connection_info.version, SPDM_MEASUREMENTS,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		l1l2_buffer, l1l2_buffer_size, sign_data, sign_data_size);
 #else
 	result = spdm_asym_verify_hash(
+		spdm_context->connection_info.version, SPDM_MEASUREMENTS,
 		spdm_context->connection_info.algorithm.base_asym_algo,
 		spdm_context->connection_info.algorithm.base_hash_algo, context,
 		l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);

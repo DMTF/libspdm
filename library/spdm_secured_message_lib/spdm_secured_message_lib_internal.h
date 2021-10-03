@@ -42,6 +42,8 @@ typedef struct {
 
 typedef struct {
 	spdm_session_type_t session_type;
+	spdm_version_number_t version;
+	spdm_version_number_t secured_message_version;
 	uint32 base_hash_algo;
 	uint16 dhe_named_group;
 	uint16 aead_cipher_suite;

@@ -227,6 +227,7 @@ return_status spdm_encode_secured_message(
 		      cipher_text_size;
 
 		result = spdm_aead_encryption(
+			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
 			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
 			record_header_size, dec_msg, cipher_text_size, tag,
@@ -259,6 +260,7 @@ return_status spdm_encode_secured_message(
 		      app_message_size;
 
 		result = spdm_aead_encryption(
+			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
 			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
 			record_header_size + app_message_size, NULL, 0, tag,
@@ -497,6 +499,7 @@ return_status spdm_decode_secured_message(
 		tag = (uint8 *)record_header1 + record_header_size +
 		      cipher_text_size;
 		result = spdm_aead_decryption(
+			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
 			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
 			record_header_size, enc_msg, cipher_text_size, tag,
@@ -559,6 +562,7 @@ return_status spdm_decode_secured_message(
 		tag = (uint8 *)record_header1 + record_header_size +
 		      record_header2->length - aead_tag_size;
 		result = spdm_aead_decryption(
+			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
 			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
 			record_header_size + record_header2->length -

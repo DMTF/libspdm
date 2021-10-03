@@ -240,6 +240,7 @@ return_status spdm_get_response_measurements(IN void *context,
 
 	device_measurement_size = sizeof(device_measurement);
 	ret = spdm_measurement_collection(
+		spdm_context->connection_info.version,
 		spdm_context->connection_info.algorithm.measurement_spec,
 		spdm_context->connection_info.algorithm.measurement_hash_algo,
 		&device_measurement_count, device_measurement,
