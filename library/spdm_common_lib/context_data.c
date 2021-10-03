@@ -104,16 +104,14 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
-			spdm_context->connection_info.secured_message_version
-				.spdm_version_count = (uint8)(
-				data_size / sizeof(spdm_version_number_t));
-			copy_mem(spdm_context->connection_info
-					 .secured_message_version.spdm_version,
+			if ((uint8)(data_size /sizeof(spdm_version_number_t)) != 1) {
+				/* Only have one connected version */
+				return RETURN_INVALID_PARAMETER;
+			}
+			copy_mem(
+				 &(spdm_context->connection_info.secured_message_version),
 				 data,
-				 spdm_context->connection_info
-						 .secured_message_version
-						 .spdm_version_count *
-					 sizeof(spdm_version_number_t));
+				 sizeof(spdm_version_number_t));
 		} else {
 			spdm_context->local_context.secured_message_version
 				.spdm_version_count = (uint8)(
@@ -455,12 +453,9 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size =
-			spdm_context->connection_info.secured_message_version
-				.spdm_version_count *
-			sizeof(spdm_version_number_t);
-		target_data = spdm_context->connection_info
-				      .secured_message_version.spdm_version;
+		target_data_size = sizeof(spdm_version_number_t);
+		target_data =
+			&(spdm_context->connection_info.secured_message_version);
 		break;
 	case SPDM_DATA_CAPABILITY_FLAGS:
 		target_data_size = sizeof(uint32);

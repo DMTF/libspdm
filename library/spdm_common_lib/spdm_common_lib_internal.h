@@ -93,7 +93,7 @@ typedef struct {
 	spdm_version_number_t version;
 	spdm_device_capability_t capability;
 	spdm_device_algorithm_t algorithm;
-	spdm_device_version_t secured_message_version;
+	spdm_version_number_t secured_message_version;
 	//
 	// Peer CertificateChain
 	//
