@@ -375,6 +375,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 {
 	spdm_test_context_t *spdm_test_context;
 	return_status status;
+	spdm_version_number_t spdm_version = {0, 0, 0, 1};
 
 	spdm_test_context = get_spdm_test_context();
 	switch (spdm_test_context->case_id) {
@@ -452,7 +453,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -535,7 +537,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -670,7 +673,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			internal_dump_hex(m_local_buffer, m_local_buffer_size);
 			sig_size =
 				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
+			spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+						 m_use_asym_algo,
 						 m_use_hash_algo,
 						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
@@ -820,7 +824,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			internal_dump_hex(m_local_buffer, m_local_buffer_size);
 			sig_size =
 				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
+			spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+						 m_use_asym_algo,
 						 m_use_hash_algo,
 						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
@@ -1195,7 +1200,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -1278,7 +1284,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -1817,7 +1824,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -1909,7 +1917,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -2001,7 +2010,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -2091,7 +2101,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_MEASUREMENTS,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;

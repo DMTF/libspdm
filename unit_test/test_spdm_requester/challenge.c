@@ -95,6 +95,7 @@ return_status spdm_requester_challenge_test_receive_message(
 	IN OUT void *response, IN uint64 timeout)
 {
 	spdm_test_context_t *spdm_test_context;
+	spdm_version_number_t spdm_version = {0, 0, 0, 1};
 
 	spdm_test_context = get_spdm_test_context();
 	switch (spdm_test_context->case_id) {
@@ -165,7 +166,8 @@ return_status spdm_requester_challenge_test_receive_message(
 		       spdm_get_hash_size(m_use_hash_algo)));
 		internal_dump_hex(m_local_buffer, m_local_buffer_size);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_CHALLENGE_AUTH,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -235,7 +237,8 @@ return_status spdm_requester_challenge_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, m_local_buffer,
 			      m_local_buffer_size, hash_data);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_CHALLENGE_AUTH,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, m_local_buffer, m_local_buffer_size,
 					 ptr, &sig_size);
 		ptr += sig_size;
@@ -358,7 +361,8 @@ return_status spdm_requester_challenge_test_receive_message(
 				      m_local_buffer_size, hash_data);
 			sig_size =
 				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
+			spdm_responder_data_sign(spdm_version, SPDM_CHALLENGE_AUTH,
+						 m_use_asym_algo,
 						 m_use_hash_algo,
 						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
@@ -495,7 +499,8 @@ return_status spdm_requester_challenge_test_receive_message(
 				      m_local_buffer_size, hash_data);
 			sig_size =
 				spdm_get_asym_signature_size(m_use_asym_algo);
-			spdm_responder_data_sign(m_use_asym_algo,
+			spdm_responder_data_sign(spdm_version, SPDM_CHALLENGE_AUTH,
+						 m_use_asym_algo,
 						 m_use_hash_algo,
 						 FALSE, m_local_buffer,
 						 m_local_buffer_size, ptr,
@@ -551,7 +556,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -617,7 +623,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -666,7 +673,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -715,7 +723,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -764,7 +773,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -815,7 +825,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -865,7 +876,8 @@ return_status spdm_requester_challenge_test_receive_message(
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     spdm_hash_all (m_use_hash_algo, hash_data, spdm_get_hash_size (m_use_hash_algo), hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, hash_data, spdm_get_hash_size (m_use_hash_algo), Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, hash_data, spdm_get_hash_size (m_use_hash_algo), Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
@@ -914,7 +926,8 @@ return_status spdm_requester_challenge_test_receive_message(
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
     sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
-    spdm_responder_data_sign (m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+					m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
     Ptr += sig_size;
 
     spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
