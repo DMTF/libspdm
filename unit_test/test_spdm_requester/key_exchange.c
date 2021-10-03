@@ -176,6 +176,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 	IN OUT void *response, IN uint64 timeout)
 {
 	spdm_test_context_t *spdm_test_context;
+	spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
 	spdm_test_context = get_spdm_test_context();
 	switch (spdm_test_context->case_id) {
@@ -288,7 +289,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
@@ -438,7 +440,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);
@@ -645,7 +648,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				      get_managed_buffer_size(&th_curr),
 				      hash_data);
 			free(data);
-			spdm_responder_data_sign(
+			spdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
 				m_use_asym_algo, m_use_hash_algo,
 				FALSE, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr), ptr,
@@ -873,7 +876,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				      get_managed_buffer_size(&th_curr),
 				      hash_data);
 			free(data);
-			spdm_responder_data_sign(
+			spdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
 				m_use_asym_algo, m_use_hash_algo,
 				FALSE, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr), ptr,
@@ -1059,7 +1062,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr), hash_data);
 		free(data);
-		spdm_responder_data_sign(m_use_asym_algo, m_use_hash_algo,
+		spdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+					 m_use_asym_algo, m_use_hash_algo,
 					 FALSE, get_managed_buffer(&th_curr),
 					 get_managed_buffer_size(&th_curr), ptr,
 					 &signature_size);

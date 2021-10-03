@@ -165,6 +165,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 	IN OUT void *response, IN uint64 timeout)
 {
 	spdm_test_context_t *spdm_test_context;
+	spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
 	spdm_test_context = get_spdm_test_context();
 	switch (spdm_test_context->case_id) {
@@ -263,7 +264,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 			 sizeof(TEST_PSK_HINT_STRING));
-		spdm_psk_handshake_secret_hkdf_expand(
+		spdm_psk_handshake_secret_hkdf_expand(spdm_version,
 			m_use_hash_algo, m_local_psk_hint,
 			sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
 			response_handshake_secret, hash_size);
@@ -378,7 +379,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 			 sizeof(TEST_PSK_HINT_STRING));
-		spdm_psk_handshake_secret_hkdf_expand(
+		spdm_psk_handshake_secret_hkdf_expand(spdm_version,
 			m_use_hash_algo, m_local_psk_hint,
 			sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
 			response_handshake_secret, hash_size);
@@ -550,7 +551,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			zero_mem(m_local_psk_hint, 32);
 			copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 				 sizeof(TEST_PSK_HINT_STRING));
-			spdm_psk_handshake_secret_hkdf_expand(
+			spdm_psk_handshake_secret_hkdf_expand(spdm_version,
 				m_use_hash_algo, m_local_psk_hint,
 				sizeof(TEST_PSK_HINT_STRING), bin_str2,
 				bin_str2_size, response_handshake_secret,
@@ -739,7 +740,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			zero_mem(m_local_psk_hint, 32);
 			copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 				 sizeof(TEST_PSK_HINT_STRING));
-			spdm_psk_handshake_secret_hkdf_expand(
+			spdm_psk_handshake_secret_hkdf_expand(spdm_version,
 				m_use_hash_algo, m_local_psk_hint,
 				sizeof(TEST_PSK_HINT_STRING), bin_str2,
 				bin_str2_size, response_handshake_secret,
@@ -887,7 +888,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 			 sizeof(TEST_PSK_HINT_STRING));
-		spdm_psk_handshake_secret_hkdf_expand(
+		spdm_psk_handshake_secret_hkdf_expand(spdm_version,
 			m_use_hash_algo, m_local_psk_hint,
 			sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
 			response_handshake_secret, hash_size);
