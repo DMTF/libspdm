@@ -337,38 +337,72 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
 	spdm_session_info_t *spdm_session_info;
 	uint32 hash_size;
 	uint8 hash_data[MAX_HASH_SIZE];
+	large_managed_buffer_t l1l2;
 
 	spdm_context = context;
 	spdm_session_info = session_info;
 
+	init_managed_buffer(&l1l2, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
-	if (spdm_session_info == NULL) {
-		*l1l2_buffer_size =
-			get_managed_buffer_size(&spdm_context->transcript.message_m);
-		copy_mem(l1l2_buffer,
-			get_managed_buffer(&spdm_context->transcript.message_m),
-			*l1l2_buffer_size);
-	} else {
-		DEBUG((DEBUG_INFO, "use message_m in session :\n"));
-		*l1l2_buffer_size =
-			get_managed_buffer_size(&spdm_session_info->session_transcript.message_m);
-		copy_mem(l1l2_buffer,
-			get_managed_buffer(&spdm_session_info->session_transcript.message_m),
-			*l1l2_buffer_size);
+	if ((spdm_context->connection_info.version.major_version >= 1) ||
+		(spdm_context->connection_info.version.minor_version >= 2)) {
+		//
+		// Need append VCA since 1.2 script
+		//
+		DEBUG((DEBUG_INFO, "message_a data :\n"));
+		internal_dump_hex(
+			get_managed_buffer(&spdm_context->transcript.message_a),
+			get_managed_buffer_size(
+				&spdm_context->transcript.message_a));
+		status = append_managed_buffer(
+			&l1l2,
+			get_managed_buffer(&spdm_context->transcript.message_a),
+			get_managed_buffer_size(
+				&spdm_context->transcript.message_a));
+		if (RETURN_ERROR(status)) {
+			return FALSE;
+		}
 	}
 
-	DEBUG((DEBUG_INFO, "message_m data :\n"));
-	internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
+	if (spdm_session_info == NULL) {
+		DEBUG((DEBUG_INFO, "message_m data :\n"));
+		internal_dump_hex(
+			get_managed_buffer(&spdm_context->transcript.message_m),
+			get_managed_buffer_size(&spdm_context->transcript.message_m));
+		status = append_managed_buffer(
+			&l1l2,
+			get_managed_buffer(&spdm_context->transcript.message_m),
+			get_managed_buffer_size(
+				&spdm_context->transcript.message_m));
+	} else {
+		DEBUG((DEBUG_INFO, "use message_m in session :\n"));
+		internal_dump_hex(
+			get_managed_buffer(&spdm_session_info->session_transcript.message_m),
+			get_managed_buffer_size(&spdm_session_info->session_transcript.message_m));
+		status = append_managed_buffer(
+			&l1l2,
+			get_managed_buffer(&spdm_session_info->session_transcript.message_m),
+			get_managed_buffer_size(
+				&spdm_session_info->session_transcript.message_m));
+	}
+	if (RETURN_ERROR(status)) {
+		return FALSE;
+	}
 
 	// debug only
 	spdm_hash_all(
 		spdm_context->connection_info.algorithm.base_hash_algo,
-		l1l2_buffer, *l1l2_buffer_size, hash_data);
+		get_managed_buffer(&l1l2),
+		get_managed_buffer_size(&l1l2), hash_data);
 	DEBUG((DEBUG_INFO, "l1l2 hash - "));
 	internal_dump_data(hash_data, hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
+
+	*l1l2_buffer_size = get_managed_buffer_size(&l1l2);
+	copy_mem(l1l2_buffer, get_managed_buffer(&l1l2), *l1l2_buffer_size);
 
 	return TRUE;
 }

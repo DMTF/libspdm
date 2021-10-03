@@ -1116,6 +1116,73 @@ boolean spdm_hkdf_expand(IN uint32 base_hash_algo, IN const uint8 *prk,
 				    out_size);
 }
 
+typedef struct {
+	boolean is_requester;
+	uint8   op_code;
+	void    *context;
+	uintn   context_size;
+} spdm_signing_context_str_t;
+
+spdm_signing_context_str_t spdm_signing_context_str_table[]={
+	{FALSE, SPDM_CHALLENGE_AUTH, SPDM_CHALLENGE_AUTH_SIGN_CONTEXT, SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE},
+	{TRUE, SPDM_CHALLENGE_AUTH, SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT, SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE},
+	{FALSE, SPDM_MEASUREMENTS, SPDM_MEASUREMENTS_SIGN_CONTEXT, SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE},
+	{FALSE, SPDM_FINISH_RSP, SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT, SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE},
+	{TRUE, SPDM_FINISH, SPDM_FINISH_SIGN_CONTEXT, SPDM_FINISH_SIGN_CONTEXT_SIZE},
+};
+
+/**
+  Create SPDM signing context, which is required since SPDM 1.2.
+
+  @param  spdm_version                         negotiated SPDM version
+  @param  op_code                              the SPDM opcode which requires the signing
+  @param  is_requester                         indicate if the signing is from a requester
+  @param  spdm_signing_context                 SPDM signing context
+**/
+void
+create_spdm_signing_context (
+	IN spdm_version_number_t spdm_version,
+	IN uint8 op_code,
+	IN boolean is_requester,
+	OUT void *spdm_signing_context)
+{
+	uintn index;
+	char8 *context_str;
+
+	// It is introduced in SPDM 1.2
+	ASSERT((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2));
+
+	// So far, it only leaves 1 bytes for version
+	ASSERT((spdm_version.major_version < 10) &&
+		(spdm_version.minor_version < 10) &&
+		(spdm_version.update_version_number < 10));
+
+	context_str = spdm_signing_context;
+	for (index = 0; index < 4; index++) {
+		copy_mem (
+			context_str,
+			SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT,
+			SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE);
+		// patch the version
+		context_str[11] = (char8)('0' + spdm_version.major_version);
+		context_str[13] = (char8)('0' + spdm_version.minor_version);
+		context_str[15] = (char8)('0' + spdm_version.update_version_number);
+		context_str += SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE;
+	}
+	for (index = 0; index < ARRAY_SIZE(spdm_signing_context_str_table); index++) {
+		if (spdm_signing_context_str_table[index].is_requester == is_requester &&
+			spdm_signing_context_str_table[index].op_code == op_code) {
+			copy_mem (
+				context_str,
+				spdm_signing_context_str_table[index].context,
+				spdm_signing_context_str_table[index].context_size);
+			return ;
+		}
+	}
+	ASSERT(FALSE);
+}
+
 /**
   This function returns the SPDM asymmetric algorithm size.
 
@@ -1359,6 +1426,7 @@ boolean spdm_asym_verify(
 	uintn hash_size;
 	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
@@ -1367,6 +1435,30 @@ boolean spdm_asym_verify(
 	if (verify_function == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
+				       &spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]);
+		if (!result) {
+			return FALSE;
+		}
+		//
+		// re-assign message and message_size for signing
+		//
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+		//
+		// Passthru
+		//
+	}
+
 	if (need_hash) {
 		hash_size = spdm_get_hash_size(base_hash_algo);
 		result = spdm_hash_all(base_hash_algo, message, message_size,
@@ -1406,7 +1498,12 @@ boolean spdm_asym_verify_hash(
 {
 	asym_verify_func verify_function;
 	boolean need_hash;
+	uint8 *message;
+	uintn message_size;
+	uint8 full_message_hash[MAX_HASH_SIZE];
+	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
@@ -1416,6 +1513,37 @@ boolean spdm_asym_verify_hash(
 	if (verify_function == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
+		copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
+		//
+		// assign message and message_size for signing
+		//
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+
+		if (need_hash) {
+			result = spdm_hash_all(base_hash_algo, message, message_size,
+						full_message_hash);
+			if (!result) {
+				return FALSE;
+			}
+			return verify_function(context, hash_nid, full_message_hash,
+						hash_size, signature, sig_size);
+		} else {
+			return verify_function(context, hash_nid, message, message_size,
+						signature, sig_size);
+		}
+		//
+		// SPDM 1.2 signing done.
+		//
+	}
+
 	if (need_hash) {
 		return verify_function(context, hash_nid, message_hash,
 				       hash_size, signature, sig_size);
@@ -1565,6 +1693,7 @@ boolean spdm_asym_sign(
 	uintn hash_size;
 	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
@@ -1573,6 +1702,30 @@ boolean spdm_asym_sign(
 	if (asym_sign == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
+				       &spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]);
+		if (!result) {
+			return FALSE;
+		}
+		//
+		// re-assign message and message_size for signing
+		//
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+		//
+		// Passthru
+		//
+	}
+
 	if (need_hash) {
 		hash_size = spdm_get_hash_size(base_hash_algo);
 		result = spdm_hash_all(base_hash_algo, message, message_size,
@@ -1616,7 +1769,12 @@ boolean spdm_asym_sign_hash(
 {
 	asym_sign_func asym_sign;
 	boolean need_hash;
+	uint8 *message;
+	uintn message_size;
+	uint8 full_message_hash[MAX_HASH_SIZE];
+	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_asym_func_need_hash(base_asym_algo);
@@ -1626,6 +1784,37 @@ boolean spdm_asym_sign_hash(
 	if (asym_sign == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
+		copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
+		//
+		// assign message and message_size for signing
+		//
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+
+		if (need_hash) {
+			result = spdm_hash_all(base_hash_algo, message, message_size,
+						full_message_hash);
+			if (!result) {
+				return FALSE;
+			}
+			return asym_sign(context, hash_nid, full_message_hash, hash_size,
+				 signature, sig_size);
+		} else {
+			return asym_sign(context, hash_nid, message, message_size,
+						signature, sig_size);
+		}
+		//
+		// SPDM 1.2 signing done.
+		//
+	}
+
 	if (need_hash) {
 		return asym_sign(context, hash_nid, message_hash, hash_size,
 				 signature, sig_size);
@@ -1769,6 +1958,7 @@ boolean spdm_req_asym_verify(
 	uintn hash_size;
 	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1777,6 +1967,30 @@ boolean spdm_req_asym_verify(
 	if (verify_function == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
+				       &spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]);
+		if (!result) {
+			return FALSE;
+		}
+		//
+		// re-assign message and message_size for signing
+		//
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+		//
+		// Passthru
+		//
+	}
+
 	if (need_hash) {
 		hash_size = spdm_get_hash_size(base_hash_algo);
 		result = spdm_hash_all(base_hash_algo, message, message_size,
@@ -1816,7 +2030,12 @@ boolean spdm_req_asym_verify_hash(
 {
 	asym_verify_func verify_function;
 	boolean need_hash;
+	uint8 *message;
+	uintn message_size;
+	uint8 full_message_hash[MAX_HASH_SIZE];
+	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1826,6 +2045,37 @@ boolean spdm_req_asym_verify_hash(
 	if (verify_function == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
+		copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
+		//
+		// assign message and message_size for signing
+		//
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+
+		if (need_hash) {
+			result = spdm_hash_all(base_hash_algo, message, message_size,
+						full_message_hash);
+			if (!result) {
+				return FALSE;
+			}
+			return verify_function(context, hash_nid, full_message_hash,
+						hash_size, signature, sig_size);
+		} else {
+			return verify_function(context, hash_nid, message, message_size,
+						signature, sig_size);
+		}
+		//
+		// SPDM 1.2 signing done.
+		//
+	}
+
 	if (need_hash) {
 		return verify_function(context, hash_nid, message_hash,
 				       hash_size, signature, sig_size);
@@ -1921,6 +2171,7 @@ boolean spdm_req_asym_sign(
 	uintn hash_size;
 	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1929,6 +2180,30 @@ boolean spdm_req_asym_sign(
 	if (asym_sign == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		result = spdm_hash_all(base_hash_algo, message, message_size,
+				       &spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]);
+		if (!result) {
+			return FALSE;
+		}
+		//
+		// re-assign message and message_size for signing
+		//
+		hash_size = spdm_get_hash_size(base_hash_algo);
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+		//
+		// Passthru
+		//
+	}
+
 	if (need_hash) {
 		hash_size = spdm_get_hash_size(base_hash_algo);
 		result = spdm_hash_all(base_hash_algo, message, message_size,
@@ -1972,7 +2247,12 @@ boolean spdm_req_asym_sign_hash(
 {
 	asym_sign_func asym_sign;
 	boolean need_hash;
+	uint8 *message;
+	uintn message_size;
+	uint8 full_message_hash[MAX_HASH_SIZE];
+	boolean result;
 	uintn hash_nid;
+	uint8 spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + MAX_HASH_SIZE];
 
 	hash_nid = get_spdm_hash_nid(base_hash_algo);
 	need_hash = spdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1982,6 +2262,37 @@ boolean spdm_req_asym_sign_hash(
 	if (asym_sign == NULL) {
 		return FALSE;
 	}
+
+	if ((spdm_version.major_version >= 1) ||
+		(spdm_version.minor_version >= 2)) {
+		//
+		// Need use SPDM 1.2 signing
+		//
+		create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
+		copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
+		//
+		// assign message and message_size for signing
+		//
+		message = spdm12_signing_context_with_hash;
+		message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
+
+		if (need_hash) {
+			result = spdm_hash_all(base_hash_algo, message, message_size,
+						full_message_hash);
+			if (!result) {
+				return FALSE;
+			}
+			return asym_sign(context, hash_nid, full_message_hash, hash_size,
+				 signature, sig_size);
+		} else {
+			return asym_sign(context, hash_nid, message, message_size,
+						signature, sig_size);
+		}
+		//
+		// SPDM 1.2 signing done.
+		//
+	}
+
 	if (need_hash) {
 		return asym_sign(context, hash_nid, message_hash, hash_size,
 				 signature, sig_size);
