@@ -38,7 +38,7 @@ return_status validate_crypt_ecd(void)
 	//
 	sig1_size = sizeof(signature1);
 	my_print("\n- Ed-DSA Signing ... ");
-	status = eddsa_sign(ecd1, CRYPTO_NID_NULL, message, sizeof(message),
+	status = eddsa_sign(ecd1, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
 			    signature1, &sig1_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -47,7 +47,7 @@ return_status validate_crypt_ecd(void)
 	}
 
 	my_print("Ed-DSA Verification ... ");
-	status = eddsa_verify(ecd1, CRYPTO_NID_NULL, message, sizeof(message),
+	status = eddsa_verify(ecd1, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
 			      signature1, sig1_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -67,7 +67,7 @@ return_status validate_crypt_ecd(void)
 
 	sig2_size = sizeof(signature2);
 	my_print("\n- Ed-DSA Signing ... ");
-	status = eddsa_sign(ecd2, CRYPTO_NID_NULL, message, sizeof(message),
+	status = eddsa_sign(ecd2, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
 			    signature2, &sig2_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -76,7 +76,7 @@ return_status validate_crypt_ecd(void)
 	}
 
 	my_print("Ed-DSA Verification ... ");
-	status = eddsa_verify(ecd2, CRYPTO_NID_NULL, message, sizeof(message),
+	status = eddsa_verify(ecd2, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
 			      signature2, sig2_size);
 	if (!status) {
 		my_print("[Fail]");

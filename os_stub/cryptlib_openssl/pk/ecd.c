@@ -206,11 +206,16 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
   hash_nid must be NULL.
   If sig_size is large enough but signature is NULL, then return FALSE.
 
+  For ed25519, context must be NULL and context_size must be 0.
+  For ed448, context must be maximum of 255 octets.
+
   For ed25519, the sig_size is 64. first 32-byte is R, second 32-byte is S.
   For ed448, the sig_size is 114. first 57-byte is R, second 57-byte is S.
 
   @param[in]       ecd_context    Pointer to Ed context for signature generation.
   @param[in]       hash_nid      hash NID
+  @param[in]       context      the EDDSA signing context.
+  @param[in]       context_size size of EDDSA signing context.
   @param[in]       message      Pointer to octet message to be signed (before hash).
   @param[in]       size         size of the message in bytes.
   @param[out]      signature    Pointer to buffer to receive Ed-DSA signature.
@@ -223,6 +228,7 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
 
 **/
 boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
+		   IN const uint8 *context, IN uintn context_size,
 		   IN const uint8 *message, IN uintn size, OUT uint8 *signature,
 		   IN OUT uintn *sig_size)
 {
@@ -292,11 +298,16 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
   If signature is NULL, then return FALSE.
   hash_nid must be NULL.
 
+  For ed25519, context must be NULL and context_size must be 0.
+  For ed448, context must be maximum of 255 octets.
+
   For ed25519, the sig_size is 64. first 32-byte is R, second 32-byte is S.
   For ed448, the sig_size is 114. first 57-byte is R, second 57-byte is S.
 
   @param[in]  ecd_context    Pointer to Ed context for signature verification.
   @param[in]  hash_nid      hash NID
+  @param[in]  context      the EDDSA signing context.
+  @param[in]  context_size size of EDDSA signing context.
   @param[in]  message      Pointer to octet message to be checked (before hash).
   @param[in]  size         size of the message in bytes.
   @param[in]  signature    Pointer to Ed-DSA signature to be verified.
@@ -307,6 +318,7 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
 
 **/
 boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
+		     IN const uint8 *context, IN uintn context_size,
 		     IN const uint8 *message, IN uintn size,
 		     IN const uint8 *signature, IN uintn sig_size)
 {
