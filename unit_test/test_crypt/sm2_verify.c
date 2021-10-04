@@ -80,9 +80,10 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("Compute key1 ... ");
-	status = sm2_compute_key(Sm2_1, public2, public2_length, key1,
-				 &key1_length);
-	if (!status || key1_length != 32) {
+	key1_length = 32;
+	status = sm2_compute_key(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public2, public2_length, key1,
+				 key1_length);
+	if (!status) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);
@@ -90,9 +91,10 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("Compute key2 ... ");
-	status = sm2_compute_key(Sm2_2, public1, public1_length, key2,
-				 &key2_length);
-	if (!status || key2_length != 32) {
+	key2_length = 32;
+	status = sm2_compute_key(Sm2_2, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public1, public1_length, key2,
+				 key2_length);
+	if (!status) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
 		sm2_free(Sm2_2);
@@ -100,12 +102,6 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("Compare Keys ... ");
-	if (key1_length != key2_length) {
-		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
-		goto Exit;
-	}
 
 	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
@@ -143,7 +139,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- SM2 Signing ... ");
-	status = sm2_ecdsa_sign(Sm2_1, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -152,7 +148,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("SM2 Verification ... ");
-	status = sm2_ecdsa_verify(Sm2_1, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -215,7 +211,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- sm2 Signing in Context1 ... ");
-	status = sm2_ecdsa_sign(Sm2_1, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -225,7 +221,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("sm2 Verification in Context2 ... ");
-	status = sm2_ecdsa_verify(Sm2_2, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_verify(Sm2_2, CRYPTO_NID_SM3_256, NULL, 0, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");

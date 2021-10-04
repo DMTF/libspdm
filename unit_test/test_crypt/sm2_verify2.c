@@ -130,7 +130,7 @@ return_status validate_crypt_sm2_2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- SM2 Signing ... ");
-	status = sm2_ecdsa_sign(sm2_priv_key, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_sign(sm2_priv_key, CRYPTO_NID_SM3_256, NULL, 0, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -142,7 +142,7 @@ return_status validate_crypt_sm2_2(void)
 	}
 
 	my_print("\n- SM2 Verification ... ");
-	status = sm2_ecdsa_verify(sm2_pub_key, CRYPTO_NID_SM3_256, message,
+	status = sm2_dsa_verify(sm2_pub_key, CRYPTO_NID_SM3_256, NULL, 0, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
