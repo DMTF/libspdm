@@ -61,6 +61,8 @@ typedef struct {
 	//
 	void *peer_cert_chain_provision;
 	uintn peer_cert_chain_provision_size;
+	// Peer Cert verify
+	spdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
 	//
 	// PSK provision locally
 	//

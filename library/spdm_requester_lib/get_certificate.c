@@ -194,16 +194,30 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 
 	} while (spdm_response.remainder_length != 0);
 
-	result = spdm_verify_peer_cert_chain_buffer(
-		spdm_context, get_managed_buffer(&certificate_chain_buffer),
-		get_managed_buffer_size(&certificate_chain_buffer),
-		trust_anchor, trust_anchor_size);
-	if (!result) {
-		spdm_context->error_state =
-			SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-		status = RETURN_SECURITY_VIOLATION;
-		goto done;
+	if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
+		status = spdm_context->local_context.verify_peer_spdm_cert_chain (
+			spdm_context, slot_id, get_managed_buffer_size(&certificate_chain_buffer),
+			get_managed_buffer(&certificate_chain_buffer),
+			trust_anchor, trust_anchor_size);
+		if (RETURN_ERROR(status)) {
+			spdm_context->error_state =
+				SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+			status = RETURN_SECURITY_VIOLATION;
+			goto done;
+		}
+	} else {
+		result = spdm_verify_peer_cert_chain_buffer(
+			spdm_context, get_managed_buffer(&certificate_chain_buffer),
+			get_managed_buffer_size(&certificate_chain_buffer),
+			trust_anchor, trust_anchor_size);
+		if (!result) {
+			spdm_context->error_state =
+				SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+			status = RETURN_SECURITY_VIOLATION;
+			goto done;
+		}
 	}
+
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		get_managed_buffer_size(&certificate_chain_buffer);
 	copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
