@@ -448,6 +448,53 @@ void spdm_register_transport_layer_func(
 	IN spdm_transport_decode_message_func transport_decode_message);
 
 /**
+  Verify a SPDM cert chain in a slot.
+
+  This function shall verify:
+    1) The integrity of the certificate chain. (Root Cert Hash->Root Cert->Cert Chain)
+    2) The trust anchor. (Root Cert Hash/Root cert matches the trust anchor)
+
+  The function shall check the negotiated hash algorithm to check root cert hash.
+  The function shall check the negotiated (req) asym algorithm to determine if it is right cert chain.
+
+  The function returns error if either of above is not satisfied.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  slot_id                       The number of slot for the certificate chain.
+  @param  cert_chain_size               Indicate the size in bytes of the certificate chain.
+  @param  cert_chain                    A pointer to the buffer storing the certificate chain
+                                        returned from GET_CERTIFICATE. It starts with spdm_cert_chain_t.
+  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+
+  @retval RETURN_SUCCESS                The cert chain verification pass.
+  @retval RETURN_SECURIY_VIOLATION      The cert chain verification fail.
+**/
+typedef return_status (*spdm_verify_spdm_cert_chain_func)(
+	IN void *spdm_context, IN uint8 slot_id,
+	IN uintn cert_chain_size, IN void *cert_chain,
+	OUT void **trust_anchor OPTIONAL,
+	OUT uintn *trust_anchor_size OPTIONAL);
+
+/**
+  Register SPDM certificate verification functions for SPDM GET_CERTIFICATE in requester or responder.
+  It is called after GET_CERTIFICATE gets a full certificate chain from peer.
+
+  If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
+  	1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
+    2) The trust anchor, according SPDM_DATA_PEER_PUBLIC_ROOT_CERT or SPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
+  If it is registered, SPDM lib will use this function to verify the certificate.
+
+  This function must be called after spdm_init_context, and before any SPDM communication.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  verify_certificate            The fuction to verify an SPDM certificate after GET_CERTIFICATE.
+**/
+void spdm_register_verify_spdm_cert_chain_func(
+	IN void *spdm_context,
+	IN spdm_verify_spdm_cert_chain_func verify_spdm_cert_chain);
+
+/**
   Reset message A cache in SPDM context.
 
   @param  spdm_context                  A pointer to the SPDM context.

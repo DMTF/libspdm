@@ -161,18 +161,35 @@ return_status spdm_process_encap_response_certificate(
 	}
 
 	*need_continue = FALSE;
-	result = spdm_verify_peer_cert_chain_buffer(
-		spdm_context,
-		get_managed_buffer(
-			&spdm_context->encap_context.certificate_chain_buffer),
-		get_managed_buffer_size(
-			&spdm_context->encap_context.certificate_chain_buffer),
-		NULL, NULL);
-	if (!result) {
-		spdm_context->encap_context.error_state =
-			SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-		return RETURN_SECURITY_VIOLATION;
+
+	if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
+		status = spdm_context->local_context.verify_peer_spdm_cert_chain (
+			spdm_context, spdm_context->encap_context.req_slot_id, 
+			get_managed_buffer_size(
+				&spdm_context->encap_context.certificate_chain_buffer),
+			get_managed_buffer(
+				&spdm_context->encap_context.certificate_chain_buffer),
+			NULL, NULL);
+		if (RETURN_ERROR(status)) {
+			spdm_context->encap_context.error_state =
+				SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+			return RETURN_SECURITY_VIOLATION;
+		}
+	} else {
+		result = spdm_verify_peer_cert_chain_buffer(
+			spdm_context,
+			get_managed_buffer(
+				&spdm_context->encap_context.certificate_chain_buffer),
+			get_managed_buffer_size(
+				&spdm_context->encap_context.certificate_chain_buffer),
+			NULL, NULL);
+		if (!result) {
+			spdm_context->encap_context.error_state =
+				SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+			return RETURN_SECURITY_VIOLATION;
+		}
 	}
+
 	spdm_context->connection_info.peer_used_cert_chain_buffer_size =
 		get_managed_buffer_size(
 			&spdm_context->encap_context.certificate_chain_buffer);
