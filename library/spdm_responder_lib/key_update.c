@@ -104,7 +104,7 @@ return_status spdm_get_response_key_update(IN void *context,
 		break;
 	case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
 		DEBUG((DEBUG_INFO,
-		       "spdm_create_update_session_data_key[%x] Responder\n",
+		       "spdm_create_update_session_data_key[%x] Requester\n",
 		       session_id));
 		spdm_create_update_session_data_key(
 			session_info->secured_message_context,
