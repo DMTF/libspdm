@@ -3252,7 +3252,7 @@ boolean sm2_get_pub_key(IN OUT void *sm2_context, OUT uint8 *public_key,
 boolean sm2_check_key(IN void *sm2_context);
 
 /**
-  Generates sm2 key and returns sm2 public key (X, Y).
+  Generates sm2 key and returns sm2 public key (X, Y), based upon GB/T 32918.3-2016: SM2 - Part3.
 
   This function generates random secret, and computes the public key (X, Y), which is
   returned via parameter public, public_size.
@@ -3282,7 +3282,7 @@ boolean sm2_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
 			 IN OUT uintn *public_size);
 
 /**
-  Computes exchanged common key.
+  Computes exchanged common key, based upon GB/T 32918.3-2016: SM2 - Part3.
 
   Given peer's public key (X, Y), this function computes the exchanged common key,
   based on its own context including value of curve parameter and random secret.
@@ -3293,28 +3293,35 @@ boolean sm2_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
   If peer_public is NULL, then return FALSE.
   If peer_public_size is 0, then return FALSE.
   If key is NULL, then return FALSE.
-  If key_size is not large enough, then return FALSE.
 
-  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y. The key_size is 32.
+  The id_a_size and id_b_size must be smaller than 2^16-1.
+  The peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
+  The key_size must be smaller than 2^32-1, limited by KDF function.
 
   @param[in, out]  sm2_context         Pointer to the sm2 context.
+  @param[in]       hash_nid            hash NID
+  @param[in]       id_a                the ID-A of the key exchange context.
+  @param[in]       id_a_size           size of ID-A key exchange context.
+  @param[in]       id_b                the ID-B of the key exchange context.
+  @param[in]       id_b_size           size of ID-B key exchange context.
   @param[in]       peer_public         Pointer to the peer's public X,Y.
   @param[in]       peer_public_size     size of peer's public X,Y in bytes.
   @param[out]      key                Pointer to the buffer to receive generated key.
-  @param[in, out]  key_size            On input, the size of key buffer in bytes.
-                                      On output, the size of data returned in key buffer in bytes.
+  @param[in]       key_size            On input, the size of key buffer in bytes.
 
   @retval TRUE   sm2 exchanged key generation succeeded.
   @retval FALSE  sm2 exchanged key generation failed.
-  @retval FALSE  key_size is not large enough.
 
 **/
-boolean sm2_compute_key(IN OUT void *sm2_context, IN const uint8 *peer_public,
+boolean sm2_compute_key(IN OUT void *sm2_context, IN uintn hash_nid,
+			IN const uint8 *id_a, IN uintn id_a_size,
+			IN const uint8 *id_b, IN uintn id_b_size,
+			IN const uint8 *peer_public,
 			IN uintn peer_public_size, OUT uint8 *key,
-			IN OUT uintn *key_size);
+			IN uintn key_size);
 
 /**
-  Carries out the SM2 signature.
+  Carries out the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
 
   This function carries out the SM2 signature.
   If the signature buffer is too small to hold the contents of signature, FALSE
@@ -3325,10 +3332,13 @@ boolean sm2_compute_key(IN OUT void *sm2_context, IN const uint8 *peer_public,
   hash_nid must be SM3_256.
   If sig_size is large enough but signature is NULL, then return FALSE.
 
+  The id_a_size must be smaller than 2^16-1.
   The sig_size is 64. first 32-byte is R, second 32-byte is S.
 
   @param[in]       sm2_context   Pointer to sm2 context for signature generation.
   @param[in]       hash_nid      hash NID
+  @param[in]       id_a          the ID-A of the signing context.
+  @param[in]       id_a_size     size of ID-A signing context.
   @param[in]       message      Pointer to octet message to be signed (before hash).
   @param[in]       size         size of the message in bytes.
   @param[out]      signature    Pointer to buffer to receive SM2 signature.
@@ -3340,22 +3350,26 @@ boolean sm2_compute_key(IN OUT void *sm2_context, IN const uint8 *peer_public,
   @retval  FALSE  sig_size is too small.
 
 **/
-boolean sm2_ecdsa_sign(IN void *sm2_context, IN uintn hash_nid,
+boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
+		       IN const uint8 *id_a, IN uintn id_a_size,
 		       IN const uint8 *message, IN uintn size,
 		       OUT uint8 *signature, IN OUT uintn *sig_size);
 
 /**
-  Verifies the SM2 signature.
+  Verifies the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
 
   If sm2_context is NULL, then return FALSE.
   If message is NULL, then return FALSE.
   If signature is NULL, then return FALSE.
   hash_nid must be SM3_256.
 
+  The id_a_size must be smaller than 2^16-1.
   The sig_size is 64. first 32-byte is R, second 32-byte is S.
 
   @param[in]  sm2_context   Pointer to SM2 context for signature verification.
   @param[in]  hash_nid      hash NID
+  @param[in]  id_a          the ID-A of the signing context.
+  @param[in]  id_a_size     size of ID-A signing context.
   @param[in]  message      Pointer to octet message to be checked (before hash).
   @param[in]  size         size of the message in bytes.
   @param[in]  signature    Pointer to SM2 signature to be verified.
@@ -3365,7 +3379,8 @@ boolean sm2_ecdsa_sign(IN void *sm2_context, IN uintn hash_nid,
   @retval  FALSE  Invalid signature or invalid sm2 context.
 
 **/
-boolean sm2_ecdsa_verify(IN void *sm2_context, IN uintn hash_nid,
+boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
+			 IN const uint8 *id_a, IN uintn id_a_size,
 			 IN const uint8 *message, IN uintn size,
 			 IN const uint8 *signature, IN uintn sig_size);
 
