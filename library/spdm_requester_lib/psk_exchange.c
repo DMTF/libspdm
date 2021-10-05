@@ -167,7 +167,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
-			spdm_context, NULL, NULL, 0, &spdm_response_size,
+			spdm_context, NULL, &spdm_response_size,
 			&spdm_response, SPDM_PSK_EXCHANGE,
 			SPDM_PSK_EXCHANGE_RSP,
 			sizeof(spdm_psk_exchange_response_max_t));

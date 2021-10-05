@@ -623,15 +623,12 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   This function handles the encap error response.
 
   @param  spdm_context                  A pointer to the SPDM context.
-  @param  managed_buffer_t                The managed buffer to be shrinked.
-  @param  shrink_buffer_size             The size in bytes of the size of the buffer to be shrinked.
   @param  error_code                    Indicate the error code.
 
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_encap_error_response_main(
-	IN spdm_context_t *spdm_context, IN OUT void *m_buffer,
-	IN uintn shrink_buffer_size, IN uint8 error_code);
+	IN spdm_context_t *spdm_context, IN uint8 error_code);
 
 /**
   Set session_state to an SPDM secured message context and trigger callback.

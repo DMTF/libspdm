@@ -129,8 +129,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
 		if (spdm_response.header.request_response_code == SPDM_ERROR) {
 			status = spdm_handle_error_response_main(
 				spdm_context, &session_id,
-				&session_info->session_transcript.message_f,
-				sizeof(spdm_request), &spdm_response_size, &spdm_response,
+				&spdm_response_size, &spdm_response,
 				SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
 				sizeof(spdm_key_update_response_mine_t));
 			if (RETURN_ERROR(status)) {
@@ -217,8 +216,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
-			&session_info->session_transcript.message_f,
-			sizeof(spdm_request), &spdm_response_size, &spdm_response,
+			&spdm_response_size, &spdm_response,
 			SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
 			sizeof(spdm_key_update_response_mine_t));
 		if (RETURN_ERROR(status)) {

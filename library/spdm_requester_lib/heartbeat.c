@@ -83,7 +83,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
-			spdm_context, &session_id, NULL, 0, &spdm_response_size,
+			spdm_context, &session_id, &spdm_response_size,
 			&spdm_response, SPDM_HEARTBEAT, SPDM_HEARTBEAT_ACK,
 			sizeof(spdm_heartbeat_response_mine_t));
 		if (RETURN_ERROR(status)) {

@@ -114,8 +114,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
-			NULL,
-			0, &spdm_response_size, &spdm_response,
+			&spdm_response_size, &spdm_response,
 			SPDM_PSK_FINISH, SPDM_PSK_FINISH_RSP,
 			sizeof(spdm_psk_finish_response_max_t));
 		if (RETURN_ERROR(status)) {

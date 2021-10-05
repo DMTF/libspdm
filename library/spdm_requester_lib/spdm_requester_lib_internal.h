@@ -33,8 +33,6 @@ return_status spdm_handle_simple_error_response(IN void *context,
   For any other error code, this function shrinks the managed buffer, and return RETURN_DEVICE_ERROR.
 
   @param  spdm_context                  A pointer to the SPDM context.
-  @param  managed_buffer_t                The managed buffer to be shrinked.
-  @param  shrink_buffer_size             The size in bytes of the size of the buffer to be shrinked.
   @param  response_size                 The size of the response.
                                        On input, it means the size in bytes of response data buffer.
                                        On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
@@ -50,7 +48,6 @@ return_status spdm_handle_simple_error_response(IN void *context,
 **/
 return_status spdm_handle_error_response_main(
 	IN spdm_context_t *spdm_context, IN uint32 *session_id,
-	IN OUT void *managed_buffer_t, IN uintn shrink_buffer_size,
 	IN OUT uintn *response_size, IN OUT void *response,
 	IN uint8 original_request_code, IN uint8 expected_response_code,
 	IN uintn expected_response_size);

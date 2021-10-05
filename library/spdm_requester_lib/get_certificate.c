@@ -127,7 +127,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		if (spdm_response.header.request_response_code == SPDM_ERROR) {
 			status = spdm_handle_error_response_main(
 				spdm_context, NULL,
-				NULL, 0, &spdm_response_size,
+				&spdm_response_size,
 				&spdm_response, SPDM_GET_CERTIFICATE,
 				SPDM_CERTIFICATE,
 				sizeof(spdm_certificate_response_max_t));

@@ -119,7 +119,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, NULL, 
-			NULL, 0, &spdm_response_size,
+			&spdm_response_size,
 			&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
 			sizeof(spdm_challenge_auth_response_max_t));
 		if (RETURN_ERROR(status)) {

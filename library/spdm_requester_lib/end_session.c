@@ -87,7 +87,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
-			spdm_context, &session_id, NULL, 0, &spdm_response_size,
+			spdm_context, &session_id, &spdm_response_size,
 			&spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,
 			sizeof(spdm_end_session_response_mine_t));
 		if (RETURN_ERROR(status)) {

@@ -87,8 +87,8 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
-			spdm_context, NULL, NULL,
-			0, &spdm_response_size,
+			spdm_context, NULL,
+			&spdm_response_size,
 			&spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
 			sizeof(spdm_digests_response_max_t));
 		if (RETURN_ERROR(status)) {

@@ -174,7 +174,6 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		status = spdm_handle_error_response_main(
 			spdm_context, session_id,
-			NULL, 0,
 			&spdm_response_size, &spdm_response,
 			SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
 			sizeof(spdm_measurements_response_max_t));
