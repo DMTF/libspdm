@@ -422,6 +422,15 @@ void init_managed_buffer(IN OUT void *managed_buffer_t,
 			 IN uintn max_buffer_size);
 
 /**
+  Reset message buffer in SPDM context according to request code.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  spdm_request                The SPDM request code.
+*/
+void spdm_reset_message_buffer_via_request_code(IN void *context,
+			       IN uint8 request_code);
+
+/**
   This function initializes the session info.
 
   @param  spdm_context                  A pointer to the SPDM context.
