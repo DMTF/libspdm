@@ -35,8 +35,9 @@ typedef struct {
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The challenge auth is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -45,6 +46,7 @@ typedef struct {
 return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 				 IN uint8 measurement_hash_type,
 				 OUT void *measurement_hash,
+			     IN void *requester_nonce_in OPTIONAL,
 				 OUT void *requester_nonce OPTIONAL,
 				 OUT void *responder_nonce OPTIONAL)
 {
@@ -97,7 +99,11 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	spdm_request.header.request_response_code = SPDM_CHALLENGE;
 	spdm_request.header.param1 = slot_id;
 	spdm_request.header.param2 = measurement_hash_type;
-	spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+	if (requester_nonce_in == NULL) {
+		spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+	} else {
+		copy_mem (spdm_request.nonce, requester_nonce_in, SPDM_NONCE_SIZE);
+	}
 	DEBUG((DEBUG_INFO, "ClientNonce - "));
 	internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
 	DEBUG((DEBUG_INFO, "\n"));
@@ -319,7 +325,7 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
 	do {
 		status = try_spdm_challenge(spdm_context, slot_id,
 					    measurement_hash_type,
-					    measurement_hash, NULL, NULL);
+					    measurement_hash, NULL, NULL, NULL);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
 		}
@@ -341,8 +347,9 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The challenge auth is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -351,6 +358,7 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
 return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash,
+			     IN void *requester_nonce_in OPTIONAL,
 			     OUT void *requester_nonce OPTIONAL,
 			     OUT void *responder_nonce OPTIONAL)
 {
@@ -364,6 +372,7 @@ return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
 		status = try_spdm_challenge(spdm_context, slot_id,
 					    measurement_hash_type,
 					    measurement_hash,
+						requester_nonce_in,
 						requester_nonce, responder_nonce);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
