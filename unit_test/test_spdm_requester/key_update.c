@@ -3118,7 +3118,7 @@ void test_spdm_requester_key_update_case11(void **state)
 		  m_req_secret_buffer, m_req_secret_buffer,
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
-
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_m.buffer_size =
 		spdm_context->transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
@@ -3129,6 +3129,7 @@ void test_spdm_requester_key_update_case11(void **state)
 					spdm_context->transcript.message_mut_b.max_buffer_size;
 	spdm_context->transcript.message_mut_c.buffer_size =
 					spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
 
 	status = spdm_key_update(
 		spdm_context, session_id, TRUE);
@@ -3144,11 +3145,13 @@ void test_spdm_requester_key_update_case11(void **state)
 			  ->application_secret.response_data_secret,
 		  m_rsp_secret_buffer, ((spdm_secured_message_context_t 
 		  *)(session_info->secured_message_context))->hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#endif
 }
 
 /**
