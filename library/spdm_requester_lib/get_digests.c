@@ -203,4 +203,4 @@ return_status spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 	return status;
 }
 
-#endif SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif //SPDM_ENABLE_CAPABILITY_CERT_CAP
