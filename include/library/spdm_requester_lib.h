@@ -340,6 +340,53 @@ return_status spdm_start_session(IN void *spdm_context, IN boolean use_psk,
 				 OUT void *measurement_hash);
 
 /**
+  This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
+  to start an SPDM Session.
+
+  If encapsulated mutual authentication is requested from the responder,
+  this function also perform the encapsulated mutual authentication.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+  @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
+                                       TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+  @param  measurement_hash_type          The type of the measurement hash.
+  @param  slot_id                      The number of slot for the certificate chain.
+  @param  session_id                    The session ID of the session.
+  @param  heartbeat_period              The heartbeat period for the session.
+  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
+  @param  requester_random_in_size      The size of requester_random_in.
+                                        If use_psk is FALSE, it must be 32 bytes.
+                                        If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
+                                        but not exceed DEFAULT_CONTEXT_LENGTH.
+  @param  requester_random              A buffer to hold the requester random, if not NULL.
+  @param  requester_random_size         On input, the size of requester_random buffer.
+                                        On output, the size of data returned in requester_random buffer.
+                                        If use_psk is FALSE, it must be 32 bytes.
+                                        If use_psk is TRUE, it means the PSK context and must be 32 bytes at least.
+  @param  responder_random              A buffer to hold the responder random, if not NULL.
+  @param  responder_random_size         On input, the size of requester_random buffer.
+                                        On output, the size of data returned in requester_random buffer.
+                                        If use_psk is FALSE, it must be 32 bytes.
+                                        If use_psk is TRUE, it means the PSK context. It could be 0 if device does not support context.
+
+  @retval RETURN_SUCCESS               The SPDM session is started.
+  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+**/
+return_status spdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
+				 IN uint8 measurement_hash_type,
+				 IN uint8 slot_id, OUT uint32 *session_id,
+				 OUT uint8 *heartbeat_period,
+				 OUT void *measurement_hash,
+				 IN void *requester_random_in OPTIONAL,
+				 IN uintn requester_random_in_size OPTIONAL,
+				 OUT void *requester_random OPTIONAL,
+				 OUT uintn *requester_random_size OPTIONAL,
+				 OUT void *responder_random OPTIONAL,
+				 OUT uintn *responder_random_size OPTIONAL);
+
+/**
   This function sends END_SESSION
   to stop an SPDM Session.
 
