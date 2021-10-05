@@ -232,8 +232,9 @@ return_status spdm_challenge(IN void *spdm_context, IN uint8 slot_id,
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The challenge auth is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -242,6 +243,7 @@ return_status spdm_challenge(IN void *spdm_context, IN uint8 slot_id,
 return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash,
+			     IN void *requester_nonce_in OPTIONAL,
 			     OUT void *requester_nonce OPTIONAL,
 			     OUT void *responder_nonce OPTIONAL);
 
@@ -292,8 +294,9 @@ return_status spdm_get_measurement(IN void *spdm_context, IN uint32 *session_id,
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
   @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The measurement is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -306,6 +309,7 @@ return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 				   OUT uint8 *number_of_blocks,
 				   IN OUT uint32 *measurement_record_length,
 				   OUT void *measurement_record,
+			     IN void *requester_nonce_in OPTIONAL,
 				   OUT void *requester_nonce OPTIONAL,
 				   OUT void *responder_nonce OPTIONAL);
 

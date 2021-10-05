@@ -38,8 +38,9 @@ typedef struct {
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
   @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The measurement is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -52,6 +53,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				       OUT uint8 *number_of_blocks,
 				       IN OUT uint32 *measurement_record_length,
 				       OUT void *measurement_record,
+				       IN void *requester_nonce_in OPTIONAL,
 				       OUT void *requester_nonce OPTIONAL,
 				       OUT void *responder_nonce OPTIONAL)
 {
@@ -150,7 +152,11 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 					    sizeof(spdm_request.SlotIDParam);
 		}
 
-		spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+		if (requester_nonce_in == NULL) {
+			spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+		} else {
+			copy_mem (spdm_request.nonce, requester_nonce_in, SPDM_NONCE_SIZE);
+		}
 		DEBUG((DEBUG_INFO, "ClientNonce - "));
 		internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
 		DEBUG((DEBUG_INFO, "\n"));
@@ -490,7 +496,7 @@ return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		status = try_spdm_get_measurement(
 			spdm_context, session_id, request_attribute,
 			measurement_operation, slot_id_param, number_of_blocks,
-			measurement_record_length, measurement_record, NULL, NULL);
+			measurement_record_length, measurement_record, NULL, NULL, NULL);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
 		}
@@ -516,8 +522,9 @@ return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
   @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce               A buffer to hold the requester nonce, if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce, if not NULL.
+  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
 
   @retval RETURN_SUCCESS               The measurement is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -530,6 +537,7 @@ return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 				   OUT uint8 *number_of_blocks,
 				   IN OUT uint32 *measurement_record_length,
 				   OUT void *measurement_record,
+				   IN void *requester_nonce_in OPTIONAL,
 				   OUT void *requester_nonce OPTIONAL,
 				   OUT void *responder_nonce OPTIONAL) {
 	spdm_context_t *spdm_context;
@@ -543,6 +551,7 @@ return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 			spdm_context, session_id, request_attribute,
 			measurement_operation, slot_id_param, number_of_blocks,
 			measurement_record_length, measurement_record,
+			requester_nonce_in,
 			requester_nonce, responder_nonce);
 		if (RETURN_NO_RESPONSE != status) {
 			return status;
