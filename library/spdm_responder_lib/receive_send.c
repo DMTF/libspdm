@@ -25,7 +25,10 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
 	{ SPDM_CHALLENGE, spdm_get_response_challenge_auth },
 	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 	{ SPDM_GET_MEASUREMENTS, spdm_get_response_measurements },
+	#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 	{ SPDM_KEY_EXCHANGE, spdm_get_response_key_exchange },
 	{ SPDM_PSK_EXCHANGE, spdm_get_response_psk_exchange },
 	{ SPDM_GET_ENCAPSULATED_REQUEST,

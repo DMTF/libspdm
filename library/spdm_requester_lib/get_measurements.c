@@ -21,6 +21,8 @@ typedef struct {
 } spdm_measurements_response_max_t;
 #pragma pack()
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 /**
   This function sends GET_MEASUREMENT
   to get measurement from the device.
@@ -560,3 +562,5 @@ return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 
 	return status;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP

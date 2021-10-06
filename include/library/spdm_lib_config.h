@@ -47,8 +47,26 @@
 #define OPENSPDM_SHA384_SUPPORT 1
 #define OPENSPDM_SHA512_SUPPORT 1
 
-// Enable(1)\Disable(0) optional capabilities here.
+
+// Code space optimization for Optional request/response messages.
+//
+// Consumers of libspdm may wish to not fully implement all of the optional
+// SPDM request/response messages. Therefore we have provided these
+// SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
+// disable the code (#if 0) related to said optional capability, thereby
+// reducing the code space used in the image.
+//
+// A single switch may enable/disable a single capability or group of related
+// capabilities.
+//
+// SPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
+// SPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
+// SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
+//                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
+//
+
 #define SPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #define SPDM_ENABLE_CAPABILITY_CHAL_CAP 1
+#define SPDM_ENABLE_CAPABILITY_MEAS_CAP 1
 
 #endif

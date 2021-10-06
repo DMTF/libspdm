@@ -163,7 +163,7 @@ uintn m_spdm_challenge_request_size = sizeof(m_spdm_challenge_request);
 
 #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   {
     SPDM_MESSAGE_VERSION_11,
@@ -173,6 +173,7 @@ spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   },
 };
 uintn m_spdm_get_measurements_request_size = sizeof(spdm_message_header_t);
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 #pragma pack(1)
 
@@ -464,6 +465,9 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   Expected behavior: the responder accepts the request and produces a valid MEASUREMENTS
   response message.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 void test_spdm_responder_respond_if_ready_case4(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -512,6 +516,8 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
   assert_int_equal (spdm_response->header.param1, MEASUREMENT_BLOCK_NUMBER);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
   Test 5: receiving a correct RESPOND_IF_READY from the requester, after a 
@@ -1225,7 +1231,10 @@ int spdm_responder_respond_if_ready_test_main(void) {
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case3),
     #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+    #if SPDM_ENABLE_CAPABILITY_MEAS_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
+    #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),

@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 #define ALTERNATIVE_DEFAULT_SLOT_ID 2
 #define LARGE_MEASUREMENT_SIZE ((1 << 24) - 1)
 
@@ -4479,3 +4481,5 @@ int spdm_requester_get_measurements_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
