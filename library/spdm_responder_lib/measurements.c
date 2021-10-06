@@ -6,6 +6,8 @@
 
 #include "spdm_responder_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 /**
   This function creates the measurement signature to response message based upon l1l2.
   @param  spdm_context                  A pointer to the SPDM context.
@@ -542,3 +544,5 @@ return_status spdm_get_response_measurements(IN void *context,
 
 	return RETURN_SUCCESS;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP

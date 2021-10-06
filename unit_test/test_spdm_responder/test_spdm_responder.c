@@ -20,7 +20,10 @@ int spdm_responder_certificate_test_main(void);
 int spdm_responder_challenge_auth_test_main(void);
 #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 int spdm_responder_measurements_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 int spdm_responder_respond_if_ready_test_main (void);
 int spdm_responder_key_exchange_test_main(void);
 int spdm_responder_finish_test_main(void);
@@ -61,9 +64,11 @@ int main(void)
 	}
 	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 	if (spdm_responder_measurements_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 	if (spdm_responder_respond_if_ready_test_main() != 0) {
 		return_value = 1;

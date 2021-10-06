@@ -20,7 +20,10 @@ int spdm_requester_get_certificate_test_main(void);
 int spdm_requester_challenge_test_main(void);
 #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 int spdm_requester_get_measurements_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 int spdm_requester_key_exchange_test_main(void);
 int spdm_requester_finish_test_main(void);
 int spdm_requester_psk_exchange_test_main(void);
@@ -61,9 +64,11 @@ int main(void)
 	}
 	#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
 	if (spdm_requester_get_measurements_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 	if (spdm_requester_key_exchange_test_main() != 0) {
 		return_value = 1;

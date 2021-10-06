@@ -244,11 +244,16 @@ return_status spdm_get_response_challenge_auth(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
+
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 return_status spdm_get_response_measurements(IN void *spdm_context,
 					     IN uintn request_size,
 					     IN void *request,
 					     IN OUT uintn *response_size,
 					     OUT void *response);
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
   Process the SPDM KEY_EXCHANGE request and return the response.

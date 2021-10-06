@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_responder_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 spdm_get_measurements_request_t m_spdm_get_measurements_request1 = {
 	{ SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0,
 	  SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
@@ -1452,3 +1454,5 @@ int spdm_responder_measurements_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
