@@ -32,6 +32,7 @@ return_status spdm_get_response_key_update(IN void *context,
 	uint32 session_id;
 	spdm_key_update_response_t *spdm_response;
 	spdm_key_update_request_t *spdm_request;
+	spdm_key_update_request_t *prev_spdm_request;
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;
 	spdm_session_state_t session_state;
@@ -93,50 +94,88 @@ return_status spdm_get_response_key_update(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	switch (spdm_request->header.param1) {
-	case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
-		DEBUG((DEBUG_INFO,
-		       "spdm_create_update_session_data_key[%x] Requester\n",
-		       session_id));
-		spdm_create_update_session_data_key(
-			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_REQUESTER);
-		break;
-	case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
-		DEBUG((DEBUG_INFO,
-		       "spdm_create_update_session_data_key[%x] Requester\n",
-		       session_id));
-		spdm_create_update_session_data_key(
-			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_REQUESTER);
-		DEBUG((DEBUG_INFO,
-		       "spdm_create_update_session_data_key[%x] Responder\n",
-		       session_id));
-		spdm_create_update_session_data_key(
-			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_RESPONDER);
+	prev_spdm_request = (spdm_key_update_request_t *) 
+		  spdm_context->last_update_request;
 
-		DEBUG((DEBUG_INFO,
-		       "spdm_activate_update_session_data_key[%x] Responder new\n",
-		       session_id));
-		spdm_activate_update_session_data_key(
-			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
-		break;
-	case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
-		DEBUG((DEBUG_INFO,
-		       "spdm_activate_update_session_data_key[%x] Requester new\n",
-		       session_id));
-		spdm_activate_update_session_data_key(
-			session_info->secured_message_context,
-			SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
-		break;
-	default:
-		spdm_generate_error_response(context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
+	if(spdm_request->header.param2 != prev_spdm_request->header.param2 ||
+		  spdm_request->header.param1 != prev_spdm_request->header.param1) {
+		switch (spdm_request->header.param1) {
+		case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
+			if(prev_spdm_request->header.param1 ==
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
+				 prev_spdm_request->header.param1 ==
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
+				spdm_generate_error_response(context,
+							     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+							     response_size, response);
+				return RETURN_SUCCESS;
+			}
+
+			DEBUG((DEBUG_INFO,
+			       "spdm_create_update_session_data_key[%x] Requester\n",
+			       session_id));
+			spdm_create_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_REQUESTER);
+			break;
+		case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
+			if(prev_spdm_request->header.param1 ==
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
+				 prev_spdm_request->header.param1 ==
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
+				spdm_generate_error_response(context,
+							     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+							     response_size, response);
+				return RETURN_SUCCESS;
+			}
+
+			DEBUG((DEBUG_INFO,
+			       "spdm_create_update_session_data_key[%x] Requester\n",
+			       session_id));
+			spdm_create_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_REQUESTER);
+			DEBUG((DEBUG_INFO,
+			       "spdm_create_update_session_data_key[%x] Responder\n",
+			       session_id));
+			spdm_create_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_RESPONDER);
+
+			DEBUG((DEBUG_INFO,
+			       "spdm_activate_update_session_data_key[%x] Responder new\n",
+			       session_id));
+			spdm_activate_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+			break;
+		case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
+			if(prev_spdm_request->header.param1 !=
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY &&
+				prev_spdm_request->header.param1 !=
+				      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
+				spdm_generate_error_response(context,
+							     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+							     response_size, response);
+				return RETURN_SUCCESS;
+			}
+			DEBUG((DEBUG_INFO,
+			       "spdm_activate_update_session_data_key[%x] Requester new\n",
+			       session_id));
+			spdm_activate_update_session_data_key(
+				session_info->secured_message_context,
+				SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+			break;
+		default:
+			DEBUG((DEBUG_INFO, "espurious case\n"));
+			spdm_generate_error_response(context,
+						     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+						     response_size, response);
+			return RETURN_SUCCESS;
+		}
 	}
+
+	copy_mem(prev_spdm_request, spdm_request, request_size);
 
 	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
