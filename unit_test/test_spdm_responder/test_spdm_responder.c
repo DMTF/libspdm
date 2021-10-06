@@ -30,6 +30,7 @@ int spdm_responder_finish_test_main(void);
 int spdm_responder_psk_exchange_test_main(void);
 int spdm_responder_psk_finish_test_main(void);
 int spdm_responder_heartbeat_test_main(void);
+int spdm_responder_key_update_test_main(void);
 int spdm_responder_end_session_test_main(void);
 
 int main(void)
@@ -91,6 +92,10 @@ int main(void)
 	}
 
 	if (spdm_responder_heartbeat_test_main() != 0) {
+		return_value = 1;
+	}
+
+	if (spdm_responder_key_update_test_main() != 0) {
 		return_value = 1;
 	}
 
