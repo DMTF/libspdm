@@ -347,6 +347,11 @@ typedef struct {
 	// Opaque context data for use by application
 	//
 	void *opaque_context_data_ptr;
+
+	//
+	// Register for the last KEY_UPDATE token and operation (responder only)
+	//
+	uint8 last_update_request[4];
 } spdm_context_t;
 
 /**
