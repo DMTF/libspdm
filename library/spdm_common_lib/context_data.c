@@ -78,7 +78,7 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
-			if ((uint8)(data_size /sizeof(spdm_version_number_t)) != 1) {
+			if (data_size != sizeof(spdm_version_number_t)) {
 				/* Only have one connected version */
 				return RETURN_INVALID_PARAMETER;
 			}
@@ -104,7 +104,7 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
-			if ((uint8)(data_size /sizeof(spdm_version_number_t)) != 1) {
+			if (data_size != sizeof(spdm_version_number_t)) {
 				/* Only have one connected version */
 				return RETURN_INVALID_PARAMETER;
 			}
