@@ -8,7 +8,11 @@
 
 /**
   This function creates the measurement signature to response message based upon l1l2.
+  If session_info is NULL, this function will use M cache of SPDM context,
+  else will use M cache of SPDM session context.
+
   @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  A pointer to the SPDM session context.
   @param  response_message              The measurement response message with empty signature to be filled.
   @param  response_message_size          Total size in bytes of the response message including signature.
 
@@ -16,6 +20,7 @@
   @retval FALSE measurement signature is not created.
 **/
 boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
+					  IN spdm_session_info_t *session_info,
 					  IN OUT void *response_message,
 					  IN uintn response_message_size)
 {
@@ -45,13 +50,13 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
 		 spdm_context->local_context.opaque_measurement_rsp_size);
 	ptr += spdm_context->local_context.opaque_measurement_rsp_size;
 
-	status = spdm_append_message_m(spdm_context, NULL, response_message,
+	status = spdm_append_message_m(spdm_context, session_info, response_message,
 				       response_message_size - signature_size);
 	if (RETURN_ERROR(status)) {
 		return FALSE;
 	}
 
-	result = spdm_generate_measurement_signature(spdm_context, ptr);
+	result = spdm_generate_measurement_signature(spdm_context, session_info, ptr);
 
 	return result;
 }
@@ -160,6 +165,7 @@ return_status spdm_get_response_measurements(IN void *context,
 				response_size, response);
 			return RETURN_SUCCESS;
 		}
+		session_info = NULL;
 	} else {
 		if (spdm_context->connection_info.connection_state <
 		    SPDM_CONNECTION_STATE_NEGOTIATED) {
@@ -502,7 +508,7 @@ return_status spdm_get_response_measurements(IN void *context,
 						spdm_request->header.request_response_code);
 
 	status = spdm_append_message_m(
-			spdm_context, NULL, spdm_request,
+			spdm_context, session_info, spdm_request,
 			request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
@@ -516,7 +522,7 @@ return_status spdm_get_response_measurements(IN void *context,
 	    0) {
 
 		ret = spdm_create_measurement_signature(
-			spdm_context, spdm_response,
+			spdm_context, session_info, spdm_response,
 			spdm_response_size);
 		if (!ret) {
 			spdm_generate_error_response(
@@ -524,19 +530,19 @@ return_status spdm_get_response_measurements(IN void *context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				SPDM_GET_MEASUREMENTS,
 				response_size, response);
-			spdm_reset_message_m(spdm_context, NULL);
+			spdm_reset_message_m(spdm_context, session_info);
 			return RETURN_SUCCESS;
 		}
 		//reset
-		spdm_reset_message_m(spdm_context, NULL);
+		spdm_reset_message_m(spdm_context, session_info);
 	} else {
-		status = spdm_append_message_m(spdm_context, NULL, spdm_response,
+		status = spdm_append_message_m(spdm_context, session_info, spdm_response,
 					       *response_size);
 		if (RETURN_ERROR(status)) {
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
-			spdm_reset_message_m(spdm_context, NULL);
+			spdm_reset_message_m(spdm_context, session_info);
 			return RETURN_SUCCESS;
 		}
 	}
