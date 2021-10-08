@@ -54,8 +54,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
-	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-						SPDM_FINISH);
+
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;
@@ -157,6 +156,9 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
 	}
+
+	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+						SPDM_FINISH);
 
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));

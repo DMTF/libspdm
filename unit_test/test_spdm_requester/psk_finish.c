@@ -1522,18 +1522,6 @@ void test_spdm_requester_psk_finish_case11(void **state)
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
 	spdm_reset_message_a(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	spdm_context->transcript.message_m.buffer_size =
-							spdm_context->transcript.message_m.max_buffer_size;
-	spdm_context->transcript.message_b.buffer_size =
-							spdm_context->transcript.message_b.max_buffer_size;
-	spdm_context->transcript.message_c.buffer_size =
-							spdm_context->transcript.message_c.max_buffer_size;
-	spdm_context->transcript.message_mut_b.buffer_size =
-							spdm_context->transcript.message_mut_b.max_buffer_size;
-	spdm_context->transcript.message_mut_c.buffer_size =
-							spdm_context->transcript.message_mut_c.max_buffer_size;
-#endif
 
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
@@ -1585,6 +1573,19 @@ void test_spdm_requester_psk_finish_case11(void **state)
 		->handshake_secret.response_handshake_sequence_number = 0;
 	spdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	session_info->session_transcript.message_m.buffer_size =
+							session_info->session_transcript.message_m.max_buffer_size;
+	spdm_context->transcript.message_b.buffer_size =
+							spdm_context->transcript.message_b.max_buffer_size;
+	spdm_context->transcript.message_c.buffer_size =
+							spdm_context->transcript.message_c.max_buffer_size;
+	spdm_context->transcript.message_mut_b.buffer_size =
+							spdm_context->transcript.message_mut_b.max_buffer_size;
+	spdm_context->transcript.message_mut_c.buffer_size =
+							spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
+
 	status = spdm_send_receive_psk_finish(spdm_context, session_id);
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(
@@ -1592,7 +1593,7 @@ void test_spdm_requester_psk_finish_case11(void **state)
 			spdm_context->session_info[0].secured_message_context),
 		SPDM_SESSION_STATE_ESTABLISHED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+	assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);

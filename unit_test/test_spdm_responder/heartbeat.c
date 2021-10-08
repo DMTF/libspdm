@@ -558,18 +558,6 @@ void test_spdm_responder_heartbeat_case7(void **state)
 	spdm_context->local_context.psk_hint_size =
 		sizeof(TEST_PSK_HINT_STRING);
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	spdm_context->transcript.message_m.buffer_size =
-							spdm_context->transcript.message_m.max_buffer_size;
-	spdm_context->transcript.message_b.buffer_size =
-							spdm_context->transcript.message_b.max_buffer_size;
-	spdm_context->transcript.message_c.buffer_size =
-							spdm_context->transcript.message_c.max_buffer_size;
-	spdm_context->transcript.message_mut_b.buffer_size =
-							spdm_context->transcript.message_mut_b.max_buffer_size;
-	spdm_context->transcript.message_mut_c.buffer_size =
-							spdm_context->transcript.message_mut_c.max_buffer_size;
-#endif
 
 	session_id = 0xFFFFFFFF;
 	spdm_context->latest_session_id = session_id;
@@ -582,6 +570,18 @@ void test_spdm_responder_heartbeat_case7(void **state)
 		SPDM_SESSION_STATE_ESTABLISHED);
 
 	response_size = sizeof(response);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	session_info->session_transcript.message_m.buffer_size =
+							session_info->session_transcript.message_m.max_buffer_size;
+	spdm_context->transcript.message_b.buffer_size =
+							spdm_context->transcript.message_b.max_buffer_size;
+	spdm_context->transcript.message_c.buffer_size =
+							spdm_context->transcript.message_c.max_buffer_size;
+	spdm_context->transcript.message_mut_b.buffer_size =
+							spdm_context->transcript.message_mut_b.max_buffer_size;
+	spdm_context->transcript.message_mut_c.buffer_size =
+							spdm_context->transcript.message_mut_c.max_buffer_size;
+#endif
 	status = spdm_get_response_heartbeat(spdm_context,
 					     m_spdm_heartbeat_request1_size,
 					     &m_spdm_heartbeat_request1,
@@ -592,7 +592,7 @@ void test_spdm_responder_heartbeat_case7(void **state)
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_HEARTBEAT_ACK);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+	assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);

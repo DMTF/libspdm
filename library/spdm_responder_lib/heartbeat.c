@@ -91,7 +91,7 @@ return_status spdm_get_response_heartbeat(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));

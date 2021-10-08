@@ -1376,8 +1376,8 @@ void test_spdm_requester_heartbeat_case11(void **state)
 						    ->secured_message_context))
 		->application_secret.response_data_sequence_number = 0;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	spdm_context->transcript.message_m.buffer_size =
-		spdm_context->transcript.message_m.max_buffer_size;
+	session_info->session_transcript.message_m.buffer_size =
+		session_info->session_transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
 							spdm_context->transcript.message_b.max_buffer_size;
 	spdm_context->transcript.message_c.buffer_size =
@@ -1391,7 +1391,7 @@ void test_spdm_requester_heartbeat_case11(void **state)
 	status = spdm_heartbeat(spdm_context, session_id);
 	assert_int_equal(status, RETURN_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+	assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);

@@ -101,7 +101,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
 
 	status = spdm_append_message_f(spdm_context, session_info, FALSE, request,
