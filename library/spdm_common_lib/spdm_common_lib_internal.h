@@ -219,12 +219,14 @@ typedef struct {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	large_managed_buffer_t message_k;
 	large_managed_buffer_t message_f;
+	large_managed_buffer_t message_m;
 #else
 	// the message_k must be plan text because we do not know the finished_key yet.
 	medium_managed_buffer_t temp_message_k;
 	boolean                message_f_initialized;
 	boolean                finished_key_ready;
 	void                   *digest_context_th;
+	void                   *digest_context_l1l2;
 	void                   *hmac_rsp_context_th;
 	void                   *hmac_req_context_th;
 	// this is back up for message F reset.
@@ -424,10 +426,11 @@ void init_managed_buffer(IN OUT void *managed_buffer_t,
 /**
   Reset message buffer in SPDM context according to request code.
 
-  @param  spdm_context                A pointer to the SPDM context.
-  @param  spdm_request                The SPDM request code.
+  @param  spdm_context               	A pointer to the SPDM context.
+  @param  spdm_session_info             A pointer to the SPDM session context.
+  @param  spdm_request               	The SPDM request code.
 */
-void spdm_reset_message_buffer_via_request_code(IN void *context,
+void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *session_info,
 			       IN uint8 request_code);
 
 /**
