@@ -45,7 +45,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
 		 spdm_context->local_context.opaque_measurement_rsp_size);
 	ptr += spdm_context->local_context.opaque_measurement_rsp_size;
 
-	status = spdm_append_message_m(spdm_context, response_message,
+	status = spdm_append_message_m(spdm_context, NULL, response_message,
 				       response_message_size - signature_size);
 	if (RETURN_ERROR(status)) {
 		return FALSE;
@@ -498,11 +498,11 @@ return_status spdm_get_response_measurements(IN void *context,
 		break;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	status = spdm_append_message_m(
-			spdm_context, spdm_request,
+			spdm_context, NULL, spdm_request,
 			request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_generate_error_response(spdm_context,
@@ -524,19 +524,19 @@ return_status spdm_get_response_measurements(IN void *context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				SPDM_GET_MEASUREMENTS,
 				response_size, response);
-			spdm_reset_message_m(spdm_context);
+			spdm_reset_message_m(spdm_context, NULL);
 			return RETURN_SUCCESS;
 		}
 		//reset
-		spdm_reset_message_m(spdm_context);
+		spdm_reset_message_m(spdm_context, NULL);
 	} else {
-		status = spdm_append_message_m(spdm_context, spdm_response,
+		status = spdm_append_message_m(spdm_context, NULL, spdm_response,
 					       *response_size);
 		if (RETURN_ERROR(status)) {
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
-			spdm_reset_message_m(spdm_context);
+			spdm_reset_message_m(spdm_context, NULL);
 			return RETURN_SUCCESS;
 		}
 	}

@@ -71,7 +71,7 @@ return_status spdm_get_encap_response_challenge_auth(
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	signature_size = spdm_get_req_asym_signature_size(

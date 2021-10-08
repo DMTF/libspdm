@@ -42,7 +42,7 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
 
 	spdm_request = encap_request;
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {

@@ -43,7 +43,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
 		return RETURN_UNSUPPORTED;
 	}
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 											SPDM_HEARTBEAT);
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
