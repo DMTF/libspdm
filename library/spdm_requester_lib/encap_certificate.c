@@ -102,7 +102,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 				   .local_cert_chain_provision_size[slot_id] -
 			   (length + offset);
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);

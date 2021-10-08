@@ -2431,7 +2431,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2487,7 +2487,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2543,7 +2543,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2599,7 +2599,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2655,7 +2655,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2711,7 +2711,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2767,7 +2767,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2825,7 +2825,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2878,7 +2878,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2932,7 +2932,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2990,7 +2990,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3054,7 +3054,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3113,7 +3113,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3172,7 +3172,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3231,7 +3231,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3308,7 +3308,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 
 	for (int i = 0; i < sizeof(SlotIDs) / sizeof(SlotIDs[0]); i++) {
 		measurement_record_length = sizeof(measurement_record);
-		spdm_reset_message_m(spdm_context);
+		spdm_reset_message_m(spdm_context, NULL);
 		status = spdm_get_measurement(spdm_context, NULL,
 					      request_attribute, 1, SlotIDs[i],
 					      &number_of_block,
@@ -3364,7 +3364,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3427,7 +3427,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3488,7 +3488,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3546,7 +3546,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3604,7 +3604,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3664,7 +3664,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3744,7 +3744,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3809,7 +3809,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3868,7 +3868,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3927,7 +3927,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3987,7 +3987,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4048,7 +4048,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4109,7 +4109,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4172,7 +4172,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4237,7 +4237,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4298,7 +4298,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context);
+	spdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4370,7 +4370,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_reset_message_m(spdm_context);
+    spdm_reset_message_m(spdm_context, NULL);
 
     measurement_record_length = sizeof(measurement_record);
     status = spdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);

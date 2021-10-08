@@ -157,7 +157,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 
 	spdm_reset_context(spdm_context);
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request.header.request_response_code);
 
 	status = spdm_send_spdm_request(spdm_context, NULL,

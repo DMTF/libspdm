@@ -104,7 +104,7 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
 	spdm_capabilities_response spdm_response;
 	uintn spdm_response_size;
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 								SPDM_GET_CAPABILITIES);
 	if (spdm_context->connection_info.connection_state !=
 	    SPDM_CONNECTION_STATE_AFTER_VERSION) {

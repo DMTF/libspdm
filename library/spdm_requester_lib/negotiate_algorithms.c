@@ -59,7 +59,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	uint8 fixed_alg_size;
 	uint8 ext_alg_count;
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 									SPDM_NEGOTIATE_ALGORITHMS);
 	
 	if (spdm_context->connection_info.connection_state !=

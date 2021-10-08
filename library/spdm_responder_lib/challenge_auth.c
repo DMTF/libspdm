@@ -126,7 +126,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 					     response_size, response);
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;

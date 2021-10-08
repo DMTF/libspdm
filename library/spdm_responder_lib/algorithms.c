@@ -285,7 +285,7 @@ return_status spdm_get_response_algorithms(IN void *context,
 	}
 	spdm_request_size = request_size;
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size >= sizeof(spdm_algorithms_response_mine_t));

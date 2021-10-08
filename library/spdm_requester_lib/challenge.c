@@ -69,7 +69,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	spdm_challenge_auth_response_attribute_t auth_attribute;
 
 	spdm_context = context;
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 									SPDM_CHALLENGE);
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE, 0,

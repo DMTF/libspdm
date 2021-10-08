@@ -388,7 +388,7 @@ return_status spdm_get_response_encapsulated_request(
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	ASSERT(*response_size > sizeof(spdm_encapsulated_request_response_t));
@@ -529,7 +529,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context,
+	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request->header.request_response_code);
 
 	status = spdm_process_encapsulated_response(
