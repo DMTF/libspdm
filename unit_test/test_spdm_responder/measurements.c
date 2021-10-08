@@ -94,6 +94,8 @@ spdm_get_measurements_request_t m_spdm_get_measurements_request13 = {
 };
 uintn m_spdm_get_measurements_request13_size = sizeof(spdm_message_header_t);
 
+static uint8 m_local_psk_hint[32];
+
 /**
   Test 1: Successful response to get a number of measurements without signature
   Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
@@ -1389,6 +1391,80 @@ void test_spdm_responder_measurements_case22(void **state)
 	}
 }
 
+/**
+  Test 23: Successful response to get a session based measurement with signature
+  Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
+**/
+void test_spdm_responder_measurements_case23(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uintn response_size;
+	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	spdm_measurements_response_t *spdm_response;
+	uintn measurment_sig_size;
+	spdm_session_info_t *session_info;
+	uint32 session_id;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x17;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AUTHENTICATED;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->connection_info.algorithm.base_asym_algo =
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.measurement_spec =
+		m_use_measurement_spec;
+	spdm_context->connection_info.algorithm.measurement_hash_algo =
+		m_use_measurement_hash_algo;
+	spdm_context->connection_info.version.major_version = 1;
+	spdm_context->connection_info.version.minor_version = 0;
+	spdm_context->local_context.opaque_measurement_rsp_size = 0;
+	spdm_context->local_context.opaque_measurement_rsp = NULL;
+	measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			      spdm_get_asym_signature_size(m_use_asym_algo);
+
+	response_size = sizeof(response);
+	spdm_get_random_number(SPDM_NONCE_SIZE,
+			       m_spdm_get_measurements_request5.nonce);
+
+	zero_mem(m_local_psk_hint, 32);
+	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
+		 sizeof(TEST_PSK_HINT_STRING));
+	spdm_context->local_context.psk_hint_size =
+		sizeof(TEST_PSK_HINT_STRING);
+	spdm_context->local_context.psk_hint = m_local_psk_hint;
+
+	session_id = 0xFFFFFFFF;
+	spdm_context->latest_session_id = session_id;
+	spdm_context->last_spdm_request_session_id_valid = TRUE;
+	spdm_context->last_spdm_request_session_id = session_id;
+	session_info = &spdm_context->session_info[0];
+	spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+	spdm_secured_message_set_session_state(
+		session_info->secured_message_context,
+		SPDM_SESSION_STATE_ESTABLISHED);
+	status = spdm_get_response_measurements(
+		spdm_context, m_spdm_get_measurements_request5_size,
+		&m_spdm_get_measurements_request5, &response_size, response);
+	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+						measurment_sig_size);
+	spdm_response = (void *)response;
+	assert_int_equal(spdm_response->header.request_response_code,
+			 SPDM_MEASUREMENTS);
+	assert_int_equal(spdm_response->header.param1,
+			 MEASUREMENT_BLOCK_NUMBER);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
+#endif
+}
+
 spdm_test_context_t m_spdm_responder_measurements_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
@@ -1444,6 +1520,8 @@ int spdm_responder_measurements_test_main(void)
 		cmocka_unit_test(test_spdm_responder_measurements_case21),
 		// Large number of requests before requiring a signature
 		cmocka_unit_test(test_spdm_responder_measurements_case22),
+		// Successful response to get a session based measurement with signature
+		cmocka_unit_test(test_spdm_responder_measurements_case23),
 	};
 
 	setup_spdm_test_context(&m_spdm_responder_measurements_test_context);
