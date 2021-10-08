@@ -2078,8 +2078,8 @@ void test_spdm_requester_finish_case11(void **state)
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 	req_slot_id_param = 0;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	spdm_context->transcript.message_m.buffer_size =
-		spdm_context->transcript.message_m.max_buffer_size;
+	session_info->session_transcript.message_m.buffer_size =
+		session_info->session_transcript.message_m.max_buffer_size;
 	spdm_context->transcript.message_b.buffer_size =
 							spdm_context->transcript.message_b.max_buffer_size;
 	spdm_context->transcript.message_c.buffer_size =
@@ -2098,7 +2098,7 @@ void test_spdm_requester_finish_case11(void **state)
 			spdm_context->session_info[0].secured_message_context),
 		SPDM_SESSION_STATE_ESTABLISHED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+	assert_int_equal(session_info->session_transcript.message_m.buffer_size,
 					0);
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);

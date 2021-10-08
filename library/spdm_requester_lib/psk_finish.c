@@ -48,8 +48,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
 		return RETURN_UNSUPPORTED;
 	}
-	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-										SPDM_PSK_FINISH);
+
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
 		return RETURN_UNSUPPORTED;
@@ -100,6 +99,9 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
 	}
+
+	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+										SPDM_PSK_FINISH);
 
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));

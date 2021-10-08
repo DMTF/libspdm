@@ -82,7 +82,7 @@ return_status spdm_get_response_end_session(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
 
 	session_info->end_session_attributes = spdm_request->header.param1;
