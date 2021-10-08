@@ -531,10 +531,13 @@ void spdm_reset_message_mut_c(IN void *spdm_context);
 
 /**
   Reset message M cache in SPDM context.
+  If session_info is NULL, this function will use M cache of SPDM context,
+  else will use M cache of SPDM session context.
 
   @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  A pointer to the SPDM session context.
 **/
-void spdm_reset_message_m(IN void *spdm_context);
+void spdm_reset_message_m(IN void *context, IN void *session_info);
 
 /**
   Reset message K cache in SPDM context.
@@ -619,16 +622,19 @@ return_status spdm_append_message_mut_c(IN void *spdm_context, IN void *message,
 
 /**
   Append message M cache in SPDM context.
+  If session_info is NULL, this function will use M cache of SPDM context,
+  else will use M cache of SPDM session context.
 
   @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_m(IN void *spdm_context, IN void *message,
-				    IN uintn message_size);
+return_status spdm_append_message_m(IN void *context, IN void *session_info,
+					IN void *message, IN uintn message_size);
 
 /**
   Append message K cache in SPDM context.

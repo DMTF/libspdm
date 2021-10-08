@@ -689,21 +689,38 @@ void spdm_reset_message_mut_c(IN void *context)
 
 /**
   Reset message M cache in SPDM context.
+  If session_info is NULL, this function will use M cache of SPDM context,
+  else will use M cache of SPDM session context.
 
   @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  A pointer to the SPDM session context.
 **/
-void spdm_reset_message_m(IN void *context)
+void spdm_reset_message_m(IN void *context, IN void *session_info)
 {
 	spdm_context_t *spdm_context;
+	spdm_session_info_t *spdm_session_info;
 
 	spdm_context = context;
+	spdm_session_info = session_info;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	reset_managed_buffer(&spdm_context->transcript.message_m);
+	if (spdm_session_info == NULL) {
+		reset_managed_buffer(&spdm_context->transcript.message_m);
+	} else {
+		reset_managed_buffer(&spdm_session_info->session_transcript.message_m);
+	}
 #else
-	if (spdm_context->transcript.digest_context_l1l2 != NULL) {
-		spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
-			spdm_context->transcript.digest_context_l1l2);
-		spdm_context->transcript.digest_context_l1l2 = NULL;
+	if (spdm_session_info == NULL) {
+		if (spdm_context->transcript.digest_context_l1l2 != NULL) {
+			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_context->transcript.digest_context_l1l2);
+			spdm_context->transcript.digest_context_l1l2 = NULL;
+	}
+	} else {
+		if (spdm_session_info->session_transcript.digest_context_l1l2 != NULL) {
+			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_l1l2);
+			spdm_session_info->session_transcript.digest_context_l1l2 = NULL;
+		}
 	}
 #endif
 }
@@ -814,9 +831,10 @@ void spdm_reset_message_f(IN void *context, IN void *session_info)
   Reset message buffer in SPDM context according to request code.
 
   @param  spdm_context               	A pointer to the SPDM context.
+  @param  spdm_session_info             A pointer to the SPDM session context.
   @param  spdm_request               	The SPDM request code.
 */
-void spdm_reset_message_buffer_via_request_code(IN void *context,
+void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *session_info,
 			       IN uint8 request_code)
 {
 	spdm_context_t *spdm_context;
@@ -826,7 +844,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context,
 	  Any request other than SPDM_GET_MEASUREMENTS resets L1/L2
 	*/
 	if (request_code != SPDM_GET_MEASUREMENTS) {
-		spdm_reset_message_m(spdm_context);
+		spdm_reset_message_m(spdm_context, session_info);
 	}
 	/**
 	  If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE 
@@ -1021,33 +1039,55 @@ return_status spdm_append_message_mut_c(IN void *context, IN void *message,
 
 /**
   Append message M cache in SPDM context.
+  If session_info is NULL, this function will use M cache of SPDM context,
+  else will use M cache of SPDM session context.
 
   @param  spdm_context                  A pointer to the SPDM context.
+  @param  session_info                  A pointer to the SPDM session context.
   @param  message                      message buffer.
   @param  message_size                  size in bytes of message buffer.
 
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_m(IN void *context, IN void *message,
-				    IN uintn message_size)
+return_status spdm_append_message_m(IN void *context, IN void *session_info,
+					IN void *message, IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
+	spdm_session_info_t *spdm_session_info;
 
 	spdm_context = context;
+	spdm_session_info = session_info;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	return append_managed_buffer(&spdm_context->transcript.message_m,
-				     message, message_size);
-#else
-	if (spdm_context->transcript.digest_context_l1l2 == NULL) {
-		spdm_context->transcript.digest_context_l1l2 = spdm_hash_new (
-			spdm_context->connection_info.algorithm.base_hash_algo);
-		spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
-			spdm_context->transcript.digest_context_l1l2);
+	if (spdm_session_info == NULL) {
+		return append_managed_buffer(&spdm_context->transcript.message_m,
+								message, message_size);
+	} else {
+		return append_managed_buffer(&spdm_session_info->session_transcript.message_m,
+								message, message_size);
 	}
-	return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
-		spdm_context->transcript.digest_context_l1l2, message, message_size) ?
-		RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+#else
+	if (spdm_session_info == NULL) {
+		if (spdm_context->transcript.digest_context_l1l2 == NULL) {
+			spdm_context->transcript.digest_context_l1l2 = spdm_hash_new (
+				spdm_context->connection_info.algorithm.base_hash_algo);
+			spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_context->transcript.digest_context_l1l2);
+		}
+		return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_context->transcript.digest_context_l1l2, message, message_size) ?
+			RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+	} else {
+		if (spdm_session_info->session_transcript.digest_context_l1l2 == NULL) {
+			spdm_session_info->session_transcript.digest_context_l1l2 = spdm_hash_new (
+				spdm_context->connection_info.algorithm.base_hash_algo);
+			spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
+				spdm_session_info->session_transcript.digest_context_l1l2);
+		}
+		return spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+			spdm_session_info->session_transcript.digest_context_l1l2, message, message_size) ?
+			RETURN_SUCCESS : RETURN_DEVICE_ERROR;
+	}
 #endif
 }
 
