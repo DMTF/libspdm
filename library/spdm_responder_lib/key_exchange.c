@@ -99,13 +99,6 @@ return_status spdm_get_response_key_exchange(IN void *context,
 			SPDM_KEY_EXCHANGE, response_size, response);
 		return RETURN_SUCCESS;
 	}
-	if (spdm_request->header.param1 != 0 && spdm_request->header.param1 != 1 &&
-		spdm_request->header.param1 != 0xFF) {
-		spdm_generate_error_response(
-			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-			0, response_size, response);
-			return RETURN_SUCCESS;
-	}
 
 	slot_id = spdm_request->header.param2;
 	if ((slot_id != 0xFF) &&
@@ -129,6 +122,12 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
 		spdm_context, FALSE, spdm_request->header.param1);
 
+	if ((measurement_summary_hash_size == 0) &&
+		(spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
+		return spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_INVALID_REQUEST,
+						0, response_size, response);
+	}
 	if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
 				   sizeof(uint16)) {
 		spdm_generate_error_response(spdm_context,
