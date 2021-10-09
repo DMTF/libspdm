@@ -78,12 +78,6 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_request->header.param2 > 0) {
 		return spdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHALLENGE, response_size, response);
 	}
-	if (spdm_request->header.param2 != 0 && spdm_request->header.param2 != 1 &&
-		spdm_request->header.param2 != 0xFF) {
-		return spdm_generate_error_response(spdm_context,
-						SPDM_ERROR_CODE_INVALID_REQUEST,
-						0, response_size, response);
-	}
 
 	spdm_request_size = request_size;
 
@@ -102,7 +96,12 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_context->connection_info.algorithm.base_hash_algo);
 	measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
 		spdm_context, FALSE, spdm_request->header.param2);
-
+	if ((measurement_summary_hash_size == 0) &&
+		(spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
+		return spdm_generate_error_response(spdm_context,
+						SPDM_ERROR_CODE_INVALID_REQUEST,
+						0, response_size, response);
+	}
 	total_size =
 		sizeof(spdm_challenge_auth_response_t) + hash_size +
 		SPDM_NONCE_SIZE + measurement_summary_hash_size +
