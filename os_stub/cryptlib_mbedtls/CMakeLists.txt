@@ -23,7 +23,11 @@ SET(src_cryptlib_mbedtls
     hash/sha3.c
     hash/sm3.c
     hmac/hmac_sha.c
-    kdf/hkdf.c
+    hmac/hmac_sha3.c
+    hmac/hmac_sm3.c
+    kdf/hkdf_sha.c
+    kdf/hkdf_sha3.c
+    kdf/hkdf_sm3.c
     pem/pem.c
     pk/ec.c
     pk/ecd.c

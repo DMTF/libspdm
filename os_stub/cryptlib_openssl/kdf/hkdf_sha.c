@@ -5,18 +5,19 @@
 **/
 
 /** @file
-  HMAC-SHA256 KDF Wrapper Implementation.
+  HMAC-SHA256/384/512 KDF Wrapper Implementation.
 
   RFC 5869: HMAC-based Extract-and-Expand key Derivation Function (HKDF)
 **/
 
 #include "internal_crypt_lib.h"
-#include <mbedtls/hkdf.h>
+#include <openssl/evp.h>
+#include <openssl/kdf.h>
 
 /**
   Derive HMAC-based Extract-and-Expand key Derivation Function (HKDF).
 
-  @param[in]   md_type           message digest Type.
+  @param[in]   md               message digest.
   @param[in]   key              Pointer to the user-supplied key.
   @param[in]   key_size          key size in bytes.
   @param[in]   salt             Pointer to the salt(non-secret) value.
@@ -30,14 +31,14 @@
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
-				   IN const uint8 *key, IN uintn key_size,
-				   IN const uint8 *salt, IN uintn salt_size,
-				   IN const uint8 *info, IN uintn info_size,
-				   OUT uint8 *out, IN uintn out_size)
+boolean hkdf_md_extract_and_expand(IN const EVP_MD *md, IN const uint8 *key,
+				   IN uintn key_size, IN const uint8 *salt,
+				   IN uintn salt_size, IN const uint8 *info,
+				   IN uintn info_size, OUT uint8 *out,
+				   IN uintn out_size)
 {
-	const mbedtls_md_info_t *md;
-	int32 ret;
+	EVP_PKEY_CTX *pkey_ctx;
+	boolean result;
 
 	if (key == NULL || salt == NULL || info == NULL || out == NULL ||
 	    key_size > INT_MAX || salt_size > INT_MAX || info_size > INT_MAX ||
@@ -45,22 +46,40 @@ boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
 		return FALSE;
 	}
 
-	md = mbedtls_md_info_from_type(md_type);
-	ASSERT(md != NULL);
-
-	ret = mbedtls_hkdf(md, salt, (uint32)salt_size, key, (uint32)key_size,
-			   info, (uint32)info_size, out, (uint32)out_size);
-	if (ret != 0) {
+	pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
+	if (pkey_ctx == NULL) {
 		return FALSE;
 	}
 
-	return TRUE;
+	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
+	if (result) {
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_set1_hkdf_salt(pkey_ctx, salt,
+						     (uint32)salt_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_set1_hkdf_key(pkey_ctx, key,
+						    (uint32)key_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_add1_hkdf_info(pkey_ctx, info,
+						     (uint32)info_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_derive(pkey_ctx, out, &out_size) > 0;
+	}
+
+	EVP_PKEY_CTX_free(pkey_ctx);
+	pkey_ctx = NULL;
+	return result;
 }
 
 /**
   Derive HMAC-based Extract key Derivation Function (HKDF).
 
-  @param[in]   md_type           message digest Type.
+  @param[in]   md               message digest.
   @param[in]   key              Pointer to the user-supplied key.
   @param[in]   key_size          key size in bytes.
   @param[in]   salt             Pointer to the salt(non-secret) value.
@@ -72,14 +91,13 @@ boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8 *key,
+boolean hkdf_md_extract(IN const EVP_MD *md, IN const uint8 *key,
 			IN uintn key_size, IN const uint8 *salt,
 			IN uintn salt_size, OUT uint8 *prk_out,
 			IN uintn prk_out_size)
 {
-	const mbedtls_md_info_t *md;
-	int32 ret;
-	uintn md_size;
+	EVP_PKEY_CTX *pkey_ctx;
+	boolean result;
 
 	if (key == NULL || salt == NULL || prk_out == NULL ||
 	    key_size > INT_MAX || salt_size > INT_MAX ||
@@ -87,40 +105,41 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8 *key,
 		return FALSE;
 	}
 
-	md_size = 0;
-	switch (md_type) {
-	case MBEDTLS_MD_SHA256:
-		md_size = SHA256_DIGEST_SIZE;
-		break;
-	case MBEDTLS_MD_SHA384:
-		md_size = SHA384_DIGEST_SIZE;
-		break;
-	case MBEDTLS_MD_SHA512:
-		md_size = SHA512_DIGEST_SIZE;
-		break;
-	default:
-		return FALSE;
-	}
-	if (prk_out_size != md_size) {
+	pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
+	if (pkey_ctx == NULL) {
 		return FALSE;
 	}
 
-	md = mbedtls_md_info_from_type(md_type);
-	ASSERT(md != NULL);
-
-	ret = mbedtls_hkdf_extract(md, salt, (uint32)salt_size, key,
-				   (uint32)key_size, prk_out);
-	if (ret != 0) {
-		return FALSE;
+	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
+	if (result) {
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
+	}
+	if (result) {
+		result =
+			EVP_PKEY_CTX_hkdf_mode(
+				pkey_ctx, EVP_PKEY_HKDEF_MODE_EXTRACT_ONLY) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_set1_hkdf_salt(pkey_ctx, salt,
+						     (uint32)salt_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_set1_hkdf_key(pkey_ctx, key,
+						    (uint32)key_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_derive(pkey_ctx, prk_out, &prk_out_size) > 0;
 	}
 
-	return TRUE;
+	EVP_PKEY_CTX_free(pkey_ctx);
+	pkey_ctx = NULL;
+	return result;
 }
 
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF).
 
-  @param[in]   md_type           message digest Type.
+  @param[in]   md               message digest.
   @param[in]   prk              Pointer to the user-supplied key.
   @param[in]   prk_size          key size in bytes.
   @param[in]   info             Pointer to the application specific info.
@@ -132,47 +151,46 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8 *key,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8 *prk,
+boolean hkdf_md_expand(IN const EVP_MD *md, IN const uint8 *prk,
 		       IN uintn prk_size, IN const uint8 *info,
 		       IN uintn info_size, OUT uint8 *out, IN uintn out_size)
 {
-	const mbedtls_md_info_t *md;
-	int32 ret;
-	uintn md_size;
+	EVP_PKEY_CTX *pkey_ctx;
+	boolean result;
 
 	if (prk == NULL || info == NULL || out == NULL || prk_size > INT_MAX ||
 	    info_size > INT_MAX || out_size > INT_MAX) {
 		return FALSE;
 	}
 
-	switch (md_type) {
-	case MBEDTLS_MD_SHA256:
-		md_size = SHA256_DIGEST_SIZE;
-		break;
-	case MBEDTLS_MD_SHA384:
-		md_size = SHA384_DIGEST_SIZE;
-		break;
-	case MBEDTLS_MD_SHA512:
-		md_size = SHA512_DIGEST_SIZE;
-		break;
-	default:
-		ASSERT(FALSE);
-		return FALSE;
-	}
-	if (prk_size != md_size) {
+	pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
+	if (pkey_ctx == NULL) {
 		return FALSE;
 	}
 
-	md = mbedtls_md_info_from_type(md_type);
-	ASSERT(md != NULL);
-
-	ret = mbedtls_hkdf_expand(md, prk, (uint32)prk_size, info,
-				  (uint32)info_size, out, (uint32)out_size);
-	if (ret != 0) {
-		return FALSE;
+	result = EVP_PKEY_derive_init(pkey_ctx) > 0;
+	if (result) {
+		result = EVP_PKEY_CTX_set_hkdf_md(pkey_ctx, md) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_hkdf_mode(
+				 pkey_ctx, EVP_PKEY_HKDEF_MODE_EXPAND_ONLY) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_set1_hkdf_key(pkey_ctx, prk,
+						    (uint32)prk_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_CTX_add1_hkdf_info(pkey_ctx, info,
+						     (uint32)info_size) > 0;
+	}
+	if (result) {
+		result = EVP_PKEY_derive(pkey_ctx, out, &out_size) > 0;
 	}
 
-	return TRUE;
+	EVP_PKEY_CTX_free(pkey_ctx);
+	pkey_ctx = NULL;
+	return result;
 }
 
 /**
@@ -196,8 +214,8 @@ boolean hkdf_sha256_extract_and_expand(IN const uint8 *key, IN uintn key_size,
 				       IN const uint8 *info, IN uintn info_size,
 				       OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA256, key, key_size,
-					  salt, salt_size, info, info_size, out,
+	return hkdf_md_extract_and_expand(EVP_sha256(), key, key_size, salt,
+					  salt_size, info, info_size, out,
 					  out_size);
 }
 
@@ -219,8 +237,8 @@ boolean hkdf_sha256_extract(IN const uint8 *key, IN uintn key_size,
 			    IN const uint8 *salt, IN uintn salt_size,
 			    OUT uint8 *prk_out, IN uintn prk_out_size)
 {
-	return hkdf_md_extract(MBEDTLS_MD_SHA256, key, key_size, salt,
-			       salt_size, prk_out, prk_out_size);
+	return hkdf_md_extract(EVP_sha256(), key, key_size, salt, salt_size,
+			       prk_out, prk_out_size);
 }
 
 /**
@@ -241,8 +259,8 @@ boolean hkdf_sha256_expand(IN const uint8 *prk, IN uintn prk_size,
 			   IN const uint8 *info, IN uintn info_size,
 			   OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_expand(MBEDTLS_MD_SHA256, prk, prk_size, info, info_size,
-			      out, out_size);
+	return hkdf_md_expand(EVP_sha256(), prk, prk_size, info, info_size, out,
+			      out_size);
 }
 
 /**
@@ -266,8 +284,8 @@ boolean hkdf_sha384_extract_and_expand(IN const uint8 *key, IN uintn key_size,
 				       IN const uint8 *info, IN uintn info_size,
 				       OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA384, key, key_size,
-					  salt, salt_size, info, info_size, out,
+	return hkdf_md_extract_and_expand(EVP_sha384(), key, key_size, salt,
+					  salt_size, info, info_size, out,
 					  out_size);
 }
 
@@ -289,8 +307,8 @@ boolean hkdf_sha384_extract(IN const uint8 *key, IN uintn key_size,
 			    IN const uint8 *salt, IN uintn salt_size,
 			    OUT uint8 *prk_out, IN uintn prk_out_size)
 {
-	return hkdf_md_extract(MBEDTLS_MD_SHA384, key, key_size, salt,
-			       salt_size, prk_out, prk_out_size);
+	return hkdf_md_extract(EVP_sha384(), key, key_size, salt, salt_size,
+			       prk_out, prk_out_size);
 }
 
 /**
@@ -311,8 +329,8 @@ boolean hkdf_sha384_expand(IN const uint8 *prk, IN uintn prk_size,
 			   IN const uint8 *info, IN uintn info_size,
 			   OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_expand(MBEDTLS_MD_SHA384, prk, prk_size, info, info_size,
-			      out, out_size);
+	return hkdf_md_expand(EVP_sha384(), prk, prk_size, info, info_size, out,
+			      out_size);
 }
 
 /**
@@ -336,8 +354,8 @@ boolean hkdf_sha512_extract_and_expand(IN const uint8 *key, IN uintn key_size,
 				       IN const uint8 *info, IN uintn info_size,
 				       OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA512, key, key_size,
-					  salt, salt_size, info, info_size, out,
+	return hkdf_md_extract_and_expand(EVP_sha512(), key, key_size, salt,
+					  salt_size, info, info_size, out,
 					  out_size);
 }
 
@@ -359,8 +377,8 @@ boolean hkdf_sha512_extract(IN const uint8 *key, IN uintn key_size,
 			    IN const uint8 *salt, IN uintn salt_size,
 			    OUT uint8 *prk_out, IN uintn prk_out_size)
 {
-	return hkdf_md_extract(MBEDTLS_MD_SHA512, key, key_size, salt,
-			       salt_size, prk_out, prk_out_size);
+	return hkdf_md_extract(EVP_sha512(), key, key_size, salt, salt_size,
+			       prk_out, prk_out_size);
 }
 
 /**
@@ -381,6 +399,6 @@ boolean hkdf_sha512_expand(IN const uint8 *prk, IN uintn prk_size,
 			   IN const uint8 *info, IN uintn info_size,
 			   OUT uint8 *out, IN uintn out_size)
 {
-	return hkdf_md_expand(MBEDTLS_MD_SHA512, prk, prk_size, info, info_size,
-			      out, out_size);
+	return hkdf_md_expand(EVP_sha512(), prk, prk_size, info, info_size, out,
+			      out_size);
 }
