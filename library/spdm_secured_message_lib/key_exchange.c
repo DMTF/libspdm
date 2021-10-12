@@ -11,12 +11,15 @@
   based upon negotiated DHE algorithm.
 
   @param  dhe_named_group                SPDM dhe_named_group
+  @param  is_initiator                   if the caller is initiator.
+                                         TRUE: initiator
+                                         FALSE: not an initiator
 
   @return  Pointer to the Diffie-Hellman context that has been initialized.
 **/
-void *spdm_secured_message_dhe_new(IN uint16 dhe_named_group)
+void *spdm_secured_message_dhe_new(IN uint16 dhe_named_group, IN const boolean is_initiator)
 {
-	return spdm_dhe_new(dhe_named_group);
+	return spdm_dhe_new(dhe_named_group, is_initiator);
 }
 
 /**

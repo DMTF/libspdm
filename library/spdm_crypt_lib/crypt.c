@@ -1739,7 +1739,7 @@ asym_free_func get_spdm_asym_free(IN uint32 base_asym_algo)
 #endif
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
-		return sm2_free;
+		return sm2_dsa_free;
 #else
 		ASSERT(FALSE);
 		break;
@@ -3109,7 +3109,7 @@ dhe_new_by_nid_func get_spdm_dhe_new(IN uint16 dhe_named_group)
 #endif
 	case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
-		return sm2_new_by_nid;
+		return sm2_key_exchange_new_by_nid;
 #else
 		ASSERT(FALSE);
 		break;
@@ -3124,13 +3124,18 @@ dhe_new_by_nid_func get_spdm_dhe_new(IN uint16 dhe_named_group)
   based upon negotiated DHE algorithm.
 
   @param  dhe_named_group                SPDM dhe_named_group
+  @param  is_initiator                   if the caller is initiator.
+                                         TRUE: initiator
+                                         FALSE: not an initiator
 
   @return  Pointer to the Diffie-Hellman context that has been initialized.
 **/
-void *spdm_dhe_new(IN uint16 dhe_named_group)
+void *spdm_dhe_new(IN uint16 dhe_named_group, IN const boolean is_initiator)
 {
 	dhe_new_by_nid_func new_function;
 	uintn nid;
+	void *context;
+	boolean result;
 
 	new_function = get_spdm_dhe_new(dhe_named_group);
 	if (new_function == NULL) {
@@ -3140,7 +3145,25 @@ void *spdm_dhe_new(IN uint16 dhe_named_group)
 	if (nid == 0) {
 		return NULL;
 	}
-	return new_function(nid);
+	context = new_function(nid);
+	if (context == NULL) {
+		return NULL;
+	}
+
+#if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
+	if (dhe_named_group == SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256) {
+		result = sm2_key_exchange_init (context, CRYPTO_NID_SM3_256,
+			SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE,
+			SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE,
+			is_initiator);
+		if (!result) {
+			sm2_key_exchange_free (context);
+			return NULL;
+		}
+	}
+#endif
+
+	return context;
 }
 
 /**
@@ -3173,7 +3196,7 @@ dhe_free_func get_spdm_dhe_free(IN uint16 dhe_named_group)
 #endif
 	case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
-		return sm2_free;
+		return sm2_key_exchange_free;
 #else
 		ASSERT(FALSE);
 		break;
@@ -3230,7 +3253,7 @@ dhe_generate_key_func get_spdm_dhe_generate_key(IN uint16 dhe_named_group)
 #endif
 	case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
-		return sm2_generate_key;
+		return sm2_key_exchange_generate_key;
 #else
 		ASSERT(FALSE);
 		break;
@@ -3301,9 +3324,7 @@ dhe_compute_key_func get_spdm_dhe_compute_key(IN uint16 dhe_named_group)
 #endif
 	case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
-		//return sm2_compute_key;
-		ASSERT(FALSE);
-		break;
+		return sm2_key_exchange_compute_key;
 #else
 		ASSERT(FALSE);
 		break;

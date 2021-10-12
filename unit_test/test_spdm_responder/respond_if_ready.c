@@ -572,7 +572,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_get_random_number (SPDM_RANDOM_DATA_SIZE, ptr);
   ptr += SPDM_RANDOM_DATA_SIZE;
   dhe_key_size = spdm_get_dhe_pub_key_size (m_use_dhe_algo);
-  dhe_context = spdm_dhe_new (m_use_dhe_algo);
+  dhe_context = spdm_dhe_new (m_use_dhe_algo, FALSE);
   spdm_dhe_generate_key (m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
   ptr += dhe_key_size;
   spdm_dhe_free (m_use_dhe_algo, dhe_context);

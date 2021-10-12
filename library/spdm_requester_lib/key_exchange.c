@@ -131,7 +131,7 @@ return_status try_spdm_send_receive_key_exchange(
 	dhe_key_size = spdm_get_dhe_pub_key_size(
 		spdm_context->connection_info.algorithm.dhe_named_group);
 	dhe_context = spdm_secured_message_dhe_new(
-		spdm_context->connection_info.algorithm.dhe_named_group);
+		spdm_context->connection_info.algorithm.dhe_named_group, TRUE);
 	spdm_secured_message_dhe_generate_key(
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		dhe_context, ptr, &dhe_key_size);

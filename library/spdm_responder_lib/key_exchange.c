@@ -234,7 +234,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 
 	ptr = (void *)(spdm_response + 1);
 	dhe_context = spdm_secured_message_dhe_new(
-		spdm_context->connection_info.algorithm.dhe_named_group);
+		spdm_context->connection_info.algorithm.dhe_named_group, FALSE);
 	spdm_secured_message_dhe_generate_key(
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		dhe_context, ptr, &dhe_key_size);
