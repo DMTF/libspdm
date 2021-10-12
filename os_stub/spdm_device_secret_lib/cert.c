@@ -59,11 +59,18 @@ boolean read_responder_root_public_certificate(IN uint32 base_hash_algo,
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
 		file = "rsa3072/ca.cert.der";
 		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+		file = "rsa4096/ca.cert.der";
+		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
 		file = "ecp256/ca.cert.der";
 		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
 		file = "ecp384/ca.cert.der";
+		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+		file = "ecp521/ca.cert.der";
 		break;
 	default:
 		ASSERT(FALSE);
@@ -139,11 +146,18 @@ boolean read_requester_root_public_certificate(IN uint32 base_hash_algo,
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
 		file = "rsa3072/ca.cert.der";
 		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+		file = "rsa4096/ca.cert.der";
+		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
 		file = "ecp256/ca.cert.der";
 		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
 		file = "ecp384/ca.cert.der";
+		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+		file = "ecp521/ca.cert.der";
 		break;
 	default:
 		ASSERT(FALSE);
@@ -219,11 +233,18 @@ boolean read_responder_public_certificate_chain(
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
 		file = "rsa3072/bundle_responder.certchain.der";
 		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+		file = "rsa4096/bundle_responder.certchain.der";
+		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
 		file = "ecp256/bundle_responder.certchain.der";
 		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
 		file = "ecp384/bundle_responder.certchain.der";
+		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+		file = "ecp521/bundle_responder.certchain.der";
 		break;
 	default:
 		ASSERT(FALSE);
@@ -317,11 +338,18 @@ boolean read_requester_public_certificate_chain(
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
 		file = "rsa3072/bundle_requester.certchain.der";
 		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+		file = "rsa4096/bundle_requester.certchain.der";
+		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
 		file = "ecp256/bundle_requester.certchain.der";
 		break;
 	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
 		file = "ecp384/bundle_requester.certchain.der";
+		break;
+	case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+		file = "ecp521/bundle_requester.certchain.der";
 		break;
 	default:
 		ASSERT(FALSE);
