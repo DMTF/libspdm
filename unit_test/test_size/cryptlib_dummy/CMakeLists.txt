@@ -16,7 +16,7 @@ SET(src_cryptlib_dummy
     cipher/aead_chacha20_poly1305.c
     hash/sha.c
     hmac/hmac_sha.c
-    kdf/hkdf.c
+    kdf/hkdf_sha.c
     pem/pem.c
     pk/ec.c
     pk/dh.c

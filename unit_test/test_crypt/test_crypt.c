@@ -55,6 +55,11 @@ return_status cryptest_main(void)
 		return status;
 	}
 
+	status = validate_crypt_hkdf();
+	if (RETURN_ERROR(status)) {
+		return status;
+	}
+
 	status = validate_crypt_aead_cipher();
 	if (RETURN_ERROR(status)) {
 		return status;
