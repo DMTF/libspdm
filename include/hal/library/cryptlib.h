@@ -1450,6 +1450,490 @@ boolean hmac_sha512_all(IN const void *data, IN uintn data_size,
 			IN const uint8 *key, IN uintn key_size,
 			OUT uint8 *hmac_value);
 
+/**
+  Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_256 use.
+
+  @return  Pointer to the HMAC_CTX context that has been initialized.
+           If the allocations fails, hmac_sha3_256_new() returns NULL.
+
+**/
+void *hmac_sha3_256_new(void);
+
+/**
+  Release the specified HMAC_CTX context.
+
+  @param[in]  hmac_sha3_256_ctx  Pointer to the HMAC_CTX context to be released.
+
+**/
+void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx);
+
+/**
+  Set user-supplied key for subsequent use. It must be done before any
+  calling to hmac_sha3_256_update().
+
+  If hmac_sha3_256_ctx is NULL, then return FALSE.
+
+  @param[out]  hmac_sha3_256_ctx  Pointer to HMAC-SHA3_256 context.
+  @param[in]   key                Pointer to the user-supplied key.
+  @param[in]   key_size            key size in bytes.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+
+**/
+boolean hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8 *key,
+			    IN uintn key_size);
+
+/**
+  Makes a copy of an existing HMAC-SHA3_256 context.
+
+  If hmac_sha3_256_ctx is NULL, then return FALSE.
+  If new_hmac_sha3_256_ctx is NULL, then return FALSE.
+
+  @param[in]  hmac_sha3_256_ctx     Pointer to HMAC-SHA3_256 context being copied.
+  @param[out] new_hmac_sha3_256_ctx  Pointer to new HMAC-SHA3_256 context.
+
+  @retval TRUE   HMAC-SHA3_256 context copy succeeded.
+  @retval FALSE  HMAC-SHA3_256 context copy failed.
+
+**/
+boolean hmac_sha3_256_duplicate(IN const void *hmac_sha3_256_ctx,
+			      OUT void *new_hmac_sha3_256_ctx);
+
+/**
+  Digests the input data and updates HMAC-SHA3_256 context.
+
+  This function performs HMAC-SHA3_256 digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  HMAC-SHA3_256 context should be initialized by hmac_sha3_256_new(), and should not be finalized
+  by hmac_sha3_256_final(). Behavior with invalid context is undefined.
+
+  If hmac_sha3_256_ctx is NULL, then return FALSE.
+
+  @param[in, out]  hmac_sha3_256_ctx Pointer to the HMAC-SHA3_256 context.
+  @param[in]       data              Pointer to the buffer containing the data to be digested.
+  @param[in]       data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC-SHA3_256 data digest succeeded.
+  @retval FALSE  HMAC-SHA3_256 data digest failed.
+
+**/
+boolean hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data,
+			   IN uintn data_size);
+
+/**
+  Completes computation of the HMAC-SHA3_256 digest value.
+
+  This function completes HMAC-SHA3_256 hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the HMAC-SHA3_256 context cannot
+  be used again.
+  HMAC-SHA3_256 context should be initialized by hmac_sha3_256_new(), and should not be finalized
+  by hmac_sha3_256_final(). Behavior with invalid HMAC-SHA3_256 context is undefined.
+
+  If hmac_sha3_256_ctx is NULL, then return FALSE.
+  If hmac_value is NULL, then return FALSE.
+
+  @param[in, out]  hmac_sha3_256_ctx  Pointer to the HMAC-SHA3_256 context.
+  @param[out]      hmac_value          Pointer to a buffer that receives the HMAC-SHA3_256 digest
+                                      value (32 bytes).
+
+  @retval TRUE   HMAC-SHA3_256 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_256 digest computation failed.
+
+**/
+boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8 *hmac_value);
+
+/**
+  Computes the HMAC-SHA3_256 digest of a input data buffer.
+
+  This function performs the HMAC-SHA3_256 digest of a given data buffer, and places
+  the digest value into the specified memory.
+
+  If this interface is not supported, then return FALSE.
+
+  @param[in]   data        Pointer to the buffer containing the data to be digested.
+  @param[in]   data_size    size of data buffer in bytes.
+  @param[in]   key         Pointer to the user-supplied key.
+  @param[in]   key_size     key size in bytes.
+  @param[out]  hash_value   Pointer to a buffer that receives the HMAC-SHA3_256 digest
+                           value (32 bytes).
+
+  @retval TRUE   HMAC-SHA3_256 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_256 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_256_all(IN const void *data, IN uintn data_size,
+			IN const uint8 *key, IN uintn key_size,
+			OUT uint8 *hmac_value);
+
+/**
+  Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_384 use.
+
+  @return  Pointer to the HMAC_CTX context that has been initialized.
+           If the allocations fails, hmac_sha3_384_new() returns NULL.
+
+**/
+void *hmac_sha3_384_new(void);
+
+/**
+  Release the specified HMAC_CTX context.
+
+  @param[in]  hmac_sha3_384_ctx  Pointer to the HMAC_CTX context to be released.
+
+**/
+void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx);
+
+/**
+  Set user-supplied key for subsequent use. It must be done before any
+  calling to hmac_sha3_384_update().
+
+  If hmac_sha3_384_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[out]  hmac_sha3_384_ctx  Pointer to HMAC-SHA3_384 context.
+  @param[in]   key                Pointer to the user-supplied key.
+  @param[in]   key_size            key size in bytes.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8 *key,
+			    IN uintn key_size);
+
+/**
+  Makes a copy of an existing HMAC-SHA3_384 context.
+
+  If hmac_sha3_384_ctx is NULL, then return FALSE.
+  If new_hmac_sha3_384_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in]  hmac_sha3_384_ctx     Pointer to HMAC-SHA3_384 context being copied.
+  @param[out] new_hmac_sha3_384_ctx  Pointer to new HMAC-SHA3_384 context.
+
+  @retval TRUE   HMAC-SHA3_384 context copy succeeded.
+  @retval FALSE  HMAC-SHA3_384 context copy failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_384_duplicate(IN const void *hmac_sha3_384_ctx,
+			      OUT void *new_hmac_sha3_384_ctx);
+
+/**
+  Digests the input data and updates HMAC-SHA3_384 context.
+
+  This function performs HMAC-SHA3_384 digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  HMAC-SHA3_384 context should be initialized by hmac_sha3_384_new(), and should not be finalized
+  by hmac_sha3_384_final(). Behavior with invalid context is undefined.
+
+  If hmac_sha3_384_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in, out]  hmac_sha3_384_ctx Pointer to the HMAC-SHA3_384 context.
+  @param[in]       data              Pointer to the buffer containing the data to be digested.
+  @param[in]       data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC-SHA3_384 data digest succeeded.
+  @retval FALSE  HMAC-SHA3_384 data digest failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data,
+			   IN uintn data_size);
+
+/**
+  Completes computation of the HMAC-SHA3_384 digest value.
+
+  This function completes HMAC-SHA3_384 hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the HMAC-SHA3_384 context cannot
+  be used again.
+  HMAC-SHA3_384 context should be initialized by hmac_sha3_384_new(), and should not be finalized
+  by hmac_sha3_384_final(). Behavior with invalid HMAC-SHA3_384 context is undefined.
+
+  If hmac_sha3_384_ctx is NULL, then return FALSE.
+  If hmac_value is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in, out]  hmac_sha3_384_ctx  Pointer to the HMAC-SHA3_384 context.
+  @param[out]      hmac_value          Pointer to a buffer that receives the HMAC-SHA3_384 digest
+                                      value (48 bytes).
+
+  @retval TRUE   HMAC-SHA3_384 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_384 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8 *hmac_value);
+
+/**
+  Computes the HMAC-SHA3_384 digest of a input data buffer.
+
+  This function performs the HMAC-SHA3_384 digest of a given data buffer, and places
+  the digest value into the specified memory.
+
+  If this interface is not supported, then return FALSE.
+
+  @param[in]   data        Pointer to the buffer containing the data to be digested.
+  @param[in]   data_size    size of data buffer in bytes.
+  @param[in]   key         Pointer to the user-supplied key.
+  @param[in]   key_size     key size in bytes.
+  @param[out]  hash_value   Pointer to a buffer that receives the HMAC-SHA3_384 digest
+                           value (48 bytes).
+
+  @retval TRUE   HMAC-SHA3_384 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_384 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_384_all(IN const void *data, IN uintn data_size,
+			IN const uint8 *key, IN uintn key_size,
+			OUT uint8 *hmac_value);
+
+/**
+  Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_512 use.
+
+  @return  Pointer to the HMAC_CTX context that has been initialized.
+           If the allocations fails, hmac_sha3_512_new() returns NULL.
+
+**/
+void *hmac_sha3_512_new(void);
+
+/**
+  Release the specified HMAC_CTX context.
+
+  @param[in]  hmac_sha3_512_ctx  Pointer to the HMAC_CTX context to be released.
+
+**/
+void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx);
+
+/**
+  Set user-supplied key for subsequent use. It must be done before any
+  calling to hmac_sha3_512_update().
+
+  If hmac_sha3_512_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[out]  hmac_sha3_512_ctx  Pointer to HMAC-SHA3_512 context.
+  @param[in]   key                Pointer to the user-supplied key.
+  @param[in]   key_size            key size in bytes.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8 *key,
+			    IN uintn key_size);
+
+/**
+  Makes a copy of an existing HMAC-SHA3_512 context.
+
+  If hmac_sha3_512_ctx is NULL, then return FALSE.
+  If new_hmac_sha3_512_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in]  hmac_sha3_512_ctx     Pointer to HMAC-SHA3_512 context being copied.
+  @param[out] new_hmac_sha3_512_ctx  Pointer to new HMAC-SHA3_512 context.
+
+  @retval TRUE   HMAC-SHA3_512 context copy succeeded.
+  @retval FALSE  HMAC-SHA3_512 context copy failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_512_duplicate(IN const void *hmac_sha3_512_ctx,
+			      OUT void *new_hmac_sha3_512_ctx);
+
+/**
+  Digests the input data and updates HMAC-SHA3_512 context.
+
+  This function performs HMAC-SHA3_512 digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  HMAC-SHA3_512 context should be initialized by hmac_sha3_512_new(), and should not be finalized
+  by hmac_sha3_512_final(). Behavior with invalid context is undefined.
+
+  If hmac_sha3_512_ctx is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in, out]  hmac_sha3_512_ctx Pointer to the HMAC-SHA3_512 context.
+  @param[in]       data              Pointer to the buffer containing the data to be digested.
+  @param[in]       data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC-SHA3_512 data digest succeeded.
+  @retval FALSE  HMAC-SHA3_512 data digest failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data,
+			   IN uintn data_size);
+
+/**
+  Completes computation of the HMAC-SHA3_512 digest value.
+
+  This function completes HMAC-SHA3_512 hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the HMAC-SHA3_512 context cannot
+  be used again.
+  HMAC-SHA3_512 context should be initialized by hmac_sha3_512_new(), and should not be finalized
+  by hmac_sha3_512_final(). Behavior with invalid HMAC-SHA3_512 context is undefined.
+
+  If hmac_sha3_512_ctx is NULL, then return FALSE.
+  If hmac_value is NULL, then return FALSE.
+  If this interface is not supported, then return FALSE.
+
+  @param[in, out]  hmac_sha3_512_ctx  Pointer to the HMAC-SHA3_512 context.
+  @param[out]      hmac_value          Pointer to a buffer that receives the HMAC-SHA3_512 digest
+                                      value (64 bytes).
+
+  @retval TRUE   HMAC-SHA3_512 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_512 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8 *hmac_value);
+
+/**
+  Computes the HMAC-SHA3_512 digest of a input data buffer.
+
+  This function performs the HMAC-SHA3_512 digest of a given data buffer, and places
+  the digest value into the specified memory.
+
+  If this interface is not supported, then return FALSE.
+
+  @param[in]   data        Pointer to the buffer containing the data to be digested.
+  @param[in]   data_size    size of data buffer in bytes.
+  @param[in]   key         Pointer to the user-supplied key.
+  @param[in]   key_size     key size in bytes.
+  @param[out]  hash_value   Pointer to a buffer that receives the HMAC-SHA3_512 digest
+                           value (64 bytes).
+
+  @retval TRUE   HMAC-SHA3_512 digest computation succeeded.
+  @retval FALSE  HMAC-SHA3_512 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sha3_512_all(IN const void *data, IN uintn data_size,
+			IN const uint8 *key, IN uintn key_size,
+			OUT uint8 *hmac_value);
+
+/**
+  Allocates and initializes one HMAC_CTX context for subsequent HMAC-SM3_256 use.
+
+  @return  Pointer to the HMAC_CTX context that has been initialized.
+           If the allocations fails, hmac_sm3_256_new() returns NULL.
+
+**/
+void *hmac_sm3_256_new(void);
+
+/**
+  Release the specified HMAC_CTX context.
+
+  @param[in]  hmac_sm3_256_ctx  Pointer to the HMAC_CTX context to be released.
+
+**/
+void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx);
+
+/**
+  Set user-supplied key for subsequent use. It must be done before any
+  calling to hmac_sm3_256_update().
+
+  If hmac_sm3_256_ctx is NULL, then return FALSE.
+
+  @param[out]  hmac_sm3_256_ctx  Pointer to HMAC-SM3_256 context.
+  @param[in]   key                Pointer to the user-supplied key.
+  @param[in]   key_size            key size in bytes.
+
+  @retval TRUE   The key is set successfully.
+  @retval FALSE  The key is set unsuccessfully.
+
+**/
+boolean hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8 *key,
+			    IN uintn key_size);
+
+/**
+  Makes a copy of an existing HMAC-SM3_256 context.
+
+  If hmac_sm3_256_ctx is NULL, then return FALSE.
+  If new_hmac_sm3_256_ctx is NULL, then return FALSE.
+
+  @param[in]  hmac_sm3_256_ctx     Pointer to HMAC-SM3_256 context being copied.
+  @param[out] new_hmac_sm3_256_ctx  Pointer to new HMAC-SM3_256 context.
+
+  @retval TRUE   HMAC-SM3_256 context copy succeeded.
+  @retval FALSE  HMAC-SM3_256 context copy failed.
+
+**/
+boolean hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
+			      OUT void *new_hmac_sm3_256_ctx);
+
+/**
+  Digests the input data and updates HMAC-SM3_256 context.
+
+  This function performs HMAC-SM3_256 digest on a data buffer of the specified size.
+  It can be called multiple times to compute the digest of long or discontinuous data streams.
+  HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
+  by hmac_sm3_256_final(). Behavior with invalid context is undefined.
+
+  If hmac_sm3_256_ctx is NULL, then return FALSE.
+
+  @param[in, out]  hmac_sm3_256_ctx Pointer to the HMAC-SM3_256 context.
+  @param[in]       data              Pointer to the buffer containing the data to be digested.
+  @param[in]       data_size          size of data buffer in bytes.
+
+  @retval TRUE   HMAC-SM3_256 data digest succeeded.
+  @retval FALSE  HMAC-SM3_256 data digest failed.
+
+**/
+boolean hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
+			   IN uintn data_size);
+
+/**
+  Completes computation of the HMAC-SM3_256 digest value.
+
+  This function completes HMAC-SM3_256 hash computation and retrieves the digest value into
+  the specified memory. After this function has been called, the HMAC-SM3_256 context cannot
+  be used again.
+  HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
+  by hmac_sm3_256_final(). Behavior with invalid HMAC-SM3_256 context is undefined.
+
+  If hmac_sm3_256_ctx is NULL, then return FALSE.
+  If hmac_value is NULL, then return FALSE.
+
+  @param[in, out]  hmac_sm3_256_ctx  Pointer to the HMAC-SM3_256 context.
+  @param[out]      hmac_value          Pointer to a buffer that receives the HMAC-SM3_256 digest
+                                      value (32 bytes).
+
+  @retval TRUE   HMAC-SM3_256 digest computation succeeded.
+  @retval FALSE  HMAC-SM3_256 digest computation failed.
+
+**/
+boolean hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8 *hmac_value);
+
+/**
+  Computes the HMAC-SM3_256 digest of a input data buffer.
+
+  This function performs the HMAC-SM3_256 digest of a given data buffer, and places
+  the digest value into the specified memory.
+
+  If this interface is not supported, then return FALSE.
+
+  @param[in]   data        Pointer to the buffer containing the data to be digested.
+  @param[in]   data_size    size of data buffer in bytes.
+  @param[in]   key         Pointer to the user-supplied key.
+  @param[in]   key_size     key size in bytes.
+  @param[out]  hash_value   Pointer to a buffer that receives the HMAC-SM3_256 digest
+                           value (32 bytes).
+
+  @retval TRUE   HMAC-SM3_256 digest computation succeeded.
+  @retval FALSE  HMAC-SM3_256 digest computation failed.
+  @retval FALSE  This interface is not supported.
+
+**/
+boolean hmac_sm3_256_all(IN const void *data, IN uintn data_size,
+			IN const uint8 *key, IN uintn key_size,
+			OUT uint8 *hmac_value);
+
 //=====================================================================================
 //    Authenticated Encryption with Associated data (AEAD) Cryptography Primitive
 //=====================================================================================
@@ -3596,6 +4080,234 @@ boolean hkdf_sha512_extract(IN const uint8 *key, IN uintn key_size,
 
 **/
 boolean hkdf_sha512_expand(IN const uint8 *prk, IN uintn prk_size,
+			   IN const uint8 *info, IN uintn info_size,
+			   OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_256_extract_and_expand(IN const uint8 *key, IN uintn key_size,
+				       IN const uint8 *salt, IN uintn salt_size,
+				       IN const uint8 *info, IN uintn info_size,
+				       OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_256 HMAC-based Extract key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[out]  prk_out           Pointer to buffer to receive hkdf value.
+  @param[in]   prk_out_size       size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_256_extract(IN const uint8 *key, IN uintn key_size,
+			    IN const uint8 *salt, IN uintn salt_size,
+			    OUT uint8 *prk_out, IN uintn prk_out_size);
+
+/**
+  Derive SHA3_256 HMAC-based Expand key Derivation Function (HKDF).
+
+  @param[in]   prk              Pointer to the user-supplied key.
+  @param[in]   prk_size          key size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_256_expand(IN const uint8 *prk, IN uintn prk_size,
+			   IN const uint8 *info, IN uintn info_size,
+			   OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_384 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_384_extract_and_expand(IN const uint8 *key, IN uintn key_size,
+				       IN const uint8 *salt, IN uintn salt_size,
+				       IN const uint8 *info, IN uintn info_size,
+				       OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_384 HMAC-based Extract key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[out]  prk_out           Pointer to buffer to receive hkdf value.
+  @param[in]   prk_out_size       size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_384_extract(IN const uint8 *key, IN uintn key_size,
+			    IN const uint8 *salt, IN uintn salt_size,
+			    OUT uint8 *prk_out, IN uintn prk_out_size);
+
+/**
+  Derive SHA3_384 HMAC-based Expand key Derivation Function (HKDF).
+
+  @param[in]   prk              Pointer to the user-supplied key.
+  @param[in]   prk_size          key size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_384_expand(IN const uint8 *prk, IN uintn prk_size,
+			   IN const uint8 *info, IN uintn info_size,
+			   OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_512 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_512_extract_and_expand(IN const uint8 *key, IN uintn key_size,
+				       IN const uint8 *salt, IN uintn salt_size,
+				       IN const uint8 *info, IN uintn info_size,
+				       OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SHA3_512 HMAC-based Extract key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[out]  prk_out           Pointer to buffer to receive hkdf value.
+  @param[in]   prk_out_size       size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_512_extract(IN const uint8 *key, IN uintn key_size,
+			    IN const uint8 *salt, IN uintn salt_size,
+			    OUT uint8 *prk_out, IN uintn prk_out_size);
+
+/**
+  Derive SHA3_512 HMAC-based Expand key Derivation Function (HKDF).
+
+  @param[in]   prk              Pointer to the user-supplied key.
+  @param[in]   prk_size          key size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sha3_512_expand(IN const uint8 *prk, IN uintn prk_size,
+			   IN const uint8 *info, IN uintn info_size,
+			   OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SM3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sm3_256_extract_and_expand(IN const uint8 *key, IN uintn key_size,
+				       IN const uint8 *salt, IN uintn salt_size,
+				       IN const uint8 *info, IN uintn info_size,
+				       OUT uint8 *out, IN uintn out_size);
+
+/**
+  Derive SM3_256 HMAC-based Extract key Derivation Function (HKDF).
+
+  @param[in]   key              Pointer to the user-supplied key.
+  @param[in]   key_size          key size in bytes.
+  @param[in]   salt             Pointer to the salt(non-secret) value.
+  @param[in]   salt_size         salt size in bytes.
+  @param[out]  prk_out           Pointer to buffer to receive hkdf value.
+  @param[in]   prk_out_size       size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sm3_256_extract(IN const uint8 *key, IN uintn key_size,
+			    IN const uint8 *salt, IN uintn salt_size,
+			    OUT uint8 *prk_out, IN uintn prk_out_size);
+
+/**
+  Derive SM3_256 HMAC-based Expand key Derivation Function (HKDF).
+
+  @param[in]   prk              Pointer to the user-supplied key.
+  @param[in]   prk_size          key size in bytes.
+  @param[in]   info             Pointer to the application specific info.
+  @param[in]   info_size         info size in bytes.
+  @param[out]  out              Pointer to buffer to receive hkdf value.
+  @param[in]   out_size          size of hkdf bytes to generate.
+
+  @retval TRUE   Hkdf generated successfully.
+  @retval FALSE  Hkdf generation failed.
+
+**/
+boolean hkdf_sm3_256_expand(IN const uint8 *prk, IN uintn prk_size,
 			   IN const uint8 *info, IN uintn info_size,
 			   OUT uint8 *out, IN uintn out_size);
 

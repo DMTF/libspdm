@@ -5,7 +5,7 @@
 **/
 
 /** @file
-  HMAC-SHA256 Wrapper Implementation.
+  HMAC-SHA256/384/512 Wrapper Implementation.
 **/
 
 #include "internal_crypt_lib.h"
@@ -15,7 +15,7 @@
   Allocates and initializes one HMAC_CTX context for subsequent HMAC-MD use.
 
   @return  Pointer to the HMAC_CTX context that has been initialized.
-           If the allocations fails, HmacShaMdNew() returns NULL.
+           If the allocations fails, hmac_md_new() returns NULL.
 
 **/
 void *hmac_md_new(void)
