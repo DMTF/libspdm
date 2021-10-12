@@ -44,14 +44,14 @@ return_status validate_crypt_sm2(void)
 	// Generate & Initialize SM2 context
 	//
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new();
+	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
 	}
 
 	my_print("Context2 ... ");
-	Sm2_2 = sm2_new();
+	Sm2_2 = sm2_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
 	if (Sm2_2 == NULL) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
@@ -120,7 +120,7 @@ return_status validate_crypt_sm2(void)
 	public1_length = sizeof(public1);
 
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new();
+	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
@@ -165,14 +165,14 @@ return_status validate_crypt_sm2(void)
 	public2_length = sizeof(public2);
 
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new();
+	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
 	}
 
 	my_print("Context2 ... ");
-	Sm2_2 = sm2_new();
+	Sm2_2 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_2 == NULL) {
 		my_print("[Fail]");
 		sm2_free(Sm2_1);
