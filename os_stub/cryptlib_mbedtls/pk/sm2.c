@@ -15,11 +15,13 @@
 
   The key is generated before the function returns.
 
+  @param nid cipher NID
+
   @return  Pointer to the Shang-Mi2 context that has been initialized.
-           If the allocations fails, sm2_new() returns NULL.
+           If the allocations fails, sm2_new_by_nid() returns NULL.
 
 **/
-void *sm2_new(void)
+void *sm2_new_by_nid(IN uintn nid)
 {
 	return NULL;
 }

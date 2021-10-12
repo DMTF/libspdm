@@ -35,7 +35,7 @@
 #define CRYPTO_NID_ECDSA_NIST_P256 0x0106
 #define CRYPTO_NID_ECDSA_NIST_P384 0x0107
 #define CRYPTO_NID_ECDSA_NIST_P521 0x0108
-#define CRYPTO_NID_ECDSA_SM2_P256 0x0109
+#define CRYPTO_NID_SM2_DSA_P256 0x0109
 #define CRYPTO_NID_EDDSA_ED25519 0x010A
 #define CRYPTO_NID_EDDSA_ED448 0x010B
 
@@ -46,7 +46,7 @@
 #define CRYPTO_NID_SECP256R1 0x0204
 #define CRYPTO_NID_SECP384R1 0x0205
 #define CRYPTO_NID_SECP521R1 0x0206
-#define CRYPTO_NID_SM2_P256 0x0207
+#define CRYPTO_NID_SM2_KEY_EXCHANGE_P256 0x0207
 #define CRYPTO_NID_CURVE_X25519 0x0208
 #define CRYPTO_NID_CURVE_X448 0x0209
 
@@ -3673,11 +3673,13 @@ boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8 *peer_public,
 
   The key is generated before the function returns.
 
+  @param nid cipher NID
+
   @return  Pointer to the Shang-Mi2 context that has been initialized.
-           If the allocations fails, sm2_new() returns NULL.
+           If the allocations fails, sm2_new_by_nid() returns NULL.
 
 **/
-void *sm2_new(void);
+void *sm2_new_by_nid(IN uintn nid);
 
 /**
   Release the specified sm2 context.
