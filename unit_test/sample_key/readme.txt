@@ -33,6 +33,7 @@ Generate a self-signed root certificate:
 === RSA Certificate Chains ===
 
 NOTE: Use "//CN" for windows and use "/CN" for Linux system.
+RECOMMEND: Use openssl 1.1.1k
 
 ```openssl.cnf
 [ v3_end ]
