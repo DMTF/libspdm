@@ -49,6 +49,15 @@ return_status validate_crypt_digest(void);
 return_status validate_crypt_hmac(void);
 
 /**
+  Validate Crypto HMAC Key Derivation Function Interfaces.
+
+  @retval  RETURN_SUCCESS  Validation succeeded.
+  @retval  RETURN_ABORTED  Validation failed.
+
+**/
+return_status validate_crypt_hkdf(void);
+
+/**
   Validate Crypto AEAD Ciphers Interfaces.
 
   @retval  RETURN_SUCCESS  Validation succeeded.

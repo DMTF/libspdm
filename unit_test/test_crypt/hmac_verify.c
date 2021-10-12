@@ -93,5 +93,79 @@ return_status validate_crypt_hmac(void)
 
 	my_print("[Pass]\n");
 
+	my_print("- HMAC-SHA3_256: ");
+	//
+	// HMAC-SHA3-256 digest Validation
+	//
+	zero_mem(digest, MAX_DIGEST_SIZE);
+	hmac_ctx = hmac_sha3_256_new();
+	if (hmac_ctx == NULL) {
+		my_print("[Fail]\n");
+		return RETURN_SUCCESS;
+	}
+
+	status = hmac_sha3_256_set_key(hmac_ctx, m_hmac_sha256_key, 20);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Update... ");
+	status = hmac_sha3_256_update(hmac_ctx, m_hmac_data, 8);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Finalize... ");
+	status = hmac_sha3_256_final(hmac_ctx, digest);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	free_pool(hmac_ctx);
+	my_print("[Pass]\n");
+
+	my_print("- HMAC-SM3_256: ");
+	//
+	// HMAC-SM3-256 digest Validation
+	//
+	zero_mem(digest, MAX_DIGEST_SIZE);
+	hmac_ctx = hmac_sm3_256_new();
+	if (hmac_ctx == NULL) {
+		my_print("[Fail]\n");
+		return RETURN_SUCCESS;
+	}
+
+	status = hmac_sm3_256_set_key(hmac_ctx, m_hmac_sha256_key, 20);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Update... ");
+	status = hmac_sm3_256_update(hmac_ctx, m_hmac_data, 8);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	my_print("Finalize... ");
+	status = hmac_sm3_256_final(hmac_ctx, digest);
+	if (!status) {
+		my_print("[Fail]");
+		free_pool(hmac_ctx);
+		return RETURN_ABORTED;
+	}
+
+	free_pool(hmac_ctx);
+	my_print("[Pass]\n");
+
 	return RETURN_SUCCESS;
 }

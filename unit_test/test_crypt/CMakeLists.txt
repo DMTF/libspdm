@@ -11,6 +11,7 @@ SET(src_test_crypt
     test_crypt.c
     hash_verify.c
     hmac_verify.c
+    hkdf_verify.c
     aead_verify.c
     rsa_verify.c
     rsa_verify2.c
