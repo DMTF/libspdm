@@ -1596,7 +1596,7 @@ done:
   @retval  FALSE  Fail to retrieve Ed public key from X509 certificate.
 
 **/
-boolean ed_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
 				    OUT void **ecd_context)
 {
 	boolean res;

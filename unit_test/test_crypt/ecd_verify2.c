@@ -94,7 +94,7 @@ return_status validate_crypt_ecd_2(void)
 	// Retrieve Ed public key from X509 Certificate.
 	//
 	my_print("\n- Retrieve Ed public key from X509 ... ");
-	status = ed_get_public_key_from_x509(
+	status = ecd_get_public_key_from_x509(
 		m_ecd_test_root_cer, sizeof(m_ecd_test_root_cer), &ecd_pub_key);
 	if (!status) {
 		my_print("[Fail]");
