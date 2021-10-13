@@ -86,30 +86,72 @@ boolean hmac_md_set_key(IN mbedtls_md_type_t md_type, OUT void *hmac_md_ctx,
 }
 
 /**
+  Return block size in md_type.
+  This function is use to enable hmac_duplicate.
+
+  @param[in]   md_type          mbedtls Type.
+
+  @retval blocksize in md_type
+**/
+int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
+{
+    switch( md_type )
+    {
+        case MBEDTLS_MD_SHA256:
+            return 64;
+        case MBEDTLS_MD_SHA384:
+            return 128;
+        case MBEDTLS_MD_SHA512:
+            return 128;
+        default:
+            ASSERT(FALSE);
+            return 0;
+    }
+}
+
+/**
   Makes a copy of an existing HMAC-MD context.
 
   If hmac_md_ctx is NULL, then return FALSE.
   If new_hmac_md_ctx is NULL, then return FALSE.
 
-  @param[in]  hmac_md_ctx     Pointer to HMAC-MD context being copied.
+  @param[in]  md_type          message digest Type.
+  @param[in]  hmac_md_ctx      Pointer to HMAC-MD context being copied.
   @param[out] new_hmac_md_ctx  Pointer to new HMAC-MD context.
 
   @retval TRUE   HMAC-MD context copy succeeded.
   @retval FALSE  HMAC-MD context copy failed.
 
 **/
-boolean hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
+boolean hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
 {
 	int32 ret;
+	const mbedtls_md_info_t *md_info;
 
 	if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
 		return FALSE;
 	}
 
+	zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
+	mbedtls_md_init(new_hmac_md_ctx);
+
+	md_info = mbedtls_md_info_from_type(md_type);
+	ASSERT(md_info != NULL);
+
+	ret = mbedtls_md_setup(new_hmac_md_ctx, md_info, 1);
+	if (ret != 0) {
+		return FALSE;
+	}
 	ret = mbedtls_md_clone(new_hmac_md_ctx, hmac_md_ctx);
 	if (ret != 0) {
 		return FALSE;
 	}
+	//Temporary solution to the problem of context clone.
+	//There are not any standard function in mbedtls to clone a complete hmac context.
+	copy_mem(
+		((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
+		((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
+		hmac_md_get_blocksize(md_type) * 2);
 	return TRUE;
 }
 
@@ -289,7 +331,7 @@ boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8 *key,
 boolean hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
 			      OUT void *new_hmac_sha256_ctx)
 {
-	return hmac_md_duplicate(hmac_sha256_ctx, new_hmac_sha256_ctx);
+	return hmac_md_duplicate(MBEDTLS_MD_SHA256, hmac_sha256_ctx, new_hmac_sha256_ctx);
 }
 
 /**
@@ -433,7 +475,7 @@ boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8 *key,
 boolean hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
 			      OUT void *new_hmac_sha384_ctx)
 {
-	return hmac_md_duplicate(hmac_sha384_ctx, new_hmac_sha384_ctx);
+	return hmac_md_duplicate(MBEDTLS_MD_SHA384, hmac_sha384_ctx, new_hmac_sha384_ctx);
 }
 
 /**
@@ -581,7 +623,7 @@ boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8 *key,
 boolean hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
 			      OUT void *new_hmac_sha512_ctx)
 {
-	return hmac_md_duplicate(hmac_sha512_ctx, new_hmac_sha512_ctx);
+	return hmac_md_duplicate(MBEDTLS_MD_SHA512, hmac_sha512_ctx, new_hmac_sha512_ctx);
 }
 
 /**
