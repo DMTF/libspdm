@@ -6,6 +6,8 @@
 
 #include "test_crypt.h"
 
+#define DEFAULT_SM2_ID "1234567812345678"
+
 /**
   Validate Crypto sm2 Interfaces.
 
@@ -139,7 +141,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- SM2 Signing ... ");
-	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -148,7 +150,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("SM2 Verification ... ");
-	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
+	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -211,7 +213,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- sm2 Signing in Context1 ... ");
-	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -221,7 +223,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("sm2 Verification in Context2 ... ");
-	status = sm2_dsa_verify(Sm2_2, CRYPTO_NID_SM3_256, NULL, 0, message,
+	status = sm2_dsa_verify(Sm2_2, CRYPTO_NID_SM3_256, DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");

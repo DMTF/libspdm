@@ -14,8 +14,6 @@
 #include <openssl/bn.h>
 #include <openssl/objects.h>
 
-#define DEFAULT_SM2_ID "1234567812345678"
-
 /**
   Allocates and Initializes one Shang-Mi2 context for subsequent use.
 
@@ -761,8 +759,8 @@ boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
 		EVP_MD_CTX_free(ctx);
 		return FALSE;
 	}
-	result = EVP_PKEY_CTX_set1_id(pkey_ctx, DEFAULT_SM2_ID,
-				      sizeof(DEFAULT_SM2_ID) - 1);
+	result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+				      id_a_size);
 	if (result <= 0) {
 		EVP_MD_CTX_free(ctx);
 		EVP_PKEY_CTX_free(pkey_ctx);
@@ -871,8 +869,8 @@ boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
 		EVP_MD_CTX_free(ctx);
 		return FALSE;
 	}
-	result = EVP_PKEY_CTX_set1_id(pkey_ctx, DEFAULT_SM2_ID,
-				      sizeof(DEFAULT_SM2_ID) - 1);
+	result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+				      id_a_size);
 	if (result <= 0) {
 		EVP_MD_CTX_free(ctx);
 		EVP_PKEY_CTX_free(pkey_ctx);
