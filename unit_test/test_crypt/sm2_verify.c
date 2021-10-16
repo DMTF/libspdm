@@ -80,7 +80,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("Compute key1 ... ");
-	key1_length = 32;
+	key1_length = 16;
 	status = sm2_compute_key(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public2, public2_length, key1,
 				 key1_length);
 	if (!status) {
@@ -91,7 +91,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("Compute key2 ... ");
-	key2_length = 32;
+	key2_length = 16;
 	status = sm2_compute_key(Sm2_2, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public1, public1_length, key2,
 				 key2_length);
 	if (!status) {
