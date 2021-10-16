@@ -6,6 +6,12 @@
 
 #include "spdm_requester_lib_internal.h"
 
+//
+// current version libspdm does not support any ext algo.
+// the requester will not build ext algo in request.
+// the requester will ignore the ext algo in response.
+//
+
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
