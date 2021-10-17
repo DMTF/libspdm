@@ -205,6 +205,18 @@ return_status try_spdm_send_receive_key_exchange(
 		return RETURN_DEVICE_ERROR;
 	}
 
+	if (!spdm_is_capabilities_flag_supported(
+		    spdm_context, TRUE,
+		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+		if (spdm_response.header.param1 != 0) {
+			spdm_secured_message_dhe_free(
+				spdm_context->connection_info.algorithm
+					.dhe_named_group,
+				dhe_context);
+			return RETURN_DEVICE_ERROR;
+		}
+	}
 	if (heartbeat_period != NULL) {
 		*heartbeat_period = spdm_response.header.param1;
 	}
