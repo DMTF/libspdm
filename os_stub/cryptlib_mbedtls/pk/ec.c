@@ -51,6 +51,7 @@ void *ec_new_by_nid(IN uintn nid)
 		goto error;
 	}
 
+	mbedtls_ecdh_init(ctx);
 	ret = mbedtls_ecdh_setup(ctx, grp_id);
 	if (ret != 0) {
 		goto error;
