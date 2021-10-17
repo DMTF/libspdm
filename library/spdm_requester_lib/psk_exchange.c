@@ -216,6 +216,15 @@ return_status try_spdm_send_receive_psk_exchange(
 	if (spdm_response_size > sizeof(spdm_response)) {
 		return RETURN_DEVICE_ERROR;
 	}
+
+	if (!spdm_is_capabilities_flag_supported(
+		    spdm_context, TRUE,
+		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+		if (spdm_response.header.param1 != 0) {
+			return RETURN_DEVICE_ERROR;
+		}
+	}
 	if (heartbeat_period != NULL) {
 		*heartbeat_period = spdm_response.header.param1;
 	}
