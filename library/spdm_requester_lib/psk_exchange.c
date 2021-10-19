@@ -6,6 +6,8 @@
 
 #include "spdm_requester_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 #pragma pack(1)
 
 typedef struct {
@@ -460,3 +462,5 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
 
 	return status;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP

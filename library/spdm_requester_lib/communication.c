@@ -72,12 +72,17 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 {
 	return_status status;
 	spdm_context_t *spdm_context;
+
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	spdm_session_info_t *session_info;
 	uint8 req_slot_id_param;
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 	spdm_context = context;
+	status = RETURN_UNSUPPORTED;
 
 	if (!use_psk) {
+		#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 		status = spdm_send_receive_key_exchange(
 			spdm_context, measurement_hash_type, slot_id,
 			session_id, heartbeat_period, &req_slot_id_param,
@@ -129,7 +134,12 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 		DEBUG((DEBUG_INFO,
 		       "spdm_start_session - spdm_send_receive_finish - %p\n",
 		       status));
+		#else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+		ASSERT(FALSE);
+		return RETURN_UNSUPPORTED;
+		#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	} else {
+		#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 		status = spdm_send_receive_psk_exchange(
 			spdm_context, measurement_hash_type, session_id,
 			heartbeat_period, measurement_hash);
@@ -150,6 +160,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 			       "spdm_start_session - spdm_send_receive_psk_finish - %p\n",
 			       status));
 		}
+		#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	}
 	return status;
 }
@@ -203,12 +214,17 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 {
 	return_status status;
 	spdm_context_t *spdm_context;
+
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	spdm_session_info_t *session_info;
 	uint8 req_slot_id_param;
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 	spdm_context = context;
+	status = RETURN_UNSUPPORTED;
 
 	if (!use_psk) {
+		#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 		ASSERT (requester_random_in_size == 0 || requester_random_in_size == SPDM_RANDOM_DATA_SIZE);
 		ASSERT (requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
 		ASSERT (responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
@@ -264,7 +280,12 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 		DEBUG((DEBUG_INFO,
 		       "spdm_start_session - spdm_send_receive_finish - %p\n",
 		       status));
+		#else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+		ASSERT(FALSE);
+		return RETURN_UNSUPPORTED;
+		#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	} else {
+		#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 		status = spdm_send_receive_psk_exchange_ex(
 			spdm_context, measurement_hash_type, session_id,
 			heartbeat_period, measurement_hash,
@@ -288,8 +309,14 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 			       "spdm_start_session - spdm_send_receive_psk_finish - %p\n",
 			       status));
 		}
+		#else // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+		ASSERT(FALSE);
+		return RETURN_UNSUPPORTED;
+		#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	}
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	return status;
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 }
 
 /**

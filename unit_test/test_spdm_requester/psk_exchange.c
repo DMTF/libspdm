@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 #define BIN_STR_2_LABEL "rsp hs data"
 #define BIN_STR_7_LABEL "finished"
 
@@ -1603,3 +1605,5 @@ int spdm_requester_psk_exchange_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP

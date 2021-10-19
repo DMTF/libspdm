@@ -35,6 +35,8 @@ uintn m_spdm_finish_request3_size = sizeof(m_spdm_finish_request3);
 
 uint8 m_dummy_buffer[MAX_HASH_SIZE];
 
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 void spdm_secured_message_set_request_finished_key(
 	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
 {
@@ -1986,3 +1988,5 @@ int spdm_responder_finish_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP

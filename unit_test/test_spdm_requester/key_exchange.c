@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_requester_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 #define BIN_CONCAT_LABEL "spdm1.1 "
 #define BIN_STR_0_LABEL "derived"
 #define BIN_STR_2_LABEL "rsp hs data"
@@ -1754,3 +1756,5 @@ int spdm_requester_key_exchange_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP

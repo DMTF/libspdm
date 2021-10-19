@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include <spdm_responder_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 #pragma pack(1)
 
 typedef struct {
@@ -645,3 +647,5 @@ int spdm_responder_key_exchange_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP

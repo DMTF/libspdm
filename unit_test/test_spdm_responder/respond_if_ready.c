@@ -525,6 +525,8 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   Expected behavior: the responder accepts the request and produces a valid KEY_EXCHANGE_RSP
   response message.
 **/
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 void test_spdm_responder_respond_if_ready_case5(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -604,12 +606,16 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 /**
   Test 6: receiving a correct RESPOND_IF_READY from the requester, after a 
   FINISH could not be processed.
   Expected behavior: the responder accepts the request and produces a valid FINISH_RSP
   response message.
 **/
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 void test_spdm_responder_respond_if_ready_case6(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -705,6 +711,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   free(data);
   spdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
   Test 7: receiving a correct RESPOND_IF_READY from the requester, after a 
@@ -712,6 +719,8 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   Expected behavior: the responder accepts the request and produces a valid PSK_EXCHANGE_RSP
   response message.
 **/
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 void test_spdm_responder_respond_if_ready_case7(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -792,6 +801,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   free(data);
   spdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
   Test 8: receiving a correct RESPOND_IF_READY from the requester, after a 
@@ -799,6 +809,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   Expected behavior: the responder accepts the request and produces a valid PSK_FINISH_RSP
   response message.
 **/
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 void test_spdm_responder_respond_if_ready_case8(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -893,6 +904,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   free(data);
   spdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 #if SPDM_ENABLE_CAPABILITY_CERT_CAP
 
@@ -1235,10 +1247,15 @@ int spdm_responder_respond_if_ready_test_main(void) {
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
     #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
+    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
+    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
+    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case8),
+    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
     #if SPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case9),

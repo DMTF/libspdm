@@ -25,9 +25,17 @@ int spdm_responder_measurements_test_main(void);
 #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 int spdm_responder_respond_if_ready_test_main (void);
+
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 int spdm_responder_key_exchange_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 int spdm_responder_finish_test_main(void);
+
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 int spdm_responder_psk_exchange_test_main(void);
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 int spdm_responder_psk_finish_test_main(void);
 int spdm_responder_heartbeat_test_main(void);
 int spdm_responder_end_session_test_main(void);
@@ -74,21 +82,29 @@ int main(void)
 		return_value = 1;
 	}
 
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	if (spdm_responder_key_exchange_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	if (spdm_responder_finish_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	if (spdm_responder_psk_exchange_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	if (spdm_responder_psk_finish_test_main() != 0) {
 		return_value = 1;
 	}
+	#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 	if (spdm_responder_heartbeat_test_main() != 0) {
 		return_value = 1;

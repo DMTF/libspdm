@@ -64,9 +64,14 @@
 // SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
 //                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
 //
+// SPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
+// SPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
 
 #define SPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #define SPDM_ENABLE_CAPABILITY_CHAL_CAP 1
 #define SPDM_ENABLE_CAPABILITY_MEAS_CAP 1
+
+#define SPDM_ENABLE_CAPABILITY_KEY_EX_CAP   1
+#define SPDM_ENABLE_CAPABILITY_PSK_EX_CAP   1
 
 #endif

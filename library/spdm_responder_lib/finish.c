@@ -6,6 +6,8 @@
 
 #include "spdm_responder_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 /**
   Process the SPDM FINISH request and return the response.
 
@@ -284,3 +286,5 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 
 	return RETURN_SUCCESS;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
