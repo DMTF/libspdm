@@ -100,10 +100,14 @@ return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context);
   @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 return_status spdm_send_receive_key_exchange(
 	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
 	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
 	OUT uint8 *req_slot_id_param, OUT void *measurement_hash);
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
   This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
@@ -122,6 +126,8 @@ return_status spdm_send_receive_key_exchange(
   @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 return_status spdm_send_receive_key_exchange_ex(
 	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
 	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
@@ -129,6 +135,8 @@ return_status spdm_send_receive_key_exchange_ex(
 	IN void *requester_random_in OPTIONAL,
 	OUT void *requester_random OPTIONAL,
 	OUT void *responder_random OPTIONAL);
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
   This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -156,11 +164,15 @@ return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 					     IN uint8 measurement_hash_type,
 					     OUT uint32 *session_id,
 					     OUT uint8 *heartbeat_period,
 					     OUT void *measurement_hash);
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
   This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
@@ -185,6 +197,8 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
 					     IN uint8 measurement_hash_type,
 					     OUT uint32 *session_id,
@@ -197,6 +211,8 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
 					     OUT void *responder_context OPTIONAL,
 					     OUT uintn *responder_context_size OPTIONAL);
 
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 /**
   This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
 
@@ -206,8 +222,12 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 					   IN uint32 session_id);
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
   This function sends END_SESSION and receives END_SESSION_ACK for SPDM session end.

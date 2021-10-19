@@ -8,6 +8,8 @@
 #include <spdm_requester_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 static uint8 m_local_psk_hint[32];
 static uint8 m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
 static uint8 m_dummy_salt_buffer[MAX_AEAD_IV_SIZE];
@@ -1932,3 +1934,5 @@ int spdm_requester_psk_finish_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP

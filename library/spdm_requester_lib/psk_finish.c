@@ -6,6 +6,8 @@
 
 #include "spdm_requester_lib_internal.h"
 
+#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 #pragma pack(1)
 
 typedef struct {
@@ -75,7 +77,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 
 	hmac_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
-	spdm_request_size = sizeof(spdm_finish_request_t) + hmac_size;
+	spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
 
 	status = spdm_append_message_f(spdm_context, session_info, TRUE, (uint8 *)&spdm_request,
 				       spdm_request_size - hmac_size);
@@ -173,3 +175,5 @@ return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 
 	return status;
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP

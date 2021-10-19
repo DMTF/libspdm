@@ -29,16 +29,28 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
 	{ SPDM_GET_MEASUREMENTS, spdm_get_response_measurements },
 	#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	{ SPDM_KEY_EXCHANGE, spdm_get_response_key_exchange },
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
+	#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	{ SPDM_PSK_EXCHANGE, spdm_get_response_psk_exchange },
+	#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 	{ SPDM_GET_ENCAPSULATED_REQUEST,
 	  spdm_get_response_encapsulated_request },
 	{ SPDM_DELIVER_ENCAPSULATED_RESPONSE,
 	  spdm_get_response_encapsulated_response_ack },
 	{ SPDM_RESPOND_IF_READY, spdm_get_response_respond_if_ready },
 
+	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	{ SPDM_FINISH, spdm_get_response_finish },
+	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
+	#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 	{ SPDM_PSK_FINISH, spdm_get_response_psk_finish },
+	#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 	{ SPDM_END_SESSION, spdm_get_response_end_session },
 	{ SPDM_HEARTBEAT, spdm_get_response_heartbeat },
 	{ SPDM_KEY_UPDATE, spdm_get_response_key_update },

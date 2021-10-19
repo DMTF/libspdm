@@ -8,6 +8,8 @@
 #include <spdm_requester_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
+#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 static uintn m_local_buffer_size;
 static uint8 m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
@@ -2908,3 +2910,5 @@ int spdm_requester_finish_test_main(void)
 				      spdm_unit_test_group_setup,
 				      spdm_unit_test_group_teardown);
 }
+
+#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
