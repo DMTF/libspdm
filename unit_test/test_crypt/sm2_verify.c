@@ -46,60 +46,78 @@ return_status validate_crypt_sm2(void)
 	// Generate & Initialize SM2 context
 	//
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
+	Sm2_1 = sm2_key_exchange_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
 	}
 
 	my_print("Context2 ... ");
-	Sm2_2 = sm2_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
+	Sm2_2 = sm2_key_exchange_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
 	if (Sm2_2 == NULL) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_1);
+		goto Exit;
+	}
+
+	my_print("Initialize key1 ... ");
+	status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, TRUE);
+	if (!status) {
+		my_print("[Fail]");
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
+		goto Exit;
+	}
+
+	my_print("Initialize key1 ... ");
+	status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, FALSE);
+	if (!status) {
+		my_print("[Fail]");
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	}
 
 	//
-	// Verify SM2-DH
+	// Verify SM2-KeyExchange
 	//
 	my_print("Generate key1 ... ");
-	status = sm2_generate_key(Sm2_1, public1, &public1_length);
+	status = sm2_key_exchange_generate_key(Sm2_1, public1, &public1_length);
 	if (!status || public1_length != 32 * 2) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	}
 
 	my_print("Generate key2 ... ");
-	status = sm2_generate_key(Sm2_2, public2, &public2_length);
+	status = sm2_key_exchange_generate_key(Sm2_2, public2, &public2_length);
 	if (!status || public2_length != 32 * 2) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	}
 
 	my_print("Compute key1 ... ");
 	key1_length = 16;
-	status = sm2_compute_key(Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public2, public2_length, key1,
-				 key1_length);
+	status = sm2_key_exchange_compute_key(Sm2_1, public2, public2_length, key1,
+				 &key1_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	}
 
 	my_print("Compute key2 ... ");
 	key2_length = 16;
-	status = sm2_compute_key(Sm2_2, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, public1, public1_length, key2,
-				 key2_length);
+	status = sm2_key_exchange_compute_key(Sm2_2, public1, public1_length, key2,
+				 &key2_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	}
 
@@ -107,32 +125,32 @@ return_status validate_crypt_sm2(void)
 
 	if (const_compare_mem(key1, key2, key1_length) != 0) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_key_exchange_free(Sm2_1);
+		sm2_key_exchange_free(Sm2_2);
 		goto Exit;
 	} else {
 		my_print("[Pass]\n");
 	}
 
-	sm2_free(Sm2_1);
-	sm2_free(Sm2_2);
+	sm2_key_exchange_free(Sm2_1);
+	sm2_key_exchange_free(Sm2_2);
 
 	my_print("\nCrypto sm2 Signing Verification Testing:\n");
 
 	public1_length = sizeof(public1);
 
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
+	Sm2_1 = sm2_dsa_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
 	}
 
 	my_print("Compute key1 ... ");
-	status = sm2_generate_key(Sm2_1, public1, &public1_length);
+	status = sm2_dsa_generate_key(Sm2_1, public1, &public1_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
+		sm2_dsa_free(Sm2_1);
 		goto Exit;
 	}
 
@@ -145,7 +163,7 @@ return_status validate_crypt_sm2(void)
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
+		sm2_dsa_free(Sm2_1);
 		goto Exit;
 	}
 
@@ -154,12 +172,12 @@ return_status validate_crypt_sm2(void)
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
+		sm2_dsa_free(Sm2_1);
 		goto Exit;
 	} else {
 		my_print("[Pass]\n");
 	}
-	sm2_free(Sm2_1);
+	sm2_dsa_free(Sm2_1);
 
 	my_print("\nCrypto sm2 Signing Verification Testing with SetPubKey:\n");
 
@@ -167,44 +185,44 @@ return_status validate_crypt_sm2(void)
 	public2_length = sizeof(public2);
 
 	my_print("- Context1 ... ");
-	Sm2_1 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
+	Sm2_1 = sm2_dsa_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_1 == NULL) {
 		my_print("[Fail]");
 		goto Exit;
 	}
 
 	my_print("Context2 ... ");
-	Sm2_2 = sm2_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
+	Sm2_2 = sm2_dsa_new_by_nid(CRYPTO_NID_SM2_DSA_P256);
 	if (Sm2_2 == NULL) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
+		sm2_dsa_free(Sm2_1);
 		goto Exit;
 	}
 
 	my_print("Compute key in Context1 ... ");
-	status = sm2_generate_key(Sm2_1, public1, &public1_length);
+	status = sm2_dsa_generate_key(Sm2_1, public1, &public1_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_dsa_free(Sm2_1);
+		sm2_dsa_free(Sm2_2);
 		goto Exit;
 	}
 
 	my_print("Export key in Context1 ... ");
-	status = sm2_get_pub_key(Sm2_1, public2, &public2_length);
+	status = sm2_dsa_get_pub_key(Sm2_1, public2, &public2_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_dsa_free(Sm2_1);
+		sm2_dsa_free(Sm2_2);
 		goto Exit;
 	}
 
 	my_print("Import key in Context2 ... ");
-	status = sm2_set_pub_key(Sm2_2, public2, public2_length);
+	status = sm2_dsa_set_pub_key(Sm2_2, public2, public2_length);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_dsa_free(Sm2_1);
+		sm2_dsa_free(Sm2_2);
 		goto Exit;
 	}
 
@@ -217,8 +235,8 @@ return_status validate_crypt_sm2(void)
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_dsa_free(Sm2_1);
+		sm2_dsa_free(Sm2_2);
 		goto Exit;
 	}
 
@@ -227,15 +245,15 @@ return_status validate_crypt_sm2(void)
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(Sm2_1);
-		sm2_free(Sm2_2);
+		sm2_dsa_free(Sm2_1);
+		sm2_dsa_free(Sm2_2);
 		goto Exit;
 	} else {
 		my_print("[Pass]\n");
 	}
 
-	sm2_free(Sm2_1);
-	sm2_free(Sm2_2);
+	sm2_dsa_free(Sm2_1);
+	sm2_dsa_free(Sm2_2);
 
 Exit:
 	return RETURN_SUCCESS;
