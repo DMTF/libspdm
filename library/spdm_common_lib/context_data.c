@@ -1054,7 +1054,7 @@ return_status spdm_append_message_m(IN void *context, IN void *session_info,
 			spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
 				spdm_context->transcript.digest_context_l1l2);
 		}
-		if ((spdm_context->connection_info.version.major_version >= 1) ||
+		if ((spdm_context->connection_info.version.major_version >= 2) ||
 			(spdm_context->connection_info.version.minor_version >= 2)) {
 			//
 			// Need append VCA since 1.2 script
@@ -1074,7 +1074,7 @@ return_status spdm_append_message_m(IN void *context, IN void *session_info,
 			spdm_hash_init (spdm_context->connection_info.algorithm.base_hash_algo,
 				spdm_session_info->session_transcript.digest_context_l1l2);
 		}
-		if ((spdm_context->connection_info.version.major_version >= 1) ||
+		if ((spdm_context->connection_info.version.major_version >= 2) ||
 			(spdm_context->connection_info.version.minor_version >= 2)) {
 			//
 			// Need append VCA since 1.2 script

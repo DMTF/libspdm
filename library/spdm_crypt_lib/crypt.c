@@ -1150,7 +1150,7 @@ create_spdm_signing_context (
 	char8 *context_str;
 
 	// It is introduced in SPDM 1.2
-	ASSERT((spdm_version.major_version >= 1) ||
+	ASSERT((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2));
 
 	// So far, it only leaves 1 bytes for version
@@ -1436,7 +1436,7 @@ boolean spdm_asym_verify(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -1514,7 +1514,7 @@ boolean spdm_asym_verify_hash(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -1703,7 +1703,7 @@ boolean spdm_asym_sign(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -1785,7 +1785,7 @@ boolean spdm_asym_sign_hash(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -1968,7 +1968,7 @@ boolean spdm_req_asym_verify(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -2046,7 +2046,7 @@ boolean spdm_req_asym_verify_hash(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -2181,7 +2181,7 @@ boolean spdm_req_asym_sign(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
@@ -2263,7 +2263,7 @@ boolean spdm_req_asym_sign_hash(
 		return FALSE;
 	}
 
-	if ((spdm_version.major_version >= 1) ||
+	if ((spdm_version.major_version >= 2) ||
 		(spdm_version.minor_version >= 2)) {
 		//
 		// Need use SPDM 1.2 signing
