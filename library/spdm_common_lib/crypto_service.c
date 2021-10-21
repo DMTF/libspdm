@@ -346,7 +346,7 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
-	if ((spdm_context->connection_info.version.major_version >= 1) ||
+	if ((spdm_context->connection_info.version.major_version >= 2) ||
 		(spdm_context->connection_info.version.minor_version >= 2)) {
 		//
 		// Need append VCA since 1.2 script
