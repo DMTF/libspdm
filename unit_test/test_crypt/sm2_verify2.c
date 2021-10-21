@@ -121,7 +121,7 @@ return_status validate_crypt_sm2_2(void)
 		m_sm2_test_root_cer, sizeof(m_sm2_test_root_cer), &sm2_pub_key);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(sm2_priv_key);
+		sm2_dsa_free(sm2_priv_key);
 		goto Exit;
 	} else {
 		my_print("[Pass]");
@@ -136,8 +136,8 @@ return_status validate_crypt_sm2_2(void)
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(sm2_priv_key);
-		sm2_free(sm2_pub_key);
+		sm2_dsa_free(sm2_priv_key);
+		sm2_dsa_free(sm2_pub_key);
 		goto Exit;
 	} else {
 		my_print("[Pass]");
@@ -148,15 +148,15 @@ return_status validate_crypt_sm2_2(void)
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
-		sm2_free(sm2_priv_key);
-		sm2_free(sm2_pub_key);
+		sm2_dsa_free(sm2_priv_key);
+		sm2_dsa_free(sm2_pub_key);
 		goto Exit;
 	} else {
 		my_print("[Pass]\n");
 	}
 
-	sm2_free(sm2_priv_key);
-	sm2_free(sm2_pub_key);
+	sm2_dsa_free(sm2_priv_key);
+	sm2_dsa_free(sm2_pub_key);
 
 Exit:
 	return RETURN_SUCCESS;
