@@ -333,6 +333,7 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
 				IN OUT uintn *l1l2_buffer_size, OUT void *l1l2_buffer)
 {
 	spdm_context_t *spdm_context;
+	return_status status;
 	spdm_session_info_t *spdm_session_info;
 	uint32 hash_size;
 	uint8 hash_data[MAX_HASH_SIZE];
