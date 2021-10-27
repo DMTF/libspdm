@@ -91,8 +91,7 @@ void test_spdm_responder_certificate_case1(void **state)
 	assert_int_equal(spdm_response->remainder_length,
 			 data_size - MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-					0);
+	assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 	free(data);
 }
@@ -391,12 +390,15 @@ void test_spdm_responder_certificate_case7(void **state)
 	// This tests considers only offset = 0, other tests vary offset value
 	m_spdm_get_certificate_request3.offset = 0;
 
-	for (int i = 0; i < sizeof(test_lenghts) / sizeof(test_lenghts[0]); i++) {
-		TEST_DEBUG_PRINT("i:%d test_lenghts[i]:%u\n", i, test_lenghts[i]);
+	for (int i = 0; i < sizeof(test_lenghts) / sizeof(test_lenghts[0]);
+	     i++) {
+		TEST_DEBUG_PRINT("i:%d test_lenghts[i]:%u\n", i,
+				 test_lenghts[i]);
 		m_spdm_get_certificate_request3.length = test_lenghts[i];
 		// Expected received length is limited by MAX_SPDM_CERT_CHAIN_BLOCK_LEN (implementation specific?)
-		expected_chunk_size = MIN(m_spdm_get_certificate_request3.length,
-					MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+		expected_chunk_size =
+			MIN(m_spdm_get_certificate_request3.length,
+			    MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
 		spdm_reset_message_b(spdm_context);
@@ -439,16 +441,16 @@ void test_spdm_responder_certificate_case8(void **state)
 
 	// Testing offsets at the boundary of maximum integer values and at the boundary of certificate length (first three positions)
 	uint16 test_offsets[] = { (uint16)(-1),
-				 0,
-				 +1,
-				 0,
-				 MAX_INT8,
-				 (uint16)(MAX_INT8 + 1),
-				 MAX_UINT8,
-				 MAX_INT16,
-				 (uint16)(MAX_INT16 + 1),
-				 MAX_UINT16,
-				 (uint16)(-1) };
+				  0,
+				  +1,
+				  0,
+				  MAX_INT8,
+				  (uint16)(MAX_INT8 + 1),
+				  MAX_UINT8,
+				  MAX_INT16,
+				  (uint16)(MAX_INT16 + 1),
+				  MAX_UINT16,
+				  (uint16)(-1) };
 
 	// Setting up the spdm_context and loading a sample certificate chain
 	spdm_test_context = *state;
@@ -475,8 +477,10 @@ void test_spdm_responder_certificate_case8(void **state)
 	test_offsets[1] = (uint16)(test_offsets[1] + data_size);
 	test_offsets[2] = (uint16)(test_offsets[2] + data_size);
 
-	for (int i = 0; i < sizeof(test_offsets) / sizeof(test_offsets[0]); i++) {
-		TEST_DEBUG_PRINT("i:%d test_offsets[i]:%u\n", i, test_offsets[i]);
+	for (int i = 0; i < sizeof(test_offsets) / sizeof(test_offsets[0]);
+	     i++) {
+		TEST_DEBUG_PRINT("i:%d test_offsets[i]:%u\n", i,
+				 test_offsets[i]);
 		m_spdm_get_certificate_request3.offset = test_offsets[i];
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
@@ -508,9 +512,9 @@ void test_spdm_responder_certificate_case8(void **state)
 			assert_int_equal(spdm_response->portion_length, 0);
 			assert_int_equal(
 				spdm_response->remainder_length,
-				(uint16)(
-					data_size -
-					m_spdm_get_certificate_request3.offset));
+				(uint16)(data_size -
+					 m_spdm_get_certificate_request3
+						 .offset));
 		}
 	}
 	free(data);
@@ -621,10 +625,11 @@ void test_spdm_responder_certificate_case9(void **state)
 					MIN(expected_chunk_size,
 					    MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 				// Expected certificate length left
-				expected_remainder = (uint16)(
-					data_size -
-					m_spdm_get_certificate_request3.offset -
-					expected_chunk_size);
+				expected_remainder =
+					(uint16)(data_size -
+						 m_spdm_get_certificate_request3
+							 .offset -
+						 expected_chunk_size);
 
 				assert_int_equal(
 					response_size,
@@ -720,11 +725,13 @@ void test_spdm_responder_certificate_case10(void **state)
 		expected_chunk_size =
 			MIN(expected_chunk_size, MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 		// Expected certificate length left
-		expected_remainder = (uint16)(
-			data_size - m_spdm_get_certificate_request3.offset -
-			expected_chunk_size);
+		expected_remainder =
+			(uint16)(data_size -
+				 m_spdm_get_certificate_request3.offset -
+				 expected_chunk_size);
 
-		TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
+		TEST_DEBUG_PRINT("expected_chunk_size %u\n",
+				 expected_chunk_size);
 		TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
 		if (expected_remainder > MAX_UINT16 ||
@@ -832,10 +839,11 @@ void test_spdm_responder_certificate_case11(void **state)
 			MIN(expected_chunk_size, MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 		// Expected certificate length left
 		expected_remainder = data_size -
-				    m_spdm_get_certificate_request3.offset -
-				    expected_chunk_size;
+				     m_spdm_get_certificate_request3.offset -
+				     expected_chunk_size;
 
-		TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
+		TEST_DEBUG_PRINT("expected_chunk_size %u\n",
+				 expected_chunk_size);
 		TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
 		if (expected_remainder > MAX_UINT16 ||
@@ -882,7 +890,9 @@ void test_spdm_responder_certificate_case12(void **state)
 	void *data;
 	uintn data_size;
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uintn count;
+#endif
 	uint16 expected_chunk_size;
 
 	// Setting up the spdm_context and loading a sample certificate chain
@@ -907,8 +917,10 @@ void test_spdm_responder_certificate_case12(void **state)
 	m_spdm_get_certificate_request3.length = 1;
 	expected_chunk_size = 1;
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	count = (data_size + m_spdm_get_certificate_request3.length - 1) /
 		m_spdm_get_certificate_request3.length;
+#endif
 
 	// reseting an internal buffer to avoid overflow and prevent tests to succeed
 	spdm_reset_message_b(spdm_context);
