@@ -881,10 +881,11 @@ void test_spdm_responder_certificate_case12(void **state)
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
-
-	uintn count;
 	uint16 expected_chunk_size;
-
+	
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	uintn count;
+#endif
 	// Setting up the spdm_context and loading a sample certificate chain
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -906,9 +907,6 @@ void test_spdm_responder_certificate_case12(void **state)
 	// This tests considers only length = 1
 	m_spdm_get_certificate_request3.length = 1;
 	expected_chunk_size = 1;
-
-	count = (data_size + m_spdm_get_certificate_request3.length - 1) /
-		m_spdm_get_certificate_request3.length;
 
 	// reseting an internal buffer to avoid overflow and prevent tests to succeed
 	spdm_reset_message_b(spdm_context);
@@ -956,6 +954,8 @@ void test_spdm_responder_certificate_case12(void **state)
 		if (spdm_response->header.request_response_code ==
 		    SPDM_CERTIFICATE) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	count = (data_size + m_spdm_get_certificate_request3.length - 1) /
+		m_spdm_get_certificate_request3.length;
 			assert_int_equal(
 				spdm_context->transcript.message_b.buffer_size,
 				sizeof(spdm_get_certificate_request_t) * count +
