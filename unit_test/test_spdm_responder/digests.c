@@ -334,7 +334,9 @@ void test_spdm_responder_digests_case7(void **state)
 	spdm_context_t *spdm_context;
 	uintn response_size;
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_digest_response_t *spdm_response;
+#endif
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -366,8 +368,9 @@ void test_spdm_responder_digests_case7(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(response_size, sizeof(spdm_error_response_t));
 #endif
-	spdm_response = (void *)response;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	spdm_response = (void *)response;
+
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
@@ -382,13 +385,15 @@ void test_spdm_responder_digests_case7(void **state)
 **/
 void test_spdm_responder_digests_case8(void **state)
 {
-	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uintn response_size;
+	
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uintn response_size;
+	return_status status;
 	spdm_digest_response_t *spdm_response;
-
+#endif
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x8;
@@ -406,22 +411,25 @@ void test_spdm_responder_digests_case8(void **state)
 		(uint8)(0xFF));
 	spdm_context->local_context.slot_count = 1;
 
-	response_size = sizeof(response);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	spdm_context->transcript.message_b.buffer_size =
 		spdm_context->transcript.message_b.max_buffer_size -
 		sizeof(spdm_get_digest_request_t);
 #endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	response_size = sizeof(response);
 	status = spdm_get_response_digests(spdm_context,
 					   m_spdm_get_digests_request1_size,
 					   &m_spdm_get_digests_request1,
 					   &response_size, response);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(status, RETURN_SUCCESS);
 	assert_int_equal(response_size, sizeof(spdm_error_response_t));
 #endif
-	spdm_response = (void *)response;
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	spdm_response = (void *)response;
+
 	assert_int_equal(spdm_response->header.request_response_code,
 			 SPDM_ERROR);
 	assert_int_equal(spdm_response->header.param1,
