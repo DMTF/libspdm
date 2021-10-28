@@ -74,14 +74,6 @@ return_status spdm_requester_get_measurements_test_send_message(
 	boolean is_app_message;
 	uint8 app_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn app_message_size;
-	spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
-
-	spdm_secured_message_callbacks_t.version =
-		SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-	spdm_secured_message_callbacks_t.get_sequence_number =
-		test_get_sequence_number;
-	spdm_secured_message_callbacks_t.get_max_random_number_count =
-		test_get_max_random_number_count;
 	spdm_test_context = get_spdm_test_context();
 	header_size = sizeof(test_message_header_t);
 	switch (spdm_test_context->case_id) {
@@ -4164,7 +4156,9 @@ void test_spdm_requester_get_measurements_case28(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uintn ExpectedBufferSize;
+#endif
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -4194,7 +4188,6 @@ void test_spdm_requester_get_measurements_case28(void **state)
 		 data, data_size);
 	request_attribute =
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
-	ExpectedBufferSize = 0;
 
 	measurement_record_length = sizeof(measurement_record);
 	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
@@ -4203,6 +4196,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 				      measurement_record);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	ExpectedBufferSize = 0;
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 ExpectedBufferSize);
 #endif
