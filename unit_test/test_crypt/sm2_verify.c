@@ -170,6 +170,7 @@ return_status validate_crypt_sm2(void)
 	my_print("SM2 Verification ... ");
 	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				  sizeof(message), signature, sig_size);
+
 	if (!status) {
 		my_print("[Fail]");
 		sm2_dsa_free(Sm2_1);
