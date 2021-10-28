@@ -1243,10 +1243,12 @@ void test_spdm_requester_get_digests_case15(void **state)
 **/
 void test_spdm_requester_get_digests_case16(void **state)
 {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	return_status status;
+	uint8 slot_mask;
+#endif
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint8 slot_mask;
 	uint8 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
 
 	spdm_test_context = *state;
@@ -1271,9 +1273,9 @@ void test_spdm_requester_get_digests_case16(void **state)
 #endif
 
 	zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	status =
 		spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
 #endif
 }

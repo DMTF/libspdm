@@ -199,7 +199,7 @@ boolean sm2_compute_key(IN OUT void *sm2_context, IN uintn hash_nid,
 
 **/
 boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
-		       IN const uint8 *id_a, IN uintn id_a_size,
+		       IN const char *id_a, IN uintn id_a_size,
 		       IN const uint8 *message, IN uintn size,
 		       OUT uint8 *signature, IN OUT uintn *sig_size)
 {
@@ -231,7 +231,7 @@ boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
 
 **/
 boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
-			 IN const uint8 *id_a, IN uintn id_a_size,
+			 IN const char *id_a, IN uintn id_a_size,
 			 IN const uint8 *message, IN uintn size,
 			 IN const uint8 *signature, IN uintn sig_size)
 {
