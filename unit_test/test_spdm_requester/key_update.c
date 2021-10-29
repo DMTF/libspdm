@@ -4569,15 +4569,15 @@ int spdm_requester_key_update_test_main(void)
 		// Error response: SPDM_ERROR_CODE_INVALID_REQUEST
 		cmocka_unit_test(test_spdm_requester_key_update_case28),
 		// Always SPDM_ERROR_CODE_BUSY
-		//cmocka_unit_test(test_spdm_requester_key_update_case29),
+		cmocka_unit_test(test_spdm_requester_key_update_case29),
 		// SPDM_ERROR_CODE_BUSY + Successful response
-		//cmocka_unit_test(test_spdm_requester_key_update_case30),
+		cmocka_unit_test(test_spdm_requester_key_update_case30),
 		// Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
-		//cmocka_unit_test(test_spdm_requester_key_update_case31),
+		cmocka_unit_test(test_spdm_requester_key_update_case31),
 		// Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
 		cmocka_unit_test(test_spdm_requester_key_update_case32),
 		// SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
-		//cmocka_unit_test(test_spdm_requester_key_update_case33),
+		cmocka_unit_test(test_spdm_requester_key_update_case33),
 		// Unexpected errors
 		cmocka_unit_test(test_spdm_requester_key_update_case34),
 	};
