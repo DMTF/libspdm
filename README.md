@@ -153,9 +153,9 @@ General build steps: (Note the `..` at the end of the cmake command).
    ```
 Example cmake commands: (Note the `..` at the end of the cmake command). 
    ```
-   cmake -G"NMake Makefiles" -DARCH=arm -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
+   cmake -DARCH=arm -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
    
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=CLANG-DTARGET=Release -DCRYPTO=mbedtls ..
+   cmake -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=Release -DCRYPTO=mbedtls ..
    
    ```
 
