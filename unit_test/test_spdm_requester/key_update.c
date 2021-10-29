@@ -2148,6 +2148,9 @@ return_status spdm_requester_key_update_test_receive_message(
 		secured_message_context->application_secret
 			  .response_data_sequence_number = my_last_rsp_sequence_number;
 
+		// once the sequence number is used, it should be increased for next BUSY nessage.
+		my_last_rsp_sequence_number ++;
+
 		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
 		spdm_response.header.request_response_code = SPDM_ERROR;
 		spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
