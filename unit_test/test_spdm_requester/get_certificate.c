@@ -12,6 +12,77 @@
 static void *m_local_certificate_chain;
 static uintn m_local_certificate_chain_size;
 
+// Loading the target expiration certificate chain and saving root certificate hash
+// "rsa3072_Expiration/bundle_responder.certchain.der"
+boolean read_responder_public_certificate_chain_expiration( 
+	OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
+{
+	uint32 base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+	boolean res;
+	void *file_data;
+	uintn file_size;
+	spdm_cert_chain_t *cert_chain;
+	uintn cert_chain_size;
+	char8 *file;
+	uint8 *root_cert;
+	uintn root_cert_len;
+	uintn digest_size;
+
+	*data = NULL;
+	*size = 0;
+	if (hash != NULL) {
+		*hash = NULL;
+	}
+	if (hash_size != NULL) {
+		*hash_size = 0;
+	}
+
+	file = "rsa3072_Expiration/bundle_responder.certchain.der";
+	res = read_input_file(file, &file_data, &file_size);
+	if (!res) {
+		return res;
+	}
+
+	digest_size = spdm_get_hash_size(base_hash_algo);
+
+	cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
+	cert_chain = (void *)malloc(cert_chain_size);
+	if (cert_chain == NULL) {
+		free(file_data);
+		return FALSE;
+	}
+	cert_chain->length = (uint16)cert_chain_size;
+	cert_chain->reserved = 0;
+
+	//
+	// Get Root Certificate and calculate hash value
+	//
+	res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+					    &root_cert_len);
+	if (!res) {
+		free(file_data);
+		free(cert_chain);
+		return res;
+	}
+
+	spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+		      (uint8 *)(cert_chain + 1));
+	copy_mem((uint8 *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+		 file_data, file_size);
+
+	*data = cert_chain;
+	*size = cert_chain_size;
+	if (hash != NULL) {
+		*hash = (cert_chain + 1);
+	}
+	if (hash_size != NULL) {
+		*hash_size = digest_size;
+	}
+
+	free(file_data);
+	return TRUE;
+}
+
 return_status spdm_requester_get_certificate_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
 	IN uint64 timeout)
@@ -55,6 +126,8 @@ return_status spdm_requester_get_certificate_test_send_message(
 	case 0x11:
 		return RETURN_SUCCESS;
 	case 0x12:
+		return RETURN_SUCCESS;
+	case 0x13:
 		return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
@@ -1094,6 +1167,69 @@ return_status spdm_requester_get_certificate_test_receive_message(
 			calling_index = 0;
 			free(m_local_certificate_chain);
 			free(root_cert_data);
+			m_local_certificate_chain = NULL;
+			m_local_certificate_chain_size = 0;
+		}
+	}
+		return RETURN_SUCCESS;
+
+	case 0x13: {
+		spdm_certificate_response_t *spdm_response;
+		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uintn temp_buf_size;
+		uint16 portion_length;
+		uint16 remainder_length;
+		uintn count;
+		static uintn calling_index = 0;
+
+		if (m_local_certificate_chain == NULL) {
+			read_responder_public_certificate_chain_expiration(
+				&m_local_certificate_chain,
+				&m_local_certificate_chain_size, NULL, NULL);
+		}
+		if (m_local_certificate_chain == NULL) {
+			return RETURN_OUT_OF_RESOURCES;
+		}
+		count = (m_local_certificate_chain_size +
+			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN + 1) /
+			MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+		if (calling_index != count - 1) {
+			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+			remainder_length =
+				(uint16)(m_local_certificate_chain_size -
+					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
+						 (calling_index + 1));
+		} else {
+			portion_length = (uint16)(
+				m_local_certificate_chain_size -
+				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
+			remainder_length = 0;
+		}
+
+		temp_buf_size =
+			sizeof(spdm_certificate_response_t) + portion_length;
+		spdm_response = (void *)temp_buf;
+
+		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+		spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+		spdm_response->header.param1 = 0;
+		spdm_response->header.param2 = 0;
+		spdm_response->portion_length = portion_length;
+		spdm_response->remainder_length = remainder_length;
+		copy_mem(spdm_response + 1,
+			 (uint8 *)m_local_certificate_chain +
+				 MAX_SPDM_CERT_CHAIN_BLOCK_LEN * calling_index,
+			 portion_length);
+
+		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+						   FALSE, temp_buf_size,
+						   temp_buf, response_size,
+						   response);
+
+		calling_index++;
+		if (calling_index == count) {
+			calling_index = 0;
+			free(m_local_certificate_chain);
 			m_local_certificate_chain = NULL;
 			m_local_certificate_chain_size = 0;
 		}
@@ -2143,6 +2279,68 @@ void test_spdm_requester_get_certificate_case18(void **state)
 	free(data);
 }
 
+/**
+  Test 19: Normal procedure, but one certificate in the retrieved certificate chain past its expiration date.
+  Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+**/
+void test_spdm_requester_get_certificate_case19(void **state)
+{
+	return_status status;
+	spdm_test_context_t *spdm_test_context;
+	spdm_context_t *spdm_context;
+	uintn cert_chain_size;
+	uint8 cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+	void *data;
+	uintn data_size;
+	void *hash;
+	uintn hash_size;
+	uint8 *root_cert;
+	uintn root_cert_size;
+	uintn count;
+
+	spdm_test_context = *state;
+	spdm_context = spdm_test_context->spdm_context;
+	spdm_test_context->case_id = 0x13;
+	// Setting SPDM context as the first steps of the protocol has been accomplished
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	// Loading the target expiration certificate chain and saving root certificate hash
+	// "rsa3072_Expiration/bundle_responder.certchain.der"
+	read_responder_public_certificate_chain_expiration(&data,
+						&data_size, &hash, &hash_size);
+	x509_get_cert_from_cert_chain(
+		(uint8 *)data + sizeof(spdm_cert_chain_t) + hash_size,
+		data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+		&root_cert, &root_cert_size);
+	spdm_context->local_context.peer_root_cert_provision_size =
+		root_cert_size;
+	spdm_context->local_context.peer_root_cert_provision = root_cert;
+	spdm_context->local_context.peer_cert_chain_provision = NULL;
+	spdm_context->local_context.peer_cert_chain_provision_size = 0;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+	// Reseting message buffer
+	spdm_reset_message_b(spdm_context);
+	// Calculating expected number of messages received
+	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
+		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+
+	cert_chain_size = sizeof(cert_chain);
+	zero_mem(cert_chain, sizeof(cert_chain));
+	status = spdm_get_certificate(spdm_context, 0, &cert_chain_size,
+				      cert_chain);
+	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
+			 sizeof(spdm_get_certificate_request_t) * count +
+				 sizeof(spdm_certificate_response_t) * count +
+				 data_size);
+#endif
+	free(data);
+}
+
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -2189,6 +2387,8 @@ int spdm_requester_get_certificate_test_main(void)
 		cmocka_unit_test(test_spdm_requester_get_certificate_case17),
 		// Fail response: get a certificate chain not start with root cert but with wrong signature.
 		cmocka_unit_test(test_spdm_requester_get_certificate_case18),
+		// Fail response: one certificate in the retrieved certificate chain past its expiration date.
+		cmocka_unit_test(test_spdm_requester_get_certificate_case19),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);
