@@ -60,6 +60,8 @@ typedef struct {
 	spdm_session_info_struct_handshake_secret_t handshake_secret;
 	spdm_session_info_struct_application_secret_t application_secret;
 	spdm_session_info_struct_application_secret_t application_secret_backup;
+	boolean requester_backup_valid;
+	boolean responder_backup_valid;
 	uintn psk_hint_size;
 	void *psk_hint;
 	//
