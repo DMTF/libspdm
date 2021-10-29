@@ -324,6 +324,7 @@ return_status spdm_decode_secured_message(
 	spdm_session_state_t session_state;
 	spdm_error_struct_t spdm_error;
 	uint8 dec_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	return_status status;
 
 	spdm_error.error_code = 0;
 	spdm_error.session_id = 0;
@@ -505,6 +506,32 @@ return_status spdm_decode_secured_message(
 			record_header_size, enc_msg, cipher_text_size, tag,
 			aead_tag_size, dec_msg, &cipher_text_size);
 		if (!result) {
+			//
+			// Try to use backup key to decrypt, because peer may use old key to encrypt error message.
+			// Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key(). 
+			//
+			if ((is_requester && secured_message_context->requester_backup_valid) ||
+				((!is_requester) && secured_message_context->responder_backup_valid)) {
+				spdm_activate_update_session_data_key(
+					secured_message_context,
+					is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
+					FALSE);
+				status = spdm_decode_secured_message(
+					spdm_secured_message_context, session_id,
+					is_requester, secured_message_size,
+					secured_message, app_message_size,
+					app_message, spdm_secured_message_callbacks_t);
+				//
+				// Handle special case:
+				// If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
+				// Then later the responder will return SUCCESS, the requester need activate new key.
+				// So we need restore the environment by spdm_create_update_session_data_key() again.
+				//
+				spdm_create_update_session_data_key (secured_message_context,
+					is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
+				return status;
+			}
+
 			spdm_secured_message_set_last_spdm_error_struct(
 				spdm_secured_message_context, &spdm_error);
 			return RETURN_SECURITY_VIOLATION;
@@ -569,6 +596,32 @@ return_status spdm_decode_secured_message(
 				aead_tag_size,
 			NULL, 0, tag, aead_tag_size, NULL, NULL);
 		if (!result) {
+			//
+			// try to use backup key to decrypt, because peer may use old key to encrypt error message.
+			// recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key(). 
+			//
+			if ((is_requester && secured_message_context->requester_backup_valid) ||
+				((!is_requester) && secured_message_context->responder_backup_valid)) {
+				spdm_activate_update_session_data_key(
+					secured_message_context,
+					is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
+					FALSE);
+				status = spdm_decode_secured_message(
+					spdm_secured_message_context, session_id,
+					is_requester, secured_message_size,
+					secured_message, app_message_size,
+					app_message, spdm_secured_message_callbacks_t);
+				//
+				// Handle special case:
+				// If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
+				// Then later the responder will return SUCCESS, the requester need activate new key.
+				// So we need restore the environment by spdm_create_update_session_data_key() again.
+				//
+				spdm_create_update_session_data_key (secured_message_context,
+					is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
+				return status;
+			}
+
 			spdm_secured_message_set_last_spdm_error_struct(
 				spdm_secured_message_context, &spdm_error);
 			return RETURN_SECURITY_VIOLATION;
