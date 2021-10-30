@@ -7,7 +7,11 @@
 #ifndef __SPDM_SECURED_MESSAGE_LIB_H__
 #define __SPDM_SECURED_MESSAGE_LIB_H__
 
+#ifndef LIBSPDM_CONFIG
 #include "spdm_lib_config.h"
+#else
+#include LIBSPDM_CONFIG
+#endif
 
 #include <base.h>
 #include <industry_standard/spdm.h>
