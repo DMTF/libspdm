@@ -339,6 +339,12 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		spdm_context->encap_context.req_slot_id =
 			parameter->additional_data[0];
 		break;
+	case SPDM_DATA_HEARTBEAT_PERIOD:
+		if (data_size != sizeof(uint8)) {
+			return RETURN_INVALID_PARAMETER;
+		}
+		spdm_context->local_context.heartbeat_period = *(uint8 *)data;
+		break;
 	case SPDM_DATA_PSK_HINT:
 		if (data_size > MAX_SPDM_PSK_HINT_LENGTH) {
 			return RETURN_INVALID_PARAMETER;
