@@ -80,6 +80,7 @@ typedef struct {
 	//
 	boolean basic_mut_auth_requested;
 	uint8 mut_auth_requested;
+	uint8 heartbeat_period;
 } spdm_local_context_t;
 
 typedef struct {

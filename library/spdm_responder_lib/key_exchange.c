@@ -185,7 +185,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 
 	spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
 	spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
-	spdm_response->header.param1 = 0;
+	spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
 
 	req_session_id = spdm_request->req_session_id;
 	rsp_session_id = spdm_allocate_rsp_session_id(spdm_context);
