@@ -660,6 +660,42 @@ spdm_negotiate_algorithms_request_spdm11_multiple_tables_t    m_spdm_negotiate_a
 };
 uintn m_spdm_negotiate_algorithm_request15_size = sizeof(m_spdm_negotiate_algorithm_request15);
 
+spdm_negotiate_algorithms_request_spdm11_t    m_spdm_negotiate_algorithm_request16 = {
+  {
+    {
+      SPDM_MESSAGE_VERSION_11,
+      SPDM_NEGOTIATE_ALGORITHMS,
+      4,
+      0
+    },
+    sizeof(spdm_negotiate_algorithms_request_spdm11_t),
+    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+  },
+  {
+    {
+      SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
+      0x20,
+      SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1 | SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1
+    },
+    {
+      SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
+      0x20,
+      SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM
+    },
+    {
+      SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG,
+      0x20,
+      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048
+    },
+    {
+      SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
+      0x20,
+      SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+    }
+  }
+};
+uintn m_spdm_negotiate_algorithm_request16_size = sizeof(m_spdm_negotiate_algorithm_request16);
+
 void test_spdm_responder_algorithms_case1(void **state)
 {
 	return_status status;
@@ -1548,6 +1584,78 @@ void test_spdm_responder_algorithms_case19(void **state) {
   assert_int_equal (spdm_response->struct_table[3].alg_supported, spdm_context->local_context.algorithm.key_schedule);
 }
 
+// When both of requester and responder support multiple algorithms, then defaults to choose the strongest available algorithm
+void test_spdm_responder_algorithms_case20(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uintn                response_size;
+  uint8                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  spdm_algorithms_response_mine_t *spdm_response;
+
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0x14;
+  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+  
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
+  spdm_context->local_context.algorithm.base_hash_algo = 
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512 | 
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+  spdm_context->local_context.algorithm.base_asym_algo = 
+      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+	  SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
+	  SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+  spdm_context->local_context.algorithm.measurement_spec = m_use_measurement_spec;
+  spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
+  spdm_context->local_context.algorithm.dhe_named_group =
+	  SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 |
+      SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1 |
+	  SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+  spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
+  spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
+  spdm_context->local_context.algorithm.key_schedule = m_use_key_schedule_algo;
+
+  spdm_reset_message_a(spdm_context);
+
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+
+  response_size = sizeof(response);
+  status = spdm_get_response_algorithms (spdm_context, m_spdm_negotiate_algorithm_request16_size, &m_spdm_negotiate_algorithm_request16, &response_size, response);
+  assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal (response_size, sizeof(spdm_algorithms_response_t)+4*sizeof(spdm_negotiate_algorithms_common_struct_table_t));
+  spdm_response = (void *)response;
+  assert_int_equal (spdm_response->header.request_response_code, SPDM_ALGORITHMS);
+  assert_int_equal (spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+
+  assert_int_equal (spdm_response->base_hash_sel, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512);
+  assert_int_equal (spdm_response->base_hash_sel, spdm_context->connection_info.algorithm.base_hash_algo);
+
+  assert_int_equal (spdm_response->base_asym_sel, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
+  assert_int_equal (spdm_response->base_asym_sel, spdm_context->connection_info.algorithm.base_asym_algo);
+
+  assert_int_equal (spdm_response->struct_table[0].alg_supported, SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1);
+  assert_int_equal (spdm_response->struct_table[0].alg_supported, spdm_context->connection_info.algorithm.dhe_named_group);
+
+  assert_int_equal (spdm_response->struct_table[1].alg_supported, spdm_context->connection_info.algorithm.aead_cipher_suite);
+  assert_int_equal (spdm_response->struct_table[2].alg_supported, spdm_context->connection_info.algorithm.req_base_asym_alg);
+  assert_int_equal (spdm_response->struct_table[3].alg_supported, spdm_context->connection_info.algorithm.key_schedule);
+}
+
 spdm_test_context_t m_spdm_responder_algorithms_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
@@ -1594,6 +1702,8 @@ int spdm_responder_algorithms_test_main(void)
 		cmocka_unit_test(test_spdm_responder_algorithms_case18),
 		// Invalid  Alg structs + valid Alg Structs for V1.1
 		cmocka_unit_test(test_spdm_responder_algorithms_case19),
+		// When support multiple algorithms, then defaults to choose the strongest available algorithm
+		cmocka_unit_test(test_spdm_responder_algorithms_case20),
 	};
 
 	m_spdm_negotiate_algorithms_request1.base_asym_algo = m_use_asym_algo;
@@ -1628,6 +1738,16 @@ int spdm_responder_algorithms_test_main(void)
 	m_spdm_negotiate_algorithm_request14.spdm_request_version10.base_hash_algo = m_use_hash_algo;
 	m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_asym_algo = m_use_asym_algo;
 	m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+	m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_asym_algo = 
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
+		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 |
+		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 |
+		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+	m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_hash_algo = 
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512 |
+		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384 |
+		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 
 	setup_spdm_test_context(&m_spdm_responder_algorithms_test_context);
 
