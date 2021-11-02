@@ -111,25 +111,66 @@ typedef boolean (*spdm_psk_hkdf_expand_func)(
 /**
   Collect the device measurement.
 
-  @param  measurement_specification     Indicates the measurement specification.
-                                       It must align with measurement_specification (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
-  @param  measurement_hash_algo          Indicates the measurement hash algorithm.
-                                       It must align with measurement_hash_algo (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
-  @param  device_measurement_count       The count of the device measurement block.
-  @param  device_measurement            A pointer to a destination buffer to store the concatenation of all device measurement blocks.
-  @param  device_measurement_size        On input, indicates the size in bytes of the destination buffer.
-                                       On output, indicates the size in bytes of all device measurement blocks in the buffer.
+  libspdm will call this function to retrieve the measurements for a device.
+  The "device_measurement_index" parameter indicates the measurement requested.
 
-  @retval TRUE  the device measurement collection success and measurement is returned.
-  @retval FALSE the device measurement collection fail.
+  @param  measurement_specification     Indicates the measurement specification.
+  Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
+
+  @param  measurement_hash_algo         Indicates the measurement hash algorithm.
+  Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
+
+  @param  measurement_index      The index of the measurement to collect.
+
+  A value of [0x0] requests only the total number of measurements to be returned
+  in "measurements_count". The parameters "measurements" and
+  "measurements_size" will be left unmodified.
+
+  A value of [1-0xFE] requests a single measurement for that measurement index
+  be returned. On success, "measurements_count" will be set to 1 and the
+  "measurements" and "measurements_size" fields will be set based
+  on the single measurement. An invalid measurement index will cause
+  "measurements_count" to return 0.
+
+  A value of [0xFF] requests all measurements be returned.
+  On success, "measurements_count", "measurements", and "measurements_size"
+  fields will be set with data from all measurements.
+
+  @param  measurements_count
+
+  When "measurement_index" is zero, returns the total count of
+  measurements available for the device. None of the actual measurements are
+  returned however, and "measurements" and "measurements_size" are unmodified.
+
+  When "measurement_index" is non-zero, returns the number of measurements
+  returned in "measurements" and "measurements_size". If "measurements_index"
+  is an invalid index not supported by the device, "measurements_count" will
+  return 0.
+
+  @param  measurements
+
+  A pointer to a destination buffer to store the concatenation of all device
+  measurement blocks. This buffer will only be modified if
+  "measurement_index" is non-zero.
+
+  @param  measurements_size
+
+  On input, indicates the size in bytes of the destination buffer.
+  On output, indicates the total size in bytes of all device measurement
+  blocks in the buffer. This field should only be modified if
+  "device_measurement_index" is non-zero.
+
+  @retval TRUE  the measurement collection succeeded and measurement is returned.
+  @retval FALSE the measurement collection failed.
 **/
 boolean spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
-				    IN uint8 measurement_specification,
+				    IN uint8  measurement_specification,
 				    IN uint32 measurement_hash_algo,
-				    OUT uint8 *device_measurement_count,
-				    OUT void *device_measurement,
-				    IN OUT uintn *device_measurement_size);
+				    IN uint8 measurement_index,
+				    OUT uint8 *measurements_count,
+				    OUT void *measurements,
+				    IN OUT uintn *measurements_size);
 
 /**
   Sign an SPDM message data.

@@ -935,9 +935,10 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 		ret = spdm_measurement_collection(
 			spdm_context->connection_info.version,
 			spdm_context->connection_info.algorithm.measurement_spec,
-			spdm_context->connection_info.algorithm
-				.measurement_hash_algo,
-			&device_measurement_count, device_measurement,
+			spdm_context->connection_info.algorithm.measurement_hash_algo,
+			0xFF, // Get all measurements
+			&device_measurement_count,
+			device_measurement,
 			&device_measurement_size);
 		if (!ret) {
 			return ret;

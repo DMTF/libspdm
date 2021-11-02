@@ -98,34 +98,49 @@ boolean read_requester_private_certificate(IN uint16 req_base_asym_alg,
 /**
   Collect the device measurement.
 
+  Please see a more detailed description of this function in spdm_device_secret_lib.h
+
   @param  measurement_specification     Indicates the measurement specification.
                                        It must align with measurement_specification (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
   @param  measurement_hash_algo          Indicates the measurement hash algorithm.
                                        It must align with measurement_hash_algo (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
-  @param  device_measurement_count       The count of the device measurement block.
-  @param  device_measurement            A pointer to a destination buffer to store the concatenation of all device measurement blocks.
-  @param  device_measurement_size        On input, indicates the size in bytes of the destination buffer.
-                                       On output, indicates the size in bytes of all device measurement blocks in the buffer.
+  @param  measurements_index       The measurement index to of the measurement to return.
+  @param  measurements_count       The count of the device measurement block.
+  @param  measurements             A pointer to a destination buffer to store the concatenation of all device measurement blocks.
+  @param  measurements_size        On input, indicates the size in bytes of the destination buffer.
+                                   On output, indicates the size in bytes of all device measurement blocks in the buffer.
 
   @retval TRUE  the device measurement collection success and measurement is returned.
   @retval FALSE the device measurement collection fail.
+
+  In this example, there are 5 possible measurements.
+  The first 4 measurements indices may be hashes or raw bitstreams.
+  The 5th measurement index always contains the raw bitstream.
+  The raw buffers are filled with repeating values of 1 for measurment index 1,
+  repeating values of 2 for measurement index 2, and so on.
+  If a hash is requested, the first 4 buffers will be hashed and the hash
+  values will be returned for those measurements. The 5 buffer is always a raw
+  bitstream and returned as such.
 **/
+
 boolean spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
 					IN uint8 measurement_specification,
 				    IN uint32 measurement_hash_algo,
-				    OUT uint8 *device_measurement_count,
-				    OUT void *device_measurement,
-				    IN OUT uintn *device_measurement_size)
+				    IN uint8 measurements_index,
+				    OUT uint8 *measurements_count,
+				    OUT void *measurements,
+				    IN OUT uintn *measurements_size)
 {
-	spdm_measurement_block_dmtf_t *MeasurementBlock;
+	spdm_measurement_block_dmtf_t *measurement_block;
 	uintn hash_size;
 	uint8 index;
 	uint8 data[MEASUREMENT_MANIFEST_SIZE];
-	uintn total_size;
+	uintn total_size_needed;
 
 	ASSERT(measurement_specification ==
 	       SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF);
+
 	if (measurement_specification !=
 	    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
 		return FALSE;
@@ -134,69 +149,172 @@ boolean spdm_measurement_collection(
 	hash_size = spdm_get_measurement_hash_size(measurement_hash_algo);
 	ASSERT(hash_size != 0);
 
-	*device_measurement_count = MEASUREMENT_BLOCK_NUMBER;
-	if (hash_size != 0xFFFFFFFF) {
-		total_size =
-			(MEASUREMENT_BLOCK_NUMBER - 1) *
-				(sizeof(spdm_measurement_block_dmtf_t) +
-				 hash_size) +
-			(sizeof(spdm_measurement_block_dmtf_t) + sizeof(data));
-	} else {
-		total_size =
-			(MEASUREMENT_BLOCK_NUMBER - 1) *
-				(sizeof(spdm_measurement_block_dmtf_t) +
-				 sizeof(data)) +
-			(sizeof(spdm_measurement_block_dmtf_t) + sizeof(data));
-	}
-	ASSERT(*device_measurement_size >= total_size);
-	*device_measurement_size = total_size;
+	if (measurements_index ==
+		SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
+		*measurements_count = MEASUREMENT_BLOCK_NUMBER;
+		return TRUE;
+	} else if (measurements_index ==
+			SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
-	MeasurementBlock = device_measurement;
-	for (index = 0; index < MEASUREMENT_BLOCK_NUMBER; index++) {
-		MeasurementBlock->Measurement_block_common_header.index =
-			index + 1;
-		MeasurementBlock->Measurement_block_common_header
+		// Calculate total_size_needed based on hash algo selected.
+		// If we have an hash algo, then the first N-1 elements will be
+		// hash values, otherwise N-1 raw bitstream values.
+		// Last one (N) is always raw bitstream data.
+		if (measurement_hash_algo
+			!= SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
+			total_size_needed = // N-1 hash_size + 1 raw data
+				(MEASUREMENT_BLOCK_NUMBER - 1) *
+					(sizeof(spdm_measurement_block_dmtf_t) + hash_size) +
+				(sizeof(spdm_measurement_block_dmtf_t) + sizeof(data));
+		} else {
+			total_size_needed = // All N items raw data
+				(MEASUREMENT_BLOCK_NUMBER *
+				 (sizeof(spdm_measurement_block_dmtf_t) +
+				  sizeof(data)));
+		}
+		ASSERT(*measurements_size >= total_size_needed);
+		if (total_size_needed >= *measurements_size) {
+			return FALSE;
+		}
+
+		*measurements_size = total_size_needed;
+		*measurements_count = MEASUREMENT_BLOCK_NUMBER;
+		measurement_block = measurements;
+
+		for (index = 1; index <= MEASUREMENT_BLOCK_NUMBER; index++) {
+			measurement_block->Measurement_block_common_header
+				.index = index;
+			measurement_block->Measurement_block_common_header
+				.measurement_specification =
+				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+
+			set_mem(data, sizeof(data), (uint8)(index + 1));
+
+			// The first N-1 blocks may be hash values,
+			// while the last one is always a raw bitstream.
+			if ((index < MEASUREMENT_BLOCK_NUMBER) &&
+			    measurement_hash_algo !=
+				    SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
+				measurement_block->Measurement_block_dmtf_header
+					.dmtf_spec_measurement_value_type =
+					(index - 1);
+				measurement_block->Measurement_block_dmtf_header
+					.dmtf_spec_measurement_value_size =
+					(uint16)hash_size;
+
+				measurement_block->Measurement_block_common_header
+					.measurement_size =
+					(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+						 (uint16)hash_size);
+
+				spdm_measurement_hash_all(
+					measurement_hash_algo, data,
+					sizeof(data),
+					(void *)(measurement_block + 1));
+
+				measurement_block =
+					(void *)((uint8 *)measurement_block +
+						 sizeof(spdm_measurement_block_dmtf_t) +
+						 hash_size);
+
+			} else {
+				measurement_block->Measurement_block_dmtf_header
+					.dmtf_spec_measurement_value_type =
+					(index - 1) |
+					SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
+				measurement_block->Measurement_block_dmtf_header
+					.dmtf_spec_measurement_value_size =
+					(uint16)sizeof(data);
+
+				measurement_block->Measurement_block_common_header
+					.measurement_size =
+					(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+						 (uint16)sizeof(data));
+
+				copy_mem((void *)(measurement_block + 1), data, sizeof(data));
+
+				measurement_block =
+					(void *)((uint8 *)measurement_block +
+						 sizeof(spdm_measurement_block_dmtf_t) +
+						 sizeof(data));
+
+			}
+		}
+
+		return TRUE;
+	} else {
+		if (measurements_index > MEASUREMENT_BLOCK_NUMBER) {
+			*measurements_count = 0;
+			return TRUE;
+		}
+
+		if (measurements_index < MEASUREMENT_BLOCK_NUMBER &&
+		    measurement_hash_algo !=
+			    SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
+			total_size_needed =
+				sizeof(spdm_measurement_block_dmtf_t) +
+				hash_size;
+		} else {
+			total_size_needed =
+				sizeof(spdm_measurement_block_dmtf_t) +
+				sizeof(data);
+		}
+		ASSERT(total_size_needed <= *measurements_size);
+		if (total_size_needed > *measurements_size) {
+			return FALSE;
+		}
+
+		set_mem(data, sizeof(data), (uint8)(measurements_index));
+
+		*measurements_count = 1;
+		*measurements_size = total_size_needed;
+
+		measurement_block = measurements;
+
+		measurement_block->Measurement_block_common_header.index =
+			measurements_index;
+
+		measurement_block->Measurement_block_common_header
 			.measurement_specification =
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-		if ((index < 4) && (hash_size != 0xFFFFFFFF)) {
-			MeasurementBlock->Measurement_block_dmtf_header
-				.dmtf_spec_measurement_value_type = index;
-			MeasurementBlock->Measurement_block_dmtf_header
+
+		if (measurements_index < MEASUREMENT_BLOCK_NUMBER &&
+		    measurement_hash_algo !=
+			    SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
+			measurement_block->Measurement_block_dmtf_header
+				.dmtf_spec_measurement_value_type =
+				measurements_index - 1;
+			measurement_block->Measurement_block_dmtf_header
 				.dmtf_spec_measurement_value_size =
 				(uint16)hash_size;
-		} else {
-			MeasurementBlock->Measurement_block_dmtf_header
-				.dmtf_spec_measurement_value_type =
-				index |
-				SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
-			MeasurementBlock->Measurement_block_dmtf_header
-				.dmtf_spec_measurement_value_size =
-				(uint16)sizeof(data);
-		}
-		MeasurementBlock->Measurement_block_common_header
-			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
-				 MeasurementBlock->Measurement_block_dmtf_header
-					 .dmtf_spec_measurement_value_size);
-		set_mem(data, sizeof(data), (uint8)(index + 1));
-		if ((index < 4) && (hash_size != 0xFFFFFFFF)) {
+			measurement_block->Measurement_block_common_header
+				.measurement_size =
+				(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+					 (uint16)hash_size);
+
+			// Hash directly to buffer after measurement block.
 			spdm_measurement_hash_all(
 				measurement_hash_algo, data, sizeof(data),
-				(void *)(MeasurementBlock + 1));
-			MeasurementBlock =
-				(void *)((uint8 *)MeasurementBlock +
-					 sizeof(spdm_measurement_block_dmtf_t) +
-					 hash_size);
+				(void *)(measurement_block + 1));
+
 		} else {
-			copy_mem((void *)(MeasurementBlock + 1), data,
+			measurement_block->Measurement_block_dmtf_header
+				.dmtf_spec_measurement_value_type =
+				(measurements_index - 1) |
+				SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
+			measurement_block->Measurement_block_dmtf_header
+				.dmtf_spec_measurement_value_size =
+				(uint16)sizeof(data);
+
+			measurement_block->Measurement_block_common_header
+				.measurement_size =
+				(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+					 (uint16)sizeof(data));
+
+			copy_mem((void *)(measurement_block + 1), data,
 				 sizeof(data));
-			MeasurementBlock =
-				(void *)((uint8 *)MeasurementBlock +
-					 sizeof(spdm_measurement_block_dmtf_t) +
-					 sizeof(data));
 		}
 	}
-
 	return TRUE;
 }
 

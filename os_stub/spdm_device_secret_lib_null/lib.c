@@ -30,6 +30,7 @@ boolean spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
 				    IN uint8 measurement_specification,
 				    IN uint32 measurement_hash_algo,
+				    IN uint8 mesurements_index,
 				    OUT uint8 *device_measurement_count,
 				    OUT void *device_measurement,
 				    IN OUT uintn *device_measurement_size)
