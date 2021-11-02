@@ -102,7 +102,17 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Install lcov `sudo apt-get install lcov`.
 
-   Build cases.
+   Build cases with `-DGCOV=ON`.
+
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<x64|ia32|arm|aarch64|riscv32|riscv64|arc> -DTOOLCHAIN=GCC -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> -DGCOV=ON ..
+   make copy_sample_key
+   make
+   ```
+
    Goto openspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
 
    Run all tests.
