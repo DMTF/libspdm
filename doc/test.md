@@ -137,8 +137,15 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Known issue: Above command cannot run in Windows Linux Subsystem.
 
-   Build cases with AFL toolchain:
-   `make fuzzing -f GNUmakefile ARCH=<x64|ia32> TARGET=<DEBUG|RELEASE> TOOLCHAIN=AFL CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>`
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL`. For example:
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls ..
+   make copy_sample_key
+   make
+   ```
 
    Run cases:
    ```
@@ -170,8 +177,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Copy all binary under [build32|build64]/bin/Release to [bin32|bin64]. `robocopy /E /is /it [build32|build64]/bin/Release [bin32|bin64]`.
 
-   Build cases with VS2019 toolchain. (non AFL toolchain in Windows):
-   `nmake fuzzing ARCH=<x64|ia32> TARGET=<DEBUG|RELEASE> TOOLCHAIN=VS2019 CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>`
+   Build cases with VS2019 toolchain. (non AFL toolchain in Windows).
 
    Run cases:
    ```
@@ -189,8 +195,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    export ASAN_SYMBOLIZER_PATH=$CLANG_PATH/llvm-symbolizer
    ```
 
-   Build cases with LIBFUZZER toolchain:
-   `make fuzzing -f GNUmakefile ARCH=<x64|ia32> TARGET=<DEBUG|RELEASE> TOOLCHAIN=LIBFUZZER CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>`
+   Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`.
 
    Run cases:
    ```
@@ -208,8 +213,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    set PATH=%PATH%;%LLVM_PATH%\bin
    ```
 
-   Build cases with LIBFUZZER toolchain:
-   `nmake fuzzing ARCH=x64 TARGET=<DEBUG|RELEASE> TOOLCHAIN=LIBFUZZER CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>`
+   Build cases with LIBFUZZER toolchain `-DARCH=x64 -DTOOLCHAIN=LIBFUZZER`.
 
    Run cases:
    ```
@@ -248,8 +252,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    export PATH=$KLEE_BIN_PATH:$PATH
    ```
 
-   Build cases in Linux with KLEE toolchain. (KLEE does not support Windows)
-   `make -f GNUmakefile ARCH=<x64|ia32> TARGET=<DEBUG|RELEASE> TOOLCHAIN=KLEE CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>`
+   Build cases in Linux with KLEE toolchain `-DTOOLCHAIN=KLEE`. (KLEE does not support Windows)
 
    Use [KLEE](http://klee.github.io/tutorials) to [generate ktest](https://klee.github.io/tutorials/testing-coreutils/):
    `klee --only-output-states-covering-new <test_app>`
@@ -274,9 +277,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Build cases with CBMC toolchain:
 
-   For Windowns, open visual studio 2019 command prompt at openspdm dir and type `nmake ARCH=ia32 TOOLCHAIN=CBMC TARGET=<DEBUG|RELEASE> CRYPTO=mbedtls -e WORKSPACE=<openspdm_root_dir>`. (Use x86 command prompt for ARCH=ia32 only)
+   For Windowns, open visual studio 2019 command prompt at openspdm dir and build it with CBMC toolchain `-DARCH=ia32 -DTOOLCHAIN=LIBFUZZER`. (Use x86 command prompt for ARCH=ia32 only)
 
-   For Linux, open command prompt at openspdm dir and type `make -f GNUmakefile ARCH=x64 TOOLCHAIN=CBMC TARGET=<DEBUG|RELEASE> CRYPTO=mbedtls -e WORKSPACE=<openspdm_root_dir>`. (ARCH=x64 only)
+   For Linux, open command prompt at openspdm dir and build it with CBMC toolchain `-DARCH=x64 -DTOOLCHAIN=CBMC`. (ARCH=x64 only)
 
    The output binary is created by the [goto-cc](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/goto-cc.md).
 
@@ -301,9 +304,11 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    set KW_PROJECT_NAME=openspdm
    ```
 
+   Run CMAKE to generate makefile.
+
    Build openspdm with Klocwork :
    ```
-   kwinject --output %KW_ROOT%\%KW_PROJECT_NAME%.out nmake ARCH=<x64|ia32> TARGET=<DEBUG|RELEASE> CRYPTO=<mbedtls|openssl> -e WORKSPACE=<openspdm_root_dir>
+   kwinject --output %KW_ROOT%\%KW_PROJECT_NAME%.out nmake
    ```
 
    Collect analysis data :
