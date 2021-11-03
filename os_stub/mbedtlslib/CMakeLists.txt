@@ -55,7 +55,6 @@ SET(src_mbedtlslib
     mbedtls/library/md2.c
     mbedtls/library/md4.c
     mbedtls/library/md5.c
-    mbedtls/library/md_wrap.c
     mbedtls/library/memory_buffer_alloc.c
     mbedtls/library/nist_kw.c
     mbedtls/library/oid.c
