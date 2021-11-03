@@ -119,8 +119,12 @@ return_status spdm_process_encap_response_digest(
 
 	digest_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
-	digest_count = (spdm_response_size - sizeof(spdm_digest_response_t)) /
-		       digest_size;
+	digest_count = 0;
+	for (index = 0; index < MAX_SPDM_SLOT_COUNT; index++) {
+		if (spdm_response->header.param2 & (1 << index)) {
+			digest_count++;
+		}
+	}
 	if (digest_count == 0) {
 		return RETURN_DEVICE_ERROR;
 	}
