@@ -489,7 +489,7 @@ endif()
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_get_version)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_version)
 
-    ADD_SUBDIRECTORY(os_stub/cryptlib_dummy)
+    ADD_SUBDIRECTORY(os_stub/cryptlib_null)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
     ADD_SUBDIRECTORY(unit_test/test_size/intrinsiclib)
     ADD_SUBDIRECTORY(unit_test/test_size/malloclib_null)

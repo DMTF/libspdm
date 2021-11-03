@@ -4,14 +4,14 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types -Wno-pointer-sign")
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_dummy
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_null
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include                   
 )
 
-SET(src_cryptlib_dummy
+SET(src_cryptlib_null
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
@@ -36,4 +36,4 @@ SET(src_cryptlib_dummy
     rand/rand.c
 )
 
-ADD_LIBRARY(cryptlib_dummy STATIC ${src_cryptlib_dummy})
+ADD_LIBRARY(cryptlib_null STATIC ${src_cryptlib_null})
