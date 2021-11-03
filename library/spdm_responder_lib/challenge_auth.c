@@ -131,9 +131,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
 	auth_attribute.slot_id = (uint8)(slot_id & 0xF);
+	auth_attribute.reserved = 0;
+	auth_attribute.basic_mut_auth_req = 0;
 	if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
-		auth_attribute.reserved = 0;
-		auth_attribute.basic_mut_auth_req = 0;
 		if (spdm_is_capabilities_flag_supported(
 			    spdm_context, FALSE,
 			    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
