@@ -1004,11 +1004,12 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 					cached_measurment_block
 						->Measurement_block_common_header
 						.measurement_size);
+
+				measurment_data_size +=
+					cached_measurment_block
+						->Measurement_block_common_header
+						.measurement_size;
 			}
-			measurment_data_size +=
-				cached_measurment_block
-					->Measurement_block_common_header
-					.measurement_size;
 			cached_measurment_block =
 				(void *)((uintn)cached_measurment_block +
 					 measurment_block_size);
