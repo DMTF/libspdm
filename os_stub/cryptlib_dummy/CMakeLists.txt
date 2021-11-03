@@ -4,7 +4,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types -Wno-pointer-sign")
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_size/cryptlib_dummy
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_dummy
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
