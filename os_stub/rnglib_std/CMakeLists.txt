@@ -5,8 +5,8 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
 )
 
-SET(src_rnglib
+SET(src_rnglib_std
     rng.c
 )
 
-ADD_LIBRARY(rnglib STATIC ${src_rnglib})
+ADD_LIBRARY(rnglib_std STATIC ${src_rnglib_std})

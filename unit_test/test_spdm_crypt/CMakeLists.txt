@@ -24,7 +24,7 @@ SET(test_spdm_crypt_LIBRARY
     spdm_crypt_lib
     ${CRYPTO_LIB_PATHS}
     cryptlib_${CRYPTO}
-    rnglib
+    rnglib_std
     malloclib
     cmockalib
 )
@@ -36,7 +36,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
+                   $<TARGET_OBJECTS:rnglib_std>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:cmockalib>
