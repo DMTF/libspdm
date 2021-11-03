@@ -28,7 +28,7 @@ SET(test_spdm_common_LIBRARY
     spdm_requester_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
-    rnglib
+    rnglib_std
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
