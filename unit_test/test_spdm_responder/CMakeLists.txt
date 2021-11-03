@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_responder
                     ${LIBSPDM_DIR}/library/spdm_common_lib
                     ${LIBSPDM_DIR}/library/spdm_responder_lib
                     ${LIBSPDM_DIR}/library/spdm_secured_message_lib
-                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib
+                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
@@ -47,7 +47,7 @@ SET(test_spdm_responder_LIBRARY
     malloclib
     spdm_crypt_lib
     spdm_secured_message_lib
-    spdm_device_secret_lib
+    spdm_device_secret_lib_sample
     spdm_transport_test_lib
     cmockalib
 )
@@ -65,7 +65,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
-                   $<TARGET_OBJECTS:spdm_device_secret_lib>
+                   $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:cmockalib>
     )
