@@ -150,7 +150,7 @@ boolean spdm_calculate_th_hmac_for_exchange_rsp(
 
 	spdm_context = context;
 	session_info = spdm_session_info;
-	secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+	secured_message_context = session_info->secured_message_context;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
@@ -359,7 +359,7 @@ boolean spdm_calculate_th_hmac_for_finish_rsp(IN void *context,
 
 	spdm_context = context;
 	session_info = spdm_session_info;
-	secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+	secured_message_context = session_info->secured_message_context;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
@@ -404,7 +404,7 @@ boolean spdm_calculate_th_hmac_for_finish_req(IN void *context,
 
 	spdm_context = context;
 	session_info = spdm_session_info;
-	secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+	secured_message_context = session_info->secured_message_context;
 
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
