@@ -2296,8 +2296,10 @@ void test_spdm_requester_get_certificate_case19(void **state)
 	uintn hash_size;
 	uint8 *root_cert;
 	uintn root_cert_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uintn count;
-
+#endif
+	
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0x13;
@@ -2324,8 +2326,6 @@ void test_spdm_requester_get_certificate_case19(void **state)
 	// Reseting message buffer
 	spdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
-	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
-		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 
 	cert_chain_size = sizeof(cert_chain);
 	zero_mem(cert_chain, sizeof(cert_chain));
@@ -2333,6 +2333,8 @@ void test_spdm_requester_get_certificate_case19(void **state)
 				      cert_chain);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+	count = (data_size + MAX_SPDM_CERT_CHAIN_BLOCK_LEN - 1) /
+		MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 	assert_int_equal(spdm_context->transcript.message_b.buffer_size,
 			 sizeof(spdm_get_certificate_request_t) * count +
 				 sizeof(spdm_certificate_response_t) * count +
