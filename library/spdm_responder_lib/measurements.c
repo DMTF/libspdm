@@ -308,12 +308,6 @@ return_status spdm_get_response_measurements(IN void *context,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
-		else if (status == RETURN_BUFFER_TOO_SMALL) {
-			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-				0, response_size, response);
-			return RETURN_BUFFER_TOO_SMALL;
-		}
 		else {
 			spdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
