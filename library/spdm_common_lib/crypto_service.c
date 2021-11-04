@@ -916,7 +916,7 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 	uint8 device_measurement[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
 	uint8 device_measurement_count;
 	uintn device_measurement_size;
-	boolean ret;
+	return_status status;
 
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, is_requester, 0,
@@ -932,7 +932,7 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 	case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
 		// get all measurement data
 		device_measurement_size = sizeof(device_measurement);
-		ret = spdm_measurement_collection(
+		status = spdm_measurement_collection(
 			spdm_context->connection_info.version,
 			spdm_context->connection_info.algorithm.measurement_spec,
 			spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -940,8 +940,8 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 			&device_measurement_count,
 			device_measurement,
 			&device_measurement_size);
-		if (!ret) {
-			return ret;
+		if (RETURN_ERROR(status)) {
+			return FALSE;
 		}
 
 		ASSERT(device_measurement_count <=

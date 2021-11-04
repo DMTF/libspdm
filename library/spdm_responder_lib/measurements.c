@@ -96,8 +96,6 @@ void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
 	return;
 }
 
-#include <assert.h>
-
 /**
   Process the SPDM GET_MEASUREMENT request and return the response.
 
@@ -292,7 +290,7 @@ return_status spdm_get_response_measurements(IN void *context,
 
 	measurements = (uint8*)response + sizeof(spdm_measurements_response_t);
 
-	ret = spdm_measurement_collection(
+	status = spdm_measurement_collection(
 		spdm_context->connection_info.version,
 		spdm_context->connection_info.algorithm.measurement_spec,
 		spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -301,12 +299,29 @@ return_status spdm_get_response_measurements(IN void *context,
 		measurements,
 		&measurements_size);
 
-	if (!ret) {
-		spdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNSPECIFIED,
-					     0, response_size, response);
-		return RETURN_SUCCESS;
+
+	if (RETURN_ERROR(status)) {
+
+		if (status == RETURN_NOT_FOUND) {
+			spdm_generate_error_response(
+				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+				0, response_size, response);
+			return RETURN_SUCCESS;
+		}
+		else if (status == RETURN_BUFFER_TOO_SMALL) {
+			spdm_generate_error_response(
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+				0, response_size, response);
+			return RETURN_BUFFER_TOO_SMALL;
+		}
+		else {
+			spdm_generate_error_response(
+				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+				0, response_size, response);
+			return RETURN_SUCCESS;
+		}
 	}
+
 	ASSERT(measurements_count <= MAX_SPDM_MEASUREMENT_BLOCK_COUNT);
 
 	switch (spdm_request->header.param2) {
@@ -373,19 +388,14 @@ return_status spdm_get_response_measurements(IN void *context,
 
 	default:
 
-		if (measurements_count != 1) { //Block not found
-			spdm_generate_error_response(
-				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-				0, response_size, response);
-			return RETURN_SUCCESS;
-		}
+		ASSERT(measurements_count == 1);
 
 		spdm_response_size += measurements_size;
 		ASSERT(*response_size >= spdm_response_size);
 		*response_size = spdm_response_size;
 		spdm_response = response;
 
-		if (spdm_is_version_supported( spdm_context, SPDM_MESSAGE_VERSION_11)) {
+		if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
 			spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
 		} else {
 			spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
