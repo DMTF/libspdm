@@ -23,10 +23,10 @@
   @param  device_measurement_size        On input, indicates the size in bytes of the destination buffer.
                                        On output, indicates the size in bytes of all device measurement blocks in the buffer.
 
-  @retval TRUE  the device measurement collection success and measurement is returned.
-  @retval FALSE the device measurement collection fail.
+  @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
+  @retval RETURN_***                 Any other RETURN_error code indicating the type of measurement collection failure.
 **/
-boolean spdm_measurement_collection(
+return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
 				    IN uint8 measurement_specification,
 				    IN uint32 measurement_hash_algo,
@@ -35,7 +35,7 @@ boolean spdm_measurement_collection(
 				    OUT void *device_measurement,
 				    IN OUT uintn *device_measurement_size)
 {
-	return FALSE;
+	return RETURN_UNSUPPORTED;
 }
 
 /**

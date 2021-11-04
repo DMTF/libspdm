@@ -27,19 +27,22 @@
                                        It must align with measurement_specification (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
   @param  measurement_hash_algo          Indicates the measurement hash algorithm.
                                        It must align with measurement_hash_algo (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
-  @param  device_measurement_count       The count of the device measurement block.
-  @param  device_measurement            A pointer to a destination buffer to store the concatenation of all device measurement blocks.
-  @param  device_measurement_size        On input, indicates the size in bytes of the destination buffer.
+  @param  measurement_index      The index of the measurement to collect.
+  @param  measurements_count       The count of the device measurement block.
+  @param  measurements            A pointer to a destination buffer to store the concatenation of all device measurement blocks.
+  @param  measurements_size        On input, indicates the size in bytes of the destination buffer.
                                        On output, indicates the size in bytes of all device measurement blocks in the buffer.
 
-  @retval TRUE  the device measurement collection success and measurement is returned.
-  @retval FALSE the device measurement collection fail.
+  @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
+  @retval RETURN_BUFFER_TOO_SMALL    "measurements" buffer too small for measurements.
+  @retval RETURN_INVALID_PARAMETER   Invalid parameter passed to function.
+  @retval RETURN_***                 Any other RETURN_ error from base.h
 **/
-typedef boolean (*spdm_measurement_collection_func)(
+typedef return_status (*spdm_measurement_collection_func)(
 	IN spdm_version_number_t spdm_version,
 	IN uint8 measurement_specification, IN uint32 measurement_hash_algo,
-	OUT uint8 *device_measurement_count, OUT void *device_measurement,
-	IN OUT uintn *device_measurement_size);
+	IN uint8 measurement_index, OUT uint8 *measurement_count,
+	OUT void *measurement, IN OUT uintn *measurement_size);
 
 /**
   Sign an SPDM message data.
@@ -112,7 +115,7 @@ typedef boolean (*spdm_psk_hkdf_expand_func)(
   Collect the device measurement.
 
   libspdm will call this function to retrieve the measurements for a device.
-  The "device_measurement_index" parameter indicates the measurement requested.
+  The "measurement_index" parameter indicates the measurement requested.
 
   @param  measurement_specification     Indicates the measurement specification.
   Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
@@ -158,12 +161,17 @@ typedef boolean (*spdm_psk_hkdf_expand_func)(
   On input, indicates the size in bytes of the destination buffer.
   On output, indicates the total size in bytes of all device measurement
   blocks in the buffer. This field should only be modified if
-  "device_measurement_index" is non-zero.
+  "measurement_index" is non-zero.
 
-  @retval TRUE  the measurement collection succeeded and measurement is returned.
-  @retval FALSE the measurement collection failed.
+  @retval RETURN_SUCCESS             Successfully returned measurement_count,
+                                     measurements, measurements_size.
+  @retval RETURN_BUFFER_TOO_SMALL    measurements buffer too small for measurements.
+  @retval RETURN_INVALID_PARAMETER   Invalid parameter passed to function.
+  @retval RETURN_NOT_FOUND           Unsupported measurement index.
+  @retval RETURN_***                 Any other RETURN_ error from base.h
+                                     indicating the type of failure
 **/
-boolean spdm_measurement_collection(
+return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
 				    IN uint8  measurement_specification,
 				    IN uint32 measurement_hash_algo,

@@ -110,8 +110,11 @@ boolean read_requester_private_certificate(IN uint16 req_base_asym_alg,
   @param  measurements_size        On input, indicates the size in bytes of the destination buffer.
                                    On output, indicates the size in bytes of all device measurement blocks in the buffer.
 
-  @retval TRUE  the device measurement collection success and measurement is returned.
-  @retval FALSE the device measurement collection fail.
+
+  @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
+  @retval RETURN_BUFFER_TOO_SMALL    "measurements" buffer too small for measurements.
+  @retval RETURN_INVALID_PARAMETER   Invalid parameter passed to function.
+  @retval RETURN_***                 Any other RETURN_ error from base.h
 
   In this example, there are 5 possible measurements.
   The first 4 measurements indices may be hashes or raw bitstreams.
@@ -123,7 +126,7 @@ boolean read_requester_private_certificate(IN uint16 req_base_asym_alg,
   bitstream and returned as such.
 **/
 
-boolean spdm_measurement_collection(
+return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
 					IN uint8 measurement_specification,
 				    IN uint32 measurement_hash_algo,
@@ -143,7 +146,7 @@ boolean spdm_measurement_collection(
 
 	if (measurement_specification !=
 	    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
-		return FALSE;
+		return RETURN_INVALID_PARAMETER;
 	}
 
 	hash_size = spdm_get_measurement_hash_size(measurement_hash_algo);
@@ -152,7 +155,7 @@ boolean spdm_measurement_collection(
 	if (measurements_index ==
 		SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
 		*measurements_count = MEASUREMENT_BLOCK_NUMBER;
-		return TRUE;
+		return RETURN_SUCCESS;
 	} else if (measurements_index ==
 			SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
@@ -172,9 +175,9 @@ boolean spdm_measurement_collection(
 				 (sizeof(spdm_measurement_block_dmtf_t) +
 				  sizeof(data)));
 		}
-		ASSERT(*measurements_size >= total_size_needed);
-		if (total_size_needed >= *measurements_size) {
-			return FALSE;
+		ASSERT(total_size_needed <= *measurements_size);
+		if (total_size_needed > *measurements_size) {
+			return RETURN_BUFFER_TOO_SMALL;
 		}
 
 		*measurements_size = total_size_needed;
@@ -241,11 +244,11 @@ boolean spdm_measurement_collection(
 			}
 		}
 
-		return TRUE;
+		return RETURN_SUCCESS;
 	} else {
 		if (measurements_index > MEASUREMENT_BLOCK_NUMBER) {
 			*measurements_count = 0;
-			return TRUE;
+			return RETURN_NOT_FOUND;
 		}
 
 		if (measurements_index < MEASUREMENT_BLOCK_NUMBER &&
@@ -261,7 +264,7 @@ boolean spdm_measurement_collection(
 		}
 		ASSERT(total_size_needed <= *measurements_size);
 		if (total_size_needed > *measurements_size) {
-			return FALSE;
+			return RETURN_BUFFER_TOO_SMALL;
 		}
 
 		set_mem(data, sizeof(data), (uint8)(measurements_index));
@@ -315,7 +318,7 @@ boolean spdm_measurement_collection(
 				 sizeof(data));
 		}
 	}
-	return TRUE;
+	return RETURN_SUCCESS;
 }
 
 /**
