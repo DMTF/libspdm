@@ -488,6 +488,8 @@ endif()
 
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_get_version)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_version)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_capabilities)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_get_capabilities)
 
     ADD_SUBDIRECTORY(unit_test/test_size/cryptlib_dummy)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
