@@ -12,6 +12,7 @@
 
 #include <base.h>
 #include <library/debuglib.h>
+#include <openssl/bio.h>
 
 /* Convert character to lowercase */
 int tolower(int c)
@@ -85,16 +86,6 @@ int sscanf(const char *buffer, const char *format, ...)
 //
 //  -- Dummy OpenSSL Support Routines --
 //
-
-int BIO_printf(void *bio, const char *format, ...)
-{
-	return 0;
-}
-
-int BIO_snprintf(char *buf, size_t n, const char *format, ...)
-{
-	return 0;
-}
 
 uid_t getuid(void)
 {

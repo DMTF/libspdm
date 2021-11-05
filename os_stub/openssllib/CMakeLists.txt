@@ -161,6 +161,7 @@ SET(src_openssllib
     openssl/crypto/bio/bss_mem.c
     openssl/crypto/bio/bss_null.c
     openssl/crypto/bio/bss_sock.c
+    openssl/crypto/bio/b_print.c
     openssl/crypto/bn/bn_add.c
     openssl/crypto/bn/bn_asm.c
     openssl/crypto/bn/bn_blind.c

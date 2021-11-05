@@ -1816,8 +1816,7 @@ boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
 	// Allow partial certificate chains, terminated by a non-self-signed but
 	// still trusted intermediate certificate. Also disable time checks.
 	//
-	X509_STORE_set_flags(cert_store, X509_V_FLAG_PARTIAL_CHAIN |
-						 X509_V_FLAG_NO_CHECK_TIME);
+	X509_STORE_set_flags(cert_store, X509_V_FLAG_PARTIAL_CHAIN);
 
 	//
 	// Set up X509_STORE_CTX for the subsequent verification operation.
