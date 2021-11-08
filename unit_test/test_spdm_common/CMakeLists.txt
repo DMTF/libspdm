@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_requester
                     ${LIBSPDM_DIR}/library/spdm_common_lib
                     ${LIBSPDM_DIR}/library/spdm_requester_lib
                     ${LIBSPDM_DIR}/library/spdm_secured_message_lib
-                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib
+                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
@@ -33,7 +33,7 @@ SET(test_spdm_common_LIBRARY
     malloclib
     spdm_crypt_lib
     spdm_secured_message_lib
-    spdm_device_secret_lib
+    spdm_device_secret_lib_sample
     spdm_transport_test_lib
     cmockalib
 )

@@ -730,7 +730,7 @@ void spdm_reset_message_k(IN void *context, IN void *session_info)
 		void *secured_message_context;
 	
 		spdm_context = context;
-		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		secured_message_context = spdm_session_info->secured_message_context;
 
 		reset_managed_buffer(&spdm_session_info->session_transcript.temp_message_k);
 
@@ -788,7 +788,7 @@ void spdm_reset_message_f(IN void *context, IN void *session_info)
 		void *secured_message_context;
 	
 		spdm_context = context;
-		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		secured_message_context = spdm_session_info->secured_message_context;
 
 		if (spdm_session_info->session_transcript.digest_context_th != NULL) {
 			spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1111,7 +1111,7 @@ return_status spdm_append_message_k(IN void *context, IN void *session_info,
 		boolean finished_key_ready;
 
 		spdm_context = context;
-		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		secured_message_context = spdm_session_info->secured_message_context;
 		finished_key_ready = spdm_secured_message_is_finished_key_ready(secured_message_context);
 
 		if (spdm_session_info->session_transcript.digest_context_th == NULL) {
@@ -1251,7 +1251,7 @@ return_status spdm_append_message_f(IN void *context, IN void *session_info,
 		boolean finished_key_ready;
 
 		spdm_context = context;
-		secured_message_context = spdm_get_secured_message_context_via_session_info (session_info);
+		secured_message_context = spdm_session_info->secured_message_context;
 		finished_key_ready = spdm_secured_message_is_finished_key_ready(secured_message_context);
 		ASSERT (finished_key_ready);
 

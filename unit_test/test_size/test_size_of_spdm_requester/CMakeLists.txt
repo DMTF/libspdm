@@ -29,7 +29,7 @@ SET(test_size_of_spdm_requester_LIBRARY
 #    ${CRYPTO_LIB_PATHS}
 #    rnglib
 #    cryptlib_${CRYPTO}
-    cryptlib_dummy
+    cryptlib_null
     malloclib_null
     spdm_crypt_lib
     spdm_secured_message_lib
@@ -49,7 +49,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
 #                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
 #                   $<TARGET_OBJECTS:rnglib>
 #                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-                   $<TARGET_OBJECTS:cryptlib_dummy>
+                   $<TARGET_OBJECTS:cryptlib_null>
                    $<TARGET_OBJECTS:malloclib_null>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
