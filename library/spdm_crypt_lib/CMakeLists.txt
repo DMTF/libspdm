@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_crypt_lib
 )
 
 SET(src_spdm_crypt_lib
-    crypt.c
+    libspdm_crypt_crypt.c
 )
 
 ADD_LIBRARY(spdm_crypt_lib STATIC ${src_spdm_crypt_lib})
