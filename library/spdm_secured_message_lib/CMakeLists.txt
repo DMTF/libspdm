@@ -7,10 +7,10 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_secured_message_lib
 )
 
 SET(src_spdm_secured_message_lib
-    context_data.c
-    encode_decode.c
-    key_exchange.c
-    session.c
+    libspdm_secmes_context_data.c
+    libspdm_secmes_encode_decode.c
+    libspdm_secmes_key_exchange.c
+    libspdm_secmes_session.c
 )
 
 ADD_LIBRARY(spdm_secured_message_lib STATIC ${src_spdm_secured_message_lib})

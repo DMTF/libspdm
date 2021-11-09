@@ -7,8 +7,8 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_transport_mctp_lib
 )
 
 SET(src_spdm_transport_mctp_lib
-    common.c
-    mctp.c
+    libspdm_mctp_common.c
+    libspdm_mctp_mctp.c
 )
 
 ADD_LIBRARY(spdm_transport_mctp_lib STATIC ${src_spdm_transport_mctp_lib})

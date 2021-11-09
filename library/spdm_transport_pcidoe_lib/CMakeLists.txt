@@ -7,8 +7,8 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_transport_pcidoe_lib
 )
 
 SET(src_spdm_transport_pcidoe_lib
-    common.c
-    pcidoe.c
+    libspdm_doe_common.c
+    libspdm_doe_pcidoe.c
 )
 
 ADD_LIBRARY(spdm_transport_pcidoe_lib STATIC ${src_spdm_transport_pcidoe_lib})
