@@ -8,29 +8,29 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_requester_lib
 )
 
 SET(src_spdm_requester_lib
-    challenge.c
-    communication.c
-    encap_certificate.c
-    encap_challenge_auth.c
-    encap_digests.c
-    encap_error.c
-    encap_key_update.c
-    encap_request.c
-    end_session.c
-    finish.c
-    get_capabilities.c
-    get_certificate.c
-    get_digests.c
-    get_measurements.c
-    get_version.c
-    handle_error_response.c
-    heartbeat.c
-    key_exchange.c
-    key_update.c
-    negotiate_algorithms.c
-    psk_exchange.c
-    psk_finish.c
-    send_receive.c
+    libspdm_req_challenge.c
+    libspdm_req_communication.c
+    libspdm_req_encap_certificate.c
+    libspdm_req_encap_challenge_auth.c
+    libspdm_req_encap_digests.c
+    libspdm_req_encap_error.c
+    libspdm_req_encap_key_update.c
+    libspdm_req_encap_request.c
+    libspdm_req_end_session.c
+    libspdm_req_finish.c
+    libspdm_req_get_capabilities.c
+    libspdm_req_get_certificate.c
+    libspdm_req_get_digests.c
+    libspdm_req_get_measurements.c
+    libspdm_req_get_version.c
+    libspdm_req_handle_error_response.c
+    libspdm_req_heartbeat.c
+    libspdm_req_key_exchange.c
+    libspdm_req_key_update.c
+    libspdm_req_negotiate_algorithms.c
+    libspdm_req_psk_exchange.c
+    libspdm_req_psk_finish.c
+    libspdm_req_send_receive.c
 )
 
 ADD_LIBRARY(spdm_requester_lib STATIC ${src_spdm_requester_lib})

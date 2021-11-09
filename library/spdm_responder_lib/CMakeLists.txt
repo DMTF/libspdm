@@ -8,30 +8,30 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/library/spdm_responder_lib
 )
 
 SET(src_spdm_responder_lib
-    algorithms.c
-    capabilities.c
-    certificate.c
-    challenge_auth.c
-    communication.c
-    digests.c
-    encap_challenge.c
-    encap_get_certificate.c
-    encap_get_digests.c
-    encap_key_update.c
-    encap_response.c
-    end_session.c
-    error.c
-    finish.c
-    handle_response_state.c
-    heartbeat.c
-    key_exchange.c
-    key_update.c
-    measurements.c
-    psk_exchange.c
-    psk_finish.c
-    receive_send.c
-    respond_if_ready.c
-    version.c
+    libspdm_rsp_algorithms.c
+    libspdm_rsp_capabilities.c
+    libspdm_rsp_certificate.c
+    libspdm_rsp_challenge_auth.c
+    libspdm_rsp_communication.c
+    libspdm_rsp_digests.c
+    libspdm_rsp_encap_challenge.c
+    libspdm_rsp_encap_get_certificate.c
+    libspdm_rsp_encap_get_digests.c
+    libspdm_rsp_encap_key_update.c
+    libspdm_rsp_encap_response.c
+    libspdm_rsp_end_session.c
+    libspdm_rsp_error.c
+    libspdm_rsp_finish.c
+    libspdm_rsp_handle_response_state.c
+    libspdm_rsp_heartbeat.c
+    libspdm_rsp_key_exchange.c
+    libspdm_rsp_key_update.c
+    libspdm_rsp_measurements.c
+    libspdm_rsp_psk_exchange.c
+    libspdm_rsp_psk_finish.c
+    libspdm_rsp_receive_send.c
+    libspdm_rsp_respond_if_ready.c
+    libspdm_rsp_version.c
 )
 
 ADD_LIBRARY(spdm_responder_lib STATIC ${src_spdm_responder_lib})
