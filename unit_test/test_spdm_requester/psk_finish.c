@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_requester_lib_internal.h>
-#include <spdm_secured_message_lib_internal.h>
+#include <internal/libspdm_requester_lib.h>
+#include <internal/libspdm_secured_message_lib.h>
 
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 

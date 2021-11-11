@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
-#include <spdm_secured_message_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
+#include <internal/libspdm_secured_message_lib.h>
 
 spdm_end_session_request_t m_spdm_end_session_request1 = {
 	{ SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION, 0, 0 }

@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_requester_lib_internal.h>
+#include <internal/libspdm_requester_lib.h>
 
 #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 

@@ -8,8 +8,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
-#include <spdm_secured_message_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
+#include <internal/libspdm_secured_message_lib.h>
 
 #define MY_TEST_TOKEN            0x30
 #define MY_WRONG_TEST_TOKEN      0x2F

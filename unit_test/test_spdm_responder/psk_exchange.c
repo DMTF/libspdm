@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
 
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 

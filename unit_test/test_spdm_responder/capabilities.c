@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request1 = {
 	{

@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
 
 int spdm_responder_version_test_main(void);
 int spdm_responder_capabilities_test_main(void);

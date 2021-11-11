@@ -18,10 +18,10 @@
 
 #include <hal/base.h>
 
-#include <library/debuglib.h>
-#include <library/memlib.h>
+#include <hal/library/debuglib.h>
+#include <hal/library/memlib.h>
 #include <library/malloclib.h>
-#include <library/cryptlib.h>
+#include <hal/library/cryptlib.h>
 
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
 			OUT uintn *file_size);

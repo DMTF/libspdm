@@ -14,12 +14,12 @@
 #include <stdlib.h>
 
 #undef NULL
-#include <base.h>
-#include <library/memlib.h>
+#include <hal/base.h>
+#include <hal/library/memlib.h>
 #include <library/spdm_requester_lib.h>
 #include <library/spdm_responder_lib.h>
 #include <library/spdm_transport_test_lib.h>
-#include <spdm_common_lib_internal.h>
+#include <internal/libspdm_common_lib.h>
 
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
