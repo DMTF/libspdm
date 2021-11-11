@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include "spdm_secured_message_lib_internal.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 /**
   Return the size in bytes of the SPDM secured message context.

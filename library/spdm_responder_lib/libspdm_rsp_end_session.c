@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include "spdm_responder_lib_internal.h"
+#include "internal/libspdm_responder_lib.h"
 
 /**
   Process the SPDM END_SESSION request and return the response.

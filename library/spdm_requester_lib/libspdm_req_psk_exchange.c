@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include "spdm_requester_lib_internal.h"
+#include "internal/libspdm_requester_lib.h"
 
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 

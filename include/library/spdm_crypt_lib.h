@@ -13,7 +13,7 @@
 #include LIBSPDM_CONFIG
 #endif
 
-#include <base.h>
+#include <hal/base.h>
 #include <industry_standard/spdm.h>
 #include <library/debuglib.h>
 #include <library/memlib.h>
