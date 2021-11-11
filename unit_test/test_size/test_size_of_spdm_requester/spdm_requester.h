@@ -7,7 +7,7 @@
 #ifndef __SPDM_REQUESTER_H__
 #define __SPDM_REQUESTER_H__
 
-#include <base.h>
+#include <hal/base.h>
 #include <library/spdm_requester_lib.h>
 #include <library/spdm_transport_mctp_lib.h>
 #include <library/malloclib.h>

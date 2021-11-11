@@ -9,7 +9,6 @@ if(TOOLCHAIN MATCHES "CLANG")
 endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
 )
 

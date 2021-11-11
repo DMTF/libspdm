@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <base.h>
+#include <hal/base.h>
 
 uint64 div_u64x64_remainder(IN uint64 dividend, IN uint64 divisor,
 			  OUT uint64 *remainder OPTIONAL);

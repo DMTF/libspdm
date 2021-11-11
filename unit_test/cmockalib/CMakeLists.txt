@@ -8,7 +8,6 @@ endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/cmockalib
                     ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery

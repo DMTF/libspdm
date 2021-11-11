@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_responder_lib_internal.h>
+#include <internal/libspdm_responder_lib.h>
 
 #pragma pack(1)
 typedef struct {

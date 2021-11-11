@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <spdm_requester_lib_internal.h>
+#include <internal/libspdm_requester_lib.h>
 
 #define DEFAULT_CAPABILITY_FLAG                                                \
 	(SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |                        \

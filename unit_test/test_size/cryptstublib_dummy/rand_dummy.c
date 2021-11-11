@@ -4,8 +4,8 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <base.h>
-#include <library/debuglib.h>
+#include <hal/base.h>
+#include <hal/library/debuglib.h>
 
 int rand()
 {

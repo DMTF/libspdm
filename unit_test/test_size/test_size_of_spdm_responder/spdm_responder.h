@@ -7,7 +7,7 @@
 #ifndef __SPDM_RESPONDER_H__
 #define __SPDM_RESPONDER_H__
 
-#include <base.h>
+#include <hal/base.h>
 #include <library/spdm_responder_lib.h>
 #include <library/spdm_transport_mctp_lib.h>
 #include <library/malloclib.h>
