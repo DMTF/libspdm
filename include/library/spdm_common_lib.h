@@ -15,9 +15,9 @@
 
 #include <hal/base.h>
 #include <industry_standard/spdm.h>
-#include <library/debuglib.h>
-#include <library/memlib.h>
-#include <library/cryptlib.h>
+#include <hal/library/debuglib.h>
+#include <hal/library/memlib.h>
+#include <hal/library/cryptlib.h>
 #include <library/spdm_crypt_lib.h>
 #include <library/spdm_secured_message_lib.h>
 #include <library/spdm_device_secret_lib.h>

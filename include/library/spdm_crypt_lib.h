@@ -15,9 +15,9 @@
 
 #include <hal/base.h>
 #include <industry_standard/spdm.h>
-#include <library/debuglib.h>
-#include <library/memlib.h>
-#include <library/cryptlib.h>
+#include <hal/library/debuglib.h>
+#include <hal/library/memlib.h>
+#include <hal/library/cryptlib.h>
 
 #define MAX_DHE_KEY_SIZE 512
 #define MAX_ASYM_KEY_SIZE 512
