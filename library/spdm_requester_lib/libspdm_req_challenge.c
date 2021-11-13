@@ -278,7 +278,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		DEBUG((DEBUG_INFO, "BasicMutAuth :\n"));
 		status = spdm_encapsulated_request(spdm_context, NULL, 0, NULL);
 		DEBUG((DEBUG_INFO,
-		       "spdm_challenge - spdm_encapsulated_request - %p\n",
+		       "libspdm_challenge - spdm_encapsulated_request - %p\n",
 		       status));
 		if (RETURN_ERROR(status)) {
 			spdm_reset_message_c(spdm_context);
@@ -312,7 +312,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_challenge(IN void *context, IN uint8 slot_id,
+return_status libspdm_challenge(IN void *context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash)
 {
@@ -355,7 +355,7 @@ return_status spdm_challenge(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
+return_status libspdm_challenge_ex(IN void *context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash,
 			     IN void *requester_nonce_in OPTIONAL,

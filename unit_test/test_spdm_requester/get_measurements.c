@@ -2572,7 +2572,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2628,7 +2628,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2684,7 +2684,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2740,7 +2740,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2796,7 +2796,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2852,7 +2852,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2908,7 +2908,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -2966,7 +2966,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3019,7 +3019,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3071,7 +3071,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 		 data, data_size);
 	request_attribute = 0;
 
-	status = spdm_get_measurement(
+	status = libspdm_get_measurement(
 		spdm_context, NULL, request_attribute,
 		SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
 		0, &number_of_blocks, NULL, NULL);
@@ -3130,7 +3130,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3195,7 +3195,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3254,7 +3254,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3313,7 +3313,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3372,7 +3372,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3433,7 +3433,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 	for (int i = 0; i < sizeof(SlotIDs) / sizeof(SlotIDs[0]); i++) {
 		measurement_record_length = sizeof(measurement_record);
 		spdm_reset_message_m(spdm_context, NULL);
-		status = spdm_get_measurement(spdm_context, NULL,
+		status = libspdm_get_measurement(spdm_context, NULL,
 					      request_attribute, 1, SlotIDs[i],
 					      &number_of_block,
 					      &measurement_record_length,
@@ -3507,7 +3507,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
 		// i=0 => both number_of_blocks and measurement_record_length are non 0
 		// i=1 => only number_of_blocks is non 0
 		// i=2 => only is measurement_record_length is non 0
-		status = spdm_get_measurement(
+		status = libspdm_get_measurement(
 			spdm_context, NULL, request_attribute,
 			SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
 			0, &number_of_blocks, NULL, NULL);
@@ -3567,7 +3567,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3628,7 +3628,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3686,7 +3686,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3744,7 +3744,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3806,7 +3806,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 	measurement_record_length = sizeof(measurement_record);
 	for (NumberOfMessages = 1; NumberOfMessages <= TOTAL_MESSAGES;
 	     NumberOfMessages++) {
-		status = spdm_get_measurement(spdm_context, NULL,
+		status = libspdm_get_measurement(spdm_context, NULL,
 					      request_attribute, 1, 0,
 					      &number_of_block,
 					      &measurement_record_length,
@@ -3884,7 +3884,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -3949,7 +3949,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4009,7 +4009,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4068,7 +4068,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4128,7 +4128,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4190,7 +4190,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4250,7 +4250,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4313,7 +4313,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4378,7 +4378,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);
@@ -4439,7 +4439,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 	request_attribute = 0;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(
+	status = libspdm_get_measurement(
 		spdm_context, NULL, request_attribute,
 		SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS,
 		0, &number_of_block, &measurement_record_length,
@@ -4498,7 +4498,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
     spdm_reset_message_m(spdm_context, NULL);
 
     measurement_record_length = sizeof(measurement_record);
-    status = spdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
+    status = libspdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -4596,7 +4596,7 @@ void test_spdm_requester_get_measurements_case34(void **state)
 		SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
 	measurement_record_length = sizeof(measurement_record);
-	status = spdm_get_measurement(spdm_context, &session_id, request_attribute, 1,
+	status = libspdm_get_measurement(spdm_context, &session_id, request_attribute, 1,
 				      0, &number_of_block,
 				      &measurement_record_length,
 				      measurement_record);

@@ -183,7 +183,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_digest(IN void *context, OUT uint8 *slot_mask,
+return_status libspdm_get_digest(IN void *context, OUT uint8 *slot_mask,
 			      OUT void *total_digest_buffer)
 {
 	spdm_context_t *spdm_context;

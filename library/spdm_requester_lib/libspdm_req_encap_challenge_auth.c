@@ -48,14 +48,14 @@ return_status spdm_get_encap_response_challenge_auth(
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_CHALLENGE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_challenge_request_t)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -65,7 +65,7 @@ return_status spdm_get_encap_response_challenge_auth(
 
 	if ((slot_id != 0xFF) &&
 	    (slot_id >= spdm_context->local_context.slot_count)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -131,7 +131,7 @@ return_status spdm_get_encap_response_challenge_auth(
 	status = spdm_append_message_mut_c(spdm_context, spdm_request,
 					   request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -141,7 +141,7 @@ return_status spdm_get_encap_response_challenge_auth(
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
 		spdm_reset_message_mut_c(spdm_context);
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -149,7 +149,7 @@ return_status spdm_get_encap_response_challenge_auth(
 	result =
 		spdm_generate_challenge_auth_signature(spdm_context, TRUE, ptr);
 	if (!result) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);
 		return RETURN_SUCCESS;

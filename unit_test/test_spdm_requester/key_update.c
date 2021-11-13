@@ -2618,7 +2618,7 @@ void test_spdm_requester_key_update_case1(void **state)
 		  m_rsp_secret_buffer, (uint8)(0xFF),
 		  m_req_secret_buffer, (uint8)(0xEE));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -2662,7 +2662,7 @@ void test_spdm_requester_key_update_case2(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -2712,7 +2712,7 @@ void test_spdm_requester_key_update_case3(void **state)
 		  m_rsp_secret_buffer, (uint8)(0xFF),
 		  m_req_secret_buffer, (uint8)(0xEE));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -2751,7 +2751,7 @@ void test_spdm_requester_key_update_case4(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -2800,7 +2800,7 @@ void test_spdm_requester_key_update_case5(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_NO_RESPONSE);
@@ -2856,7 +2856,7 @@ void test_spdm_requester_key_update_case6(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -2904,7 +2904,7 @@ void test_spdm_requester_key_update_case7(void **state)
 		  m_rsp_secret_buffer, (uint8)(0xFF),
 		  m_req_secret_buffer, (uint8)(0xEE));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -2946,7 +2946,7 @@ void test_spdm_requester_key_update_case8(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3002,7 +3002,7 @@ void test_spdm_requester_key_update_case9(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -3058,7 +3058,7 @@ void test_spdm_requester_key_update_case10(void **state)
 
 		//no keys are updated
 
-		status = spdm_key_update(
+		status = libspdm_key_update(
 			spdm_context, session_id, TRUE);
 
 		// assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -3134,7 +3134,7 @@ void test_spdm_requester_key_update_case11(void **state)
 					spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -3197,7 +3197,7 @@ void test_spdm_requester_key_update_case12(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -3246,7 +3246,7 @@ void test_spdm_requester_key_update_case13(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3301,7 +3301,7 @@ void test_spdm_requester_key_update_case14(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -3351,7 +3351,7 @@ void test_spdm_requester_key_update_case15(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3401,7 +3401,7 @@ void test_spdm_requester_key_update_case16(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3455,7 +3455,7 @@ void test_spdm_requester_key_update_case17(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3510,7 +3510,7 @@ void test_spdm_requester_key_update_case18(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_NO_RESPONSE);
@@ -3566,7 +3566,7 @@ void test_spdm_requester_key_update_case19(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -3614,7 +3614,7 @@ void test_spdm_requester_key_update_case20(void **state)
 		  m_rsp_secret_buffer, (uint8)(0xFF),
 		  m_req_secret_buffer, (uint8)(0xEE));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3661,7 +3661,7 @@ void test_spdm_requester_key_update_case21(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3716,7 +3716,7 @@ void test_spdm_requester_key_update_case22(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -3777,7 +3777,7 @@ void test_spdm_requester_key_update_case23(void **state)
 			  sizeof(m_req_secret_buffer));
 		//response side *not* updated
 
-		status = spdm_key_update(
+		status = libspdm_key_update(
 			spdm_context, session_id, TRUE);
 
 		// assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -3847,7 +3847,7 @@ void test_spdm_requester_key_update_case24(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3902,7 +3902,7 @@ void test_spdm_requester_key_update_case25(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -3957,7 +3957,7 @@ void test_spdm_requester_key_update_case26(void **state)
 		  sizeof(m_req_secret_buffer));
 	//response side *not* updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -4015,7 +4015,7 @@ void test_spdm_requester_key_update_case27(void **state)
 		  m_rsp_secret_buffer, m_rsp_secret_buffer,
 		  sizeof(m_rsp_secret_buffer));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -4077,7 +4077,7 @@ void test_spdm_requester_key_update_case28(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -4140,7 +4140,7 @@ void test_spdm_requester_key_update_case29(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_NO_RESPONSE);
@@ -4213,7 +4213,7 @@ void test_spdm_requester_key_update_case30(void **state)
 		  m_rsp_secret_buffer, m_rsp_secret_buffer,
 		  sizeof(m_rsp_secret_buffer));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -4274,7 +4274,7 @@ void test_spdm_requester_key_update_case31(void **state)
 	my_last_rsp_sequence_number = secured_message_context
 			  ->application_secret.response_data_sequence_number;
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -4329,7 +4329,7 @@ void test_spdm_requester_key_update_case32(void **state)
 
 	//no keys are updated
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -4402,7 +4402,7 @@ void test_spdm_requester_key_update_case33(void **state)
 		  m_rsp_secret_buffer, m_rsp_secret_buffer,
 		  sizeof(m_rsp_secret_buffer));
 
-	status = spdm_key_update(
+	status = libspdm_key_update(
 		spdm_context, session_id, FALSE);
 
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -4471,7 +4471,7 @@ void test_spdm_requester_key_update_case34(void **state)
 
 		//no keys are updated
 
-		status = spdm_key_update(
+		status = libspdm_key_update(
 			spdm_context, session_id, FALSE);
 
 		// assert_int_equal (status, RETURN_DEVICE_ERROR);

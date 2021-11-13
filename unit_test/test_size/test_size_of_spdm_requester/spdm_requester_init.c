@@ -89,9 +89,9 @@ void *spdm_client_init(void)
 	spdm_set_data(spdm_context, SPDM_DATA_KEY_SCHEDULE, &parameter, &data16,
 		      sizeof(data16));
 
-	status = spdm_init_connection(spdm_context, FALSE);
+	status = libspdm_init_connection(spdm_context, FALSE);
 	if (RETURN_ERROR(status)) {
-		DEBUG((DEBUG_ERROR, "spdm_init_connection - %r\n", status));
+		DEBUG((DEBUG_ERROR, "libspdm_init_connection - %r\n", status));
 		free_pool(spdm_context);
 		return NULL;
 	}

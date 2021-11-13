@@ -46,14 +46,14 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_GET_CERTIFICATE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_get_certificate_request_t)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -62,7 +62,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	slot_id = spdm_request->header.param1;
 
 	if (slot_id >= spdm_context->local_context.slot_count) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -70,7 +70,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 
 	if (spdm_context->local_context
 					  .local_cert_chain_provision[slot_id] == NULL) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);
 		return RETURN_SUCCESS;
@@ -84,7 +84,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 
 	if (offset >= spdm_context->local_context
 			      .local_cert_chain_provision_size[slot_id]) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -131,7 +131,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	status = spdm_append_message_mut_b(spdm_context, spdm_request,
 					   request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -140,7 +140,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	status = spdm_append_message_mut_b(spdm_context, spdm_response,
 					   *response_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;

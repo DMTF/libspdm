@@ -18,7 +18,7 @@
   @retval RETURN_SUCCESS               The connection is initialized successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
-return_status spdm_init_connection(IN void *context,
+return_status libspdm_init_connection(IN void *context,
 				   IN boolean get_version_only)
 {
 	return_status status;
@@ -64,7 +64,7 @@ return_status spdm_init_connection(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_start_session(IN void *context, IN boolean use_psk,
+return_status libspdm_start_session(IN void *context, IN boolean use_psk,
 				 IN uint8 measurement_hash_type,
 				 IN uint8 slot_id, OUT uint32 *session_id,
 				 OUT uint8 *heartbeat_period,
@@ -89,7 +89,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 			measurement_hash);
 		if (RETURN_ERROR(status)) {
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_key_exchange - %p\n",
+			       "libspdm_start_session - spdm_send_receive_key_exchange - %p\n",
 			       status));
 			return status;
 		}
@@ -113,7 +113,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 				session_info->mut_auth_requested,
 				&req_slot_id_param);
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_encapsulated_request - %p\n",
+			       "libspdm_start_session - spdm_encapsulated_request - %p\n",
 			       status));
 			if (RETURN_ERROR(status)) {
 				return status;
@@ -121,7 +121,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 			break;
 		default:
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - unknown mut_auth_requested - 0x%x\n",
+			       "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
 			       session_info->mut_auth_requested));
 			return RETURN_UNSUPPORTED;
 		}
@@ -132,7 +132,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 		status = spdm_send_receive_finish(spdm_context, *session_id,
 						  req_slot_id_param);
 		DEBUG((DEBUG_INFO,
-		       "spdm_start_session - spdm_send_receive_finish - %p\n",
+		       "libspdm_start_session - spdm_send_receive_finish - %p\n",
 		       status));
 		#else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 		ASSERT(FALSE);
@@ -145,7 +145,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 			heartbeat_period, measurement_hash);
 		if (RETURN_ERROR(status)) {
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_psk_exchange - %p\n",
+			       "libspdm_start_session - spdm_send_receive_psk_exchange - %p\n",
 			       status));
 			return status;
 		}
@@ -157,7 +157,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
 			status = spdm_send_receive_psk_finish(spdm_context,
 							      *session_id);
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_psk_finish - %p\n",
+			       "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
 			       status));
 		}
 		#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
@@ -200,7 +200,7 @@ return_status spdm_start_session(IN void *context, IN boolean use_psk,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
+return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
 				 IN uint8 measurement_hash_type,
 				 IN uint8 slot_id, OUT uint32 *session_id,
 				 OUT uint8 *heartbeat_period,
@@ -235,7 +235,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 			requester_random, responder_random);
 		if (RETURN_ERROR(status)) {
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_key_exchange - %p\n",
+			       "libspdm_start_session - spdm_send_receive_key_exchange - %p\n",
 			       status));
 			return status;
 		}
@@ -259,7 +259,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 				session_info->mut_auth_requested,
 				&req_slot_id_param);
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_encapsulated_request - %p\n",
+			       "libspdm_start_session - spdm_encapsulated_request - %p\n",
 			       status));
 			if (RETURN_ERROR(status)) {
 				return status;
@@ -267,7 +267,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 			break;
 		default:
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - unknown mut_auth_requested - 0x%x\n",
+			       "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
 			       session_info->mut_auth_requested));
 			return RETURN_UNSUPPORTED;
 		}
@@ -278,7 +278,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 		status = spdm_send_receive_finish(spdm_context, *session_id,
 						  req_slot_id_param);
 		DEBUG((DEBUG_INFO,
-		       "spdm_start_session - spdm_send_receive_finish - %p\n",
+		       "libspdm_start_session - spdm_send_receive_finish - %p\n",
 		       status));
 		#else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 		ASSERT(FALSE);
@@ -294,7 +294,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 			responder_random, responder_random_size);
 		if (RETURN_ERROR(status)) {
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_psk_exchange - %p\n",
+			       "libspdm_start_session - spdm_send_receive_psk_exchange - %p\n",
 			       status));
 			return status;
 		}
@@ -306,7 +306,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
 			status = spdm_send_receive_psk_finish(spdm_context,
 							      *session_id);
 			DEBUG((DEBUG_INFO,
-			       "spdm_start_session - spdm_send_receive_psk_finish - %p\n",
+			       "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
 			       status));
 		}
 		#else // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
@@ -331,7 +331,7 @@ return_status spdm_start_session_ex(IN void *context, IN boolean use_psk,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_stop_session(IN void *context, IN uint32 session_id,
+return_status libspdm_stop_session(IN void *context, IN uint32 session_id,
 				IN uint8 end_session_attributes)
 {
 	return_status status;
@@ -341,7 +341,7 @@ return_status spdm_stop_session(IN void *context, IN uint32 session_id,
 
 	status = spdm_send_receive_end_session(spdm_context, session_id,
 					       end_session_attributes);
-	DEBUG((DEBUG_INFO, "spdm_stop_session - %p\n", status));
+	DEBUG((DEBUG_INFO, "libspdm_stop_session - %p\n", status));
 
 	return status;
 }
@@ -373,7 +373,7 @@ return_status spdm_stop_session(IN void *context, IN uint32 session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_send_receive_data(IN void *context, IN uint32 *session_id,
+return_status libspdm_send_receive_data(IN void *context, IN uint32 *session_id,
 				     IN boolean is_app_message,
 				     IN void *request, IN uintn request_size,
 				     IN OUT void *response,
@@ -384,13 +384,13 @@ return_status spdm_send_receive_data(IN void *context, IN uint32 *session_id,
 
 	spdm_context = context;
 
-	status = spdm_send_request(spdm_context, session_id, is_app_message,
+	status = libspdm_send_request(spdm_context, session_id, is_app_message,
 				   request_size, request);
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
 	}
 
-	status = spdm_receive_response(spdm_context, session_id, is_app_message,
+	status = libspdm_receive_response(spdm_context, session_id, is_app_message,
 				       response_size, response);
 	if (RETURN_ERROR(status)) {
 		return RETURN_DEVICE_ERROR;
