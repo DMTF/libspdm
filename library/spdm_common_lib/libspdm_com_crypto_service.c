@@ -16,7 +16,7 @@
   @retval TRUE  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
   @retval FALSE Peer certificate chain buffer including spdm_cert_chain_t header is not found.
 **/
-boolean spdm_get_peer_cert_chain_buffer(IN void *context,
+boolean libspdm_get_peer_cert_chain_buffer(IN void *context,
 					OUT void **cert_chain_buffer,
 					OUT uintn *cert_chain_buffer_size)
 {
@@ -53,7 +53,7 @@ boolean spdm_get_peer_cert_chain_buffer(IN void *context,
   @retval TRUE  Peer certificate chain data without spdm_cert_chain_t header is returned.
   @retval FALSE Peer certificate chain data without spdm_cert_chain_t header is not found.
 **/
-boolean spdm_get_peer_cert_chain_data(IN void *context,
+boolean libspdm_get_peer_cert_chain_data(IN void *context,
 				      OUT void **cert_chain_data,
 				      OUT uintn *cert_chain_data_size)
 {
@@ -63,7 +63,7 @@ boolean spdm_get_peer_cert_chain_data(IN void *context,
 
 	spdm_context = context;
 
-	result = spdm_get_peer_cert_chain_buffer(spdm_context, cert_chain_data,
+	result = libspdm_get_peer_cert_chain_buffer(spdm_context, cert_chain_data,
 						 cert_chain_data_size);
 	if (!result) {
 		return FALSE;
@@ -89,7 +89,7 @@ boolean spdm_get_peer_cert_chain_data(IN void *context,
   @retval TRUE  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
   @retval FALSE Local used certificate chain buffer including spdm_cert_chain_t header is not found.
 **/
-boolean spdm_get_local_cert_chain_buffer(IN void *context,
+boolean libspdm_get_local_cert_chain_buffer(IN void *context,
 					 OUT void **cert_chain_buffer,
 					 OUT uintn *cert_chain_buffer_size)
 {
@@ -118,7 +118,7 @@ boolean spdm_get_local_cert_chain_buffer(IN void *context,
   @retval TRUE  Local used certificate chain data without spdm_cert_chain_t header is returned.
   @retval FALSE Local used certificate chain data without spdm_cert_chain_t header is not found.
 **/
-boolean spdm_get_local_cert_chain_data(IN void *context,
+boolean libspdm_get_local_cert_chain_data(IN void *context,
 				       OUT void **cert_chain_data,
 				       OUT uintn *cert_chain_data_size)
 {
@@ -128,7 +128,7 @@ boolean spdm_get_local_cert_chain_data(IN void *context,
 
 	spdm_context = context;
 
-	result = spdm_get_local_cert_chain_buffer(spdm_context, cert_chain_data,
+	result = libspdm_get_local_cert_chain_buffer(spdm_context, cert_chain_data,
 						  cert_chain_data_size);
 	if (!result) {
 		return FALSE;
@@ -700,7 +700,7 @@ boolean spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
 	uintn cert_chain_buffer_size;
 	boolean result;
 
-	result = spdm_get_peer_cert_chain_buffer(spdm_context,
+	result = libspdm_get_peer_cert_chain_buffer(spdm_context,
 						 (void **)&cert_chain_buffer,
 						 &cert_chain_buffer_size);
 	if (!result) {
@@ -772,7 +772,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	result = spdm_get_peer_cert_chain_data(
+	result = libspdm_get_peer_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
 	if (!result) {
 		return FALSE;
@@ -1128,7 +1128,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 		return FALSE;
 	}
 
-	result = spdm_get_peer_cert_chain_data(
+	result = libspdm_get_peer_cert_chain_data(
 		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
 	if (!result) {
 		return FALSE;

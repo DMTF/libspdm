@@ -55,8 +55,8 @@ return_status libspdm_receive_response(IN void *spdm_context,
   This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHMS
   to initialize the connection with SPDM responder.
 
-  Before this function, the requester configuration data can be set via spdm_set_data.
-  After this function, the negotiated configuration data can be got via spdm_get_data.
+  Before this function, the requester configuration data can be set via libspdm_set_data.
+  After this function, the negotiated configuration data can be got via libspdm_get_data.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  get_version_only               If the requester sends GET_VERSION only or not.

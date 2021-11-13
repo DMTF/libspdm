@@ -74,7 +74,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	}
 	session_id = spdm_context->last_spdm_request_session_id;
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -104,7 +104,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
 
-	status = spdm_append_message_f(spdm_context, session_info, FALSE, request,
+	status = libspdm_append_message_f(spdm_context, session_info, FALSE, request,
 				       request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,
@@ -133,7 +133,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
-	status = spdm_append_message_f(
+	status = libspdm_append_message_f(
 		spdm_context, session_info, FALSE,
 		(uint8 *)request + request_size - hmac_size,
 		hmac_size);
@@ -144,7 +144,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_f(spdm_context, session_info, FALSE, spdm_response,
+	status = libspdm_append_message_f(spdm_context, session_info, FALSE, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,
@@ -154,7 +154,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	}
 
 	DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n", session_id));
-	status = spdm_calculate_th2_hash(spdm_context, session_info, FALSE,
+	status = libspdm_calculate_th2_hash(spdm_context, session_info, FALSE,
 					 th2_hash_data);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,

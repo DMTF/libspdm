@@ -128,7 +128,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 	//
 	// Cache
 	//
-	status = spdm_append_message_mut_b(spdm_context, spdm_request,
+	status = libspdm_append_message_mut_b(spdm_context, spdm_request,
 					   request_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_encap_error_response(
@@ -137,7 +137,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_mut_b(spdm_context, spdm_response,
+	status = libspdm_append_message_mut_b(spdm_context, spdm_response,
 					   *response_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_encap_error_response(

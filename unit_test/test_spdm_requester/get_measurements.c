@@ -377,7 +377,7 @@ return_status spdm_requester_get_measurements_test_send_message(
 		m_local_buffer_size = 0;
 		session_id = NULL;
 		app_message_size = sizeof(app_message);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, 0xFFFFFFFF);
 		message_size = spdm_test_get_measurement_request_size(
 			spdm_context, (uint8 *)request + header_size,
@@ -448,7 +448,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -532,7 +532,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -665,7 +665,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			spdm_response->header.param1 = 0;
 			spdm_response->header.param2 = 0;
 			spdm_response->number_of_blocks = 1;
-			spdm_write_uint24(
+			libspdm_write_uint24(
 				spdm_response->measurement_record_length,
 				(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 					 spdm_get_measurement_hash_size(
@@ -816,7 +816,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			spdm_response->header.param1 = 0;
 			spdm_response->header.param2 = 0;
 			spdm_response->number_of_blocks = 1;
-			spdm_write_uint24(
+			libspdm_write_uint24(
 				spdm_response->measurement_record_length,
 				(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 					 spdm_get_measurement_hash_size(
@@ -885,7 +885,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 4;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 0;
-		spdm_write_uint24(spdm_response->measurement_record_length, 0);
+		libspdm_write_uint24(spdm_response->measurement_record_length, 0);
 		
 		ptr = (uint8 *)spdm_response +
 		sizeof(spdm_measurements_response_t);
@@ -921,7 +921,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -990,7 +990,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1060,7 +1060,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1133,7 +1133,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1195,7 +1195,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1279,7 +1279,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = ALTERNATIVE_DEFAULT_SLOT_ID;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1353,7 +1353,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 					spdm_get_measurement_hash_size(
 						m_use_measurement_hash_algo);
 			spdm_response->number_of_blocks = 1;
-			spdm_write_uint24(
+			libspdm_write_uint24(
 				spdm_response->measurement_record_length,
 				(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 					 spdm_get_measurement_hash_size(
@@ -1375,7 +1375,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		} else if (sub_index0x11 == 1) {
 			temp_buf_size = sizeof(spdm_measurements_response_t);
 			spdm_response->number_of_blocks = 1;
-			spdm_write_uint24(
+			libspdm_write_uint24(
 				spdm_response->measurement_record_length, 0);
 		} else if (sub_index0x11 == 2) {
 			temp_buf_size = sizeof(spdm_measurements_response_t) +
@@ -1383,7 +1383,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 					spdm_get_measurement_hash_size(
 						m_use_measurement_hash_algo);
 			spdm_response->number_of_blocks = 0;
-			spdm_write_uint24(
+			libspdm_write_uint24(
 				spdm_response->measurement_record_length,
 				(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 					 spdm_get_measurement_hash_size(
@@ -1434,7 +1434,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = MAX_UINT8;
-		spdm_write_uint24(spdm_response->measurement_record_length,
+		libspdm_write_uint24(spdm_response->measurement_record_length,
 				  (uint32)(LARGE_MEASUREMENT_SIZE));
 		measurment_block = (void *)(spdm_response + 1);
 		set_mem(measurment_block, LARGE_MEASUREMENT_SIZE, 1);
@@ -1479,7 +1479,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1526,7 +1526,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1573,7 +1573,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1622,7 +1622,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1678,7 +1678,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1740,7 +1740,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1815,7 +1815,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -1909,7 +1909,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2002,7 +2002,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2093,7 +2093,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2171,7 +2171,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2234,7 +2234,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2297,7 +2297,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2464,7 +2464,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(
+		libspdm_write_uint24(
 			spdm_response->measurement_record_length,
 			(uint32)(sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
@@ -2511,7 +2511,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 						   FALSE, temp_buf_size,
 						   temp_buf, response_size,
 						   response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2555,7 +2555,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2611,7 +2611,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2667,7 +2667,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2723,7 +2723,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2779,7 +2779,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2835,7 +2835,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2891,7 +2891,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2949,7 +2949,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3002,7 +3002,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3056,7 +3056,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3114,7 +3114,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3178,7 +3178,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3237,7 +3237,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3296,7 +3296,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3355,7 +3355,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3432,7 +3432,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
 
 	for (int i = 0; i < sizeof(SlotIDs) / sizeof(SlotIDs[0]); i++) {
 		measurement_record_length = sizeof(measurement_record);
-		spdm_reset_message_m(spdm_context, NULL);
+		libspdm_reset_message_m(spdm_context, NULL);
 		status = libspdm_get_measurement(spdm_context, NULL,
 					      request_attribute, 1, SlotIDs[i],
 					      &number_of_block,
@@ -3488,7 +3488,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3551,7 +3551,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3612,7 +3612,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3670,7 +3670,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3728,7 +3728,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3788,7 +3788,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3868,7 +3868,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3933,7 +3933,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3992,7 +3992,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4051,7 +4051,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4111,7 +4111,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4173,7 +4173,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4234,7 +4234,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4297,7 +4297,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4362,7 +4362,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4423,7 +4423,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_m(spdm_context, NULL);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4495,7 +4495,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_m(spdm_context, NULL);
 
     measurement_record_length = sizeof(measurement_record);
     status = libspdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);

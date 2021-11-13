@@ -58,7 +58,7 @@ return_status spdm_get_response_end_session(IN void *context,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
-	session_info = spdm_get_session_info_via_session_id(
+	session_info = libspdm_get_session_info_via_session_id(
 		spdm_context, spdm_context->last_spdm_request_session_id);
 	if (session_info == NULL) {
 		libspdm_generate_error_response(spdm_context,

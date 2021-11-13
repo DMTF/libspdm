@@ -232,7 +232,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	}
 	rsp_session_id = spdm_response.rsp_session_id;
 	*session_id = (req_session_id << 16) | rsp_session_id;
-	session_info = spdm_assign_session_id(spdm_context, *session_id, TRUE);
+	session_info = libspdm_assign_session_id(spdm_context, *session_id, TRUE);
 	if (session_info == NULL) {
 		return RETURN_DEVICE_ERROR;
 	}
@@ -246,7 +246,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	    sizeof(spdm_psk_exchange_response_t) +
 		    spdm_response.context_length + spdm_response.opaque_length +
 		    measurement_summary_hash_size + hmac_size) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_DEVICE_ERROR;
 	}
 
@@ -255,7 +255,7 @@ return_status try_spdm_send_receive_psk_exchange(
 	status = spdm_process_opaque_data_version_selection_data(
 		spdm_context, spdm_response.opaque_length, ptr);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_UNSUPPORTED;
 	}
 
@@ -292,31 +292,31 @@ return_status try_spdm_send_receive_psk_exchange(
 	//
 	// Cache session data
 	//
-	status = spdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
+	status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_k(spdm_context, session_info, TRUE, &spdm_response,
+	status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_response,
 				       spdm_response_size - hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
 	DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
 	       *session_id));
-	status = spdm_calculate_th1_hash(spdm_context, session_info, TRUE,
+	status = libspdm_calculate_th1_hash(spdm_context, session_info, TRUE,
 					 th1_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_SECURITY_VIOLATION;
 	}
 	status = spdm_generate_session_handshake_key(
 		session_info->secured_message_context, th1_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
@@ -326,15 +326,15 @@ return_status try_spdm_send_receive_psk_exchange(
 	result = spdm_verify_psk_exchange_rsp_hmac(spdm_context, session_info,
 						   verify_data, hmac_size);
 	if (!result) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		spdm_context->error_state =
 			SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_k(spdm_context, session_info, TRUE, verify_data, hmac_size);
+	status = libspdm_append_message_k(spdm_context, session_info, TRUE, verify_data, hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, *session_id);
+		libspdm_free_session_id(spdm_context, *session_id);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
@@ -355,7 +355,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
 		DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
 		       session_id));
-		status = spdm_calculate_th2_hash(spdm_context, session_info,
+		status = libspdm_calculate_th2_hash(spdm_context, session_info,
 						 TRUE, th2_hash_data);
 		if (RETURN_ERROR(status)) {
 			return RETURN_SECURITY_VIOLATION;

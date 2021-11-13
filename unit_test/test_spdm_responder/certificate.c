@@ -399,7 +399,7 @@ void test_spdm_responder_certificate_case7(void **state)
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		spdm_reset_message_b(spdm_context);
+		libspdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -480,7 +480,7 @@ void test_spdm_responder_certificate_case8(void **state)
 		m_spdm_get_certificate_request3.offset = test_offsets[i];
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		spdm_reset_message_b(spdm_context);
+		libspdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -589,7 +589,7 @@ void test_spdm_responder_certificate_case9(void **state)
 			m_spdm_get_certificate_request3.offset = test_sizes[j];
 
 			// reseting an internal buffer to avoid overflow and prevent tests to succeed
-			spdm_reset_message_b(spdm_context);
+			libspdm_reset_message_b(spdm_context);
 			response_size = sizeof(response);
 			status = spdm_get_response_certificate(
 				spdm_context,
@@ -705,7 +705,7 @@ void test_spdm_responder_certificate_case10(void **state)
 				m_spdm_get_certificate_request3.length);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		spdm_reset_message_b(spdm_context);
+		libspdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -816,7 +816,7 @@ void test_spdm_responder_certificate_case11(void **state)
 				m_spdm_get_certificate_request3.length);
 
 		// reseting an internal buffer to avoid overflow and prevent tests to succeed
-		spdm_reset_message_b(spdm_context);
+		libspdm_reset_message_b(spdm_context);
 		response_size = sizeof(response);
 		status = spdm_get_response_certificate(
 			spdm_context, m_spdm_get_certificate_request3_size,
@@ -909,7 +909,7 @@ void test_spdm_responder_certificate_case12(void **state)
 
 
 	// reseting an internal buffer to avoid overflow and prevent tests to succeed
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 
 	spdm_response = NULL;
 	for (uintn offset = 0; offset < data_size; offset++) {

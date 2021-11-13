@@ -70,7 +70,7 @@ void internal_dump_hex(IN uint8 *data, IN uintn size)
 
   @return The 24-bit value read from buffer.
 **/
-uint32 spdm_read_uint24(IN uint8 *buffer)
+uint32 libspdm_read_uint24(IN uint8 *buffer)
 {
 	return (uint32)(buffer[0] | buffer[1] << 8 | buffer[2] << 16);
 }
@@ -83,7 +83,7 @@ uint32 spdm_read_uint24(IN uint8 *buffer)
 
   @return The 24-bit value to write to buffer.
 **/
-uint32 spdm_write_uint24(IN uint8 *buffer, IN uint32 value)
+uint32 libspdm_write_uint24(IN uint8 *buffer, IN uint32 value)
 {
 	buffer[0] = (uint8)(value & 0xFF);
 	buffer[1] = (uint8)((value >> 8) & 0xFF);

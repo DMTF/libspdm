@@ -41,7 +41,7 @@ boolean need_session_info_for_data(IN spdm_data_type_t data_type)
   @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
   @retval RETURN_NOT_READY             data is not ready to set.
 **/
-return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
+return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			    IN spdm_data_parameter_t *parameter, IN void *data,
 			    IN uintn data_size)
 {
@@ -62,7 +62,7 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		session_id = *(uint32 *)parameter->additional_data;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_INVALID_PARAMETER;
@@ -403,7 +403,7 @@ return_status spdm_set_data(IN void *context, IN spdm_data_type_t data_type,
   @retval RETURN_NOT_READY             The data is not ready to return.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
+return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 			    IN spdm_data_parameter_t *parameter,
 			    IN OUT void *data, IN OUT uintn *data_size)
 {
@@ -424,7 +424,7 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 			return RETURN_INVALID_PARAMETER;
 		}
 		session_id = *(uint32 *)parameter->additional_data;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_INVALID_PARAMETER;
@@ -581,7 +581,7 @@ return_status spdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_reset_message_a(IN void *context)
+void libspdm_reset_message_a(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -594,7 +594,7 @@ void spdm_reset_message_a(IN void *context)
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_reset_message_b(IN void *context)
+void libspdm_reset_message_b(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -615,7 +615,7 @@ void spdm_reset_message_b(IN void *context)
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_reset_message_c(IN void *context)
+void libspdm_reset_message_c(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -636,7 +636,7 @@ void spdm_reset_message_c(IN void *context)
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_reset_message_mut_b(IN void *context)
+void libspdm_reset_message_mut_b(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -657,7 +657,7 @@ void spdm_reset_message_mut_b(IN void *context)
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_reset_message_mut_c(IN void *context)
+void libspdm_reset_message_mut_c(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -681,7 +681,7 @@ void spdm_reset_message_mut_c(IN void *context)
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_info                  A pointer to the SPDM session context.
 **/
-void spdm_reset_message_m(IN void *context, IN void *session_info)
+void libspdm_reset_message_m(IN void *context, IN void *session_info)
 {
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *spdm_session_info;
@@ -717,7 +717,7 @@ void spdm_reset_message_m(IN void *context, IN void *session_info)
   @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
 **/
-void spdm_reset_message_k(IN void *context, IN void *session_info)
+void libspdm_reset_message_k(IN void *context, IN void *session_info)
 {
 	spdm_session_info_t *spdm_session_info;
 
@@ -775,7 +775,7 @@ void spdm_reset_message_k(IN void *context, IN void *session_info)
   @param  spdm_context                  A pointer to the SPDM context.
   @param  spdm_session_info              A pointer to the SPDM session context.
 **/
-void spdm_reset_message_f(IN void *context, IN void *session_info)
+void libspdm_reset_message_f(IN void *context, IN void *session_info)
 {
 	spdm_session_info_t *spdm_session_info;
 
@@ -830,7 +830,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
 	  Any request other than SPDM_GET_MEASUREMENTS resets L1/L2
 	*/
 	if (request_code != SPDM_GET_MEASUREMENTS) {
-		spdm_reset_message_m(spdm_context, session_info);
+		libspdm_reset_message_m(spdm_context, session_info);
 	}
 	/**
 	  If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE 
@@ -850,17 +850,17 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
 	case SPDM_END_SESSION:
 		if (spdm_context->connection_info.connection_state <
 			SPDM_CONNECTION_STATE_AUTHENTICATED) {
-			spdm_reset_message_b(spdm_context);
-			spdm_reset_message_c(spdm_context);
-			spdm_reset_message_mut_b(spdm_context);
-			spdm_reset_message_mut_c(spdm_context);
+			libspdm_reset_message_b(spdm_context);
+			libspdm_reset_message_c(spdm_context);
+			libspdm_reset_message_mut_b(spdm_context);
+			libspdm_reset_message_mut_c(spdm_context);
 		}
 		break;
 	case SPDM_DELIVER_ENCAPSULATED_RESPONSE:
 		if (spdm_context->connection_info.connection_state <
 			SPDM_CONNECTION_STATE_AUTHENTICATED) {
-			spdm_reset_message_b(spdm_context);
-			spdm_reset_message_c(spdm_context);
+			libspdm_reset_message_b(spdm_context);
+			libspdm_reset_message_c(spdm_context);
 		}
 		break;
 	default:
@@ -877,7 +877,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_a(IN void *context, IN void *message,
+return_status libspdm_append_message_a(IN void *context, IN void *message,
 				    IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -897,7 +897,7 @@ return_status spdm_append_message_a(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_b(IN void *context, IN void *message,
+return_status libspdm_append_message_b(IN void *context, IN void *message,
 				    IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -933,7 +933,7 @@ return_status spdm_append_message_b(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_c(IN void *context, IN void *message,
+return_status libspdm_append_message_c(IN void *context, IN void *message,
 				    IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -969,7 +969,7 @@ return_status spdm_append_message_c(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_mut_b(IN void *context, IN void *message,
+return_status libspdm_append_message_mut_b(IN void *context, IN void *message,
 					IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -1001,7 +1001,7 @@ return_status spdm_append_message_mut_b(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_mut_c(IN void *context, IN void *message,
+return_status libspdm_append_message_mut_c(IN void *context, IN void *message,
 					IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -1036,7 +1036,7 @@ return_status spdm_append_message_mut_c(IN void *context, IN void *message,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_m(IN void *context, IN void *session_info,
+return_status libspdm_append_message_m(IN void *context, IN void *session_info,
 					IN void *message, IN uintn message_size)
 {
 	spdm_context_t *spdm_context;
@@ -1089,7 +1089,7 @@ return_status spdm_append_message_m(IN void *context, IN void *session_info,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_k(IN void *context, IN void *session_info,
+return_status libspdm_append_message_k(IN void *context, IN void *session_info,
             IN boolean is_requester, IN void *message, IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
@@ -1117,10 +1117,10 @@ return_status spdm_append_message_k(IN void *context, IN void *session_info,
 		if (spdm_session_info->session_transcript.digest_context_th == NULL) {
 			if (!spdm_session_info->use_psk) {
 				if (is_requester) {
-					result = spdm_get_peer_cert_chain_buffer(
+					result = libspdm_get_peer_cert_chain_buffer(
 						spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
 				} else {
-					result = spdm_get_local_cert_chain_buffer(
+					result = libspdm_get_local_cert_chain_buffer(
 						spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
 				}
 				if (!result) {
@@ -1229,7 +1229,7 @@ return_status spdm_append_message_k(IN void *context, IN void *session_info,
   @return RETURN_SUCCESS          message is appended.
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
-return_status spdm_append_message_f(IN void *context, IN void *session_info, 
+return_status libspdm_append_message_f(IN void *context, IN void *session_info, 
             IN boolean is_requester, IN void *message, IN uintn message_size)
 {
 	spdm_session_info_t *spdm_session_info;
@@ -1259,24 +1259,24 @@ return_status spdm_append_message_f(IN void *context, IN void *session_info,
 			//
 			// digest_context_th might be NULL in unit test, where message_k is hardcoded.
 			// hmac_{rsp,req}_context_th might be NULL in real case, because
-			//   after finished_key_ready is generated, no one trigger spdm_append_message_k.
+			//   after finished_key_ready is generated, no one trigger libspdm_append_message_k.
 			// trigger message_k to initialize by using zero length message_k, no impact to hash or HMAC.
 			//   only temp_message_k is appended.
 			//
 			if (spdm_session_info->session_transcript.digest_context_th == NULL ||
 				spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
 				spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
-				spdm_append_message_k (context, session_info, is_requester, NULL, 0);
+				libspdm_append_message_k (context, session_info, is_requester, NULL, 0);
 			}
 
 			if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
 				if (is_requester) {
-					result = spdm_get_local_cert_chain_buffer(
+					result = libspdm_get_local_cert_chain_buffer(
 						spdm_context,
 						(void **)&mut_cert_chain_buffer,
 						&mut_cert_chain_buffer_size);
 				} else {
-					result = spdm_get_peer_cert_chain_buffer(
+					result = libspdm_get_peer_cert_chain_buffer(
 						spdm_context,
 						(void **)&mut_cert_chain_buffer,
 						&mut_cert_chain_buffer_size);
@@ -1439,15 +1439,15 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 /**
   Register SPDM device input/output functions.
 
-  This function must be called after spdm_init_context, and before any SPDM communication.
+  This function must be called after libspdm_init_context, and before any SPDM communication.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  send_message                  The fuction to send an SPDM transport layer message.
   @param  receive_message               The fuction to receive an SPDM transport layer message.
 **/
-void spdm_register_device_io_func(
-	IN void *context, IN spdm_device_send_message_func send_message,
-	IN spdm_device_receive_message_func receive_message)
+void libspdm_register_device_io_func(
+	IN void *context, IN libspdm_device_send_message_func send_message,
+	IN libspdm_device_receive_message_func receive_message)
 {
 	spdm_context_t *spdm_context;
 
@@ -1460,16 +1460,16 @@ void spdm_register_device_io_func(
 /**
   Register SPDM transport layer encode/decode functions for SPDM or APP messages.
 
-  This function must be called after spdm_init_context, and before any SPDM communication.
+  This function must be called after libspdm_init_context, and before any SPDM communication.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  transport_encode_message       The fuction to encode an SPDM or APP message to a transport layer message.
   @param  transport_decode_message       The fuction to decode an SPDM or APP message from a transport layer message.
 **/
-void spdm_register_transport_layer_func(
+void libspdm_register_transport_layer_func(
 	IN void *context,
-	IN spdm_transport_encode_message_func transport_encode_message,
-	IN spdm_transport_decode_message_func transport_decode_message)
+	IN libspdm_transport_encode_message_func transport_encode_message,
+	IN libspdm_transport_decode_message_func transport_decode_message)
 {
 	spdm_context_t *spdm_context;
 
@@ -1486,7 +1486,7 @@ void spdm_register_transport_layer_func(
 
   @return Last error of an SPDM context.
 */
-uint32 spdm_get_last_error(IN void *context)
+uint32 libspdm_get_last_error(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -1500,7 +1500,7 @@ uint32 spdm_get_last_error(IN void *context)
   @param  spdm_context                  A pointer to the SPDM context.
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
-void spdm_get_last_spdm_error_struct(IN void *context,
+void libspdm_get_last_spdm_error_struct(IN void *context,
 				     OUT spdm_error_struct_t *last_spdm_error)
 {
 	spdm_context_t *spdm_context;
@@ -1516,7 +1516,7 @@ void spdm_get_last_spdm_error_struct(IN void *context,
   @param  spdm_context                  A pointer to the SPDM context.
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
-void spdm_set_last_spdm_error_struct(IN void *context,
+void libspdm_set_last_spdm_error_struct(IN void *context,
 				     IN spdm_error_struct_t *last_spdm_error)
 {
 	spdm_context_t *spdm_context;
@@ -1529,11 +1529,11 @@ void spdm_set_last_spdm_error_struct(IN void *context,
 /**
   Initialize an SPDM context.
 
-  The size in bytes of the spdm_context can be returned by spdm_get_context_size.
+  The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
 
   @param  spdm_context                  A pointer to the SPDM context.
 */
-void spdm_init_context(IN void *context)
+void libspdm_init_context(IN void *context)
 {
 	spdm_context_t *spdm_context;
 	void *secured_message_context;
@@ -1602,11 +1602,11 @@ void spdm_init_context(IN void *context)
 /**
   Reset an SPDM context.
 
-  The size in bytes of the spdm_context can be returned by spdm_get_context_size.
+  The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
 
   @param  spdm_context                  A pointer to the SPDM context.
 */
-void spdm_reset_context(IN void *context)
+void libspdm_reset_context(IN void *context)
 {
 	spdm_context_t *spdm_context;
 	uintn index;
@@ -1641,7 +1641,7 @@ void spdm_reset_context(IN void *context)
 
   @return the size in bytes of the SPDM context.
 **/
-uintn spdm_get_context_size(void)
+uintn libspdm_get_context_size(void)
 {
 	return sizeof(spdm_context_t) +
 	       spdm_secured_message_get_context_size() * MAX_SPDM_SESSION_COUNT;

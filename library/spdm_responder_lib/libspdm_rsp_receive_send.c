@@ -167,7 +167,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32 **session_id,
 	*session_id = message_session_id;
 
 	if (message_session_id != NULL) {
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *message_session_id);
 		if (session_info == NULL) {
 			return RETURN_UNSUPPORTED;
@@ -223,7 +223,7 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
 	spdm_session_state_t old_session_state;
 
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		ASSERT(FALSE);
 		return;
@@ -358,7 +358,7 @@ return_status libspdm_build_response(IN void *context, IN uint32 *session_id,
 	}
 
 	if (session_id != NULL) {
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		if (session_info == NULL) {
 			ASSERT(FALSE);
@@ -449,7 +449,7 @@ return_status libspdm_build_response(IN void *context, IN uint32 *session_id,
 		case SPDM_END_SESSION_ACK:
 			spdm_set_session_state(spdm_context, *session_id,
 					       SPDM_SESSION_STATE_NOT_STARTED);
-			spdm_free_session_id(spdm_context, *session_id);
+			libspdm_free_session_id(spdm_context, *session_id);
 			break;
 		}
 	} else {

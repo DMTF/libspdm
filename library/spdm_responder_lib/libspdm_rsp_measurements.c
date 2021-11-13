@@ -52,7 +52,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
 		 spdm_context->local_context.opaque_measurement_rsp_size);
 	ptr += spdm_context->local_context.opaque_measurement_rsp_size;
 
-	status = spdm_append_message_m(spdm_context, session_info, response_message,
+	status = libspdm_append_message_m(spdm_context, session_info, response_message,
 				       response_message_size - signature_size);
 	if (RETURN_ERROR(status)) {
 		return FALSE;
@@ -176,7 +176,7 @@ return_status spdm_get_response_measurements(IN void *context,
 				response_size, response);
 			return RETURN_SUCCESS;
 		}
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context,
 			spdm_context->last_spdm_request_session_id);
 		if (session_info == NULL) {
@@ -335,7 +335,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_response->header.param1 = measurements_count;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 0;
-		spdm_write_uint24(spdm_response->measurement_record_length, 0);
+		libspdm_write_uint24(spdm_response->measurement_record_length, 0);
 
 		break;
 
@@ -375,7 +375,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = measurements_count;
-		spdm_write_uint24(spdm_response->measurement_record_length,
+		libspdm_write_uint24(spdm_response->measurement_record_length,
 				  (uint32)measurements_size);
 
 		break;
@@ -398,7 +398,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
-		spdm_write_uint24(spdm_response->measurement_record_length,
+		libspdm_write_uint24(spdm_response->measurement_record_length,
 			(uint32)measurements_size);
 
 		break;
@@ -429,7 +429,7 @@ return_status spdm_get_response_measurements(IN void *context,
 	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
 						spdm_request->header.request_response_code);
 
-	status = spdm_append_message_m(
+	status = libspdm_append_message_m(
 			spdm_context, session_info, spdm_request,
 			request_size);
 	if (RETURN_ERROR(status)) {
@@ -452,19 +452,19 @@ return_status spdm_get_response_measurements(IN void *context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				SPDM_GET_MEASUREMENTS,
 				response_size, response);
-			spdm_reset_message_m(spdm_context, session_info);
+			libspdm_reset_message_m(spdm_context, session_info);
 			return RETURN_SUCCESS;
 		}
 		//reset
-		spdm_reset_message_m(spdm_context, session_info);
+		libspdm_reset_message_m(spdm_context, session_info);
 	} else {
-		status = spdm_append_message_m(spdm_context, session_info, spdm_response,
+		status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
 					       *response_size);
 		if (RETURN_ERROR(status)) {
 			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
-			spdm_reset_message_m(spdm_context, session_info);
+			libspdm_reset_message_m(spdm_context, session_info);
 			return RETURN_SUCCESS;
 		}
 	}

@@ -1276,7 +1276,7 @@ void test_spdm_requester_get_certificate_case1(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1334,7 +1334,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1395,7 +1395,7 @@ void test_spdm_requester_get_certificate_case3(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1446,7 +1446,7 @@ void test_spdm_requester_get_certificate_case4(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1497,7 +1497,7 @@ void test_spdm_requester_get_certificate_case5(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1550,7 +1550,7 @@ void test_spdm_requester_get_certificate_case6(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1606,7 +1606,7 @@ void test_spdm_requester_get_certificate_case7(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1659,7 +1659,7 @@ void test_spdm_requester_get_certificate_case8(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1710,7 +1710,7 @@ void test_spdm_requester_get_certificate_case9(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1769,7 +1769,7 @@ void test_spdm_requester_get_certificate_case10(void **state)
 	spdm_context->local_context.peer_root_cert_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision = data;
 	spdm_context->local_context.peer_cert_chain_provision_size = data_size;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -1832,7 +1832,7 @@ void test_spdm_requester_get_certificate_case11(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 	cert_chain_size = sizeof(cert_chain);
@@ -1898,7 +1898,7 @@ void test_spdm_requester_get_certificate_case12(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 
@@ -1962,7 +1962,7 @@ void test_spdm_requester_get_certificate_case13(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 	cert_chain_size = sizeof(cert_chain);
@@ -2028,7 +2028,7 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 	cert_chain_size = sizeof(cert_chain);
@@ -2094,7 +2094,7 @@ void test_spdm_requester_get_certificate_case15(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 	cert_chain_size = sizeof(cert_chain);
@@ -2156,7 +2156,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_reset_message_b(spdm_context);
+    libspdm_reset_message_b(spdm_context);
 
     cert_chain_size = sizeof(cert_chain);
     zero_mem (cert_chain, sizeof(cert_chain));
@@ -2219,7 +2219,7 @@ void test_spdm_requester_get_certificate_case17(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -2267,7 +2267,7 @@ void test_spdm_requester_get_certificate_case18(void **state)
 	spdm_context->local_context.peer_root_cert_provision = root_cert;
 	spdm_context->local_context.peer_cert_chain_provision = NULL;
 	spdm_context->local_context.peer_cert_chain_provision_size = 0;
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 
@@ -2324,7 +2324,7 @@ void test_spdm_requester_get_certificate_case19(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 	// Reseting message buffer
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	// Calculating expected number of messages received
 
 	cert_chain_size = sizeof(cert_chain);

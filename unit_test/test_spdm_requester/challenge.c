@@ -995,9 +995,9 @@ void test_spdm_requester_challenge_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1057,9 +1057,9 @@ void test_spdm_requester_challenge_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1117,9 +1117,9 @@ void test_spdm_requester_challenge_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1172,9 +1172,9 @@ void test_spdm_requester_challenge_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1227,9 +1227,9 @@ void test_spdm_requester_challenge_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1282,9 +1282,9 @@ void test_spdm_requester_challenge_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1335,9 +1335,9 @@ void test_spdm_requester_challenge_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1392,9 +1392,9 @@ void test_spdm_requester_challenge_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1448,9 +1448,9 @@ void test_spdm_requester_challenge_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1497,9 +1497,9 @@ void test_spdm_requester_challenge_case10(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   // spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1539,9 +1539,9 @@ void test_spdm_requester_challenge_case11(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1579,9 +1579,9 @@ void test_spdm_requester_challenge_case12(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1620,9 +1620,9 @@ void test_spdm_requester_challenge_case13(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1660,9 +1660,9 @@ void test_spdm_requester_challenge_case14(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1701,9 +1701,9 @@ void test_spdm_requester_challenge_case15(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1748,9 +1748,9 @@ void test_spdm_requester_challenge_case16(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1795,9 +1795,9 @@ void test_spdm_requester_challenge_case17(void **state) {
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1843,9 +1843,9 @@ void test_spdm_requester_challenge_case18(void **state) {
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1890,9 +1890,9 @@ void test_spdm_requester_challenge_case19(void **state) {
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  spdm_reset_message_a(spdm_context);
-  spdm_reset_message_b(spdm_context);
-  spdm_reset_message_c(spdm_context);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   
@@ -1942,9 +1942,9 @@ void test_spdm_requester_challenge_case20(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_reset_message_a(spdm_context);
-    spdm_reset_message_b(spdm_context);
-    spdm_reset_message_c(spdm_context);
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
 
     zero_mem (measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);

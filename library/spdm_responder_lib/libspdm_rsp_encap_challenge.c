@@ -61,7 +61,7 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
 	//
 	// Cache data
 	//
-	status = spdm_append_message_mut_c(spdm_context, spdm_request,
+	status = libspdm_append_message_mut_c(spdm_context, spdm_request,
 					   *encap_request_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -207,7 +207,7 @@ return_status spdm_process_encap_response_challenge_auth(
 			     hash_size + SPDM_NONCE_SIZE +
 			     measurement_summary_hash_size + sizeof(uint16) +
 			     opaque_length + signature_size;
-	status = spdm_append_message_mut_c(spdm_context, spdm_response,
+	status = libspdm_append_message_mut_c(spdm_context, spdm_response,
 					   spdm_response_size - signature_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;

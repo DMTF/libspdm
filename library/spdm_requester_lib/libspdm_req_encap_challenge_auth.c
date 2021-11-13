@@ -128,7 +128,7 @@ return_status spdm_get_encap_response_challenge_auth(
 	//
 	// Calc Sign
 	//
-	status = spdm_append_message_mut_c(spdm_context, spdm_request,
+	status = libspdm_append_message_mut_c(spdm_context, spdm_request,
 					   request_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_encap_error_response(
@@ -137,10 +137,10 @@ return_status spdm_get_encap_response_challenge_auth(
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_mut_c(spdm_context, spdm_response,
+	status = libspdm_append_message_mut_c(spdm_context, spdm_response,
 					   (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
-		spdm_reset_message_mut_c(spdm_context);
+		libspdm_reset_message_mut_c(spdm_context);
 		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
 			response_size, response);

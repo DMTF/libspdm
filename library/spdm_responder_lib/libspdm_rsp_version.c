@@ -81,10 +81,10 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	//
 	// Cache
 	//
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
-	status = spdm_append_message_a(spdm_context, spdm_request,
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
+	status = libspdm_append_message_a(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,
@@ -93,7 +93,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 		return RETURN_SUCCESS;
 	}
 
-	spdm_reset_context(spdm_context);
+	libspdm_reset_context(spdm_context);
 
 	ASSERT(*response_size >= sizeof(spdm_version_response_mine_t));
 	*response_size =
@@ -118,10 +118,10 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	//
 	// Cache
 	//
-	status = spdm_append_message_a(spdm_context, spdm_response,
+	status = libspdm_append_message_a(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
-		spdm_reset_message_a(spdm_context);
+		libspdm_reset_message_a(spdm_context);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);

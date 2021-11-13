@@ -146,7 +146,7 @@ return_status spdm_requester_key_update_test_send_message(
 		session_id = 0xFFFFFFFF;
 		decoded_message_size = sizeof(decoded_message);
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -184,7 +184,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -225,7 +225,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -266,7 +266,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -307,7 +307,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -351,7 +351,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -401,7 +401,7 @@ return_status spdm_requester_key_update_test_send_message(
 		session_id = 0xFFFFFFFF;
 		decoded_message_size = sizeof(decoded_message);
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -439,7 +439,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -482,7 +482,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -524,7 +524,7 @@ return_status spdm_requester_key_update_test_send_message(
 		session_id = 0xFFFFFFFF;
 		decoded_message_size = sizeof(decoded_message);
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -559,7 +559,7 @@ return_status spdm_requester_key_update_test_send_message(
 		session_id = 0xFFFFFFFF;
 		decoded_message_size = sizeof(decoded_message);
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -597,7 +597,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -638,7 +638,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -679,7 +679,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -723,7 +723,7 @@ return_status spdm_requester_key_update_test_send_message(
 			session_id = 0xFFFFFFFF;
 			decoded_message_size = sizeof(decoded_message);
 
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -775,7 +775,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -816,7 +816,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -854,7 +854,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -882,7 +882,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -911,7 +911,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -985,7 +985,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1013,7 +1013,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1047,7 +1047,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1129,7 +1129,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1180,7 +1180,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1221,7 +1221,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1263,7 +1263,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1304,7 +1304,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1345,7 +1345,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1387,7 +1387,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1427,7 +1427,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1483,7 +1483,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1539,7 +1539,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1616,7 +1616,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1672,7 +1672,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1733,7 +1733,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1815,7 +1815,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1890,7 +1890,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1936,7 +1936,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -1978,7 +1978,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2020,7 +2020,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 		session_id = 0xFFFFFFFF;
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2066,7 +2066,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		uint64 curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2123,7 +2123,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		uint64 curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2181,7 +2181,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_secured_message_context_t *secured_message_context;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2286,7 +2286,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		uint64 curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2343,7 +2343,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		uint64 curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2403,7 +2403,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		spdm_secured_message_context_t *secured_message_context;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -2518,7 +2518,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		uint64 curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;

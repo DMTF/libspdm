@@ -42,7 +42,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 		return RETURN_UNSUPPORTED;
 	}
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		ASSERT(FALSE);
 		return RETURN_UNSUPPORTED;
@@ -107,7 +107,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 	spdm_secured_message_set_session_state(
 		session_info->secured_message_context,
 		SPDM_SESSION_STATE_NOT_STARTED);
-	spdm_free_session_id(spdm_context, session_id);
+	libspdm_free_session_id(spdm_context, session_id);
 
 	spdm_context->error_state = SPDM_STATUS_SUCCESS;
 

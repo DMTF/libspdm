@@ -964,7 +964,7 @@ void test_spdm_requester_negotiate_algorithms_case1(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -988,7 +988,7 @@ void test_spdm_requester_negotiate_algorithms_case2(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -1014,7 +1014,7 @@ void test_spdm_requester_negotiate_algorithms_case3(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -1038,7 +1038,7 @@ void test_spdm_requester_negotiate_algorithms_case4(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1062,7 +1062,7 @@ void test_spdm_requester_negotiate_algorithms_case5(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
@@ -1086,7 +1086,7 @@ void test_spdm_requester_negotiate_algorithms_case6(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SUCCESS);
@@ -1112,7 +1112,7 @@ void test_spdm_requester_negotiate_algorithms_case7(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1138,7 +1138,7 @@ void test_spdm_requester_negotiate_algorithms_case8(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1159,7 +1159,7 @@ void test_spdm_requester_negotiate_algorithms_case9(void **state)
 		m_use_measurement_hash_algo;
 	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1188,7 +1188,7 @@ void test_spdm_requester_negotiate_algorithms_case10(void **state)
 	spdm_context->connection_info.algorithm.base_hash_algo = 0;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -1219,7 +1219,7 @@ void test_spdm_requester_negotiate_algorithms_case11(void **state)
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -1245,7 +1245,7 @@ void test_spdm_requester_negotiate_algorithms_case12(void **state)
 	spdm_context->connection_info.algorithm.measurement_hash_algo = 0;
 	spdm_context->connection_info.algorithm.base_asym_algo = 0;
 	spdm_context->connection_info.algorithm.base_hash_algo = 0;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	status = spdm_negotiate_algorithms(spdm_context);
 	assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -1265,7 +1265,7 @@ void test_spdm_requester_negotiate_algorithms_case13(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -1283,7 +1283,7 @@ void test_spdm_requester_negotiate_algorithms_case14(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -1301,7 +1301,7 @@ void test_spdm_requester_negotiate_algorithms_case15(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -1319,7 +1319,7 @@ void test_spdm_requester_negotiate_algorithms_case16(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -1355,7 +1355,7 @@ void test_spdm_requester_negotiate_algorithms_case17(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
@@ -1373,7 +1373,7 @@ void test_spdm_requester_negotiate_algorithms_case18(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
@@ -1391,7 +1391,7 @@ void test_spdm_requester_negotiate_algorithms_case19(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
@@ -1409,7 +1409,7 @@ void test_spdm_requester_negotiate_algorithms_case20(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
@@ -1427,7 +1427,7 @@ void test_spdm_requester_negotiate_algorithms_case21(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
@@ -1445,7 +1445,7 @@ void test_spdm_requester_negotiate_algorithms_case22(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
 
   status = spdm_negotiate_algorithms (spdm_context);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
@@ -1466,7 +1466,7 @@ void test_spdm_requester_negotiate_algorithms_case23(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1509,7 +1509,7 @@ void test_spdm_requester_negotiate_algorithms_case24(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1549,7 +1549,7 @@ void test_spdm_requester_negotiate_algorithms_case25(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1589,7 +1589,7 @@ void test_spdm_requester_negotiate_algorithms_case26(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1629,7 +1629,7 @@ void test_spdm_requester_negotiate_algorithms_case27(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1669,7 +1669,7 @@ void test_spdm_requester_negotiate_algorithms_case28(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1709,7 +1709,7 @@ void test_spdm_requester_negotiate_algorithms_case29(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1749,7 +1749,7 @@ void test_spdm_requester_negotiate_algorithms_case30(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
@@ -1789,7 +1789,7 @@ void test_spdm_requester_negotiate_algorithms_case31(void **state) {
   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_reset_message_a(spdm_context);
+  libspdm_reset_message_a(spdm_context);
   spdm_context->local_context.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;

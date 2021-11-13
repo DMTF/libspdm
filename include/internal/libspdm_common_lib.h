@@ -62,7 +62,7 @@ typedef struct {
 	void *peer_cert_chain_provision;
 	uintn peer_cert_chain_provision_size;
 	// Peer Cert verify
-	spdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
+	libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
 	//
 	// PSK provision locally
 	//
@@ -269,13 +269,13 @@ typedef struct {
 	//
 	// IO information
 	//
-	spdm_device_send_message_func send_message;
-	spdm_device_receive_message_func receive_message;
+	libspdm_device_send_message_func send_message;
+	libspdm_device_receive_message_func receive_message;
 	//
 	// Transport Layer infomration
 	//
-	spdm_transport_encode_message_func transport_encode_message;
-	spdm_transport_decode_message_func transport_decode_message;
+	libspdm_transport_encode_message_func transport_encode_message;
+	libspdm_transport_decode_message_func transport_decode_message;
 
 	//
 	// command status

@@ -62,7 +62,7 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
 	//
 	// Cache data
 	//
-	status = spdm_append_message_mut_b(spdm_context, spdm_request,
+	status = libspdm_append_message_mut_b(spdm_context, spdm_request,
 					   *encap_request_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -136,7 +136,7 @@ return_status spdm_process_encap_response_certificate(
 	//
 	// Cache data
 	//
-	status = spdm_append_message_mut_b(spdm_context, spdm_response,
+	status = libspdm_append_message_mut_b(spdm_context, spdm_response,
 					   spdm_response_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;

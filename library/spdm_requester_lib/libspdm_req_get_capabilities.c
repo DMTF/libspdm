@@ -172,13 +172,13 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
 	//
 	// Cache data
 	//
-	status = spdm_append_message_a(spdm_context, &spdm_request,
+	status = libspdm_append_message_a(spdm_context, &spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_a(spdm_context, &spdm_response,
+	status = libspdm_append_message_a(spdm_context, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;

@@ -71,7 +71,7 @@ return_status spdm_get_response_key_update(IN void *context,
 	}
 	session_id = spdm_context->last_spdm_request_session_id;
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		libspdm_generate_error_response(context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,

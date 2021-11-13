@@ -43,7 +43,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
 	}
 	session_id = spdm_context->last_spdm_request_session_id;
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		return RETURN_UNSUPPORTED;
 	}
@@ -129,7 +129,7 @@ return_status spdm_process_encap_response_key_update(
 	}
 	session_id = spdm_context->last_spdm_request_session_id;
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		return RETURN_UNSUPPORTED;
 	}

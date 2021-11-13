@@ -103,7 +103,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   FALSE, FALSE, temp_buf_size,
 						   temp_buf, response_size,
 						   response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -136,7 +136,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   FALSE, FALSE, temp_buf_size,
 						   temp_buf, response_size,
 						   response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -163,7 +163,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   sizeof(spdm_response),
 						   &spdm_response,
 						   response_size, response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -190,7 +190,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   sizeof(spdm_response),
 						   &spdm_response,
 						   response_size, response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -220,7 +220,7 @@ return_status spdm_requester_end_session_test_receive_message(
 				sizeof(spdm_response), &spdm_response,
 				response_size, response);
 			sub_index1++;
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -251,7 +251,7 @@ return_status spdm_requester_end_session_test_receive_message(
 				spdm_context, &session_id, FALSE, FALSE,
 				temp_buf_size, temp_buf, response_size,
 				response);
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -280,7 +280,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   sizeof(spdm_response),
 						   &spdm_response,
 						   response_size, response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -312,7 +312,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   sizeof(spdm_response),
 						   &spdm_response,
 						   response_size, response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -349,7 +349,7 @@ return_status spdm_requester_end_session_test_receive_message(
 				sizeof(spdm_response), &spdm_response,
 				response_size, response);
 			sub_index2++;
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -380,7 +380,7 @@ return_status spdm_requester_end_session_test_receive_message(
 				spdm_context, &session_id, FALSE, FALSE,
 				temp_buf_size, temp_buf, response_size,
 				response);
-			session_info = spdm_get_session_info_via_session_id(
+			session_info = libspdm_get_session_info_via_session_id(
 				spdm_context, session_id);
 			if (session_info == NULL) {
 				return RETURN_DEVICE_ERROR;
@@ -411,7 +411,7 @@ return_status spdm_requester_end_session_test_receive_message(
       spdm_response.header.param2 = 0;
 
       spdm_transport_test_encode_message (spdm_context, &session_id, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
-      session_info = spdm_get_session_info_via_session_id (spdm_context, session_id);
+      session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
       ((spdm_secured_message_context_t*)(session_info->secured_message_context))->application_secret.response_data_sequence_number --;
     }
 
@@ -448,7 +448,7 @@ return_status spdm_requester_end_session_test_receive_message(
 						   FALSE, FALSE, temp_buf_size,
 						   temp_buf, response_size,
 						   response);
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
 			return RETURN_DEVICE_ERROR;
@@ -496,7 +496,7 @@ void test_spdm_requester_end_session_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -560,7 +560,7 @@ void test_spdm_requester_end_session_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -651,7 +651,7 @@ void test_spdm_requester_end_session_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -738,7 +738,7 @@ void test_spdm_requester_end_session_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -825,7 +825,7 @@ void test_spdm_requester_end_session_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -912,7 +912,7 @@ void test_spdm_requester_end_session_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1003,7 +1003,7 @@ void test_spdm_requester_end_session_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1092,7 +1092,7 @@ void test_spdm_requester_end_session_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1179,7 +1179,7 @@ void test_spdm_requester_end_session_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1274,7 +1274,7 @@ void test_spdm_requester_end_session_case10(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_reset_message_a(spdm_context);
+    libspdm_reset_message_a(spdm_context);
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -1337,7 +1337,7 @@ void test_spdm_requester_end_session_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =

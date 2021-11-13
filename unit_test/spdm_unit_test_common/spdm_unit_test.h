@@ -57,8 +57,8 @@ extern uint16 m_use_key_schedule_algo;
 typedef struct {
 	uint32 signature;
 	boolean is_requester;
-	spdm_device_send_message_func send_message;
-	spdm_device_receive_message_func receive_message;
+	libspdm_device_send_message_func send_message;
+	libspdm_device_receive_message_func receive_message;
 	void *spdm_context;
 	uint32 case_id;
 } spdm_test_context_t;

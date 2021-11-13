@@ -108,7 +108,7 @@ void test_spdm_responder_finish_case1(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -216,7 +216,7 @@ void test_spdm_responder_finish_case2(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -327,7 +327,7 @@ void test_spdm_responder_finish_case3(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -441,7 +441,7 @@ void test_spdm_responder_finish_case4(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -557,7 +557,7 @@ void test_spdm_responder_finish_case5(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -679,7 +679,7 @@ void test_spdm_responder_finish_case6(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -785,7 +785,7 @@ void test_spdm_responder_finish_case7(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -924,7 +924,7 @@ void test_spdm_responder_finish_case8(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 1;
 	read_requester_public_certificate_chain(m_use_hash_algo,
 						m_use_req_asym_algo, &data2,
@@ -1061,7 +1061,7 @@ void test_spdm_responder_finish_case9(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1174,7 +1174,7 @@ void test_spdm_responder_finish_case10(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1281,7 +1281,7 @@ void test_spdm_responder_finish_case11(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1377,7 +1377,7 @@ void test_spdm_responder_finish_case12(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1480,7 +1480,7 @@ void test_spdm_responder_finish_case13(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1593,7 +1593,7 @@ void test_spdm_responder_finish_case14(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
 
 	session_id = 0xFFFFFFFF;
@@ -1713,7 +1713,7 @@ void test_spdm_responder_finish_case15(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 1;
 	read_requester_public_certificate_chain(m_use_hash_algo,
 						m_use_req_asym_algo, &data2,
@@ -1861,7 +1861,7 @@ void test_spdm_responder_finish_case16(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 1;
 	read_requester_public_certificate_chain(m_use_hash_algo,
 						m_use_req_asym_algo, &data2,

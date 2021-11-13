@@ -166,13 +166,13 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 		//
 		// Cache data
 		//
-		status = spdm_append_message_b(spdm_context, &spdm_request,
+		status = libspdm_append_message_b(spdm_context, &spdm_request,
 					       sizeof(spdm_request));
 		if (RETURN_ERROR(status)) {
 			status = RETURN_SECURITY_VIOLATION;
 			goto done;
 		}
-		status = spdm_append_message_b(spdm_context, &spdm_response,
+		status = libspdm_append_message_b(spdm_context, &spdm_response,
 					       spdm_response_size);
 		if (RETURN_ERROR(status)) {
 			status = RETURN_SECURITY_VIOLATION;

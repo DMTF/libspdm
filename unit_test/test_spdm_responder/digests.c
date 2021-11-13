@@ -466,7 +466,7 @@ void test_spdm_responder_digests_case9(void **state)
 	spdm_context->local_context.slot_count = 0;
 
 	response_size = sizeof(response);
-	spdm_reset_message_b(spdm_context);
+	libspdm_reset_message_b(spdm_context);
 	status = spdm_get_response_digests(spdm_context,
 					   m_spdm_get_digests_request1_size,
 					   &m_spdm_get_digests_request1,
