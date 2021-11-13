@@ -293,7 +293,7 @@ typedef struct {
 	uint32 last_spdm_request_session_id;
 	boolean last_spdm_request_session_id_valid;
 	//
-	// Cache the error in spdm_process_request. It is handled in spdm_build_response.
+	// Cache the error in libspdm_process_request. It is handled in libspdm_build_response.
 	//
 	spdm_error_struct_t last_spdm_error;
 

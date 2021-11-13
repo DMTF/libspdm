@@ -45,7 +45,7 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
 	}
 
 	if (request_size != sizeof(spdm_message_header_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -53,19 +53,19 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
 
 	ASSERT(spdm_request->request_response_code == SPDM_RESPOND_IF_READY);
 	if (spdm_request->param1 != spdm_context->error_data.request_code) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_request->param1 == SPDM_RESPOND_IF_READY) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_request->param2 != spdm_context->error_data.token) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -75,7 +75,7 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
 	get_response_func =
 		spdm_get_response_func_via_request_code(spdm_request->param1);
 	if (get_response_func == NULL) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			spdm_request->param1, response_size, response);
 		return RETURN_SUCCESS;

@@ -65,14 +65,14 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_KEY_EXCHANGE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
@@ -86,7 +86,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		    SPDM_STATUS_SUCCESS) {
 			DEBUG((DEBUG_INFO,
 			       "spdm_get_response_key_exchange fail due to Mutual Auth fail\n"));
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
 				0, response_size, response);
 			return RETURN_SUCCESS;
@@ -96,7 +96,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 			spdm_context, FALSE,
 			0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
 			spdm_request->header.param1 > 0) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_KEY_EXCHANGE, response_size, response);
 		return RETURN_SUCCESS;
@@ -105,7 +105,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	slot_id = spdm_request->header.param2;
 	if ((slot_id != 0xFF) &&
 	    (slot_id >= spdm_context->local_context.slot_count)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -126,13 +126,13 @@ return_status spdm_get_response_key_exchange(IN void *context,
 
 	if ((measurement_summary_hash_size == 0) &&
 		(spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 						SPDM_ERROR_CODE_INVALID_REQUEST,
 						0, response_size, response);
 	}
 	if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
 				   sizeof(uint16)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -142,7 +142,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 			    sizeof(spdm_key_exchange_request_t) + dhe_key_size);
 	if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
 				   sizeof(uint16) + opaque_data_length) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -155,7 +155,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	status = spdm_process_opaque_data_supported_version_data(
 		spdm_context, opaque_data_length, ptr);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -190,7 +190,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	req_session_id = spdm_request->req_session_id;
 	rsp_session_id = spdm_allocate_rsp_session_id(spdm_context);
 	if (rsp_session_id == (INVALID_SESSION_ID & 0xFFFF)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -198,7 +198,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	session_id = (req_session_id << 16) | rsp_session_id;
 	session_info = spdm_assign_session_id(spdm_context, session_id, FALSE);
 	if (session_info == NULL) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -256,7 +256,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		dhe_context);
 	if (!result) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -268,7 +268,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		spdm_context, FALSE, spdm_request->header.param1, ptr);
 	if (!result) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -291,7 +291,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	status = spdm_append_message_k(spdm_context, session_info, FALSE, request, request_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -301,7 +301,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -310,7 +310,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 							  session_info, ptr);
 	if (!result) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			SPDM_KEY_EXCHANGE_RSP, response_size, response);
 		return RETURN_SUCCESS;
@@ -319,7 +319,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	status = spdm_append_message_k(spdm_context, session_info, FALSE, ptr, signature_size);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -331,7 +331,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 					 th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -340,7 +340,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		session_info->secured_message_context, th1_hash_data);
 	if (RETURN_ERROR(status)) {
 		spdm_free_session_id(spdm_context, session_id);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -356,7 +356,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 							     session_info, ptr);
 		if (!result) {
 			spdm_free_session_id(spdm_context, session_id);
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
@@ -365,7 +365,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 		status = spdm_append_message_k(spdm_context, session_info, FALSE, ptr, hmac_size);
 		if (RETURN_ERROR(status)) {
 			spdm_free_session_id(spdm_context, session_id);
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
