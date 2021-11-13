@@ -481,7 +481,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
+return_status libspdm_get_measurement(IN void *context, IN uint32 *session_id,
 				   IN uint8 request_attribute,
 				   IN uint8 measurement_operation,
 				   IN uint8 slot_id_param,
@@ -533,7 +533,7 @@ return_status spdm_get_measurement(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
+return_status libspdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 				   IN uint8 request_attribute,
 				   IN uint8 measurement_operation,
 				   IN uint8 slot_id_param,

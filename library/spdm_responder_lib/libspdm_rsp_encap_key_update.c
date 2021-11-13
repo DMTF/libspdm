@@ -152,7 +152,7 @@ return_status spdm_process_encap_response_key_update(
 	    (spdm_response->header.param2 != spdm_request->header.param2)) {
 		if (spdm_request->header.param1 !=
 		    SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-			DEBUG((DEBUG_INFO, "spdm_key_update[%x] failed\n",
+			DEBUG((DEBUG_INFO, "libspdm_key_update[%x] failed\n",
 			       session_id));
 		} else {
 			DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] failed\n",
@@ -163,7 +163,7 @@ return_status spdm_process_encap_response_key_update(
 
 	if (spdm_request->header.param1 !=
 	    SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-		DEBUG((DEBUG_INFO, "spdm_key_update[%x] success\n",
+		DEBUG((DEBUG_INFO, "libspdm_key_update[%x] success\n",
 		       session_id));
 		*need_continue = TRUE;
 	} else {

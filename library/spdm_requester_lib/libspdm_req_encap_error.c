@@ -9,7 +9,7 @@
 /**
   Generate encapsulated ERROR message.
 
-  This function can be called in spdm_get_encap_response_func.
+  This function can be called in libspdm_get_encap_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -23,7 +23,7 @@
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_encap_error_response(IN void *context,
+return_status libspdm_generate_encap_error_response(IN void *context,
 						 IN uint8 error_code,
 						 IN uint8 error_data,
 						 IN OUT uintn *response_size,
@@ -46,7 +46,7 @@ return_status spdm_generate_encap_error_response(IN void *context,
 /**
   Generate encapsulated ERROR message with extended error data.
 
-  This function can be called in spdm_get_encap_response_func.
+  This function can be called in libspdm_get_encap_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -62,7 +62,7 @@ return_status spdm_generate_encap_error_response(IN void *context,
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_encap_extended_error_response(
+return_status libspdm_generate_encap_extended_error_response(
 	IN void *context, IN uint8 error_code, IN uint8 error_data,
 	IN uintn extended_error_data_size, IN uint8 *extended_error_data,
 	IN OUT uintn *response_size, OUT void *response)

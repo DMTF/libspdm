@@ -43,14 +43,14 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_KEY_UPDATE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (!spdm_context->last_spdm_request_session_id_valid) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -59,7 +59,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 	session_info =
 		spdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -67,14 +67,14 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 	session_state = spdm_secured_message_get_session_state(
 		session_info->secured_message_context);
 	if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_key_update_request_t)) {
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;
@@ -90,7 +90,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 			SPDM_KEY_UPDATE_ACTION_RESPONDER);
 		break;
 	case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		break;
@@ -103,7 +103,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 			SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
 		break;
 	default:
-		spdm_generate_encap_error_response(
+		libspdm_generate_encap_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 			response_size, response);
 		return RETURN_SUCCESS;

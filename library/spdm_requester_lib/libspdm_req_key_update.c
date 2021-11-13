@@ -239,7 +239,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
 	return RETURN_SUCCESS;
 }
 
-return_status spdm_key_update(IN void *context, IN uint32 session_id,
+return_status libspdm_key_update(IN void *context, IN uint32 session_id,
 			      IN boolean single_direction)
 {
 	spdm_context_t *spdm_context;

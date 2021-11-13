@@ -25,7 +25,7 @@
   @retval RETURN_SUCCESS               The SPDM request is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
 **/
-return_status spdm_send_request(IN void *spdm_context, IN uint32 *session_id,
+return_status libspdm_send_request(IN void *spdm_context, IN uint32 *session_id,
 				IN boolean is_app_message,
 				IN uintn request_size, IN void *request);
 
@@ -45,7 +45,7 @@ return_status spdm_send_request(IN void *spdm_context, IN uint32 *session_id,
   @retval RETURN_SUCCESS               The SPDM response is received successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
 **/
-return_status spdm_receive_response(IN void *spdm_context,
+return_status libspdm_receive_response(IN void *spdm_context,
 				    IN uint32 *session_id,
 				    IN boolean is_app_message,
 				    IN OUT uintn *response_size,
@@ -64,7 +64,7 @@ return_status spdm_receive_response(IN void *spdm_context,
   @retval RETURN_SUCCESS               The connection is initialized successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
-return_status spdm_init_connection(IN void *spdm_context,
+return_status libspdm_init_connection(IN void *spdm_context,
 				   IN boolean get_version_only);
 
 /**
@@ -84,7 +84,7 @@ return_status spdm_init_connection(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_digest(IN void *spdm_context, OUT uint8 *slot_mask,
+return_status libspdm_get_digest(IN void *spdm_context, OUT uint8 *slot_mask,
 			      OUT void *total_digest_buffer);
 
 /**
@@ -107,7 +107,7 @@ return_status spdm_get_digest(IN void *spdm_context, OUT uint8 *slot_mask,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_certificate(IN void *spdm_context, IN uint8 slot_id,
+return_status libspdm_get_certificate(IN void *spdm_context, IN uint8 slot_id,
 				   IN OUT uintn *cert_chain_size,
 				   OUT void *cert_chain);
 
@@ -133,7 +133,7 @@ return_status spdm_get_certificate(IN void *spdm_context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
+return_status libspdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
 				   IN OUT uintn *cert_chain_size,
 				   OUT void *cert_chain,
 				   OUT void **trust_anchor OPTIONAL,
@@ -160,7 +160,7 @@ return_status spdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_certificate_choose_length(IN void *spdm_context,
+return_status libspdm_get_certificate_choose_length(IN void *spdm_context,
 						 IN uint8 slot_id,
 						 IN uint16 length,
 						 IN OUT uintn *cert_chain_size,
@@ -189,7 +189,7 @@ return_status spdm_get_certificate_choose_length(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_certificate_choose_length_ex(IN void *context,
+return_status libspdm_get_certificate_choose_length_ex(IN void *context,
 						 IN uint8 slot_id,
 						 IN uint16 length,
 						 IN OUT uintn *cert_chain_size,
@@ -215,7 +215,7 @@ return_status spdm_get_certificate_choose_length_ex(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_challenge(IN void *spdm_context, IN uint8 slot_id,
+return_status libspdm_challenge(IN void *spdm_context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash);
 
@@ -240,7 +240,7 @@ return_status spdm_challenge(IN void *spdm_context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
+return_status libspdm_challenge_ex(IN void *context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
 			     OUT void *measurement_hash,
 			     IN void *requester_nonce_in OPTIONAL,
@@ -269,7 +269,7 @@ return_status spdm_challenge_ex(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_measurement(IN void *spdm_context, IN uint32 *session_id,
+return_status libspdm_get_measurement(IN void *spdm_context, IN uint32 *session_id,
 				   IN uint8 request_attribute,
 				   IN uint8 measurement_operation,
 				   IN uint8 slot_id,
@@ -302,7 +302,7 @@ return_status spdm_get_measurement(IN void *spdm_context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
+return_status libspdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
 				   IN uint8 request_attribute,
 				   IN uint8 measurement_operation,
 				   IN uint8 slot_id_param,
@@ -333,7 +333,7 @@ return_status spdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_start_session(IN void *spdm_context, IN boolean use_psk,
+return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
 				 IN uint8 measurement_hash_type,
 				 IN uint8 slot_id, OUT uint32 *session_id,
 				 OUT uint8 *heartbeat_period,
@@ -374,7 +374,7 @@ return_status spdm_start_session(IN void *spdm_context, IN boolean use_psk,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
+return_status libspdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
 				 IN uint8 measurement_hash_type,
 				 IN uint8 slot_id, OUT uint32 *session_id,
 				 OUT uint8 *heartbeat_period,
@@ -398,7 +398,7 @@ return_status spdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_stop_session(IN void *spdm_context, IN uint32 session_id,
+return_status libspdm_stop_session(IN void *spdm_context, IN uint32 session_id,
 				IN uint8 end_session_attributes);
 
 /**
@@ -428,7 +428,7 @@ return_status spdm_stop_session(IN void *spdm_context, IN uint32 session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_send_receive_data(IN void *spdm_context,
+return_status libspdm_send_receive_data(IN void *spdm_context,
 				     IN uint32 *session_id,
 				     IN boolean is_app_message,
 				     IN void *request, IN uintn request_size,
@@ -446,7 +446,7 @@ return_status spdm_send_receive_data(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_heartbeat(IN void *spdm_context, IN uint32 session_id);
+return_status libspdm_heartbeat(IN void *spdm_context, IN uint32 session_id);
 
 /**
   This function sends KEY_UPDATE
@@ -463,7 +463,7 @@ return_status spdm_heartbeat(IN void *spdm_context, IN uint32 session_id);
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_key_update(IN void *spdm_context, IN uint32 session_id,
+return_status libspdm_key_update(IN void *spdm_context, IN uint32 session_id,
 			      IN boolean single_direction);
 
 /**
@@ -480,7 +480,7 @@ return_status spdm_key_update(IN void *spdm_context, IN uint32 session_id,
   @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
-return_status spdm_send_receive_encap_request(IN void *spdm_context,
+return_status libspdm_send_receive_encap_request(IN void *spdm_context,
 					      IN uint32 *session_id);
 
 /**
@@ -500,7 +500,7 @@ return_status spdm_send_receive_encap_request(IN void *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-typedef return_status (*spdm_get_encap_response_func)(
+typedef return_status (*libspdm_get_encap_response_func)(
 	IN void *spdm_context, IN uintn spdm_request_size,
 	IN void *spdm_request, IN OUT uintn *spdm_response_size,
 	OUT void *spdm_response);
@@ -514,14 +514,14 @@ typedef return_status (*spdm_get_encap_response_func)(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  get_encap_response_func         The function to process the encapsuled message.
 **/
-void spdm_register_get_encap_response_func(IN void *spdm_context,
-					   IN spdm_get_encap_response_func
+void libspdm_register_get_encap_response_func(IN void *spdm_context,
+					   IN libspdm_get_encap_response_func
 						   get_encap_response_func);
 
 /**
   Generate encapsulated ERROR message.
 
-  This function can be called in spdm_get_encap_response_func.
+  This function can be called in libspdm_get_encap_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -535,14 +535,14 @@ void spdm_register_get_encap_response_func(IN void *spdm_context,
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_encap_error_response(
+return_status libspdm_generate_encap_error_response(
 	IN void *spdm_context, IN uint8 error_code, IN uint8 error_data,
 	IN OUT uintn *spdm_response_size, OUT void *spdm_response);
 
 /**
   Generate encapsulated ERROR message with extended error data.
 
-  This function can be called in spdm_get_encap_response_func.
+  This function can be called in libspdm_get_encap_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -558,7 +558,7 @@ return_status spdm_generate_encap_error_response(
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_encap_extended_error_response(
+return_status libspdm_generate_encap_extended_error_response(
 	IN void *spdm_context, IN uint8 error_code, IN uint8 error_data,
 	IN uintn extended_error_data_size, IN uint8 *extended_error_data,
 	IN OUT uintn *spdm_response_size, OUT void *spdm_response);

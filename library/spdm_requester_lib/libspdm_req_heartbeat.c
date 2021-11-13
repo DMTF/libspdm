@@ -102,7 +102,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
 	return RETURN_SUCCESS;
 }
 
-return_status spdm_heartbeat(IN void *context, IN uint32 session_id)
+return_status libspdm_heartbeat(IN void *context, IN uint32 session_id)
 {
 	uintn retry;
 	return_status status;
