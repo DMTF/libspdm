@@ -178,7 +178,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 	}
 
 	if (session_id != NULL) {
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		if (session_info == NULL) {
 			ASSERT(FALSE);
@@ -196,8 +196,8 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 	//
 	// Cache
 	//
-	spdm_reset_message_mut_b(spdm_context);
-	spdm_reset_message_mut_c(spdm_context);
+	libspdm_reset_message_mut_b(spdm_context);
+	libspdm_reset_message_mut_c(spdm_context);
 
 	if (session_id == NULL) {
 		spdm_context->last_spdm_request_session_id_valid = FALSE;

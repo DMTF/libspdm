@@ -176,7 +176,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		ASSERT(session_info != NULL);
 		if (session_info == NULL) {
@@ -222,7 +222,7 @@ return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
 		    spdm_context, TRUE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		ASSERT(session_info != NULL);
 		if (session_info == NULL) {

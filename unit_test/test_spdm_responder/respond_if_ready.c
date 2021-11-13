@@ -603,7 +603,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
   assert_int_equal (spdm_response->rsp_session_id, 0xFFFF);
   free(data);
-  spdm_free_session_id (spdm_context, (0xFFFFFFFF));
+  libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 
 #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -709,7 +709,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_FINISH_RSP);
   free(data);
-  spdm_free_session_id (spdm_context, (0xFFFFFFFF));
+  libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
@@ -799,7 +799,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_PSK_EXCHANGE_RSP);
   assert_int_equal (spdm_response->rsp_session_id, 0xFFFF);
   free(data);
-  spdm_free_session_id (spdm_context, (0xFFFFFFFF));
+  libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
@@ -902,7 +902,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_PSK_FINISH_RSP);
   free(data);
-  spdm_free_session_id (spdm_context, (0xFFFFFFFF));
+  libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 

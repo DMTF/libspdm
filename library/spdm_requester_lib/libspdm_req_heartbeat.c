@@ -49,7 +49,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
 		return RETURN_UNSUPPORTED;
 	}
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		ASSERT(FALSE);
 		return RETURN_UNSUPPORTED;

@@ -10,8 +10,8 @@
   This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHM
   to initialize the connection with SPDM responder.
 
-  Before this function, the requester configuration data can be set via spdm_set_data.
-  After this function, the negotiated configuration data can be got via spdm_get_data.
+  Before this function, the requester configuration data can be set via libspdm_set_data.
+  After this function, the negotiated configuration data can be got via libspdm_get_data.
 
   @param  spdm_context                  A pointer to the SPDM context.
 
@@ -94,7 +94,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
 			return status;
 		}
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		if (session_info == NULL) {
 			ASSERT(FALSE);
@@ -240,7 +240,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
 			return status;
 		}
 
-		session_info = spdm_get_session_info_via_session_id(
+		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, *session_id);
 		if (session_info == NULL) {
 			ASSERT(FALSE);

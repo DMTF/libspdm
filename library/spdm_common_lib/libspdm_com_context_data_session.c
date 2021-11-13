@@ -83,7 +83,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
 
   @return session info.
 **/
-void *spdm_get_session_info_via_session_id(IN void *context,
+void *libspdm_get_session_info_via_session_id(IN void *context,
 					   IN uint32 session_id)
 {
 	spdm_context_t *spdm_context;
@@ -92,7 +92,7 @@ void *spdm_get_session_info_via_session_id(IN void *context,
 
 	if (session_id == INVALID_SESSION_ID) {
 		DEBUG((DEBUG_ERROR,
-		       "spdm_get_session_info_via_session_id - Invalid session_id\n"));
+		       "libspdm_get_session_info_via_session_id - Invalid session_id\n"));
 		ASSERT(FALSE);
 		return NULL;
 	}
@@ -107,7 +107,7 @@ void *spdm_get_session_info_via_session_id(IN void *context,
 	}
 
 	DEBUG((DEBUG_ERROR,
-	       "spdm_get_session_info_via_session_id - not found session_id\n"));
+	       "libspdm_get_session_info_via_session_id - not found session_id\n"));
 	return NULL;
 }
 
@@ -119,13 +119,13 @@ void *spdm_get_session_info_via_session_id(IN void *context,
 
   @return secured message context.
 **/
-void *spdm_get_secured_message_context_via_session_id(IN void *spdm_context,
+void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
 						      IN uint32 session_id)
 {
 	spdm_session_info_t *session_info;
 
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		return NULL;
 	} else {
@@ -141,7 +141,7 @@ void *spdm_get_secured_message_context_via_session_id(IN void *spdm_context,
   @return secured message context.
 **/
 void *
-spdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
+libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
 {
 	spdm_session_info_t *session_info;
 
@@ -161,7 +161,7 @@ spdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
 
   @return session info associated with this new session ID.
 **/
-void *spdm_assign_session_id(IN void *context, IN uint32 session_id,
+void *libspdm_assign_session_id(IN void *context, IN uint32 session_id,
 			     IN boolean use_psk)
 {
 	spdm_context_t *spdm_context;
@@ -172,7 +172,7 @@ void *spdm_assign_session_id(IN void *context, IN uint32 session_id,
 
 	if (session_id == INVALID_SESSION_ID) {
 		DEBUG((DEBUG_ERROR,
-		       "spdm_assign_session_id - Invalid session_id\n"));
+		       "libspdm_assign_session_id - Invalid session_id\n"));
 		ASSERT(FALSE);
 		return NULL;
 	}
@@ -182,7 +182,7 @@ void *spdm_assign_session_id(IN void *context, IN uint32 session_id,
 	for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
 		if (session_info[index].session_id == session_id) {
 			DEBUG((DEBUG_ERROR,
-			       "spdm_assign_session_id - Duplicated session_id\n"));
+			       "libspdm_assign_session_id - Duplicated session_id\n"));
 			ASSERT(FALSE);
 			return NULL;
 		}
@@ -198,7 +198,7 @@ void *spdm_assign_session_id(IN void *context, IN uint32 session_id,
 		}
 	}
 
-	DEBUG((DEBUG_ERROR, "spdm_assign_session_id - MAX session_id\n"));
+	DEBUG((DEBUG_ERROR, "libspdm_assign_session_id - MAX session_id\n"));
 	return NULL;
 }
 
@@ -262,7 +262,7 @@ uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
 
   @return freed session info assicated with this session ID.
 **/
-void *spdm_free_session_id(IN void *context, IN uint32 session_id)
+void *libspdm_free_session_id(IN void *context, IN uint32 session_id)
 {
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;
@@ -272,7 +272,7 @@ void *spdm_free_session_id(IN void *context, IN uint32 session_id)
 
 	if (session_id == INVALID_SESSION_ID) {
 		DEBUG((DEBUG_ERROR,
-		       "spdm_free_session_id - Invalid session_id\n"));
+		       "libspdm_free_session_id - Invalid session_id\n"));
 		ASSERT(FALSE);
 		return NULL;
 	}
@@ -287,7 +287,7 @@ void *spdm_free_session_id(IN void *context, IN uint32 session_id)
 		}
 	}
 
-	DEBUG((DEBUG_ERROR, "spdm_free_session_id - MAX session_id\n"));
+	DEBUG((DEBUG_ERROR, "libspdm_free_session_id - MAX session_id\n"));
 	ASSERT(FALSE);
 	return NULL;
 }

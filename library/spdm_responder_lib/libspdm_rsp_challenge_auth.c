@@ -190,7 +190,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	//
 	// Calc Sign
 	//
-	status = spdm_append_message_c(spdm_context, spdm_request,
+	status = libspdm_append_message_c(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,
@@ -199,10 +199,10 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_c(spdm_context, spdm_response,
+	status = libspdm_append_message_c(spdm_context, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
-		spdm_reset_message_c(spdm_context);
+		libspdm_reset_message_c(spdm_context);
 		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -210,7 +210,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	result = spdm_generate_challenge_auth_signature(spdm_context, FALSE,
 							ptr);
 	if (!result) {
-		spdm_reset_message_c(spdm_context);
+		libspdm_reset_message_c(spdm_context);
 		return libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);

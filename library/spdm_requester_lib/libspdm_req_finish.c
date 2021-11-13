@@ -63,7 +63,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	}
 
 	session_info =
-		spdm_get_session_info_via_session_id(spdm_context, session_id);
+		libspdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
 		ASSERT(FALSE);
 		return RETURN_UNSUPPORTED;
@@ -124,7 +124,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		sizeof(spdm_finish_request_t) + signature_size + hmac_size;
 	ptr = spdm_request.signature;
 
-	status = spdm_append_message_f(spdm_context, session_info, TRUE, (uint8 *)&spdm_request,
+	status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8 *)&spdm_request,
 				       sizeof(spdm_finish_request_t));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -135,7 +135,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		if (!result) {
 			return RETURN_SECURITY_VIOLATION;
 		}
-		status = spdm_append_message_f(spdm_context, session_info, TRUE, ptr,
+		status = libspdm_append_message_f(spdm_context, session_info, TRUE, ptr,
 					       signature_size);
 		if (RETURN_ERROR(status)) {
 			return RETURN_SECURITY_VIOLATION;
@@ -148,7 +148,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	status = spdm_append_message_f(spdm_context, session_info, TRUE, ptr, hmac_size);
+	status = libspdm_append_message_f(spdm_context, session_info, TRUE, ptr, hmac_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
 	}
@@ -174,7 +174,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	}
 	if (spdm_response.header.request_response_code == SPDM_ERROR) {
 		if (spdm_response.header.param1 != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
-			spdm_reset_message_f (spdm_context, session_info);
+			libspdm_reset_message_f (spdm_context, session_info);
 		}
 		status = spdm_handle_error_response_main(
 			spdm_context, &session_id,
@@ -200,7 +200,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		return RETURN_DEVICE_ERROR;
 	}
 
-	status = spdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
+	status = libspdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
 				       sizeof(spdm_finish_response_t));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -219,7 +219,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 			return RETURN_SECURITY_VIOLATION;
 		}
 
-		status = spdm_append_message_f(
+		status = libspdm_append_message_f(
 			spdm_context, session_info, TRUE,
 			(uint8 *)&spdm_response +
 				sizeof(spdm_finish_response_t),
@@ -230,7 +230,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	}
 
 	DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n", session_id));
-	status = spdm_calculate_th2_hash(spdm_context, session_info, TRUE,
+	status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
 					 th2_hash_data);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;

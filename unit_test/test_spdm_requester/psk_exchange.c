@@ -943,7 +943,7 @@ void test_spdm_requester_psk_exchange_case1(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -998,7 +998,7 @@ void test_spdm_requester_psk_exchange_case2(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1058,7 +1058,7 @@ void test_spdm_requester_psk_exchange_case3(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1113,7 +1113,7 @@ void test_spdm_requester_psk_exchange_case4(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1168,7 +1168,7 @@ void test_spdm_requester_psk_exchange_case5(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
@@ -1223,7 +1223,7 @@ void test_spdm_requester_psk_exchange_case6(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1283,7 +1283,7 @@ void test_spdm_requester_psk_exchange_case7(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1340,7 +1340,7 @@ void test_spdm_requester_psk_exchange_case8(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1395,7 +1395,7 @@ void test_spdm_requester_psk_exchange_case9(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
@@ -1463,7 +1463,7 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
     spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_reset_message_a(spdm_context);
+    libspdm_reset_message_a(spdm_context);
   
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -1512,7 +1512,7 @@ void test_spdm_requester_psk_exchange_case11(void **state)
 	read_responder_public_certificate_chain(m_use_hash_algo,
 						m_use_asym_algo, &data,
 						&data_size, &hash, &hash_size);
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	spdm_context->connection_info.algorithm.base_hash_algo =
 		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =

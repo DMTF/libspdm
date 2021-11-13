@@ -26,8 +26,8 @@
 typedef struct {
 	uint32 signature;
 	boolean is_requester;
-	spdm_device_send_message_func send_message;
-	spdm_device_receive_message_func receive_message;
+	libspdm_device_send_message_func send_message;
+	libspdm_device_receive_message_func receive_message;
 	void *spdm_context;
 	void *test_buffer;
 	uintn test_buffer_size;

@@ -82,7 +82,7 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -175,7 +175,7 @@ void test_spdm_responder_psk_exchange_case2(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -260,7 +260,7 @@ void test_spdm_responder_psk_exchange_case3(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -346,7 +346,7 @@ void test_spdm_responder_psk_exchange_case4(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -434,7 +434,7 @@ void test_spdm_responder_psk_exchange_case5(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -526,7 +526,7 @@ void test_spdm_responder_psk_exchange_case6(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));
@@ -610,7 +610,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
 		data_size1;
 	spdm_context->local_context.slot_count = 1;
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 	zero_mem(m_local_psk_hint, 32);
 	copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
 		 sizeof(TEST_PSK_HINT_STRING));

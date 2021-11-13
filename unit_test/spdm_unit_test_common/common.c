@@ -25,18 +25,18 @@ int spdm_unit_test_group_setup(void **state)
 
 	spdm_test_context = m_spdm_test_context;
 	spdm_test_context->spdm_context =
-		(void *)malloc(spdm_get_context_size());
+		(void *)malloc(libspdm_get_context_size());
 	if (spdm_test_context->spdm_context == NULL) {
 		return -1;
 	}
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_test_context->case_id = 0xFFFFFFFF;
 
-	spdm_init_context(spdm_context);
-	spdm_register_device_io_func(spdm_context,
+	libspdm_init_context(spdm_context);
+	libspdm_register_device_io_func(spdm_context,
 				     spdm_test_context->send_message,
 				     spdm_test_context->receive_message);
-	spdm_register_transport_layer_func(spdm_context,
+	libspdm_register_transport_layer_func(spdm_context,
 					   spdm_transport_test_encode_message,
 					   spdm_transport_test_decode_message);
 

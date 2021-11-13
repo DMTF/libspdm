@@ -128,7 +128,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 	//
 	// Cache
 	//
-	status = spdm_append_message_b(spdm_context, spdm_request,
+	status = libspdm_append_message_b(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,
@@ -137,7 +137,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 		return RETURN_SUCCESS;
 	}
 
-	status = spdm_append_message_b(spdm_context, spdm_response,
+	status = libspdm_append_message_b(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,

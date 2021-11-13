@@ -155,7 +155,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 	spdm_request.header.param1 = 0;
 	spdm_request.header.param2 = 0;
 
-	spdm_reset_context(spdm_context);
+	libspdm_reset_context(spdm_context);
 
 	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 						spdm_request.header.request_response_code);
@@ -166,9 +166,9 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 		return RETURN_DEVICE_ERROR;
 	}
 
-	spdm_reset_message_a(spdm_context);
-	spdm_reset_message_b(spdm_context);
-	spdm_reset_message_c(spdm_context);
+	libspdm_reset_message_a(spdm_context);
+	libspdm_reset_message_b(spdm_context);
+	libspdm_reset_message_c(spdm_context);
 
 	spdm_response_size = sizeof(spdm_response);
 	zero_mem(&spdm_response, sizeof(spdm_response));
@@ -217,15 +217,15 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 	//
 	// Cache data
 	//
-	status = spdm_append_message_a(spdm_context, &spdm_request,
+	status = libspdm_append_message_a(spdm_context, &spdm_request,
 				       sizeof(spdm_request));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
 	}
-	status = spdm_append_message_a(spdm_context, &spdm_response,
+	status = libspdm_append_message_a(spdm_context, &spdm_response,
 				       spdm_response_size);
 	if (RETURN_ERROR(status)) {
-		spdm_reset_message_a(spdm_context);
+		libspdm_reset_message_a(spdm_context);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
@@ -238,7 +238,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 									spdm_response.version_number_entry,
 									spdm_response.version_number_entry_count);
 	if (result != TRUE) {
-		spdm_reset_message_a(spdm_context);
+		libspdm_reset_message_a(spdm_context);
 		return RETURN_DEVICE_ERROR;
 	}
 

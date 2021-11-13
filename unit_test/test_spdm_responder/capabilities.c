@@ -952,7 +952,7 @@ void test_spdm_responder_capabilities_case18(void **state)
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_VERSION;
 
-	spdm_reset_message_a(spdm_context);
+	libspdm_reset_message_a(spdm_context);
 
 	response_size = sizeof(response);
 	status = spdm_get_response_capabilities(

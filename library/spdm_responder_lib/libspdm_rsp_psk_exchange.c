@@ -223,7 +223,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		return RETURN_SUCCESS;
 	}
 	session_id = (req_session_id << 16) | rsp_session_id;
-	session_info = spdm_assign_session_id(spdm_context, session_id, TRUE);
+	session_info = libspdm_assign_session_id(spdm_context, session_id, TRUE);
 	if (session_info == NULL) {
 		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
@@ -251,7 +251,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 						0, response_size, response);
 	}
 	if (!result) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -270,19 +270,19 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	ptr += opaque_psk_exchange_rsp_size;
 
 
-	status = spdm_append_message_k(spdm_context, session_info, FALSE, request, request_size);
+	status = libspdm_append_message_k(spdm_context, session_info, FALSE, request, request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	
-	status = spdm_append_message_k(spdm_context, session_info, FALSE, spdm_response,
+	status = libspdm_append_message_k(spdm_context, session_info, FALSE, spdm_response,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -291,10 +291,10 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 
 	DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
 	       session_id));
-	status = spdm_calculate_th1_hash(spdm_context, session_info, FALSE,
+	status = libspdm_calculate_th1_hash(spdm_context, session_info, FALSE,
 					 th1_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -303,7 +303,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	status = spdm_generate_session_handshake_key(
 		session_info->secured_message_context, th1_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -313,15 +313,15 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	result = spdm_generate_psk_exchange_rsp_hmac(spdm_context, session_info,
 						     ptr);
 	if (!result) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);
 		return RETURN_SUCCESS;
 	}
-	status = spdm_append_message_k(spdm_context, session_info, FALSE, ptr, hmac_size);
+	status = libspdm_append_message_k(spdm_context, session_info, FALSE, ptr, hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_free_session_id(spdm_context, session_id);
+		libspdm_free_session_id(spdm_context, session_id);
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
@@ -339,7 +339,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 
 		DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
 		       session_id));
-		status = spdm_calculate_th2_hash(spdm_context, session_info,
+		status = libspdm_calculate_th2_hash(spdm_context, session_info,
 						 FALSE, th2_hash_data);
 		if (RETURN_ERROR(status)) {
 			libspdm_generate_error_response(
