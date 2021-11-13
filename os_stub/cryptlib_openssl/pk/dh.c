@@ -318,6 +318,7 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 		final_key_size = 512;
 		break;
 	default:
+		BN_free(bn);
 		return FALSE;
 	}
 	if (*key_size < final_key_size) {
