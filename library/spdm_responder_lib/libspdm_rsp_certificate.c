@@ -55,7 +55,7 @@ return_status spdm_get_response_certificate(IN void *context,
 	     SPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
 	    (spdm_context->connection_info.connection_state !=
 	     SPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
@@ -63,14 +63,14 @@ return_status spdm_get_response_certificate(IN void *context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE, 0,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_GET_CERTIFICATE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_get_certificate_request_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -80,7 +80,7 @@ return_status spdm_get_response_certificate(IN void *context,
 	slot_id = spdm_request->header.param1;
 
 	if (slot_id >= spdm_context->local_context.slot_count) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -88,7 +88,7 @@ return_status spdm_get_response_certificate(IN void *context,
 
 	if (spdm_context->local_context
 					  .local_cert_chain_provision[slot_id] == NULL) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);
 		return RETURN_SUCCESS;
@@ -102,7 +102,7 @@ return_status spdm_get_response_certificate(IN void *context,
 
 	if (offset >= spdm_context->local_context
 			      .local_cert_chain_provision_size[slot_id]) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -149,7 +149,7 @@ return_status spdm_get_response_certificate(IN void *context,
 	status = spdm_append_message_b(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -158,7 +158,7 @@ return_status spdm_get_response_certificate(IN void *context,
 	status = spdm_append_message_b(spdm_context, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;

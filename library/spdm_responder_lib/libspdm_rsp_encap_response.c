@@ -300,7 +300,7 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_init_key_update_encap_state(IN void *context)
+void libspdm_init_key_update_encap_state(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -360,7 +360,7 @@ return_status spdm_get_response_encapsulated_request(
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_GET_ENCAPSULATED_REQUEST, response_size, response);
 		return RETURN_SUCCESS;
@@ -369,7 +369,7 @@ return_status spdm_get_response_encapsulated_request(
 	    SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
 		if (spdm_context->response_state ==
 		    SPDM_RESPONSE_STATE_NORMAL) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context,
 				SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
 				response_size, response);
@@ -382,7 +382,7 @@ return_status spdm_get_response_encapsulated_request(
 	}
 
 	if (request_size != sizeof(spdm_get_encapsulated_request_request_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -407,7 +407,7 @@ return_status spdm_get_response_encapsulated_request(
 	status = spdm_process_encapsulated_response(
 		context, 0, NULL, &encap_request_size, encap_request);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
 			response_size, response);
 		spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
@@ -462,7 +462,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_DELIVER_ENCAPSULATED_RESPONSE, response_size,
 			response);
@@ -472,7 +472,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 	    SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
 		if (spdm_context->response_state ==
 		    SPDM_RESPONSE_STATE_NORMAL) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context,
 				SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
 				response_size, response);
@@ -486,7 +486,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 
 	if (request_size <=
 	    sizeof(spdm_deliver_encapsulated_response_request_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -496,7 +496,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 
 	if (spdm_request->header.param1 !=
 	    spdm_context->encap_context.request_id) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -523,7 +523,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 			     sizeof(spdm_encapsulated_response_ack_response_t);
 	encap_request = spdm_response + 1;
 	if (encap_response_size < sizeof(spdm_message_header_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -536,7 +536,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 		context, encap_response_size, encap_response,
 		&encap_request_size, encap_request);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
 			response_size, response);
 		spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;

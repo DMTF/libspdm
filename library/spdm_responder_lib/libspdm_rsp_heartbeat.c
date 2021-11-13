@@ -48,21 +48,21 @@ return_status spdm_get_response_heartbeat(IN void *context,
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (!spdm_context->last_spdm_request_session_id_valid) {
-		spdm_generate_error_response(context,
+		libspdm_generate_error_response(context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -70,7 +70,7 @@ return_status spdm_get_response_heartbeat(IN void *context,
 	session_info = spdm_get_session_info_via_session_id(
 		spdm_context, spdm_context->last_spdm_request_session_id);
 	if (session_info == NULL) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -78,14 +78,14 @@ return_status spdm_get_response_heartbeat(IN void *context,
 	session_state = spdm_secured_message_get_session_state(
 		session_info->secured_message_context);
 	if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (request_size != sizeof(spdm_heartbeat_request_t)) {
-		spdm_generate_error_response(context,
+		libspdm_generate_error_response(context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;

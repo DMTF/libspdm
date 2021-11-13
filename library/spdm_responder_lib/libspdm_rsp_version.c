@@ -50,13 +50,13 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 				  SPDM_CONNECTION_STATE_NOT_STARTED);
 
 	if (spdm_request->header.spdm_version != SPDM_MESSAGE_VERSION_10) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (request_size != sizeof(spdm_get_version_request_t)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -87,7 +87,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 	status = spdm_append_message_a(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -122,7 +122,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
 		spdm_reset_message_a(spdm_context);
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;

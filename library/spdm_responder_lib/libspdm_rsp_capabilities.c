@@ -164,7 +164,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 	}
 	if (spdm_context->connection_info.connection_state !=
 	    SPDM_CONNECTION_STATE_AFTER_VERSION) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
@@ -172,7 +172,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 
 	if (!spdm_check_request_version_compability(
 			spdm_context, spdm_request->header.spdm_version)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -180,14 +180,14 @@ return_status spdm_get_response_capabilities(IN void *context,
 
 	if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
 		if (request_size != sizeof(spdm_get_capabilities_request)) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
 				0, response_size, response);
 			return RETURN_SUCCESS;
 		}
 	} else {
 		if (request_size != sizeof(spdm_message_header_t)) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
 				0, response_size, response);
 			return RETURN_SUCCESS;
@@ -196,7 +196,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 
 	if (!spdm_check_request_flag_compability(
 		    spdm_request->flags, spdm_request->header.spdm_version)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -228,7 +228,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 	status = spdm_append_message_a(spdm_context, spdm_request,
 			      spdm_request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 						SPDM_ERROR_CODE_UNSPECIFIED, 0,
 						response_size, response);
 		return RETURN_SUCCESS;
@@ -237,7 +237,7 @@ return_status spdm_get_response_capabilities(IN void *context,
 			      spdm_response, *response_size);
 
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 						SPDM_ERROR_CODE_UNSPECIFIED, 0,
 						response_size, response);
 		return RETURN_SUCCESS;

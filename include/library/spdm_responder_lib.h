@@ -34,7 +34,7 @@
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-typedef return_status (*spdm_get_response_func)(
+typedef return_status (*libspdm_get_response_func)(
 	IN void *spdm_context, IN uint32 *session_id, IN boolean is_app_message,
 	IN uintn request_size, IN void *request, IN OUT uintn *response_size,
 	OUT void *response);
@@ -48,8 +48,8 @@ typedef return_status (*spdm_get_response_func)(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  get_response_func              The function to process the encapsuled message.
 **/
-void spdm_register_get_response_func(
-	IN void *spdm_context, IN spdm_get_response_func get_response_func);
+void libspdm_register_get_response_func(
+	IN void *spdm_context, IN libspdm_get_response_func get_response_func);
 
 /**
   Process a SPDM request from a device.
@@ -67,7 +67,7 @@ void spdm_register_get_response_func(
   @retval RETURN_SUCCESS               The SPDM request is received successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
 **/
-return_status spdm_process_request(IN void *spdm_context,
+return_status libspdm_process_request(IN void *spdm_context,
 				   OUT uint32 **session_id,
 				   OUT boolean *is_app_message,
 				   IN uintn request_size, IN void *request);
@@ -88,7 +88,7 @@ return_status spdm_process_request(IN void *spdm_context,
   @retval RETURN_SUCCESS               The SPDM response is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
 **/
-return_status spdm_build_response(IN void *spdm_context, IN uint32 *session_id,
+return_status libspdm_build_response(IN void *spdm_context, IN uint32 *session_id,
 				  IN boolean is_app_message,
 				  IN OUT uintn *response_size,
 				  OUT void *response);
@@ -99,7 +99,7 @@ return_status spdm_build_response(IN void *spdm_context, IN uint32 *session_id,
   The message can be a normal message or a secured message in SPDM session.
   The message can be an SPDM message or an APP message.
 
-  This function is called in spdm_responder_dispatch_message to process the message.
+  This function is called in libspdm_responder_dispatch_message to process the message.
   The alternative is: an SPDM responder may receive the request message directly
   and call this function to process it, then send the response message.
 
@@ -120,7 +120,7 @@ return_status spdm_build_response(IN void *spdm_context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_process_message(IN void *context, IN OUT uint32 **session_id,
+return_status libspdm_process_message(IN void *context, IN OUT uint32 **session_id,
 				   IN void *request, IN uintn request_size,
 				   OUT void *response,
 				   IN OUT uintn *response_size);
@@ -138,12 +138,12 @@ return_status spdm_process_message(IN void *context, IN OUT uint32 **session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_UNSUPPORTED           One request message is not supported.
 **/
-return_status spdm_responder_dispatch_message(IN void *spdm_context);
+return_status libspdm_responder_dispatch_message(IN void *spdm_context);
 
 /**
   Generate ERROR message.
 
-  This function can be called in spdm_get_response_func.
+  This function can be called in libspdm_get_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -157,7 +157,7 @@ return_status spdm_responder_dispatch_message(IN void *spdm_context);
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_error_response(IN void *spdm_context,
+return_status libspdm_generate_error_response(IN void *spdm_context,
 					   IN uint8 error_code,
 					   IN uint8 error_data,
 					   IN OUT uintn *spdm_response_size,
@@ -166,7 +166,7 @@ return_status spdm_generate_error_response(IN void *spdm_context,
 /**
   Generate ERROR message with extended error data.
 
-  This function can be called in spdm_get_response_func.
+  This function can be called in libspdm_get_response_func.
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  error_code                    The error code of the message.
@@ -182,7 +182,7 @@ return_status spdm_generate_error_response(IN void *spdm_context,
   @retval RETURN_SUCCESS               The error message is generated.
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
-return_status spdm_generate_extended_error_response(
+return_status libspdm_generate_extended_error_response(
 	IN void *context, IN uint8 error_code, IN uint8 error_data,
 	IN uintn extended_error_data_size, IN uint8 *extended_error_data,
 	IN OUT uintn *spdm_response_size, OUT void *spdm_response);
@@ -194,7 +194,7 @@ return_status spdm_generate_extended_error_response(
   @param  session_id                    The session_id of a session.
   @param  session_state                 The state of a session.
 **/
-typedef void (*spdm_session_state_callback_func)(
+typedef void (*libspdm_session_state_callback_func)(
 	IN void *spdm_context, IN uint32 session_id,
 	IN spdm_session_state_t session_state);
 
@@ -209,9 +209,9 @@ typedef void (*spdm_session_state_callback_func)(
   @retval RETURN_SUCCESS          The callback is registered.
   @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
 **/
-return_status spdm_register_session_state_callback_func(
+return_status libspdm_register_session_state_callback_func(
 	IN void *spdm_context,
-	IN spdm_session_state_callback_func spdm_session_state_callback);
+	IN libspdm_session_state_callback_func spdm_session_state_callback);
 
 /**
   Notify the connection state to an SPDM context register.
@@ -219,7 +219,7 @@ return_status spdm_register_session_state_callback_func(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  connection_state              Indicate the SPDM connection state.
 **/
-typedef void (*spdm_connection_state_callback_func)(
+typedef void (*libspdm_connection_state_callback_func)(
 	IN void *spdm_context, IN spdm_connection_state_t connection_state);
 
 /**
@@ -233,15 +233,15 @@ typedef void (*spdm_connection_state_callback_func)(
   @retval RETURN_SUCCESS          The callback is registered.
   @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
 **/
-return_status spdm_register_connection_state_callback_func(
+return_status libspdm_register_connection_state_callback_func(
 	IN void *spdm_context,
-	IN spdm_connection_state_callback_func spdm_connection_state_callback);
+	IN libspdm_connection_state_callback_func spdm_connection_state_callback);
 
 /**
   This function initializes the key_update encapsulated state.
 
   @param  spdm_context                  A pointer to the SPDM context.
 **/
-void spdm_init_key_update_encap_state(IN void *spdm_context);
+void libspdm_init_key_update_encap_state(IN void *spdm_context);
 
 #endif

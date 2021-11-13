@@ -12,7 +12,7 @@
   The message can be a normal message or a secured message in SPDM session.
   The message can be an SPDM message or an APP message.
 
-  This function is called in spdm_responder_dispatch_message to process the message.
+  This function is called in libspdm_responder_dispatch_message to process the message.
   The alternative is: an SPDM responder may receive the request message directly
   and call this function to process it, then send the response message.
 
@@ -33,7 +33,7 @@
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status spdm_process_message(IN void *context, IN OUT uint32 **session_id,
+return_status libspdm_process_message(IN void *context, IN OUT uint32 **session_id,
 				   IN void *request, IN uintn request_size,
 				   OUT void *response,
 				   IN OUT uintn *response_size)
@@ -44,13 +44,13 @@ return_status spdm_process_message(IN void *context, IN OUT uint32 **session_id,
 
 	spdm_context = context;
 
-	status = spdm_process_request(spdm_context, session_id, &is_app_message,
+	status = libspdm_process_request(spdm_context, session_id, &is_app_message,
 				      request_size, request);
 	if (RETURN_ERROR(status)) {
 		return status;
 	}
 
-	status = spdm_build_response(spdm_context, *session_id, is_app_message,
+	status = libspdm_build_response(spdm_context, *session_id, is_app_message,
 				     response_size, response);
 	if (RETURN_ERROR(status)) {
 		return status;
@@ -71,7 +71,7 @@ return_status spdm_process_message(IN void *context, IN OUT uint32 **session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_UNSUPPORTED           One request message is not supported.
 **/
-return_status spdm_responder_dispatch_message(IN void *context)
+return_status libspdm_responder_dispatch_message(IN void *context)
 {
 	return_status status;
 	spdm_context_t *spdm_context;
@@ -91,7 +91,7 @@ return_status spdm_responder_dispatch_message(IN void *context)
 	}
 
 	response_size = sizeof(response);
-	status = spdm_process_message(spdm_context, &session_id, request,
+	status = libspdm_process_message(spdm_context, &session_id, request,
 				      request_size, response, &response_size);
 	if (RETURN_ERROR(status)) {
 		return status;

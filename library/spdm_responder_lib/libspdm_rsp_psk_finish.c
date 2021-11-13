@@ -53,21 +53,21 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_PSK_EXCHANGE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
 	}
 
 	if (!spdm_context->last_spdm_request_session_id_valid) {
-		spdm_generate_error_response(context,
+		libspdm_generate_error_response(context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -76,7 +76,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	session_info =
 		spdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -84,7 +84,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	session_state = spdm_secured_message_get_session_state(
 		session_info->secured_message_context);
 	if (session_state != SPDM_SESSION_STATE_HANDSHAKING) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -95,7 +95,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
 	if (request_size != sizeof(spdm_psk_finish_request_t) + hmac_size) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -107,7 +107,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_append_message_f(spdm_context, session_info, FALSE, request,
 				       request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -128,7 +128,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		(uint8 *)request + sizeof(spdm_psk_finish_request_t),
 		hmac_size);
 	if (!result) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -138,7 +138,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 		(uint8 *)request + request_size - hmac_size,
 		hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -147,7 +147,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_append_message_f(spdm_context, session_info, FALSE, spdm_response,
 				       *response_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -157,7 +157,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_calculate_th2_hash(spdm_context, session_info, FALSE,
 					 th2_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -165,7 +165,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	status = spdm_generate_session_data_key(
 		session_info->secured_message_context, th2_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;

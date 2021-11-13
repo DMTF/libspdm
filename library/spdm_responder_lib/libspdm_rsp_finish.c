@@ -56,14 +56,14 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 		    spdm_context, FALSE,
 		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_KEY_EXCHANGE, response_size, response);
 		return RETURN_SUCCESS;
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 		return RETURN_SUCCESS;
@@ -74,7 +74,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
 		// No handshake in clear, then it must be in a session.
 		if (!spdm_context->last_spdm_request_session_id_valid) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 				response_size, response);
 			return RETURN_SUCCESS;
@@ -82,7 +82,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	} else {
 		// handshake in clear, then it must not be in a session.
 		if (spdm_context->last_spdm_request_session_id_valid) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 				response_size, response);
 			return RETURN_SUCCESS;
@@ -96,7 +96,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	session_info =
 		spdm_get_session_info_via_session_id(spdm_context, session_id);
 	if (session_info == NULL) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -104,7 +104,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	session_state = spdm_secured_message_get_session_state(
 		session_info->secured_message_context);
 	if (session_state != SPDM_SESSION_STATE_HANDSHAKING) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -114,7 +114,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	     (spdm_request->header.param1 != 0)) ||
 	    ((session_info->mut_auth_requested != 0) &&
 	     (spdm_request->header.param1 == 0))) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -132,7 +132,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 
 	if (request_size !=
 	    sizeof(spdm_finish_request_t) + signature_size + hmac_size) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -141,7 +141,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	req_slot_id = spdm_request->header.param2;
 	if ((req_slot_id != 0xFF) &&
 	    (req_slot_id >= spdm_context->local_context.slot_count)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -150,7 +150,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 		req_slot_id = spdm_context->encap_context.req_slot_id;
 	}
 	if (req_slot_id != spdm_context->encap_context.req_slot_id) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -162,7 +162,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_append_message_f(spdm_context, session_info, FALSE, request,
 				       sizeof(spdm_finish_request_t));
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -173,7 +173,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			(uint8 *)request + sizeof(spdm_finish_request_t),
 			signature_size);
 		if (!result) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
 				response_size, response);
 			return RETURN_SUCCESS;
@@ -183,7 +183,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			(uint8 *)request + sizeof(spdm_finish_request_t),
 			signature_size);
 		if (RETURN_ERROR(status)) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
@@ -196,7 +196,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			sizeof(spdm_finish_request_t),
 		hmac_size);
 	if (!result) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -207,7 +207,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 					       sizeof(spdm_finish_request_t),
 				       hmac_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -233,7 +233,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_append_message_f(spdm_context, session_info, FALSE, spdm_response,
 				       sizeof(spdm_finish_response_t));
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -247,7 +247,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			spdm_context, session_info,
 			(uint8 *)spdm_response + sizeof(spdm_finish_request_t));
 		if (!result) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context,
 				SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
@@ -259,7 +259,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 			(uint8 *)spdm_response + sizeof(spdm_finish_request_t),
 			hmac_size);
 		if (RETURN_ERROR(status)) {
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 				0, response_size, response);
 			return RETURN_SUCCESS;
@@ -270,7 +270,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_calculate_th2_hash(spdm_context, session_info, FALSE,
 					 th2_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -278,7 +278,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	status = spdm_generate_session_data_key(
 		session_info->secured_message_context, th2_hash_data);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;

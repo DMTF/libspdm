@@ -118,7 +118,7 @@ spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
   @retval RETURN_SUCCESS               The SPDM request is received successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
 **/
-return_status spdm_process_request(IN void *context, OUT uint32 **session_id,
+return_status libspdm_process_request(IN void *context, OUT uint32 **session_id,
 				   OUT boolean *is_app_message,
 				   IN uintn request_size, IN void *request)
 {
@@ -151,7 +151,7 @@ return_status spdm_process_request(IN void *context, OUT uint32 **session_id,
 		if (spdm_context->last_spdm_error.error_code != 0) {
 			//
 			// If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
-			// In this case, we need return SUCCESS and let caller invoke spdm_build_response() to send an ERROR message.
+			// In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.
 			//
 			*session_id = &spdm_context->last_spdm_error.session_id;
 			*is_app_message = FALSE;
@@ -201,7 +201,7 @@ void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
 
 	for (index = 0; index < MAX_SPDM_SESSION_STATE_CALLBACK_NUM; index++) {
 		if (spdm_context->spdm_session_state_callback[index] != 0) {
-			((spdm_session_state_callback_func)spdm_context
+			((libspdm_session_state_callback_func)spdm_context
 				 ->spdm_session_state_callback[index])(
 				spdm_context, session_id, session_state);
 		}
@@ -254,7 +254,7 @@ void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
 	for (index = 0; index < MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM;
 	     index++) {
 		if (spdm_context->spdm_connection_state_callback[index] != 0) {
-			((spdm_connection_state_callback_func)spdm_context
+			((libspdm_connection_state_callback_func)spdm_context
 				 ->spdm_connection_state_callback[index])(
 				spdm_context, connection_state);
 		}
@@ -295,7 +295,7 @@ void spdm_set_connection_state(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The SPDM response is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
 **/
-return_status spdm_build_response(IN void *context, IN uint32 *session_id,
+return_status libspdm_build_response(IN void *context, IN uint32 *session_id,
 				  IN boolean is_app_message,
 				  IN OUT uintn *response_size,
 				  OUT void *response)
@@ -314,20 +314,20 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
 
 	if (spdm_context->last_spdm_error.error_code != 0) {
 		//
-		// Error in spdm_process_request(), and we need send error message directly.
+		// Error in libspdm_process_request(), and we need send error message directly.
 		//
 		my_response_size = sizeof(my_response);
 		zero_mem(my_response, sizeof(my_response));
 		switch (spdm_context->last_spdm_error.error_code) {
 		case SPDM_ERROR_CODE_DECRYPT_ERROR:
 			// session ID is valid. Use it to encrypt the error message.
-			spdm_generate_error_response(
+			libspdm_generate_error_response(
 				spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
 				&my_response_size, my_response);
 			break;
 		case SPDM_ERROR_CODE_INVALID_SESSION:
 			// don't use session ID, because we dont know which right session ID should be used.
-			spdm_generate_extended_error_response(
+			libspdm_generate_extended_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_SESSION,
 				0, sizeof(uint32), (void *)session_id,
 				&my_response_size, my_response);
@@ -400,7 +400,7 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
 	}
 	if (is_app_message || (get_response_func == NULL)) {
 		if (spdm_context->get_response_func != 0) {
-			status = ((spdm_get_response_func)
+			status = ((libspdm_get_response_func)
 					  spdm_context->get_response_func)(
 				spdm_context, session_id, is_app_message,
 				spdm_context->last_spdm_request_size,
@@ -411,7 +411,7 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
 		}
 	}
 	if (status != RETURN_SUCCESS) {
-		spdm_generate_error_response(
+		libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			spdm_request->request_response_code, &my_response_size,
 			my_response);
@@ -480,8 +480,8 @@ return_status spdm_build_response(IN void *context, IN uint32 *session_id,
   @param  spdm_context                  A pointer to the SPDM context.
   @param  get_response_func              The function to process the encapsuled message.
 **/
-void spdm_register_get_response_func(
-	IN void *context, IN spdm_get_response_func get_response_func)
+void libspdm_register_get_response_func(
+	IN void *context, IN libspdm_get_response_func get_response_func)
 {
 	spdm_context_t *spdm_context;
 
@@ -502,9 +502,9 @@ void spdm_register_get_response_func(
   @retval RETURN_SUCCESS          The callback is registered.
   @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
 **/
-return_status spdm_register_session_state_callback_func(
+return_status libspdm_register_session_state_callback_func(
 	IN void *context,
-	IN spdm_session_state_callback_func spdm_session_state_callback)
+	IN libspdm_session_state_callback_func spdm_session_state_callback)
 {
 	spdm_context_t *spdm_context;
 	uintn index;
@@ -533,9 +533,9 @@ return_status spdm_register_session_state_callback_func(
   @retval RETURN_SUCCESS          The callback is registered.
   @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
 **/
-return_status spdm_register_connection_state_callback_func(
+return_status libspdm_register_connection_state_callback_func(
 	IN void *context,
-	IN spdm_connection_state_callback_func spdm_connection_state_callback)
+	IN libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
 	spdm_context_t *spdm_context;
 	uintn index;

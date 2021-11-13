@@ -58,25 +58,25 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, FALSE, 0,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
-		return spdm_generate_error_response(
+		return libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
 			SPDM_CHALLENGE, response_size, response);
 	}
 	if (spdm_context->connection_info.connection_state <
 	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
 					     0, response_size, response);
 	}
 
 	if (request_size != sizeof(spdm_challenge_request_t)) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 	}
 	if (!spdm_is_capabilities_flag_supported(spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
 		spdm_request->header.param2 > 0) {
-		return spdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHALLENGE, response_size, response);
+		return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHALLENGE, response_size, response);
 	}
 
 	spdm_request_size = request_size;
@@ -85,7 +85,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 
 	if ((slot_id != 0xFF) &&
 	    (slot_id >= spdm_context->local_context.slot_count)) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 	}
@@ -98,7 +98,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_context, FALSE, spdm_request->header.param2);
 	if ((measurement_summary_hash_size == 0) &&
 		(spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 						SPDM_ERROR_CODE_INVALID_REQUEST,
 						0, response_size, response);
 	}
@@ -121,7 +121,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_10)) {
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
 	} else {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 	}
@@ -174,7 +174,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	result = spdm_generate_measurement_summary_hash(
 		spdm_context, FALSE, spdm_request->header.param2, ptr);
 	if (!result) {
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 	}
@@ -193,7 +193,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	status = spdm_append_message_c(spdm_context, spdm_request,
 				       spdm_request_size);
 	if (RETURN_ERROR(status)) {
-		spdm_generate_error_response(spdm_context,
+		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
@@ -203,7 +203,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 				       (uintn)ptr - (uintn)spdm_response);
 	if (RETURN_ERROR(status)) {
 		spdm_reset_message_c(spdm_context);
-		return spdm_generate_error_response(spdm_context,
+		return libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_UNSPECIFIED, 0,
 					     response_size, response);
 	}
@@ -211,7 +211,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 							ptr);
 	if (!result) {
 		spdm_reset_message_c(spdm_context);
-		return spdm_generate_error_response(
+		return libspdm_generate_error_response(
 			spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
 			0, response_size, response);
 	}
