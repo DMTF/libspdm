@@ -103,7 +103,7 @@
 typedef uintn size_t;
 typedef uintn u_int;
 typedef intn ssize_t;
-typedef int32 time_t;
+typedef intn time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */ 
 typedef uint8 __uint8_t;
 typedef uint8 sa_family_t;
 typedef uint8 u_char;
