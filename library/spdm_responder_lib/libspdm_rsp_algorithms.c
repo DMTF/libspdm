@@ -188,6 +188,12 @@ return_status spdm_get_response_algorithms(IN void *context,
 
 	ext_alg_total_count = 0;
 
+	ASSERT(!(((spdm_context->local_context.capability.flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
+		(spdm_context->local_context.algorithm.measurement_spec == 0)));
+
+	ASSERT(!(((spdm_context->local_context.capability.flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
+		(spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
+
 	if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
 		return spdm_responder_handle_response_state(
 			spdm_context,
