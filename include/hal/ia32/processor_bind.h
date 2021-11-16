@@ -119,7 +119,7 @@ typedef unsigned __int64 uint64_t;
 ///
 /// 8-byte signed value.
 ///
-typedef __int64 int64;
+typedef __int64 int64_t;
 ///
 /// 4-byte unsigned value.
 ///
@@ -135,7 +135,7 @@ typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value.
 ///
-typedef short int16;
+typedef short int16_t;
 ///
 /// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
 /// values are undefined.
@@ -152,7 +152,7 @@ typedef char char8;
 ///
 /// 1-byte signed value.
 ///
-typedef signed char int8;
+typedef signed char int8_t;
 #else
 ///
 /// 8-byte unsigned value.
@@ -161,7 +161,7 @@ typedef unsigned long long uint64_t;
 ///
 /// 8-byte signed value.
 ///
-typedef long long int64;
+typedef long long int64_t;
 ///
 /// 4-byte unsigned value.
 ///
@@ -177,7 +177,7 @@ typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value.
 ///
-typedef short int16;
+typedef short int16_t;
 ///
 /// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
 /// values are undefined.
@@ -194,7 +194,7 @@ typedef char char8;
 ///
 /// 1-byte signed value
 ///
-typedef signed char int8;
+typedef signed char int8_t;
 #endif
 
 ///

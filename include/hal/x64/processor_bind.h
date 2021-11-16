@@ -106,7 +106,7 @@ typedef unsigned __int64 uint64_t;
 ///
 /// 8-byte signed value
 ///
-typedef __int64 int64;
+typedef __int64 int64_t;
 ///
 /// 4-byte unsigned value
 ///
@@ -122,7 +122,7 @@ typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value
 ///
-typedef short int16;
+typedef short int16_t;
 ///
 /// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
 /// values are undefined.
@@ -139,7 +139,7 @@ typedef char char8;
 ///
 /// 1-byte signed value
 ///
-typedef signed char int8;
+typedef signed char int8_t;
 #else
 ///
 /// 8-byte unsigned value
@@ -148,7 +148,7 @@ typedef unsigned long long uint64_t;
 ///
 /// 8-byte signed value
 ///
-typedef long long int64;
+typedef long long int64_t;
 ///
 /// 4-byte unsigned value
 ///
@@ -164,7 +164,7 @@ typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value
 ///
-typedef short int16;
+typedef short int16_t;
 ///
 /// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
 /// values are undefined.
@@ -181,7 +181,7 @@ typedef char char8;
 ///
 /// 1-byte signed value
 ///
-typedef signed char int8;
+typedef signed char int8_t;
 #endif
 
 ///
@@ -193,7 +193,7 @@ typedef uint64_t uintn;
 /// Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
 /// 8 bytes on supported 64-bit processor instructions)
 ///
-typedef int64 intn;
+typedef int64_t intn;
 
 //
 // Processor specific defines

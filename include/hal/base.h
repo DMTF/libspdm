@@ -240,22 +240,22 @@
 ///
 /// Maximum values for common UEFI data Types
 ///
-#define MAX_INT8 ((int8)0x7F)
+#define MAX_INT8 ((int8_t)0x7F)
 #define MAX_UINT8 ((uint8_t)0xFF)
-#define MAX_INT16 ((int16)0x7FFF)
+#define MAX_INT16 ((int16_t)0x7FFF)
 #define MAX_UINT16 ((uint16_t)0xFFFF)
 #define MAX_INT32 ((int32_t)0x7FFFFFFF)
 #define MAX_UINT32 ((uint32_t)0xFFFFFFFF)
-#define MAX_INT64 ((int64)0x7FFFFFFFFFFFFFFFULL)
+#define MAX_INT64 ((int64_t)0x7FFFFFFFFFFFFFFFULL)
 #define MAX_UINT64 ((uint64_t)0xFFFFFFFFFFFFFFFFULL)
 
 ///
 /// Minimum values for the signed UEFI data Types
 ///
-#define MIN_INT8 (((int8)-127) - 1)
-#define MIN_INT16 (((int16)-32767) - 1)
+#define MIN_INT8 (((int8_t)-127) - 1)
+#define MIN_INT16 (((int16_t)-32767) - 1)
 #define MIN_INT32 (((int32_t)-2147483647) - 1)
-#define MIN_INT64 (((int64)-9223372036854775807LL) - 1)
+#define MIN_INT64 (((int64_t)-9223372036854775807LL) - 1)
 
 #define BIT0 0x00000001
 #define BIT1 0x00000002
@@ -666,14 +666,14 @@ STATIC_ASSERT(
 	sizeof(boolean) == 1,
 	"sizeof (boolean) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int8) == 1,
-	"sizeof (int8) does not meet UEFI Specification data Type requirements");
+	sizeof(int8_t) == 1,
+	"sizeof (int8_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(uint8_t) == 1,
 	"sizeof (uint8_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int16) == 2,
-	"sizeof (int16) does not meet UEFI Specification data Type requirements");
+	sizeof(int16_t) == 2,
+	"sizeof (int16_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(uint16_t) == 2,
 	"sizeof (uint16_t) does not meet UEFI Specification data Type requirements");
@@ -684,8 +684,8 @@ STATIC_ASSERT(
 	sizeof(uint32_t) == 4,
 	"sizeof (uint32_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int64) == 8,
-	"sizeof (int64) does not meet UEFI Specification data Type requirements");
+	sizeof(int64_t) == 8,
+	"sizeof (int64_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(uint64_t) == 8,
 	"sizeof (uint64_t) does not meet UEFI Specification data Type requirements");

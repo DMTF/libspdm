@@ -26,7 +26,7 @@ typedef unsigned long long uint64_t __attribute__((aligned(8)));
 ///
 /// 8-byte signed value
 ///
-typedef long long int64 __attribute__((aligned(8)));
+typedef long long int64_t __attribute__((aligned(8)));
 ///
 /// 4-byte unsigned value
 ///
@@ -42,7 +42,7 @@ typedef unsigned short uint16_t __attribute__((aligned(2)));
 ///
 /// 2-byte signed value
 ///
-typedef short int16 __attribute__((aligned(2)));
+typedef short int16_t __attribute__((aligned(2)));
 ///
 /// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
 /// values are undefined.
@@ -59,7 +59,7 @@ typedef char char8;
 ///
 /// 1-byte signed value
 ///
-typedef signed char int8;
+typedef signed char int8_t;
 ///
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
 /// 8 bytes on supported 64-bit processor instructions)
