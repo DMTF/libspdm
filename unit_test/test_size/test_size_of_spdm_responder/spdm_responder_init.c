@@ -8,7 +8,7 @@
 
 return_status SpdmResponderSendMessage(IN void *spdm_context,
 				       IN uintn message_size, IN void *message,
-				       IN uint64 timeout)
+				       IN uint64_t timeout)
 {
 	// Dummy
 	return RETURN_SUCCESS;
@@ -17,7 +17,7 @@ return_status SpdmResponderSendMessage(IN void *spdm_context,
 return_status SpdmResponderReceiveMessage(IN void *spdm_context,
 					  IN OUT uintn *message_size,
 					  IN OUT void *message,
-					  IN uint64 timeout)
+					  IN uint64_t timeout)
 {
 	// Dummy
 	return RETURN_SUCCESS;
@@ -27,9 +27,9 @@ void *spdm_server_init(void)
 {
 	void *spdm_context;
 	spdm_data_parameter_t parameter;
-	uint8 data8;
+	uint8_t data8;
 	uint16 data16;
-	uint32 data32;
+	uint32_t data32;
 	boolean has_rsp_pub_cert;
 	boolean has_rsp_priv_key;
 	boolean has_req_pub_cert;

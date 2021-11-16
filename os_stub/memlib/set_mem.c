@@ -20,11 +20,11 @@
   @return buffer.
 
 **/
-void *set_mem(OUT void *buffer, IN uintn length, IN uint8 value)
+void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value)
 {
-	volatile uint8 *pointer;
+	volatile uint8_t *pointer;
 
-	pointer = (uint8 *)buffer;
+	pointer = (uint8_t *)buffer;
 	while (length-- != 0) {
 		*(pointer++) = value;
 	}

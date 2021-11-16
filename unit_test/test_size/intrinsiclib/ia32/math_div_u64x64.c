@@ -6,8 +6,8 @@
 
 #include <hal/base.h>
 
-uint64 div_u64x64_remainder(IN uint64 dividend, IN uint64 divisor,
-			  OUT uint64 *remainder OPTIONAL);
+uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
+			  OUT uint64_t *remainder OPTIONAL);
 
 /*
  * Divides a 64-bit unsigned value with a 64-bit unsigned value and returns
@@ -16,11 +16,11 @@ uint64 div_u64x64_remainder(IN uint64 dividend, IN uint64 divisor,
 __declspec(naked) void __cdecl _aulldiv(void)
 {
 	//
-	//    uint64
+	//    uint64_t
 	//      //    div_u64x64_remainder (
-	//      IN      uint64     dividend,
-	//      IN      uint64     divisor,
-	//      OUT     uint64     *remainder  OPTIONAL
+	//      IN      uint64_t     dividend,
+	//      IN      uint64_t     divisor,
+	//      OUT     uint64_t     *remainder  OPTIONAL
 	//      )
 	//
   _asm {

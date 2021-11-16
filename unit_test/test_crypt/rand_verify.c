@@ -8,11 +8,11 @@
 
 #define RANDOM_NUMBER_SIZE 256
 
-const uint8 m_seed_string[] = "This is the random seed for PRNG verification.";
+const uint8_t m_seed_string[] = "This is the random seed for PRNG verification.";
 
-uint8 m_previous_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
+uint8_t m_previous_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 
-uint8 m_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
+uint8_t m_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 
 /**
   Validate Crypto pseudorandom number generator interfaces.

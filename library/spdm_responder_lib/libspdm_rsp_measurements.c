@@ -26,7 +26,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
 					  IN OUT void *response_message,
 					  IN uintn response_message_size)
 {
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn measurment_sig_size;
 	uintn signature_size;
 	boolean result;
@@ -35,19 +35,19 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
 	signature_size = spdm_get_asym_signature_size(
 		spdm_context->connection_info.algorithm.base_asym_algo);
 	measurment_sig_size =
-		SPDM_NONCE_SIZE + sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16_t) +
 		spdm_context->local_context.opaque_measurement_rsp_size +
 		signature_size;
 	ASSERT(response_message_size > measurment_sig_size);
-	ptr = (void *)((uint8 *)response_message + response_message_size -
+	ptr = (void *)((uint8_t *)response_message + response_message_size -
 		       measurment_sig_size);
 
 	spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 	ptr += SPDM_NONCE_SIZE;
 
-	*(uint16 *)ptr =
-		(uint16)spdm_context->local_context.opaque_measurement_rsp_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr =
+		(uint16_t)spdm_context->local_context.opaque_measurement_rsp_size;
+	ptr += sizeof(uint16_t);
 	copy_mem(ptr, spdm_context->local_context.opaque_measurement_rsp,
 		 spdm_context->local_context.opaque_measurement_rsp_size);
 	ptr += spdm_context->local_context.opaque_measurement_rsp_size;
@@ -73,22 +73,22 @@ void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
 				    IN OUT void *response_message,
 				    IN uintn response_message_size)
 {
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn measurment_no_sig_size;
 
 	measurment_no_sig_size =
-		SPDM_NONCE_SIZE + sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16_t) +
 		spdm_context->local_context.opaque_measurement_rsp_size;
 	ASSERT(response_message_size > measurment_no_sig_size);
-	ptr = (void *)((uint8 *)response_message + response_message_size -
+	ptr = (void *)((uint8_t *)response_message + response_message_size -
 		       measurment_no_sig_size);
 
 	spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 	ptr += SPDM_NONCE_SIZE;
 	
-	*(uint16 *)ptr =
-		(uint16)spdm_context->local_context.opaque_measurement_rsp_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr =
+		(uint16_t)spdm_context->local_context.opaque_measurement_rsp_size;
+	ptr += sizeof(uint16_t);
 	copy_mem(ptr, spdm_context->local_context.opaque_measurement_rsp,
 		 spdm_context->local_context.opaque_measurement_rsp_size);
 	ptr += spdm_context->local_context.opaque_measurement_rsp_size;
@@ -119,7 +119,7 @@ return_status spdm_get_response_measurements(IN void *context,
 					     IN OUT uintn *response_size,
 					     OUT void *response)
 {
-	uint8 index;
+	uint8_t index;
 	spdm_get_measurements_request_t *spdm_request;
 	spdm_measurements_response_t *spdm_response;
 	uintn spdm_response_size;
@@ -129,10 +129,10 @@ return_status spdm_get_response_measurements(IN void *context,
 	uintn measurements_no_sig_size;
 
 	spdm_context_t *spdm_context;
-	uint8  slot_id_param;
-	uint8  measurements_index;
-	uint8 *measurements;
-	uint8  measurements_count;
+	uint8_t  slot_id_param;
+	uint8_t  measurements_index;
+	uint8_t *measurements;
+	uint8_t  measurements_count;
 	uintn  measurements_size;
 	boolean ret;
 	spdm_session_info_t *session_info;
@@ -251,11 +251,11 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_context->connection_info.algorithm.base_asym_algo);
 
 	measurements_sig_size =
-		SPDM_NONCE_SIZE + sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16_t) +
 		spdm_context->local_context.opaque_measurement_rsp_size +
 		signature_size;
 	measurements_no_sig_size =
-		SPDM_NONCE_SIZE + sizeof(uint16) +
+		SPDM_NONCE_SIZE + sizeof(uint16_t) +
 		spdm_context->local_context.opaque_measurement_rsp_size;
 
 	if ((spdm_request->header.param1 &
@@ -288,7 +288,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		return RETURN_BUFFER_TOO_SMALL;
 	}
 
-	measurements = (uint8*)response + sizeof(spdm_measurements_response_t);
+	measurements = (uint8_t*)response + sizeof(spdm_measurements_response_t);
 
 	status = spdm_measurement_collection(
 		spdm_context->connection_info.version,
@@ -376,7 +376,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = measurements_count;
 		libspdm_write_uint24(spdm_response->measurement_record_length,
-				  (uint32)measurements_size);
+				  (uint32_t)measurements_size);
 
 		break;
 
@@ -399,7 +399,7 @@ return_status spdm_get_response_measurements(IN void *context,
 		spdm_response->header.param2 = 0;
 		spdm_response->number_of_blocks = 1;
 		libspdm_write_uint24(spdm_response->measurement_record_length,
-			(uint32)measurements_size);
+			(uint32_t)measurements_size);
 
 		break;
 	}

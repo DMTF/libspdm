@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_secured_message_lib.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8 m_zero_filled_buffer[64];
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
 
 /**
   This function dump raw data.
@@ -14,7 +14,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8 m_zero_filled_buffer[64];
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex_str(IN uint8 *data, IN uintn size);
+void internal_dump_hex_str(IN uint8_t *data, IN uintn size);
 
 /**
   This function dump raw data.
@@ -22,7 +22,7 @@ void internal_dump_hex_str(IN uint8 *data, IN uintn size);
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_data(IN uint8 *data, IN uintn size);
+void internal_dump_data(IN uint8_t *data, IN uintn size);
 
 /**
   This function dump raw data with colume format.
@@ -30,7 +30,7 @@ void internal_dump_data(IN uint8 *data, IN uintn size);
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex(IN uint8 *data, IN uintn size);
+void internal_dump_hex(IN uint8_t *data, IN uintn size);
 
 /**
   This function concatenates binary data, which is used as info in HKDF expand later.
@@ -47,13 +47,13 @@ void internal_dump_hex(IN uint8 *data, IN uintn size);
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status spdm_bin_concat(IN char8 *label, IN uintn label_size,
-			      IN uint8 *context, IN uint16 length,
-			      IN uintn hash_size, OUT uint8 *out_bin,
+			      IN uint8_t *context, IN uint16_t length,
+			      IN uintn hash_size, OUT uint8_t *out_bin,
 			      IN OUT uintn *out_bin_size)
 {
 	uintn final_size;
 
-	final_size = sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1 + label_size;
+	final_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 + label_size;
 	if (context != NULL) {
 		final_size += hash_size;
 	}
@@ -64,13 +64,13 @@ return_status spdm_bin_concat(IN char8 *label, IN uintn label_size,
 
 	*out_bin_size = final_size;
 
-	copy_mem(out_bin, &length, sizeof(uint16));
-	copy_mem(out_bin + sizeof(uint16), BIN_CONCAT_LABEL,
+	copy_mem(out_bin, &length, sizeof(uint16_t));
+	copy_mem(out_bin + sizeof(uint16_t), BIN_CONCAT_LABEL,
 		 sizeof(BIN_CONCAT_LABEL) - 1);
-	copy_mem(out_bin + sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1, label,
+	copy_mem(out_bin + sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1, label,
 		 label_size);
 	if (context != NULL) {
-		copy_mem(out_bin + sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) -
+		copy_mem(out_bin + sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) -
 				 1 + label_size,
 			 context, hash_size);
 	}
@@ -90,16 +90,16 @@ return_status spdm_bin_concat(IN char8 *label, IN uintn label_size,
 **/
 return_status spdm_generate_aead_key_and_iv(
 	IN spdm_secured_message_context_t *secured_message_context,
-	IN uint8 *major_secret, OUT uint8 *key, OUT uint8 *iv)
+	IN uint8_t *major_secret, OUT uint8_t *key, OUT uint8_t *iv)
 {
 	return_status status;
 	boolean ret_val;
 	uintn hash_size;
 	uintn key_length;
 	uintn iv_length;
-	uint8 bin_str5[128];
+	uint8_t bin_str5[128];
 	uintn bin_str5_size;
-	uint8 bin_str6[128];
+	uint8_t bin_str6[128];
 	uintn bin_str6_size;
 
 	hash_size = secured_message_context->hash_size;
@@ -108,7 +108,7 @@ return_status spdm_generate_aead_key_and_iv(
 
 	bin_str5_size = sizeof(bin_str5);
 	status = spdm_bin_concat(BIN_STR_5_LABEL, sizeof(BIN_STR_5_LABEL) - 1,
-				 NULL, (uint16)key_length, hash_size, bin_str5,
+				 NULL, (uint16_t)key_length, hash_size, bin_str5,
 				 &bin_str5_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str5 (0x%x):\n", bin_str5_size));
@@ -123,7 +123,7 @@ return_status spdm_generate_aead_key_and_iv(
 
 	bin_str6_size = sizeof(bin_str6);
 	status = spdm_bin_concat(BIN_STR_6_LABEL, sizeof(BIN_STR_6_LABEL) - 1,
-				 NULL, (uint16)iv_length, hash_size, bin_str6,
+				 NULL, (uint16_t)iv_length, hash_size, bin_str6,
 				 &bin_str6_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str6 (0x%x):\n", bin_str6_size));
@@ -150,19 +150,19 @@ return_status spdm_generate_aead_key_and_iv(
 **/
 return_status spdm_generate_finished_key(
 	IN spdm_secured_message_context_t *secured_message_context,
-	IN uint8 *handshake_secret, OUT uint8 *finished_key)
+	IN uint8_t *handshake_secret, OUT uint8_t *finished_key)
 {
 	return_status status;
 	boolean ret_val;
 	uintn hash_size;
-	uint8 bin_str7[128];
+	uint8_t bin_str7[128];
 	uintn bin_str7_size;
 
 	hash_size = secured_message_context->hash_size;
 
 	bin_str7_size = sizeof(bin_str7);
 	status = spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				 NULL, (uint16)hash_size, hash_size, bin_str7,
+				 NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				 &bin_str7_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str7 (0x%x):\n", bin_str7_size));
@@ -188,16 +188,16 @@ return_status spdm_generate_finished_key(
 **/
 return_status
 spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
-				    IN uint8 *th1_hash_data)
+				    IN uint8_t *th1_hash_data)
 {
 	return_status status;
 	boolean ret_val;
 	uintn hash_size;
-	uint8 bin_str0[128];
+	uint8_t bin_str0[128];
 	uintn bin_str0_size;
-	uint8 bin_str1[128];
+	uint8_t bin_str1[128];
 	uintn bin_str1_size;
-	uint8 bin_str2[128];
+	uint8_t bin_str2[128];
 	uintn bin_str2_size;
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -207,7 +207,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 
 	bin_str0_size = sizeof(bin_str0);
 	status = spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
-				 NULL, (uint16)hash_size, hash_size, bin_str0,
+				 NULL, (uint16_t)hash_size, hash_size, bin_str0,
 				 &bin_str0_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str0 (0x%x):\n", bin_str0_size));
@@ -237,7 +237,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 
 	bin_str1_size = sizeof(bin_str1);
 	status = spdm_bin_concat(BIN_STR_1_LABEL, sizeof(BIN_STR_1_LABEL) - 1,
-				 th1_hash_data, (uint16)hash_size, hash_size,
+				 th1_hash_data, (uint16_t)hash_size, hash_size,
 				 bin_str1, &bin_str1_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str1 (0x%x):\n", bin_str1_size));
@@ -272,7 +272,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 	DEBUG((DEBUG_INFO, "\n"));
 	bin_str2_size = sizeof(bin_str2);
 	status = spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				 th1_hash_data, (uint16)hash_size, hash_size,
+				 th1_hash_data, (uint16_t)hash_size, hash_size,
 				 bin_str2, &bin_str2_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str2 (0x%x):\n", bin_str2_size));
@@ -356,19 +356,19 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 **/
 return_status
 spdm_generate_session_data_key(IN void *spdm_secured_message_context,
-			       IN uint8 *th2_hash_data)
+			       IN uint8_t *th2_hash_data)
 {
 	return_status status;
 	boolean ret_val;
 	uintn hash_size;
-	uint8 salt1[64];
-	uint8 bin_str0[128];
+	uint8_t salt1[64];
+	uint8_t bin_str0[128];
 	uintn bin_str0_size;
-	uint8 bin_str3[128];
+	uint8_t bin_str3[128];
 	uintn bin_str3_size;
-	uint8 bin_str4[128];
+	uint8_t bin_str4[128];
 	uintn bin_str4_size;
-	uint8 bin_str8[128];
+	uint8_t bin_str8[128];
 	uintn bin_str8_size;
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -382,7 +382,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 		bin_str0_size = sizeof(bin_str0);
 		status = spdm_bin_concat(BIN_STR_0_LABEL,
 					 sizeof(BIN_STR_0_LABEL) - 1, NULL,
-					 (uint16)hash_size, hash_size, bin_str0,
+					 (uint16_t)hash_size, hash_size, bin_str0,
 					 &bin_str0_size);
 		ASSERT_RETURN_ERROR(status);
 		ret_val = spdm_hkdf_expand(
@@ -408,7 +408,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 
 	bin_str3_size = sizeof(bin_str3);
 	status = spdm_bin_concat(BIN_STR_3_LABEL, sizeof(BIN_STR_3_LABEL) - 1,
-				 th2_hash_data, (uint16)hash_size, hash_size,
+				 th2_hash_data, (uint16_t)hash_size, hash_size,
 				 bin_str3, &bin_str3_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str3 (0x%x):\n", bin_str3_size));
@@ -443,7 +443,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 	DEBUG((DEBUG_INFO, "\n"));
 	bin_str4_size = sizeof(bin_str4);
 	status = spdm_bin_concat(BIN_STR_4_LABEL, sizeof(BIN_STR_4_LABEL) - 1,
-				 th2_hash_data, (uint16)hash_size, hash_size,
+				 th2_hash_data, (uint16_t)hash_size, hash_size,
 				 bin_str4, &bin_str4_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str4 (0x%x):\n", bin_str4_size));
@@ -479,7 +479,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
 
 	bin_str8_size = sizeof(bin_str8);
 	status = spdm_bin_concat(BIN_STR_8_LABEL, sizeof(BIN_STR_8_LABEL) - 1,
-				 th2_hash_data, (uint16)hash_size, hash_size,
+				 th2_hash_data, (uint16_t)hash_size, hash_size,
 				 bin_str8, &bin_str8_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str8 (0x%x):\n", bin_str8_size));
@@ -549,7 +549,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 	return_status status;
 	boolean ret_val;
 	uintn hash_size;
-	uint8 bin_str9[128];
+	uint8_t bin_str9[128];
 	uintn bin_str9_size;
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -559,7 +559,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 
 	bin_str9_size = sizeof(bin_str9);
 	status = spdm_bin_concat(BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL) - 1,
-				 NULL, (uint16)hash_size, hash_size, bin_str9,
+				 NULL, (uint16_t)hash_size, hash_size, bin_str9,
 				 &bin_str9_size);
 	ASSERT_RETURN_ERROR(status);
 	DEBUG((DEBUG_INFO, "bin_str9 (0x%x):\n", bin_str9_size));
@@ -905,7 +905,7 @@ boolean spdm_hmac_update_with_request_finished_key(
 **/
 boolean spdm_hmac_final_with_request_finished_key(
 	IN void *spdm_secured_message_context,
-	OUT void *hmac_ctx,  OUT uint8 *hmac_value)
+	OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -929,7 +929,7 @@ boolean spdm_hmac_final_with_request_finished_key(
 boolean
 spdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
 					IN const void *data, IN uintn data_size,
-					OUT uint8 *hmac_value)
+					OUT uint8_t *hmac_value)
 {
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -1052,7 +1052,7 @@ boolean spdm_hmac_update_with_response_finished_key(
 **/
 boolean spdm_hmac_final_with_response_finished_key(
 	IN void *spdm_secured_message_context,
-	OUT void *hmac_ctx,  OUT uint8 *hmac_value)
+	OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -1075,7 +1075,7 @@ boolean spdm_hmac_final_with_response_finished_key(
 **/
 boolean spdm_hmac_all_with_response_finished_key(
 	IN void *spdm_secured_message_context, IN const void *data,
-	IN uintn data_size, OUT uint8 *hmac_value)
+	IN uintn data_size, OUT uint8_t *hmac_value)
 {
 	spdm_secured_message_context_t *secured_message_context;
 

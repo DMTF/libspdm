@@ -138,10 +138,10 @@ void spdm_secured_message_set_session_type(IN void *spdm_secured_message_context
 void spdm_secured_message_set_algorithms(IN void *spdm_secured_message_context,
 					 IN spdm_version_number_t version,
 					 IN spdm_version_number_t secured_message_version,
-					 IN uint32 base_hash_algo,
-					 IN uint16 dhe_named_group,
-					 IN uint16 aead_cipher_suite,
-					 IN uint16 key_schedule);
+					 IN uint32_t base_hash_algo,
+					 IN uint16_t dhe_named_group,
+					 IN uint16_t aead_cipher_suite,
+					 IN uint16_t key_schedule);
 
 /**
   Set the psk_hint to an SPDM secured message context.
@@ -185,15 +185,15 @@ return_status spdm_secured_message_export_master_secret(
 
 #pragma pack(1)
 typedef struct {
-	uint32 version;
-	uint32 aead_key_size;
-	uint32 aead_iv_size;
-	//  uint8                request_data_encryption_key[aead_key_size];
-	//  uint8                request_data_salt[aead_iv_size];
-	//  uint64               request_data_sequence_number;
-	//  uint8                response_data_encryption_key[aead_key_size];
-	//  uint8                response_data_salt[aead_iv_size];
-	//  uint64               response_data_sequence_number;
+	uint32_t version;
+	uint32_t aead_key_size;
+	uint32_t aead_iv_size;
+	//  uint8_t                request_data_encryption_key[aead_key_size];
+	//  uint8_t                request_data_salt[aead_iv_size];
+	//  uint64_t               request_data_sequence_number;
+	//  uint8_t                response_data_encryption_key[aead_key_size];
+	//  uint8_t                response_data_salt[aead_iv_size];
+	//  uint64_t               response_data_sequence_number;
 } spdm_secure_session_keys_struct_t;
 #pragma pack()
 
@@ -233,7 +233,7 @@ spdm_secured_message_import_session_keys(IN void *spdm_secured_message_context,
 
   @return  Pointer to the Diffie-Hellman context that has been initialized.
 **/
-void *spdm_secured_message_dhe_new(IN uint16 dhe_named_group);
+void *spdm_secured_message_dhe_new(IN uint16_t dhe_named_group);
 
 /**
   Release the specified DHE context,
@@ -242,7 +242,7 @@ void *spdm_secured_message_dhe_new(IN uint16 dhe_named_group);
   @param  dhe_named_group                SPDM dhe_named_group
   @param  dhe_context                   Pointer to the DHE context to be released.
 **/
-void spdm_secured_message_dhe_free(IN uint16 dhe_named_group,
+void spdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
 				   IN void *dhe_context);
 
 /**
@@ -264,9 +264,9 @@ void spdm_secured_message_dhe_free(IN uint16 dhe_named_group,
   @retval FALSE  DHE public key generation failed.
   @retval FALSE  public_key_size is not large enough.
 **/
-boolean spdm_secured_message_dhe_generate_key(IN uint16 dhe_named_group,
+boolean spdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
 					      IN OUT void *dhe_context,
-					      OUT uint8 *public_key,
+					      OUT uint8_t *public_key,
 					      IN OUT uintn *public_key_size);
 
 /**
@@ -287,8 +287,8 @@ boolean spdm_secured_message_dhe_generate_key(IN uint16 dhe_named_group,
   @retval FALSE  key_size is not large enough.
 **/
 boolean spdm_secured_message_dhe_compute_key(
-	IN uint16 dhe_named_group, IN OUT void *dhe_context,
-	IN const uint8 *peer_public, IN uintn peer_public_size,
+	IN uint16_t dhe_named_group, IN OUT void *dhe_context,
+	IN const uint8_t *peer_public, IN uintn peer_public_size,
 	IN OUT void *spdm_secured_message_context);
 
 /**
@@ -373,7 +373,7 @@ boolean spdm_hmac_update_with_request_finished_key(
 **/
 boolean spdm_hmac_final_with_request_finished_key(
 	IN void *spdm_secured_message_context,
-	OUT void *hmac_ctx,  OUT uint8 *hmac_value);
+	OUT void *hmac_ctx,  OUT uint8_t *hmac_value);
 
 /**
   Computes the HMAC of a input data buffer, with request_finished_key.
@@ -389,7 +389,7 @@ boolean spdm_hmac_final_with_request_finished_key(
 boolean
 spdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
 					IN const void *data, IN uintn data_size,
-					OUT uint8 *hmac_value);
+					OUT uint8_t *hmac_value);
 
 /**
   Allocates and initializes one HMAC context for subsequent use, with response_finished_key.
@@ -466,7 +466,7 @@ boolean spdm_hmac_update_with_response_finished_key(
 **/
 boolean spdm_hmac_final_with_response_finished_key(
 	IN void *spdm_secured_message_context,
-	OUT void *hmac_ctx,  OUT uint8 *hmac_value);
+	OUT void *hmac_ctx,  OUT uint8_t *hmac_value);
 
 /**
   Computes the HMAC of a input data buffer, with response_finished_key.
@@ -481,7 +481,7 @@ boolean spdm_hmac_final_with_response_finished_key(
 **/
 boolean spdm_hmac_all_with_response_finished_key(
 	IN void *spdm_secured_message_context, IN const void *data,
-	IN uintn data_size, OUT uint8 *hmac_value);
+	IN uintn data_size, OUT uint8_t *hmac_value);
 
 /**
   This function concatenates binary data, which is used as info in HKDF expand later.
@@ -498,8 +498,8 @@ boolean spdm_hmac_all_with_response_finished_key(
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status spdm_bin_concat(IN char8 *label, IN uintn label_size,
-			      IN uint8 *context, IN uint16 length,
-			      IN uintn hash_size, OUT uint8 *out_bin,
+			      IN uint8_t *context, IN uint16_t length,
+			      IN uintn hash_size, OUT uint8_t *out_bin,
 			      IN OUT uintn *out_bin_size);
 
 /**
@@ -512,7 +512,7 @@ return_status spdm_bin_concat(IN char8 *label, IN uintn label_size,
 **/
 return_status
 spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
-				    IN uint8 *th1_hash_data);
+				    IN uint8_t *th1_hash_data);
 
 /**
   This function generates SPDM DataKey for a session.
@@ -524,7 +524,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
 **/
 return_status
 spdm_generate_session_data_key(IN void *spdm_secured_message_context,
-			       IN uint8 *th2_hash_data);
+			       IN uint8_t *th2_hash_data);
 
 typedef enum {
 	SPDM_KEY_UPDATE_ACTION_REQUESTER = 0x1,
@@ -571,8 +571,8 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
           It shall be no greater than 8.
           0 means no sequence number is required.
 **/
-typedef uint8 (*spdm_secured_message_get_sequence_number_func)(
-	IN uint64 sequence_number, IN OUT uint8 *sequence_number_buffer);
+typedef uint8_t (*spdm_secured_message_get_sequence_number_func)(
+	IN uint64_t sequence_number, IN OUT uint8_t *sequence_number_buffer);
 
 /**
   Return max random number count in an SPDM secure message.
@@ -582,20 +582,20 @@ typedef uint8 (*spdm_secured_message_get_sequence_number_func)(
   @return Max random number count in an SPDM secured message.
           0 means no randum number is required.
 **/
-typedef uint32 (*spdm_secured_message_get_max_random_number_count_func)(void);
+typedef uint32_t (*spdm_secured_message_get_max_random_number_count_func)(void);
 
 #define SPDM_SECURED_MESSAGE_CALLBACKS_VERSION 1
 
 typedef struct {
-	uint32 version;
+	uint32_t version;
 	spdm_secured_message_get_sequence_number_func get_sequence_number;
 	spdm_secured_message_get_max_random_number_count_func
 		get_max_random_number_count;
 } spdm_secured_message_callbacks_t;
 
 typedef struct {
-	uint8 error_code;
-	uint32 session_id;
+	uint8_t error_code;
+	uint32_t session_id;
 } spdm_error_struct_t;
 
 /**
@@ -614,7 +614,7 @@ typedef struct {
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 return_status spdm_encode_secured_message(
-	IN void *spdm_secured_message_context, IN uint32 session_id,
+	IN void *spdm_secured_message_context, IN uint32_t session_id,
 	IN boolean is_requester, IN uintn app_message_size,
 	IN void *app_message, IN OUT uintn *secured_message_size,
 	OUT void *secured_message,
@@ -637,7 +637,7 @@ return_status spdm_encode_secured_message(
   @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
 **/
 return_status spdm_decode_secured_message(
-	IN void *spdm_secured_message_context, IN uint32 session_id,
+	IN void *spdm_secured_message_context, IN uint32_t session_id,
 	IN boolean is_requester, IN uintn secured_message_size,
 	IN void *secured_message, IN OUT uintn *app_message_size,
 	OUT void *app_message,

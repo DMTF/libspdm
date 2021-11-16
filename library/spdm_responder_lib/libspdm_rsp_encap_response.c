@@ -40,7 +40,7 @@ typedef return_status (*spdm_process_encap_response_func)(
 	IN void *encap_response, OUT boolean *need_continue);
 
 typedef struct {
-	uint8 request_op_code;
+	uint8_t request_op_code;
 	spdm_get_encap_request_func get_encap_request;
 	spdm_process_encap_response_func process_encap_response;
 } spdm_encap_response_struct_t;
@@ -65,7 +65,7 @@ spdm_encap_response_struct_t m_encap_response_struct[] = {
 
 spdm_encap_response_struct_t *
 spdm_get_encap_struct_via_op_code(IN spdm_context_t *spdm_context,
-				  IN uint8 request_op_code)
+				  IN uint8_t request_op_code)
 {
 	uintn index;
 
@@ -81,7 +81,7 @@ spdm_get_encap_struct_via_op_code(IN spdm_context_t *spdm_context,
 
 void spdm_encap_move_to_next_op_code(IN spdm_context_t *spdm_context)
 {
-	uint8 index;
+	uint8_t index;
 
 	ASSERT(spdm_context->encap_context.request_op_code_count <=
 	       MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT);
@@ -186,7 +186,7 @@ return_status spdm_process_encapsulated_response(
   @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENG response.
 **/
 void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-				    IN uint8 mut_auth_requested)
+				    IN uint8_t mut_auth_requested)
 {
 	spdm_context->encap_context.error_state = 0;
 	spdm_context->encap_context.current_request_op_code = 0x00;
@@ -245,7 +245,7 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   @param  basic_mut_auth_requested        Indicate of the mut_auth_requested through CHALLENG response.
 **/
 void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-					  IN uint8 basic_mut_auth_requested)
+					  IN uint8_t basic_mut_auth_requested)
 {
 	spdm_context->encap_context.error_state = 0;
 	spdm_context->encap_context.current_request_op_code = 0x00;
@@ -555,7 +555,7 @@ return_status spdm_get_response_encapsulated_response_ack(
 			*response_size =
 				sizeof(spdm_encapsulated_response_ack_response_t) +
 				1;
-			*(uint8 *)(spdm_response + 1) =
+			*(uint8_t *)(spdm_response + 1) =
 				spdm_context->encap_context.req_slot_id;
 		}
 		spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
@@ -573,7 +573,7 @@ return_status spdm_get_response_encapsulated_response_ack(
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_encap_error_response_main(
-	IN spdm_context_t *spdm_context, IN uint8 error_code)
+	IN spdm_context_t *spdm_context, IN uint8_t error_code)
 {
 	//
 	// According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.

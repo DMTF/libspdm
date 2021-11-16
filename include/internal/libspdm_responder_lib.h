@@ -49,7 +49,7 @@ typedef return_status (*spdm_get_spdm_response_func)(
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status spdm_responder_handle_response_state(IN void *spdm_context,
-						   IN uint8 request_code,
+						   IN uint8_t request_code,
 						   IN OUT uintn *response_size,
 						   OUT void *response);
 
@@ -604,7 +604,7 @@ return_status spdm_process_encap_response_key_update(
   @return GET_SPDM_RESPONSE function according to the request code.
 **/
 spdm_get_spdm_response_func
-spdm_get_response_func_via_request_code(IN uint8 request_code);
+spdm_get_response_func_via_request_code(IN uint8_t request_code);
 
 /**
   This function initializes the mut_auth encapsulated state.
@@ -613,7 +613,7 @@ spdm_get_response_func_via_request_code(IN uint8 request_code);
   @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE response.
 **/
 void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-				    IN uint8 mut_auth_requested);
+				    IN uint8_t mut_auth_requested);
 
 /**
   This function initializes the basic_mut_auth encapsulated state.
@@ -622,7 +622,7 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   @param  basic_mut_auth_requested        Indicate of the mut_auth_requested through CHALLENG response.
 **/
 void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-					  IN uint8 basic_mut_auth_requested);
+					  IN uint8_t basic_mut_auth_requested);
 
 /**
   This function handles the encap error response.
@@ -633,7 +633,7 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_encap_error_response_main(
-	IN spdm_context_t *spdm_context, IN uint8 error_code);
+	IN spdm_context_t *spdm_context, IN uint8_t error_code);
 
 /**
   Set session_state to an SPDM secured message context and trigger callback.
@@ -643,7 +643,7 @@ return_status spdm_handle_encap_error_response_main(
   @param  session_state                 Indicate the SPDM session state.
 */
 void spdm_set_session_state(IN spdm_context_t *spdm_context,
-			    IN uint32 session_id,
+			    IN uint32_t session_id,
 			    IN spdm_session_state_t session_state);
 
 /**

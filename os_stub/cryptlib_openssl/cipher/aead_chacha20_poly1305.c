@@ -40,10 +40,10 @@
 
 **/
 boolean aead_chacha20_poly1305_encrypt(
-	IN const uint8 *key, IN uintn key_size, IN const uint8 *iv,
-	IN uintn iv_size, IN const uint8 *a_data, IN uintn a_data_size,
-	IN const uint8 *data_in, IN uintn data_in_size, OUT uint8 *tag_out,
-	IN uintn tag_size, OUT uint8 *data_out, OUT uintn *data_out_size)
+	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+	IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
+	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	EVP_CIPHER_CTX *ctx;
 	uintn temp_out_size;
@@ -83,13 +83,13 @@ boolean aead_chacha20_poly1305_encrypt(
 	}
 
 	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
-						 (int32)iv_size, NULL);
+						 (int32_t)iv_size, NULL);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
-						 (int32)tag_size, NULL);
+						 (int32_t)tag_size, NULL);
 	if (!ret_value) {
 		goto done;
 	}
@@ -100,26 +100,26 @@ boolean aead_chacha20_poly1305_encrypt(
 	}
 
 	ret_value = (boolean)EVP_EncryptUpdate(
-		ctx, NULL, (int32 *)&temp_out_size, a_data, (int32)a_data_size);
+		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_EncryptUpdate(ctx, data_out,
-					       (int32 *)&temp_out_size, data_in,
-					       (int32)data_in_size);
+					       (int32_t *)&temp_out_size, data_in,
+					       (int32_t)data_in_size);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_EncryptFinal_ex(ctx, data_out,
-						 (int32 *)&temp_out_size);
+						 (int32_t *)&temp_out_size);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(
-		ctx, EVP_CTRL_AEAD_GET_TAG, (int32)tag_size, (void *)tag_out);
+		ctx, EVP_CTRL_AEAD_GET_TAG, (int32_t)tag_size, (void *)tag_out);
 
 done:
 	EVP_CIPHER_CTX_free(ctx);
@@ -160,10 +160,10 @@ done:
 
 **/
 boolean aead_chacha20_poly1305_decrypt(
-	IN const uint8 *key, IN uintn key_size, IN const uint8 *iv,
-	IN uintn iv_size, IN const uint8 *a_data, IN uintn a_data_size,
-	IN const uint8 *data_in, IN uintn data_in_size, IN const uint8 *tag,
-	IN uintn tag_size, OUT uint8 *data_out, OUT uintn *data_out_size)
+	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+	IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
+	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	EVP_CIPHER_CTX *ctx;
 	uintn temp_out_size;
@@ -203,13 +203,13 @@ boolean aead_chacha20_poly1305_decrypt(
 	}
 
 	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
-						 (int32)iv_size, NULL);
+						 (int32_t)iv_size, NULL);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
-						 (int32)tag_size, (void *)tag);
+						 (int32_t)tag_size, (void *)tag);
 	if (!ret_value) {
 		goto done;
 	}
@@ -220,20 +220,20 @@ boolean aead_chacha20_poly1305_decrypt(
 	}
 
 	ret_value = (boolean)EVP_DecryptUpdate(
-		ctx, NULL, (int32 *)&temp_out_size, a_data, (int32)a_data_size);
+		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_DecryptUpdate(ctx, data_out,
-					       (int32 *)&temp_out_size, data_in,
-					       (int32)data_in_size);
+					       (int32_t *)&temp_out_size, data_in,
+					       (int32_t)data_in_size);
 	if (!ret_value) {
 		goto done;
 	}
 
 	ret_value = (boolean)EVP_DecryptFinal_ex(ctx, data_out,
-						 (int32 *)&temp_out_size);
+						 (int32_t *)&temp_out_size);
 
 done:
 	EVP_CIPHER_CTX_free(ctx);

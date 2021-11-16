@@ -21,7 +21,7 @@
   @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
 **/
 return_status spdm_handle_simple_error_response(IN void *context,
-						IN uint8 error_code);
+						IN uint8_t error_code);
 
 /**
   This function handles the error response.
@@ -47,9 +47,9 @@ return_status spdm_handle_simple_error_response(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_error_response_main(
-	IN spdm_context_t *spdm_context, IN uint32 *session_id,
+	IN spdm_context_t *spdm_context, IN uint32_t *session_id,
 	IN OUT uintn *response_size, IN OUT void *response,
-	IN uint8 original_request_code, IN uint8 expected_response_code,
+	IN uint8_t original_request_code, IN uint8_t expected_response_code,
 	IN uintn expected_response_size);
 
 /**
@@ -103,9 +103,9 @@ return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context);
 #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 return_status spdm_send_receive_key_exchange(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
-	OUT uint8 *req_slot_id_param, OUT void *measurement_hash);
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+	OUT uint8_t *req_slot_id_param, OUT void *measurement_hash);
 
 #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
@@ -129,9 +129,9 @@ return_status spdm_send_receive_key_exchange(
 #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 return_status spdm_send_receive_key_exchange_ex(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
-	OUT uint8 *req_slot_id_param, OUT void *measurement_hash,
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+	OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
 	IN void *requester_random_in OPTIONAL,
 	OUT void *requester_random OPTIONAL,
 	OUT void *responder_random OPTIONAL);
@@ -149,8 +149,8 @@ return_status spdm_send_receive_key_exchange_ex(
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-				       IN uint32 session_id,
-				       IN uint8 req_slot_id_param);
+				       IN uint32_t session_id,
+				       IN uint8_t req_slot_id_param);
 
 /**
   This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
@@ -167,9 +167,9 @@ return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
-					     IN uint8 measurement_hash_type,
-					     OUT uint32 *session_id,
-					     OUT uint8 *heartbeat_period,
+					     IN uint8_t measurement_hash_type,
+					     OUT uint32_t *session_id,
+					     OUT uint8_t *heartbeat_period,
 					     OUT void *measurement_hash);
 
 #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
@@ -200,9 +200,9 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
-					     IN uint8 measurement_hash_type,
-					     OUT uint32 *session_id,
-					     OUT uint8 *heartbeat_period,
+					     IN uint8_t measurement_hash_type,
+					     OUT uint32_t *session_id,
+					     OUT uint8_t *heartbeat_period,
 					     OUT void *measurement_hash,
 					     IN void *requester_context_in OPTIONAL,
 					     IN uintn requester_context_in_size OPTIONAL,
@@ -225,7 +225,7 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
 #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-					   IN uint32 session_id);
+					   IN uint32_t session_id);
 
 #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
@@ -240,8 +240,8 @@ return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-					    IN uint32 session_id,
-					    IN uint8 end_session_attributes);
+					    IN uint32_t session_id,
+					    IN uint8_t end_session_attributes);
 
 /**
   This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
@@ -260,9 +260,9 @@ return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
-					IN uint32 *session_id,
-					IN uint8 mut_auth_requested,
-					OUT uint8 *req_slot_id_param);
+					IN uint32_t *session_id,
+					IN uint8_t mut_auth_requested,
+					OUT uint8_t *req_slot_id_param);
 
 /**
   Process the SPDM encapsulated GET_DIGESTS request and return the response.
@@ -374,7 +374,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
 **/
 return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
-				     IN uint32 *session_id,
+				     IN uint32_t *session_id,
 				     IN uintn request_size, IN void *request);
 
 /**
@@ -393,7 +393,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
 **/
 return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
-					 IN uint32 *session_id,
+					 IN uint32_t *session_id,
 					 IN OUT uintn *response_size,
 					 OUT void *response);
 

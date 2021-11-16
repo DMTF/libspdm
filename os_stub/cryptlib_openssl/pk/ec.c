@@ -31,7 +31,7 @@ void *ec_new_by_nid(IN uintn nid)
 	EC_KEY *ec_key;
 	EC_GROUP *ec_group;
 	boolean ret_val;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 
 	ec_key = EC_KEY_new();
 	if (ec_key == NULL) {
@@ -89,7 +89,7 @@ void ec_free(IN void *ec_context)
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8 *public_key,
+boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
 		       IN uintn public_key_size)
 {
 	EC_KEY *ec_key;
@@ -98,7 +98,7 @@ boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8 *public_key,
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
 	EC_POINT *ec_point;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 
 	if (ec_context == NULL || public_key == NULL) {
@@ -127,8 +127,8 @@ boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8 *public_key,
 	ec_group = EC_KEY_get0_group(ec_key);
 	ec_point = NULL;
 
-	bn_x = BN_bin2bn(public_key, (uint32)half_size, NULL);
-	bn_y = BN_bin2bn(public_key + half_size, (uint32)half_size, NULL);
+	bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
+	bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
 	if (bn_x == NULL || bn_y == NULL) {
 		ret_val = FALSE;
 		goto done;
@@ -181,7 +181,7 @@ done:
   @retval  FALSE  Invalid EC key component.
 
 **/
-boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8 *public_key,
+boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
 		       IN OUT uintn *public_key_size)
 {
 	EC_KEY *ec_key;
@@ -190,7 +190,7 @@ boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8 *public_key,
 	const EC_POINT *ec_point;
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 	intn x_size;
 	intn y_size;
@@ -330,7 +330,7 @@ boolean ec_check_key(IN void *ec_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
+boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
 			IN OUT uintn *public_size)
 {
 	EC_KEY *ec_key;
@@ -339,7 +339,7 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
 	const EC_POINT *ec_point;
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 	intn x_size;
 	intn y_size;
@@ -451,8 +451,8 @@ done:
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
-		       IN uintn peer_public_size, OUT uint8 *key,
+boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
+		       IN uintn peer_public_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
 	EC_KEY *ec_key;
@@ -461,7 +461,7 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
 	EC_POINT *ec_point;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 	intn size;
 
@@ -496,8 +496,8 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
 	ec_group = EC_KEY_get0_group(ec_key);
 	ec_point = NULL;
 
-	bn_x = BN_bin2bn(peer_public, (uint32)half_size, NULL);
-	bn_y = BN_bin2bn(peer_public + half_size, (uint32)half_size, NULL);
+	bn_x = BN_bin2bn(peer_public, (uint32_t)half_size, NULL);
+	bn_y = BN_bin2bn(peer_public + half_size, (uint32_t)half_size, NULL);
 	if (bn_x == NULL || bn_y == NULL) {
 		ret_val = FALSE;
 		goto done;
@@ -573,13 +573,13 @@ done:
 
 **/
 boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-		   IN const uint8 *message_hash, IN uintn hash_size,
-		   OUT uint8 *signature, IN OUT uintn *sig_size)
+		   IN const uint8_t *message_hash, IN uintn hash_size,
+		   OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	EC_KEY *ec_key;
 	ECDSA_SIG *ecdsa_sig;
-	int32 openssl_nid;
-	uint8 half_size;
+	int32_t openssl_nid;
+	uint8_t half_size;
 	BIGNUM *bn_r;
 	BIGNUM *bn_s;
 	intn r_size;
@@ -638,7 +638,7 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 		return FALSE;
 	}
 
-	ecdsa_sig = ECDSA_do_sign(message_hash, (uint32)hash_size,
+	ecdsa_sig = ECDSA_do_sign(message_hash, (uint32_t)hash_size,
 				  (EC_KEY *)ec_context);
 	if (ecdsa_sig == NULL) {
 		return FALSE;
@@ -687,14 +687,14 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 
 **/
 boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-		     IN const uint8 *message_hash, IN uintn hash_size,
-		     IN const uint8 *signature, IN uintn sig_size)
+		     IN const uint8_t *message_hash, IN uintn hash_size,
+		     IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32 result;
+	int32_t result;
 	EC_KEY *ec_key;
 	ECDSA_SIG *ecdsa_sig;
-	int32 openssl_nid;
-	uint8 half_size;
+	int32_t openssl_nid;
+	uint8_t half_size;
 	BIGNUM *bn_r;
 	BIGNUM *bn_s;
 
@@ -754,8 +754,8 @@ boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
 		return FALSE;
 	}
 
-	bn_r = BN_bin2bn(signature, (uint32)half_size, NULL);
-	bn_s = BN_bin2bn(signature + half_size, (uint32)half_size, NULL);
+	bn_r = BN_bin2bn(signature, (uint32_t)half_size, NULL);
+	bn_s = BN_bin2bn(signature + half_size, (uint32_t)half_size, NULL);
 	if (bn_r == NULL || bn_s == NULL) {
 		if (bn_r != NULL) {
 			BN_free(bn_r);
@@ -768,7 +768,7 @@ boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
 	}
 	ECDSA_SIG_set0(ecdsa_sig, bn_r, bn_s);
 
-	result = ECDSA_do_verify(message_hash, (uint32)hash_size, ecdsa_sig,
+	result = ECDSA_do_verify(message_hash, (uint32_t)hash_size, ecdsa_sig,
 				 (EC_KEY *)ec_context);
 
 	ECDSA_SIG_free(ecdsa_sig);

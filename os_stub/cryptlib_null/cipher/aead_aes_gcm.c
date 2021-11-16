@@ -37,12 +37,12 @@
   @retval FALSE  AEAD AES-GCM authenticated encryption failed.
 
 **/
-boolean aead_aes_gcm_encrypt(IN const uint8 *key, IN uintn key_size,
-			     IN const uint8 *iv, IN uintn iv_size,
-			     IN const uint8 *a_data, IN uintn a_data_size,
-			     IN const uint8 *data_in, IN uintn data_in_size,
-			     OUT uint8 *tag_out, IN uintn tag_size,
-			     OUT uint8 *data_out, OUT uintn *data_out_size)
+boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
+			     IN const uint8_t *iv, IN uintn iv_size,
+			     IN const uint8_t *a_data, IN uintn a_data_size,
+			     IN const uint8_t *data_in, IN uintn data_in_size,
+			     OUT uint8_t *tag_out, IN uintn tag_size,
+			     OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	copy_mem(data_out, data_in, data_in_size);
 	*data_out_size = data_in_size;
@@ -75,12 +75,12 @@ boolean aead_aes_gcm_encrypt(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  AEAD AES-GCM authenticated decryption failed.
 
 **/
-boolean aead_aes_gcm_decrypt(IN const uint8 *key, IN uintn key_size,
-			     IN const uint8 *iv, IN uintn iv_size,
-			     IN const uint8 *a_data, IN uintn a_data_size,
-			     IN const uint8 *data_in, IN uintn data_in_size,
-			     IN const uint8 *tag, IN uintn tag_size,
-			     OUT uint8 *data_out, OUT uintn *data_out_size)
+boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
+			     IN const uint8_t *iv, IN uintn iv_size,
+			     IN const uint8_t *a_data, IN uintn a_data_size,
+			     IN const uint8_t *data_in, IN uintn data_in_size,
+			     IN const uint8_t *tag, IN uintn tag_size,
+			     OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	copy_mem(data_out, data_in, data_in_size);
 	*data_out_size = data_in_size;

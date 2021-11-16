@@ -27,7 +27,7 @@
   @retval FALSE  Pseudorandom number generator does not have enough entropy for random generation.
 
 **/
-boolean random_seed(IN const uint8 *seed OPTIONAL, IN uintn seed_size)
+boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
 	// TBD
 	return TRUE;
@@ -45,10 +45,10 @@ boolean random_seed(IN const uint8 *seed OPTIONAL, IN uintn seed_size)
   @retval FALSE  Pseudorandom number generator fails to generate due to lack of entropy.
 
 **/
-boolean random_bytes(OUT uint8 *output, IN uintn size)
+boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
 	boolean ret;
-	uint64 temp_rand;
+	uint64_t temp_rand;
 
 	ret = FALSE;
 
@@ -60,8 +60,8 @@ boolean random_bytes(OUT uint8 *output, IN uintn size)
 			return ret;
 		}
 		if (size >= sizeof(temp_rand)) {
-			*((uint64 *)output) = temp_rand;
-			output += sizeof(uint64);
+			*((uint64_t *)output) = temp_rand;
+			output += sizeof(uint64_t);
 			size -= sizeof(temp_rand);
 		} else {
 			copy_mem(output, &temp_rand, size);

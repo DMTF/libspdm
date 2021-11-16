@@ -90,7 +90,7 @@ return_status spdm_process_encap_response_digest(
 	boolean result;
 	spdm_digest_response_t *spdm_response;
 	uintn spdm_response_size;
-	uint8 *digest;
+	uint8_t *digest;
 	uintn digest_size;
 	uintn digest_count;
 	uintn index;

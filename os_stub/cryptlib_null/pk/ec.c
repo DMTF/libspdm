@@ -69,7 +69,7 @@ void ec_free(IN void *ec_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
+boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
 			IN OUT uintn *public_size)
 {
 	ASSERT(FALSE);
@@ -106,8 +106,8 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
-		       IN uintn peer_public_size, OUT uint8 *key,
+boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
+		       IN uintn peer_public_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
 	ASSERT(FALSE);
@@ -144,8 +144,8 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
 
 **/
 boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-		   IN const uint8 *message_hash, IN uintn hash_size,
-		   OUT uint8 *signature, IN OUT uintn *sig_size)
+		   IN const uint8_t *message_hash, IN uintn hash_size,
+		   OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -175,8 +175,8 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 
 **/
 boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-		     IN const uint8 *message_hash, IN uintn hash_size,
-		     IN const uint8 *signature, IN uintn sig_size)
+		     IN const uint8_t *message_hash, IN uintn hash_size,
+		     IN const uint8_t *signature, IN uintn sig_size)
 {
 	ASSERT(FALSE);
 	return FALSE;

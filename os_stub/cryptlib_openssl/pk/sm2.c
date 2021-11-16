@@ -30,7 +30,7 @@ void *sm2_dsa_new_by_nid(IN uintn nid)
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY_CTX *key_ctx;
 	EVP_PKEY *pkey;
-	int32 result;
+	int32_t result;
 	EVP_PKEY *params;
 
 	pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
@@ -109,7 +109,7 @@ void sm2_dsa_free(IN void *sm2_context)
   @retval  FALSE  Invalid sm2 public key component.
 
 **/
-boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8 *public_key,
+boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
 			IN uintn public_key_size)
 {
 	EVP_PKEY *pkey;
@@ -119,7 +119,7 @@ boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8 *public_key,
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
 	EC_POINT *ec_point;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 
 	if (sm2_context == NULL || public_key == NULL) {
@@ -149,8 +149,8 @@ boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8 *public_key,
 	ec_group = EC_KEY_get0_group(ec_key);
 	ec_point = NULL;
 
-	bn_x = BN_bin2bn(public_key, (uint32)half_size, NULL);
-	bn_y = BN_bin2bn(public_key + half_size, (uint32)half_size, NULL);
+	bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
+	bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
 	if (bn_x == NULL || bn_y == NULL) {
 		ret_val = FALSE;
 		goto done;
@@ -201,7 +201,7 @@ done:
   @retval  FALSE  Invalid sm2 key component.
 
 **/
-boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8 *public_key,
+boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	EVP_PKEY *pkey;
@@ -211,7 +211,7 @@ boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8 *public_key,
 	const EC_POINT *ec_point;
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 	intn x_size;
 	intn y_size;
@@ -356,7 +356,7 @@ boolean sm2_dsa_check_key(IN void *sm2_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
+boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	EVP_PKEY *pkey;
@@ -366,7 +366,7 @@ boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
 	const EC_POINT *ec_point;
 	BIGNUM *bn_x;
 	BIGNUM *bn_y;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 	uintn half_size;
 	intn x_size;
 	intn y_size;
@@ -494,8 +494,8 @@ void sm2_key_exchange_free(IN void *sm2_context)
   @retval FALSE  sm2 context is not initialized.
 **/
 boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
-			IN const uint8 *id_a, IN uintn id_a_size,
-			IN const uint8 *id_b, IN uintn id_b_size,
+			IN const uint8_t *id_a, IN uintn id_a_size,
+			IN const uint8_t *id_b, IN uintn id_b_size,
 			IN const boolean is_initiator)
 {
 	// current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
@@ -529,7 +529,7 @@ boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
+boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	// current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
@@ -564,27 +564,27 @@ boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8 *publi
 
 **/
 boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
-			IN const uint8 *peer_public,
-			IN uintn peer_public_size, OUT uint8 *key,
+			IN const uint8_t *peer_public,
+			IN uintn peer_public_size, OUT uint8_t *key,
 			IN uintn *key_size)
 {
 	// current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
 	return FALSE;
 }
 
-static void ecc_signature_der_to_bin(IN uint8 *der_signature,
+static void ecc_signature_der_to_bin(IN uint8_t *der_signature,
 				     IN uintn der_sig_size,
-				     OUT uint8 *signature, IN uintn sig_size)
+				     OUT uint8_t *signature, IN uintn sig_size)
 {
-	uint8 der_r_size;
-	uint8 der_s_size;
-	uint8 *bn_r;
-	uint8 *bn_s;
-	uint8 r_size;
-	uint8 s_size;
-	uint8 half_size;
+	uint8_t der_r_size;
+	uint8_t der_s_size;
+	uint8_t *bn_r;
+	uint8_t *bn_s;
+	uint8_t r_size;
+	uint8_t s_size;
+	uint8_t half_size;
 
-	half_size = (uint8)(sig_size / 2);
+	half_size = (uint8_t)(sig_size / 2);
 
 	ASSERT(der_signature[0] == 0x30);
 	ASSERT((uintn)(der_signature[1] + 2) == der_sig_size);
@@ -614,35 +614,35 @@ static void ecc_signature_der_to_bin(IN uint8 *der_signature,
 	copy_mem(&signature[half_size + half_size - s_size], bn_s, s_size);
 }
 
-static void ecc_signature_bin_to_der(IN uint8 *signature, IN uintn sig_size,
-				     OUT uint8 *der_signature,
+static void ecc_signature_bin_to_der(IN uint8_t *signature, IN uintn sig_size,
+				     OUT uint8_t *der_signature,
 				     IN OUT uintn *der_sig_size_in_out)
 {
 	uintn der_sig_size;
-	uint8 der_r_size;
-	uint8 der_s_size;
-	uint8 *bn_r;
-	uint8 *bn_s;
-	uint8 r_size;
-	uint8 s_size;
-	uint8 half_size;
-	uint8 index;
+	uint8_t der_r_size;
+	uint8_t der_s_size;
+	uint8_t *bn_r;
+	uint8_t *bn_s;
+	uint8_t r_size;
+	uint8_t s_size;
+	uint8_t half_size;
+	uint8_t index;
 
-	half_size = (uint8)(sig_size / 2);
+	half_size = (uint8_t)(sig_size / 2);
 
 	for (index = 0; index < half_size; index++) {
 		if (signature[index] != 0) {
 			break;
 		}
 	}
-	r_size = (uint8)(half_size - index);
+	r_size = (uint8_t)(half_size - index);
 	bn_r = &signature[index];
 	for (index = 0; index < half_size; index++) {
 		if (signature[half_size + index] != 0) {
 			break;
 		}
 	}
-	s_size = (uint8)(half_size - index);
+	s_size = (uint8_t)(half_size - index);
 	bn_s = &signature[half_size + index];
 	if (r_size == 0 || s_size == 0) {
 		*der_sig_size_in_out = 0;
@@ -663,7 +663,7 @@ static void ecc_signature_bin_to_der(IN uint8 *signature, IN uintn sig_size,
 	*der_sig_size_in_out = der_sig_size;
 	zero_mem(der_signature, der_sig_size);
 	der_signature[0] = 0x30;
-	der_signature[1] = (uint8)(der_sig_size - 2);
+	der_signature[1] = (uint8_t)(der_sig_size - 2);
 	der_signature[2] = 0x02;
 	der_signature[3] = der_r_size;
 	if (bn_r[0] < 0x80) {
@@ -711,16 +711,16 @@ static void ecc_signature_bin_to_der(IN uint8 *signature, IN uintn sig_size,
 
 **/
 boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
-		       IN const uint8 *id_a, IN uintn id_a_size,
-		       IN const uint8 *message, IN uintn size,
-		       OUT uint8 *signature, IN OUT uintn *sig_size)
+		       IN const uint8_t *id_a, IN uintn id_a_size,
+		       IN const uint8_t *message, IN uintn size,
+		       OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY *pkey;
 	EVP_MD_CTX *ctx;
 	uintn half_size;
-	int32 result;
-	uint8 der_signature[32 * 2 + 8];
+	int32_t result;
+	uint8_t der_signature[32 * 2 + 8];
 	uintn der_sig_size;
 
 	if (sm2_context == NULL || message == NULL) {
@@ -820,16 +820,16 @@ boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
 
 **/
 boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
-			 IN const uint8 *id_a, IN uintn id_a_size,
-			 IN const uint8 *message, IN uintn size,
-			 IN const uint8 *signature, IN uintn sig_size)
+			 IN const uint8_t *id_a, IN uintn id_a_size,
+			 IN const uint8_t *message, IN uintn size,
+			 IN const uint8_t *signature, IN uintn sig_size)
 {
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY *pkey;
 	EVP_MD_CTX *ctx;
 	uintn half_size;
-	int32 result;
-	uint8 der_signature[32 * 2 + 8];
+	int32_t result;
+	uint8_t der_signature[32 * 2 + 8];
 	uintn der_sig_size;
 
 	if (sm2_context == NULL || message == NULL || signature == NULL) {
@@ -861,7 +861,7 @@ boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
 	}
 
 	der_sig_size = sizeof(der_signature);
-	ecc_signature_bin_to_der((uint8 *)signature, sig_size, der_signature,
+	ecc_signature_bin_to_der((uint8_t *)signature, sig_size, der_signature,
 				 &der_sig_size);
 
 	ctx = EVP_MD_CTX_new();
@@ -888,7 +888,7 @@ boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
 		EVP_PKEY_CTX_free(pkey_ctx);
 		return FALSE;
 	}
-	result = EVP_DigestVerify(ctx, der_signature, (uint32)der_sig_size,
+	result = EVP_DigestVerify(ctx, der_signature, (uint32_t)der_sig_size,
 				  message, size);
 	if (result != 1) {
 		EVP_MD_CTX_free(ctx);

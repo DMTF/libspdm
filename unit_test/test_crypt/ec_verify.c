@@ -17,17 +17,17 @@ return_status validate_crypt_ec(void)
 {
 	void *ec1;
 	void *ec2;
-	uint8 public1[66 * 2];
+	uint8_t public1[66 * 2];
 	uintn public1_length;
-	uint8 public2[66 * 2];
+	uint8_t public2[66 * 2];
 	uintn public2_length;
-	uint8 key1[66];
+	uint8_t key1[66];
 	uintn key1_length;
-	uint8 key2[66];
+	uint8_t key2[66];
 	uintn key2_length;
-	uint8 hash_value[SHA256_DIGEST_SIZE];
+	uint8_t hash_value[SHA256_DIGEST_SIZE];
 	uintn hash_size;
-	uint8 signature[66 * 2];
+	uint8_t signature[66 * 2];
 	uintn sig_size;
 	boolean status;
 

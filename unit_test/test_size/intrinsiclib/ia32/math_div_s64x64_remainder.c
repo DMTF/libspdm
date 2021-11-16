@@ -6,26 +6,26 @@
 
 #include <hal/base.h>
 
-uint64 internal_math_div_rem_u64x64(IN uint64 dividend, IN uint64 divisor,
-				OUT uint64 *remainder OPTIONAL);
+uint64_t internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
+				OUT uint64_t *remainder OPTIONAL);
 
-int64 internal_math_div_rem_s64x64(IN int64 dividend, IN int64 divisor,
-			       OUT int64 *remainder OPTIONAL)
+int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
+			       OUT int64_t *remainder OPTIONAL)
 {
-	int64 quot;
+	int64_t quot;
 
 	quot = internal_math_div_rem_u64x64(
-		(uint64)(dividend >= 0 ? dividend : -dividend),
-		(uint64)(divisor >= 0 ? divisor : -divisor),
-		(uint64 *)remainder);
+		(uint64_t)(dividend >= 0 ? dividend : -dividend),
+		(uint64_t)(divisor >= 0 ? divisor : -divisor),
+		(uint64_t *)remainder);
 	if (remainder != NULL && dividend < 0) {
 		*remainder = -*remainder;
 	}
 	return (dividend ^ divisor) >= 0 ? quot : -quot;
 }
 
-int64 div_s64x64_remainder(IN int64 dividend, IN int64 divisor,
-			 OUT int64 *remainder OPTIONAL)
+int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
+			 OUT int64_t *remainder OPTIONAL)
 {
 	return internal_math_div_rem_s64x64(dividend, divisor, remainder);
 }
@@ -37,11 +37,11 @@ int64 div_s64x64_remainder(IN int64 dividend, IN int64 divisor,
 __declspec(naked) void __cdecl _alldvrm(void)
 {
 	//
-	//    int64
+	//    int64_t
 	//      //    div_s64x64_remainder (
-	//      IN      int64     dividend,
-	//      IN      int64     divisor,
-	//      OUT     int64     *remainder  OPTIONAL
+	//      IN      int64_t     dividend,
+	//      IN      int64_t     divisor,
+	//      OUT     int64_t     *remainder  OPTIONAL
 	//      )
 	//
   _asm {

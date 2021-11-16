@@ -12,25 +12,25 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 req_session_id;
-	uint16 psk_hint_length;
-	uint16 context_length;
-	uint16 opaque_length;
-	uint8 psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
-	uint8 context[DEFAULT_CONTEXT_LENGTH];
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint16_t req_session_id;
+	uint16_t psk_hint_length;
+	uint16_t context_length;
+	uint16_t opaque_length;
+	uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
+	uint8_t context[DEFAULT_CONTEXT_LENGTH];
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 rsp_session_id;
-	uint16 reserved;
-	uint16 context_length;
-	uint16 opaque_length;
-	uint8 measurement_summary_hash[MAX_HASH_SIZE];
-	uint8 context[DEFAULT_CONTEXT_LENGTH];
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
-	uint8 verify_data[MAX_HASH_SIZE];
+	uint16_t rsp_session_id;
+	uint16_t reserved;
+	uint16_t context_length;
+	uint16_t opaque_length;
+	uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+	uint8_t context[DEFAULT_CONTEXT_LENGTH];
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_psk_exchange_response_max_t;
 
 #pragma pack()
@@ -59,8 +59,8 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status try_spdm_send_receive_psk_exchange(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	OUT uint32 *session_id, OUT uint8 *heartbeat_period,
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
 	OUT void *measurement_hash,
 	IN void *requester_context_in OPTIONAL,
 	IN uintn requester_context_in_size OPTIONAL,
@@ -75,18 +75,18 @@ return_status try_spdm_send_receive_psk_exchange(
 	uintn spdm_request_size;
 	spdm_psk_exchange_response_max_t spdm_response;
 	uintn spdm_response_size;
-	uint32 measurement_summary_hash_size;
-	uint32 hmac_size;
-	uint8 *ptr;
+	uint32_t measurement_summary_hash_size;
+	uint32_t hmac_size;
+	uint8_t *ptr;
 	void *measurement_summary_hash;
-	uint8 *verify_data;
-	uint16 req_session_id;
-	uint16 rsp_session_id;
+	uint8_t *verify_data;
+	uint16_t req_session_id;
+	uint16_t rsp_session_id;
 	spdm_session_info_t *session_info;
 	uintn opaque_psk_exchange_req_size;
-	uint8 th1_hash_data[64];
-	uint8 th2_hash_data[64];
-	uint32 algo_size;
+	uint8_t th1_hash_data[64];
+	uint8_t th2_hash_data[64];
+	uint32_t algo_size;
 
 	// Check capabilities even if GET_CAPABILITIES is not sent.
 	// Assuming capabilities are provisioned.
@@ -138,16 +138,16 @@ return_status try_spdm_send_receive_psk_exchange(
 	spdm_request.header.param1 = measurement_hash_type;
 	spdm_request.header.param2 = 0;
 	spdm_request.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	if (requester_context_in == NULL) {
 		spdm_request.context_length = DEFAULT_CONTEXT_LENGTH;
 	} else {
 		ASSERT (requester_context_in_size <= DEFAULT_CONTEXT_LENGTH);
-		spdm_request.context_length = (uint16)requester_context_in_size;
+		spdm_request.context_length = (uint16_t)requester_context_in_size;
 	}
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	spdm_request.opaque_length = (uint16)opaque_psk_exchange_req_size;
+	spdm_request.opaque_length = (uint16_t)opaque_psk_exchange_req_size;
 
 	req_session_id = spdm_allocate_req_session_id(spdm_context);
 	spdm_request.req_session_id = req_session_id;
@@ -250,7 +250,7 @@ return_status try_spdm_send_receive_psk_exchange(
 		return RETURN_DEVICE_ERROR;
 	}
 
-	ptr = (uint8 *)&spdm_response + sizeof(spdm_psk_exchange_response_t) +
+	ptr = (uint8_t *)&spdm_response + sizeof(spdm_psk_exchange_response_t) +
 	      measurement_summary_hash_size + spdm_response.context_length;
 	status = spdm_process_opaque_data_version_selection_data(
 		spdm_context, spdm_response.opaque_length, ptr);
@@ -264,7 +264,7 @@ return_status try_spdm_send_receive_psk_exchange(
 			     spdm_response.opaque_length +
 			     measurement_summary_hash_size + hmac_size;
 
-	ptr = (uint8 *)(spdm_response.measurement_summary_hash);
+	ptr = (uint8_t *)(spdm_response.measurement_summary_hash);
 	measurement_summary_hash = ptr;
 	DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
 	       measurement_summary_hash_size));
@@ -387,9 +387,9 @@ return_status try_spdm_send_receive_psk_exchange(
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
-					     IN uint8 measurement_hash_type,
-					     OUT uint32 *session_id,
-					     OUT uint8 *heartbeat_period,
+					     IN uint8_t measurement_hash_type,
+					     OUT uint32_t *session_id,
+					     OUT uint8_t *heartbeat_period,
 					     OUT void *measurement_hash)
 {
 	uintn retry;
@@ -433,9 +433,9 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
-					     IN uint8 measurement_hash_type,
-					     OUT uint32 *session_id,
-					     OUT uint8 *heartbeat_period,
+					     IN uint8_t measurement_hash_type,
+					     OUT uint32_t *session_id,
+					     OUT uint8_t *heartbeat_period,
 					     OUT void *measurement_hash,
 					     IN void *requester_context_in OPTIONAL,
 					     IN uintn requester_context_in_size OPTIONAL,

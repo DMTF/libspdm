@@ -6,7 +6,7 @@
 
 #include <hal/base.h>
 
-uint64 internal_math_mult_u64x64(IN uint64 multiplicand, IN uint64 multiplier)
+uint64_t internal_math_mult_u64x64(IN uint64_t multiplicand, IN uint64_t multiplier)
 {
 	_asm {
     mov     ebx, dword ptr [multiplicand + 0]
@@ -21,18 +21,18 @@ uint64 internal_math_mult_u64x64(IN uint64 multiplicand, IN uint64 multiplier)
 	}
 }
 
-uint64 mult_u64x64(IN uint64 multiplicand, IN uint64 multiplier)
+uint64_t mult_u64x64(IN uint64_t multiplicand, IN uint64_t multiplier)
 {
-	uint64 result;
+	uint64_t result;
 
 	result = internal_math_mult_u64x64(multiplicand, multiplier);
 
 	return result;
 }
 
-int64 mult_s64x64(IN int64 multiplicand, IN int64 multiplier)
+int64_t mult_s64x64(IN int64_t multiplicand, IN int64_t multiplier)
 {
-	return (int64)mult_u64x64((uint64)multiplicand, (uint64)multiplier);
+	return (int64_t)mult_u64x64((uint64_t)multiplicand, (uint64_t)multiplier);
 }
 
 /*
@@ -42,10 +42,10 @@ int64 mult_s64x64(IN int64 multiplicand, IN int64 multiplier)
 __declspec(naked) void __cdecl _allmul(void)
 {
 	//
-	//    int64
+	//    int64_t
 	//      //    mult_s64x64 (
-	//      IN      int64      multiplicand,
-	//      IN      int64      multiplier
+	//      IN      int64_t      multiplicand,
+	//      IN      int64_t      multiplier
 	//      )
 	//
   _asm {

@@ -34,7 +34,7 @@
 void debug_assert(IN const char8 *file_name, IN uintn line_number,
 		  IN const char8 *description)
 {
-	printf("ASSERT: %s(%d): %s\n", file_name, (int32)(uint32)line_number,
+	printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
 	       description);
 
 #if (DEBUG_ASSERT_CONFIG == DEBUG_ASSERT_DEADLOOP)

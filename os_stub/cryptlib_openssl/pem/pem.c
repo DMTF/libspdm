@@ -73,7 +73,7 @@ intn PasswordCallback(OUT char8 *buf, IN intn size, IN intn flag, IN void *key)
   @retval  FALSE  Invalid PEM key data or incorrect password.
 
 **/
-boolean rsa_get_private_key_from_pem(IN const uint8 *pem_data,
+boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 				     IN uintn pem_size,
 				     IN const char8 *password,
 				     OUT void **rsa_context)
@@ -153,7 +153,7 @@ done:
   @retval  FALSE  Invalid PEM key data or incorrect password.
 
 **/
-boolean ec_get_private_key_from_pem(IN const uint8 *pem_data, IN uintn pem_size,
+boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
 				    IN const char8 *password,
 				    OUT void **ec_context)
 {
@@ -232,7 +232,7 @@ done:
   @retval  FALSE  Invalid PEM key data or incorrect password.
 
 **/
-boolean ecd_get_private_key_from_pem(IN const uint8 *pem_data,
+boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
 				     IN uintn pem_size,
 				     IN const char8 *password,
 				     OUT void **ecd_context)
@@ -240,7 +240,7 @@ boolean ecd_get_private_key_from_pem(IN const uint8 *pem_data,
 	boolean status;
 	BIO *pem_bio;
 	EVP_PKEY *pkey;
-	int32 type;
+	int32_t type;
 
 	//
 	// Check input parameters.
@@ -319,7 +319,7 @@ done:
   @retval  FALSE  Invalid PEM key data or incorrect password.
 
 **/
-boolean sm2_get_private_key_from_pem(IN const uint8 *pem_data,
+boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
 				     IN uintn pem_size,
 				     IN const char8 *password,
 				     OUT void **sm2_context)
@@ -327,9 +327,9 @@ boolean sm2_get_private_key_from_pem(IN const uint8 *pem_data,
 	boolean status;
 	BIO *pem_bio;
 	EVP_PKEY *pkey;
-	int32 result;
+	int32_t result;
 	EC_KEY *ec_key;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 
 	//
 	// Check input parameters.

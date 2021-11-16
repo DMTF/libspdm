@@ -18,8 +18,8 @@
 //
 #define CRYPTMEM_HEAD_SIGNATURE SIGNATURE_32('c', 'm', 'h', 'd')
 typedef struct {
-	uint32 signature;
-	uint32 reserved;
+	uint32_t signature;
+	uint32_t reserved;
 	uintn size;
 } CRYPTMEM_HEAD;
 

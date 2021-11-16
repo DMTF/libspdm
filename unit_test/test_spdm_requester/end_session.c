@@ -8,9 +8,9 @@
 #include <internal/libspdm_requester_lib.h>
 #include <internal/libspdm_secured_message_lib.h>
 
-static uint8 m_local_psk_hint[32];
-static uint8 m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
-static uint8 m_dummy_salt_buffer[MAX_AEAD_IV_SIZE];
+static uint8_t m_local_psk_hint[32];
+static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
+static uint8_t m_dummy_salt_buffer[MAX_AEAD_IV_SIZE];
 
 static void spdm_secured_message_set_response_data_encryption_key(
 	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
@@ -38,7 +38,7 @@ static void spdm_secured_message_set_response_data_salt(
 
 return_status spdm_requester_end_session_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64 timeout)
+	IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -73,7 +73,7 @@ return_status spdm_requester_end_session_test_send_message(
 
 return_status spdm_requester_end_session_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -84,9 +84,9 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x2: {
 		spdm_end_session_response_t *spdm_response;
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -117,9 +117,9 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x3: {
 		spdm_end_session_response_t *spdm_response;
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -149,7 +149,7 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x4: {
 		spdm_error_response_t spdm_response;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -176,7 +176,7 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x5: {
 		spdm_error_response_t spdm_response;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -205,7 +205,7 @@ return_status spdm_requester_end_session_test_receive_message(
 		static uintn sub_index1 = 0;
 		if (sub_index1 == 0) {
 			spdm_error_response_t spdm_response;
-			uint32 session_id;
+			uint32_t session_id;
 			spdm_session_info_t *session_info;
 
 			session_id = 0xFFFFFFFF;
@@ -231,9 +231,9 @@ return_status spdm_requester_end_session_test_receive_message(
 				.response_data_sequence_number--;
 		} else if (sub_index1 == 1) {
 			spdm_end_session_response_t *spdm_response;
-			uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
-			uint32 session_id;
+			uint32_t session_id;
 			spdm_session_info_t *session_info;
 
 			session_id = 0xFFFFFFFF;
@@ -266,7 +266,7 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x7: {
 		spdm_error_response_t spdm_response;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -293,7 +293,7 @@ return_status spdm_requester_end_session_test_receive_message(
 
 	case 0x8: {
 		spdm_error_response_data_response_not_ready_t spdm_response;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -328,7 +328,7 @@ return_status spdm_requester_end_session_test_receive_message(
 		if (sub_index2 == 0) {
 			spdm_error_response_data_response_not_ready_t
 				spdm_response;
-			uint32 session_id;
+			uint32_t session_id;
 			spdm_session_info_t *session_info;
 
 			session_id = 0xFFFFFFFF;
@@ -360,9 +360,9 @@ return_status spdm_requester_end_session_test_receive_message(
 				.response_data_sequence_number--;
 		} else if (sub_index2 == 1) {
 			spdm_end_session_response_t *spdm_response;
-			uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
-			uint32 session_id;
+			uint32_t session_id;
 			spdm_session_info_t *session_info;
 
 			session_id = 0xFFFFFFFF;
@@ -398,7 +398,7 @@ return_status spdm_requester_end_session_test_receive_message(
     static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
-    uint32                 session_id;
+    uint32_t                 session_id;
     spdm_session_info_t      *session_info;
 
     session_id = 0xFFFFFFFF;
@@ -407,7 +407,7 @@ return_status spdm_requester_end_session_test_receive_message(
       zero_mem (&spdm_response, sizeof(spdm_response));
       spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
       spdm_response.header.request_response_code = SPDM_ERROR;
-      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param1 = (uint8_t) error_code;
       spdm_response.header.param2 = 0;
 
       spdm_transport_test_encode_message (spdm_context, &session_id, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
@@ -429,9 +429,9 @@ return_status spdm_requester_end_session_test_receive_message(
     return RETURN_SUCCESS;
 	case 0xB: {
 		spdm_end_session_response_t *spdm_response;
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint32 session_id;
+		uint32_t session_id;
 		spdm_session_info_t *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -469,7 +469,7 @@ void test_spdm_requester_end_session_case1(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -533,7 +533,7 @@ void test_spdm_requester_end_session_case2(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -590,7 +590,7 @@ void test_spdm_requester_end_session_case2(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -600,7 +600,7 @@ void test_spdm_requester_end_session_case2(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -624,7 +624,7 @@ void test_spdm_requester_end_session_case3(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -681,7 +681,7 @@ void test_spdm_requester_end_session_case3(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -691,7 +691,7 @@ void test_spdm_requester_end_session_case3(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -711,7 +711,7 @@ void test_spdm_requester_end_session_case4(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -768,7 +768,7 @@ void test_spdm_requester_end_session_case4(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -778,7 +778,7 @@ void test_spdm_requester_end_session_case4(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -798,7 +798,7 @@ void test_spdm_requester_end_session_case5(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -855,7 +855,7 @@ void test_spdm_requester_end_session_case5(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -865,7 +865,7 @@ void test_spdm_requester_end_session_case5(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -885,7 +885,7 @@ void test_spdm_requester_end_session_case6(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -942,7 +942,7 @@ void test_spdm_requester_end_session_case6(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -952,7 +952,7 @@ void test_spdm_requester_end_session_case6(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -976,7 +976,7 @@ void test_spdm_requester_end_session_case7(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1033,7 +1033,7 @@ void test_spdm_requester_end_session_case7(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -1043,7 +1043,7 @@ void test_spdm_requester_end_session_case7(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -1065,7 +1065,7 @@ void test_spdm_requester_end_session_case8(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1122,7 +1122,7 @@ void test_spdm_requester_end_session_case8(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -1132,7 +1132,7 @@ void test_spdm_requester_end_session_case8(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -1152,7 +1152,7 @@ void test_spdm_requester_end_session_case9(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1209,7 +1209,7 @@ void test_spdm_requester_end_session_case9(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -1219,7 +1219,7 @@ void test_spdm_requester_end_session_case9(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t
@@ -1242,7 +1242,7 @@ void test_spdm_requester_end_session_case10(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
-  uint32               session_id;
+  uint32_t               session_id;
   void                 *data;
   uintn                data_size;
   void                 *hash;
@@ -1280,9 +1280,9 @@ void test_spdm_requester_end_session_case10(void **state) {
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init (spdm_context, session_info, session_id, TRUE);
     spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_ESTABLISHED);  
-    set_mem (m_dummy_key_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size, (uint8)(0xFF));
+    set_mem (m_dummy_key_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_encryption_key (session_info->secured_message_context, m_dummy_key_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size);
-    set_mem (m_dummy_salt_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size, (uint8)(0xFF));
+    set_mem (m_dummy_salt_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_salt (session_info->secured_message_context, m_dummy_salt_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size);
     ((spdm_secured_message_context_t*)(session_info->secured_message_context))->application_secret.response_data_sequence_number = 0;
     
@@ -1310,7 +1310,7 @@ void test_spdm_requester_end_session_case11(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1367,7 +1367,7 @@ void test_spdm_requester_end_session_case11(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_key_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_encryption_key(
 		session_info->secured_message_context, m_dummy_key_buffer,
 		((spdm_secured_message_context_t
@@ -1377,7 +1377,7 @@ void test_spdm_requester_end_session_case11(void **state)
 		((spdm_secured_message_context_t
 			  *)(session_info->secured_message_context))
 			->aead_iv_size,
-		(uint8)(0xFF));
+		(uint8_t)(0xFF));
 	spdm_secured_message_set_response_data_salt(
 		session_info->secured_message_context, m_dummy_salt_buffer,
 		((spdm_secured_message_context_t

@@ -67,10 +67,10 @@
 /// SPDM message header
 ///
 typedef struct {
-	uint8 spdm_version;
-	uint8 request_response_code;
-	uint8 param1;
-	uint8 param2;
+	uint8_t spdm_version;
+	uint8_t request_response_code;
+	uint8_t param1;
+	uint8_t param2;
 } spdm_message_header_t;
 
 #define SPDM_MESSAGE_VERSION_10 0x10
@@ -93,8 +93,8 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	uint8 reserved;
-	uint8 version_number_entry_count;
+	uint8_t reserved;
+	uint8_t version_number_entry_count;
 	//spdm_version_number_t  version_number_entry[version_number_entry_count];
 } spdm_version_response;
 
@@ -102,10 +102,10 @@ typedef struct {
 /// SPDM VERSION structure
 ///
 typedef struct {
-	uint16 alpha : 4;
-	uint16 update_version_number : 4;
-	uint16 minor_version : 4;
-	uint16 major_version : 4;
+	uint16_t alpha : 4;
+	uint16_t update_version_number : 4;
+	uint16_t minor_version : 4;
+	uint16_t major_version : 4;
 } spdm_version_number_t;
 
 ///
@@ -116,10 +116,10 @@ typedef struct {
 	// param1 == RSVD
 	// param2 == RSVD
 	// Below field is added in 1.1.
-	uint8 reserved;
-	uint8 ct_exponent;
-	uint16 reserved2;
-	uint32 flags;
+	uint8_t reserved;
+	uint8_t ct_exponent;
+	uint16_t reserved2;
+	uint32_t flags;
 } spdm_get_capabilities_request;
 
 ///
@@ -129,10 +129,10 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	uint8 reserved;
-	uint8 ct_exponent;
-	uint16 reserved2;
-	uint32 flags;
+	uint8_t reserved;
+	uint8_t ct_exponent;
+	uint16_t reserved2;
+	uint32_t flags;
 } spdm_capabilities_response;
 
 ///
@@ -186,15 +186,15 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == Number of Algorithms Structure Tables
 	// param2 == RSVD
-	uint16 length;
-	uint8 measurement_specification;
-	uint8 reserved;
-	uint32 base_asym_algo;
-	uint32 base_hash_algo;
-	uint8 reserved2[12];
-	uint8 ext_asym_count;
-	uint8 ext_hash_count;
-	uint16 reserved3;
+	uint16_t length;
+	uint8_t measurement_specification;
+	uint8_t reserved;
+	uint32_t base_asym_algo;
+	uint32_t base_hash_algo;
+	uint8_t reserved2[12];
+	uint8_t ext_asym_count;
+	uint8_t ext_hash_count;
+	uint16_t reserved3;
 	//spdm_extended_algorithm_t                 ext_asym[ext_asym_count];
 	//spdm_extended_algorithm_t                 ext_hash[ext_hash_count];
 	// Below field is added in 1.1.
@@ -207,15 +207,15 @@ typedef struct {
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11 0x14
 
 typedef struct {
-	uint8 alg_type;
-	uint8 alg_count; // BIT[0:3]=ext_alg_count, BIT[4:7]=fixed_alg_byte_count
-	//uint8                alg_supported[fixed_alg_byte_count];
-	//uint32               alg_external[ext_alg_count];
+	uint8_t alg_type;
+	uint8_t alg_count; // BIT[0:3]=ext_alg_count, BIT[4:7]=fixed_alg_byte_count
+	//uint8_t                alg_supported[fixed_alg_byte_count];
+	//uint32_t               alg_external[ext_alg_count];
 } spdm_negotiate_algorithms_struct_table_t;
 
 typedef struct {
-	uint8 ext_alg_count : 4;
-	uint8 fixed_alg_byte_count : 4;
+	uint8_t ext_alg_count : 4;
+	uint8_t fixed_alg_byte_count : 4;
 } spdm_negotiate_algorithms_struct_table_alg_count_t;
 
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE 2
@@ -224,9 +224,9 @@ typedef struct {
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE 5
 
 typedef struct {
-	uint8 alg_type;
-	uint8 alg_count;
-	uint16 alg_supported;
+	uint8_t alg_type;
+	uint8_t alg_count;
+	uint16_t alg_supported;
 } spdm_negotiate_algorithms_common_struct_table_t;
 
 ///
@@ -281,16 +281,16 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == Number of Algorithms Structure Tables
 	// param2 == RSVD
-	uint16 length;
-	uint8 measurement_specification_sel;
-	uint8 reserved;
-	uint32 measurement_hash_algo;
-	uint32 base_asym_sel;
-	uint32 base_hash_sel;
-	uint8 reserved2[12];
-	uint8 ext_asym_sel_count;
-	uint8 ext_hash_sel_count;
-	uint16 reserved3;
+	uint16_t length;
+	uint8_t measurement_specification_sel;
+	uint8_t reserved;
+	uint32_t measurement_hash_algo;
+	uint32_t base_asym_sel;
+	uint32_t base_hash_sel;
+	uint8_t reserved2[12];
+	uint8_t ext_asym_sel_count;
+	uint8_t ext_hash_sel_count;
+	uint16_t reserved3;
 	//spdm_extended_algorithm_t                 ext_asym_sel[ext_asym_sel_count];
 	//spdm_extended_algorithm_t                 ext_hash_sel[ext_hash_sel_count];
 	// Below field is added in 1.1.
@@ -312,9 +312,9 @@ typedef struct {
 /// SPDM extended algorithm
 ///
 typedef struct {
-	uint8 registry_id;
-	uint8 reserved;
-	uint16 algorithm_id;
+	uint8_t registry_id;
+	uint8_t reserved;
+	uint16_t algorithm_id;
 } spdm_extended_algorithm_t;
 
 ///
@@ -346,7 +346,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == slot_mask
-	//uint8                digest[digest_size][slot_count];
+	//uint8_t                digest[digest_size][slot_count];
 } spdm_digest_response_t;
 
 ///
@@ -356,8 +356,8 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == slot_id
 	// param2 == RSVD
-	uint16 offset;
-	uint16 length;
+	uint16_t offset;
+	uint16_t length;
 } spdm_get_certificate_request_t;
 
 ///
@@ -367,9 +367,9 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == slot_id
 	// param2 == RSVD
-	uint16 portion_length;
-	uint16 remainder_length;
-	//uint8                cert_chain[portion_length];
+	uint16_t portion_length;
+	uint16_t remainder_length;
+	//uint8_t                cert_chain[portion_length];
 } spdm_certificate_response_t;
 
 typedef struct {
@@ -377,20 +377,20 @@ typedef struct {
 	// Total length of the certificate chain, in bytes,
 	// including all fields in this table.
 	//
-	uint16 length;
-	uint16 reserved;
+	uint16_t length;
+	uint16_t reserved;
 	//
 	// digest of the Root Certificate.
 	// Note that Root Certificate is ASN.1 DER-encoded for this digest.
 	// The hash size is determined by the SPDM device.
 	//
-	//uint8    root_hash[hash_size];
+	//uint8_t    root_hash[hash_size];
 	//
 	// One or more ASN.1 DER-encoded X509v3 certificates where the first certificate is signed by the Root
 	// Certificate or is the Root Certificate itself and each subsequent certificate is signed by the preceding
 	// certificate. The last certificate is the Leaf Certificate.
 	//
-	//uint8    certificates[length - 4 - hash_size];
+	//uint8_t    certificates[length - 4 - hash_size];
 } spdm_cert_chain_t;
 
 ///
@@ -400,7 +400,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == slot_id
 	// param2 == HashType
-	uint8 nonce[32];
+	uint8_t nonce[32];
 } spdm_challenge_request_t;
 
 ///
@@ -410,12 +410,12 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == ResponseAttribute
 	// param2 == slot_mask
-	//uint8                cert_chain_hash[digest_size];
-	//uint8                nonce[32];
-	//uint8                measurement_summary_hash[digest_size];
-	//uint16               opaque_length;
-	//uint8                opaque_data[opaque_length];
-	//uint8                signature[key_size];
+	//uint8_t                cert_chain_hash[digest_size];
+	//uint8_t                nonce[32];
+	//uint8_t                measurement_summary_hash[digest_size];
+	//uint16_t               opaque_length;
+	//uint8_t                opaque_data[opaque_length];
+	//uint8_t                signature[key_size];
 } spdm_challenge_auth_response_t;
 
 ///
@@ -426,9 +426,9 @@ typedef struct {
 #define SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
 
 typedef struct {
-	uint8 slot_id : 4;
-	uint8 reserved : 3;
-	uint8 basic_mut_auth_req : 1;
+	uint8_t slot_id : 4;
+	uint8_t reserved : 3;
+	uint8_t basic_mut_auth_req : 1;
 } spdm_challenge_auth_response_attribute_t;
 
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
@@ -440,14 +440,14 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == Attributes
 	// param2 == measurement_operation
-	uint8 nonce[32];
+	uint8_t nonce[32];
 	// Below field is added in 1.1.
-	uint8 SlotIDParam; // BIT[0:3]=slot_id, BIT[4:7]=reserved
+	uint8_t SlotIDParam; // BIT[0:3]=slot_id, BIT[4:7]=reserved
 } spdm_get_measurements_request_t;
 
 typedef struct {
-	uint8 slot_id : 4;
-	uint8 reserved : 4;
+	uint8_t slot_id : 4;
+	uint8_t reserved : 4;
 } spdm_get_measurements_request_slot_id_parameter_t;
 
 ///
@@ -468,10 +468,10 @@ typedef struct {
 /// SPDM MEASUREMENTS block common header
 ///
 typedef struct {
-	uint8 index;
-	uint8 measurement_specification;
-	uint16 measurement_size;
-	//uint8                measurement[measurement_size];
+	uint8_t index;
+	uint8_t measurement_specification;
+	uint16_t measurement_size;
+	//uint8_t                measurement[measurement_size];
 } spdm_measurement_block_common_header_t;
 
 #define SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF BIT0
@@ -480,20 +480,20 @@ typedef struct {
 /// SPDM MEASUREMENTS block DMTF header
 ///
 typedef struct {
-	uint8 dmtf_spec_measurement_value_type;
-	uint16 dmtf_spec_measurement_value_size;
-	//uint8                Dmtf_spec_measurement_value[dmtf_spec_measurement_value_size];
+	uint8_t dmtf_spec_measurement_value_type;
+	uint16_t dmtf_spec_measurement_value_size;
+	//uint8_t                Dmtf_spec_measurement_value[dmtf_spec_measurement_value_size];
 } spdm_measurement_block_dmtf_header_t;
 
 typedef struct {
 	spdm_measurement_block_common_header_t Measurement_block_common_header;
 	spdm_measurement_block_dmtf_header_t Measurement_block_dmtf_header;
-	//uint8                                 hash_value[hash_size];
+	//uint8_t                                 hash_value[hash_size];
 } spdm_measurement_block_dmtf_t;
 
 typedef struct {
-	uint8 Content : 7;
-	uint8 presentation : 1;
+	uint8_t Content : 7;
+	uint8_t presentation : 1;
 } SPDM_MEASUREMENTS_BLOCK_MEASUREMENT_TYPE;
 
 ///
@@ -514,13 +514,13 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == TotalNumberOfMeasurement/RSVD
 	// param2 == slot_id
-	uint8 number_of_blocks;
-	uint8 measurement_record_length[3];
-	//uint8                measurement_record[measurement_record_length];
-	//uint8                nonce[32];
-	//uint16               opaque_length;
-	//uint8                opaque_data[opaque_length];
-	//uint8                signature[key_size];
+	uint8_t number_of_blocks;
+	uint8_t measurement_record_length[3];
+	//uint8_t                measurement_record[measurement_record_length];
+	//uint8_t                nonce[32];
+	//uint16_t               opaque_length;
+	//uint8_t                opaque_data[opaque_length];
+	//uint8_t                signature[key_size];
 } spdm_measurements_response_t;
 
 ///
@@ -530,7 +530,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == Error Code
 	// param2 == Error data
-	//uint8                extended_error_data[];
+	//uint8_t                extended_error_data[];
 } spdm_error_response_t;
 
 ///
@@ -558,10 +558,10 @@ typedef struct {
 /// SPDM ResponseNotReady extended data
 ///
 typedef struct {
-	uint8 rd_exponent;
-	uint8 request_code;
-	uint8 token;
-	uint8 rd_tm;
+	uint8_t rd_exponent;
+	uint8_t request_code;
+	uint8_t token;
+	uint8_t rd_tm;
 } spdm_error_data_response_not_ready_t;
 
 typedef struct {
@@ -587,11 +587,11 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	uint16 standard_id;
-	uint8 len;
-	//uint8                vendor_id[len];
-	//uint16               payload_length;
-	//uint8                vendor_defined_payload[payload_length];
+	uint16_t standard_id;
+	uint8_t len;
+	//uint8_t                vendor_id[len];
+	//uint16_t               payload_length;
+	//uint8_t                vendor_defined_payload[payload_length];
 } spdm_vendor_defined_request_msg_t;
 
 ///
@@ -601,11 +601,11 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	uint16 standard_id;
-	uint8 len;
-	//uint8                vendor_id[len];
-	//uint16               payload_length;
-	//uint8                vendor_defined_payload[payload_length];
+	uint16_t standard_id;
+	uint8_t len;
+	//uint8_t                vendor_id[len];
+	//uint16_t               payload_length;
+	//uint8_t                vendor_defined_payload[payload_length];
 } spdm_vendor_defined_response_msg_t;
 
 //
@@ -619,12 +619,12 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == HashType
 	// param2 == slot_id
-	uint16 req_session_id;
-	uint16 reserved;
-	uint8 random_data[32];
-	//uint8                exchange_data[D];
-	//uint16               opaque_length;
-	//uint8                opaque_data[opaque_length];
+	uint16_t req_session_id;
+	uint16_t reserved;
+	uint8_t random_data[32];
+	//uint8_t                exchange_data[D];
+	//uint16_t               opaque_length;
+	//uint8_t                opaque_data[opaque_length];
 } spdm_key_exchange_request_t;
 
 ///
@@ -641,16 +641,16 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == heartbeat_period
 	// param2 == RSVD
-	uint16 rsp_session_id;
-	uint8 mut_auth_requested;
-	uint8 req_slot_id_param;
-	uint8 random_data[32];
-	//uint8                exchange_data[D];
-	//uint8                measurement_summary_hash[digest_size];
-	//uint16               opaque_length;
-	//uint8                opaque_data[opaque_length];
-	//uint8                signature[S];
-	//uint8                verify_data[H];
+	uint16_t rsp_session_id;
+	uint8_t mut_auth_requested;
+	uint8_t req_slot_id_param;
+	uint8_t random_data[32];
+	//uint8_t                exchange_data[D];
+	//uint8_t                measurement_summary_hash[digest_size];
+	//uint16_t               opaque_length;
+	//uint8_t                opaque_data[opaque_length];
+	//uint8_t                signature[S];
+	//uint8_t                verify_data[H];
 } spdm_key_exchange_response_t;
 
 ///
@@ -667,8 +667,8 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == signature_included
 	// param2 == req_slot_id
-	//uint8                signature[S];
-	//uint8                verify_data[H];
+	//uint8_t                signature[S];
+	//uint8_t                verify_data[H];
 } spdm_finish_request_t;
 
 ///
@@ -683,7 +683,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	//uint8                verify_data[H];
+	//uint8_t                verify_data[H];
 } spdm_finish_response_t;
 
 ///
@@ -693,13 +693,13 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == HashType
 	// param2 == RSVD
-	uint16 req_session_id;
-	uint16 psk_hint_length;
-	uint16 context_length;
-	uint16 opaque_length;
-	//uint8                psk_hint[psk_hint_length];
-	//uint8                context[context_length];
-	//uint8                opaque_data[opaque_length];
+	uint16_t req_session_id;
+	uint16_t psk_hint_length;
+	uint16_t context_length;
+	uint16_t opaque_length;
+	//uint8_t                psk_hint[psk_hint_length];
+	//uint8_t                context[context_length];
+	//uint8_t                opaque_data[opaque_length];
 } spdm_psk_exchange_request_t;
 
 ///
@@ -709,14 +709,14 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == heartbeat_period
 	// param2 == RSVD
-	uint16 rsp_session_id;
-	uint16 reserved;
-	uint16 context_length;
-	uint16 opaque_length;
-	//uint8                measurement_summary_hash[digest_size];
-	//uint8                context[context_length];
-	//uint8                opaque_data[opaque_length];
-	//uint8                verify_data[H];
+	uint16_t rsp_session_id;
+	uint16_t reserved;
+	uint16_t context_length;
+	uint16_t opaque_length;
+	//uint8_t                measurement_summary_hash[digest_size];
+	//uint8_t                context[context_length];
+	//uint8_t                opaque_data[opaque_length];
+	//uint8_t                verify_data[H];
 } spdm_psk_exchange_response_t;
 
 ///
@@ -726,7 +726,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == RSVD
 	// param2 == RSVD
-	//uint8                verify_data[H];
+	//uint8_t                verify_data[H];
 } spdm_psk_finish_request_t;
 
 ///
@@ -797,7 +797,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == request_id
 	// param2 == RSVD
-	//uint8                encapsulated_request[];
+	//uint8_t                encapsulated_request[];
 } spdm_encapsulated_request_response_t;
 
 ///
@@ -807,7 +807,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == request_id
 	// param2 == RSVD
-	//uint8                encapsulated_response[];
+	//uint8_t                encapsulated_response[];
 } spdm_deliver_encapsulated_response_request_t;
 
 ///
@@ -817,7 +817,7 @@ typedef struct {
 	spdm_message_header_t header;
 	// param1 == request_id
 	// param2 == payload_type
-	//uint8                encapsulated_request[];
+	//uint8_t                encapsulated_request[];
 } spdm_encapsulated_response_ack_response_t;
 
 ///

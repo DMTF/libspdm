@@ -28,8 +28,8 @@ void *ecx_new_by_nid(IN uintn nid)
 {
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY *pkey;
-	int32 result;
-	int32 openssl_pkey_type;
+	int32_t result;
+	int32_t openssl_pkey_type;
 
 	switch (nid) {
 	case CRYPTO_NID_CURVE_X25519:
@@ -99,12 +99,12 @@ void ecx_free(IN void *ecx_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8 *public,
+boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	EVP_PKEY *pkey;
-	int32 result;
-	uint32 final_pub_key_size;
+	int32_t result;
+	uint32_t final_pub_key_size;
 
 	if (ecx_context == NULL || public == NULL || public_size == NULL) {
 		return FALSE;
@@ -162,16 +162,16 @@ boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8 *public,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8 *peer_public,
-			IN uintn peer_public_size, OUT uint8 *key,
+boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
+			IN uintn peer_public_size, OUT uint8_t *key,
 			IN OUT uintn *key_size)
 {
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY *pkey;
 	EVP_PKEY *peer_key;
-	int32 result;
-	uint32 final_key_size;
-	int32 openssl_pkey_type;
+	int32_t result;
+	uint32_t final_key_size;
+	int32_t openssl_pkey_type;
 
 	if (ecx_context == NULL || peer_public == NULL) {
 		return FALSE;

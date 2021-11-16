@@ -51,7 +51,7 @@
 
 **/
 boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    OUT uint8 *big_number, IN OUT uintn *bn_size)
+		    OUT uint8_t *big_number, IN OUT uintn *bn_size)
 {
 	RSA *rsa_key;
 	BIGNUM *bn_key;
@@ -176,7 +176,7 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 **/
 boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
-			 IN const uint8 *public_exponent,
+			 IN const uint8_t *public_exponent,
 			 IN uintn public_exponent_size)
 {
 	BIGNUM *bn_e;
@@ -202,13 +202,13 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
 			goto done;
 		}
 	} else {
-		if (BN_bin2bn(public_exponent, (uint32)public_exponent_size,
+		if (BN_bin2bn(public_exponent, (uint32_t)public_exponent_size,
 			      bn_e) == NULL) {
 			goto done;
 		}
 	}
 
-	if (RSA_generate_key_ex((RSA *)rsa_context, (uint32)modulus_length,
+	if (RSA_generate_key_ex((RSA *)rsa_context, (uint32_t)modulus_length,
 				bn_e, NULL) == 1) {
 		ret_val = TRUE;
 	}
@@ -290,13 +290,13 @@ boolean rsa_check_key(IN void *rsa_context)
 
 **/
 boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				IN const uint8 *message_hash,
-				IN uintn hash_size, OUT uint8 *signature,
+				IN const uint8_t *message_hash,
+				IN uintn hash_size, OUT uint8_t *signature,
 				IN OUT uintn *sig_size)
 {
 	RSA *rsa;
 	uintn size;
-	int32 digest_type;
+	int32_t digest_type;
 
 	//
 	// Check input parameters.
@@ -364,8 +364,8 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
 		return FALSE;
 	}
 
-	return (boolean)RSA_sign(digest_type, message_hash, (uint32)hash_size,
-				 signature, (uint32 *)sig_size,
+	return (boolean)RSA_sign(digest_type, message_hash, (uint32_t)hash_size,
+				 signature, (uint32_t *)sig_size,
 				 (RSA *)rsa_context);
 }
 
@@ -399,12 +399,12 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
-		     IN const uint8 *message_hash, IN uintn hash_size,
-		     OUT uint8 *signature, IN OUT uintn *sig_size)
+		     IN const uint8_t *message_hash, IN uintn hash_size,
+		     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	RSA *rsa;
 	boolean result;
-	int32 size;
+	int32_t size;
 	const EVP_MD *evp_md;
 	void *buffer;
 

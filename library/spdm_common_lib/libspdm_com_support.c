@@ -12,7 +12,7 @@
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex_str(IN uint8 *data, IN uintn size)
+void internal_dump_hex_str(IN uint8_t *data, IN uintn size)
 {
 	uintn index;
 	for (index = 0; index < size; index++) {
@@ -26,7 +26,7 @@ void internal_dump_hex_str(IN uint8 *data, IN uintn size)
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_data(IN uint8 *data, IN uintn size)
+void internal_dump_data(IN uint8_t *data, IN uintn size)
 {
 	uintn index;
 	for (index = 0; index < size; index++) {
@@ -40,7 +40,7 @@ void internal_dump_data(IN uint8 *data, IN uintn size)
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex(IN uint8 *data, IN uintn size)
+void internal_dump_hex(IN uint8_t *data, IN uintn size)
 {
 	uintn index;
 	uintn count;
@@ -70,9 +70,9 @@ void internal_dump_hex(IN uint8 *data, IN uintn size)
 
   @return The 24-bit value read from buffer.
 **/
-uint32 libspdm_read_uint24(IN uint8 *buffer)
+uint32_t libspdm_read_uint24(IN uint8_t *buffer)
 {
-	return (uint32)(buffer[0] | buffer[1] << 8 | buffer[2] << 16);
+	return (uint32_t)(buffer[0] | buffer[1] << 8 | buffer[2] << 16);
 }
 
 /**
@@ -83,11 +83,11 @@ uint32 libspdm_read_uint24(IN uint8 *buffer)
 
   @return The 24-bit value to write to buffer.
 **/
-uint32 libspdm_write_uint24(IN uint8 *buffer, IN uint32 value)
+uint32_t libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value)
 {
-	buffer[0] = (uint8)(value & 0xFF);
-	buffer[1] = (uint8)((value >> 8) & 0xFF);
-	buffer[2] = (uint8)((value >> 16) & 0xFF);
+	buffer[0] = (uint8_t)(value & 0xFF);
+	buffer[1] = (uint8_t)((value >> 8) & 0xFF);
+	buffer[2] = (uint8_t)((value >> 16) & 0xFF);
 	return value;
 }
 
@@ -128,15 +128,15 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
 		// Do not ASSERT here, because command processor will append message from external.
 		DEBUG((DEBUG_ERROR,
 		       "append_managed_buffer 0x%x fail, rest 0x%x only\n",
-		       (uint32)buffer_size,
-		       (uint32)(managed_buffer->max_buffer_size -
+		       (uint32_t)buffer_size,
+		       (uint32_t)(managed_buffer->max_buffer_size -
 				managed_buffer->buffer_size)));
 		return RETURN_BUFFER_TOO_SMALL;
 	}
 	ASSERT(buffer_size <=
 	       managed_buffer->max_buffer_size - managed_buffer->buffer_size);
 
-	copy_mem((uint8 *)(managed_buffer + 1) + managed_buffer->buffer_size,
+	copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
 		 buffer, buffer_size);
 	managed_buffer->buffer_size += buffer_size;
 	return RETURN_SUCCESS;

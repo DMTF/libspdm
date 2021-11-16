@@ -19,16 +19,16 @@ return_status validate_crypt_sm2(void)
 {
 	void *Sm2_1;
 	void *Sm2_2;
-	uint8 public1[66 * 2];
+	uint8_t public1[66 * 2];
 	uintn public1_length;
-	uint8 public2[66 * 2];
+	uint8_t public2[66 * 2];
 	uintn public2_length;
-	uint8 key1[66];
+	uint8_t key1[66];
 	uintn key1_length;
-	uint8 key2[66];
+	uint8_t key2[66];
 	uintn key2_length;
-	uint8 message[] = "Sm2Test";
-	uint8 signature[66 * 2];
+	uint8_t message[] = "Sm2Test";
+	uint8_t signature[66 * 2];
 	uintn sig_size;
 	boolean status;
 
@@ -159,7 +159,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- SM2 Signing ... ");
-	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8 *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -168,7 +168,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("SM2 Verification ... ");
-	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, (uint8 *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
+	status = sm2_dsa_verify(Sm2_1, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -231,7 +231,7 @@ return_status validate_crypt_sm2(void)
 	//
 	sig_size = sizeof(signature);
 	my_print("\n- sm2 Signing in Context1 ... ");
-	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8 *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
+	status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				sizeof(message), signature, &sig_size);
 	if (!status) {
 		my_print("[Fail]");
@@ -241,7 +241,7 @@ return_status validate_crypt_sm2(void)
 	}
 
 	my_print("sm2 Verification in Context2 ... ");
-	status = sm2_dsa_verify(Sm2_2, CRYPTO_NID_SM3_256, (uint8 *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
+	status = sm2_dsa_verify(Sm2_2, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
 				  sizeof(message), signature, sig_size);
 	if (!status) {
 		my_print("[Fail]");

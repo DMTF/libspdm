@@ -18,14 +18,14 @@
 #pragma pack(1)
 
 typedef struct {
-	uint8 instance_id;
-	uint8 pldm_type;
-	uint8 pldm_command_code;
-	//uint8    payload[];
+	uint8_t instance_id;
+	uint8_t pldm_type;
+	uint8_t pldm_command_code;
+	//uint8_t    payload[];
 } pldm_message_header_t;
 
 typedef struct {
-	uint8 pldm_completion_code;
+	uint8_t pldm_completion_code;
 } pldm_message_response_header_t;
 
 #define PLDM_BASE_CODE_SUCCESS 0

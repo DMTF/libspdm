@@ -38,11 +38,11 @@ void *memset(void *dest, int ch, size_t count)
 	// volatile to prevent the optimizer from replacing this function with
 	// the intrinsic memset()
 	//
-	volatile uint8 *pointer;
+	volatile uint8_t *pointer;
 
-	pointer = (uint8 *)dest;
+	pointer = (uint8_t *)dest;
 	while (count-- != 0) {
-		*(pointer++) = (uint8)ch;
+		*(pointer++) = (uint8_t)ch;
 	}
 
 	return dest;

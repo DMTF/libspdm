@@ -64,7 +64,7 @@ void dh_free(IN void *dh_context)
 
 **/
 boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-			      IN uintn prime_length, OUT uint8 *prime)
+			      IN uintn prime_length, OUT uint8_t *prime)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -92,7 +92,7 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-			 IN uintn prime_length, IN const uint8 *prime)
+			 IN uintn prime_length, IN const uint8_t *prime)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -120,7 +120,7 @@ boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
   @retval FALSE  public_key_size is not large enough.
 
 **/
-boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
+boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	ASSERT(FALSE);
@@ -151,8 +151,8 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
-		       IN uintn peer_public_key_size, OUT uint8 *key,
+boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
+		       IN uintn peer_public_key_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
 	ASSERT(FALSE);

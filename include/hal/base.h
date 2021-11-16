@@ -241,20 +241,20 @@
 /// Maximum values for common UEFI data Types
 ///
 #define MAX_INT8 ((int8)0x7F)
-#define MAX_UINT8 ((uint8)0xFF)
+#define MAX_UINT8 ((uint8_t)0xFF)
 #define MAX_INT16 ((int16)0x7FFF)
-#define MAX_UINT16 ((uint16)0xFFFF)
-#define MAX_INT32 ((int32)0x7FFFFFFF)
-#define MAX_UINT32 ((uint32)0xFFFFFFFF)
+#define MAX_UINT16 ((uint16_t)0xFFFF)
+#define MAX_INT32 ((int32_t)0x7FFFFFFF)
+#define MAX_UINT32 ((uint32_t)0xFFFFFFFF)
 #define MAX_INT64 ((int64)0x7FFFFFFFFFFFFFFFULL)
-#define MAX_UINT64 ((uint64)0xFFFFFFFFFFFFFFFFULL)
+#define MAX_UINT64 ((uint64_t)0xFFFFFFFFFFFFFFFFULL)
 
 ///
 /// Minimum values for the signed UEFI data Types
 ///
 #define MIN_INT8 (((int8)-127) - 1)
 #define MIN_INT16 (((int16)-32767) - 1)
-#define MIN_INT32 (((int32)-2147483647) - 1)
+#define MIN_INT32 (((int32_t)-2147483647) - 1)
 #define MIN_INT64 (((int64)-9223372036854775807LL) - 1)
 
 #define BIT0 0x00000001
@@ -586,7 +586,7 @@ typedef char8 *VA_LIST;
 #endif
 
 ///
-/// Pointer to the start of a variable argument list stored in a memory buffer. Same as uint8 *.
+/// Pointer to the start of a variable argument list stored in a memory buffer. Same as uint8_t *.
 ///
 typedef uintn *BASE_LIST;
 
@@ -669,26 +669,26 @@ STATIC_ASSERT(
 	sizeof(int8) == 1,
 	"sizeof (int8) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint8) == 1,
-	"sizeof (uint8) does not meet UEFI Specification data Type requirements");
+	sizeof(uint8_t) == 1,
+	"sizeof (uint8_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(int16) == 2,
 	"sizeof (int16) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint16) == 2,
-	"sizeof (uint16) does not meet UEFI Specification data Type requirements");
+	sizeof(uint16_t) == 2,
+	"sizeof (uint16_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int32) == 4,
-	"sizeof (int32) does not meet UEFI Specification data Type requirements");
+	sizeof(int32_t) == 4,
+	"sizeof (int32_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint32) == 4,
-	"sizeof (uint32) does not meet UEFI Specification data Type requirements");
+	sizeof(uint32_t) == 4,
+	"sizeof (uint32_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(int64) == 8,
 	"sizeof (int64) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint64) == 8,
-	"sizeof (uint64) does not meet UEFI Specification data Type requirements");
+	sizeof(uint64_t) == 8,
+	"sizeof (uint64_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
 	sizeof(char8) == 1,
 	"sizeof (char8) does not meet UEFI Specification data Type requirements");
@@ -1112,7 +1112,7 @@ typedef uintn return_status;
 
 **/
 #define SIGNATURE_64(A, B, C, D, E, F, G, H)                                   \
-	(SIGNATURE_32(A, B, C, D) | ((uint64)(SIGNATURE_32(E, F, G, H)) << 32))
+	(SIGNATURE_32(A, B, C, D) | ((uint64_t)(SIGNATURE_32(E, F, G, H)) << 32))
 
 #if defined(_MSC_EXTENSIONS) && !defined(__INTEL_COMPILER) &&                  \
 	!defined(MDE_CPU_EBC)

@@ -113,7 +113,7 @@ boolean sm3_256_update(IN OUT void *sm3_context, IN const void *data,
   @retval FALSE  SM3 digest computation failed.
 
 **/
-boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
+boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
 {
 	return FALSE;
 }
@@ -137,7 +137,7 @@ boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
 
 **/
 boolean sm3_256_hash_all(IN const void *data, IN uintn data_size,
-			 OUT uint8 *hash_value)
+			 OUT uint8_t *hash_value)
 {
 	return FALSE;
 }

@@ -72,7 +72,7 @@ boolean libspdm_get_peer_cert_chain_data(IN void *context,
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
-	*cert_chain_data = (uint8 *)*cert_chain_data +
+	*cert_chain_data = (uint8_t *)*cert_chain_data +
 			   sizeof(spdm_cert_chain_t) + hash_size;
 	*cert_chain_data_size =
 		*cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
@@ -137,7 +137,7 @@ boolean libspdm_get_local_cert_chain_data(IN void *context,
 	hash_size = spdm_get_hash_size(
 		spdm_context->connection_info.algorithm.base_hash_algo);
 
-	*cert_chain_data = (uint8 *)*cert_chain_data +
+	*cert_chain_data = (uint8_t *)*cert_chain_data +
 			   sizeof(spdm_cert_chain_t) + hash_size;
 	*cert_chain_data_size =
 		*cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
@@ -161,8 +161,8 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 {
 	spdm_context_t *spdm_context;
 	return_status status;
-	uint32 hash_size;
-	uint8 hash_data[MAX_HASH_SIZE];
+	uint32_t hash_size;
+	uint8_t hash_data[MAX_HASH_SIZE];
 	large_managed_buffer_t m1m2;
 
 	spdm_context = context;
@@ -288,7 +288,7 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
 			    OUT void *m1m2_hash)
 {
 	spdm_context_t *spdm_context;
-	uint32 hash_size;
+	uint32_t hash_size;
 
 	spdm_context = context;
 
@@ -334,8 +334,8 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
 {
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *spdm_session_info;
-	uint32 hash_size;
-	uint8 hash_data[MAX_HASH_SIZE];
+	uint32_t hash_size;
+	uint8_t hash_data[MAX_HASH_SIZE];
 
 	spdm_context = context;
 	spdm_session_info = session_info;
@@ -390,7 +390,7 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *spdm_session_info;
 
-	uint32 hash_size;
+	uint32_t hash_size;
 
 	spdm_context = context;
 	spdm_session_info = session_info;
@@ -427,7 +427,7 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
   @retval FALSE certificate chain hash is not generated.
 **/
 boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
-				      IN uintn slot_id, OUT uint8 *hash)
+				      IN uintn slot_id, OUT uint8_t *hash)
 {
 	ASSERT(slot_id < spdm_context->local_context.slot_count);
 	spdm_hash_all(
@@ -453,9 +453,9 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
 				 IN void *digest, IN uintn digest_count)
 {
 	uintn hash_size;
-	uint8 *hash_buffer;
-	uint8 cert_chain_buffer_hash[MAX_HASH_SIZE];
-	uint8 *cert_chain_buffer;
+	uint8_t *hash_buffer;
+	uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
+	uint8_t *cert_chain_buffer;
 	uintn cert_chain_buffer_size;
 	uintn index;
 
@@ -509,13 +509,13 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 					   OUT void **trust_anchor OPTIONAL,
 					   OUT uintn *trust_anchor_size OPTIONAL)
 {
-	uint8 *cert_chain_data;
+	uint8_t *cert_chain_data;
 	uintn cert_chain_data_size;
-	uint8 *root_cert;
+	uint8_t *root_cert;
 	uintn root_cert_size;
-	uint8 root_cert_hash[MAX_HASH_SIZE];
+	uint8_t root_cert_hash[MAX_HASH_SIZE];
 	uintn root_cert_hash_size;
-	uint8 *received_root_cert;
+	uint8_t *received_root_cert;
 	uintn received_root_cert_size;
 	boolean result;
 
@@ -539,7 +539,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 		spdm_hash_all(
 			spdm_context->connection_info.algorithm.base_hash_algo,
 			root_cert, root_cert_size, root_cert_hash);
-		if (const_compare_mem((uint8 *)cert_chain_buffer +
+		if (const_compare_mem((uint8_t *)cert_chain_buffer +
 					sizeof(spdm_cert_chain_t),
 				root_cert_hash, root_cert_hash_size) != 0) {
 			DEBUG((DEBUG_INFO,
@@ -548,7 +548,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 		}
 
 		x509_get_cert_from_cert_chain(
-		    (uint8 *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
+		    (uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
 			cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
 			0, &received_root_cert, &received_root_cert_size);
 		if (spdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
@@ -611,15 +611,15 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 					       IN boolean is_requester,
-					       OUT uint8 *signature)
+					       OUT uint8_t *signature)
 {
 	boolean result;
 	uintn signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn m1m2_buffer_size;
 #else
-	uint8 m1m2_hash[MAX_HASH_SIZE];
+	uint8_t m1m2_hash[MAX_HASH_SIZE];
 	uintn m1m2_hash_size;
 #endif
 
@@ -695,8 +695,8 @@ boolean spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
 					   IN uintn certificate_chain_hash_size)
 {
 	uintn hash_size;
-	uint8 cert_chain_buffer_hash[MAX_HASH_SIZE];
-	uint8 *cert_chain_buffer;
+	uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
+	uint8_t *cert_chain_buffer;
 	uintn cert_chain_buffer_size;
 	boolean result;
 
@@ -746,16 +746,16 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
 					     IN uintn sign_data_size)
 {
 	boolean result;
-	uint8 *cert_buffer;
+	uint8_t *cert_buffer;
 	uintn cert_buffer_size;
 	void *context;
-	uint8 *cert_chain_data;
+	uint8_t *cert_chain_data;
 	uintn cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8 m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn m1m2_buffer_size;
 #else
-	uint8 m1m2_hash[MAX_HASH_SIZE];
+	uint8_t m1m2_hash[MAX_HASH_SIZE];
 	uintn m1m2_hash_size;
 #endif
 
@@ -865,10 +865,10 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
   @return 0 measurement summary hash type is invalid, NO_MEAS hash type or no MEAS capabilities.
   @return measurement summary hash size according to type.
 **/
-uint32
+uint32_t
 spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
 				       IN boolean is_requester,
-				       IN uint8 measurement_summary_hash_type)
+				       IN uint8_t measurement_summary_hash_type)
 {
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, is_requester, 0,
@@ -905,16 +905,16 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
 boolean
 spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 				       IN boolean is_requester,
-				       IN uint8 measurement_summary_hash_type,
-				       OUT uint8 *measurement_summary_hash)
+				       IN uint8_t measurement_summary_hash_type,
+				       OUT uint8_t *measurement_summary_hash)
 {
-	uint8 measurement_data[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+	uint8_t measurement_data[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
 	uintn index;
 	spdm_measurement_block_dmtf_t *cached_measurment_block;
 	uintn measurment_data_size;
 	uintn measurment_block_size;
-	uint8 device_measurement[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
-	uint8 device_measurement_count;
+	uint8_t device_measurement[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+	uint8_t device_measurement_count;
 	uintn device_measurement_size;
 	return_status status;
 
@@ -1040,15 +1040,15 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 						IN spdm_session_info_t *session_info,
-					    OUT uint8 *signature)
+					    OUT uint8_t *signature)
 {
 	uintn signature_size;
 	boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn l1l2_buffer_size;
 #else
-	uint8 l1l2_hash[MAX_HASH_SIZE];
+	uint8_t l1l2_hash[MAX_HASH_SIZE];
 	uintn l1l2_hash_size;
 #endif
 
@@ -1102,16 +1102,16 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 					  IN uintn sign_data_size)
 {
 	boolean result;
-	uint8 *cert_buffer;
+	uint8_t *cert_buffer;
 	uintn cert_buffer_size;
 	void *context;
-	uint8 *cert_chain_data;
+	uint8_t *cert_chain_data;
 	uintn cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8 l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn l1l2_buffer_size;
 #else
-	uint8 l1l2_hash[MAX_HASH_SIZE];
+	uint8_t l1l2_hash[MAX_HASH_SIZE];
 	uintn l1l2_hash_size;
 #endif
 

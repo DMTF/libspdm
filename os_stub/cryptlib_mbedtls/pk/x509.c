@@ -19,9 +19,9 @@
 ///
 /// OID
 ///
-static const uint8 m_oid_common_name[] = { 0x55, 0x04, 0x03 };
-static const uint8 m_oid_organization_name[] = { 0x55, 0x04, 0x0A };
-static const uint8 m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
+static const uint8_t m_oid_common_name[] = { 0x55, 0x04, 0x03 };
+static const uint8_t m_oid_organization_name[] = { 0x55, 0x04, 0x0A };
+static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 
 /**
   Construct a X509 object from DER-encoded certificate data.
@@ -37,11 +37,11 @@ static const uint8 m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
   @retval     FALSE           The operation failed.
 
 **/
-boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
-				   OUT uint8 **single_x509_cert)
+boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
+				   OUT uint8_t **single_x509_cert)
 {
 	mbedtls_x509_crt *mbedtls_cert;
-	int32 ret;
+	int32_t ret;
 
 	if (cert == NULL || single_x509_cert == NULL || cert_size == 0) {
 		return FALSE;
@@ -54,19 +54,19 @@ boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
 
 	mbedtls_x509_crt_init(mbedtls_cert);
 
-	*single_x509_cert = (uint8 *)(void *)mbedtls_cert;
+	*single_x509_cert = (uint8_t *)(void *)mbedtls_cert;
 	ret = mbedtls_x509_crt_parse_der(mbedtls_cert, cert, cert_size);
 
 	return ret == 0;
 }
 
-static boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
+static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
 					      IN VA_LIST args)
 {
-	uint8 *cert;
+	uint8_t *cert;
 	uintn cert_size;
-	int32 index;
-	int32 ret;
+	int32_t index;
+	int32_t ret;
 
 	if (x509_stack == NULL) {
 		return FALSE;
@@ -80,14 +80,14 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
 			return FALSE;
 		}
 		mbedtls_x509_crt_init(crt);
-		*x509_stack = (uint8 *)crt;
+		*x509_stack = (uint8_t *)crt;
 	}
 
 	for (index = 0;; index++) {
 		//
 		// If cert is NULL, then it is the end of the list.
 		//
-		cert = VA_ARG(args, uint8 *);
+		cert = VA_ARG(args, uint8_t *);
 		if (cert == NULL) {
 			break;
 		}
@@ -122,7 +122,7 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
   @retval     FALSE           The construction operation failed.
 
 **/
-boolean x509_construct_certificate_stack(IN OUT uint8 **x509_stack, ...)
+boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 {
 	VA_LIST args;
 	boolean result;
@@ -177,10 +177,10 @@ void x509_stack_free(IN void *x509_stack)
   @retval      TRUE   Get tag successful
   @retval      FALSe  Failed to get tag or tag not match
 **/
-boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
-		     IN uint32 tag)
+boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
+		     IN uint32_t tag)
 {
-	if (mbedtls_asn1_get_tag(ptr, end, length, (int32)tag) == 0) {
+	if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
 		return TRUE;
 	} else {
 		return FALSE;
@@ -204,12 +204,12 @@ boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
                   The subject_size will be updated with the required size.
 
 **/
-boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
-			      OUT uint8 *cert_subject,
+boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
+			      OUT uint8_t *cert_subject,
 			      IN OUT uintn *subject_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	boolean status;
 
 	if (cert == NULL) {
@@ -242,7 +242,7 @@ cleanup:
 }
 
 return_status
-internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8 *oid,
+internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8_t *oid,
 			   IN uintn oid_size, IN OUT char8 *common_name,
 			   OPTIONAL IN OUT uintn *common_name_size)
 {
@@ -266,13 +266,13 @@ internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8 *oid,
 }
 
 return_status
-internal_x509_get_subject_nid_name(IN const uint8 *cert, IN uintn cert_size,
-				   IN uint8 *oid, IN uintn oid_size,
+internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
+				   IN uint8_t *oid, IN uintn oid_size,
 				   OUT char8 *common_name,
 				   OPTIONAL IN OUT uintn *common_name_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	mbedtls_x509_name *name;
 	return_status status;
 
@@ -298,13 +298,13 @@ internal_x509_get_subject_nid_name(IN const uint8 *cert, IN uintn cert_size,
 }
 
 return_status
-internal_x509_get_issuer_nid_name(IN const uint8 *cert, IN uintn cert_size,
-				  IN uint8 *oid, IN uintn oid_size,
+internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
+				  IN uint8_t *oid, IN uintn oid_size,
 				  OUT char8 *common_name,
 				  OPTIONAL IN OUT uintn *common_name_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	mbedtls_x509_name *name;
 	return_status status;
 
@@ -355,12 +355,12 @@ internal_x509_get_issuer_nid_name(IN const uint8 *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 				   OUT char8 *common_name,
 				   OPTIONAL IN OUT uintn *common_name_size)
 {
 	return internal_x509_get_subject_nid_name(
-		cert, cert_size, (uint8 *)m_oid_common_name,
+		cert, cert_size, (uint8_t *)m_oid_common_name,
 		sizeof(m_oid_common_name), common_name, common_name_size);
 }
 
@@ -391,12 +391,12 @@ return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT char8 *name_buffer,
 			   OPTIONAL IN OUT uintn *name_buffer_size)
 {
 	return internal_x509_get_subject_nid_name(
-		cert, cert_size, (uint8 *)m_oid_organization_name,
+		cert, cert_size, (uint8_t *)m_oid_organization_name,
 		sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
 }
 
@@ -416,12 +416,12 @@ x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve RSA public key from X509 certificate.
 
 **/
-boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **rsa_context)
 {
 	mbedtls_x509_crt crt;
 	mbedtls_rsa_context *rsa;
-	int32 ret;
+	int32_t ret;
 
 	mbedtls_x509_crt_init(&crt);
 
@@ -467,12 +467,12 @@ boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve EC public key from X509 certificate.
 
 **/
-boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ec_context)
 {
 	mbedtls_x509_crt crt;
 	mbedtls_ecdh_context *ecdh;
-	int32 ret;
+	int32_t ret;
 
 	mbedtls_x509_crt_init(&crt);
 
@@ -522,7 +522,7 @@ boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve Ed public key from X509 certificate.
 
 **/
-boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ecd_context)
 {
 	return FALSE;
@@ -544,7 +544,7 @@ boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve sm2 public key from X509 certificate.
 
 **/
-boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **sm2_context)
 {
 	return FALSE;
@@ -566,12 +566,12 @@ boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
                   trusted CA.
 
 **/
-boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
-			 IN const uint8 *ca_cert, IN uintn ca_cert_size)
+boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
+			 IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_x509_crt ca, end;
-	uint32 v_flag = 0;
+	uint32_t v_flag = 0;
 	mbedtls_x509_crt_profile profile = { 0 };
 
 	if (cert == NULL || ca_cert == NULL) {
@@ -619,16 +619,16 @@ boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Invalid certificate or the certificate was not issued by the given
                   trusted CA.
 **/
-boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
-			       IN uint8 *cert_chain, IN uintn cert_chain_length)
+boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
+			       IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
 	uintn asn1_len;
 	uintn preceding_cert_len;
-	uint8 *preceding_cert;
+	uint8_t *preceding_cert;
 	uintn current_cert_len;
-	uint8 *current_cert;
-	uint8 *tmp_ptr;
-	uint32 ret;
+	uint8_t *current_cert;
+	uint8_t *tmp_ptr;
+	uint32_t ret;
 	boolean verify_flag;
 
 	verify_flag = FALSE;
@@ -693,17 +693,17 @@ boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
   @retval  TRUE   Success.
   @retval  FALSE  Failed to get certificate from certificate chain.
 **/
-boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
+boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 				      IN uintn cert_chain_length,
-				      IN int32 cert_index, OUT uint8 **cert,
+				      IN int32_t cert_index, OUT uint8_t **cert,
 				      OUT uintn *cert_length)
 {
 	uintn asn1_len;
-	int32 current_index;
+	int32_t current_index;
 	uintn current_cert_len;
-	uint8 *current_cert;
-	uint8 *tmp_ptr;
-	int32 ret;
+	uint8_t *current_cert;
+	uint8_t *tmp_ptr;
+	int32_t ret;
 
 	//
 	// Check input parameters.
@@ -774,8 +774,8 @@ boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
   @retval  FALSE  Invalid X.509 certificate.
 
 **/
-boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
-			  OUT uint8 **tbs_cert, OUT uintn *tbs_cert_size)
+boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
+			  OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
 	return FALSE;
 }
@@ -796,11 +796,11 @@ boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
 			       OUT uintn *version)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	return_status status;
 
 	if (cert == NULL) {
@@ -846,12 +846,12 @@ return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
                                    serial_number_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
-				     OUT uint8 *serial_number,
+return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
+				     OUT uint8_t *serial_number,
 				     OPTIONAL IN OUT uintn *serial_number_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	return_status status;
 
 	if (cert == NULL) {
@@ -902,12 +902,12 @@ cleanup:
   @retval  FALSE  This interface is not supported.
 
 **/
-boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
-			     OUT uint8 *cert_issuer,
+boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
+			     OUT uint8_t *cert_issuer,
 			     IN OUT uintn *issuer_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	boolean status;
 
 	if (cert == NULL) {
@@ -966,12 +966,12 @@ cleanup:
 
 **/
 return_status
-x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 			    OUT char8 *common_name,
 			    OPTIONAL IN OUT uintn *common_name_size)
 {
 	return internal_x509_get_issuer_nid_name(cert, cert_size,
-						 (uint8 *)m_oid_common_name,
+						 (uint8_t *)m_oid_common_name,
 						 sizeof(m_oid_common_name),
 						 common_name, common_name_size);
 }
@@ -1003,12 +1003,12 @@ x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
 				 OUT char8 *name_buffer,
 				 OPTIONAL IN OUT uintn *name_buffer_size)
 {
 	return internal_x509_get_issuer_nid_name(
-		cert, cert_size, (uint8 *)m_oid_organization_name,
+		cert, cert_size, (uint8_t *)m_oid_organization_name,
 		sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
 }
 
@@ -1030,12 +1030,12 @@ x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
                                    is returned in the oid_size.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_signature_algorithm(IN const uint8 *cert,
-					   IN uintn cert_size, OUT uint8 *oid,
+return_status x509_get_signature_algorithm(IN const uint8_t *cert,
+					   IN uintn cert_size, OUT uint8_t *oid,
 					   OPTIONAL IN OUT uintn *oid_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	return_status status;
 
 	if (cert == NULL || cert_size == 0 || oid_size == NULL) {
@@ -1079,14 +1079,14 @@ cleanup:
 
  **/
 static return_status
-internal_x509_find_extension_data(uint8 *start, uint8 *end, uint8 *oid,
-				  uintn oid_size, uint8 **find_extension_data,
+internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
+				  uintn oid_size, uint8_t **find_extension_data,
 				  uintn *find_extension_data_len)
 {
-	uint8 *ptr;
-	uint8 *extension_ptr;
+	uint8_t *ptr;
+	uint8_t *extension_ptr;
 	size_t obj_len;
-	int32 ret;
+	int32_t ret;
 	return_status status;
 	size_t find_extension_len;
 	size_t header_len;
@@ -1167,16 +1167,16 @@ internal_x509_find_extension_data(uint8 *start, uint8 *end, uint8 *oid,
                                    is returned in the extension_data_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
-				      IN uint8 *oid, IN uintn oid_size,
-				      OUT uint8 *extension_data,
+return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
+				      IN uint8_t *oid, IN uintn oid_size,
+				      OUT uint8_t *extension_data,
 				      IN OUT uintn *extension_data_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	return_status status;
-	uint8 *ptr;
-	uint8 *end;
+	uint8_t *ptr;
+	uint8_t *end;
 	size_t obj_len;
 
 	if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
@@ -1243,12 +1243,12 @@ cleanup:
   @retval  FALSE  Invalid certificate, or Validity retrieve failed.
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_validity(IN const uint8 *cert, IN uintn cert_size,
-			  IN uint8 *from, IN OUT uintn *from_size, IN uint8 *to,
+boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
+			  IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
 			  IN OUT uintn *to_size)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	boolean status;
 	uintn t_size;
 	uintn f_size;
@@ -1304,11 +1304,11 @@ done:
   @retval  FALSE  Invalid certificate, or usage is NULL
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
+boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT uintn *usage)
 {
 	mbedtls_x509_crt crt;
-	int32 ret;
+	int32_t ret;
 	boolean status;
 
 	if (cert == NULL) {
@@ -1347,8 +1347,8 @@ boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
                                    is returned in the usage_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extended_key_usage(IN const uint8 *cert,
-					  IN uintn cert_size, OUT uint8 *usage,
+return_status x509_get_extended_key_usage(IN const uint8_t *cert,
+					  IN uintn cert_size, OUT uint8_t *usage,
 					  IN OUT uintn *usage_size)
 {
 	return_status status;
@@ -1357,8 +1357,8 @@ return_status x509_get_extended_key_usage(IN const uint8 *cert,
 		return RETURN_INVALID_PARAMETER;
 	}
 
-	status = x509_get_extension_data((uint8 *)cert, cert_size,
-					 (uint8 *)m_oid_ext_key_usage,
+	status = x509_get_extension_data((uint8_t *)cert, cert_size,
+					 (uint8_t *)m_oid_ext_key_usage,
 					 sizeof(m_oid_ext_key_usage), usage,
 					 usage_size);
 
@@ -1398,10 +1398,10 @@ static intn internal_x509_check_time(const mbedtls_x509_time *before,
 	return (0);
 }
 
-static int32 internal_atoi(char8 *p_start, char8 *p_end)
+static int32_t internal_atoi(char8 *p_start, char8 *p_end)
 {
 	char8 *p = p_start;
-	int32 k = 0;
+	int32_t k = 0;
 	while (p < p_end) {
 		///
 		/// k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10
@@ -1440,12 +1440,12 @@ return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
 {
 	mbedtls_x509_time dt;
 
-	int32 year;
-	int32 month;
-	int32 day;
-	int32 hour;
-	int32 minute;
-	int32 second;
+	int32_t year;
+	int32_t month;
+	int32_t day;
+	int32_t hour;
+	int32_t minute;
+	int32_t second;
 	return_status status;
 	char8 *p;
 

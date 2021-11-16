@@ -23,7 +23,7 @@
 #include <library/memlib.h>
 #include "spdm_device_secret_lib_internal.h"
 
-boolean read_responder_private_certificate(IN uint32 base_asym_algo,
+boolean read_responder_private_certificate(IN uint32_t base_asym_algo,
 					   OUT void **data, OUT uintn *size)
 {
 	boolean res;
@@ -59,7 +59,7 @@ boolean read_responder_private_certificate(IN uint32 base_asym_algo,
 	return res;
 }
 
-boolean read_requester_private_certificate(IN uint16 req_base_asym_alg,
+boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
 					   OUT void **data, OUT uintn *size)
 {
 	boolean res;
@@ -128,17 +128,17 @@ boolean read_requester_private_certificate(IN uint16 req_base_asym_alg,
 
 return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
-					IN uint8 measurement_specification,
-				    IN uint32 measurement_hash_algo,
-				    IN uint8 measurements_index,
-				    OUT uint8 *measurements_count,
+					IN uint8_t measurement_specification,
+				    IN uint32_t measurement_hash_algo,
+				    IN uint8_t measurements_index,
+				    OUT uint8_t *measurements_count,
 				    OUT void *measurements,
 				    IN OUT uintn *measurements_size)
 {
 	spdm_measurement_block_dmtf_t *measurement_block;
 	uintn hash_size;
-	uint8 index;
-	uint8 data[MEASUREMENT_MANIFEST_SIZE];
+	uint8_t index;
+	uint8_t data[MEASUREMENT_MANIFEST_SIZE];
 	uintn total_size_needed;
 
 	ASSERT(measurement_specification ==
@@ -191,7 +191,7 @@ return_status spdm_measurement_collection(
 				.measurement_specification =
 				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
-			set_mem(data, sizeof(data), (uint8)(index + 1));
+			set_mem(data, sizeof(data), (uint8_t)(index + 1));
 
 			// The first N-1 blocks may be hash values,
 			// while the last one is always a raw bitstream.
@@ -203,12 +203,12 @@ return_status spdm_measurement_collection(
 					(index - 1);
 				measurement_block->Measurement_block_dmtf_header
 					.dmtf_spec_measurement_value_size =
-					(uint16)hash_size;
+					(uint16_t)hash_size;
 
 				measurement_block->Measurement_block_common_header
 					.measurement_size =
-					(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
-						 (uint16)hash_size);
+					(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
+						 (uint16_t)hash_size);
 
 				spdm_measurement_hash_all(
 					measurement_hash_algo, data,
@@ -216,7 +216,7 @@ return_status spdm_measurement_collection(
 					(void *)(measurement_block + 1));
 
 				measurement_block =
-					(void *)((uint8 *)measurement_block +
+					(void *)((uint8_t *)measurement_block +
 						 sizeof(spdm_measurement_block_dmtf_t) +
 						 hash_size);
 
@@ -227,17 +227,17 @@ return_status spdm_measurement_collection(
 					SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
 				measurement_block->Measurement_block_dmtf_header
 					.dmtf_spec_measurement_value_size =
-					(uint16)sizeof(data);
+					(uint16_t)sizeof(data);
 
 				measurement_block->Measurement_block_common_header
 					.measurement_size =
-					(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
-						 (uint16)sizeof(data));
+					(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
+						 (uint16_t)sizeof(data));
 
 				copy_mem((void *)(measurement_block + 1), data, sizeof(data));
 
 				measurement_block =
-					(void *)((uint8 *)measurement_block +
+					(void *)((uint8_t *)measurement_block +
 						 sizeof(spdm_measurement_block_dmtf_t) +
 						 sizeof(data));
 
@@ -267,7 +267,7 @@ return_status spdm_measurement_collection(
 			return RETURN_BUFFER_TOO_SMALL;
 		}
 
-		set_mem(data, sizeof(data), (uint8)(measurements_index));
+		set_mem(data, sizeof(data), (uint8_t)(measurements_index));
 
 		*measurements_count = 1;
 		*measurements_size = total_size_needed;
@@ -289,11 +289,11 @@ return_status spdm_measurement_collection(
 				measurements_index - 1;
 			measurement_block->Measurement_block_dmtf_header
 				.dmtf_spec_measurement_value_size =
-				(uint16)hash_size;
+				(uint16_t)hash_size;
 			measurement_block->Measurement_block_common_header
 				.measurement_size =
-				(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
-					 (uint16)hash_size);
+				(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
+					 (uint16_t)hash_size);
 
 			// Hash directly to buffer after measurement block.
 			spdm_measurement_hash_all(
@@ -307,12 +307,12 @@ return_status spdm_measurement_collection(
 				SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
 			measurement_block->Measurement_block_dmtf_header
 				.dmtf_spec_measurement_value_size =
-				(uint16)sizeof(data);
+				(uint16_t)sizeof(data);
 
 			measurement_block->Measurement_block_common_header
 				.measurement_size =
-				(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
-					 (uint16)sizeof(data));
+				(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
+					 (uint16_t)sizeof(data));
 
 			copy_mem((void *)(measurement_block + 1), data,
 				 sizeof(data));
@@ -336,11 +336,11 @@ return_status spdm_measurement_collection(
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8 op_code,
-				 IN uint16 req_base_asym_alg,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size)
+				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+				 IN uint16_t req_base_asym_alg,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	void *context;
 	void *private_pem;
@@ -388,11 +388,11 @@ boolean spdm_requester_data_sign(
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8 op_code,
-				 IN uint32 base_asym_algo,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size)
+				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+				 IN uint32_t base_asym_algo,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	void *context;
 	void *private_pem;
@@ -423,8 +423,8 @@ boolean spdm_responder_data_sign(
 	return result;
 }
 
-uint8 m_my_zero_filled_buffer[64];
-uint8 m_bin_str0[0x11] = {
+uint8_t m_my_zero_filled_buffer[64];
+uint8_t m_bin_str0[0x11] = {
 	0x00, 0x00, // length - to be filled
 	0x73, 0x70, 0x64, 0x6d, 0x31, 0x2e, 0x31, 0x20, // version: 'spdm1.1 '
 	0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64, // label: 'derived'
@@ -446,18 +446,18 @@ uint8 m_bin_str0[0x11] = {
 **/
 boolean spdm_psk_handshake_secret_hkdf_expand(
 					      IN spdm_version_number_t spdm_version,
-					      IN uint32 base_hash_algo,
-					      IN const uint8 *psk_hint,
+					      IN uint32_t base_hash_algo,
+					      IN const uint8_t *psk_hint,
 					      OPTIONAL IN uintn psk_hint_size,
-					      OPTIONAL IN const uint8 *info,
+					      OPTIONAL IN const uint8_t *info,
 					      IN uintn info_size,
-					      OUT uint8 *out, IN uintn out_size)
+					      OUT uint8_t *out, IN uintn out_size)
 {
 	void *psk;
 	uintn psk_size;
 	uintn hash_size;
 	boolean result;
-	uint8 handshake_secret[64];
+	uint8_t handshake_secret[64];
 
 	if ((psk_hint == NULL) && (psk_hint_size == 0)) {
 		psk = TEST_PSK_DATA_STRING;
@@ -506,20 +506,20 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
 **/
 boolean spdm_psk_master_secret_hkdf_expand(
 					   IN spdm_version_number_t spdm_version,
-					   IN uint32 base_hash_algo,
-					   IN const uint8 *psk_hint,
+					   IN uint32_t base_hash_algo,
+					   IN const uint8_t *psk_hint,
 					   OPTIONAL IN uintn psk_hint_size,
-					   OPTIONAL IN const uint8 *info,
-					   IN uintn info_size, OUT uint8 *out,
+					   OPTIONAL IN const uint8_t *info,
+					   IN uintn info_size, OUT uint8_t *out,
 					   IN uintn out_size)
 {
 	void *psk;
 	uintn psk_size;
 	uintn hash_size;
 	boolean result;
-	uint8 handshake_secret[64];
-	uint8 salt1[64];
-	uint8 master_secret[64];
+	uint8_t handshake_secret[64];
+	uint8_t salt1[64];
+	uint8_t master_secret[64];
 
 	if ((psk_hint == NULL) && (psk_hint_size == 0)) {
 		psk = TEST_PSK_DATA_STRING;
@@ -542,7 +542,7 @@ boolean spdm_psk_master_secret_hkdf_expand(
 		return result;
 	}
 
-	*(uint16 *)m_bin_str0 = (uint16)hash_size;
+	*(uint16_t *)m_bin_str0 = (uint16_t)hash_size;
 	result = spdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
 				  m_bin_str0, sizeof(m_bin_str0), salt1,
 				  hash_size);

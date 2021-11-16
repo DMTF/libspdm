@@ -115,7 +115,7 @@
 ///
 /// 8-byte unsigned value.
 ///
-typedef unsigned __int64 uint64;
+typedef unsigned __int64 uint64_t;
 ///
 /// 8-byte signed value.
 ///
@@ -123,15 +123,15 @@ typedef __int64 int64;
 ///
 /// 4-byte unsigned value.
 ///
-typedef unsigned __int32 uint32;
+typedef unsigned __int32 uint32_t;
 ///
 /// 4-byte signed value.
 ///
-typedef __int32 int32;
+typedef __int32 int32_t;
 ///
 /// 2-byte unsigned value.
 ///
-typedef unsigned short uint16;
+typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value.
 ///
@@ -144,7 +144,7 @@ typedef unsigned char boolean;
 ///
 /// 1-byte unsigned value.
 ///
-typedef unsigned char uint8;
+typedef unsigned char uint8_t;
 ///
 /// 1-byte Character.
 ///
@@ -157,7 +157,7 @@ typedef signed char int8;
 ///
 /// 8-byte unsigned value.
 ///
-typedef unsigned long long uint64;
+typedef unsigned long long uint64_t;
 ///
 /// 8-byte signed value.
 ///
@@ -165,15 +165,15 @@ typedef long long int64;
 ///
 /// 4-byte unsigned value.
 ///
-typedef unsigned int uint32;
+typedef unsigned int uint32_t;
 ///
 /// 4-byte signed value.
 ///
-typedef int int32;
+typedef int int32_t;
 ///
 /// 2-byte unsigned value.
 ///
-typedef unsigned short uint16;
+typedef unsigned short uint16_t;
 ///
 /// 2-byte signed value.
 ///
@@ -186,7 +186,7 @@ typedef unsigned char boolean;
 ///
 /// 1-byte unsigned value.
 ///
-typedef unsigned char uint8;
+typedef unsigned char uint8_t;
 ///
 /// 1-byte Character
 ///
@@ -201,12 +201,12 @@ typedef signed char int8;
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions;
 /// 8 bytes on supported 64-bit processor instructions.)
 ///
-typedef uint32 uintn;
+typedef uint32_t uintn;
 ///
 /// Signed value of native width.  (4 bytes on supported 32-bit processor instructions;
 /// 8 bytes on supported 64-bit processor instructions.)
 ///
-typedef int32 intn;
+typedef int32_t intn;
 
 //
 // Processor specific defines

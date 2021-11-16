@@ -12,26 +12,26 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 req_session_id;
-	uint16 reserved;
-	uint8 random_data[SPDM_RANDOM_DATA_SIZE];
-	uint8 exchange_data[MAX_DHE_KEY_SIZE];
-	uint16 opaque_length;
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint16_t req_session_id;
+	uint16_t reserved;
+	uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
+	uint8_t exchange_data[MAX_DHE_KEY_SIZE];
+	uint16_t opaque_length;
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 rsp_session_id;
-	uint8 mut_auth_requested;
-	uint8 req_slot_id_param;
-	uint8 random_data[SPDM_RANDOM_DATA_SIZE];
-	uint8 exchange_data[MAX_DHE_KEY_SIZE];
-	uint8 measurement_summary_hash[MAX_HASH_SIZE];
-	uint16 opaque_length;
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
-	uint8 signature[MAX_ASYM_KEY_SIZE];
-	uint8 verify_data[MAX_HASH_SIZE];
+	uint16_t rsp_session_id;
+	uint8_t mut_auth_requested;
+	uint8_t req_slot_id_param;
+	uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
+	uint8_t exchange_data[MAX_DHE_KEY_SIZE];
+	uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+	uint16_t opaque_length;
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint8_t signature[MAX_ASYM_KEY_SIZE];
+	uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_key_exchange_response_max_t;
 
 #pragma pack()
@@ -54,9 +54,9 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status try_spdm_send_receive_key_exchange(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
-	OUT uint8 *req_slot_id_param, OUT void *measurement_hash,
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+	OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
 	IN void *requester_random_in OPTIONAL,
 	OUT void *requester_random OPTIONAL,
 	OUT void *responder_random OPTIONAL)
@@ -68,20 +68,20 @@ return_status try_spdm_send_receive_key_exchange(
 	spdm_key_exchange_response_max_t spdm_response;
 	uintn spdm_response_size;
 	uintn dhe_key_size;
-	uint32 measurement_summary_hash_size;
-	uint32 signature_size;
-	uint32 hmac_size;
-	uint8 *ptr;
+	uint32_t measurement_summary_hash_size;
+	uint32_t signature_size;
+	uint32_t hmac_size;
+	uint8_t *ptr;
 	void *measurement_summary_hash;
-	uint16 opaque_length;
-	uint8 *signature;
-	uint8 *verify_data;
+	uint16_t opaque_length;
+	uint8_t *signature;
+	uint8_t *verify_data;
 	void *dhe_context;
-	uint16 req_session_id;
-	uint16 rsp_session_id;
+	uint16_t req_session_id;
+	uint16_t rsp_session_id;
 	spdm_session_info_t *session_info;
 	uintn opaque_key_exchange_req_size;
-	uint8 th1_hash_data[64];
+	uint8_t th1_hash_data[64];
 
 	if (!spdm_is_capabilities_flag_supported(
 		    spdm_context, TRUE,
@@ -141,8 +141,8 @@ return_status try_spdm_send_receive_key_exchange(
 
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	status = spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ASSERT_RETURN_ERROR(status);
@@ -277,7 +277,7 @@ return_status try_spdm_send_receive_key_exchange(
 
 	if (spdm_response_size <
 	    sizeof(spdm_key_exchange_response_t) + dhe_key_size +
-		    measurement_summary_hash_size + sizeof(uint16) +
+		    measurement_summary_hash_size + sizeof(uint16_t) +
 		    signature_size + hmac_size) {
 		libspdm_free_session_id(spdm_context, *session_id);
 		spdm_secured_message_dhe_free(
@@ -309,14 +309,14 @@ return_status try_spdm_send_receive_key_exchange(
 
 	ptr += measurement_summary_hash_size;
 
-	opaque_length = *(uint16 *)ptr;
+	opaque_length = *(uint16_t *)ptr;
 	if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 		return RETURN_SECURITY_VIOLATION;
 	}
-	ptr += sizeof(uint16);
+	ptr += sizeof(uint16_t);
 	if (spdm_response_size <
 	    sizeof(spdm_key_exchange_response_t) + dhe_key_size +
-		    measurement_summary_hash_size + sizeof(uint16) +
+		    measurement_summary_hash_size + sizeof(uint16_t) +
 		    opaque_length + signature_size + hmac_size) {
 		libspdm_free_session_id(spdm_context, *session_id);
 		spdm_secured_message_dhe_free(
@@ -338,7 +338,7 @@ return_status try_spdm_send_receive_key_exchange(
 
 	spdm_response_size = sizeof(spdm_key_exchange_response_t) +
 			     dhe_key_size + measurement_summary_hash_size +
-			     sizeof(uint16) + opaque_length + signature_size +
+			     sizeof(uint16_t) + opaque_length + signature_size +
 			     hmac_size;
 
 	//
@@ -474,9 +474,9 @@ return_status try_spdm_send_receive_key_exchange(
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_key_exchange(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
-	OUT uint8 *req_slot_id_param, OUT void *measurement_hash)
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+	OUT uint8_t *req_slot_id_param, OUT void *measurement_hash)
 {
 	uintn retry;
 	return_status status;
@@ -513,9 +513,9 @@ return_status spdm_send_receive_key_exchange(
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_send_receive_key_exchange_ex(
-	IN spdm_context_t *spdm_context, IN uint8 measurement_hash_type,
-	IN uint8 slot_id, OUT uint32 *session_id, OUT uint8 *heartbeat_period,
-	OUT uint8 *req_slot_id_param, OUT void *measurement_hash,
+	IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+	IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+	OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
 	IN void *requester_random_in OPTIONAL,
 	OUT void *requester_random OPTIONAL,
 	OUT void *responder_random OPTIONAL)

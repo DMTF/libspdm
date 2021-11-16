@@ -56,7 +56,7 @@ void hmac_md_free(IN void *hmac_md_ctx)
 
 **/
 boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
-			IN const uint8 *key, IN uintn key_size)
+			IN const uint8_t *key, IN uintn key_size)
 {
 	//
 	// Check input parameters.
@@ -65,7 +65,7 @@ boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
 		return FALSE;
 	}
 
-	if (HMAC_Init_ex((HMAC_CTX *)hmac_md_ctx, key, (uint32)key_size, md,
+	if (HMAC_Init_ex((HMAC_CTX *)hmac_md_ctx, key, (uint32_t)key_size, md,
 			 NULL) != 1) {
 		return FALSE;
 	}
@@ -168,9 +168,9 @@ boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
   @retval FALSE  HMAC-MD digest computation failed.
 
 **/
-boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8 *hmac_value)
+boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
 {
-	uint32 length;
+	uint32_t length;
 
 	//
 	// Check input parameters.
@@ -214,10 +214,10 @@ boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8 *hmac_value)
 
 **/
 boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
-		    IN uintn data_size, IN const uint8 *key, IN uintn key_size,
-		    OUT uint8 *hmac_value)
+		    IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
+		    OUT uint8_t *hmac_value)
 {
-	uint32 length;
+	uint32_t length;
 	HMAC_CTX *ctx;
 	boolean ret_val;
 
@@ -230,7 +230,7 @@ boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
 	if (!ret_val) {
 		goto done;
 	}
-	ret_val = (boolean)HMAC_Init_ex(ctx, key, (uint32)key_size, md, NULL);
+	ret_val = (boolean)HMAC_Init_ex(ctx, key, (uint32_t)key_size, md, NULL);
 	if (!ret_val) {
 		goto done;
 	}
@@ -286,7 +286,7 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx)
   @retval FALSE  The key is set unsuccessfully.
 
 **/
-boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8 *key,
+boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return hmac_md_set_key(EVP_sha256(), hmac_sha256_ctx, key, key_size);
@@ -355,7 +355,7 @@ boolean hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
   @retval FALSE  HMAC-SHA256 digest computation failed.
 
 **/
-boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
 {
 	return hmac_md_final(hmac_sha256_ctx, hmac_value);
 }
@@ -381,8 +381,8 @@ boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8 *hmac_value)
 
 **/
 boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return hmac_md_all(EVP_sha256(), data, data_size, key, key_size,
 			   hmac_value);
@@ -427,7 +427,7 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8 *key,
+boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return hmac_md_set_key(EVP_sha384(), hmac_sha384_ctx, key, key_size);
@@ -502,7 +502,7 @@ boolean hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
 {
 	return hmac_md_final(hmac_sha384_ctx, hmac_value);
 }
@@ -528,8 +528,8 @@ boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8 *hmac_value)
 
 **/
 boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return hmac_md_all(EVP_sha384(), data, data_size, key, key_size,
 			   hmac_value);
@@ -574,7 +574,7 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8 *key,
+boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return hmac_md_set_key(EVP_sha512(), hmac_sha512_ctx, key, key_size);
@@ -649,7 +649,7 @@ boolean hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
 {
 	return hmac_md_final(hmac_sha512_ctx, hmac_value);
 }
@@ -675,8 +675,8 @@ boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8 *hmac_value)
 
 **/
 boolean hmac_sha512_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return hmac_md_all(EVP_sha512(), data, data_size, key, key_size,
 			   hmac_value);

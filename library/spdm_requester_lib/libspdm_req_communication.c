@@ -65,9 +65,9 @@ return_status libspdm_init_connection(IN void *context,
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status libspdm_start_session(IN void *context, IN boolean use_psk,
-				 IN uint8 measurement_hash_type,
-				 IN uint8 slot_id, OUT uint32 *session_id,
-				 OUT uint8 *heartbeat_period,
+				 IN uint8_t measurement_hash_type,
+				 IN uint8_t slot_id, OUT uint32_t *session_id,
+				 OUT uint8_t *heartbeat_period,
 				 OUT void *measurement_hash)
 {
 	return_status status;
@@ -75,7 +75,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
 
 	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	spdm_session_info_t *session_info;
-	uint8 req_slot_id_param;
+	uint8_t req_slot_id_param;
 	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 	spdm_context = context;
@@ -201,9 +201,9 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
-				 IN uint8 measurement_hash_type,
-				 IN uint8 slot_id, OUT uint32 *session_id,
-				 OUT uint8 *heartbeat_period,
+				 IN uint8_t measurement_hash_type,
+				 IN uint8_t slot_id, OUT uint32_t *session_id,
+				 OUT uint8_t *heartbeat_period,
 				 OUT void *measurement_hash,
 				 IN void *requester_random_in OPTIONAL,
 				 IN uintn requester_random_in_size OPTIONAL,
@@ -217,7 +217,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
 
 	#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 	spdm_session_info_t *session_info;
-	uint8 req_slot_id_param;
+	uint8_t req_slot_id_param;
 	#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 	spdm_context = context;
@@ -331,8 +331,8 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_stop_session(IN void *context, IN uint32 session_id,
-				IN uint8 end_session_attributes)
+return_status libspdm_stop_session(IN void *context, IN uint32_t session_id,
+				IN uint8_t end_session_attributes)
 {
 	return_status status;
 	spdm_context_t *spdm_context;
@@ -373,7 +373,7 @@ return_status libspdm_stop_session(IN void *context, IN uint32 session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_send_receive_data(IN void *context, IN uint32 *session_id,
+return_status libspdm_send_receive_data(IN void *context, IN uint32_t *session_id,
 				     IN boolean is_app_message,
 				     IN void *request, IN uintn request_size,
 				     IN OUT void *response,

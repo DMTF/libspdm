@@ -6,7 +6,7 @@
 
 #include "spdm_unit_test.h"
 
-void dump_hex_str(IN uint8 *buffer, IN uintn buffer_size)
+void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size)
 {
 	uintn index;
 
@@ -15,7 +15,7 @@ void dump_hex_str(IN uint8 *buffer, IN uintn buffer_size)
 	}
 }
 
-void dump_data(IN uint8 *buffer, IN uintn buffer_size)
+void dump_data(IN uint8_t *buffer, IN uintn buffer_size)
 {
 	uintn index;
 
@@ -24,7 +24,7 @@ void dump_data(IN uint8 *buffer, IN uintn buffer_size)
 	}
 }
 
-void dump_hex(IN uint8 *data, IN uintn size)
+void dump_hex(IN uint8_t *data, IN uintn size)
 {
 	uintn index;
 	uintn count;
@@ -35,13 +35,13 @@ void dump_hex(IN uint8 *data, IN uintn size)
 	count = size / COLUME_SIZE;
 	left = size % COLUME_SIZE;
 	for (index = 0; index < count; index++) {
-		printf("%04x: ", (uint32)(index * COLUME_SIZE));
+		printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
 		dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
 		printf("\n");
 	}
 
 	if (left != 0) {
-		printf("%04x: ", (uint32)(index * COLUME_SIZE));
+		printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
 		dump_data(data + index * COLUME_SIZE, left);
 		printf("\n");
 	}

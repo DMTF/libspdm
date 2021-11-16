@@ -30,8 +30,8 @@ void *ecd_new_by_nid(IN uintn nid)
 {
 	EVP_PKEY_CTX *pkey_ctx;
 	EVP_PKEY *pkey;
-	int32 result;
-	int32 openssl_pkey_type;
+	int32_t result;
+	int32_t openssl_pkey_type;
 
 	switch (nid) {
 	case CRYPTO_NID_EDDSA_ED25519:
@@ -89,7 +89,7 @@ void ecd_free(IN void *ecd_context)
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8 *public_key,
+boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
 			IN uintn public_key_size)
 {
 	// TBD
@@ -111,12 +111,12 @@ boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8 *public_key,
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8 *public_key,
+boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	EVP_PKEY *pkey;
-	int32 result;
-	uint32 final_pub_key_size;
+	int32_t result;
+	uint32_t final_pub_key_size;
 
 	if (ecd_context == NULL || public_key == NULL ||
 	    public_key_size == NULL) {
@@ -187,7 +187,7 @@ boolean ecd_check_key(IN void *ecd_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
+boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 			 IN OUT uintn *public_key_size)
 {
 	// TBD
@@ -228,14 +228,14 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
 
 **/
 boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-		   IN const uint8 *context, IN uintn context_size,
-		   IN const uint8 *message, IN uintn size, OUT uint8 *signature,
+		   IN const uint8_t *context, IN uintn context_size,
+		   IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
 		   IN OUT uintn *sig_size)
 {
 	EVP_PKEY *pkey;
 	EVP_MD_CTX *ctx;
 	uintn half_size;
-	int32 result;
+	int32_t result;
 
 	if (ecd_context == NULL || message == NULL) {
 		return FALSE;
@@ -318,14 +318,14 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
 
 **/
 boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-		     IN const uint8 *context, IN uintn context_size,
-		     IN const uint8 *message, IN uintn size,
-		     IN const uint8 *signature, IN uintn sig_size)
+		     IN const uint8_t *context, IN uintn context_size,
+		     IN const uint8_t *message, IN uintn size,
+		     IN const uint8_t *signature, IN uintn sig_size)
 {
 	EVP_PKEY *pkey;
 	EVP_MD_CTX *ctx;
 	uintn half_size;
-	int32 result;
+	int32_t result;
 
 	if (ecd_context == NULL || message == NULL || signature == NULL) {
 		return FALSE;

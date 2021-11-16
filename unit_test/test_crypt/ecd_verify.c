@@ -17,9 +17,9 @@ return_status validate_crypt_ecd(void)
 {
 	void *ecd1;
 	void *ecd2;
-	uint8 message[] = "EdDsaTest";
-	uint8 signature1[32 * 2];
-	uint8 signature2[57 * 2];
+	uint8_t message[] = "EdDsaTest";
+	uint8_t signature1[32 * 2];
+	uint8_t signature2[57 * 2];
 	uintn sig1_size;
 	uintn sig2_size;
 	boolean status;

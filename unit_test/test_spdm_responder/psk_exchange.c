@@ -17,14 +17,14 @@ typedef struct {
 	uint16 psk_hint_length;
 	uint16 context_length;
 	uint16 opaque_length;
-	uint8 psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
-	uint8 context[DEFAULT_CONTEXT_LENGTH];
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
+	uint8_t context[DEFAULT_CONTEXT_LENGTH];
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
 #pragma pack()
 
-static uint8 m_local_psk_hint[32];
+static uint8_t m_local_psk_hint[32];
 
 spdm_psk_exchange_request_mine_t m_spdm_psk_exchange_request1 = {
 	{ SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
@@ -44,11 +44,11 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;
@@ -137,11 +137,11 @@ void test_spdm_responder_psk_exchange_case2(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;
@@ -221,11 +221,11 @@ void test_spdm_responder_psk_exchange_case3(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;
@@ -307,11 +307,11 @@ void test_spdm_responder_psk_exchange_case4(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;
@@ -394,11 +394,11 @@ void test_spdm_responder_psk_exchange_case5(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 	spdm_error_data_response_not_ready_t *error_data;
 
@@ -487,11 +487,11 @@ void test_spdm_responder_psk_exchange_case6(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;
@@ -572,11 +572,11 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_psk_exchange_response_t *spdm_response;
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
+	uint8_t *ptr;
 	uintn opaque_psk_exchange_req_size;
 
 	spdm_test_context = *state;

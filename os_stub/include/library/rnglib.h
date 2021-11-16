@@ -22,6 +22,6 @@
   @retval FALSE        Failed to generate the random number.
 
 **/
-boolean get_random_number_64(OUT uint64 *rand_data);
+boolean get_random_number_64(OUT uint64_t *rand_data);
 
 #endif // __RNG_LIB_H__

@@ -46,10 +46,10 @@
 
 **/
 boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    OUT uint8 *big_number, IN OUT uintn *bn_size)
+		    OUT uint8_t *big_number, IN OUT uintn *bn_size)
 {
 	mbedtls_rsa_context *rsa_key;
-	int32 ret;
+	int32_t ret;
 	mbedtls_mpi value;
 	uintn size;
 
@@ -159,12 +159,12 @@ end:
 
 **/
 boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
-			 IN const uint8 *public_exponent,
+			 IN const uint8_t *public_exponent,
 			 IN uintn public_exponent_size)
 {
-	int32 ret = 0;
+	int32_t ret = 0;
 	mbedtls_rsa_context *rsa;
-	int32 pe;
+	int32_t pe;
 	mbedtls_mpi e;
 
 	//
@@ -190,7 +190,7 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
 
 	if (ret == 0) {
 		ret = mbedtls_rsa_gen_key(rsa, myrand, NULL,
-					  (uint32)modulus_length, pe);
+					  (uint32_t)modulus_length, pe);
 	}
 
 	return ret == 0;
@@ -217,7 +217,7 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
 **/
 boolean rsa_check_key(IN void *rsa_context)
 {
-	uint32 ret;
+	uint32_t ret;
 
 	if (rsa_context == NULL) {
 		return FALSE;
@@ -259,11 +259,11 @@ boolean rsa_check_key(IN void *rsa_context)
 
 **/
 boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				IN const uint8 *message_hash,
-				IN uintn hash_size, OUT uint8 *signature,
+				IN const uint8_t *message_hash,
+				IN uintn hash_size, OUT uint8_t *signature,
 				IN OUT uintn *sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_md_type_t md_alg;
 
 	if (rsa_context == NULL || message_hash == NULL) {
@@ -305,7 +305,7 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 	ret = mbedtls_rsa_pkcs1_sign(rsa_context, myrand, NULL,
 				     MBEDTLS_RSA_PRIVATE, md_alg,
-				     (uint32)hash_size, message_hash,
+				     (uint32_t)hash_size, message_hash,
 				     signature);
 	if (ret != 0) {
 		return FALSE;
@@ -344,10 +344,10 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
-		     IN const uint8 *message_hash, IN uintn hash_size,
-		     OUT uint8 *signature, IN OUT uintn *sig_size)
+		     IN const uint8_t *message_hash, IN uintn hash_size,
+		     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_md_type_t md_alg;
 
 	if (rsa_context == NULL || message_hash == NULL) {
@@ -392,7 +392,7 @@ boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
 
 	ret = mbedtls_rsa_rsassa_pss_sign(rsa_context, myrand, NULL,
 					  MBEDTLS_RSA_PRIVATE, md_alg,
-					  (uint32)hash_size, message_hash,
+					  (uint32_t)hash_size, message_hash,
 					  signature);
 	if (ret != 0) {
 		return FALSE;

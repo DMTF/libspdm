@@ -34,22 +34,22 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	spdm_psk_exchange_request_t *spdm_request;
 	spdm_psk_exchange_response_t *spdm_response;
 	boolean result;
-	uint8 slot_id;
-	uint32 session_id;
-	uint32 measurement_summary_hash_size;
-	uint32 hmac_size;
-	uint8 *ptr;
+	uint8_t slot_id;
+	uint32_t session_id;
+	uint32_t measurement_summary_hash_size;
+	uint32_t hmac_size;
+	uint8_t *ptr;
 	spdm_session_info_t *session_info;
 	uintn total_size;
 	spdm_context_t *spdm_context;
-	uint16 req_session_id;
-	uint16 rsp_session_id;
+	uint16_t req_session_id;
+	uint16_t rsp_session_id;
 	return_status status;
 	uintn opaque_psk_exchange_rsp_size;
-	uint8 th1_hash_data[64];
-	uint8 th2_hash_data[64];
-	uint32 algo_size;
-	uint16 context_length;
+	uint8_t th1_hash_data[64];
+	uint8_t th2_hash_data[64];
+	uint32_t algo_size;
+	uint16_t context_length;
 
 	spdm_context = context;
 	spdm_request = request;
@@ -181,7 +181,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 		       spdm_request->context_length +
 		       spdm_request->opaque_length;
 
-	ptr = (uint8 *)request + sizeof(spdm_psk_exchange_request_t) +
+	ptr = (uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
 	      spdm_request->psk_hint_length + spdm_request->context_length;
 	status = spdm_process_opaque_data_supported_version_data(
 		spdm_context, spdm_request->opaque_length, ptr);
@@ -238,7 +238,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 	spdm_response->reserved = 0;
 
 	spdm_response->context_length = context_length;
-	spdm_response->opaque_length = (uint16)opaque_psk_exchange_rsp_size;
+	spdm_response->opaque_length = (uint16_t)opaque_psk_exchange_rsp_size;
 
 	ptr = (void *)(spdm_response + 1);
 

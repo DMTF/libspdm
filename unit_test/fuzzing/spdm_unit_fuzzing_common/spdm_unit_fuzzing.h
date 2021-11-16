@@ -24,7 +24,7 @@
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
 typedef struct {
-	uint32 signature;
+	uint32_t signature;
 	boolean is_requester;
 	libspdm_device_send_message_func send_message;
 	libspdm_device_receive_message_func receive_message;

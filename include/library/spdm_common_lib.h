@@ -135,7 +135,7 @@ typedef struct {
 	//   session_id for the negoatiated key.
 	//   SlotId for the certificate.
 	//   req_slot_id + measurement_hash_type for SPDM_DATA_MUT_AUTH_REQUESTED
-	uint8 additional_data[4];
+	uint8_t additional_data[4];
 } spdm_data_parameter_t;
 
 typedef enum {
@@ -251,7 +251,7 @@ return_status libspdm_get_data(IN void *spdm_context,
 
   @return Last error of an SPDM context.
 */
-uint32 libspdm_get_last_error(IN void *spdm_context);
+uint32_t libspdm_get_last_error(IN void *spdm_context);
 
 /**
   Get the last SPDM error struct of an SPDM context.
@@ -327,7 +327,7 @@ uintn libspdm_get_context_size(void);
 typedef return_status (*libspdm_device_send_message_func)(IN void *spdm_context,
 						       IN uintn message_size,
 						       IN void *message,
-						       IN uint64 timeout);
+						       IN uint64_t timeout);
 
 /**
   Receive an SPDM transport layer message from a device.
@@ -360,7 +360,7 @@ typedef return_status (*libspdm_device_send_message_func)(IN void *spdm_context,
 **/
 typedef return_status (*libspdm_device_receive_message_func)(
 	IN void *spdm_context, IN OUT uintn *message_size, IN OUT void *message,
-	IN uint64 timeout);
+	IN uint64_t timeout);
 
 /**
   Register SPDM device input/output functions.
@@ -401,7 +401,7 @@ void libspdm_register_device_io_func(
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 typedef return_status (*libspdm_transport_encode_message_func)(
-	IN void *spdm_context, IN uint32 *session_id, IN boolean is_app_message,
+	IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
 	IN boolean is_requester, IN uintn spdm_message_size,
 	IN void *spdm_message, IN OUT uintn *transport_message_size,
 	OUT void *transport_message);
@@ -433,7 +433,7 @@ typedef return_status (*libspdm_transport_encode_message_func)(
   @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
 **/
 typedef return_status (*libspdm_transport_decode_message_func)(
-	IN void *spdm_context, OUT uint32 **session_id,
+	IN void *spdm_context, OUT uint32_t **session_id,
 	OUT boolean *is_app_message, IN boolean is_requester,
 	IN uintn transport_message_size, IN void *transport_message,
 	IN OUT uintn *message_size, OUT void *message);
@@ -476,7 +476,7 @@ void libspdm_register_transport_layer_func(
   @retval RETURN_SECURIY_VIOLATION      The cert chain verification fail.
 **/
 typedef return_status (*libspdm_verify_spdm_cert_chain_func)(
-	IN void *spdm_context, IN uint8 slot_id,
+	IN void *spdm_context, IN uint8_t slot_id,
 	IN uintn cert_chain_size, IN void *cert_chain,
 	OUT void **trust_anchor OPTIONAL,
 	OUT uintn *trust_anchor_size OPTIONAL);
@@ -680,7 +680,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *spdm_session_i
   @return session info.
 **/
 void *libspdm_get_session_info_via_session_id(IN void *spdm_context,
-					   IN uint32 session_id);
+					   IN uint32_t session_id);
 
 /**
   This function gets the secured message context via session ID.
@@ -691,7 +691,7 @@ void *libspdm_get_session_info_via_session_id(IN void *spdm_context,
   @return secured message context.
 **/
 void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
-						      IN uint32 session_id);
+						      IN uint32_t session_id);
 
 /**
   This function gets the secured message context via session ID.
@@ -711,7 +711,7 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
 
   @return session info associated with this new session ID.
 **/
-void *libspdm_assign_session_id(IN void *spdm_context, IN uint32 session_id,
+void *libspdm_assign_session_id(IN void *spdm_context, IN uint32_t session_id,
 			     IN boolean use_psk);
 
 /**
@@ -722,7 +722,7 @@ void *libspdm_assign_session_id(IN void *spdm_context, IN uint32 session_id,
 
   @return freed session info assicated with this session ID.
 **/
-void *libspdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
+void *libspdm_free_session_id(IN void *spdm_context, IN uint32_t session_id);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
@@ -739,7 +739,7 @@ void *libspdm_free_session_id(IN void *spdm_context, IN uint32 session_id);
 */
 boolean libspdm_calculate_th_for_exchange(
 	IN void *spdm_context, IN void *spdm_session_info,
-	IN uint8 *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
+	IN uint8_t *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
 	OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
 #else
 /*
@@ -788,9 +788,9 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
 */
 boolean libspdm_calculate_th_for_finish(IN void *spdm_context,
 				     IN void *spdm_session_info,
-				     IN uint8 *cert_chain_buffer,
+				     IN uint8_t *cert_chain_buffer,
 				     OPTIONAL IN uintn cert_chain_buffer_size,
-				     OPTIONAL IN uint8 *mut_cert_chain_buffer,
+				     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
 				     OPTIONAL IN uintn mut_cert_chain_buffer_size,
 				     OPTIONAL IN OUT uintn *th_data_buffer_size,
 				     OUT void *th_data_buffer);
@@ -854,7 +854,7 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
 return_status libspdm_calculate_th1_hash(IN void *spdm_context,
 				      IN void *spdm_session_info,
 				      IN boolean is_requester,
-				      OUT uint8 *th1_hash_data);
+				      OUT uint8_t *th1_hash_data);
 
 /*
   This function calculates th2 hash.
@@ -869,7 +869,7 @@ return_status libspdm_calculate_th1_hash(IN void *spdm_context,
 return_status libspdm_calculate_th2_hash(IN void *spdm_context,
 				      IN void *spdm_session_info,
 				      IN boolean is_requester,
-				      OUT uint8 *th2_hash_data);
+				      OUT uint8_t *th2_hash_data);
 
 /**
   This function returns peer certificate chain buffer including spdm_cert_chain_t header.
@@ -934,7 +934,7 @@ boolean libspdm_get_local_cert_chain_data(IN void *spdm_context,
 
   @return The 24-bit value read from buffer.
 **/
-uint32 libspdm_read_uint24(IN uint8 *buffer);
+uint32_t libspdm_read_uint24(IN uint8_t *buffer);
 
 /**
   Writes a 24-bit value to memory that may be unaligned.
@@ -944,6 +944,6 @@ uint32 libspdm_read_uint24(IN uint8 *buffer);
 
   @return The 24-bit value to write to buffer.
 **/
-uint32 libspdm_write_uint24(IN uint8 *buffer, IN uint32 value);
+uint32_t libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value);
 
 #endif

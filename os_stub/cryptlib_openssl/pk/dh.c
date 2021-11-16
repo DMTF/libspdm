@@ -78,7 +78,7 @@ void dh_free(IN void *dh_context)
 
 **/
 boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-			      IN uintn prime_length, OUT uint8 *prime)
+			      IN uintn prime_length, OUT uint8_t *prime)
 {
 	boolean ret_val;
 	BIGNUM *bn_p;
@@ -95,7 +95,7 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 	}
 
 	ret_val = (boolean)DH_generate_parameters_ex(
-		dh_context, (uint32)prime_length, (uint32)generator, NULL);
+		dh_context, (uint32_t)prime_length, (uint32_t)generator, NULL);
 	if (!ret_val) {
 		return FALSE;
 	}
@@ -128,7 +128,7 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-			 IN uintn prime_length, IN const uint8 *prime)
+			 IN uintn prime_length, IN const uint8_t *prime)
 {
 	DH *dh;
 	BIGNUM *bn_p;
@@ -192,7 +192,7 @@ error:
   @retval FALSE  public_key_size is not large enough.
 
 **/
-boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
+boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	boolean ret_val;
@@ -280,8 +280,8 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
-		       IN uintn peer_public_key_size, OUT uint8 *key,
+boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
+		       IN uintn peer_public_key_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
 	BIGNUM *bn;
@@ -301,7 +301,7 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
 		return FALSE;
 	}
 
-	bn = BN_bin2bn(peer_public_key, (uint32)peer_public_key_size, NULL);
+	bn = BN_bin2bn(peer_public_key, (uint32_t)peer_public_key_size, NULL);
 	if (bn == NULL) {
 		return FALSE;
 	}

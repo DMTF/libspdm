@@ -46,10 +46,10 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			    IN uintn data_size)
 {
 	spdm_context_t *spdm_context;
-	uint32 session_id;
+	uint32_t session_id;
 	spdm_session_info_t *session_info;
-	uint8 slot_id;
-	uint8 mut_auth_requested;
+	uint8_t slot_id;
+	uint8_t mut_auth_requested;
 
 	if (!context || !data || data_type >= SPDM_DATA_MAX) {
 		return RETURN_INVALID_PARAMETER;
@@ -61,7 +61,7 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_SESSION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		session_id = *(uint32 *)parameter->additional_data;
+		session_id = *(uint32_t *)parameter->additional_data;
 		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
@@ -88,7 +88,7 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 				 sizeof(spdm_version_number_t));
 		} else {
 			spdm_context->local_context.version.spdm_version_count =
-				(uint8)(data_size /
+				(uint8_t)(data_size /
 					sizeof(spdm_version_number_t));
 			copy_mem(
 				spdm_context->local_context.version.spdm_version,
@@ -114,7 +114,7 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 				 sizeof(spdm_version_number_t));
 		} else {
 			spdm_context->local_context.secured_message_version
-				.spdm_version_count = (uint8)(
+				.spdm_version_count = (uint8_t)(
 				data_size / sizeof(spdm_version_number_t));
 			copy_mem(spdm_context->local_context
 					 .secured_message_version.spdm_version,
@@ -126,132 +126,132 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		}
 		break;
 	case SPDM_DATA_CAPABILITY_FLAGS:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.capability.flags =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		} else {
 			spdm_context->local_context.capability.flags =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		}
 		break;
 	case SPDM_DATA_CAPABILITY_CT_EXPONENT:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		spdm_context->local_context.capability.ct_exponent =
-			*(uint8 *)data;
+			*(uint8_t *)data;
 		break;
 	case SPDM_DATA_MEASUREMENT_SPEC:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm
-				.measurement_spec = *(uint8 *)data;
+				.measurement_spec = *(uint8_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.measurement_spec =
-				*(uint8 *)data;
+				*(uint8_t *)data;
 		}
 		break;
 	case SPDM_DATA_MEASUREMENT_HASH_ALGO:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm
-				.measurement_hash_algo = *(uint32 *)data;
+				.measurement_hash_algo = *(uint32_t *)data;
 		} else {
 			spdm_context->local_context.algorithm
-				.measurement_hash_algo = *(uint32 *)data;
+				.measurement_hash_algo = *(uint32_t *)data;
 		}
 		break;
 	case SPDM_DATA_BASE_ASYM_ALGO:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm.base_asym_algo =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.base_asym_algo =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		}
 		break;
 	case SPDM_DATA_BASE_HASH_ALGO:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm.base_hash_algo =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.base_hash_algo =
-				*(uint32 *)data;
+				*(uint32_t *)data;
 		}
 		break;
 	case SPDM_DATA_DHE_NAME_GROUP:
-		if (data_size != sizeof(uint16)) {
+		if (data_size != sizeof(uint16_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm.dhe_named_group =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.dhe_named_group =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		}
 		break;
 	case SPDM_DATA_AEAD_CIPHER_SUITE:
-		if (data_size != sizeof(uint16)) {
+		if (data_size != sizeof(uint16_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm
-				.aead_cipher_suite = *(uint16 *)data;
+				.aead_cipher_suite = *(uint16_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.aead_cipher_suite =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		}
 		break;
 	case SPDM_DATA_REQ_BASE_ASYM_ALG:
-		if (data_size != sizeof(uint16)) {
+		if (data_size != sizeof(uint16_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm
-				.req_base_asym_alg = *(uint16 *)data;
+				.req_base_asym_alg = *(uint16_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.req_base_asym_alg =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		}
 		break;
 	case SPDM_DATA_KEY_SCHEDULE:
-		if (data_size != sizeof(uint16)) {
+		if (data_size != sizeof(uint16_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.algorithm.key_schedule =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		} else {
 			spdm_context->local_context.algorithm.key_schedule =
-				*(uint16 *)data;
+				*(uint16_t *)data;
 		}
 		break;
 	case SPDM_DATA_CONNECTION_STATE:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
 		spdm_context->connection_info.connection_state =
-			*(uint32 *)data;
+			*(uint32_t *)data;
 		break;
 	case SPDM_DATA_RESPONSE_STATE:
-		if (data_size != sizeof(uint32)) {
+		if (data_size != sizeof(uint32_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		spdm_context->response_state = *(uint32 *)data;
+		spdm_context->response_state = *(uint32_t *)data;
 		break;
 	case SPDM_DATA_PEER_PUBLIC_ROOT_CERT:
 		spdm_context->local_context.peer_root_cert_provision_size =
@@ -265,10 +265,10 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		spdm_context->local_context.peer_cert_chain_provision = data;
 		break;
 	case SPDM_DATA_LOCAL_SLOT_COUNT:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		slot_id = *(uint8 *)data;
+		slot_id = *(uint8_t *)data;
 		if (slot_id > MAX_SPDM_SLOT_COUNT) {
 			return RETURN_INVALID_PARAMETER;
 		}
@@ -307,7 +307,7 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		if (data_size != sizeof(boolean)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		mut_auth_requested = *(uint8 *)data;
+		mut_auth_requested = *(uint8_t *)data;
 		if (((mut_auth_requested != 0) && (mut_auth_requested != 1))) {
 			return RETURN_INVALID_PARAMETER;
 		}
@@ -319,10 +319,10 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			parameter->additional_data[0];
 		break;
 	case SPDM_DATA_MUT_AUTH_REQUESTED:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		mut_auth_requested = *(uint8 *)data;
+		mut_auth_requested = *(uint8_t *)data;
 		if (((mut_auth_requested != 0) &&
 		     (mut_auth_requested !=
 		      SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
@@ -340,10 +340,10 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 			parameter->additional_data[0];
 		break;
 	case SPDM_DATA_HEARTBEAT_PERIOD:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		spdm_context->local_context.heartbeat_period = *(uint8 *)data;
+		spdm_context->local_context.heartbeat_period = *(uint8_t *)data;
 		break;
 	case SPDM_DATA_PSK_HINT:
 		if (data_size > MAX_SPDM_PSK_HINT_LENGTH) {
@@ -359,16 +359,16 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		session_info->use_psk = *(boolean *)data;
 		break;
 	case SPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		session_info->mut_auth_requested = *(uint8 *)data;
+		session_info->mut_auth_requested = *(uint8_t *)data;
 		break;
 	case SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
-		if (data_size != sizeof(uint8)) {
+		if (data_size != sizeof(uint8_t)) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		session_info->end_session_attributes = *(uint8 *)data;
+		session_info->end_session_attributes = *(uint8_t *)data;
 		break;
 	case SPDM_DATA_OPAQUE_CONTEXT_DATA:
 		if (data_size != sizeof(void *) || *(void **)data == NULL) {
@@ -410,7 +410,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 	spdm_context_t *spdm_context;
 	uintn target_data_size;
 	void *target_data;
-	uint32 session_id;
+	uint32_t session_id;
 	spdm_session_info_t *session_info;
 
 	if (!context || !data || !data_size || data_type >= SPDM_DATA_MAX) {
@@ -423,7 +423,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_SESSION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		session_id = *(uint32 *)parameter->additional_data;
+		session_id = *(uint32_t *)parameter->additional_data;
 		session_info = libspdm_get_session_info_via_session_id(
 			spdm_context, session_id);
 		if (session_info == NULL) {
@@ -451,7 +451,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 			&(spdm_context->connection_info.secured_message_version);
 		break;
 	case SPDM_DATA_CAPABILITY_FLAGS:
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			target_data =
 				&spdm_context->connection_info.capability.flags;
@@ -461,7 +461,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		}
 		break;
 	case SPDM_DATA_CAPABILITY_CT_EXPONENT:
-		target_data_size = sizeof(uint8);
+		target_data_size = sizeof(uint8_t);
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			target_data = &spdm_context->connection_info.capability
 					       .ct_exponent;
@@ -474,7 +474,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint8);
+		target_data_size = sizeof(uint8_t);
 		target_data = &spdm_context->connection_info.algorithm
 				       .measurement_spec;
 		break;
@@ -482,7 +482,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		target_data = &spdm_context->connection_info.algorithm
 				       .measurement_hash_algo;
 		break;
@@ -490,7 +490,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		target_data =
 			&spdm_context->connection_info.algorithm.base_asym_algo;
 		break;
@@ -498,7 +498,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		target_data =
 			&spdm_context->connection_info.algorithm.base_hash_algo;
 		break;
@@ -506,7 +506,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint16);
+		target_data_size = sizeof(uint16_t);
 		target_data =
 			&spdm_context->connection_info.algorithm.dhe_named_group;
 		break;
@@ -514,7 +514,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint16);
+		target_data_size = sizeof(uint16_t);
 		target_data = &spdm_context->connection_info.algorithm
 				       .aead_cipher_suite;
 		break;
@@ -522,7 +522,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint16);
+		target_data_size = sizeof(uint16_t);
 		target_data = &spdm_context->connection_info.algorithm
 				       .req_base_asym_alg;
 		break;
@@ -530,7 +530,7 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint16);
+		target_data_size = sizeof(uint16_t);
 		target_data =
 			&spdm_context->connection_info.algorithm.key_schedule;
 		break;
@@ -538,11 +538,11 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		if (parameter->location != SPDM_DATA_LOCATION_CONNECTION) {
 			return RETURN_INVALID_PARAMETER;
 		}
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		target_data = &spdm_context->connection_info.connection_state;
 		break;
 	case SPDM_DATA_RESPONSE_STATE:
-		target_data_size = sizeof(uint32);
+		target_data_size = sizeof(uint32_t);
 		target_data = &spdm_context->response_state;
 		break;
 	case SPDM_DATA_SESSION_USE_PSK:
@@ -550,11 +550,11 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
 		target_data = &session_info->use_psk;
 		break;
 	case SPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
-		target_data_size = sizeof(uint8);
+		target_data_size = sizeof(uint8_t);
 		target_data = &session_info->mut_auth_requested;
 		break;
 	case SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
-		target_data_size = sizeof(uint8);
+		target_data_size = sizeof(uint8_t);
 		target_data = &session_info->end_session_attributes;
 		break;
 	case SPDM_DATA_OPAQUE_CONTEXT_DATA:
@@ -821,7 +821,7 @@ void libspdm_reset_message_f(IN void *context, IN void *session_info)
   @param  spdm_request               	The SPDM request code.
 */
 void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *session_info,
-			       IN uint8 request_code)
+			       IN uint8_t request_code)
 {
 	spdm_context_t *spdm_context;
 
@@ -1103,11 +1103,11 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
 	{
 		spdm_context_t *spdm_context;
 		void *secured_message_context;
-		uint8 *cert_chain_buffer;
+		uint8_t *cert_chain_buffer;
 		uintn cert_chain_buffer_size;
 		boolean result;
-		uint8 cert_chain_buffer_hash[MAX_HASH_SIZE];
-		uint32 hash_size;
+		uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
+		uint32_t hash_size;
 		boolean finished_key_ready;
 
 		spdm_context = context;
@@ -1243,11 +1243,11 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
 	{
 		spdm_context_t *spdm_context;
 		void *secured_message_context;
-		uint8 *mut_cert_chain_buffer;
+		uint8_t *mut_cert_chain_buffer;
 		uintn mut_cert_chain_buffer_size;
 		boolean result;
-		uint8 mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
-		uint32 hash_size;
+		uint8_t mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
+		uint32_t hash_size;
 		boolean finished_key_ready;
 
 		spdm_context = context;
@@ -1374,10 +1374,10 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
   @retval FALSE the version is not supported.
 **/
 boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
-				  IN uint8 version)
+				  IN uint8_t version)
 {
-	uint8 major_version;
-	uint8 minor_version;
+	uint8_t major_version;
+	uint8_t minor_version;
 
 	major_version = ((version >> 4) & 0xF);
 	minor_version = (version & 0xF);
@@ -1406,11 +1406,11 @@ boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
 boolean
 spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 				    IN boolean is_requester,
-				    IN uint32 requester_capabilities_flag,
-				    IN uint32 responder_capabilities_flag)
+				    IN uint32_t requester_capabilities_flag,
+				    IN uint32_t responder_capabilities_flag)
 {
-	uint32 negotiated_requester_capabilities_flag;
-	uint32 negotiated_responder_capabilities_flag;
+	uint32_t negotiated_requester_capabilities_flag;
+	uint32_t negotiated_responder_capabilities_flag;
 
 	if (is_requester) {
 		negotiated_requester_capabilities_flag =
@@ -1486,7 +1486,7 @@ void libspdm_register_transport_layer_func(
 
   @return Last error of an SPDM context.
 */
-uint32 libspdm_get_last_error(IN void *context)
+uint32_t libspdm_get_last_error(IN void *context)
 {
 	spdm_context_t *spdm_context;
 
@@ -1654,8 +1654,8 @@ uintn libspdm_get_context_size(void)
 
   @return the SPDMversion of the version number struct.
 **/
-uint8 spdm_get_version_from_version_number(IN spdm_version_number_t ver)
+uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
 {
-	return (uint8)(ver.major_version << 4 |
+	return (uint8_t)(ver.major_version << 4 |
 				   ver.minor_version);
 }

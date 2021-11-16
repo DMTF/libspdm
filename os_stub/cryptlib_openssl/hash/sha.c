@@ -166,7 +166,7 @@ boolean hash_md_final(IN void *md_ctx, OUT void *hash_value)
 
 **/
 boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value)
+			  OUT uint8_t *hash_value)
 {
   if (hash_value == NULL) {
     return FALSE;
@@ -284,7 +284,7 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
   @retval FALSE  SHA-256 digest computation failed.
 
 **/
-boolean sha256_final(IN OUT void *sha256_context, OUT uint8 *hash_value)
+boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha256_context, hash_value);
 }
@@ -308,7 +308,7 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8 *hash_value)
 
 **/
 boolean sha256_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha256(), data, data_size, hash_value);
 }
@@ -418,7 +418,7 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
   @retval FALSE  SHA-384 digest computation failed.
 
 **/
-boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
+boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha384_context, hash_value);
 }
@@ -442,7 +442,7 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
 
 **/
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha384(), data, data_size, hash_value);
 }
@@ -552,7 +552,7 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
   @retval FALSE  SHA-512 digest computation failed.
 
 **/
-boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
+boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha512_context, hash_value);
 }
@@ -576,7 +576,7 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
 
 **/
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha512(), data, data_size, hash_value);
 }

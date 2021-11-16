@@ -28,10 +28,10 @@
 **/
 return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
-				    IN uint8 measurement_specification,
-				    IN uint32 measurement_hash_algo,
-				    IN uint8 mesurements_index,
-				    OUT uint8 *device_measurement_count,
+				    IN uint8_t measurement_specification,
+				    IN uint32_t measurement_hash_algo,
+				    IN uint8_t mesurements_index,
+				    OUT uint8_t *device_measurement_count,
 				    OUT void *device_measurement,
 				    IN OUT uintn *device_measurement_size)
 {
@@ -54,11 +54,11 @@ return_status spdm_measurement_collection(
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8 op_code,
-				 IN uint16 req_base_asym_alg,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size)
+				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+				 IN uint16_t req_base_asym_alg,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	return FALSE;
 }
@@ -79,11 +79,11 @@ boolean spdm_requester_data_sign(
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8 op_code,
-				 IN uint32 base_asym_algo,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size)
+				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+				 IN uint32_t base_asym_algo,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	return FALSE;
 }
@@ -104,12 +104,12 @@ boolean spdm_responder_data_sign(
 **/
 boolean spdm_psk_handshake_secret_hkdf_expand(
 					      IN spdm_version_number_t spdm_version,
-					      IN uint32 base_hash_algo,
-					      IN const uint8 *psk_hint,
+					      IN uint32_t base_hash_algo,
+					      IN const uint8_t *psk_hint,
 					      OPTIONAL IN uintn psk_hint_size,
-					      OPTIONAL IN const uint8 *info,
+					      OPTIONAL IN const uint8_t *info,
 					      IN uintn info_size,
-					      OUT uint8 *out, IN uintn out_size)
+					      OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -130,11 +130,11 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
 **/
 boolean spdm_psk_master_secret_hkdf_expand(
 					   IN spdm_version_number_t spdm_version,
-					   IN uint32 base_hash_algo,
-					   IN const uint8 *psk_hint,
+					   IN uint32_t base_hash_algo,
+					   IN const uint8_t *psk_hint,
 					   OPTIONAL IN uintn psk_hint_size,
-					   OPTIONAL IN const uint8 *info,
-					   IN uintn info_size, OUT uint8 *out,
+					   OPTIONAL IN const uint8_t *info,
+					   IN uintn info_size, OUT uint8_t *out,
 					   IN uintn out_size)
 {
 	return FALSE;

@@ -22,13 +22,13 @@
   @retval RETURN_SUCCESS               The SPDM request is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
 **/
-return_status libspdm_send_request(IN void *context, IN uint32 *session_id,
+return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
 				IN boolean is_app_message,
 				IN uintn request_size, IN void *request)
 {
 	spdm_context_t *spdm_context;
 	return_status status;
-	uint8 message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn message_size;
 
 	spdm_context = context;
@@ -73,16 +73,16 @@ return_status libspdm_send_request(IN void *context, IN uint32 *session_id,
   @retval RETURN_SUCCESS               The SPDM response is received successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
 **/
-return_status libspdm_receive_response(IN void *context, IN uint32 *session_id,
+return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id,
 				    IN boolean is_app_message,
 				    IN OUT uintn *response_size,
 				    OUT void *response)
 {
 	spdm_context_t *spdm_context;
 	return_status status;
-	uint8 message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn message_size;
-	uint32 *message_session_id;
+	uint32_t *message_session_id;
 	boolean is_message_app_message;
 
 	spdm_context = context;
@@ -165,7 +165,7 @@ return_status libspdm_receive_response(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
 **/
 return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
-				     IN uint32 *session_id,
+				     IN uint32_t *session_id,
 				     IN uintn request_size, IN void *request)
 {
 	spdm_session_info_t *session_info;
@@ -210,7 +210,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
 **/
 return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
-					 IN uint32 *session_id,
+					 IN uint32_t *session_id,
 					 IN OUT uintn *response_size,
 					 OUT void *response)
 {

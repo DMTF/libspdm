@@ -12,12 +12,12 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 verify_data[MAX_HASH_SIZE];
+	uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_psk_finish_request_mine_t;
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+	uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } spdm_psk_finish_response_max_t;
 
 #pragma pack()
@@ -32,7 +32,7 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-					       IN uint32 session_id)
+					       IN uint32_t session_id)
 {
 	return_status status;
 	spdm_psk_finish_request_mine_t spdm_request;
@@ -41,7 +41,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 	spdm_psk_finish_response_max_t spdm_response;
 	uintn spdm_response_size;
 	spdm_session_info_t *session_info;
-	uint8 th2_hash_data[64];
+	uint8_t th2_hash_data[64];
 	spdm_session_state_t session_state;
 
 	if (!spdm_is_capabilities_flag_supported(
@@ -79,7 +79,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 		spdm_context->connection_info.algorithm.base_hash_algo);
 	spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
 
-	status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8 *)&spdm_request,
+	status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
 				       spdm_request_size - hmac_size);
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -89,7 +89,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 					    spdm_request.verify_data);
 
 	status = libspdm_append_message_f(spdm_context, session_info, TRUE,
-				       (uint8 *)&spdm_request +
+				       (uint8_t *)&spdm_request +
 					       spdm_request_size - hmac_size,
 				       hmac_size);
 	if (RETURN_ERROR(status)) {
@@ -159,7 +159,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 }
 
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-					   IN uint32 session_id)
+					   IN uint32_t session_id)
 {
 	uintn retry;
 	return_status status;

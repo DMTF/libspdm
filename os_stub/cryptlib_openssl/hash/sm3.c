@@ -18,7 +18,7 @@ boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
 boolean hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
 boolean hash_md_final(IN void *md_ctx, OUT void *hash_value);
 boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value);
+			  OUT uint8_t *hash_value);
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent SM3-256 use.
@@ -124,7 +124,7 @@ boolean sm3_256_update(IN OUT void *sm3_context, IN const void *data,
   @retval FALSE  SM3 digest computation failed.
 
 **/
-boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
+boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sm3_context, hash_value);
 }
@@ -148,7 +148,7 @@ boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8 *hash_value)
 
 **/
 boolean sm3_256_hash_all(IN const void *data, IN uintn data_size,
-			 OUT uint8 *hash_value)
+			 OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sm3(), data, data_size, hash_value);
 }

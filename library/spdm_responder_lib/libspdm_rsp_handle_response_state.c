@@ -23,7 +23,7 @@
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status spdm_responder_handle_response_state(IN void *context,
-						   IN uint8 request_code,
+						   IN uint8_t request_code,
 						   IN OUT uintn *response_size,
 						   OUT void *response)
 {
@@ -60,7 +60,7 @@ return_status spdm_responder_handle_response_state(IN void *context,
 		libspdm_generate_extended_error_response(
 			spdm_context, SPDM_ERROR_CODE_RESPONSE_NOT_READY, 0,
 			sizeof(spdm_error_data_response_not_ready_t),
-			(uint8 *)(void *)&spdm_context->error_data,
+			(uint8_t *)(void *)&spdm_context->error_data,
 			response_size, response);
 		// NOTE: Need to reset status to Normal in up level
 		return RETURN_SUCCESS;

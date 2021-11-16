@@ -24,8 +24,8 @@
           It shall be no greater than 8.
           0 means no sequence number is required.
 **/
-uint8 spdm_mctp_get_sequence_number(IN uint64 sequence_number,
-				    IN OUT uint8 *sequence_number_buffer)
+uint8_t spdm_mctp_get_sequence_number(IN uint64_t sequence_number,
+				    IN OUT uint8_t *sequence_number_buffer)
 {
 	copy_mem(sequence_number_buffer, &sequence_number,
 		 MCTP_SEQUENCE_NUMBER_COUNT);
@@ -40,7 +40,7 @@ uint8 spdm_mctp_get_sequence_number(IN uint64 sequence_number,
   @return Max random number count in an SPDM secured message.
           0 means no randum number is required.
 **/
-uint32 spdm_mctp_get_max_random_number_count(void)
+uint32_t spdm_mctp_get_max_random_number_count(void)
 {
 	return MCTP_MAX_RANDOM_NUMBER_COUNT;
 }
@@ -59,7 +59,7 @@ uint32 spdm_mctp_get_max_random_number_count(void)
   @retval RETURN_SUCCESS               The message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status mctp_encode_message(IN uint32 *session_id, IN uintn message_size,
+return_status mctp_encode_message(IN uint32_t *session_id, IN uintn message_size,
 				  IN void *message,
 				  IN OUT uintn *transport_message_size,
 				  OUT void *transport_message)
@@ -86,16 +86,16 @@ return_status mctp_encode_message(IN uint32 *session_id, IN uintn message_size,
 	if (session_id != NULL) {
 		mctp_message_header->message_type =
 			MCTP_MESSAGE_TYPE_SECURED_MCTP;
-		ASSERT(*session_id == *(uint32 *)(message));
-		if (*session_id != *(uint32 *)(message)) {
+		ASSERT(*session_id == *(uint32_t *)(message));
+		if (*session_id != *(uint32_t *)(message)) {
 			return RETURN_UNSUPPORTED;
 		}
 	} else {
 		mctp_message_header->message_type = MCTP_MESSAGE_TYPE_SPDM;
 	}
-	copy_mem((uint8 *)transport_message + sizeof(mctp_message_header_t),
+	copy_mem((uint8_t *)transport_message + sizeof(mctp_message_header_t),
 		 message, message_size);
-	zero_mem((uint8 *)transport_message + sizeof(mctp_message_header_t) +
+	zero_mem((uint8_t *)transport_message + sizeof(mctp_message_header_t) +
 			 message_size,
 		 *transport_message_size - sizeof(mctp_message_header_t) -
 			 message_size);
@@ -115,7 +115,7 @@ return_status mctp_encode_message(IN uint32 *session_id, IN uintn message_size,
   @retval RETURN_SUCCESS               The message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status mctp_decode_message(OUT uint32 **session_id,
+return_status mctp_decode_message(OUT uint32_t **session_id,
 				  IN uintn transport_message_size,
 				  IN void *transport_message,
 				  IN OUT uintn *message_size, OUT void *message)
@@ -139,10 +139,10 @@ return_status mctp_decode_message(OUT uint32 **session_id,
 			return RETURN_UNSUPPORTED;
 		}
 		if (transport_message_size <=
-		    sizeof(mctp_message_header_t) + sizeof(uint32)) {
+		    sizeof(mctp_message_header_t) + sizeof(uint32_t)) {
 			return RETURN_UNSUPPORTED;
 		}
-		*session_id = (uint32 *)((uint8 *)transport_message +
+		*session_id = (uint32_t *)((uint8_t *)transport_message +
 					 sizeof(mctp_message_header_t));
 		break;
 	case MCTP_MESSAGE_TYPE_SPDM:
@@ -167,7 +167,7 @@ return_status mctp_decode_message(OUT uint32 **session_id,
 		if (*message_size + alignment - 1 >=
 		    transport_message_size - sizeof(mctp_message_header_t)) {
 			copy_mem(message,
-				 (uint8 *)transport_message +
+				 (uint8_t *)transport_message +
 					 sizeof(mctp_message_header_t),
 				 *message_size);
 			return RETURN_SUCCESS;
@@ -180,7 +180,7 @@ return_status mctp_decode_message(OUT uint32 **session_id,
 	}
 	*message_size = transport_message_size - sizeof(mctp_message_header_t);
 	copy_mem(message,
-		 (uint8 *)transport_message + sizeof(mctp_message_header_t),
+		 (uint8_t *)transport_message + sizeof(mctp_message_header_t),
 		 *message_size);
 	return RETURN_SUCCESS;
 }

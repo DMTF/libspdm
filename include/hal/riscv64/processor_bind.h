@@ -22,7 +22,7 @@
 ///
 /// 8-byte unsigned value
 ///
-typedef unsigned long long uint64 __attribute__((aligned(8)));
+typedef unsigned long long uint64_t __attribute__((aligned(8)));
 ///
 /// 8-byte signed value
 ///
@@ -30,15 +30,15 @@ typedef long long int64 __attribute__((aligned(8)));
 ///
 /// 4-byte unsigned value
 ///
-typedef unsigned int uint32 __attribute__((aligned(4)));
+typedef unsigned int uint32_t __attribute__((aligned(4)));
 ///
 /// 4-byte signed value
 ///
-typedef int int32 __attribute__((aligned(4)));
+typedef int int32_t __attribute__((aligned(4)));
 ///
 /// 2-byte unsigned value
 ///
-typedef unsigned short uint16 __attribute__((aligned(2)));
+typedef unsigned short uint16_t __attribute__((aligned(2)));
 ///
 /// 2-byte signed value
 ///
@@ -51,7 +51,7 @@ typedef unsigned char boolean;
 ///
 /// 1-byte unsigned value
 ///
-typedef unsigned char uint8;
+typedef unsigned char uint8_t;
 ///
 /// 1-byte Character
 ///
@@ -64,7 +64,7 @@ typedef signed char int8;
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
 /// 8 bytes on supported 64-bit processor instructions)
 ///
-typedef uint64 uintn __attribute__((aligned(8)));
+typedef uint64_t uintn __attribute__((aligned(8)));
 ///
 /// Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
 /// 8 bytes on supported 64-bit processor instructions)

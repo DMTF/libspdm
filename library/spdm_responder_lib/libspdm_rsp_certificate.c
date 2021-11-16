@@ -33,10 +33,10 @@ return_status spdm_get_response_certificate(IN void *context,
 	spdm_get_certificate_request_t *spdm_request;
 	uintn spdm_request_size;
 	spdm_certificate_response_t *spdm_response;
-	uint16 offset;
-	uint16 length;
+	uint16_t offset;
+	uint16_t length;
 	uintn remainder_length;
-	uint8 slot_id;
+	uint8_t slot_id;
 	spdm_context_t *spdm_context;
 	return_status status;
 
@@ -114,7 +114,7 @@ return_status spdm_get_response_certificate(IN void *context,
 	if ((uintn)(offset + length) >
 	    spdm_context->local_context
 		    .local_cert_chain_provision_size[slot_id]) {
-		length = (uint16)(
+		length = (uint16_t)(
 			spdm_context->local_context
 				.local_cert_chain_provision_size[slot_id] -
 			offset);
@@ -137,9 +137,9 @@ return_status spdm_get_response_certificate(IN void *context,
 	spdm_response->header.param1 = slot_id;
 	spdm_response->header.param2 = 0;
 	spdm_response->portion_length = length;
-	spdm_response->remainder_length = (uint16)remainder_length;
+	spdm_response->remainder_length = (uint16_t)remainder_length;
 	copy_mem(spdm_response + 1,
-		 (uint8 *)spdm_context->local_context
+		 (uint8_t *)spdm_context->local_context
 				 .local_cert_chain_provision[slot_id] +
 			 offset,
 		 length);

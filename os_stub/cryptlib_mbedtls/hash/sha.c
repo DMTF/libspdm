@@ -57,7 +57,7 @@ void sha256_free(IN void *sha256_ctx)
 **/
 boolean sha256_init(OUT void *sha256_context)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha256_context == NULL) {
 		return FALSE;
@@ -118,7 +118,7 @@ boolean sha256_duplicate(IN const void *sha256_context,
 boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
 		      IN uintn data_size)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha256_context == NULL) {
 		return FALSE;
@@ -158,9 +158,9 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
   @retval FALSE  SHA-256 digest computation failed.
 
 **/
-boolean sha256_final(IN OUT void *sha256_context, OUT uint8 *hash_value)
+boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha256_context == NULL || hash_value == NULL) {
 		return FALSE;
@@ -193,9 +193,9 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8 *hash_value)
 
 **/
 boolean sha256_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (hash_value == NULL) {
 		return FALSE;
@@ -259,7 +259,7 @@ void sha384_free(IN void *sha384_ctx)
 **/
 boolean sha384_init(OUT void *sha384_context)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha384_context == NULL) {
 		return FALSE;
@@ -322,7 +322,7 @@ boolean sha384_duplicate(IN const void *sha384_context,
 boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 		      IN uintn data_size)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha384_context == NULL) {
 		return FALSE;
@@ -362,9 +362,9 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
   @retval FALSE  SHA-384 digest computation failed.
 
 **/
-boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
+boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha384_context == NULL || hash_value == NULL) {
 		return FALSE;
@@ -397,9 +397,9 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8 *hash_value)
 
 **/
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (hash_value == NULL) {
 		return FALSE;
@@ -463,7 +463,7 @@ void sha512_free(IN void *sha512_ctx)
 **/
 boolean sha512_init(OUT void *sha512_context)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha512_context == NULL) {
 		return FALSE;
@@ -526,7 +526,7 @@ boolean sha512_duplicate(IN const void *sha512_context,
 boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 		      IN uintn data_size)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha512_context == NULL) {
 		return FALSE;
@@ -566,9 +566,9 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
   @retval FALSE  SHA-512 digest computation failed.
 
 **/
-boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
+boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (sha512_context == NULL || hash_value == NULL) {
 		return FALSE;
@@ -601,9 +601,9 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8 *hash_value)
 
 **/
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8 *hash_value)
+			OUT uint8_t *hash_value)
 {
-	int32 ret;
+	int32_t ret;
 
 	if (hash_value == NULL) {
 		return FALSE;

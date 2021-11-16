@@ -10,7 +10,7 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+	uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } spdm_heartbeat_response_mine_t;
 
 #pragma pack()
@@ -26,7 +26,7 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
+return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
 {
 	return_status status;
 	spdm_heartbeat_request_t spdm_request;
@@ -102,7 +102,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32 session_id)
 	return RETURN_SUCCESS;
 }
 
-return_status libspdm_heartbeat(IN void *context, IN uint32 session_id)
+return_status libspdm_heartbeat(IN void *context, IN uint32_t session_id)
 {
 	uintn retry;
 	return_status status;

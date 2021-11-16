@@ -39,13 +39,13 @@
 
 **/
 boolean aead_chacha20_poly1305_encrypt(
-	IN const uint8 *key, IN uintn key_size, IN const uint8 *iv,
-	IN uintn iv_size, IN const uint8 *a_data, IN uintn a_data_size,
-	IN const uint8 *data_in, IN uintn data_in_size, OUT uint8 *tag_out,
-	IN uintn tag_size, OUT uint8 *data_out, OUT uintn *data_out_size)
+	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+	IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
+	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	mbedtls_chachapoly_context ctx;
-	int32 ret;
+	int32_t ret;
 
 	if (data_in_size > INT_MAX) {
 		return FALSE;
@@ -76,8 +76,8 @@ boolean aead_chacha20_poly1305_encrypt(
 		return FALSE;
 	}
 
-	ret = mbedtls_chachapoly_encrypt_and_tag(&ctx, (uint32)data_in_size, iv,
-						 a_data, (uint32)a_data_size,
+	ret = mbedtls_chachapoly_encrypt_and_tag(&ctx, (uint32_t)data_in_size, iv,
+						 a_data, (uint32_t)a_data_size,
 						 data_in, data_out, tag_out);
 	mbedtls_chachapoly_free(&ctx);
 	if (ret != 0) {
@@ -116,13 +116,13 @@ boolean aead_chacha20_poly1305_encrypt(
 
 **/
 boolean aead_chacha20_poly1305_decrypt(
-	IN const uint8 *key, IN uintn key_size, IN const uint8 *iv,
-	IN uintn iv_size, IN const uint8 *a_data, IN uintn a_data_size,
-	IN const uint8 *data_in, IN uintn data_in_size, IN const uint8 *tag,
-	IN uintn tag_size, OUT uint8 *data_out, OUT uintn *data_out_size)
+	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+	IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
+	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
 	mbedtls_chachapoly_context ctx;
-	int32 ret;
+	int32_t ret;
 
 	if (data_in_size > INT_MAX) {
 		return FALSE;
@@ -153,8 +153,8 @@ boolean aead_chacha20_poly1305_decrypt(
 		return FALSE;
 	}
 
-	ret = mbedtls_chachapoly_auth_decrypt(&ctx, (uint32)data_in_size, iv,
-					      a_data, (uint32)a_data_size, tag,
+	ret = mbedtls_chachapoly_auth_decrypt(&ctx, (uint32_t)data_in_size, iv,
+					      a_data, (uint32_t)a_data_size, tag,
 					      data_in, data_out);
 	mbedtls_chachapoly_free(&ctx);
 	if (ret != 0) {
