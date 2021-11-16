@@ -22,10 +22,10 @@
   @retval FALSE       Failed to request random bytes.
 
 **/
-static boolean rand_get_bytes(IN uintn length, OUT uint8 *RandBuffer)
+static boolean rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
 {
 	boolean ret;
-	uint64 temp_rand;
+	uint64_t temp_rand;
 
 	ret = FALSE;
 
@@ -45,8 +45,8 @@ static boolean rand_get_bytes(IN uintn length, OUT uint8 *RandBuffer)
 			return ret;
 		}
 		if (length >= sizeof(temp_rand)) {
-			*((uint64 *)RandBuffer) = temp_rand;
-			RandBuffer += sizeof(uint64);
+			*((uint64_t *)RandBuffer) = temp_rand;
+			RandBuffer += sizeof(uint64_t);
 			length -= sizeof(temp_rand);
 		} else {
 			copy_mem(RandBuffer, &temp_rand, length);
@@ -96,7 +96,7 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
  */
 int rand_pool_add_nonce_data(RAND_POOL *pool)
 {
-	uint8 data[16];
+	uint8_t data[16];
 	rand_get_bytes(sizeof(data), data);
 
 	return rand_pool_add(pool, (unsigned char *)&data, sizeof(data), 0);
@@ -109,7 +109,7 @@ int rand_pool_add_nonce_data(RAND_POOL *pool)
  */
 int rand_pool_add_additional_data(RAND_POOL *pool)
 {
-	uint8 data[16];
+	uint8_t data[16];
 	rand_get_bytes(sizeof(data), data);
 
 	return rand_pool_add(pool, (unsigned char *)&data, sizeof(data), 0);
