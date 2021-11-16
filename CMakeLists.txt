@@ -363,6 +363,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mcmodel=small")
     elseif(ARCH STREQUAL "ia32")
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32" )
     endif()
 
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
