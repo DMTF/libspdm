@@ -141,6 +141,7 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
    ```
 
 ### Linux Builds
+    If ia32 builds on 64 bit Linux machine, need install `sudo apt-get install gcc-multilib`.
 General build steps: (Note the `..` at the end of the cmake command). 
   
    ```
