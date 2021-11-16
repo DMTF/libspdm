@@ -110,14 +110,14 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
             DEBUG((DEBUG_INFO,
                    "spdm_receive_spdm_response[%x] GetSessionId - NULL\n",
                    (session_id != NULL) ? *session_id : 0x0));
-            return RETURN_DEVICE_ERROR;
+            goto error;
         }
         if (*message_session_id != *session_id) {
             DEBUG((DEBUG_INFO,
                    "spdm_receive_spdm_response[%x] GetSessionId - %x\n",
                    (session_id != NULL) ? *session_id : 0x0,
                    *message_session_id));
-            return RETURN_DEVICE_ERROR;
+            goto error;
         }
     } else {
         if (message_session_id != NULL) {
@@ -125,7 +125,7 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
                    "spdm_receive_spdm_response[%x] GetSessionId - %x\n",
                    (session_id != NULL) ? *session_id : 0x0,
                    *message_session_id));
-            return RETURN_DEVICE_ERROR;
+            goto error;
         }
     }
 
@@ -134,7 +134,7 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
         DEBUG((DEBUG_INFO,
                "spdm_receive_spdm_response[%x] app_message mismatch\n",
                (session_id != NULL) ? *session_id : 0x0));
-        return RETURN_DEVICE_ERROR;
+        goto error;
     }
 
     DEBUG((DEBUG_INFO, "spdm_receive_spdm_response[%x] (0x%x): \n",
@@ -147,6 +147,13 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
         internal_dump_hex(response, *response_size);
     }
     return status;
+
+error:
+    if (spdm_context->last_spdm_error.error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+        return RETURN_SECURITY_VIOLATION;
+    } else {
+        return RETURN_DEVICE_ERROR;
+    }
 }
 
 /**
