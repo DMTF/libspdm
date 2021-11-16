@@ -21,7 +21,7 @@
   @retval RETURN_SUCCESS               The message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status pci_doe_encode_message(IN uint32 *session_id,
+return_status pci_doe_encode_message(IN uint32_t *session_id,
 				     IN uintn message_size, IN void *message,
 				     IN OUT uintn *transport_message_size,
 				     OUT void *transport_message);
@@ -39,7 +39,7 @@ return_status pci_doe_encode_message(IN uint32 *session_id,
   @retval RETURN_SUCCESS               The message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status pci_doe_decode_message(OUT uint32 **session_id,
+return_status pci_doe_decode_message(OUT uint32_t **session_id,
 				     IN uintn transport_message_size,
 				     IN void *transport_message,
 				     IN OUT uintn *message_size,
@@ -60,7 +60,7 @@ return_status pci_doe_decode_message(OUT uint32 **session_id,
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 typedef return_status (*transport_encode_message_func)(
-	IN uint32 *session_id, IN uintn message_size, IN void *message,
+	IN uint32_t *session_id, IN uintn message_size, IN void *message,
 	IN OUT uintn *transport_message_size, OUT void *transport_message);
 
 /**
@@ -77,7 +77,7 @@ typedef return_status (*transport_encode_message_func)(
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 typedef return_status (*transport_decode_message_func)(
-	OUT uint32 **session_id, IN uintn transport_message_size,
+	OUT uint32_t **session_id, IN uintn transport_message_size,
 	IN void *transport_message, IN OUT uintn *message_size,
 	OUT void *message);
 
@@ -107,13 +107,13 @@ typedef return_status (*transport_decode_message_func)(
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 return_status spdm_transport_pci_doe_encode_message(
-	IN void *spdm_context, IN uint32 *session_id, IN boolean is_app_message,
+	IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
 	IN boolean is_requester, IN uintn message_size, IN void *message,
 	IN OUT uintn *transport_message_size, OUT void *transport_message)
 {
 	return_status status;
 	transport_encode_message_func transport_encode_message;
-	uint8 secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn secured_message_size;
 	spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
 	void *secured_message_context;
@@ -201,15 +201,15 @@ return_status spdm_transport_pci_doe_encode_message(
   @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
 **/
 return_status spdm_transport_pci_doe_decode_message(
-	IN void *spdm_context, OUT uint32 **session_id,
+	IN void *spdm_context, OUT uint32_t **session_id,
 	OUT boolean *is_app_message, IN boolean is_requester,
 	IN uintn transport_message_size, IN void *transport_message,
 	IN OUT uintn *message_size, OUT void *message)
 {
 	return_status status;
 	transport_decode_message_func transport_decode_message;
-	uint32 *SecuredMessageSessionId;
-	uint8 secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint32_t *SecuredMessageSessionId;
+	uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn secured_message_size;
 	spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
 	void *secured_message_context;

@@ -35,7 +35,7 @@
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 typedef return_status (*libspdm_get_response_func)(
-	IN void *spdm_context, IN uint32 *session_id, IN boolean is_app_message,
+	IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
 	IN uintn request_size, IN void *request, IN OUT uintn *response_size,
 	OUT void *response);
 
@@ -68,7 +68,7 @@ void libspdm_register_get_response_func(
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
 **/
 return_status libspdm_process_request(IN void *spdm_context,
-				   OUT uint32 **session_id,
+				   OUT uint32_t **session_id,
 				   OUT boolean *is_app_message,
 				   IN uintn request_size, IN void *request);
 
@@ -88,7 +88,7 @@ return_status libspdm_process_request(IN void *spdm_context,
   @retval RETURN_SUCCESS               The SPDM response is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
 **/
-return_status libspdm_build_response(IN void *spdm_context, IN uint32 *session_id,
+return_status libspdm_build_response(IN void *spdm_context, IN uint32_t *session_id,
 				  IN boolean is_app_message,
 				  IN OUT uintn *response_size,
 				  OUT void *response);
@@ -120,7 +120,7 @@ return_status libspdm_build_response(IN void *spdm_context, IN uint32 *session_i
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_process_message(IN void *context, IN OUT uint32 **session_id,
+return_status libspdm_process_message(IN void *context, IN OUT uint32_t **session_id,
 				   IN void *request, IN uintn request_size,
 				   OUT void *response,
 				   IN OUT uintn *response_size);
@@ -158,8 +158,8 @@ return_status libspdm_responder_dispatch_message(IN void *spdm_context);
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_generate_error_response(IN void *spdm_context,
-					   IN uint8 error_code,
-					   IN uint8 error_data,
+					   IN uint8_t error_code,
+					   IN uint8_t error_data,
 					   IN OUT uintn *spdm_response_size,
 					   OUT void *spdm_response);
 
@@ -183,8 +183,8 @@ return_status libspdm_generate_error_response(IN void *spdm_context,
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_generate_extended_error_response(
-	IN void *context, IN uint8 error_code, IN uint8 error_data,
-	IN uintn extended_error_data_size, IN uint8 *extended_error_data,
+	IN void *context, IN uint8_t error_code, IN uint8_t error_data,
+	IN uintn extended_error_data_size, IN uint8_t *extended_error_data,
 	IN OUT uintn *spdm_response_size, OUT void *spdm_response);
 
 /**
@@ -195,7 +195,7 @@ return_status libspdm_generate_extended_error_response(
   @param  session_state                 The state of a session.
 **/
 typedef void (*libspdm_session_state_callback_func)(
-	IN void *spdm_context, IN uint32 session_id,
+	IN void *spdm_context, IN uint32_t session_id,
 	IN spdm_session_state_t session_state);
 
 /**

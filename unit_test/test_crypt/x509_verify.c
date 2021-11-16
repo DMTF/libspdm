@@ -5,7 +5,7 @@
 **/
 #include "test_crypt.h"
 
-static const uint8 m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
+static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
 /**
   Validate UEFI-Crypto  X509 certificate Verify
@@ -17,30 +17,30 @@ static const uint8 m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 return_status validate_crypt_x509(char8 *Path, uintn len)
 {
 	boolean status;
-	uint8 *leaf_cert;
+	uint8_t *leaf_cert;
 	uintn leaf_cert_len;
-	uint8 *test_cert;
+	uint8_t *test_cert;
 	uintn test_cert_len;
-	uint8 *test_ca_cert;
+	uint8_t *test_ca_cert;
 	uintn test_ca_cert_len;
-	uint8 *test_bundle_cert;
+	uint8_t *test_bundle_cert;
 	uintn test_bundle_cert_len;
-	uint8 *test_end_cert;
+	uint8_t *test_end_cert;
 	uintn test_end_cert_len;
 	uintn subject_size;
-	uint8 *subject;
+	uint8_t *subject;
 	uintn common_name_size;
 	char8 common_name[64];
 	return_status ret;
 	uintn cert_version;
-	uint8 asn1_buffer[1024];
+	uint8_t asn1_buffer[1024];
 	uintn asn1_buffer_len;
-	uint8 end_cert_from[64];
+	uint8_t end_cert_from[64];
 	uintn end_cert_from_len;
-	uint8 end_cert_to[64];
+	uint8_t end_cert_to[64];
 	uintn end_cert_to_len;
-	uint8 date_time1[64];
-	uint8 date_time2[64];
+	uint8_t date_time1[64];
+	uint8_t date_time2[64];
 	return_status ret_status;
 	char8 file_name_buffer[1024];
 
@@ -107,8 +107,8 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 	// X509 Certificate Chain Verification.
 	//
 	DEBUG((DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
-	status = x509_verify_cert_chain((uint8 *)test_ca_cert, test_ca_cert_len,
-					(uint8 *)test_bundle_cert,
+	status = x509_verify_cert_chain((uint8_t *)test_ca_cert, test_ca_cert_len,
+					(uint8_t *)test_bundle_cert,
 					test_bundle_cert_len);
 	if (!status) {
 		my_print("[Fail]\n");
@@ -193,7 +193,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 	subject_size = 0;
 	status = x509_get_subject_name(test_cert, test_cert_len, NULL,
 				       &subject_size);
-	subject = (uint8 *)allocate_pool(subject_size);
+	subject = (uint8_t *)allocate_pool(subject_size);
 	status = x509_get_subject_name(test_cert, test_cert_len, subject,
 				       &subject_size);
 	free_pool(subject);
@@ -262,7 +262,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 		goto cleanup;
 	} else {
 		DEBUG((DEBUG_INFO, "\n  - Retrieving serial_number = %d - ",
-		       *((uint64 *)asn1_buffer)));
+		       *((uint64_t *)asn1_buffer)));
 		my_print("[Pass]");
 	}
 
@@ -273,7 +273,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 	subject_size = 0;
 	status = x509_get_issuer_name(test_cert, test_cert_len, NULL,
 				      &subject_size);
-	subject = (uint8 *)allocate_pool(subject_size);
+	subject = (uint8_t *)allocate_pool(subject_size);
 	status = x509_get_issuer_name(test_cert, test_cert_len, subject,
 				      &subject_size);
 	free_pool(subject);
@@ -321,7 +321,7 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
 	asn1_buffer_len = 1024;
 	zero_mem(asn1_buffer, asn1_buffer_len);
 	ret = x509_get_extension_data(test_end_cert, test_end_cert_len,
-				      (uint8 *)m_oid_subject_alt_name,
+				      (uint8_t *)m_oid_subject_alt_name,
 				      sizeof(m_oid_subject_alt_name),
 				      asn1_buffer, &asn1_buffer_len);
 	if (RETURN_ERROR(ret)) {

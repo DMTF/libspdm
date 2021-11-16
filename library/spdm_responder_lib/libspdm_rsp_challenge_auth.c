@@ -37,10 +37,10 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	spdm_challenge_auth_response_t *spdm_response;
 	boolean result;
 	uintn signature_size;
-	uint8 slot_id;
-	uint32 hash_size;
-	uint32 measurement_summary_hash_size;
-	uint8 *ptr;
+	uint8_t slot_id;
+	uint32_t hash_size;
+	uint32_t measurement_summary_hash_size;
+	uint8_t *ptr;
 	uintn total_size;
 	spdm_context_t *spdm_context;
 	spdm_challenge_auth_response_attribute_t auth_attribute;
@@ -105,7 +105,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	total_size =
 		sizeof(spdm_challenge_auth_response_t) + hash_size +
 		SPDM_NONCE_SIZE + measurement_summary_hash_size +
-		sizeof(uint16) +
+		sizeof(uint16_t) +
 		spdm_context->local_context.opaque_challenge_auth_rsp_size +
 		signature_size;
 
@@ -130,7 +130,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 						spdm_request->header.request_response_code);
 
 	spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-	auth_attribute.slot_id = (uint8)(slot_id & 0xF);
+	auth_attribute.slot_id = (uint8_t)(slot_id & 0xF);
 	auth_attribute.reserved = 0;
 	auth_attribute.basic_mut_auth_req = 0;
 	if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
@@ -156,7 +156,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 		}
 	}
 
-	spdm_response->header.param1 = *(uint8 *)&auth_attribute;
+	spdm_response->header.param1 = *(uint8_t *)&auth_attribute;
 	spdm_response->header.param2 = (1 << slot_id);
 	if (slot_id == 0xFF) {
 		spdm_response->header.param2 = 0;
@@ -180,9 +180,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 	}
 	ptr += measurement_summary_hash_size;
 
-	*(uint16 *)ptr = (uint16)spdm_context->local_context
+	*(uint16_t *)ptr = (uint16_t)spdm_context->local_context
 				 .opaque_challenge_auth_rsp_size;
-	ptr += sizeof(uint16);
+	ptr += sizeof(uint16_t);
 	copy_mem(ptr, spdm_context->local_context.opaque_challenge_auth_rsp,
 		 spdm_context->local_context.opaque_challenge_auth_rsp_size);
 	ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;

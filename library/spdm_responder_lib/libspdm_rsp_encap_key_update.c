@@ -25,7 +25,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
 				  OUT void *encap_request)
 {
 	spdm_key_update_request_t *spdm_request;
-	uint32 session_id;
+	uint32_t session_id;
 	spdm_session_info_t *session_info;
 	spdm_session_state_t session_state;
 
@@ -120,7 +120,7 @@ return_status spdm_process_encap_response_key_update(
 	spdm_key_update_request_t *spdm_request;
 	spdm_key_update_response_t *spdm_response;
 	uintn spdm_response_size;
-	uint32 session_id;
+	uint32_t session_id;
 	spdm_session_info_t *session_info;
 	spdm_session_state_t session_state;
 

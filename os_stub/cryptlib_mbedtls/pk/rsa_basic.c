@@ -75,10 +75,10 @@ void rsa_free(IN void *rsa_context)
 
 **/
 boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    IN const uint8 *big_number, IN uintn bn_size)
+		    IN const uint8_t *big_number, IN uintn bn_size)
 {
 	mbedtls_rsa_context *rsa_key;
-	int32 ret;
+	int32_t ret;
 	mbedtls_mpi value;
 
 	//
@@ -153,11 +153,11 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 **/
 boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				  IN const uint8 *message_hash,
-				  IN uintn hash_size, IN const uint8 *signature,
+				  IN const uint8_t *message_hash,
+				  IN uintn hash_size, IN const uint8_t *signature,
 				  IN uintn sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_md_type_t md_alg;
 
 	if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
@@ -202,7 +202,7 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 	ret = mbedtls_rsa_pkcs1_verify(rsa_context, NULL, NULL,
 				       MBEDTLS_RSA_PUBLIC, md_alg,
-				       (uint32)hash_size, message_hash,
+				       (uint32_t)hash_size, message_hash,
 				       signature);
 	if (ret != 0) {
 		return FALSE;
@@ -233,10 +233,10 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-		       IN const uint8 *message_hash, IN uintn hash_size,
-		       IN const uint8 *signature, IN uintn sig_size)
+		       IN const uint8_t *message_hash, IN uintn hash_size,
+		       IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_md_type_t md_alg;
 
 	if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
@@ -281,7 +281,7 @@ boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
 
 	ret = mbedtls_rsa_rsassa_pss_verify(rsa_context, NULL, NULL,
 					    MBEDTLS_RSA_PUBLIC, md_alg,
-					    (uint32)hash_size, message_hash,
+					    (uint32_t)hash_size, message_hash,
 					    signature);
 	if (ret != 0) {
 		return FALSE;

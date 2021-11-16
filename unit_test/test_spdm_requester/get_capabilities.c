@@ -40,7 +40,7 @@
 
 return_status spdm_requester_get_capabilities_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64 timeout)
+	IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -111,7 +111,7 @@ return_status spdm_requester_get_capabilities_test_send_message(
 
 return_status spdm_requester_get_capabilities_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -403,7 +403,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
 
 		spdm_transport_test_encode_message(
 			spdm_context, NULL, FALSE, FALSE,
-			sizeof(spdm_response) + sizeof(uint8), &spdm_response,
+			sizeof(spdm_response) + sizeof(uint8_t), &spdm_response,
 			response_size, response);
 	}
 		return RETURN_DEVICE_ERROR;
@@ -421,7 +421,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
 
 		spdm_transport_test_encode_message(
 			spdm_context, NULL, FALSE, FALSE,
-			sizeof(spdm_response) - sizeof(uint8), &spdm_response,
+			sizeof(spdm_response) - sizeof(uint8_t), &spdm_response,
 			response_size, response);
 	}
 		return RETURN_DEVICE_ERROR;
@@ -719,7 +719,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
       zero_mem (&spdm_response, sizeof(spdm_response));
       spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
       spdm_response.header.request_response_code = SPDM_ERROR;
-      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param1 = (uint8_t) error_code;
       spdm_response.header.param2 = 0;
 
       spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);

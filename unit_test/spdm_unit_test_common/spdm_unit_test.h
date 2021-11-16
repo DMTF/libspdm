@@ -26,10 +26,10 @@
 #include <internal/libspdm_common_lib.h>
 #include <spdm_device_secret_lib_internal.h>
 
-extern uint8 m_use_measurement_spec;
-extern uint32 m_use_measurement_hash_algo;
-extern uint32 m_use_hash_algo;
-extern uint32 m_use_asym_algo;
+extern uint8_t m_use_measurement_spec;
+extern uint32_t m_use_measurement_hash_algo;
+extern uint32_t m_use_hash_algo;
+extern uint32_t m_use_asym_algo;
 extern uint16 m_use_req_asym_algo;
 extern uint16 m_use_dhe_algo;
 extern uint16 m_use_aead_algo;
@@ -55,12 +55,12 @@ extern uint16 m_use_key_schedule_algo;
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
 typedef struct {
-	uint32 signature;
+	uint32_t signature;
 	boolean is_requester;
 	libspdm_device_send_message_func send_message;
 	libspdm_device_receive_message_func receive_message;
 	void *spdm_context;
-	uint32 case_id;
+	uint32_t case_id;
 } spdm_test_context_t;
 
 #define SPDM_TEST_CONTEXT_FROM_SPDM_PROTOCOL(a)                                \
@@ -76,11 +76,11 @@ void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context);
 
 spdm_test_context_t *get_spdm_test_context(void);
 
-void dump_hex_str(IN uint8 *buffer, IN uintn buffer_size);
+void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
 
-void dump_data(IN uint8 *buffer, IN uintn buffer_size);
+void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
 
-void dump_hex(IN uint8 *buffer, IN uintn buffer_size);
+void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
 
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
 			OUT uintn *file_size);

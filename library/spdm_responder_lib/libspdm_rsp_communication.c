@@ -33,7 +33,7 @@
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_process_message(IN void *context, IN OUT uint32 **session_id,
+return_status libspdm_process_message(IN void *context, IN OUT uint32_t **session_id,
 				   IN void *request, IN uintn request_size,
 				   OUT void *response,
 				   IN OUT uintn *response_size)
@@ -75,11 +75,11 @@ return_status libspdm_responder_dispatch_message(IN void *context)
 {
 	return_status status;
 	spdm_context_t *spdm_context;
-	uint8 request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn request_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn response_size;
-	uint32 *session_id;
+	uint32_t *session_id;
 
 	spdm_context = context;
 

@@ -7,7 +7,7 @@
 #include "internal/libspdm_responder_lib.h"
 
 typedef struct {
-	uint8 request_response_code;
+	uint8_t request_response_code;
 	spdm_get_spdm_response_func get_response_func;
 } spdm_get_response_struct_t;
 
@@ -69,7 +69,7 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
   @return GET_SPDM_RESPONSE function according to the request code.
 **/
 spdm_get_spdm_response_func
-spdm_get_response_func_via_request_code(IN uint8 request_code)
+spdm_get_response_func_via_request_code(IN uint8_t request_code)
 {
 	uintn index;
 
@@ -118,14 +118,14 @@ spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
   @retval RETURN_SUCCESS               The SPDM request is received successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
 **/
-return_status libspdm_process_request(IN void *context, OUT uint32 **session_id,
+return_status libspdm_process_request(IN void *context, OUT uint32_t **session_id,
 				   OUT boolean *is_app_message,
 				   IN uintn request_size, IN void *request)
 {
 	spdm_context_t *spdm_context;
 	return_status status;
 	spdm_session_info_t *session_info;
-	uint32 *message_session_id;
+	uint32_t *message_session_id;
 
 	spdm_context = context;
 
@@ -180,7 +180,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32 **session_id,
 	DEBUG((DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
 	       (message_session_id != NULL) ? *message_session_id : 0,
 	       spdm_context->last_spdm_request_size));
-	internal_dump_hex((uint8 *)spdm_context->last_spdm_request,
+	internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
 			  spdm_context->last_spdm_request_size);
 
 	return RETURN_SUCCESS;
@@ -194,7 +194,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32 **session_id,
   @param  session_state                 The state of a session.
 **/
 void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
-					 IN uint32 session_id,
+					 IN uint32_t session_id,
 					 IN spdm_session_state_t session_state)
 {
 	uintn index;
@@ -216,7 +216,7 @@ void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
   @param  session_state                 Indicate the SPDM session state.
 */
 void spdm_set_session_state(IN spdm_context_t *spdm_context,
-			    IN uint32 session_id,
+			    IN uint32_t session_id,
 			    IN spdm_session_state_t session_state)
 {
 	spdm_session_info_t *session_info;
@@ -295,13 +295,13 @@ void spdm_set_connection_state(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The SPDM response is sent successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
 **/
-return_status libspdm_build_response(IN void *context, IN uint32 *session_id,
+return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
 				  IN boolean is_app_message,
 				  IN OUT uintn *response_size,
 				  OUT void *response)
 {
 	spdm_context_t *spdm_context;
-	uint8 my_response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t my_response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn my_response_size;
 	return_status status;
 	spdm_get_spdm_response_func get_response_func;
@@ -329,7 +329,7 @@ return_status libspdm_build_response(IN void *context, IN uint32 *session_id,
 			// don't use session ID, because we dont know which right session ID should be used.
 			libspdm_generate_extended_error_response(
 				spdm_context, SPDM_ERROR_CODE_INVALID_SESSION,
-				0, sizeof(uint32), (void *)session_id,
+				0, sizeof(uint32_t), (void *)session_id,
 				&my_response_size, my_response);
 			session_id = NULL;
 			break;

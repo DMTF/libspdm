@@ -18,13 +18,13 @@ return_status validate_crypt_dh(void)
 	void *dh1;
 	void *dh2;
 	boolean status;
-	uint8 ff_public_key1[256];
+	uint8_t ff_public_key1[256];
 	uintn ff_public_key1_length;
-	uint8 ff_public_key2[256];
+	uint8_t ff_public_key2[256];
 	uintn ff_public_key2_length;
-	uint8 ff_key1[256];
+	uint8_t ff_key1[256];
 	uintn ff_key1_length;
-	uint8 ff_key2[256];
+	uint8_t ff_key2[256];
 	uintn ff_key2_length;
 
 	my_print("\nCrypto DH Engine Testing:\n");

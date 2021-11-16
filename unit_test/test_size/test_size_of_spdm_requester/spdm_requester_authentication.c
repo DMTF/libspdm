@@ -27,10 +27,10 @@
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status
-spdm_authentication(IN void *context, OUT uint8 *slot_mask,
-		    OUT void *total_digest_buffer, IN uint8 slot_id,
+spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
+		    OUT void *total_digest_buffer, IN uint8_t slot_id,
 		    IN OUT uintn *cert_chain_size, OUT void *cert_chain,
-		    IN uint8 measurement_hash_type, OUT void *measurement_hash)
+		    IN uint8_t measurement_hash_type, OUT void *measurement_hash)
 {
 	return_status status;
 
@@ -69,11 +69,11 @@ spdm_authentication(IN void *context, OUT uint8 *slot_mask,
 return_status do_authentication_via_spdm(IN void *spdm_context)
 {
 	return_status status;
-	uint8 slot_mask;
-	uint8 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
-	uint8 measurement_hash[MAX_HASH_SIZE];
+	uint8_t slot_mask;
+	uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+	uint8_t measurement_hash[MAX_HASH_SIZE];
 	uintn cert_chain_size;
-	uint8 cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+	uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
 
 	zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
 	cert_chain_size = sizeof(cert_chain);

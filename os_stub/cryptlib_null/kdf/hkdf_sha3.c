@@ -28,10 +28,10 @@
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_256_extract_and_expand(IN const uint8 *key, IN uintn key_size,
-				       IN const uint8 *salt, IN uintn salt_size,
-				       IN const uint8 *info, IN uintn info_size,
-				       OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+				       IN const uint8_t *salt, IN uintn salt_size,
+				       IN const uint8_t *info, IN uintn info_size,
+				       OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -50,9 +50,9 @@ boolean hkdf_sha3_256_extract_and_expand(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_256_extract(IN const uint8 *key, IN uintn key_size,
-			    IN const uint8 *salt, IN uintn salt_size,
-			    OUT uint8 *prk_out, IN uintn prk_out_size)
+boolean hkdf_sha3_256_extract(IN const uint8_t *key, IN uintn key_size,
+			    IN const uint8_t *salt, IN uintn salt_size,
+			    OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
 	return FALSE;
 }
@@ -71,9 +71,9 @@ boolean hkdf_sha3_256_extract(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_256_expand(IN const uint8 *prk, IN uintn prk_size,
-			   IN const uint8 *info, IN uintn info_size,
-			   OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
+			   IN const uint8_t *info, IN uintn info_size,
+			   OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -94,10 +94,10 @@ boolean hkdf_sha3_256_expand(IN const uint8 *prk, IN uintn prk_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_384_extract_and_expand(IN const uint8 *key, IN uintn key_size,
-				       IN const uint8 *salt, IN uintn salt_size,
-				       IN const uint8 *info, IN uintn info_size,
-				       OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+				       IN const uint8_t *salt, IN uintn salt_size,
+				       IN const uint8_t *info, IN uintn info_size,
+				       OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -116,9 +116,9 @@ boolean hkdf_sha3_384_extract_and_expand(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_384_extract(IN const uint8 *key, IN uintn key_size,
-			    IN const uint8 *salt, IN uintn salt_size,
-			    OUT uint8 *prk_out, IN uintn prk_out_size)
+boolean hkdf_sha3_384_extract(IN const uint8_t *key, IN uintn key_size,
+			    IN const uint8_t *salt, IN uintn salt_size,
+			    OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
 	return FALSE;
 }
@@ -137,9 +137,9 @@ boolean hkdf_sha3_384_extract(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_384_expand(IN const uint8 *prk, IN uintn prk_size,
-			   IN const uint8 *info, IN uintn info_size,
-			   OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_384_expand(IN const uint8_t *prk, IN uintn prk_size,
+			   IN const uint8_t *info, IN uintn info_size,
+			   OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -160,10 +160,10 @@ boolean hkdf_sha3_384_expand(IN const uint8 *prk, IN uintn prk_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_512_extract_and_expand(IN const uint8 *key, IN uintn key_size,
-				       IN const uint8 *salt, IN uintn salt_size,
-				       IN const uint8 *info, IN uintn info_size,
-				       OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+				       IN const uint8_t *salt, IN uintn salt_size,
+				       IN const uint8_t *info, IN uintn info_size,
+				       OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }
@@ -182,9 +182,9 @@ boolean hkdf_sha3_512_extract_and_expand(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_512_extract(IN const uint8 *key, IN uintn key_size,
-			    IN const uint8 *salt, IN uintn salt_size,
-			    OUT uint8 *prk_out, IN uintn prk_out_size)
+boolean hkdf_sha3_512_extract(IN const uint8_t *key, IN uintn key_size,
+			    IN const uint8_t *salt, IN uintn salt_size,
+			    OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
 	return FALSE;
 }
@@ -203,9 +203,9 @@ boolean hkdf_sha3_512_extract(IN const uint8 *key, IN uintn key_size,
   @retval FALSE  Hkdf generation failed.
 
 **/
-boolean hkdf_sha3_512_expand(IN const uint8 *prk, IN uintn prk_size,
-			   IN const uint8 *info, IN uintn info_size,
-			   OUT uint8 *out, IN uintn out_size)
+boolean hkdf_sha3_512_expand(IN const uint8_t *prk, IN uintn prk_size,
+			   IN const uint8_t *info, IN uintn info_size,
+			   OUT uint8_t *out, IN uintn out_size)
 {
 	return FALSE;
 }

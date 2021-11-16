@@ -10,7 +10,7 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+	uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } spdm_end_session_response_mine_t;
 
 #pragma pack()
@@ -26,8 +26,8 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-						IN uint32 session_id,
-						IN uint8 end_session_attributes)
+						IN uint32_t session_id,
+						IN uint8_t end_session_attributes)
 {
 	return_status status;
 	spdm_end_session_request_t spdm_request;
@@ -115,8 +115,8 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 }
 
 return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-					    IN uint32 session_id,
-					    IN uint8 end_session_attributes)
+					    IN uint32_t session_id,
+					    IN uint8_t end_session_attributes)
 {
 	uintn retry;
 	return_status status;

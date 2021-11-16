@@ -49,7 +49,7 @@ void test_spdm_responder_certificate_case1(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -107,7 +107,7 @@ void test_spdm_responder_certificate_case2(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -154,7 +154,7 @@ void test_spdm_responder_certificate_case3(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -203,7 +203,7 @@ void test_spdm_responder_certificate_case4(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -253,7 +253,7 @@ void test_spdm_responder_certificate_case5(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -309,7 +309,7 @@ void test_spdm_responder_certificate_case6(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -357,7 +357,7 @@ void test_spdm_responder_certificate_case7(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -431,7 +431,7 @@ void test_spdm_responder_certificate_case8(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	spdm_error_response_t *spdm_responseError;
 	void *data;
@@ -526,7 +526,7 @@ void test_spdm_responder_certificate_case9(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	spdm_error_response_t *spdm_responseError;
 	void *data;
@@ -657,7 +657,7 @@ void test_spdm_responder_certificate_case10(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	spdm_error_response_t *spdm_responseError;
 	void *data;
@@ -770,7 +770,7 @@ void test_spdm_responder_certificate_case11(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	spdm_error_response_t *spdm_responseError;
 	void *data;
@@ -877,7 +877,7 @@ void test_spdm_responder_certificate_case12(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_certificate_response_t *spdm_response;
 	void *data;
 	uintn data_size;
@@ -940,7 +940,7 @@ void test_spdm_responder_certificate_case12(void **state)
 					 data_size - offset -
 						 expected_chunk_size);
 			assert_int_equal(
-				((uint8 *)data)[offset],
+				((uint8_t *)data)[offset],
 				(response +
 				 sizeof(spdm_certificate_response_t))[0]);
 		} else {

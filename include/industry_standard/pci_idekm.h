@@ -23,7 +23,7 @@
 // PCI Protocol definition
 //
 typedef struct {
-	uint8 protocol_id;
+	uint8_t protocol_id;
 } pci_protocol_header_t;
 
 //
@@ -35,7 +35,7 @@ typedef struct {
 // IDE_KM header
 //
 typedef struct {
-	uint8 object_id;
+	uint8_t object_id;
 } pci_ide_km_header_t;
 
 #define PCI_IDE_KM_OBJECT_ID_QUERY 0x00
@@ -51,8 +51,8 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved;
-	uint8 port_index;
+	uint8_t reserved;
+	uint8_t port_index;
 } pci_ide_km_query_t;
 
 //
@@ -60,12 +60,12 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved;
-	uint8 port_index;
-	uint8 dev_func_num;
-	uint8 bus_num;
-	uint8 segment;
-	uint8 max_port_index;
+	uint8_t reserved;
+	uint8_t port_index;
+	uint8_t dev_func_num;
+	uint8_t bus_num;
+	uint8_t segment;
+	uint8_t max_port_index;
 	//IDE Extended capability
 } pci_ide_km_query_resp_t;
 
@@ -74,11 +74,11 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved[2];
-	uint8 stream_id;
-	uint8 reserved2;
-	uint8 key_sub_stream;
-	uint8 port_index;
+	uint8_t reserved[2];
+	uint8_t stream_id;
+	uint8_t reserved2;
+	uint8_t key_sub_stream;
+	uint8_t port_index;
 	//KEY 8 DW
 	//IFV(invocation field of the IV) 2 DW
 } pci_ide_km_key_prog_t;
@@ -88,11 +88,11 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved[2];
-	uint8 stream_id;
-	uint8 reserved2;
-	uint8 key_sub_stream;
-	uint8 port_index;
+	uint8_t reserved[2];
+	uint8_t stream_id;
+	uint8_t reserved2;
+	uint8_t key_sub_stream;
+	uint8_t port_index;
 } pci_ide_km_kp_ack_t;
 
 //
@@ -100,11 +100,11 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved[2];
-	uint8 stream_id;
-	uint8 reserved2;
-	uint8 key_sub_stream;
-	uint8 port_index;
+	uint8_t reserved[2];
+	uint8_t stream_id;
+	uint8_t reserved2;
+	uint8_t key_sub_stream;
+	uint8_t port_index;
 } pci_ide_km_k_set_go_t;
 
 //
@@ -112,11 +112,11 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved[2];
-	uint8 stream_id;
-	uint8 reserved2;
-	uint8 key_sub_stream;
-	uint8 port_index;
+	uint8_t reserved[2];
+	uint8_t stream_id;
+	uint8_t reserved2;
+	uint8_t key_sub_stream;
+	uint8_t port_index;
 } pci_ide_km_k_set_stop_t;
 
 //
@@ -124,11 +124,11 @@ typedef struct {
 //
 typedef struct {
 	pci_ide_km_header_t header;
-	uint8 reserved[2];
-	uint8 stream_id;
-	uint8 reserved2;
-	uint8 key_sub_stream;
-	uint8 port_index;
+	uint8_t reserved[2];
+	uint8_t stream_id;
+	uint8_t reserved2;
+	uint8_t key_sub_stream;
+	uint8_t port_index;
 } pci_ide_km_k_gostop_ack_t;
 
 #pragma pack()

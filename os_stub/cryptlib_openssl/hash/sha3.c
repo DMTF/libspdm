@@ -18,7 +18,7 @@ boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
 boolean hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
 boolean hash_md_final(IN void *md_ctx, OUT void *hash_value);
 boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value);
+			  OUT uint8_t *hash_value);
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
@@ -125,7 +125,7 @@ boolean sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
   @retval FALSE  SHA3-256 digest computation failed.
 
 **/
-boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8 *hash_value)
+boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha3_256_context, hash_value);
 }
@@ -149,7 +149,7 @@ boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8 *hash_value)
 
 **/
 boolean sha3_256_hash_all(IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value)
+			  OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
 }
@@ -259,7 +259,7 @@ boolean sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
   @retval FALSE  SHA3-384 digest computation failed.
 
 **/
-boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8 *hash_value)
+boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha3_384_context, hash_value);
 }
@@ -283,7 +283,7 @@ boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8 *hash_value)
 
 **/
 boolean sha3_384_hash_all(IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value)
+			  OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
 }
@@ -393,7 +393,7 @@ boolean sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
   @retval FALSE  SHA3-512 digest computation failed.
 
 **/
-boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8 *hash_value)
+boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (sha3_512_context, hash_value);
 }
@@ -417,7 +417,7 @@ boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8 *hash_value)
 
 **/
 boolean sha3_512_hash_all(IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value)
+			  OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
 }
@@ -527,7 +527,7 @@ boolean shake256_update(IN OUT void *shake256_context, IN const void *data,
   @retval FALSE  SHAKE256 digest computation failed.
 
 **/
-boolean shake256_final(IN OUT void *shake256_context, OUT uint8 *hash_value)
+boolean shake256_final(IN OUT void *shake256_context, OUT uint8_t *hash_value)
 {
 	return hash_md_final (shake256_context, hash_value);
 }
@@ -551,7 +551,7 @@ boolean shake256_final(IN OUT void *shake256_context, OUT uint8 *hash_value)
 
 **/
 boolean shake256_hash_all(IN const void *data, IN uintn data_size,
-			  OUT uint8 *hash_value)
+			  OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_shake256(), data, data_size, hash_value);
 }

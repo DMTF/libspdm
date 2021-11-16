@@ -17,13 +17,13 @@ return_status validate_crypt_ecx(void)
 {
 	void *ecx1;
 	void *ecx2;
-	uint8 public1[56];
+	uint8_t public1[56];
 	uintn public1_length;
-	uint8 public2[56];
+	uint8_t public2[56];
 	uintn public2_length;
-	uint8 key1[56];
+	uint8_t key1[56];
 	uintn key1_length;
-	uint8 key2[56];
+	uint8_t key2[56];
 	uintn key2_length;
 	boolean Status;
 

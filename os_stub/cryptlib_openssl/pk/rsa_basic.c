@@ -75,7 +75,7 @@ void rsa_free(IN void *rsa_context)
 
 **/
 boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    IN const uint8 *big_number, IN uintn bn_size)
+		    IN const uint8_t *big_number, IN uintn bn_size)
 {
 	RSA *rsa_key;
 	BIGNUM *bn_n;
@@ -143,13 +143,13 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 		switch (key_tag) {
 		case RSA_KEY_N:
-			bn_n = BN_bin2bn(big_number, (uint32)bn_size, bn_n);
+			bn_n = BN_bin2bn(big_number, (uint32_t)bn_size, bn_n);
 			break;
 		case RSA_KEY_E:
-			bn_e = BN_bin2bn(big_number, (uint32)bn_size, bn_e);
+			bn_e = BN_bin2bn(big_number, (uint32_t)bn_size, bn_e);
 			break;
 		case RSA_KEY_D:
-			bn_d = BN_bin2bn(big_number, (uint32)bn_size, bn_d);
+			bn_d = BN_bin2bn(big_number, (uint32_t)bn_size, bn_d);
 			break;
 		default:
 			return FALSE;
@@ -178,10 +178,10 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 		switch (key_tag) {
 		case RSA_KEY_P:
-			bn_p = BN_bin2bn(big_number, (uint32)bn_size, bn_p);
+			bn_p = BN_bin2bn(big_number, (uint32_t)bn_size, bn_p);
 			break;
 		case RSA_KEY_Q:
-			bn_q = BN_bin2bn(big_number, (uint32)bn_size, bn_q);
+			bn_q = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q);
 			break;
 		default:
 			return FALSE;
@@ -215,13 +215,13 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 		switch (key_tag) {
 		case RSA_KEY_DP:
-			bn_dp = BN_bin2bn(big_number, (uint32)bn_size, bn_dp);
+			bn_dp = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dp);
 			break;
 		case RSA_KEY_DQ:
-			bn_dq = BN_bin2bn(big_number, (uint32)bn_size, bn_dq);
+			bn_dq = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dq);
 			break;
 		case RSA_KEY_Q_INV:
-			bn_q_inv = BN_bin2bn(big_number, (uint32)bn_size,
+			bn_q_inv = BN_bin2bn(big_number, (uint32_t)bn_size,
 					     bn_q_inv);
 			break;
 		default:
@@ -262,12 +262,12 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 **/
 boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				  IN const uint8 *message_hash,
-				  IN uintn hash_size, IN const uint8 *signature,
+				  IN const uint8_t *message_hash,
+				  IN uintn hash_size, IN const uint8_t *signature,
 				  IN uintn sig_size)
 {
-	int32 digest_type;
-	uint8 *sig_buf;
+	int32_t digest_type;
+	uint8_t *sig_buf;
 
 	//
 	// Check input parameters.
@@ -327,9 +327,9 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 		return FALSE;
 	}
 
-	sig_buf = (uint8 *)signature;
-	return (boolean)RSA_verify(digest_type, message_hash, (uint32)hash_size,
-				   sig_buf, (uint32)sig_size,
+	sig_buf = (uint8_t *)signature;
+	return (boolean)RSA_verify(digest_type, message_hash, (uint32_t)hash_size,
+				   sig_buf, (uint32_t)sig_size,
 				   (RSA *)rsa_context);
 }
 
@@ -356,12 +356,12 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-		       IN const uint8 *message_hash, IN uintn hash_size,
-		       IN const uint8 *signature, IN uintn sig_size)
+		       IN const uint8_t *message_hash, IN uintn hash_size,
+		       IN const uint8_t *signature, IN uintn sig_size)
 {
 	RSA *rsa;
 	boolean result;
-	int32 size;
+	int32_t size;
 	const EVP_MD *evp_md;
 	void *buffer;
 

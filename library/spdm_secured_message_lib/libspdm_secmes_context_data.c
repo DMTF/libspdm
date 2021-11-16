@@ -130,10 +130,10 @@ void spdm_secured_message_set_session_type(IN void *spdm_secured_message_context
 void spdm_secured_message_set_algorithms(IN void *spdm_secured_message_context,
 					 IN spdm_version_number_t version,
 					 IN spdm_version_number_t secured_message_version,
-					 IN uint32 base_hash_algo,
-					 IN uint16 dhe_named_group,
-					 IN uint16 aead_cipher_suite,
-					 IN uint16 key_schedule)
+					 IN uint32_t base_hash_algo,
+					 IN uint16_t dhe_named_group,
+					 IN uint16_t aead_cipher_suite,
+					 IN uint16_t key_schedule)
 {
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -245,12 +245,12 @@ spdm_secured_message_export_session_keys(IN void *spdm_secured_message_context,
 	spdm_secured_message_context_t *secured_message_context;
 	uintn struct_size;
 	spdm_secure_session_keys_struct_t *session_keys_struct;
-	uint8 *ptr;
+	uint8_t *ptr;
 
 	secured_message_context = spdm_secured_message_context;
 	struct_size = sizeof(spdm_secure_session_keys_struct_t) +
 		      (secured_message_context->aead_key_size +
-		       secured_message_context->aead_iv_size + sizeof(uint64)) *
+		       secured_message_context->aead_iv_size + sizeof(uint64_t)) *
 			      2;
 
 	if (*SessionKeysSize < struct_size) {
@@ -261,9 +261,9 @@ spdm_secured_message_export_session_keys(IN void *spdm_secured_message_context,
 	session_keys_struct = SessionKeys;
 	session_keys_struct->version = SPDM_SECURE_SESSION_KEYS_STRUCT_VERSION;
 	session_keys_struct->aead_key_size =
-		(uint32)secured_message_context->aead_key_size;
+		(uint32_t)secured_message_context->aead_key_size;
 	session_keys_struct->aead_iv_size =
-		(uint32)secured_message_context->aead_iv_size;
+		(uint32_t)secured_message_context->aead_iv_size;
 
 	ptr = (void *)(session_keys_struct + 1);
 	copy_mem(ptr,
@@ -278,8 +278,8 @@ spdm_secured_message_export_session_keys(IN void *spdm_secured_message_context,
 	copy_mem(ptr,
 		 &secured_message_context->application_secret
 			  .request_data_sequence_number,
-		 sizeof(uint64));
-	ptr += sizeof(uint64);
+		 sizeof(uint64_t));
+	ptr += sizeof(uint64_t);
 	copy_mem(ptr,
 		 secured_message_context->application_secret
 			 .response_data_encryption_key,
@@ -292,8 +292,8 @@ spdm_secured_message_export_session_keys(IN void *spdm_secured_message_context,
 	copy_mem(ptr,
 		 &secured_message_context->application_secret
 			  .response_data_sequence_number,
-		 sizeof(uint64));
-	ptr += sizeof(uint64);
+		 sizeof(uint64_t));
+	ptr += sizeof(uint64_t);
 	return RETURN_SUCCESS;
 }
 
@@ -314,12 +314,12 @@ spdm_secured_message_import_session_keys(IN void *spdm_secured_message_context,
 	spdm_secured_message_context_t *secured_message_context;
 	uintn struct_size;
 	spdm_secure_session_keys_struct_t *session_keys_struct;
-	uint8 *ptr;
+	uint8_t *ptr;
 
 	secured_message_context = spdm_secured_message_context;
 	struct_size = sizeof(spdm_secure_session_keys_struct_t) +
 		      (secured_message_context->aead_key_size +
-		       secured_message_context->aead_iv_size + sizeof(uint64)) *
+		       secured_message_context->aead_iv_size + sizeof(uint64_t)) *
 			      2;
 
 	if (SessionKeysSize != struct_size) {
@@ -346,8 +346,8 @@ spdm_secured_message_import_session_keys(IN void *spdm_secured_message_context,
 	ptr += secured_message_context->aead_iv_size;
 	copy_mem(&secured_message_context->application_secret
 			  .request_data_sequence_number,
-		 ptr, sizeof(uint64));
-	ptr += sizeof(uint64);
+		 ptr, sizeof(uint64_t));
+	ptr += sizeof(uint64_t);
 	copy_mem(secured_message_context->application_secret
 			 .response_data_encryption_key,
 		 ptr, secured_message_context->aead_key_size);
@@ -357,8 +357,8 @@ spdm_secured_message_import_session_keys(IN void *spdm_secured_message_context,
 	ptr += secured_message_context->aead_iv_size;
 	copy_mem(&secured_message_context->application_secret
 			  .response_data_sequence_number,
-		 ptr, sizeof(uint64));
-	ptr += sizeof(uint64);
+		 ptr, sizeof(uint64_t));
+	ptr += sizeof(uint64_t);
 	return RETURN_SUCCESS;
 }
 

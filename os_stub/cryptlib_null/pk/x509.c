@@ -24,8 +24,8 @@
   @retval     FALSE           The operation failed.
 
 **/
-boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
-				   OUT uint8 **single_x509_cert)
+boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
+				   OUT uint8_t **single_x509_cert)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -47,7 +47,7 @@ boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
   @retval     FALSE           The construction operation failed.
 
 **/
-boolean x509_construct_certificate_stack(IN OUT uint8 **x509_stack, ...)
+boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -90,8 +90,8 @@ void x509_stack_free(IN void *x509_stack)
   @retval      TRUE   Get tag successful
   @retval      FALSe  Failed to get tag or tag not match
 **/
-boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
-		     IN uint32 tag)
+boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
+		     IN uint32_t tag)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -114,8 +114,8 @@ boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
                   The subject_size will be updated with the required size.
 
 **/
-boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
-			      OUT uint8 *cert_subject,
+boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
+			      OUT uint8_t *cert_subject,
 			      IN OUT uintn *subject_size)
 {
 	ASSERT(FALSE);
@@ -148,7 +148,7 @@ boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 				   OUT char8 *common_name,
 				   OPTIONAL IN OUT uintn *common_name_size)
 {
@@ -183,7 +183,7 @@ return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT char8 *name_buffer,
 			   OPTIONAL IN OUT uintn *name_buffer_size)
 {
@@ -207,7 +207,7 @@ x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve RSA public key from X509 certificate.
 
 **/
-boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **rsa_context)
 {
 	ASSERT(FALSE);
@@ -230,7 +230,7 @@ boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve EC public key from X509 certificate.
 
 **/
-boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ec_context)
 {
 	ASSERT(FALSE);
@@ -253,7 +253,7 @@ boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve Ed public key from X509 certificate.
 
 **/
-boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ecd_context)
 {
 	ASSERT(FALSE);
@@ -276,7 +276,7 @@ boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Fail to retrieve sm2 public key from X509 certificate.
 
 **/
-boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **sm2_context)
 {
 	ASSERT(FALSE);
@@ -299,8 +299,8 @@ boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
                   trusted CA.
 
 **/
-boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
-			 IN const uint8 *ca_cert, IN uintn ca_cert_size)
+boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
+			 IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -324,8 +324,8 @@ boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Invalid certificate or the certificate was not issued by the given
                   trusted CA.
 **/
-boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
-			       IN uint8 *cert_chain, IN uintn cert_chain_length)
+boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
+			       IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -349,9 +349,9 @@ boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
   @retval  TRUE   Success.
   @retval  FALSE  Failed to get certificate from certificate chain.
 **/
-boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
+boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 				      IN uintn cert_chain_length,
-				      IN int32 cert_index, OUT uint8 **cert,
+				      IN int32_t cert_index, OUT uint8_t **cert,
 				      OUT uintn *cert_length)
 {
 	ASSERT(FALSE);
@@ -374,8 +374,8 @@ boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
   @retval  FALSE  Invalid X.509 certificate.
 
 **/
-boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
-			  OUT uint8 **tbs_cert, OUT uintn *tbs_cert_size)
+boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
+			  OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
 	ASSERT(FALSE);
 	return FALSE;
@@ -397,7 +397,7 @@ boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
 			       OUT uintn *version)
 {
 	ASSERT(FALSE);
@@ -427,8 +427,8 @@ return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
                                    serial_number_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
-				     OUT uint8 *serial_number,
+return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
+				     OUT uint8_t *serial_number,
 				     OPTIONAL IN OUT uintn *serial_number_size)
 {
 	ASSERT(FALSE);
@@ -454,8 +454,8 @@ return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  This interface is not supported.
 
 **/
-boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
-			     OUT uint8 *cert_issuer,
+boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
+			     OUT uint8_t *cert_issuer,
 			     IN OUT uintn *issuer_size)
 {
 	ASSERT(FALSE);
@@ -489,7 +489,7 @@ boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 			    OUT char8 *common_name,
 			    OPTIONAL IN OUT uintn *common_name_size)
 {
@@ -524,7 +524,7 @@ x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
 				 OUT char8 *name_buffer,
 				 OPTIONAL IN OUT uintn *name_buffer_size)
 {
@@ -550,8 +550,8 @@ x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
                                    is returned in the oid_size.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_signature_algorithm(IN const uint8 *cert,
-					   IN uintn cert_size, OUT uint8 *oid,
+return_status x509_get_signature_algorithm(IN const uint8_t *cert,
+					   IN uintn cert_size, OUT uint8_t *oid,
 					   OPTIONAL IN OUT uintn *oid_size)
 {
 	ASSERT(FALSE);
@@ -578,9 +578,9 @@ return_status x509_get_signature_algorithm(IN const uint8 *cert,
                                    is returned in the extension_data_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
-				      IN uint8 *oid, IN uintn oid_size,
-				      OUT uint8 *extension_data,
+return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
+				      IN uint8_t *oid, IN uintn oid_size,
+				      OUT uint8_t *extension_data,
 				      IN OUT uintn *extension_data_size)
 {
 	ASSERT(FALSE);
@@ -608,8 +608,8 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Invalid certificate, or Validity retrieve failed.
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_validity(IN const uint8 *cert, IN uintn cert_size,
-			  IN uint8 *from, IN OUT uintn *from_size, IN uint8 *to,
+boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
+			  IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
 			  IN OUT uintn *to_size)
 {
 	ASSERT(FALSE);
@@ -627,7 +627,7 @@ boolean x509_get_validity(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Invalid certificate, or usage is NULL
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
+boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT uintn *usage)
 {
 	ASSERT(FALSE);
@@ -651,8 +651,8 @@ boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
                                    is returned in the usage_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extended_key_usage(IN const uint8 *cert,
-					  IN uintn cert_size, OUT uint8 *usage,
+return_status x509_get_extended_key_usage(IN const uint8_t *cert,
+					  IN uintn cert_size, OUT uint8_t *usage,
 					  IN OUT uintn *usage_size)
 {
 	ASSERT(FALSE);

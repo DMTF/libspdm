@@ -64,7 +64,7 @@ void ecx_free(IN void *ecx_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8 *public,
+boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	return FALSE;
@@ -97,8 +97,8 @@ boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8 *public,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8 *peer_public,
-			IN uintn peer_public_size, OUT uint8 *key,
+boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
+			IN uintn peer_public_size, OUT uint8_t *key,
 			IN OUT uintn *key_size)
 {
 	return FALSE;

@@ -29,13 +29,13 @@ return_status spdm_get_response_psk_finish(IN void *context,
 					   IN OUT uintn *response_size,
 					   OUT void *response)
 {
-	uint32 session_id;
+	uint32_t session_id;
 	boolean result;
-	uint32 hmac_size;
+	uint32_t hmac_size;
 	spdm_psk_finish_response_t *spdm_response;
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;
-	uint8 th2_hash_data[64];
+	uint8_t th2_hash_data[64];
 	spdm_psk_finish_request_t *spdm_request;
 	return_status status;
 	spdm_session_state_t session_state;
@@ -125,7 +125,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 
 	result = spdm_verify_psk_finish_req_hmac(
 		spdm_context, session_info,
-		(uint8 *)request + sizeof(spdm_psk_finish_request_t),
+		(uint8_t *)request + sizeof(spdm_psk_finish_request_t),
 		hmac_size);
 	if (!result) {
 		libspdm_generate_error_response(spdm_context,
@@ -135,7 +135,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
 	}
 	status = libspdm_append_message_f(
 		spdm_context, session_info, FALSE,
-		(uint8 *)request + request_size - hmac_size,
+		(uint8_t *)request + request_size - hmac_size,
 		hmac_size);
 	if (RETURN_ERROR(status)) {
 		libspdm_generate_error_response(spdm_context,

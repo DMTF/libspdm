@@ -11,14 +11,14 @@
 typedef struct {
   spdm_message_header_t  header;
   uint16               length;
-  uint8                measurement_specification_sel;
-  uint8                reserved;
-  uint32               measurement_hash_algo;
-  uint32               base_asym_sel;
-  uint32               base_hash_sel;
-  uint8                reserved2[12];
-  uint8                ext_asym_sel_count;
-  uint8                ext_hash_sel_count;
+  uint8_t                measurement_specification_sel;
+  uint8_t                reserved;
+  uint32_t               measurement_hash_algo;
+  uint32_t               base_asym_sel;
+  uint32_t               base_hash_sel;
+  uint8_t                reserved2[12];
+  uint8_t                ext_asym_sel_count;
+  uint8_t                ext_hash_sel_count;
   uint16               reserved3;
   spdm_negotiate_algorithms_common_struct_table_t  struct_table[4];
 } spdm_algorithms_response_spdm11_t;
@@ -26,7 +26,7 @@ typedef struct {
 
 return_status spdm_requester_negotiate_algorithms_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64 timeout)
+	IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -103,7 +103,7 @@ return_status spdm_requester_negotiate_algorithms_test_send_message(
 
 return_status spdm_requester_negotiate_algorithm_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 

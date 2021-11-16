@@ -46,7 +46,7 @@ void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx)
   @retval FALSE  The key is set unsuccessfully.
 
 **/
-boolean hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8 *key,
+boolean hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return FALSE;
@@ -115,7 +115,7 @@ boolean hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data
   @retval FALSE  HMAC-SHA3_256 digest computation failed.
 
 **/
-boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }
@@ -141,8 +141,8 @@ boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8 *hmac_valu
 
 **/
 boolean hmac_sha3_256_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }
@@ -185,7 +185,7 @@ void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8 *key,
+boolean hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return FALSE;
@@ -260,7 +260,7 @@ boolean hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }
@@ -286,8 +286,8 @@ boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8 *hmac_valu
 
 **/
 boolean hmac_sha3_384_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }
@@ -330,7 +330,7 @@ void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx)
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8 *key,
+boolean hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8_t *key,
 			    IN uintn key_size)
 {
 	return FALSE;
@@ -405,7 +405,7 @@ boolean hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data
   @retval FALSE  This interface is not supported.
 
 **/
-boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8 *hmac_value)
+boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }
@@ -431,8 +431,8 @@ boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8 *hmac_valu
 
 **/
 boolean hmac_sha3_512_all(IN const void *data, IN uintn data_size,
-			IN const uint8 *key, IN uintn key_size,
-			OUT uint8 *hmac_value)
+			IN const uint8_t *key, IN uintn key_size,
+			OUT uint8_t *hmac_value)
 {
 	return FALSE;
 }

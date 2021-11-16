@@ -10,13 +10,13 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 signature[MAX_ASYM_KEY_SIZE];
-	uint8 verify_data[MAX_HASH_SIZE];
+	uint8_t signature[MAX_ASYM_KEY_SIZE];
+	uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_finish_request_mine_t;
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 verify_data[MAX_HASH_SIZE];
+	uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_finish_response_mine_t;
 
 #pragma pack()
@@ -34,8 +34,8 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-					   IN uint32 session_id,
-					   IN uint8 req_slot_id_param)
+					   IN uint32_t session_id,
+					   IN uint8_t req_slot_id_param)
 {
 	return_status status;
 	spdm_finish_request_mine_t spdm_request;
@@ -45,9 +45,9 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 	spdm_finish_response_mine_t spdm_response;
 	uintn spdm_response_size;
 	spdm_session_info_t *session_info;
-	uint8 *ptr;
+	uint8_t *ptr;
 	boolean result;
-	uint8 th2_hash_data[64];
+	uint8_t th2_hash_data[64];
 	spdm_session_state_t session_state;
 
 	if (!spdm_is_capabilities_flag_supported(
@@ -124,7 +124,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		sizeof(spdm_finish_request_t) + signature_size + hmac_size;
 	ptr = spdm_request.signature;
 
-	status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8 *)&spdm_request,
+	status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
 				       sizeof(spdm_finish_request_t));
 	if (RETURN_ERROR(status)) {
 		return RETURN_SECURITY_VIOLATION;
@@ -221,7 +221,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 
 		status = libspdm_append_message_f(
 			spdm_context, session_info, TRUE,
-			(uint8 *)&spdm_response +
+			(uint8_t *)&spdm_response +
 				sizeof(spdm_finish_response_t),
 			hmac_size);
 		if (RETURN_ERROR(status)) {
@@ -250,8 +250,8 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 }
 
 return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-				       IN uint32 session_id,
-				       IN uint8 req_slot_id_param)
+				       IN uint32_t session_id,
+				       IN uint8_t req_slot_id_param)
 {
 	uintn retry;
 	return_status status;

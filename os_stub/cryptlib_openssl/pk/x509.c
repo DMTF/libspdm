@@ -17,7 +17,7 @@
 ///
 /// OID
 ///
-static const uint8 m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
+static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 
 /**
   Construct a X509 object from DER-encoded certificate data.
@@ -33,11 +33,11 @@ static const uint8 m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
   @retval     FALSE           The operation failed.
 
 **/
-boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
-				   OUT uint8 **single_x509_cert)
+boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
+				   OUT uint8_t **single_x509_cert)
 {
 	X509 *x509_cert;
-	const uint8 *temp;
+	const uint8_t *temp;
 
 	//
 	// Check input parameters.
@@ -55,7 +55,7 @@ boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
 		return FALSE;
 	}
 
-	*single_x509_cert = (uint8 *)x509_cert;
+	*single_x509_cert = (uint8_t *)x509_cert;
 
 	return TRUE;
 }
@@ -79,10 +79,10 @@ boolean x509_construct_certificate(IN const uint8 *cert, IN uintn cert_size,
   @retval     FALSE           This interface is not supported.
 
 **/
-boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
+boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
 				       IN VA_LIST args)
 {
-	uint8 *cert;
+	uint8_t *cert;
 	uintn cert_size;
 	X509 *x509_cert;
 	STACK_OF(X509) * cert_stack;
@@ -113,7 +113,7 @@ boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
 		//
 		// If cert is NULL, then it is the end of the list.
 		//
-		cert = VA_ARG(args, uint8 *);
+		cert = VA_ARG(args, uint8_t *);
 		if (cert == NULL) {
 			break;
 		}
@@ -127,8 +127,8 @@ boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
 		// Construct X509 Object from the given DER-encoded certificate data.
 		//
 		x509_cert = NULL;
-		res = x509_construct_certificate((const uint8 *)cert, cert_size,
-						 (uint8 **)&x509_cert);
+		res = x509_construct_certificate((const uint8_t *)cert, cert_size,
+						 (uint8_t **)&x509_cert);
 		if (!res) {
 			if (x509_cert != NULL) {
 				X509_free(x509_cert);
@@ -145,7 +145,7 @@ boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
 	if (!res) {
 		sk_X509_pop_free(cert_stack, X509_free);
 	} else {
-		*x509_stack = (uint8 *)cert_stack;
+		*x509_stack = (uint8_t *)cert_stack;
 	}
 
 	return res;
@@ -167,7 +167,7 @@ boolean X509ConstructCertificateStackV(IN OUT uint8 **x509_stack,
   @retval     FALSE           The construction operation failed.
 
 **/
-boolean x509_construct_certificate_stack(IN OUT uint8 **x509_stack, ...)
+boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 {
 	VA_LIST args;
 	boolean result;
@@ -235,12 +235,12 @@ void x509_stack_free(IN void *x509_stack)
   @retval      TRUE   Get tag successful
   @retval      FALSe  Failed to get tag or tag not match
 **/
-boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
-		     IN uint32 tag)
+boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
+		     IN uint32_t tag)
 {
-	uint8 *ptr_old;
-	int32 obj_tag;
-	int32 obj_class;
+	uint8_t *ptr_old;
+	int32_t obj_tag;
+	int32_t obj_class;
 	long obj_length;
 
 	//
@@ -248,10 +248,10 @@ boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
 	//
 	ptr_old = *ptr;
 
-	ASN1_get_object((const uint8 **)ptr, &obj_length, &obj_tag, &obj_class,
-			(int32)(end - (*ptr)));
-	if (obj_tag == (int32)(tag & CRYPTO_ASN1_TAG_VALUE_MASK) &&
-	    obj_class == (int32)(tag & CRYPTO_ASN1_TAG_CLASS_MASK)) {
+	ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
+			(int32_t)(end - (*ptr)));
+	if (obj_tag == (int32_t)(tag & CRYPTO_ASN1_TAG_VALUE_MASK) &&
+	    obj_class == (int32_t)(tag & CRYPTO_ASN1_TAG_CLASS_MASK)) {
 		*length = (uintn)obj_length;
 		return TRUE;
 	} else {
@@ -280,8 +280,8 @@ boolean asn1_get_tag(IN OUT uint8 **ptr, IN uint8 *end, OUT uintn *length,
                   The subject_size will be updated with the required size.
 
 **/
-boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
-			      OUT uint8 *cert_subject,
+boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
+			      OUT uint8_t *cert_subject,
 			      IN OUT uintn *subject_size)
 {
 	boolean res;
@@ -301,7 +301,7 @@ boolean x509_get_subject_name(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -366,16 +366,16 @@ done:
 
 **/
 static return_status
-internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32 request_nid,
+internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
 			   OUT char8 *common_name,
 			   OPTIONAL IN OUT uintn *common_name_size)
 {
 	return_status status;
-	int32 index;
+	int32_t index;
 	intn length;
 	X509_NAME_ENTRY *entry;
 	ASN1_STRING *entry_data;
-	uint8 *utf8_name;
+	uint8_t *utf8_name;
 
 	status = RETURN_INVALID_PARAMETER;
 	utf8_name = NULL;
@@ -474,8 +474,8 @@ done:
 
 **/
 static return_status
-internal_x509_get_subject_nid_name(IN const uint8 *cert, IN uintn cert_size,
-				   IN int32 request_nid, OUT char8 *common_name,
+internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
+				   IN int32_t request_nid, OUT char8 *common_name,
 				   OPTIONAL IN OUT uintn *common_name_size)
 {
 	return_status status;
@@ -493,7 +493,7 @@ internal_x509_get_subject_nid_name(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		//
 		// Invalid X.509 Certificate
@@ -554,8 +554,8 @@ done:
 
 **/
 static return_status
-internal_x509_get_issuer_nid_name(IN const uint8 *cert, IN uintn cert_size,
-				  IN int32 request_nid, OUT char8 *common_name,
+internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
+				  IN int32_t request_nid, OUT char8 *common_name,
 				  OPTIONAL IN OUT uintn *common_name_size)
 {
 	return_status status;
@@ -573,7 +573,7 @@ internal_x509_get_issuer_nid_name(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		//
 		// Invalid X.509 Certificate
@@ -633,7 +633,7 @@ done:
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 				   OUT char8 *common_name,
 				   OPTIONAL IN OUT uintn *common_name_size)
 {
@@ -668,7 +668,7 @@ return_status x509_get_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT char8 *name_buffer,
 			   OPTIONAL IN OUT uintn *name_buffer_size)
 {
@@ -694,7 +694,7 @@ x509_get_organization_name(IN const uint8 *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 
 **/
-return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
+return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
 			       OUT uintn *version)
 {
 	return_status status;
@@ -703,7 +703,7 @@ return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
 
 	x509_cert = NULL;
 	status = RETURN_SUCCESS;
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		//
 		// Invalid X.509 Certificate
@@ -744,8 +744,8 @@ return_status x509_get_version(IN const uint8 *cert, IN uintn cert_size,
                                    serial_number_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
-				     OUT uint8 *serial_number,
+return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
+				     OUT uint8_t *serial_number,
 				     OPTIONAL IN OUT uintn *serial_number_size)
 {
 	boolean res;
@@ -767,7 +767,7 @@ return_status x509_get_serial_number(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		goto done;
 	}
@@ -823,8 +823,8 @@ done:
   @retval  FALSE  This interface is not supported.
 
 **/
-boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
-			     OUT uint8 *cert_issuer,
+boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
+			     OUT uint8_t *cert_issuer,
 			     IN OUT uintn *issuer_size)
 {
 	boolean res;
@@ -844,7 +844,7 @@ boolean x509_get_issuer_name(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -909,7 +909,7 @@ done:
 
 **/
 return_status
-x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 			    OUT char8 *common_name,
 			    OPTIONAL IN OUT uintn *common_name_size)
 {
@@ -944,7 +944,7 @@ x509_get_issuer_common_name(IN const uint8 *cert, IN uintn cert_size,
 
 **/
 return_status
-x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
+x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
 				 OUT char8 *name_buffer,
 				 OPTIONAL IN OUT uintn *name_buffer_size)
 {
@@ -971,8 +971,8 @@ x509_get_issuer_orgnization_name(IN const uint8 *cert, IN uintn cert_size,
                                    is returned in the oid_size.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_signature_algorithm(IN const uint8 *cert,
-					   IN uintn cert_size, OUT uint8 *oid,
+return_status x509_get_signature_algorithm(IN const uint8_t *cert,
+					   IN uintn cert_size, OUT uint8_t *oid,
 					   OPTIONAL IN OUT uintn *oid_size)
 {
 	boolean res;
@@ -995,7 +995,7 @@ return_status x509_get_signature_algorithm(IN const uint8 *cert,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		status = RETURN_INVALID_PARAMETER;
 		goto done;
@@ -1059,8 +1059,8 @@ done:
   @retval  FALSE  Invalid certificate, or Validity retrieve failed.
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_validity(IN const uint8 *cert, IN uintn cert_size,
-			  IN uint8 *from, IN OUT uintn *from_size, IN uint8 *to,
+boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
+			  IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
 			  IN OUT uintn *to_size)
 {
 	boolean res;
@@ -1084,7 +1084,7 @@ boolean x509_get_validity(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		goto done;
 	}
@@ -1164,7 +1164,7 @@ return_status x509_set_date_time(IN char8 *date_time_str, OUT void *date_time,
 				 IN OUT uintn *date_time_size)
 {
 	return_status status;
-	int32 ret;
+	int32_t ret;
 	ASN1_TIME *dt;
 	uintn d_size;
 
@@ -1193,8 +1193,8 @@ return_status x509_set_date_time(IN char8 *date_time_str, OUT void *date_time,
 	if (date_time != NULL) {
 		copy_mem(date_time, dt, sizeof(ASN1_TIME));
 		((ASN1_TIME *)date_time)->data =
-			(uint8 *)date_time + sizeof(ASN1_TIME);
-		copy_mem((uint8 *)date_time + sizeof(ASN1_TIME), dt->data,
+			(uint8_t *)date_time + sizeof(ASN1_TIME);
+		copy_mem((uint8_t *)date_time + sizeof(ASN1_TIME), dt->data,
 			 dt->length);
 	}
 	status = RETURN_SUCCESS;
@@ -1238,7 +1238,7 @@ intn x509_compare_date_time(IN void *date_time1, IN void *date_time2)
   @retval  FALSE  Invalid certificate, or usage is NULL
   @retval  FALSE  This interface is not supported.
 **/
-boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
+boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
 			   OUT uintn *usage)
 {
 	boolean res;
@@ -1257,7 +1257,7 @@ boolean x509_get_key_usage(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		goto done;
 	}
@@ -1302,9 +1302,9 @@ done:
                                    is returned in the extension_data_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
-				      IN uint8 *oid, IN uintn oid_size,
-				      OUT uint8 *extension_data,
+return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
+				      IN uint8_t *oid, IN uintn oid_size,
+				      OUT uint8_t *extension_data,
 				      IN OUT uintn *extension_data_size)
 {
 	return_status status;
@@ -1334,7 +1334,7 @@ return_status x509_get_extension_data(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		goto cleanup;
 	}
@@ -1419,13 +1419,13 @@ cleanup:
                                    is returned in the usage_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_get_extended_key_usage(IN const uint8 *cert,
-					  IN uintn cert_size, OUT uint8 *usage,
+return_status x509_get_extended_key_usage(IN const uint8_t *cert,
+					  IN uintn cert_size, OUT uint8_t *usage,
 					  IN OUT uintn *usage_size)
 {
 	return_status status;
 	status = x509_get_extension_data(cert, cert_size,
-					 (uint8 *)m_oid_ext_key_usage,
+					 (uint8_t *)m_oid_ext_key_usage,
 					 sizeof(m_oid_ext_key_usage), usage,
 					 usage_size);
 	return status;
@@ -1447,7 +1447,7 @@ return_status x509_get_extended_key_usage(IN const uint8 *cert,
   @retval  FALSE  Fail to retrieve RSA public key from X509 certificate.
 
 **/
-boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **rsa_context)
 {
 	boolean res;
@@ -1467,7 +1467,7 @@ boolean rsa_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1522,7 +1522,7 @@ done:
   @retval  FALSE  Fail to retrieve EC public key from X509 certificate.
 
 **/
-boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ec_context)
 {
 	boolean res;
@@ -1542,7 +1542,7 @@ boolean ec_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1596,13 +1596,13 @@ done:
   @retval  FALSE  Fail to retrieve Ed public key from X509 certificate.
 
 **/
-boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				    OUT void **ecd_context)
 {
 	boolean res;
 	EVP_PKEY *pkey;
 	X509 *x509_cert;
-	int32 type;
+	int32_t type;
 
 	//
 	// Check input parameters.
@@ -1617,7 +1617,7 @@ boolean ecd_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1667,15 +1667,15 @@ done:
   @retval  FALSE  Fail to retrieve sm2 public key from X509 certificate.
 
 **/
-boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
+boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 				     OUT void **sm2_context)
 {
 	boolean res;
 	EVP_PKEY *pkey;
 	X509 *x509_cert;
-	int32 result;
+	int32_t result;
 	EC_KEY *ec_key;
-	int32 openssl_nid;
+	int32_t openssl_nid;
 
 	//
 	// Check input parameters.
@@ -1690,7 +1690,7 @@ boolean sm2_get_public_key_from_x509(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded X509 Certificate and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1745,8 +1745,8 @@ done:
                   trusted CA.
 
 **/
-boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
-			 IN const uint8 *ca_cert, IN uintn ca_cert_size)
+boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
+			 IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
 	boolean res;
 	X509 *x509_cert;
@@ -1783,7 +1783,7 @@ boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
 	//
 	// Read DER-encoded certificate to be verified and Construct X509 object.
 	//
-	res = x509_construct_certificate(cert, cert_size, (uint8 **)&x509_cert);
+	res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
 	if ((x509_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1793,7 +1793,7 @@ boolean x509_verify_cert(IN const uint8 *cert, IN uintn cert_size,
 	// Read DER-encoded root certificate and Construct X509 object.
 	//
 	res = x509_construct_certificate(ca_cert, ca_cert_size,
-					 (uint8 **)&x509_ca_cert);
+					 (uint8_t **)&x509_ca_cert);
 	if ((x509_ca_cert == NULL) || (!res)) {
 		res = FALSE;
 		goto done;
@@ -1872,12 +1872,12 @@ done:
   @retval  FALSE  Invalid X.509 certificate.
 
 **/
-boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
-			  OUT uint8 **tbs_cert, OUT uintn *tbs_cert_size)
+boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
+			  OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
-	const uint8 *temp;
-	uint32 asn1_tag;
-	uint32 obj_class;
+	const uint8_t *temp;
+	uint32_t asn1_tag;
+	uint32_t obj_class;
 	uintn length;
 
 	//
@@ -1914,7 +1914,7 @@ boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
 		return FALSE;
 	}
 
-	*tbs_cert = (uint8 *)temp;
+	*tbs_cert = (uint8_t *)temp;
 
 	ASN1_get_object(&temp, (long *)&length, (int *)&asn1_tag,
 			(int *)&obj_class, (long)length);
@@ -1948,19 +1948,19 @@ boolean x509_get_tbs_cert(IN const uint8 *cert, IN uintn cert_size,
   @retval  FALSE  Invalid certificate or the certificate was not issued by the given
                   trusted CA.
 **/
-boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
-			       IN uint8 *cert_chain, IN uintn cert_chain_length)
+boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
+			       IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
-	uint8 *tmp_ptr;
+	uint8_t *tmp_ptr;
 	uintn length;
-	uint32 asn1_tag;
-	uint32 obj_class;
-	uint8 *current_cert;
+	uint32_t asn1_tag;
+	uint32_t obj_class;
+	uint8_t *current_cert;
 	uintn current_cert_len;
-	uint8 *preceding_cert;
+	uint8_t *preceding_cert;
 	uintn preceding_cert_len;
 	boolean verify_flag;
-	int32 ret;
+	int32_t ret;
 
 	preceding_cert = root_cert;
 	preceding_cert_len = root_cert_length;
@@ -1973,7 +1973,7 @@ boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
 	while (TRUE) {
 		tmp_ptr = current_cert;
 		ret = ASN1_get_object(
-			(const uint8 **)&tmp_ptr, (long *)&length,
+			(const uint8_t **)&tmp_ptr, (long *)&length,
 			(int *)&asn1_tag, (int *)&obj_class,
 			(long)(cert_chain_length + cert_chain - tmp_ptr));
 		if (asn1_tag != V_ASN1_SEQUENCE || ret == 0x80) {
@@ -2028,19 +2028,19 @@ boolean x509_verify_cert_chain(IN uint8 *root_cert, IN uintn root_cert_length,
   @retval  TRUE   Success.
   @retval  FALSE  Failed to get certificate from certificate chain.
 **/
-boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
+boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 				      IN uintn cert_chain_length,
-				      IN int32 cert_index, OUT uint8 **cert,
+				      IN int32_t cert_index, OUT uint8_t **cert,
 				      OUT uintn *cert_length)
 {
 	uintn asn1_len;
-	int32 current_index;
+	int32_t current_index;
 	uintn current_cert_len;
-	uint8 *current_cert;
-	uint8 *tmp_ptr;
-	int32 ret;
-	uint32 asn1_tag;
-	uint32 obj_class;
+	uint8_t *current_cert;
+	uint8_t *tmp_ptr;
+	int32_t ret;
+	uint32_t asn1_tag;
+	uint32_t obj_class;
 
 	//
 	// Check input parameters.
@@ -2063,7 +2063,7 @@ boolean x509_get_cert_from_cert_chain(IN uint8 *cert_chain,
 
 		// Get asn1 object and taglen
 		ret = ASN1_get_object(
-			(const uint8 **)&tmp_ptr, (long *)&asn1_len,
+			(const uint8_t **)&tmp_ptr, (long *)&asn1_len,
 			(int *)&asn1_tag, (int *)&obj_class,
 			(long)(cert_chain_length + cert_chain - tmp_ptr));
 		if (asn1_tag != V_ASN1_SEQUENCE || ret == 0x80) {

@@ -28,14 +28,14 @@ extern "C" {
 
 typedef uintn UINTN;
 typedef intn INTN;
-typedef uint8 UINT8;
-typedef int8 INT8;
-typedef uint16 UINT16;
-typedef int16 INT16;
-typedef uint32 UINT32;
-typedef int32 INT32;
+typedef uint8_t UINT8;
+typedef int8_t INT8;
+typedef uint16_t UINT16;
+typedef int16_t INT16;
+typedef uint32_t UINT32;
+typedef int32_t INT32;
 typedef uint64 UINT64;
-typedef int64 INT64;
+typedef int64_t INT64;
 
 /*
  * OpenSSL was configured with the following options:

@@ -7,7 +7,7 @@
 #include "internal/libspdm_requester_lib.h"
 
 typedef struct {
-	uint8 request_response_code;
+	uint8_t request_response_code;
 	libspdm_get_encap_response_func get_encap_response_func;
 } spdm_get_encap_response_struct_t;
 
@@ -54,7 +54,7 @@ void libspdm_register_get_encap_response_func(IN void *context,
   @return GET_ENCAP_RESPONSE function according to the request code.
 **/
 libspdm_get_encap_response_func
-SpdmGetEncapResponseFuncViaRequestCode(IN uint8 request_response_code)
+SpdmGetEncapResponseFuncViaRequestCode(IN uint8_t request_response_code)
 {
 	uintn index;
 
@@ -143,24 +143,24 @@ return_status SpdmProcessEncapsulatedRequest(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
-					IN uint32 *session_id,
-					IN uint8 mut_auth_requested,
-					OUT uint8 *req_slot_id_param)
+					IN uint32_t *session_id,
+					IN uint8_t mut_auth_requested,
+					OUT uint8_t *req_slot_id_param)
 {
 	return_status status;
-	uint8 request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn spdm_request_size;
 	spdm_get_encapsulated_request_request_t
 		*spdm_get_encapsulated_request_request;
 	spdm_deliver_encapsulated_response_request_t
 		*spdm_deliver_encapsulated_response_request;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn spdm_response_size;
 	spdm_encapsulated_request_response_t *spdm_encapsulated_request_response;
 	spdm_encapsulated_response_ack_response_t
 		*spdm_encapsulated_response_ack_response;
 	spdm_session_info_t *session_info;
-	uint8 request_id;
+	uint8_t request_id;
 	void *encapsulated_request;
 	uintn encapsulated_request_size;
 	void *encapsulated_response;
@@ -347,11 +347,11 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 		case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER:
 			if (spdm_response_size >=
 			    sizeof(spdm_encapsulated_response_ack_response_t) +
-				    sizeof(uint8)) {
+				    sizeof(uint8_t)) {
 				if ((req_slot_id_param != NULL) &&
 				    (*req_slot_id_param == 0)) {
 					*req_slot_id_param = *(
-						uint8 *)(spdm_encapsulated_response_ack_response +
+						uint8_t *)(spdm_encapsulated_response_ack_response +
 							 1);
 					if (*req_slot_id_param >=
 					    spdm_context->local_context
@@ -395,7 +395,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status libspdm_send_receive_encap_request(IN void *spdm_context,
-					      IN uint32 *session_id)
+					      IN uint32_t *session_id)
 {
 	return spdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }

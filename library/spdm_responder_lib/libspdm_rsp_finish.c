@@ -30,16 +30,16 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 				       IN OUT uintn *response_size,
 				       OUT void *response)
 {
-	uint32 session_id;
+	uint32_t session_id;
 	boolean result;
-	uint32 hmac_size;
-	uint32 signature_size;
-	uint8 req_slot_id;
+	uint32_t hmac_size;
+	uint32_t signature_size;
+	uint8_t req_slot_id;
 	spdm_finish_request_t *spdm_request;
 	spdm_finish_response_t *spdm_response;
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;
-	uint8 th2_hash_data[64];
+	uint8_t th2_hash_data[64];
 	return_status status;
 	spdm_session_state_t session_state;
 
@@ -170,7 +170,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	if (session_info->mut_auth_requested) {
 		result = spdm_verify_finish_req_signature(
 			spdm_context, session_info,
-			(uint8 *)request + sizeof(spdm_finish_request_t),
+			(uint8_t *)request + sizeof(spdm_finish_request_t),
 			signature_size);
 		if (!result) {
 			libspdm_generate_error_response(
@@ -180,7 +180,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 		}
 		status = libspdm_append_message_f(
 			spdm_context, session_info, FALSE,
-			(uint8 *)request + sizeof(spdm_finish_request_t),
+			(uint8_t *)request + sizeof(spdm_finish_request_t),
 			signature_size);
 		if (RETURN_ERROR(status)) {
 			libspdm_generate_error_response(
@@ -192,7 +192,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 
 	result = spdm_verify_finish_req_hmac(
 		spdm_context, session_info,
-		(uint8 *)request + signature_size +
+		(uint8_t *)request + signature_size +
 			sizeof(spdm_finish_request_t),
 		hmac_size);
 	if (!result) {
@@ -203,7 +203,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 	}
 
 	status = libspdm_append_message_f(spdm_context, session_info, FALSE,
-				       (uint8 *)request + signature_size +
+				       (uint8_t *)request + signature_size +
 					       sizeof(spdm_finish_request_t),
 				       hmac_size);
 	if (RETURN_ERROR(status)) {
@@ -245,7 +245,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
 		result = spdm_generate_finish_rsp_hmac(
 			spdm_context, session_info,
-			(uint8 *)spdm_response + sizeof(spdm_finish_request_t));
+			(uint8_t *)spdm_response + sizeof(spdm_finish_request_t));
 		if (!result) {
 			libspdm_generate_error_response(
 				spdm_context,
@@ -256,7 +256,7 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
 
 		status = libspdm_append_message_f(
 			spdm_context, session_info, FALSE,
-			(uint8 *)spdm_response + sizeof(spdm_finish_request_t),
+			(uint8_t *)spdm_response + sizeof(spdm_finish_request_t),
 			hmac_size);
 		if (RETURN_ERROR(status)) {
 			libspdm_generate_error_response(

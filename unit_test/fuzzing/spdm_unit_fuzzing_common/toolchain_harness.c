@@ -46,7 +46,7 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 	// 3. Initialize test_buffer
 #ifdef TEST_WITH_KLEE
 	// 3.1 For test with KLEE: write symbolic values to test_buffer
-	klee_make_symbolic((uint8 *)buffer, max_buffer_size, "buffer");
+	klee_make_symbolic((uint8_t *)buffer, max_buffer_size, "buffer");
 	return TRUE;
 #endif
 

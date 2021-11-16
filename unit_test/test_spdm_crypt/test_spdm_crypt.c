@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 
 // https://lapo.it/asn1js/#MCQGCisGAQQBgxyCEgEMFkFDTUU6V0lER0VUOjEyMzQ1Njc4OTA
-const uint8 m_subject_alt_name_buffer1[] = {
+const uint8_t m_subject_alt_name_buffer1[] = {
 	0x30, 0x24, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83,
 	0x1C, 0x82, 0x12, 0x01, 0x0C, 0x16, 0x41, 0x43, 0x4D, 0x45,
 	0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A, 0x31, 0x32,
@@ -15,7 +15,7 @@ const uint8 m_subject_alt_name_buffer1[] = {
 };
 
 // https://lapo.it/asn1js/#MCYGCisGAQQBgxyCEgGgGAwWQUNNRTpXSURHRVQ6MTIzNDU2Nzg5MA
-const uint8 m_subject_alt_name_buffer2[] = {
+const uint8_t m_subject_alt_name_buffer2[] = {
 	0x30, 0x26, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83,
 	0x1C, 0x82, 0x12, 0x01, 0xA0, 0x18, 0x0C, 0x16, 0x41, 0x43,
 	0x4D, 0x45, 0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A,
@@ -23,14 +23,14 @@ const uint8 m_subject_alt_name_buffer2[] = {
 };
 
 // https://lapo.it/asn1js/#MCigJgYKKwYBBAGDHIISAaAYDBZBQ01FOldJREdFVDoxMjM0NTY3ODkw
-const uint8 m_subject_alt_name_buffer3[] = {
+const uint8_t m_subject_alt_name_buffer3[] = {
 	0x30, 0x28, 0xA0, 0x26, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01,
 	0x83, 0x1C, 0x82, 0x12, 0x01, 0xA0, 0x18, 0x0C, 0x16, 0x41, 0x43,
 	0x4D, 0x45, 0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A, 0x31,
 	0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30
 };
 
-const uint8 m_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
+const uint8_t m_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
 			     0x83, 0x1C, 0x82, 0x12, 0x01 };
 
 void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
@@ -38,7 +38,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 	uintn common_name_size;
 	char8 common_name[64];
 	uintn dmtf_oid_size;
-	uint8 dmtf_oid[64];
+	uint8_t dmtf_oid[64];
 	return_status ret;
 
 	common_name_size = 64;
@@ -80,8 +80,8 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 	uintn common_name_size;
 	char8 common_name[64];
 	uintn dmtf_oid_size;
-	uint8 dmtf_oid[64];
-	uint8 *file_buffer;
+	uint8_t dmtf_oid[64];
+	uint8_t *file_buffer;
 	uintn file_buffer_size;
 	return_status ret;
 	boolean status;
@@ -168,7 +168,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 void test_spdm_crypt_spdm_x509_certificate_check(void **state)
 {
 	boolean status;
-	uint8 *file_buffer;
+	uint8_t *file_buffer;
 	uintn file_buffer_size;
 
 	status = read_input_file("rsa2048/end_requester.cert.der",

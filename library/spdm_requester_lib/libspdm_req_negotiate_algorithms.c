@@ -15,32 +15,32 @@
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
-	uint16 length;
-	uint8 measurement_specification;
-	uint8 reserved;
-	uint32 base_asym_algo;
-	uint32 base_hash_algo;
-	uint8 reserved2[12];
-	uint8 ext_asym_count;
-	uint8 ext_hash_count;
-	uint16 reserved3;
+	uint16_t length;
+	uint8_t measurement_specification;
+	uint8_t reserved;
+	uint32_t base_asym_algo;
+	uint32_t base_hash_algo;
+	uint8_t reserved2[12];
+	uint8_t ext_asym_count;
+	uint8_t ext_hash_count;
+	uint16_t reserved3;
 	spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
 } spdm_negotiate_algorithms_request_mine_t;
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 length;
-	uint8 measurement_specification_sel;
-	uint8 reserved;
-	uint32 measurement_hash_algo;
-	uint32 base_asym_sel;
-	uint32 base_hash_sel;
-	uint8 reserved2[12];
-	uint8 ext_asym_sel_count;
-	uint8 ext_hash_sel_count;
-	uint16 reserved3;
-	uint32 ext_asym_sel;
-	uint32 ext_hash_sel;
+	uint16_t length;
+	uint8_t measurement_specification_sel;
+	uint8_t reserved;
+	uint32_t measurement_hash_algo;
+	uint32_t base_asym_sel;
+	uint32_t base_hash_sel;
+	uint8_t reserved2[12];
+	uint8_t ext_asym_sel_count;
+	uint8_t ext_hash_sel_count;
+	uint16_t reserved3;
+	uint32_t ext_asym_sel;
+	uint32_t ext_hash_sel;
 	spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
 } spdm_algorithms_response_max_t;
 #pragma pack()
@@ -59,11 +59,11 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	spdm_negotiate_algorithms_request_mine_t spdm_request;
 	spdm_algorithms_response_max_t spdm_response;
 	uintn spdm_response_size;
-	uint32 algo_size;
+	uint32_t algo_size;
 	uintn index;
 	spdm_negotiate_algorithms_common_struct_table_t *struct_table;
-	uint8 fixed_alg_size;
-	uint8 ext_alg_count;
+	uint8_t fixed_alg_size;
+	uint8_t ext_alg_count;
 
 	spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
 									SPDM_NEGOTIATE_ALGORITHMS);
@@ -159,8 +159,8 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	}
 	if (spdm_response_size <
 	    sizeof(spdm_algorithms_response_t) +
-		    sizeof(uint32) * spdm_response.ext_asym_sel_count +
-		    sizeof(uint32) * spdm_response.ext_hash_sel_count +
+		    sizeof(uint32_t) * spdm_response.ext_asym_sel_count +
+		    sizeof(uint32_t) * spdm_response.ext_hash_sel_count +
 		    sizeof(spdm_negotiate_algorithms_common_struct_table_t) *
 			    spdm_response.header.param1) {
 		return RETURN_DEVICE_ERROR;
@@ -168,8 +168,8 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	struct_table =
 		(void *)((uintn)&spdm_response +
 			 sizeof(spdm_algorithms_response_t) +
-			 sizeof(uint32) * spdm_response.ext_asym_sel_count +
-			 sizeof(uint32) * spdm_response.ext_hash_sel_count);
+			 sizeof(uint32_t) * spdm_response.ext_asym_sel_count +
+			 sizeof(uint32_t) * spdm_response.ext_hash_sel_count);
 	if (spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
 		for (index = 0; index < spdm_response.header.param1; index++) {
 			if ((uintn)&spdm_response + spdm_response_size <
@@ -192,13 +192,13 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 			if ((uintn)&spdm_response + spdm_response_size -
 				    (uintn)struct_table -
 				    sizeof(spdm_negotiate_algorithms_common_struct_table_t) <
-			    sizeof(uint32) * ext_alg_count) {
+			    sizeof(uint32_t) * ext_alg_count) {
 				return RETURN_DEVICE_ERROR;
 			}
 			struct_table =
 				(void *)((uintn)struct_table +
 					 sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
-					 sizeof(uint32) * ext_alg_count);
+					 sizeof(uint32_t) * ext_alg_count);
 		}
 	}
 	spdm_response_size = (uintn)struct_table - (uintn)&spdm_response;
@@ -269,9 +269,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 		struct_table =
 			(void *)((uintn)&spdm_response +
 				 sizeof(spdm_algorithms_response_t) +
-				 sizeof(uint32) *
+				 sizeof(uint32_t) *
 					 spdm_response.ext_asym_sel_count +
-				 sizeof(uint32) *
+				 sizeof(uint32_t) *
 					 spdm_response.ext_hash_sel_count);
 		for (index = 0; index < spdm_response.header.param1; index++) {
 			switch (struct_table->alg_type) {
@@ -300,7 +300,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 			struct_table =
 				(void *)((uintn)struct_table +
 					 sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
-					 sizeof(uint32) * ext_alg_count);
+					 sizeof(uint32_t) * ext_alg_count);
 		}
 
 		if (spdm_is_capabilities_flag_supported(

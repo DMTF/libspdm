@@ -40,7 +40,7 @@ static const unsigned char m_ffehde4096_g[] =
 void *dh_new_by_nid(IN uintn nid)
 {
 	mbedtls_dhm_context *ctx;
-	int32 ret;
+	int32_t ret;
 
 	ctx = allocate_zero_pool(sizeof(mbedtls_dhm_context));
 	if (ctx == NULL) {
@@ -133,7 +133,7 @@ void dh_free(IN void *dh_context)
 
 **/
 boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-			      IN uintn prime_length, OUT uint8 *prime)
+			      IN uintn prime_length, OUT uint8_t *prime)
 {
 	return FALSE;
 }
@@ -160,7 +160,7 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-			 IN uintn prime_length, IN const uint8 *prime)
+			 IN uintn prime_length, IN const uint8_t *prime)
 {
 	return FALSE;
 }
@@ -191,10 +191,10 @@ boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
   @retval FALSE  public_key_size is not large enough.
 
 **/
-boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
+boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_dhm_context *ctx;
 	uintn final_pub_key_size;
 
@@ -230,8 +230,8 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
 	*public_key_size = final_pub_key_size;
 	zero_mem(public_key, *public_key_size);
 
-	ret = mbedtls_dhm_make_public(dh_context, (uint32)*public_key_size,
-				      public_key, (uint32)*public_key_size,
+	ret = mbedtls_dhm_make_public(dh_context, (uint32_t)*public_key_size,
+				      public_key, (uint32_t)*public_key_size,
 				      myrand, NULL);
 	if (ret != 0) {
 		return FALSE;
@@ -268,11 +268,11 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8 *public_key,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean dh_compute_key(IN OUT void *dh_context, IN const uint8 *peer_public_key,
-		       IN uintn peer_public_key_size, OUT uint8 *key,
+boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
+		       IN uintn peer_public_key_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_dhm_context *ctx;
 	uintn return_size;
 	uintn dh_key_size;

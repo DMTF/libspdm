@@ -31,7 +31,7 @@ void *ec_new_by_nid(IN uintn nid)
 {
 	mbedtls_ecdh_context *ctx;
 	mbedtls_ecp_group_id grp_id;
-	int32 ret;
+	int32_t ret;
 
 	ctx = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
 	if (ctx == NULL) {
@@ -89,11 +89,11 @@ void ec_free(IN void *ec_context)
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8 *public_key,
+boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
 		       IN uintn public_key_size)
 {
 	mbedtls_ecdh_context *ctx;
-	int32 ret;
+	int32_t ret;
 	uintn half_size;
 
 	if (ec_context == NULL || public_key == NULL) {
@@ -151,11 +151,11 @@ boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8 *public_key,
   @retval  FALSE  Invalid EC key component.
 
 **/
-boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8 *public_key,
+boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
 		       IN OUT uintn *public_key_size)
 {
 	mbedtls_ecdh_context *ctx;
-	int32 ret;
+	int32_t ret;
 	uintn half_size;
 	uintn x_size;
 	uintn y_size;
@@ -255,11 +255,11 @@ boolean ec_check_key(IN void *ec_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
+boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
 			IN OUT uintn *public_size)
 {
 	mbedtls_ecdh_context *ctx;
-	int32 ret;
+	int32_t ret;
 	uintn half_size;
 	uintn x_size;
 	uintn y_size;
@@ -347,13 +347,13 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8 *public,
   @retval FALSE  key_size is not large enough.
 
 **/
-boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
-		       IN uintn peer_public_size, OUT uint8 *key,
+boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
+		       IN uintn peer_public_size, OUT uint8_t *key,
 		       IN OUT uintn *key_size)
 {
 	mbedtls_ecdh_context *ctx;
 	uintn half_size;
-	int32 ret;
+	int32_t ret;
 
 	if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
 	    key == NULL) {
@@ -445,10 +445,10 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8 *peer_public,
 
 **/
 boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-		   IN const uint8 *message_hash, IN uintn hash_size,
-		   OUT uint8 *signature, IN OUT uintn *sig_size)
+		   IN const uint8_t *message_hash, IN uintn hash_size,
+		   OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_ecdh_context *ctx;
 	mbedtls_mpi bn_r;
 	mbedtls_mpi bn_s;
@@ -566,10 +566,10 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 
 **/
 boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-		     IN const uint8 *message_hash, IN uintn hash_size,
-		     IN const uint8 *signature, IN uintn sig_size)
+		     IN const uint8_t *message_hash, IN uintn hash_size,
+		     IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32 ret;
+	int32_t ret;
 	mbedtls_ecdh_context *ctx;
 	mbedtls_mpi bn_r;
 	mbedtls_mpi bn_s;

@@ -9,8 +9,8 @@
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
-	uint8 reserved;
-	uint8 version_number_entry_count;
+	uint8_t reserved;
+	uint8_t version_number_entry_count;
 	spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
 } spdm_version_response_max_t;
 #pragma pack()
@@ -28,8 +28,8 @@ typedef struct {
 */
 boolean spdm_version_number_compare(IN spdm_version_number_t first_ver, IN spdm_version_number_t seccond_ver)
 {
-	uint8 first_version;
-	uint8 seccond_version;
+	uint8_t first_version;
+	uint8_t seccond_version;
 
 	first_version = spdm_get_version_from_version_number(first_ver);
 	seccond_version = spdm_get_version_from_version_number(seccond_ver);
@@ -83,8 +83,8 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
 boolean spdm_negotiate_connection_version(IN OUT void *context, IN spdm_version_number_t *req_ver_set, IN uintn req_ver_num,
 									   	IN spdm_version_number_t *res_ver_set, IN uintn res_ver_num)
 {
-	uint8 req_version;
-	uint8 res_version;
+	uint8_t req_version;
+	uint8_t res_version;
 	boolean ver_available;
 	uintn req_index;
 	uintn res_index;

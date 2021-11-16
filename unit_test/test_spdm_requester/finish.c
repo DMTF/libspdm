@@ -11,9 +11,9 @@
 #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 static uintn m_local_buffer_size;
-static uint8 m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
-uint8 m_dummy_buffer[MAX_HASH_SIZE];
+uint8_t m_dummy_buffer[MAX_HASH_SIZE];
 
 void spdm_secured_message_set_response_finished_key(
 	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
@@ -31,13 +31,13 @@ void spdm_secured_message_set_response_finished_key(
 return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 						      IN uintn request_size,
 						      IN void *request,
-						      IN uint64 timeout)
+						      IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
-	uint8 *ptr;
+	uint8_t *ptr;
 
 	spdm_test_context = get_spdm_test_context();
-	ptr = (uint8 *)request;
+	ptr = (uint8_t *)request;
 	switch (spdm_test_context->case_id) {
 	case 0x1:
 		return RETURN_DEVICE_ERROR;
@@ -148,7 +148,7 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 
 return_status spdm_requester_finish_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -159,17 +159,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x2: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -201,7 +201,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -210,7 +210,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -226,17 +226,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x3: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -268,7 +268,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -277,7 +277,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -339,17 +339,17 @@ return_status spdm_requester_finish_test_receive_message(
 			sub_index1++;
 		} else if (sub_index1 == 1) {
 			spdm_finish_response_t *spdm_response;
-			uint32 hash_size;
-			uint32 hmac_size;
-			uint8 *ptr;
+			uint32_t hash_size;
+			uint32_t hmac_size;
+			uint8_t *ptr;
 			void *data;
 			uintn data_size;
-			uint8 *cert_buffer;
+			uint8_t *cert_buffer;
 			uintn cert_buffer_size;
-			uint8 cert_buffer_hash[MAX_HASH_SIZE];
+			uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 			large_managed_buffer_t th_curr;
-			uint8 response_finished_key[MAX_HASH_SIZE];
-			uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t response_finished_key[MAX_HASH_SIZE];
+			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
 
 			((spdm_context_t *)spdm_context)
@@ -386,7 +386,7 @@ return_status spdm_requester_finish_test_receive_message(
 				&data_size, NULL, NULL);
 			init_managed_buffer(&th_curr,
 					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data;
+			cert_buffer = (uint8_t *)data;
 			cert_buffer_size = data_size;
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
@@ -397,7 +397,7 @@ return_status spdm_requester_finish_test_receive_message(
 			append_managed_buffer(&th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			set_mem(response_finished_key, MAX_HASH_SIZE,
-				(uint8)(0xFF));
+				(uint8_t)(0xFF));
 			spdm_hmac_all(m_use_hash_algo,
 				      get_managed_buffer(&th_curr),
 				      get_managed_buffer_size(&th_curr),
@@ -472,17 +472,17 @@ return_status spdm_requester_finish_test_receive_message(
 			sub_index2++;
 		} else if (sub_index2 == 1) {
 			spdm_finish_response_t *spdm_response;
-			uint32 hash_size;
-			uint32 hmac_size;
-			uint8 *ptr;
+			uint32_t hash_size;
+			uint32_t hmac_size;
+			uint8_t *ptr;
 			void *data;
 			uintn data_size;
-			uint8 *cert_buffer;
+			uint8_t *cert_buffer;
 			uintn cert_buffer_size;
-			uint8 cert_buffer_hash[MAX_HASH_SIZE];
+			uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 			large_managed_buffer_t th_curr;
-			uint8 response_finished_key[MAX_HASH_SIZE];
-			uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t response_finished_key[MAX_HASH_SIZE];
+			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
 
 			((spdm_context_t *)spdm_context)
@@ -519,7 +519,7 @@ return_status spdm_requester_finish_test_receive_message(
 				&data_size, NULL, NULL);
 			init_managed_buffer(&th_curr,
 					    MAX_SPDM_MESSAGE_BUFFER_SIZE);
-			cert_buffer = (uint8 *)data;
+			cert_buffer = (uint8_t *)data;
 			cert_buffer_size = data_size;
 			spdm_hash_all(m_use_hash_algo, cert_buffer,
 				      cert_buffer_size, cert_buffer_hash);
@@ -530,7 +530,7 @@ return_status spdm_requester_finish_test_receive_message(
 			append_managed_buffer(&th_curr, m_local_buffer,
 					      m_local_buffer_size);
 			set_mem(response_finished_key, MAX_HASH_SIZE,
-				(uint8)(0xFF));
+				(uint8_t)(0xFF));
 			spdm_hmac_all(m_use_hash_algo,
 				      get_managed_buffer(&th_curr),
 				      get_managed_buffer_size(&th_curr),
@@ -555,7 +555,7 @@ return_status spdm_requester_finish_test_receive_message(
       zero_mem (&spdm_response, sizeof(spdm_response));
       spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
       spdm_response.header.request_response_code = SPDM_ERROR;
-      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param1 = (uint8_t) error_code;
       spdm_response.header.param2 = 0;
 
       spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
@@ -576,17 +576,17 @@ return_status spdm_requester_finish_test_receive_message(
   case 0xB:
   {
 	spdm_finish_response_t *spdm_response;
-	uint32 hash_size;
-	uint32 hmac_size;
-	uint8 *ptr;
+	uint32_t hash_size;
+	uint32_t hmac_size;
+	uint8_t *ptr;
 	void *data;
 	uintn data_size;
-	uint8 *cert_buffer;
+	uint8_t *cert_buffer;
 	uintn cert_buffer_size;
-	uint8 cert_buffer_hash[MAX_HASH_SIZE];
+	uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 	large_managed_buffer_t th_curr;
-	uint8 response_finished_key[MAX_HASH_SIZE];
-	uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response_finished_key[MAX_HASH_SIZE];
+	uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn temp_buf_size;
 
 	((spdm_context_t *)spdm_context)
@@ -618,7 +618,7 @@ return_status spdm_requester_finish_test_receive_message(
 						m_use_asym_algo, &data,
 						&data_size, NULL, NULL);
 	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-	cert_buffer = (uint8 *)data;
+	cert_buffer = (uint8_t *)data;
 	cert_buffer_size = data_size;
 	spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 				cert_buffer_hash);
@@ -627,7 +627,7 @@ return_status spdm_requester_finish_test_receive_message(
 	// session_transcript.message_k is 0
 	append_managed_buffer(&th_curr, m_local_buffer,
 					m_local_buffer_size);
-	set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+	set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 				get_managed_buffer_size(&th_curr),
 				response_finished_key, hash_size, ptr);
@@ -643,17 +643,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0xC: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -685,7 +685,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -694,7 +694,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -710,17 +710,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0xD: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -752,7 +752,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -761,7 +761,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -777,17 +777,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0xE: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -820,7 +820,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -829,7 +829,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -845,17 +845,17 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0xF: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -887,7 +887,7 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
@@ -896,7 +896,7 @@ return_status spdm_requester_finish_test_receive_message(
 		// session_transcript.message_k is 0
 		append_managed_buffer(&th_curr, m_local_buffer,
 				      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -912,18 +912,18 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x10: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
-		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t req_cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -958,14 +958,14 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
@@ -976,7 +976,7 @@ return_status spdm_requester_finish_test_receive_message(
 			      hash_size);
 		append_managed_buffer(&th_curr, m_local_buffer,
 			      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -992,9 +992,9 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x11: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hmac_size;
-		uint8 *ptr;
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint32_t hmac_size;
+		uint8_t *ptr;
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -1021,7 +1021,7 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		ptr = (void *)(spdm_response + 1);
-		set_mem(ptr, hmac_size, (uint8)(0x00)); //all-zero MAC
+		set_mem(ptr, hmac_size, (uint8_t)(0x00)); //all-zero MAC
 		ptr += hmac_size;
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
@@ -1033,12 +1033,12 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x12: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 zero_data[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t zero_data[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -1066,8 +1066,8 @@ return_status spdm_requester_finish_test_receive_message(
 		spdm_response->header.param1 = 0;
 		spdm_response->header.param2 = 0;
 		ptr = (void *)(spdm_response + 1);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
-		set_mem(zero_data, hash_size, (uint8)(0x00));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
+		set_mem(zero_data, hash_size, (uint8_t)(0x00));
 		spdm_hmac_all(m_use_hash_algo, zero_data, hash_size,
 			      response_finished_key, hash_size, ptr);
 		ptr += hmac_size;
@@ -1081,18 +1081,18 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x13: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
-		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t req_cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -1128,14 +1128,14 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
@@ -1146,7 +1146,7 @@ return_status spdm_requester_finish_test_receive_message(
 			      hash_size);
 		append_managed_buffer(&th_curr, m_local_buffer,
 			      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
@@ -1163,18 +1163,18 @@ return_status spdm_requester_finish_test_receive_message(
 
 	case 0x14: {
 		spdm_finish_response_t *spdm_response;
-		uint32 hash_size;
-		uint32 hmac_size;
-		uint8 *ptr;
+		uint32_t hash_size;
+		uint32_t hmac_size;
+		uint8_t *ptr;
 		void *data;
 		uintn data_size;
-		uint8 *cert_buffer;
+		uint8_t *cert_buffer;
 		uintn cert_buffer_size;
-		uint8 cert_buffer_hash[MAX_HASH_SIZE];
-		uint8 req_cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t cert_buffer_hash[MAX_HASH_SIZE];
+		uint8_t req_cert_buffer_hash[MAX_HASH_SIZE];
 		large_managed_buffer_t th_curr;
-		uint8 response_finished_key[MAX_HASH_SIZE];
-		uint8 temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t response_finished_key[MAX_HASH_SIZE];
+		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 
 		((spdm_context_t *)spdm_context)
@@ -1210,14 +1210,14 @@ return_status spdm_requester_finish_test_receive_message(
 							m_use_asym_algo, &data,
 							&data_size, NULL, NULL);
 		init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      cert_buffer_hash);
 		read_requester_public_certificate_chain(m_use_hash_algo,
 							m_use_req_asym_algo, &data,
 							&data_size, NULL, NULL);
-		cert_buffer = (uint8 *)data;
+		cert_buffer = (uint8_t *)data;
 		cert_buffer_size = data_size;
 		spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
 			      req_cert_buffer_hash);
@@ -1228,12 +1228,12 @@ return_status spdm_requester_finish_test_receive_message(
 			      hash_size);
 		append_managed_buffer(&th_curr, m_local_buffer,
 			      m_local_buffer_size);
-		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
+		set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
 		spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
 			      get_managed_buffer_size(&th_curr),
 			      response_finished_key, hash_size, ptr);
 		ptr += hmac_size/2; // half HMAC size
-		set_mem(ptr, hmac_size/2, (uint8) 0x00);
+		set_mem(ptr, hmac_size/2, (uint8_t) 0x00);
 		free(data);
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
@@ -1258,8 +1258,8 @@ void test_spdm_requester_finish_case1(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1304,7 +1304,7 @@ void test_spdm_requester_finish_case1(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1334,8 +1334,8 @@ void test_spdm_requester_finish_case2(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1380,7 +1380,7 @@ void test_spdm_requester_finish_case2(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1413,8 +1413,8 @@ void test_spdm_requester_finish_case3(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1459,7 +1459,7 @@ void test_spdm_requester_finish_case3(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1488,8 +1488,8 @@ void test_spdm_requester_finish_case4(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1534,7 +1534,7 @@ void test_spdm_requester_finish_case4(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1563,8 +1563,8 @@ void test_spdm_requester_finish_case5(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1609,7 +1609,7 @@ void test_spdm_requester_finish_case5(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1639,8 +1639,8 @@ void test_spdm_requester_finish_case6(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1685,7 +1685,7 @@ void test_spdm_requester_finish_case6(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1719,8 +1719,8 @@ void test_spdm_requester_finish_case7(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1765,7 +1765,7 @@ void test_spdm_requester_finish_case7(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1796,8 +1796,8 @@ void test_spdm_requester_finish_case8(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1842,7 +1842,7 @@ void test_spdm_requester_finish_case8(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1872,8 +1872,8 @@ void test_spdm_requester_finish_case9(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -1918,7 +1918,7 @@ void test_spdm_requester_finish_case9(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -1953,8 +1953,8 @@ void test_spdm_requester_finish_case10(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
-  uint32               session_id;
-  uint8                req_slot_id_param;
+  uint32_t               session_id;
+  uint8_t                req_slot_id_param;
   void                 *data;
   uintn                data_size;
   void                 *hash;
@@ -1992,7 +1992,7 @@ void test_spdm_requester_finish_case10(void **state) {
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init (spdm_context, session_info, session_id, FALSE);
     hash_size = spdm_get_hash_size (m_use_hash_algo);
-    set_mem (m_dummy_buffer, hash_size, (uint8)(0xFF));
+    set_mem (m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_finished_key (session_info->secured_message_context, m_dummy_buffer, hash_size);
     spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_HANDSHAKING);
 
@@ -2020,8 +2020,8 @@ void test_spdm_requester_finish_case11(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2066,7 +2066,7 @@ void test_spdm_requester_finish_case11(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2121,8 +2121,8 @@ void test_spdm_requester_finish_case12(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2168,7 +2168,7 @@ void test_spdm_requester_finish_case12(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2199,8 +2199,8 @@ void test_spdm_requester_finish_case13(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2245,7 +2245,7 @@ void test_spdm_requester_finish_case13(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2274,8 +2274,8 @@ void test_spdm_requester_finish_case14(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2320,7 +2320,7 @@ void test_spdm_requester_finish_case14(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2350,8 +2350,8 @@ void test_spdm_requester_finish_case15(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2396,7 +2396,7 @@ void test_spdm_requester_finish_case15(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2426,8 +2426,8 @@ void test_spdm_requester_finish_case16(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2483,7 +2483,7 @@ void test_spdm_requester_finish_case16(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2517,8 +2517,8 @@ void test_spdm_requester_finish_case17(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2574,7 +2574,7 @@ void test_spdm_requester_finish_case17(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2604,8 +2604,8 @@ void test_spdm_requester_finish_case18(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2661,7 +2661,7 @@ void test_spdm_requester_finish_case18(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2692,8 +2692,8 @@ void test_spdm_requester_finish_case19(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2749,7 +2749,7 @@ void test_spdm_requester_finish_case19(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);
@@ -2780,8 +2780,8 @@ void test_spdm_requester_finish_case20(void **state)
 	return_status status;
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32 session_id;
-	uint8 req_slot_id_param;
+	uint32_t session_id;
+	uint8_t req_slot_id_param;
 	void *data;
 	uintn data_size;
 	void *hash;
@@ -2837,7 +2837,7 @@ void test_spdm_requester_finish_case20(void **state)
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
 	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 	spdm_secured_message_set_response_finished_key(
 		session_info->secured_message_context, m_dummy_buffer,
 		hash_size);

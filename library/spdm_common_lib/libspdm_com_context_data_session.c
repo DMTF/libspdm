@@ -14,10 +14,10 @@
 **/
 void spdm_session_info_init(IN spdm_context_t *spdm_context,
 			    IN spdm_session_info_t *session_info,
-			    IN uint32 session_id, IN boolean use_psk)
+			    IN uint32_t session_id, IN boolean use_psk)
 {
 	spdm_session_type_t session_type;
-	uint32 capabilities_flag;
+	uint32_t capabilities_flag;
 
 	capabilities_flag = spdm_context->connection_info.capability.flags &
 			    spdm_context->local_context.capability.flags;
@@ -84,7 +84,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
   @return session info.
 **/
 void *libspdm_get_session_info_via_session_id(IN void *context,
-					   IN uint32 session_id)
+					   IN uint32_t session_id)
 {
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;
@@ -120,7 +120,7 @@ void *libspdm_get_session_info_via_session_id(IN void *context,
   @return secured message context.
 **/
 void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
-						      IN uint32 session_id)
+						      IN uint32_t session_id)
 {
 	spdm_session_info_t *session_info;
 
@@ -161,7 +161,7 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
 
   @return session info associated with this new session ID.
 **/
-void *libspdm_assign_session_id(IN void *context, IN uint32 session_id,
+void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
 			     IN boolean use_psk)
 {
 	spdm_context_t *spdm_context;
@@ -209,9 +209,9 @@ void *libspdm_assign_session_id(IN void *context, IN uint32 session_id,
 
   @return half of session ID for a requester.
 **/
-uint16 spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
+uint16_t spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
 {
-	uint16 req_session_id;
+	uint16_t req_session_id;
 	spdm_session_info_t *session_info;
 	uintn index;
 
@@ -219,7 +219,7 @@ uint16 spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
 	for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
 		if ((session_info[index].session_id & 0xFFFF0000) ==
 		    (INVALID_SESSION_ID & 0xFFFF0000)) {
-			req_session_id = (uint16)(0xFFFF - index);
+			req_session_id = (uint16_t)(0xFFFF - index);
 			return req_session_id;
 		}
 	}
@@ -235,9 +235,9 @@ uint16 spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
 
   @return half of session ID for a responder.
 **/
-uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
+uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
 {
-	uint16 rsp_session_id;
+	uint16_t rsp_session_id;
 	spdm_session_info_t *session_info;
 	uintn index;
 
@@ -245,7 +245,7 @@ uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
 	for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
 		if ((session_info[index].session_id & 0xFFFF) ==
 		    (INVALID_SESSION_ID & 0xFFFF)) {
-			rsp_session_id = (uint16)(0xFFFF - index);
+			rsp_session_id = (uint16_t)(0xFFFF - index);
 			return rsp_session_id;
 		}
 	}
@@ -262,7 +262,7 @@ uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
 
   @return freed session info assicated with this session ID.
 **/
-void *libspdm_free_session_id(IN void *context, IN uint32 session_id)
+void *libspdm_free_session_id(IN void *context, IN uint32_t session_id)
 {
 	spdm_context_t *spdm_context;
 	spdm_session_info_t *session_info;

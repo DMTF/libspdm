@@ -34,23 +34,23 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	spdm_key_exchange_request_t *spdm_request;
 	spdm_key_exchange_response_t *spdm_response;
 	uintn dhe_key_size;
-	uint32 measurement_summary_hash_size;
-	uint32 signature_size;
-	uint32 hmac_size;
-	uint8 *ptr;
-	uint16 opaque_data_length;
+	uint32_t measurement_summary_hash_size;
+	uint32_t signature_size;
+	uint32_t hmac_size;
+	uint8_t *ptr;
+	uint16_t opaque_data_length;
 	boolean result;
-	uint8 slot_id;
-	uint32 session_id;
+	uint8_t slot_id;
+	uint32_t session_id;
 	void *dhe_context;
 	spdm_session_info_t *session_info;
 	uintn total_size;
 	spdm_context_t *spdm_context;
-	uint16 req_session_id;
-	uint16 rsp_session_id;
+	uint16_t req_session_id;
+	uint16_t rsp_session_id;
 	return_status status;
 	uintn opaque_key_exchange_rsp_size;
-	uint8 th1_hash_data[64];
+	uint8_t th1_hash_data[64];
 
 	spdm_context = context;
 	spdm_request = request;
@@ -131,27 +131,27 @@ return_status spdm_get_response_key_exchange(IN void *context,
 						0, response_size, response);
 	}
 	if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-				   sizeof(uint16)) {
+				   sizeof(uint16_t)) {
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	opaque_data_length =
-		*(uint16 *)((uint8 *)request +
+		*(uint16_t *)((uint8_t *)request +
 			    sizeof(spdm_key_exchange_request_t) + dhe_key_size);
 	if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-				   sizeof(uint16) + opaque_data_length) {
+				   sizeof(uint16_t) + opaque_data_length) {
 		libspdm_generate_error_response(spdm_context,
 					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
 					     response_size, response);
 		return RETURN_SUCCESS;
 	}
 	request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-		       sizeof(uint16) + opaque_data_length;
+		       sizeof(uint16_t) + opaque_data_length;
 
-	ptr = (uint8 *)request + sizeof(spdm_key_exchange_request_t) +
-	      dhe_key_size + sizeof(uint16);
+	ptr = (uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
+	      dhe_key_size + sizeof(uint16_t);
 	status = spdm_process_opaque_data_supported_version_data(
 		spdm_context, opaque_data_length, ptr);
 	if (RETURN_ERROR(status)) {
@@ -175,7 +175,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	}
 
 	total_size = sizeof(spdm_key_exchange_response_t) + dhe_key_size +
-		     measurement_summary_hash_size + sizeof(uint16) +
+		     measurement_summary_hash_size + sizeof(uint16_t) +
 		     opaque_key_exchange_rsp_size + signature_size + hmac_size;
 
 	ASSERT(*response_size >= total_size);
@@ -242,14 +242,14 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	internal_dump_hex(ptr, dhe_key_size);
 
 	DEBUG((DEBUG_INFO, "Calc peer_key (0x%x):\n", dhe_key_size));
-	internal_dump_hex((uint8 *)request +
+	internal_dump_hex((uint8_t *)request +
 				  sizeof(spdm_key_exchange_request_t),
 			  dhe_key_size);
 
 	result = spdm_secured_message_dhe_compute_key(
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		dhe_context,
-		(uint8 *)request + sizeof(spdm_key_exchange_request_t),
+		(uint8_t *)request + sizeof(spdm_key_exchange_request_t),
 		dhe_key_size, session_info->secured_message_context);
 	spdm_secured_message_dhe_free(
 		spdm_context->connection_info.algorithm.dhe_named_group,
@@ -275,8 +275,8 @@ return_status spdm_get_response_key_exchange(IN void *context,
 	}
 	ptr += measurement_summary_hash_size;
 
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+	ptr += sizeof(uint16_t);
 	status = spdm_build_opaque_data_version_selection_data(
 		spdm_context, &opaque_key_exchange_rsp_size, ptr);
 	ASSERT_RETURN_ERROR(status);

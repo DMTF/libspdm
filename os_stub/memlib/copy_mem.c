@@ -30,11 +30,11 @@
 void *copy_mem(OUT void *destination_buffer, IN const void *source_buffer,
 	       IN uintn length)
 {
-	volatile uint8 *pointer_dst;
-	volatile uint8 *pointer_src;
+	volatile uint8_t *pointer_dst;
+	volatile uint8_t *pointer_src;
 
-	pointer_dst = (uint8 *)destination_buffer;
-	pointer_src = (uint8 *)source_buffer;
+	pointer_dst = (uint8_t *)destination_buffer;
+	pointer_src = (uint8_t *)source_buffer;
 	while (length-- != 0) {
 		*(pointer_dst++) = *(pointer_src++);
 	}

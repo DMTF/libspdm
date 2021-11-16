@@ -12,8 +12,8 @@
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
-	uint8 reserved;
-	uint8 version_number_entry_count;
+	uint8_t reserved;
+	uint8_t version_number_entry_count;
 	spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
@@ -61,7 +61,7 @@ void test_spdm_responder_version_case1(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;
@@ -95,7 +95,7 @@ void test_spdm_responder_version_case2(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;
@@ -129,7 +129,7 @@ void test_spdm_responder_version_case3(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;
@@ -165,7 +165,7 @@ void test_spdm_responder_version_case4(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;
@@ -202,7 +202,7 @@ void test_spdm_responder_version_case5(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 	spdm_error_data_response_not_ready_t *error_data;
 
@@ -246,7 +246,7 @@ void test_spdm_responder_version_case6(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;
@@ -281,7 +281,7 @@ void test_spdm_responder_version_case7(void **state)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	spdm_version_response *spdm_response;
 
 	spdm_test_context = *state;

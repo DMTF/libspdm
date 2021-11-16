@@ -18,7 +18,7 @@ void test_spdm_responder_algorithms(void **State)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
-	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	response_size = sizeof(response);
 
 	spdm_test_context = *State;

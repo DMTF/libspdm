@@ -9,15 +9,15 @@
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
-	uint8 number_of_blocks;
-	uint8 measurement_record_length[3];
-	uint8 measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
+	uint8_t number_of_blocks;
+	uint8_t measurement_record_length[3];
+	uint8_t measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
 				  MAX_HASH_SIZE) *
 				 MAX_SPDM_MEASUREMENT_BLOCK_COUNT];
-	uint8 nonce[SPDM_NONCE_SIZE];
-	uint16 opaque_length;
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
-	uint8 signature[MAX_ASYM_KEY_SIZE];
+	uint8_t nonce[SPDM_NONCE_SIZE];
+	uint16_t opaque_length;
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint8_t signature[MAX_ASYM_KEY_SIZE];
 } spdm_measurements_response_max_t;
 #pragma pack()
 
@@ -48,12 +48,12 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
-				       IN uint8 request_attribute,
-				       IN uint8 measurement_operation,
-				       IN uint8 slot_id_param,
-				       OUT uint8 *number_of_blocks,
-				       IN OUT uint32 *measurement_record_length,
+return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id,
+				       IN uint8_t request_attribute,
+				       IN uint8_t measurement_operation,
+				       IN uint8_t slot_id_param,
+				       OUT uint8_t *number_of_blocks,
+				       IN OUT uint32_t *measurement_record_length,
 				       OUT void *measurement_record,
 				       IN void *requester_nonce_in OPTIONAL,
 				       OUT void *requester_nonce OPTIONAL,
@@ -65,14 +65,14 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	uintn spdm_request_size;
 	spdm_measurements_response_max_t spdm_response;
 	uintn spdm_response_size;
-	uint32 measurement_record_data_length;
-	uint8 *measurement_record_data;
+	uint32_t measurement_record_data_length;
+	uint8_t *measurement_record_data;
 	spdm_measurement_block_common_header_t *measurement_block_header;
-	uint32 measurement_block_size;
-	uint8 measurement_block_count;
-	uint8 *ptr;
+	uint32_t measurement_block_size;
+	uint8_t measurement_block_count;
+	uint8_t *ptr;
 	void *nonce;
-	uint16 opaque_length;
+	uint16_t opaque_length;
 	void *opaque;
 	void *signature;
 	uintn signature_size;
@@ -258,7 +258,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
 			    measurement_record_data_length + SPDM_NONCE_SIZE +
-			    sizeof(uint16)) {
+			    sizeof(uint16_t)) {
 			libspdm_reset_message_m(spdm_context, session_info);
 			return RETURN_DEVICE_ERROR;
 		}
@@ -278,21 +278,21 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 			copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
 		}
 
-		opaque_length = *(uint16 *)ptr;
+		opaque_length = *(uint16_t *)ptr;
 		if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 			return RETURN_SECURITY_VIOLATION;
 		}
-		ptr += sizeof(uint16);
+		ptr += sizeof(uint16_t);
 
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
 			    measurement_record_data_length + SPDM_NONCE_SIZE +
-			    sizeof(uint16) + opaque_length + signature_size) {
+			    sizeof(uint16_t) + opaque_length + signature_size) {
 			return RETURN_DEVICE_ERROR;
 		}
 		spdm_response_size = sizeof(spdm_measurements_response_t) +
 				     measurement_record_data_length +
-				     SPDM_NONCE_SIZE + sizeof(uint16) +
+				     SPDM_NONCE_SIZE + sizeof(uint16_t) +
 				     opaque_length + signature_size;
 		//
 		// Cache data
@@ -333,7 +333,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 	} else {
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
-			    measurement_record_data_length + sizeof(uint16)) {
+			    measurement_record_data_length + sizeof(uint16_t)) {
 			return RETURN_DEVICE_ERROR;
 		}
 		ptr = measurement_record_data + measurement_record_data_length;
@@ -347,21 +347,21 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 			copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
 		}
 
-		opaque_length = *(uint16 *)ptr;
+		opaque_length = *(uint16_t *)ptr;
 		if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 			return RETURN_SECURITY_VIOLATION;
 		}
-		ptr += sizeof(uint16);
+		ptr += sizeof(uint16_t);
 
 		if (spdm_response_size <
 		    sizeof(spdm_measurements_response_t) +
 			    measurement_record_data_length + SPDM_NONCE_SIZE + 
-				sizeof(uint16) + opaque_length) {
+				sizeof(uint16_t) + opaque_length) {
 			return RETURN_DEVICE_ERROR;
 		}
 		spdm_response_size = sizeof(spdm_measurements_response_t) +
 				     measurement_record_data_length +
-					 SPDM_NONCE_SIZE + sizeof(uint16) +
+					 SPDM_NONCE_SIZE + sizeof(uint16_t) +
 				     opaque_length;
 		//
 		// Cache data
@@ -412,8 +412,8 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 					[measurement_block_size];
 			if (measurement_block_header->measurement_size >
 			    measurement_record_data_length -
-				    ((uint8 *)measurement_block_header -
-				     (uint8 *)measurement_record_data)) {
+				    ((uint8_t *)measurement_block_header -
+				     (uint8_t *)measurement_record_data)) {
 				return RETURN_DEVICE_ERROR;
 			}
 			if (measurement_block_header
@@ -444,7 +444,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 				return RETURN_DEVICE_ERROR;
 			}
 			measurement_block_count++;
-			measurement_block_size = (uint32)(
+			measurement_block_size = (uint32_t)(
 				measurement_block_size +
 				sizeof(spdm_measurement_block_common_header_t) +
 				measurement_block_header->measurement_size);
@@ -481,12 +481,12 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_get_measurement(IN void *context, IN uint32 *session_id,
-				   IN uint8 request_attribute,
-				   IN uint8 measurement_operation,
-				   IN uint8 slot_id_param,
-				   OUT uint8 *number_of_blocks,
-				   IN OUT uint32 *measurement_record_length,
+return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
+				   IN uint8_t request_attribute,
+				   IN uint8_t measurement_operation,
+				   IN uint8_t slot_id_param,
+				   OUT uint8_t *number_of_blocks,
+				   IN OUT uint32_t *measurement_record_length,
 				   OUT void *measurement_record)
 {
 	spdm_context_t *spdm_context;
@@ -533,12 +533,12 @@ return_status libspdm_get_measurement(IN void *context, IN uint32 *session_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_get_measurement_ex(IN void *context, IN uint32 *session_id,
-				   IN uint8 request_attribute,
-				   IN uint8 measurement_operation,
-				   IN uint8 slot_id_param,
-				   OUT uint8 *number_of_blocks,
-				   IN OUT uint32 *measurement_record_length,
+return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_id,
+				   IN uint8_t request_attribute,
+				   IN uint8_t measurement_operation,
+				   IN uint8_t slot_id_param,
+				   OUT uint8_t *number_of_blocks,
+				   IN OUT uint32_t *measurement_record_length,
 				   OUT void *measurement_record,
 				   IN void *requester_nonce_in OPTIONAL,
 				   OUT void *requester_nonce OPTIONAL,

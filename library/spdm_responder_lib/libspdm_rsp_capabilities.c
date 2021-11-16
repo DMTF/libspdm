@@ -17,9 +17,9 @@
   @retval True                         The received SPDM version is valid.
   @retval False                        The received SPDM version is invalid.
 **/
-boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8 version)
+boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8_t version)
 {
-	uint8 local_ver;
+	uint8_t local_ver;
 	uintn index;
 
 	for (index = 0; 
@@ -47,24 +47,24 @@ boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, 
   @retval True                         The received Capabilities flag is valid.
   @retval False                        The received Capabilities flag is invalid.
 **/
-boolean spdm_check_request_flag_compability(IN uint32 capabilities_flag,
-					    IN uint8 version)
+boolean spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
+					    IN uint8_t version)
 {
-	uint8 cert_cap = (uint8)(capabilities_flag >> 1) & 0x01;
-	//uint8 chal_cap = (uint8)(capabilities_flag>>2)&0x01;
-	uint8 meas_cap = (uint8)(capabilities_flag >> 3) & 0x03;
-	uint8 meas_fresh_cap = (uint8)(capabilities_flag >> 5) & 0x01;
-	uint8 encrypt_cap = (uint8)(capabilities_flag >> 6) & 0x01;
-	uint8 mac_cap = (uint8)(capabilities_flag >> 7) & 0x01;
-	uint8 mut_auth_cap = (uint8)(capabilities_flag >> 8) & 0x01;
-	uint8 key_ex_cap = (uint8)(capabilities_flag >> 9) & 0x01;
-	uint8 psk_cap = (uint8)(capabilities_flag >> 10) & 0x03;
-	uint8 encap_cap = (uint8)(capabilities_flag >> 12) & 0x01;
-	//uint8 hbeat_cap = (uint8)(capabilities_flag>>13)&0x01;
-	//uint8 key_upd_cap = (uint8)(capabilities_flag>>14)&0x01;
-	uint8 handshake_in_the_clear_cap =
-		(uint8)(capabilities_flag >> 15) & 0x01;
-	uint8 pub_key_id_cap = (uint8)(capabilities_flag >> 16) & 0x01;
+	uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
+	//uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;
+	uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
+	uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag >> 5) & 0x01;
+	uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
+	uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
+	uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
+	uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
+	uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
+	uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
+	//uint8_t hbeat_cap = (uint8_t)(capabilities_flag>>13)&0x01;
+	//uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;
+	uint8_t handshake_in_the_clear_cap =
+		(uint8_t)(capabilities_flag >> 15) & 0x01;
+	uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
 
 	switch (version) {
 	case SPDM_MESSAGE_VERSION_10:

@@ -15,7 +15,7 @@
 //
 // Default seed for Crypto Library
 //
-const uint8 default_seed[] = "Crypto Library default seed";
+const uint8_t default_seed[] = "Crypto Library default seed";
 
 /**
   Sets up the seed value for the pseudorandom number generator.
@@ -33,7 +33,7 @@ const uint8 default_seed[] = "Crypto Library default seed";
   @retval FALSE  Pseudorandom number generator does not have enough entropy for random generation.
 
 **/
-boolean random_seed(IN const uint8 *seed OPTIONAL, IN uintn seed_size)
+boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
 	if (seed_size > INT_MAX) {
 		return FALSE;
@@ -52,7 +52,7 @@ boolean random_seed(IN const uint8 *seed OPTIONAL, IN uintn seed_size)
 	// NOTE: A cryptographic PRNG must be seeded with unpredictable data.
 	//
 	if (seed != NULL) {
-		RAND_seed(seed, (uint32)seed_size);
+		RAND_seed(seed, (uint32_t)seed_size);
 	} else {
 		RAND_seed(default_seed, sizeof(default_seed));
 	}
@@ -76,7 +76,7 @@ boolean random_seed(IN const uint8 *seed OPTIONAL, IN uintn seed_size)
   @retval FALSE  Pseudorandom number generator fails to generate due to lack of entropy.
 
 **/
-boolean random_bytes(OUT uint8 *output, IN uintn size)
+boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
 	//
 	// Check input parameters.
@@ -88,7 +88,7 @@ boolean random_bytes(OUT uint8 *output, IN uintn size)
 	//
 	// Generate random data.
 	//
-	if (RAND_bytes(output, (uint32)size) != 1) {
+	if (RAND_bytes(output, (uint32_t)size) != 1) {
 		return FALSE;
 	}
 

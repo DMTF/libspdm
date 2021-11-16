@@ -13,24 +13,24 @@
 #define INVALID_SESSION_ID 0
 
 typedef struct {
-	uint8 spdm_version_count;
+	uint8_t spdm_version_count;
 	spdm_version_number_t spdm_version[MAX_SPDM_VERSION_COUNT];
 } spdm_device_version_t;
 
 typedef struct {
-	uint8 ct_exponent;
-	uint32 flags;
+	uint8_t ct_exponent;
+	uint32_t flags;
 } spdm_device_capability_t;
 
 typedef struct {
-	uint8 measurement_spec;
-	uint32 measurement_hash_algo;
-	uint32 base_asym_algo;
-	uint32 base_hash_algo;
-	uint16 dhe_named_group;
-	uint16 aead_cipher_suite;
-	uint16 req_base_asym_alg;
-	uint16 key_schedule;
+	uint8_t measurement_spec;
+	uint32_t measurement_hash_algo;
+	uint32_t base_asym_algo;
+	uint32_t base_hash_algo;
+	uint16_t dhe_named_group;
+	uint16_t aead_cipher_suite;
+	uint16_t req_base_asym_alg;
+	uint16_t key_schedule;
 } spdm_device_algorithm_t;
 
 typedef struct {
@@ -46,9 +46,9 @@ typedef struct {
 	//
 	void *local_cert_chain_provision[MAX_SPDM_SLOT_COUNT];
 	uintn local_cert_chain_provision_size[MAX_SPDM_SLOT_COUNT];
-	uint8 slot_count;
+	uint8_t slot_count;
 	// My provisioned certificate (for slot_id - 0xFF, default 0)
-	uint8 provisioned_slot_id;
+	uint8_t provisioned_slot_id;
 	//
 	// Peer Root Certificate
 	//
@@ -72,15 +72,15 @@ typedef struct {
 	// opaque_data provision locally
 	//
 	uintn opaque_challenge_auth_rsp_size;
-	uint8 *opaque_challenge_auth_rsp;
+	uint8_t *opaque_challenge_auth_rsp;
 	uintn opaque_measurement_rsp_size;
-	uint8 *opaque_measurement_rsp;
+	uint8_t *opaque_measurement_rsp;
 	//
 	// Responder policy
 	//
 	boolean basic_mut_auth_requested;
-	uint8 mut_auth_requested;
-	uint8 heartbeat_period;
+	uint8_t mut_auth_requested;
+	uint8_t heartbeat_period;
 } spdm_local_context_t;
 
 typedef struct {
@@ -98,37 +98,37 @@ typedef struct {
 	//
 	// Peer CertificateChain
 	//
-	uint8 peer_used_cert_chain_buffer[MAX_SPDM_CERT_CHAIN_SIZE];
+	uint8_t peer_used_cert_chain_buffer[MAX_SPDM_CERT_CHAIN_SIZE];
 	uintn peer_used_cert_chain_buffer_size;
 	//
 	// Local Used CertificateChain (for responder, or requester in mut auth)
 	//
-	uint8 *local_used_cert_chain_buffer;
+	uint8_t *local_used_cert_chain_buffer;
 	uintn local_used_cert_chain_buffer_size;
 } spdm_connection_info_t;
 
 typedef struct {
 	uintn max_buffer_size;
 	uintn buffer_size;
-	//uint8   buffer[max_buffer_size];
+	//uint8_t   buffer[max_buffer_size];
 } managed_buffer_t;
 
 typedef struct {
 	uintn max_buffer_size;
 	uintn buffer_size;
-	uint8 buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 } large_managed_buffer_t;
 
 typedef struct {
 	uintn max_buffer_size;
 	uintn buffer_size;
-	uint8 buffer[MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE];
+	uint8_t buffer[MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE];
 } medium_managed_buffer_t;
 
 typedef struct {
 	uintn max_buffer_size;
 	uintn buffer_size;
-	uint8 buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+	uint8_t buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
 	//
@@ -238,25 +238,25 @@ typedef struct {
 } spdm_session_transcript_t;
 
 typedef struct {
-	uint32 session_id;
+	uint32_t session_id;
 	boolean use_psk;
-	uint8 mut_auth_requested;
-	uint8 end_session_attributes;
+	uint8_t mut_auth_requested;
+	uint8_t end_session_attributes;
 	spdm_session_transcript_t session_transcript;
 	void *secured_message_context;
 } spdm_session_info_t;
 
 #define MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
-	uint32 error_state;
+	uint32_t error_state;
 	// Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
 	// The last one is 0x00, as terminator.
-	uint8 request_op_code_sequence[MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT +
+	uint8_t request_op_code_sequence[MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT +
 				       1];
-	uint8 request_op_code_count;
-	uint8 current_request_op_code;
-	uint8 request_id;
-	uint8 req_slot_id;
+	uint8_t request_op_code_count;
+	uint8_t current_request_op_code;
+	uint8_t request_id;
+	uint8_t req_slot_id;
 	spdm_message_header_t last_encap_request_header;
 	uintn last_encap_request_size;
 	large_managed_buffer_t certificate_chain_buffer;
@@ -265,7 +265,7 @@ typedef struct {
 #define spdm_context_struct_VERSION 0x1
 
 typedef struct {
-	uint32 version;
+	uint32_t version;
 	//
 	// IO information
 	//
@@ -280,17 +280,17 @@ typedef struct {
 	//
 	// command status
 	//
-	uint32 error_state;
+	uint32_t error_state;
 	//
 	// Cached plain text command
 	// If the command is cipher text, decrypt then cache it.
 	//
-	uint8 last_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t last_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn last_spdm_request_size;
 	//
 	// Cache session_id in this spdm_message, only valid for secured message.
 	//
-	uint32 last_spdm_request_session_id;
+	uint32_t last_spdm_request_session_id;
 	boolean last_spdm_request_session_id_valid;
 	//
 	// Cache the error in libspdm_process_request. It is handled in libspdm_build_response.
@@ -327,7 +327,7 @@ typedef struct {
 	//
 	// Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR
 	//
-	uint32 latest_session_id;
+	uint32_t latest_session_id;
 	//
 	// Register for Responder state, be initial to Normal (responder only)
 	//
@@ -336,13 +336,13 @@ typedef struct {
 	// Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY
 	//
 	spdm_error_data_response_not_ready_t error_data;
-	uint8 cache_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t cache_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	uintn cache_spdm_request_size;
-	uint8 current_token;
+	uint8_t current_token;
 	//
 	// Register for the retry times when receive "BUSY" Error response (requester only)
 	//
-	uint8 retry_times;
+	uint8_t retry_times;
 
 	//
 	// Opaque context data for use by application
@@ -352,7 +352,7 @@ typedef struct {
 	//
 	// Register for the last KEY_UPDATE token and operation (responder only)
 	//
-	uint8 last_update_request[4];
+	uint8_t last_update_request[4];
 } spdm_context_t;
 
 /**
@@ -361,7 +361,7 @@ typedef struct {
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex_str(IN uint8 *data, IN uintn size);
+void internal_dump_hex_str(IN uint8_t *data, IN uintn size);
 
 /**
   This function dump raw data.
@@ -369,7 +369,7 @@ void internal_dump_hex_str(IN uint8 *data, IN uintn size);
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_data(IN uint8 *data, IN uintn size);
+void internal_dump_data(IN uint8_t *data, IN uintn size);
 
 /**
   This function dump raw data with colume format.
@@ -377,7 +377,7 @@ void internal_dump_data(IN uint8 *data, IN uintn size);
   @param  data  raw data
   @param  size  raw data size
 **/
-void internal_dump_hex(IN uint8 *data, IN uintn size);
+void internal_dump_hex(IN uint8_t *data, IN uintn size);
 
 /**
   Append a new data buffer to the managed buffer.
@@ -437,7 +437,7 @@ void init_managed_buffer(IN OUT void *managed_buffer_t,
   @param  spdm_request               	The SPDM request code.
 */
 void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *session_info,
-			       IN uint8 request_code);
+			       IN uint8_t request_code);
 
 /**
   This function initializes the session info.
@@ -447,7 +447,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
 **/
 void spdm_session_info_init(IN spdm_context_t *spdm_context,
 			    IN spdm_session_info_t *session_info,
-			    IN uint32 session_id, IN boolean use_psk);
+			    IN uint32_t session_id, IN boolean use_psk);
 
 /**
   This function allocates half of session ID for a requester.
@@ -456,7 +456,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
 
   @return half of session ID for a requester.
 **/
-uint16 spdm_allocate_req_session_id(IN spdm_context_t *spdm_context);
+uint16_t spdm_allocate_req_session_id(IN spdm_context_t *spdm_context);
 
 /**
   This function allocates half of session ID for a responder.
@@ -465,7 +465,7 @@ uint16 spdm_allocate_req_session_id(IN spdm_context_t *spdm_context);
 
   @return half of session ID for a responder.
 **/
-uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context);
+uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context);
 
 /**
   This function returns if a given version is supported based upon the GET_VERSION/VERSION.
@@ -477,7 +477,7 @@ uint16 spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context);
   @retval FALSE the version is not supported.
 **/
 boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
-				  IN uint8 version);
+				  IN uint8_t version);
 
 /**
   This function returns if a capablities flag is supported in current SPDM connection.
@@ -493,8 +493,8 @@ boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
 boolean
 spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
 				    IN boolean is_requester,
-				    IN uint32 requester_capabilities_flag,
-				    IN uint32 responder_capabilities_flag);
+				    IN uint32_t requester_capabilities_flag,
+				    IN uint32_t responder_capabilities_flag);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
@@ -569,7 +569,7 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
   @retval FALSE certificate chain hash is not generated.
 **/
 boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
-				      IN uintn slot_id, OUT uint8 *hash);
+				      IN uintn slot_id, OUT uint8_t *hash);
 
 /**
   This function verifies the digest.
@@ -614,7 +614,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
 					       IN boolean is_requester,
-					       OUT uint8 *signature);
+					       OUT uint8_t *signature);
 
 /**
   This function verifies the certificate chain hash.
@@ -657,10 +657,10 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
   @return 0 measurement summary hash type is invalid, NO_MEAS hash type or no MEAS capabilities.
   @return measurement summary hash size according to type.
 **/
-uint32
+uint32_t
 spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
 				       IN boolean is_requester,
-				       IN uint8 measurement_summary_hash_type);
+				       IN uint8_t measurement_summary_hash_type);
 
 /**
   This function calculate the measurement summary hash.
@@ -676,8 +676,8 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
 boolean
 spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 				       IN boolean is_requester,
-				       IN uint8 measurement_summary_hash_type,
-				       OUT uint8 *measurement_summary_hash);
+				       IN uint8_t measurement_summary_hash_type,
+				       OUT uint8_t *measurement_summary_hash);
 
 /**
   This function generates the measurement signature to response message based upon l1l2.
@@ -693,7 +693,7 @@ spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
 						IN spdm_session_info_t *session_info,
-					    OUT uint8 *signature);
+					    OUT uint8_t *signature);
 
 /**
   This function verifies the measurement signature based upon l1l2.
@@ -726,7 +726,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 boolean
 spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 					 IN spdm_session_info_t *session_info,
-					 OUT uint8 *signature);
+					 OUT uint8_t *signature);
 
 /**
   This function generates the key exchange HMAC based upon TH.
@@ -741,7 +741,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 boolean
 spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 				    IN spdm_session_info_t *session_info,
-				    OUT uint8 *hmac);
+				    OUT uint8_t *hmac);
 
 /**
   This function verifies the key exchange signature based upon TH.
@@ -786,7 +786,7 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
 					   IN spdm_session_info_t *session_info,
-					   OUT uint8 *signature);
+					   OUT uint8_t *signature);
 
 /**
   This function generates the finish HMAC based upon TH.
@@ -831,7 +831,7 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 				    IN spdm_session_info_t *session_info,
-				    IN uint8 *hmac, IN uintn hmac_size);
+				    IN uint8_t *hmac, IN uintn hmac_size);
 
 /**
   This function generates the finish HMAC based upon TH.
@@ -845,7 +845,7 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 				      IN spdm_session_info_t *session_info,
-				      OUT uint8 *hmac);
+				      OUT uint8_t *hmac);
 
 /**
   This function verifies the finish HMAC based upon TH.
@@ -876,7 +876,7 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 boolean
 spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 				    IN spdm_session_info_t *session_info,
-				    OUT uint8 *hmac);
+				    OUT uint8_t *hmac);
 
 /**
   This function verifies the PSK exchange HMAC based upon TH.
@@ -922,7 +922,7 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
 **/
 boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
 					IN spdm_session_info_t *session_info,
-					IN uint8 *hmac, IN uintn hmac_size);
+					IN uint8_t *hmac, IN uintn hmac_size);
 
 /**
   Return the size in bytes of opaque data supproted version.
@@ -1021,5 +1021,5 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
 
   @return the SPDMversion of the version number struct.
 **/
-uint8 spdm_get_version_from_version_number(IN spdm_version_number_t ver);
+uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver);
 #endif

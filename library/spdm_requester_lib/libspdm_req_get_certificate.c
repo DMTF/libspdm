@@ -12,9 +12,9 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 portion_length;
-	uint16 remainder_length;
-	uint8 cert_chain[MAX_SPDM_CERT_CHAIN_BLOCK_LEN];
+	uint16_t portion_length;
+	uint16_t remainder_length;
+	uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_BLOCK_LEN];
 } spdm_certificate_response_max_t;
 
 #pragma pack()
@@ -42,8 +42,8 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
-				       IN uint16 length,
+return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
+				       IN uint16_t length,
 				       IN OUT uintn *cert_chain_size,
 				       OUT void *cert_chain,
 				       OUT void **trust_anchor OPTIONAL,
@@ -97,7 +97,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8 slot_id,
 			SPDM_GET_CERTIFICATE;
 		spdm_request.header.param1 = slot_id;
 		spdm_request.header.param2 = 0;
-		spdm_request.offset = (uint16)get_managed_buffer_size(
+		spdm_request.offset = (uint16_t)get_managed_buffer_size(
 			&certificate_chain_buffer);
 		spdm_request.length = length;
 		DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
@@ -270,7 +270,7 @@ done:
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_get_certificate(IN void *context, IN uint8 slot_id,
+return_status libspdm_get_certificate(IN void *context, IN uint8_t slot_id,
 				   IN OUT uintn *cert_chain_size,
 				   OUT void *cert_chain)
 {
@@ -301,7 +301,7 @@ return_status libspdm_get_certificate(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
+return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
 				   IN OUT uintn *cert_chain_size,
 				   OUT void *cert_chain,
 				   OUT void **trust_anchor,
@@ -335,8 +335,8 @@ return_status libspdm_get_certificate_ex(IN void *context, IN uint8 slot_id,
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status libspdm_get_certificate_choose_length(IN void *context,
-						 IN uint8 slot_id,
-						 IN uint16 length,
+						 IN uint8_t slot_id,
+						 IN uint16_t length,
 						 IN OUT uintn *cert_chain_size,
 						 OUT void *cert_chain)
 {
@@ -381,8 +381,8 @@ return_status libspdm_get_certificate_choose_length(IN void *context,
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status libspdm_get_certificate_choose_length_ex(IN void *context,
-						 IN uint8 slot_id,
-						 IN uint16 length,
+						 IN uint8_t slot_id,
+						 IN uint16_t length,
 						 IN OUT uintn *cert_chain_size,
 						 OUT void *cert_chain,
 						 OUT void **trust_anchor,

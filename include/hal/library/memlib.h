@@ -49,7 +49,7 @@ void *copy_mem(OUT void *destination_buffer, IN const void *source_buffer,
   @return buffer.
 
 **/
-void *set_mem(OUT void *buffer, IN uintn length, IN uint8 value);
+void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value);
 
 /**
   Fills a target buffer with zeros, and returns the target buffer.

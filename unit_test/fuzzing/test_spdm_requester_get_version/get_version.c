@@ -15,7 +15,7 @@ uintn get_max_buffer_size(void)
 
 return_status spdm_device_send_message(IN void *spdm_context,
 				       IN uintn request_size, IN void *request,
-				       IN uint64 timeout)
+				       IN uint64_t timeout)
 {
 	return RETURN_SUCCESS;
 }
@@ -23,7 +23,7 @@ return_status spdm_device_send_message(IN void *spdm_context,
 return_status spdm_device_receive_message(IN void *spdm_context,
 					  IN OUT uintn *response_size,
 					  IN OUT void *response,
-					  IN uint64 timeout)
+					  IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 

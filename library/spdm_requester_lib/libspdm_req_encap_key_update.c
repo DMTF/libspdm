@@ -29,7 +29,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 						 IN OUT uintn *response_size,
 						 OUT void *response)
 {
-	uint32 session_id;
+	uint32_t session_id;
 	spdm_key_update_response_t *spdm_response;
 	spdm_key_update_request_t *spdm_request;
 	spdm_context_t *spdm_context;

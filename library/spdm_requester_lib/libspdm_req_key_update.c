@@ -10,7 +10,7 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+	uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } spdm_key_update_response_mine_t;
 
 #pragma pack()
@@ -32,7 +32,7 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
+return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
 			      IN boolean single_direction, IN OUT boolean *key_updated)
 {
 	return_status status;
@@ -239,7 +239,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32 session_id,
 	return RETURN_SUCCESS;
 }
 
-return_status libspdm_key_update(IN void *context, IN uint32 session_id,
+return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
 			      IN boolean single_direction)
 {
 	spdm_context_t *spdm_context;

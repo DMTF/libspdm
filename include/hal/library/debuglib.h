@@ -179,7 +179,7 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 **/
 #define DEBUG_CODE_BEGIN()                                                     \
 	do {                                                                   \
-	uint8 __debug_code_local
+	uint8_t __debug_code_local
 
 /**
   The macro that marks the end of debug source code.

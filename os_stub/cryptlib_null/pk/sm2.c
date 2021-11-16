@@ -49,7 +49,7 @@ void sm2_dsa_free(IN void *sm2_context)
   @retval  FALSE  Invalid sm2 public key component.
 
 **/
-boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8 *public_key,
+boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
 			IN uintn public_key_size)
 {
 	return FALSE;
@@ -69,7 +69,7 @@ boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8 *public_key,
   @retval  FALSE  Invalid sm2 key component.
 
 **/
-boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8 *public_key,
+boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	return FALSE;
@@ -120,7 +120,7 @@ boolean sm2_dsa_check_key(IN void *sm2_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
+boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	return FALSE;
@@ -169,8 +169,8 @@ void sm2_key_exchange_free(IN void *sm2_context)
   @retval FALSE  sm2 context is not initialized.
 **/
 boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
-			IN const uint8 *id_a, IN uintn id_a_size,
-			IN const uint8 *id_b, IN uintn id_b_size,
+			IN const uint8_t *id_a, IN uintn id_a_size,
+			IN const uint8_t *id_b, IN uintn id_b_size,
 			IN const boolean is_initiator)
 {
 	return FALSE;
@@ -203,7 +203,7 @@ boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8 *public,
+boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
 			 IN OUT uintn *public_size)
 {
 	return FALSE;
@@ -237,8 +237,8 @@ boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8 *publi
 
 **/
 boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
-			IN const uint8 *peer_public,
-			IN uintn peer_public_size, OUT uint8 *key,
+			IN const uint8_t *peer_public,
+			IN uintn peer_public_size, OUT uint8_t *key,
 			IN uintn *key_size)
 {
 	return FALSE;
@@ -275,9 +275,9 @@ boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
 
 **/
 boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
-		       IN const uint8 *id_a, IN uintn id_a_size,
-		       IN const uint8 *message, IN uintn size,
-		       OUT uint8 *signature, IN OUT uintn *sig_size)
+		       IN const uint8_t *id_a, IN uintn id_a_size,
+		       IN const uint8_t *message, IN uintn size,
+		       OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
 	return FALSE;
 }
@@ -307,9 +307,9 @@ boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
 
 **/
 boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
-			 IN const uint8 *id_a, IN uintn id_a_size,
-			 IN const uint8 *message, IN uintn size,
-			 IN const uint8 *signature, IN uintn sig_size)
+			 IN const uint8_t *id_a, IN uintn id_a_size,
+			 IN const uint8_t *message, IN uintn size,
+			 IN const uint8_t *signature, IN uintn sig_size)
 {
 	return FALSE;
 }

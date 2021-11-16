@@ -8,13 +8,13 @@
 #include <internal/libspdm_requester_lib.h>
 #include <internal/libspdm_secured_message_lib.h>
 
-static uint8 my_last_token;
-static uint8 my_last_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-static uint8 my_last_rsp_salt[MAX_AEAD_IV_SIZE];
-static uint64 my_last_rsp_sequence_number;
+static uint8_t my_last_token;
+static uint8_t my_last_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+static uint8_t my_last_rsp_salt[MAX_AEAD_IV_SIZE];
+static uint64_t my_last_rsp_sequence_number;
 
 static void spdm_set_standard_key_update_test_state(
-	IN OUT spdm_context_t *spdm_context, IN OUT uint32 *session_id)
+	IN OUT spdm_context_t *spdm_context, IN OUT uint32_t *session_id)
 {
 	void                   *data;
 	uintn                  data_size;
@@ -65,8 +65,8 @@ static void spdm_set_standard_key_update_test_state(
 
 static void spdm_set_standard_key_update_test_secrets(
 	IN OUT spdm_secured_message_context_t *secured_message_context,
-	OUT uint8 *m_rsp_secret_buffer, IN uint8 rsp_secret_fill,
-	OUT uint8 *m_req_secret_buffer, IN uint8 req_secret_fill)
+	OUT uint8_t *m_rsp_secret_buffer, IN uint8_t rsp_secret_fill,
+	OUT uint8_t *m_req_secret_buffer, IN uint8_t req_secret_fill)
 {
 	set_mem(m_rsp_secret_buffer, secured_message_context
 		->hash_size, rsp_secret_fill);
@@ -82,18 +82,18 @@ static void spdm_set_standard_key_update_test_secrets(
 
 	set_mem(secured_message_context->application_secret
 			 .response_data_encryption_key,
-		  secured_message_context->aead_key_size, (uint8)(0xFF));
+		  secured_message_context->aead_key_size, (uint8_t)(0xFF));
 	set_mem(secured_message_context->application_secret
 			 .response_data_salt,
-		  secured_message_context->aead_iv_size, (uint8)(0xFF));
+		  secured_message_context->aead_iv_size, (uint8_t)(0xFF));
 
 
 	set_mem(secured_message_context->application_secret
 			 .request_data_encryption_key,
-		  secured_message_context->aead_key_size, (uint8)(0xEE));
+		  secured_message_context->aead_key_size, (uint8_t)(0xEE));
 	set_mem(secured_message_context->application_secret
 			 .request_data_salt,
-		  secured_message_context->aead_iv_size, (uint8)(0xEE));
+		  secured_message_context->aead_iv_size, (uint8_t)(0xEE));
 
 	secured_message_context->application_secret.
 		  response_data_sequence_number = 0;
@@ -102,10 +102,10 @@ static void spdm_set_standard_key_update_test_secrets(
 }
 
 static void spdm_compute_secret_update(uintn hash_size,
-	IN const uint8 *in_secret, OUT uint8 *out_secret,
+	IN const uint8_t *in_secret, OUT uint8_t *out_secret,
 	IN uintn out_secret_size)
 {
-	uint8    m_bin_str9[128];
+	uint8_t    m_bin_str9[128];
 	uintn    m_bin_str9_size;
 	uint16   length;
 
@@ -125,7 +125,7 @@ static void spdm_compute_secret_update(uintn hash_size,
 
 return_status spdm_requester_key_update_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64 timeout)
+	IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -135,10 +135,10 @@ return_status spdm_requester_key_update_test_send_message(
 		return RETURN_DEVICE_ERROR;
 	case 0x2: {
 		return_status       status;
-		uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn               decoded_message_size;
-		uint32              session_id;
-		uint32              *message_session_id;
+		uint32_t              session_id;
+		uint32_t              *message_session_id;
 		boolean             is_app_message;
 		spdm_session_info_t *session_info;
 
@@ -173,10 +173,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -214,10 +214,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -255,10 +255,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -296,10 +296,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -340,10 +340,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index != 1) {
 			return_status          status;
-			uint8 decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn decoded_message_size;
-			uint32                 session_id;
-			uint32 *message_session_id;
+			uint32_t                 session_id;
+			uint32_t *message_session_id;
 			boolean is_app_message;
 			spdm_session_info_t    *session_info;
 
@@ -390,10 +390,10 @@ return_status spdm_requester_key_update_test_send_message(
 	case 0x14:
 	case 0x15: {
 		return_status       status;
-		uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn               decoded_message_size;
-		uint32              session_id;
-		uint32              *message_session_id;
+		uint32_t              session_id;
+		uint32_t              *message_session_id;
 		boolean             is_app_message;
 		spdm_session_info_t *session_info;
 
@@ -428,10 +428,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index < 2) {
 			return_status          status;
-			uint8 decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn decoded_message_size;
-			uint32                 session_id;
-			uint32 *message_session_id;
+			uint32_t                 session_id;
+			uint32_t *message_session_id;
 			boolean is_app_message;
 			spdm_session_info_t    *session_info;
 
@@ -471,10 +471,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index%2 == 0) {
 			return_status          status;
-			uint8 decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn decoded_message_size;
-			uint32                 session_id;
-			uint32 *message_session_id;
+			uint32_t                 session_id;
+			uint32_t *message_session_id;
 			boolean is_app_message;
 			spdm_session_info_t    *session_info;
 
@@ -513,10 +513,10 @@ return_status spdm_requester_key_update_test_send_message(
 	case 0x19:
 	case 0x1A: {
 		return_status       status;
-		uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn               decoded_message_size;
-		uint32              session_id;
-		uint32              *message_session_id;
+		uint32_t              session_id;
+		uint32_t              *message_session_id;
 		boolean             is_app_message;
 		spdm_session_info_t *session_info;
 
@@ -548,10 +548,10 @@ return_status spdm_requester_key_update_test_send_message(
 		return RETURN_SUCCESS;
 	case 0x1B: {
 		return_status       status;
-		uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+		uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn               decoded_message_size;
-		uint32              session_id;
-		uint32              *message_session_id;
+		uint32_t              session_id;
+		uint32_t              *message_session_id;
 		boolean             is_app_message;
 		spdm_session_info_t *session_info;
 
@@ -586,10 +586,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -627,10 +627,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -668,10 +668,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index > 0) {
 			return_status       status;
-			uint8               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn               decoded_message_size;
-			uint32              session_id;
-			uint32              *message_session_id;
+			uint32_t              session_id;
+			uint32_t              *message_session_id;
 			boolean             is_app_message;
 			spdm_session_info_t *session_info;
 
@@ -712,10 +712,10 @@ return_status spdm_requester_key_update_test_send_message(
 
 		if(sub_index != 1) {
 			return_status          status;
-			uint8 decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+			uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn decoded_message_size;
-			uint32                 session_id;
-			uint32 *message_session_id;
+			uint32_t                 session_id;
+			uint32_t *message_session_id;
 			boolean is_app_message;
 			spdm_session_info_t    *session_info;
 
@@ -757,7 +757,7 @@ return_status spdm_requester_key_update_test_send_message(
 
 return_status spdm_requester_key_update_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -770,7 +770,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -811,7 +811,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -850,7 +850,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x4: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -878,7 +878,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x5: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -907,7 +907,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x6: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -981,7 +981,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x7: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1009,7 +1009,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x8: {
 		spdm_error_response_data_response_not_ready_t spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1043,7 +1043,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x9: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1125,7 +1125,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0xA: {
 		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1141,7 +1141,7 @@ return_status spdm_requester_key_update_test_receive_message(
 			zero_mem (&spdm_response, sizeof(spdm_response));
 			spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
 			spdm_response.header.request_response_code = SPDM_ERROR;
-			spdm_response.header.param1 = (uint8) error_code;
+			spdm_response.header.param1 = (uint8_t) error_code;
 			spdm_response.header.param2 = 0;
 
 			spdm_transport_test_encode_message(spdm_context,
@@ -1175,7 +1175,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1216,7 +1216,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1258,7 +1258,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1299,7 +1299,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1340,7 +1340,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1382,7 +1382,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1423,7 +1423,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x11: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1479,7 +1479,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x12: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1535,7 +1535,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x13: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1612,7 +1612,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x14: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1668,7 +1668,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x15: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1729,7 +1729,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x16: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1811,7 +1811,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1848,7 +1848,7 @@ return_status spdm_requester_key_update_test_receive_message(
 				zero_mem (&spdm_response, sizeof(spdm_response));
 				spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
 				spdm_response.header.request_response_code = SPDM_ERROR;
-				spdm_response.header.param1 = (uint8) error_code;
+				spdm_response.header.param1 = (uint8_t) error_code;
 				spdm_response.header.param2 = 0;
 
 				spdm_transport_test_encode_message(spdm_context,
@@ -1885,7 +1885,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1931,7 +1931,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -1973,7 +1973,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -2015,7 +2015,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		static uintn sub_index = 0;
 
 		spdm_key_update_response_t spdm_response;
-		uint32                     session_id;
+		uint32_t                     session_id;
 		spdm_session_info_t        *session_info;
 
 		session_id = 0xFFFFFFFF;
@@ -2057,13 +2057,13 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x1C: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
-		uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-		uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-		uint64 curr_rsp_sequence_number;
+		uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+		uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+		uint64_t curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
 		session_info = libspdm_get_session_info_via_session_id(
@@ -2114,13 +2114,13 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x1D: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
-		uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-		uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-		uint64 curr_rsp_sequence_number;
+		uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+		uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+		uint64_t curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
 		session_info = libspdm_get_session_info_via_session_id(
@@ -2175,7 +2175,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x1E: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
@@ -2191,9 +2191,9 @@ return_status spdm_requester_key_update_test_receive_message(
 		if (sub_index == 0) {
 			spdm_error_response_t spdm_response;
 
-			uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-			uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-			uint64 curr_rsp_sequence_number;
+			uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+			uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+			uint64_t curr_rsp_sequence_number;
 
 			//use previous key to send
 			copy_mem(curr_rsp_enc_key, secured_message_context
@@ -2277,13 +2277,13 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x1F: {
 		spdm_error_response_t  spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
-		uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-		uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-		uint64 curr_rsp_sequence_number;
+		uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+		uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+		uint64_t curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
 		session_info = libspdm_get_session_info_via_session_id(
@@ -2334,13 +2334,13 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x20: {
 		spdm_error_response_data_response_not_ready_t spdm_response;
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
-		uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-		uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-		uint64 curr_rsp_sequence_number;
+		uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+		uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+		uint64_t curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
 		session_info = libspdm_get_session_info_via_session_id(
@@ -2397,7 +2397,7 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x21: {
 		static uintn sub_index = 0;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_secured_message_context_t *secured_message_context;
@@ -2414,9 +2414,9 @@ return_status spdm_requester_key_update_test_receive_message(
 			spdm_error_response_data_response_not_ready_t
 				spdm_response;
 
-			uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-			uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-			uint64 curr_rsp_sequence_number;
+			uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+			uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+			uint64_t curr_rsp_sequence_number;
 
 			//use previous key to send
 			copy_mem(curr_rsp_enc_key, secured_message_context
@@ -2507,15 +2507,15 @@ return_status spdm_requester_key_update_test_receive_message(
 	case 0x22: {
 		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
 
-		uint32                 session_id;
+		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
 
 		spdm_error_response_t    spdm_response;
 
 		spdm_secured_message_context_t *secured_message_context;
-		uint8 curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
-		uint8 curr_rsp_salt[MAX_AEAD_IV_SIZE];
-		uint64 curr_rsp_sequence_number;
+		uint8_t curr_rsp_enc_key[MAX_AEAD_KEY_SIZE];
+		uint8_t curr_rsp_salt[MAX_AEAD_IV_SIZE];
+		uint64_t curr_rsp_sequence_number;
 
 		session_id = 0xFFFFFFFF;
 		session_info = libspdm_get_session_info_via_session_id(
@@ -2547,7 +2547,7 @@ return_status spdm_requester_key_update_test_receive_message(
 			zero_mem (&spdm_response, sizeof(spdm_response));
 			spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
 			spdm_response.header.request_response_code = SPDM_ERROR;
-			spdm_response.header.param1 = (uint8) error_code;
+			spdm_response.header.param1 = (uint8_t) error_code;
 			spdm_response.header.param2 = 0;
 
 			spdm_transport_test_encode_message(spdm_context,
@@ -2598,11 +2598,11 @@ void test_spdm_requester_key_update_case1(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2615,8 +2615,8 @@ void test_spdm_requester_key_update_case1(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
@@ -2635,11 +2635,11 @@ void test_spdm_requester_key_update_case2(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2652,8 +2652,8 @@ void test_spdm_requester_key_update_case2(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -2688,11 +2688,11 @@ void test_spdm_requester_key_update_case3(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2709,8 +2709,8 @@ void test_spdm_requester_key_update_case3(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
@@ -2729,11 +2729,11 @@ void test_spdm_requester_key_update_case4(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2746,8 +2746,8 @@ void test_spdm_requester_key_update_case4(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -2778,11 +2778,11 @@ void test_spdm_requester_key_update_case5(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2795,8 +2795,8 @@ void test_spdm_requester_key_update_case5(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -2829,11 +2829,11 @@ void test_spdm_requester_key_update_case6(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2846,8 +2846,8 @@ void test_spdm_requester_key_update_case6(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -2884,11 +2884,11 @@ void test_spdm_requester_key_update_case7(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2901,8 +2901,8 @@ void test_spdm_requester_key_update_case7(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
@@ -2924,11 +2924,11 @@ void test_spdm_requester_key_update_case8(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2941,8 +2941,8 @@ void test_spdm_requester_key_update_case8(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -2975,11 +2975,11 @@ void test_spdm_requester_key_update_case9(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -2992,8 +2992,8 @@ void test_spdm_requester_key_update_case9(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3033,12 +3033,12 @@ void test_spdm_requester_key_update_case10(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 	uint16                 error_code;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3053,8 +3053,8 @@ void test_spdm_requester_key_update_case10(void **state)
 	while(error_code <= 0xff) {
 		spdm_set_standard_key_update_test_secrets(
 			  session_info->secured_message_context,
-			  m_rsp_secret_buffer, (uint8)(0xFF),
-			  m_req_secret_buffer, (uint8)(0xEE));
+			  m_rsp_secret_buffer, (uint8_t)(0xFF),
+			  m_req_secret_buffer, (uint8_t)(0xEE));
 
 		//no keys are updated
 
@@ -3095,11 +3095,11 @@ void test_spdm_requester_key_update_case11(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3112,8 +3112,8 @@ void test_spdm_requester_key_update_case11(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3169,11 +3169,11 @@ void test_spdm_requester_key_update_case12(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3192,8 +3192,8 @@ void test_spdm_requester_key_update_case12(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -3224,11 +3224,11 @@ void test_spdm_requester_key_update_case13(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3241,8 +3241,8 @@ void test_spdm_requester_key_update_case13(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -3274,11 +3274,11 @@ void test_spdm_requester_key_update_case14(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3296,8 +3296,8 @@ void test_spdm_requester_key_update_case14(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -3329,11 +3329,11 @@ void test_spdm_requester_key_update_case15(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3346,8 +3346,8 @@ void test_spdm_requester_key_update_case15(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -3379,11 +3379,11 @@ void test_spdm_requester_key_update_case16(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3396,8 +3396,8 @@ void test_spdm_requester_key_update_case16(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//no keys are updated
 
@@ -3428,11 +3428,11 @@ void test_spdm_requester_key_update_case17(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3445,8 +3445,8 @@ void test_spdm_requester_key_update_case17(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3483,11 +3483,11 @@ void test_spdm_requester_key_update_case18(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3500,8 +3500,8 @@ void test_spdm_requester_key_update_case18(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3539,11 +3539,11 @@ void test_spdm_requester_key_update_case19(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3556,8 +3556,8 @@ void test_spdm_requester_key_update_case19(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3594,11 +3594,11 @@ void test_spdm_requester_key_update_case20(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3611,8 +3611,8 @@ void test_spdm_requester_key_update_case20(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	status = libspdm_key_update(
 		spdm_context, session_id, TRUE);
@@ -3634,11 +3634,11 @@ void test_spdm_requester_key_update_case21(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3651,8 +3651,8 @@ void test_spdm_requester_key_update_case21(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3689,11 +3689,11 @@ void test_spdm_requester_key_update_case22(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3706,8 +3706,8 @@ void test_spdm_requester_key_update_case22(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3747,12 +3747,12 @@ void test_spdm_requester_key_update_case23(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 	uint16                 error_code;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3767,8 +3767,8 @@ void test_spdm_requester_key_update_case23(void **state)
 	while(error_code <= 0xff) {
 		spdm_set_standard_key_update_test_secrets(
 			  session_info->secured_message_context,
-			  m_rsp_secret_buffer, (uint8)(0xFF),
-			  m_req_secret_buffer, (uint8)(0xEE));
+			  m_rsp_secret_buffer, (uint8_t)(0xFF),
+			  m_req_secret_buffer, (uint8_t)(0xEE));
 
 		//request side updated
 		spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3820,11 +3820,11 @@ void test_spdm_requester_key_update_case24(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3837,8 +3837,8 @@ void test_spdm_requester_key_update_case24(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3875,11 +3875,11 @@ void test_spdm_requester_key_update_case25(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3892,8 +3892,8 @@ void test_spdm_requester_key_update_case25(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3930,11 +3930,11 @@ void test_spdm_requester_key_update_case26(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -3947,8 +3947,8 @@ void test_spdm_requester_key_update_case26(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -3984,11 +3984,11 @@ void test_spdm_requester_key_update_case27(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -4001,8 +4001,8 @@ void test_spdm_requester_key_update_case27(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//request side updated
 	spdm_compute_secret_update(((spdm_secured_message_context_t 
@@ -4042,11 +4042,11 @@ void test_spdm_requester_key_update_case28(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4062,8 +4062,8 @@ void test_spdm_requester_key_update_case28(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4105,11 +4105,11 @@ void test_spdm_requester_key_update_case29(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4125,8 +4125,8 @@ void test_spdm_requester_key_update_case29(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4169,11 +4169,11 @@ void test_spdm_requester_key_update_case30(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4189,8 +4189,8 @@ void test_spdm_requester_key_update_case30(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4241,11 +4241,11 @@ void test_spdm_requester_key_update_case31(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4261,8 +4261,8 @@ void test_spdm_requester_key_update_case31(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4294,11 +4294,11 @@ void test_spdm_requester_key_update_case32(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4314,8 +4314,8 @@ void test_spdm_requester_key_update_case32(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4358,11 +4358,11 @@ void test_spdm_requester_key_update_case33(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4378,8 +4378,8 @@ void test_spdm_requester_key_update_case33(void **state)
 
 	spdm_set_standard_key_update_test_secrets(
 		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		  m_rsp_secret_buffer, (uint8_t)(0xFF),
+		  m_req_secret_buffer, (uint8_t)(0xEE));
 
 	//store previous encryption state
 	copy_mem(my_last_rsp_enc_key, secured_message_context
@@ -4433,12 +4433,12 @@ void test_spdm_requester_key_update_case34(void **state)
 	return_status          status;
 	spdm_test_context_t    *spdm_test_context;
 	spdm_context_t         *spdm_context;
-	uint32                 session_id;
+	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
 	uint16                 error_code;
 
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_secured_message_context_t *secured_message_context;
 
@@ -4456,8 +4456,8 @@ void test_spdm_requester_key_update_case34(void **state)
 	while(error_code <= 0xff) {
 		spdm_set_standard_key_update_test_secrets(
 			  session_info->secured_message_context,
-			  m_rsp_secret_buffer, (uint8)(0xFF),
-			  m_req_secret_buffer, (uint8)(0xEE));
+			  m_rsp_secret_buffer, (uint8_t)(0xFF),
+			  m_req_secret_buffer, (uint8_t)(0xEE));
 
 		//store previous encryption state
 		copy_mem(my_last_rsp_enc_key, secured_message_context

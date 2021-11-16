@@ -35,8 +35,8 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 	spdm_digest_response_t *spdm_response;
 	uintn index;
 	boolean no_local_cert_chain;
-	uint32 hash_size;
-	uint8 *digest;
+	uint32_t hash_size;
+	uint8_t *digest;
 	spdm_context_t *spdm_context;
 	return_status status;
 

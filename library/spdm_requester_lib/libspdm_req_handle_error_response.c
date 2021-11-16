@@ -21,10 +21,10 @@
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
-					      IN uint32 *session_id,
+					      IN uint32_t *session_id,
 					      IN OUT uintn *response_size,
 					      OUT void *response,
-					      IN uint8 expected_response_code,
+					      IN uint8_t expected_response_code,
 					      IN uintn expected_response_size)
 {
 	return_status status;
@@ -77,7 +77,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
 **/
 return_status spdm_handle_simple_error_response(IN void *context,
-						IN uint8 error_code)
+						IN uint8_t error_code)
 {
 	spdm_context_t *spdm_context;
 
@@ -119,11 +119,11 @@ return_status spdm_handle_simple_error_response(IN void *context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
-					     IN uint32 *session_id,
+					     IN uint32_t *session_id,
 					     IN OUT uintn *response_size,
 					     OUT void *response,
-					     IN uint8 original_request_code,
-					     IN uint8 expected_response_code,
+					     IN uint8_t original_request_code,
+					     IN uint8_t expected_response_code,
 					     IN uintn expected_response_size)
 {
 	spdm_error_response_t *spdm_response;
@@ -175,9 +175,9 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
 return_status spdm_handle_error_response_main(
-	IN spdm_context_t *spdm_context, IN uint32 *session_id,
+	IN spdm_context_t *spdm_context, IN uint32_t *session_id,
 	IN OUT uintn *response_size, IN OUT void *response,
-	IN uint8 original_request_code, IN uint8 expected_response_code,
+	IN uint8_t original_request_code, IN uint8_t expected_response_code,
 	IN uintn expected_response_size)
 {
 	spdm_message_header_t *spdm_response;

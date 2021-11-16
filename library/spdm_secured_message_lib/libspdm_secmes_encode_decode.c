@@ -22,7 +22,7 @@
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 return_status spdm_encode_secured_message(
-	IN void *spdm_secured_message_context, IN uint32 session_id,
+	IN void *spdm_secured_message_context, IN uint32_t session_id,
 	IN boolean is_requester, IN uintn app_message_size,
 	IN void *app_message, IN OUT uintn *secured_message_size,
 	OUT void *secured_message,
@@ -36,23 +36,23 @@ return_status spdm_encode_secured_message(
 	uintn aead_tag_size;
 	uintn aead_key_size;
 	uintn aead_iv_size;
-	uint8 *a_data;
-	uint8 *enc_msg;
-	uint8 *dec_msg;
-	uint8 *tag;
+	uint8_t *a_data;
+	uint8_t *enc_msg;
+	uint8_t *dec_msg;
+	uint8_t *tag;
 	spdm_secured_message_a_data_header1_t *record_header1;
 	spdm_secured_message_a_data_header2_t *record_header2;
 	uintn record_header_size;
 	spdm_secured_message_cipher_header_t *enc_msg_header;
 	boolean result;
-	uint8 key[MAX_AEAD_KEY_SIZE];
-	uint8 salt[MAX_AEAD_IV_SIZE];
-	uint64 sequence_number;
-	uint64 sequence_num_in_header;
-	uint8 sequence_num_in_header_size;
+	uint8_t key[MAX_AEAD_KEY_SIZE];
+	uint8_t salt[MAX_AEAD_IV_SIZE];
+	uint64_t sequence_number;
+	uint64_t sequence_num_in_header;
+	uint8_t sequence_num_in_header_size;
 	spdm_session_type_t session_type;
-	uint32 rand_count;
-	uint32 max_rand_count;
+	uint32_t rand_count;
+	uint32_t max_rand_count;
 	spdm_session_state_t session_state;
 
 	secured_message_context = spdm_secured_message_context;
@@ -129,16 +129,16 @@ return_status spdm_encode_secured_message(
 		break;
 	}
 
-	if (sequence_number == (uint64)-1) {
+	if (sequence_number == (uint64_t)-1) {
 		return RETURN_OUT_OF_RESOURCES;
 	}
 
-	*(uint64 *)salt = *(uint64 *)salt ^ sequence_number;
+	*(uint64_t *)salt = *(uint64_t *)salt ^ sequence_number;
 
 	sequence_num_in_header = 0;
 	sequence_num_in_header_size =
 		spdm_secured_message_callbacks_t->get_sequence_number(
-			sequence_number, (uint8 *)&sequence_num_in_header);
+			sequence_number, (uint8_t *)&sequence_num_in_header);
 	ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
 	sequence_number++;
@@ -179,8 +179,8 @@ return_status spdm_encode_secured_message(
 					 ->get_max_random_number_count();
 		if (max_rand_count != 0) {
 			rand_count = 0;
-			random_bytes((uint8 *)&rand_count, sizeof(rand_count));
-			rand_count = (uint8)((rand_count % max_rand_count) + 1);
+			random_bytes((uint8_t *)&rand_count, sizeof(rand_count));
+			rand_count = (uint8_t)((rand_count % max_rand_count) + 1);
 		} else {
 			rand_count = 0;
 		}
@@ -200,36 +200,36 @@ return_status spdm_encode_secured_message(
 		*secured_message_size = total_secured_message_size;
 		record_header1 = (void *)secured_message;
 		record_header2 =
-			(void *)((uint8 *)record_header1 +
+			(void *)((uint8_t *)record_header1 +
 				 sizeof(spdm_secured_message_a_data_header1_t) +
 				 sequence_num_in_header_size);
 		record_header1->session_id = session_id;
 		copy_mem(record_header1 + 1, &sequence_num_in_header,
 			 sequence_num_in_header_size);
 		record_header2->length =
-			(uint16)(cipher_text_size + aead_tag_size);
+			(uint16_t)(cipher_text_size + aead_tag_size);
 		enc_msg_header = (void *)(record_header2 + 1);
 		enc_msg_header->application_data_length =
-			(uint16)app_message_size;
+			(uint16_t)app_message_size;
 		copy_mem(enc_msg_header + 1, app_message, app_message_size);
 		random_bytes(
-			(uint8 *)enc_msg_header +
+			(uint8_t *)enc_msg_header +
 				sizeof(spdm_secured_message_cipher_header_t) +
 				app_message_size,
 			rand_count);
-		zero_mem((uint8 *)enc_msg_header + plain_text_size,
+		zero_mem((uint8_t *)enc_msg_header + plain_text_size,
 			 aead_pad_size);
 
-		a_data = (uint8 *)record_header1;
-		enc_msg = (uint8 *)enc_msg_header;
-		dec_msg = (uint8 *)enc_msg_header;
-		tag = (uint8 *)record_header1 + record_header_size +
+		a_data = (uint8_t *)record_header1;
+		enc_msg = (uint8_t *)enc_msg_header;
+		dec_msg = (uint8_t *)enc_msg_header;
+		tag = (uint8_t *)record_header1 + record_header_size +
 		      cipher_text_size;
 
 		result = spdm_aead_encryption(
 			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
-			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
+			aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
 			record_header_size, dec_msg, cipher_text_size, tag,
 			aead_tag_size, enc_msg, &cipher_text_size);
 		break;
@@ -246,23 +246,23 @@ return_status spdm_encode_secured_message(
 		*secured_message_size = total_secured_message_size;
 		record_header1 = (void *)secured_message;
 		record_header2 =
-			(void *)((uint8 *)record_header1 +
+			(void *)((uint8_t *)record_header1 +
 				 sizeof(spdm_secured_message_a_data_header1_t) +
 				 sequence_num_in_header_size);
 		record_header1->session_id = session_id;
 		copy_mem(record_header1 + 1, &sequence_num_in_header,
 			 sequence_num_in_header_size);
 		record_header2->length =
-			(uint16)(app_message_size + aead_tag_size);
+			(uint16_t)(app_message_size + aead_tag_size);
 		copy_mem(record_header2 + 1, app_message, app_message_size);
-		a_data = (uint8 *)record_header1;
-		tag = (uint8 *)record_header1 + record_header_size +
+		a_data = (uint8_t *)record_header1;
+		tag = (uint8_t *)record_header1 + record_header_size +
 		      app_message_size;
 
 		result = spdm_aead_encryption(
 			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
-			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
+			aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
 			record_header_size + app_message_size, NULL, 0, tag,
 			aead_tag_size, NULL, NULL);
 		break;
@@ -294,7 +294,7 @@ return_status spdm_encode_secured_message(
   @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
 **/
 return_status spdm_decode_secured_message(
-	IN void *spdm_secured_message_context, IN uint32 session_id,
+	IN void *spdm_secured_message_context, IN uint32_t session_id,
 	IN boolean is_requester, IN uintn secured_message_size,
 	IN void *secured_message, IN OUT uintn *app_message_size,
 	OUT void *app_message,
@@ -306,24 +306,24 @@ return_status spdm_decode_secured_message(
 	uintn aead_tag_size;
 	uintn aead_key_size;
 	uintn aead_iv_size;
-	uint8 *a_data;
-	uint8 *enc_msg;
-	uint8 *dec_msg;
-	uint8 *tag;
+	uint8_t *a_data;
+	uint8_t *enc_msg;
+	uint8_t *dec_msg;
+	uint8_t *tag;
 	spdm_secured_message_a_data_header1_t *record_header1;
 	spdm_secured_message_a_data_header2_t *record_header2;
 	uintn record_header_size;
 	spdm_secured_message_cipher_header_t *enc_msg_header;
 	boolean result;
-	uint8 key[MAX_AEAD_KEY_SIZE];
-	uint8 salt[MAX_AEAD_IV_SIZE];
-	uint64 sequence_number;
-	uint64 sequence_num_in_header;
-	uint8 sequence_num_in_header_size;
+	uint8_t key[MAX_AEAD_KEY_SIZE];
+	uint8_t salt[MAX_AEAD_IV_SIZE];
+	uint64_t sequence_number;
+	uint64_t sequence_num_in_header;
+	uint8_t sequence_num_in_header_size;
 	spdm_session_type_t session_type;
 	spdm_session_state_t session_state;
 	spdm_error_struct_t spdm_error;
-	uint8 dec_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8_t dec_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	return_status status;
 
 	spdm_error.error_code = 0;
@@ -407,18 +407,18 @@ return_status spdm_decode_secured_message(
 		return RETURN_UNSUPPORTED;
 	}
 
-	if (sequence_number == (uint64)-1) {
+	if (sequence_number == (uint64_t)-1) {
 		spdm_secured_message_set_last_spdm_error_struct(
 			spdm_secured_message_context, &spdm_error);
 		return RETURN_SECURITY_VIOLATION;
 	}
 
-	*(uint64 *)salt = *(uint64 *)salt ^ sequence_number;
+	*(uint64_t *)salt = *(uint64_t *)salt ^ sequence_number;
 
 	sequence_num_in_header = 0;
 	sequence_num_in_header_size =
 		spdm_secured_message_callbacks_t->get_sequence_number(
-			sequence_number, (uint8 *)&sequence_num_in_header);
+			sequence_number, (uint8_t *)&sequence_num_in_header);
 	ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
 	sequence_number++;
@@ -462,7 +462,7 @@ return_status spdm_decode_secured_message(
 		}
 		record_header1 = (void *)secured_message;
 		record_header2 =
-			(void *)((uint8 *)record_header1 +
+			(void *)((uint8_t *)record_header1 +
 				 sizeof(spdm_secured_message_a_data_header1_t) +
 				 sequence_num_in_header_size);
 		if (record_header1->session_id != session_id) {
@@ -493,16 +493,16 @@ return_status spdm_decode_secured_message(
 		}
 		zero_mem(dec_message, sizeof(dec_message));
 		enc_msg_header = (void *)(record_header2 + 1);
-		a_data = (uint8 *)record_header1;
-		enc_msg = (uint8 *)enc_msg_header;
-		dec_msg = (uint8 *)dec_message;
+		a_data = (uint8_t *)record_header1;
+		enc_msg = (uint8_t *)enc_msg_header;
+		dec_msg = (uint8_t *)dec_message;
 		enc_msg_header = (void *)dec_msg;
-		tag = (uint8 *)record_header1 + record_header_size +
+		tag = (uint8_t *)record_header1 + record_header_size +
 		      cipher_text_size;
 		result = spdm_aead_decryption(
 			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
-			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
+			aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
 			record_header_size, enc_msg, cipher_text_size, tag,
 			aead_tag_size, dec_msg, &cipher_text_size);
 		if (!result) {
@@ -560,7 +560,7 @@ return_status spdm_decode_secured_message(
 		}
 		record_header1 = (void *)secured_message;
 		record_header2 =
-			(void *)((uint8 *)record_header1 +
+			(void *)((uint8_t *)record_header1 +
 				 sizeof(spdm_secured_message_a_data_header1_t) +
 				 sequence_num_in_header_size);
 		if (record_header1->session_id != session_id) {
@@ -585,13 +585,13 @@ return_status spdm_decode_secured_message(
 				spdm_secured_message_context, &spdm_error);
 			return RETURN_SECURITY_VIOLATION;
 		}
-		a_data = (uint8 *)record_header1;
-		tag = (uint8 *)record_header1 + record_header_size +
+		a_data = (uint8_t *)record_header1;
+		tag = (uint8_t *)record_header1 + record_header_size +
 		      record_header2->length - aead_tag_size;
 		result = spdm_aead_decryption(
 			secured_message_context->secured_message_version,
 			secured_message_context->aead_cipher_suite, key,
-			aead_key_size, salt, aead_iv_size, (uint8 *)a_data,
+			aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
 			record_header_size + record_header2->length -
 				aead_tag_size,
 			NULL, 0, tag, aead_tag_size, NULL, NULL);

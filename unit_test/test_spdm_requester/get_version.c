@@ -10,15 +10,15 @@
 #pragma pack(1)
 typedef struct {
 	spdm_message_header_t header;
-	uint8 reserved;
-	uint8 version_number_entry_count;
+	uint8_t reserved;
+	uint8_t version_number_entry_count;
 	spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 
 return_status spdm_requester_get_version_test_send_message(
 	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64 timeout)
+	IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -61,7 +61,7 @@ return_status spdm_requester_get_version_test_send_message(
 
 return_status spdm_requester_get_version_test_receive_message(
 	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64 timeout)
+	IN OUT void *response, IN uint64_t timeout)
 {
 	spdm_test_context_t *spdm_test_context;
 
@@ -362,7 +362,7 @@ return_status spdm_requester_get_version_test_receive_message(
       zero_mem (&spdm_response, sizeof(spdm_response));
       spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
       spdm_response.header.request_response_code = SPDM_ERROR;
-      spdm_response.header.param1 = (uint8) error_code;
+      spdm_response.header.param1 = (uint8_t) error_code;
 
       spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
     }

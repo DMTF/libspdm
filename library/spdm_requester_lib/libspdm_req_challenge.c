@@ -10,12 +10,12 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint8 cert_chain_hash[MAX_HASH_SIZE];
-	uint8 nonce[SPDM_NONCE_SIZE];
-	uint8 measurement_summary_hash[MAX_HASH_SIZE];
-	uint16 opaque_length;
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
-	uint8 signature[MAX_ASYM_KEY_SIZE];
+	uint8_t cert_chain_hash[MAX_HASH_SIZE];
+	uint8_t nonce[SPDM_NONCE_SIZE];
+	uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+	uint16_t opaque_length;
+	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+	uint8_t signature[MAX_ASYM_KEY_SIZE];
 } spdm_challenge_auth_response_max_t;
 
 #pragma pack()
@@ -43,8 +43,8 @@ typedef struct {
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
-				 IN uint8 measurement_hash_type,
+return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
+				 IN uint8_t measurement_hash_type,
 				 OUT void *measurement_hash,
 			     IN void *requester_nonce_in OPTIONAL,
 				 OUT void *requester_nonce OPTIONAL,
@@ -55,13 +55,13 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	spdm_challenge_request_t spdm_request;
 	spdm_challenge_auth_response_max_t spdm_response;
 	uintn spdm_response_size;
-	uint8 *ptr;
+	uint8_t *ptr;
 	void *cert_chain_hash;
 	uintn hash_size;
 	uintn measurement_summary_hash_size;
 	void *nonce;
 	void *measurement_summary_hash;
-	uint16 opaque_length;
+	uint16_t opaque_length;
 	void *opaque;
 	void *signature;
 	uintn signature_size;
@@ -149,7 +149,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	if (spdm_response_size > sizeof(spdm_response)) {
 		return RETURN_DEVICE_ERROR;
 	}
-	*(uint8 *)&auth_attribute = spdm_response.header.param1;
+	*(uint8_t *)&auth_attribute = spdm_response.header.param1;
 	if (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
 		if (auth_attribute.slot_id != 0xF) {
 			return RETURN_DEVICE_ERROR;
@@ -159,7 +159,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 		}
 	} else {
 		if ((spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_11 && auth_attribute.slot_id != slot_id) ||
-		    (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && *(uint8 *)&auth_attribute != slot_id)) {
+		    (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && *(uint8_t *)&auth_attribute != slot_id)) {
 			return RETURN_DEVICE_ERROR;
 		}
 		if (spdm_response.header.param2 != (1 << slot_id)) {
@@ -184,7 +184,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
 					  hash_size + SPDM_NONCE_SIZE +
 					  measurement_summary_hash_size +
-					  sizeof(uint16)) {
+					  sizeof(uint16_t)) {
 		return RETURN_DEVICE_ERROR;
 	}
 
@@ -220,11 +220,11 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 			   measurement_summary_hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	opaque_length = *(uint16 *)ptr;
+	opaque_length = *(uint16_t *)ptr;
 	if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 		return RETURN_SECURITY_VIOLATION;
 	}
-	ptr += sizeof(uint16);
+	ptr += sizeof(uint16_t);
 	//
 	// Cache data
 	//
@@ -236,12 +236,12 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
 	if (spdm_response_size <
 	    sizeof(spdm_challenge_auth_response_t) + hash_size +
 		    SPDM_NONCE_SIZE + measurement_summary_hash_size +
-		    sizeof(uint16) + opaque_length + signature_size) {
+		    sizeof(uint16_t) + opaque_length + signature_size) {
 		return RETURN_DEVICE_ERROR;
 	}
 	spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
 			     hash_size + SPDM_NONCE_SIZE +
-			     measurement_summary_hash_size + sizeof(uint16) +
+			     measurement_summary_hash_size + sizeof(uint16_t) +
 			     opaque_length + signature_size;
 	status = libspdm_append_message_c(spdm_context, &spdm_response,
 				       spdm_response_size - signature_size);
@@ -312,8 +312,8 @@ return_status try_spdm_challenge(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_challenge(IN void *context, IN uint8 slot_id,
-			     IN uint8 measurement_hash_type,
+return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
+			     IN uint8_t measurement_hash_type,
 			     OUT void *measurement_hash)
 {
 	spdm_context_t *spdm_context;
@@ -355,8 +355,8 @@ return_status libspdm_challenge(IN void *context, IN uint8 slot_id,
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
-return_status libspdm_challenge_ex(IN void *context, IN uint8 slot_id,
-			     IN uint8 measurement_hash_type,
+return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
+			     IN uint8_t measurement_hash_type,
 			     OUT void *measurement_hash,
 			     IN void *requester_nonce_in OPTIONAL,
 			     OUT void *requester_nonce OPTIONAL,

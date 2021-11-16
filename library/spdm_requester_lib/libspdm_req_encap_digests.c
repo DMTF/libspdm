@@ -34,8 +34,8 @@ return_status spdm_get_encap_response_digest(IN void *context,
 	spdm_get_digest_request_t *spdm_request;
 	spdm_digest_response_t *spdm_response;
 	uintn index;
-	uint32 hash_size;
-	uint8 *digest;
+	uint32_t hash_size;
+	uint8_t *digest;
 	spdm_context_t *spdm_context;
 	return_status status;
 

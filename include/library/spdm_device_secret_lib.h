@@ -40,8 +40,8 @@
 **/
 typedef return_status (*spdm_measurement_collection_func)(
 	IN spdm_version_number_t spdm_version,
-	IN uint8 measurement_specification, IN uint32 measurement_hash_algo,
-	IN uint8 measurement_index, OUT uint8 *measurement_count,
+	IN uint8_t measurement_specification, IN uint32_t measurement_hash_algo,
+	IN uint8_t measurement_index, OUT uint8_t *measurement_count,
 	OUT void *measurement, IN OUT uintn *measurement_size);
 
 /**
@@ -59,11 +59,11 @@ typedef return_status (*spdm_measurement_collection_func)(
 **/
 typedef boolean (*spdm_requester_data_sign_func)(
 						 IN spdm_version_number_t spdm_version,
-						 IN uint8 op_code,
-						 IN uint16 req_base_asym_alg,
-						 IN const uint8 *message_hash,
+						 IN uint8_t op_code,
+						 IN uint16_t req_base_asym_alg,
+						 IN const uint8_t *message_hash,
 						 IN uintn hash_size,
-						 OUT uint8 *signature,
+						 OUT uint8_t *signature,
 						 IN OUT uintn *sig_size);
 
 /**
@@ -81,11 +81,11 @@ typedef boolean (*spdm_requester_data_sign_func)(
 **/
 typedef boolean (*spdm_responder_data_sign_func)(
 						 IN spdm_version_number_t spdm_version,
-						 IN uint8 op_code,
-						 IN uint32 base_asym_algo,
-						 IN const uint8 *message_hash,
+						 IN uint8_t op_code,
+						 IN uint32_t base_asym_algo,
+						 IN const uint8_t *message_hash,
 						 IN uintn hash_size,
-						 OUT uint8 *signature,
+						 OUT uint8_t *signature,
 						 IN OUT uintn *sig_size);
 
 /**
@@ -104,11 +104,11 @@ typedef boolean (*spdm_responder_data_sign_func)(
 **/
 typedef boolean (*spdm_psk_hkdf_expand_func)(
 					     IN spdm_version_number_t spdm_version,
-					     IN uint32 base_hash_algo,
-					     IN const uint8 *psk_hint,
+					     IN uint32_t base_hash_algo,
+					     IN const uint8_t *psk_hint,
 					     OPTIONAL IN uintn psk_hint_size,
-					     OPTIONAL IN const uint8 *info,
-					     IN uintn info_size, OUT uint8 *out,
+					     OPTIONAL IN const uint8_t *info,
+					     IN uintn info_size, OUT uint8_t *out,
 					     IN uintn out_size);
 
 /**
@@ -173,10 +173,10 @@ typedef boolean (*spdm_psk_hkdf_expand_func)(
 **/
 return_status spdm_measurement_collection(
 				    IN spdm_version_number_t spdm_version,
-				    IN uint8  measurement_specification,
-				    IN uint32 measurement_hash_algo,
-				    IN uint8 measurement_index,
-				    OUT uint8 *measurements_count,
+				    IN uint8_t  measurement_specification,
+				    IN uint32_t measurement_hash_algo,
+				    IN uint8_t measurement_index,
+				    OUT uint8_t *measurements_count,
 				    OUT void *measurements,
 				    IN OUT uintn *measurements_size);
 
@@ -197,11 +197,11 @@ return_status spdm_measurement_collection(
 **/
 boolean spdm_requester_data_sign(
 				 IN spdm_version_number_t spdm_version,
-				 IN uint8 op_code,
-				 IN uint16 req_base_asym_alg,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size);
+				 IN uint8_t op_code,
+				 IN uint16_t req_base_asym_alg,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size);
 
 /**
   Sign an SPDM message data.
@@ -220,11 +220,11 @@ boolean spdm_requester_data_sign(
 **/
 boolean spdm_responder_data_sign(
 				 IN spdm_version_number_t spdm_version,
-				 IN uint8 op_code,
-				 IN uint32 base_asym_algo,
-				 IN uint32 base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8 *message, IN uintn message_size,
-				 OUT uint8 *signature, IN OUT uintn *sig_size);
+				 IN uint8_t op_code,
+				 IN uint32_t base_asym_algo,
+				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+				 IN const uint8_t *message, IN uintn message_size,
+				 OUT uint8_t *signature, IN OUT uintn *sig_size);
 
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
@@ -242,9 +242,9 @@ boolean spdm_responder_data_sign(
 **/
 boolean spdm_psk_handshake_secret_hkdf_expand(
 	IN spdm_version_number_t spdm_version,
-	IN uint32 base_hash_algo, IN const uint8 *psk_hint,
-	OPTIONAL IN uintn psk_hint_size, OPTIONAL IN const uint8 *info,
-	IN uintn info_size, OUT uint8 *out, IN uintn out_size);
+	IN uint32_t base_hash_algo, IN const uint8_t *psk_hint,
+	OPTIONAL IN uintn psk_hint_size, OPTIONAL IN const uint8_t *info,
+	IN uintn info_size, OUT uint8_t *out, IN uintn out_size);
 
 /**
   Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
@@ -262,11 +262,11 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
 **/
 boolean spdm_psk_master_secret_hkdf_expand(
 					   IN spdm_version_number_t spdm_version,
-					   IN uint32 base_hash_algo,
-					   IN const uint8 *psk_hint,
+					   IN uint32_t base_hash_algo,
+					   IN const uint8_t *psk_hint,
 					   OPTIONAL IN uintn psk_hint_size,
-					   OPTIONAL IN const uint8 *info,
-					   IN uintn info_size, OUT uint8 *out,
+					   OPTIONAL IN const uint8_t *info,
+					   IN uintn info_size, OUT uint8_t *out,
 					   IN uintn out_size);
 
 #endif

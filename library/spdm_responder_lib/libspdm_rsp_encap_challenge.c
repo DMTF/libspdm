@@ -94,13 +94,13 @@ return_status spdm_process_encap_response_challenge_auth(
 	boolean result;
 	spdm_challenge_auth_response_t *spdm_response;
 	uintn spdm_response_size;
-	uint8 *ptr;
+	uint8_t *ptr;
 	void *cert_chain_hash;
 	uintn hash_size;
 	uintn measurement_summary_hash_size;
 	void *nonce;
 	void *measurement_summary_hash;
-	uint16 opaque_length;
+	uint16_t opaque_length;
 	void *opaque;
 	void *signature;
 	uintn signature_size;
@@ -131,7 +131,7 @@ return_status spdm_process_encap_response_challenge_auth(
 		return RETURN_DEVICE_ERROR;
 	}
 
-	*(uint8 *)&auth_attribute = spdm_response->header.param1;
+	*(uint8_t *)&auth_attribute = spdm_response->header.param1;
 	if (spdm_context->encap_context.req_slot_id == 0xFF) {
 		if (auth_attribute.slot_id != 0xF) {
 			return RETURN_DEVICE_ERROR;
@@ -158,7 +158,7 @@ return_status spdm_process_encap_response_challenge_auth(
 	if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
 					  hash_size + SPDM_NONCE_SIZE +
 					  measurement_summary_hash_size +
-					  sizeof(uint16)) {
+					  sizeof(uint16_t)) {
 		return RETURN_DEVICE_ERROR;
 	}
 
@@ -191,21 +191,21 @@ return_status spdm_process_encap_response_challenge_auth(
 			   measurement_summary_hash_size);
 	DEBUG((DEBUG_INFO, "\n"));
 
-	opaque_length = *(uint16 *)ptr;
+	opaque_length = *(uint16_t *)ptr;
 	if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
 		return RETURN_SECURITY_VIOLATION;
 	}
-	ptr += sizeof(uint16);
+	ptr += sizeof(uint16_t);
 
 	if (spdm_response_size <
 	    sizeof(spdm_challenge_auth_response_t) + hash_size +
 		    SPDM_NONCE_SIZE + measurement_summary_hash_size +
-		    sizeof(uint16) + opaque_length + signature_size) {
+		    sizeof(uint16_t) + opaque_length + signature_size) {
 		return RETURN_DEVICE_ERROR;
 	}
 	spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
 			     hash_size + SPDM_NONCE_SIZE +
-			     measurement_summary_hash_size + sizeof(uint16) +
+			     measurement_summary_hash_size + sizeof(uint16_t) +
 			     opaque_length + signature_size;
 	status = libspdm_append_message_mut_c(spdm_context, spdm_response,
 					   spdm_response_size - signature_size);

@@ -54,7 +54,7 @@ void ecd_free(IN void *ecd_context)
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8 *public_key,
+boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
 			IN uintn public_key_size)
 {
 	return FALSE;
@@ -75,7 +75,7 @@ boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8 *public_key,
   @retval  FALSE  Invalid EC public key component.
 
 **/
-boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8 *public_key,
+boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 			IN OUT uintn *public_key_size)
 {
 	return FALSE;
@@ -119,7 +119,7 @@ boolean ecd_check_key(IN void *ecd_context)
   @retval FALSE  public_size is not large enough.
 
 **/
-boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
+boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 			 IN OUT uintn *public_key_size)
 {
 	return FALSE;
@@ -159,8 +159,8 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8 *public_key,
 
 **/
 boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-		   IN const uint8 *context, IN uintn context_size,
-		   IN const uint8 *message, IN uintn size, OUT uint8 *signature,
+		   IN const uint8_t *context, IN uintn context_size,
+		   IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
 		   IN OUT uintn *sig_size)
 {
 	return FALSE;
@@ -194,9 +194,9 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
 
 **/
 boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-		     IN const uint8 *context, IN uintn context_size,
-		     IN const uint8 *message, IN uintn size,
-		     IN const uint8 *signature, IN uintn sig_size)
+		     IN const uint8_t *context, IN uintn context_size,
+		     IN const uint8_t *message, IN uintn size,
+		     IN const uint8_t *signature, IN uintn sig_size)
 {
 	return FALSE;
 }
