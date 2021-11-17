@@ -30,10 +30,10 @@ extern uint8_t m_use_measurement_spec;
 extern uint32_t m_use_measurement_hash_algo;
 extern uint32_t m_use_hash_algo;
 extern uint32_t m_use_asym_algo;
-extern uint16 m_use_req_asym_algo;
-extern uint16 m_use_dhe_algo;
-extern uint16 m_use_aead_algo;
-extern uint16 m_use_key_schedule_algo;
+extern uint16_t m_use_req_asym_algo;
+extern uint16_t m_use_dhe_algo;
+extern uint16_t m_use_aead_algo;
+extern uint16_t m_use_key_schedule_algo;
 
 ///
 /// SPDM reserved error code

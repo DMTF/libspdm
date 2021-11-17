@@ -10,7 +10,7 @@
 #pragma pack(1)
 typedef struct {
   spdm_message_header_t  header;
-  uint16               length;
+  uint16_t               length;
   uint8_t                measurement_specification_sel;
   uint8_t                reserved;
   uint32_t               measurement_hash_algo;
@@ -19,7 +19,7 @@ typedef struct {
   uint8_t                reserved2[12];
   uint8_t                ext_asym_sel_count;
   uint8_t                ext_hash_sel_count;
-  uint16               reserved3;
+  uint16_t               reserved3;
   spdm_negotiate_algorithms_common_struct_table_t  struct_table[4];
 } spdm_algorithms_response_spdm11_t;
 #pragma pack()

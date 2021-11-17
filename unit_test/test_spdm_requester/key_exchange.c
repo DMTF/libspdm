@@ -25,7 +25,7 @@ uintn spdm_test_get_key_exchange_request_size(IN void *spdm_context,
 	spdm_key_exchange_request_t *spdm_request;
 	uintn message_size;
 	uintn dhe_key_size;
-	uint16 opaque_length;
+	uint16_t opaque_length;
 
 	spdm_request = buffer;
 	message_size = sizeof(spdm_message_header_t);
@@ -43,13 +43,13 @@ uintn spdm_test_get_key_exchange_request_size(IN void *spdm_context,
 	}
 
 	dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-	message_size += dhe_key_size + sizeof(uint16);
+	message_size += dhe_key_size + sizeof(uint16_t);
 	if (buffer_size < message_size) {
 		return buffer_size;
 	}
 
 	opaque_length =
-		*(uint16 *)((uintn)buffer +
+		*(uint16_t *)((uintn)buffer +
 			    sizeof(spdm_key_exchange_request_t) + dhe_key_size);
 	message_size += opaque_length;
 	if (buffer_size < message_size) {
@@ -236,7 +236,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			spdm_get_opaque_data_version_selection_data_size(
 				spdm_context);
 		temp_buf_size = sizeof(spdm_key_exchange_response_t) +
-				dhe_key_size + 0 + sizeof(uint16) +
+				dhe_key_size + 0 + sizeof(uint16_t) +
 				opaque_key_exchange_rsp_size + signature_size +
 				hmac_size;
 		spdm_response = (void *)temp_buf;
@@ -265,8 +265,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		ptr += dhe_key_size;
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
-		*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+		ptr += sizeof(uint16_t);
 		spdm_build_opaque_data_version_selection_data(
 			spdm_context, &opaque_key_exchange_rsp_size, ptr);
 		ptr += opaque_key_exchange_rsp_size;
@@ -306,20 +306,20 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      THCurrHashData);
 		bin_str0_size = sizeof(bin_str0);
 		spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str0,
+				NULL, (uint16_t)hash_size, hash_size, bin_str0,
 				&bin_str0_size);
 		spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer, hash_size,
 			      final_key, final_key_size, handshake_secret);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				THCurrHashData, (uint16)hash_size, hash_size,
+				THCurrHashData, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		spdm_hkdf_expand(m_use_hash_algo, handshake_secret, hash_size,
 				 bin_str2, bin_str2_size,
 				 response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -387,7 +387,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			spdm_get_opaque_data_version_selection_data_size(
 				spdm_context);
 		temp_buf_size = sizeof(spdm_key_exchange_response_t) +
-				dhe_key_size + 0 + sizeof(uint16) +
+				dhe_key_size + 0 + sizeof(uint16_t) +
 				opaque_key_exchange_rsp_size + signature_size +
 				hmac_size;
 		spdm_response = (void *)temp_buf;
@@ -416,8 +416,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		ptr += dhe_key_size;
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
-		*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+		ptr += sizeof(uint16_t);
 		spdm_build_opaque_data_version_selection_data(
 			spdm_context, &opaque_key_exchange_rsp_size, ptr);
 		ptr += opaque_key_exchange_rsp_size;
@@ -457,20 +457,20 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      THCurrHashData);
 		bin_str0_size = sizeof(bin_str0);
 		spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str0,
+				NULL, (uint16_t)hash_size, hash_size, bin_str0,
 				&bin_str0_size);
 		spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer, hash_size,
 			      final_key, final_key_size, handshake_secret);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				THCurrHashData, (uint16)hash_size, hash_size,
+				THCurrHashData, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		spdm_hkdf_expand(m_use_hash_algo, handshake_secret, hash_size,
 				 bin_str2, bin_str2_size,
 				 response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -587,7 +587,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				spdm_get_opaque_data_version_selection_data_size(
 					spdm_context);
 			temp_buf_size = sizeof(spdm_key_exchange_response_t) +
-					dhe_key_size + 0 + sizeof(uint16) +
+					dhe_key_size + 0 + sizeof(uint16_t) +
 					opaque_key_exchange_rsp_size +
 					signature_size + hmac_size;
 			spdm_response = (void *)temp_buf;
@@ -617,8 +617,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			ptr += dhe_key_size;
 			// zero_mem (ptr, hash_size);
 			// ptr += hash_size;
-			*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+			ptr += sizeof(uint16_t);
 			spdm_build_opaque_data_version_selection_data(
 				spdm_context, &opaque_key_exchange_rsp_size,
 				ptr);
@@ -667,7 +667,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str0_size = sizeof(bin_str0);
 			spdm_bin_concat(BIN_STR_0_LABEL,
 					sizeof(BIN_STR_0_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str0,
+					(uint16_t)hash_size, hash_size, bin_str0,
 					&bin_str0_size);
 			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer,
 				      hash_size, final_key, final_key_size,
@@ -675,7 +675,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str2_size = sizeof(bin_str2);
 			spdm_bin_concat(BIN_STR_2_LABEL,
 					sizeof(BIN_STR_2_LABEL) - 1,
-					THCurrHashData, (uint16)hash_size,
+					THCurrHashData, (uint16_t)hash_size,
 					hash_size, bin_str2, &bin_str2_size);
 			spdm_hkdf_expand(m_use_hash_algo, handshake_secret,
 					 hash_size, bin_str2, bin_str2_size,
@@ -683,7 +683,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str7_size = sizeof(bin_str7);
 			spdm_bin_concat(BIN_STR_7_LABEL,
 					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+					(uint16_t)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
 			spdm_hkdf_expand(m_use_hash_algo,
 					 response_handshake_secret, hash_size,
@@ -815,7 +815,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 				spdm_get_opaque_data_version_selection_data_size(
 					spdm_context);
 			temp_buf_size = sizeof(spdm_key_exchange_response_t) +
-					dhe_key_size + 0 + sizeof(uint16) +
+					dhe_key_size + 0 + sizeof(uint16_t) +
 					opaque_key_exchange_rsp_size +
 					signature_size + hmac_size;
 			spdm_response = (void *)temp_buf;
@@ -845,8 +845,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			ptr += dhe_key_size;
 			// zero_mem (ptr, hash_size);
 			// ptr += hash_size;
-			*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+			ptr += sizeof(uint16_t);
 			spdm_build_opaque_data_version_selection_data(
 				spdm_context, &opaque_key_exchange_rsp_size,
 				ptr);
@@ -895,7 +895,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str0_size = sizeof(bin_str0);
 			spdm_bin_concat(BIN_STR_0_LABEL,
 					sizeof(BIN_STR_0_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str0,
+					(uint16_t)hash_size, hash_size, bin_str0,
 					&bin_str0_size);
 			spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer,
 				      hash_size, final_key, final_key_size,
@@ -903,7 +903,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str2_size = sizeof(bin_str2);
 			spdm_bin_concat(BIN_STR_2_LABEL,
 					sizeof(BIN_STR_2_LABEL) - 1,
-					THCurrHashData, (uint16)hash_size,
+					THCurrHashData, (uint16_t)hash_size,
 					hash_size, bin_str2, &bin_str2_size);
 			spdm_hkdf_expand(m_use_hash_algo, handshake_secret,
 					 hash_size, bin_str2, bin_str2_size,
@@ -911,7 +911,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			bin_str7_size = sizeof(bin_str7);
 			spdm_bin_concat(BIN_STR_7_LABEL,
 					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+					(uint16_t)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
 			spdm_hkdf_expand(m_use_hash_algo,
 					 response_handshake_secret, hash_size,
@@ -932,7 +932,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 
   case 0xA:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -1009,7 +1009,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			spdm_get_opaque_data_version_selection_data_size(
 				spdm_context);
 		temp_buf_size = sizeof(spdm_key_exchange_response_t) +
-				dhe_key_size + 0 + sizeof(uint16) +
+				dhe_key_size + 0 + sizeof(uint16_t) +
 				opaque_key_exchange_rsp_size + signature_size +
 				hmac_size;
 		spdm_response = (void *)temp_buf;
@@ -1038,8 +1038,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
 		ptr += dhe_key_size;
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
-		*(uint16 *)ptr = (uint16)opaque_key_exchange_rsp_size;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+		ptr += sizeof(uint16_t);
 		spdm_build_opaque_data_version_selection_data(
 			spdm_context, &opaque_key_exchange_rsp_size, ptr);
 		ptr += opaque_key_exchange_rsp_size;
@@ -1079,20 +1079,20 @@ return_status spdm_requester_key_exchange_test_receive_message(
 			      THCurrHashData);
 		bin_str0_size = sizeof(bin_str0);
 		spdm_bin_concat(BIN_STR_0_LABEL, sizeof(BIN_STR_0_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str0,
+				NULL, (uint16_t)hash_size, hash_size, bin_str0,
 				&bin_str0_size);
 		spdm_hmac_all(m_use_hash_algo, m_zero_filled_buffer, hash_size,
 			      final_key, final_key_size, handshake_secret);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				THCurrHashData, (uint16)hash_size, hash_size,
+				THCurrHashData, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		spdm_hkdf_expand(m_use_hash_algo, handshake_secret, hash_size,
 				 bin_str2, bin_str2_size,
 				 response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -1599,7 +1599,7 @@ void test_spdm_requester_key_exchange_case10(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
-  uint16               error_code;
+  uint16_t               error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

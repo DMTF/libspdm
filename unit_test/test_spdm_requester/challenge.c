@@ -128,7 +128,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
-				SPDM_NONCE_SIZE + 0 + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_response = (void *)temp_buf;
 
@@ -152,8 +152,8 @@ return_status spdm_requester_challenge_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		// zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
 		// ptr += spdm_get_hash_size (m_use_hash_algo);
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -205,7 +205,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			m_use_hash_algo;
 		temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
-				SPDM_NONCE_SIZE + 0 + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 		spdm_response = (void *)temp_buf;
 
@@ -229,8 +229,8 @@ return_status spdm_requester_challenge_test_receive_message(
 		ptr += SPDM_NONCE_SIZE;
 		// zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
 		// ptr += spdm_get_hash_size (m_use_hash_algo);
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -324,7 +324,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			temp_buf_size =
 				sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
-				SPDM_NONCE_SIZE + 0 + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_response = (void *)temp_buf;
 
@@ -350,8 +350,8 @@ return_status spdm_requester_challenge_test_receive_message(
 			ptr += SPDM_NONCE_SIZE;
 			// zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
 			// ptr += spdm_get_hash_size (m_use_hash_algo);
-			*(uint16 *)ptr = 0;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = 0;
+			ptr += sizeof(uint16_t);
 			copy_mem(&m_local_buffer[m_local_buffer_size],
 				 spdm_response,
 				 (uintn)ptr - (uintn)spdm_response);
@@ -462,7 +462,7 @@ return_status spdm_requester_challenge_test_receive_message(
 			temp_buf_size =
 				sizeof(spdm_challenge_auth_response_t) +
 				spdm_get_hash_size(m_use_hash_algo) +
-				SPDM_NONCE_SIZE + 0 + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			spdm_response = (void *)temp_buf;
 
@@ -488,8 +488,8 @@ return_status spdm_requester_challenge_test_receive_message(
 			ptr += SPDM_NONCE_SIZE;
 			// zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
 			// ptr += spdm_get_hash_size (m_use_hash_algo);
-			*(uint16 *)ptr = 0;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = 0;
+			ptr += sizeof(uint16_t);
 			copy_mem(&m_local_buffer[m_local_buffer_size],
 				 spdm_response,
 				 (uintn)ptr - (uintn)spdm_response);
@@ -534,7 +534,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -550,8 +550,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -601,7 +601,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               spdm_get_hash_size (m_use_hash_algo) +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -617,8 +617,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -651,7 +651,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -667,8 +667,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -701,7 +701,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -717,8 +717,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -751,7 +751,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -767,8 +767,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -801,7 +801,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 8 +
+              sizeof(uint16_t) + 8 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -817,8 +817,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 8;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 8;
+    Ptr += sizeof(uint16_t);
     copy_mem (Ptr, "openspdm", 8);
     Ptr += 8;
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -853,7 +853,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               0 +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
@@ -869,8 +869,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     // Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -905,7 +905,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_hash_size (m_use_hash_algo) +
               SPDM_NONCE_SIZE +
               spdm_get_hash_size (m_use_hash_algo) +
-              sizeof(uint16) + 0 +
+              sizeof(uint16_t) + 0 +
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -920,8 +920,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += SPDM_NONCE_SIZE;
     zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
     Ptr += spdm_get_hash_size (m_use_hash_algo);
-    *(uint16 *)Ptr = 0;
-    Ptr += sizeof(uint16);
+    *(uint16_t *)Ptr = 0;
+    Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
     spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -936,7 +936,7 @@ return_status spdm_requester_challenge_test_receive_message(
 
   case 0x14:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -1923,7 +1923,7 @@ void test_spdm_requester_challenge_case20(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
-  uint16                error_code;
+  uint16_t                error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

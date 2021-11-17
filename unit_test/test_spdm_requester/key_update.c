@@ -107,15 +107,15 @@ static void spdm_compute_secret_update(uintn hash_size,
 {
 	uint8_t    m_bin_str9[128];
 	uintn    m_bin_str9_size;
-	uint16   length;
+	uint16_t   length;
 
-	length = (uint16) hash_size;
-	copy_mem(m_bin_str9, &length, sizeof(uint16));
-	copy_mem(m_bin_str9 + sizeof(uint16), BIN_CONCAT_LABEL,
+	length = (uint16_t) hash_size;
+	copy_mem(m_bin_str9, &length, sizeof(uint16_t));
+	copy_mem(m_bin_str9 + sizeof(uint16_t), BIN_CONCAT_LABEL,
 		  sizeof(BIN_CONCAT_LABEL) - 1);
-	copy_mem(m_bin_str9 + sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1,
+	copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1,
 		  BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
-	m_bin_str9_size = sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1 +
+	m_bin_str9_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 +
 		  sizeof(BIN_STR_9_LABEL) - 1;
 	//context is NULL for key update
 
@@ -1123,7 +1123,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		return RETURN_SUCCESS;
 
 	case 0xA: {
-		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+		static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
 		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
@@ -1809,7 +1809,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
 	case 0x17: {
 		static uintn sub_index = 0;
-		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+		static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
 		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
@@ -2505,7 +2505,7 @@ return_status spdm_requester_key_update_test_receive_message(
 		return RETURN_SUCCESS;
 
 	case 0x22: {
-		static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+		static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
 		uint32_t                 session_id;
 		spdm_session_info_t    *session_info;
@@ -3035,7 +3035,7 @@ void test_spdm_requester_key_update_case10(void **state)
 	spdm_context_t         *spdm_context;
 	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
-	uint16                 error_code;
+	uint16_t                 error_code;
 
 	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
@@ -3749,7 +3749,7 @@ void test_spdm_requester_key_update_case23(void **state)
 	spdm_context_t         *spdm_context;
 	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
-	uint16                 error_code;
+	uint16_t                 error_code;
 
 	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];
@@ -4435,7 +4435,7 @@ void test_spdm_requester_key_update_case34(void **state)
 	spdm_context_t         *spdm_context;
 	uint32_t                 session_id;
 	spdm_session_info_t    *session_info;
-	uint16                 error_code;
+	uint16_t                 error_code;
 
 	uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
 	uint8_t    m_rsp_secret_buffer[MAX_HASH_SIZE];

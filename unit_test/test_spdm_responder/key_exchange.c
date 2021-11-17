@@ -13,11 +13,11 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 req_session_id;
-	uint16 reserved;
+	uint16_t req_session_id;
+	uint16_t reserved;
 	uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
 	uint8_t exchange_data[MAX_DHE_KEY_SIZE];
-	uint16 opaque_length;
+	uint16_t opaque_length;
 	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
@@ -93,8 +93,8 @@ void test_spdm_responder_key_exchange_case1(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -172,8 +172,8 @@ void test_spdm_responder_key_exchange_case2(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -251,8 +251,8 @@ void test_spdm_responder_key_exchange_case3(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -331,8 +331,8 @@ void test_spdm_responder_key_exchange_case4(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -413,8 +413,8 @@ void test_spdm_responder_key_exchange_case5(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -499,8 +499,8 @@ void test_spdm_responder_key_exchange_case6(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
@@ -589,8 +589,8 @@ void test_spdm_responder_key_exchange_case7(void **state)
 	spdm_dhe_free(m_use_dhe_algo, dhe_context);
 	opaque_key_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	*(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-	ptr += sizeof(uint16);
+	*(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+	ptr += sizeof(uint16_t);
 	spdm_build_opaque_data_supported_version_data(
 		spdm_context, &opaque_key_exchange_req_size, ptr);
 	ptr += opaque_key_exchange_req_size;
