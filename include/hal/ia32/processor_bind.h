@@ -106,96 +106,14 @@
 
 #endif
 
-#if defined(_MSC_EXTENSIONS)
-
-//
-// use Microsoft C compiler dependent integer width types
-//
-
-///
-/// 8-byte unsigned value.
-///
-typedef unsigned __int64 uint64_t;
-///
-/// 8-byte signed value.
-///
-typedef __int64 int64_t;
-///
-/// 4-byte unsigned value.
-///
-typedef unsigned __int32 uint32_t;
-///
-/// 4-byte signed value.
-///
-typedef __int32 int32_t;
-///
-/// 2-byte unsigned value.
-///
-typedef unsigned short uint16_t;
-///
-/// 2-byte signed value.
-///
-typedef short int16_t;
-///
-/// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
-/// values are undefined.
-///
-typedef unsigned char boolean;
-///
-/// 1-byte unsigned value.
-///
-typedef unsigned char uint8_t;
-///
-/// 1-byte Character.
-///
-typedef char char8;
-///
-/// 1-byte signed value.
-///
-typedef signed char int8_t;
+#ifndef LIBSPDM_STDINT_ALT
+#include <stdint.h>
 #else
-///
-/// 8-byte unsigned value.
-///
-typedef unsigned long long uint64_t;
-///
-/// 8-byte signed value.
-///
-typedef long long int64_t;
-///
-/// 4-byte unsigned value.
-///
-typedef unsigned int uint32_t;
-///
-/// 4-byte signed value.
-///
-typedef int int32_t;
-///
-/// 2-byte unsigned value.
-///
-typedef unsigned short uint16_t;
-///
-/// 2-byte signed value.
-///
-typedef short int16_t;
-///
-/// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
-/// values are undefined.
-///
-typedef unsigned char boolean;
-///
-/// 1-byte unsigned value.
-///
-typedef unsigned char uint8_t;
-///
-/// 1-byte Character
-///
-typedef char char8;
-///
-/// 1-byte signed value
-///
-typedef signed char int8_t;
+#include LIBSPDM_STDINT_ALT
 #endif
+
+typedef char char8;
+typedef unsigned char boolean;
 
 ///
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions;

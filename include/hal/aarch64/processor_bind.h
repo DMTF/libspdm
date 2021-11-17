@@ -66,37 +66,14 @@
 //
 #pragma warning(disable : 4703)
 
-//
-// use Microsoft* C compiler dependent integer width types
-//
-typedef unsigned __int64 uint64_t;
-typedef __int64 int64_t;
-typedef unsigned __int32 uint32_t;
-typedef __int32 int32_t;
-typedef unsigned short uint16_t;
-typedef short int16_t;
-typedef unsigned char boolean;
-typedef unsigned char uint8_t;
-typedef char char8;
-typedef signed char int8_t;
-
+#ifndef LIBSPDM_STDINT_ALT
+#include <stdint.h>
 #else
-
-//
-// Assume standard AARCH64 alignment.
-//
-typedef unsigned long long uint64_t;
-typedef long long int64_t;
-typedef unsigned int uint32_t;
-typedef int int32_t;
-typedef unsigned short uint16_t;
-typedef short int16_t;
-typedef unsigned char boolean;
-typedef unsigned char uint8_t;
-typedef char char8;
-typedef signed char int8_t;
-
+#include LIBSPDM_STDINT_ALT
 #endif
+
+typedef char char8;
+typedef unsigned char boolean;
 
 ///
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
