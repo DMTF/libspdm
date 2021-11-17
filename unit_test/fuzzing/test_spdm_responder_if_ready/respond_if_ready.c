@@ -22,27 +22,20 @@ spdm_test_context_t m_spdm_responder_if_ready_test_context = {
 	FALSE,
 };
 
-spdm_response_if_ready_request_t m_spdm_respond_if_ready_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_RESPOND_IF_READY, SPDM_GET_DIGESTS,
-	  MY_TEST_TOKEN },
-};
-
 void test_spdm_responder_respond_if_ready(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uintn response_size;
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	static uint8 m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn m_spdm_respond_if_ready_request_size =
-		sizeof(spdm_message_header_t);
-	spdm_get_digest_request_t m_spdm_get_digest_request = {
-		{ SPDM_MESSAGE_VERSION_11, SPDM_GET_DIGESTS, 0, 0 },
-	};
+	uint8 m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+	spdm_get_digest_request_t m_spdm_get_digest_request = {
+		{ SPDM_MESSAGE_VERSION_11, SPDM_GET_DIGESTS, 0, 0 },
+	};
 	uintn m_spdm_get_digest_request_size = sizeof(spdm_message_header_t);
 
 	spdm_context->connection_info.connection_state =
@@ -67,7 +60,6 @@ void test_spdm_responder_respond_if_ready(void **State)
 	copy_mem(spdm_context->last_spdm_request, &m_spdm_get_digest_request,
 		 m_spdm_get_digest_request_size);
 
-	//RESPOND_IF_READY specific data
 	spdm_context->cache_spdm_request_size =
 		spdm_context->last_spdm_request_size;
 	copy_mem(spdm_context->cache_spdm_request,
@@ -78,11 +70,10 @@ void test_spdm_responder_respond_if_ready(void **State)
 	spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
 	spdm_context->error_data.token = MY_TEST_TOKEN;
 
-	//check DIGESTS response
 	response_size = sizeof(response);
 	spdm_get_response_respond_if_ready(spdm_context,
-					   m_spdm_respond_if_ready_request_size,
-					   &m_spdm_respond_if_ready_request,
+					   spdm_test_context->test_buffer_size,
+					   spdm_test_context->test_buffer,
 					   &response_size, response);
 }
 

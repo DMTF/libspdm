@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_respond_challenge_auth
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_challenge_auth
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
@@ -18,14 +18,14 @@ if(TOOLCHAIN STREQUAL "KLEE")
     INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_spdm_respond_challenge_auth
+SET(src_test_spdm_responder_challenge_auth
     challenge_auth.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
-SET(test_spdm_respond_challenge_auth_LIBRARY
+SET(test_spdm_responder_challenge_auth_LIBRARY
     memlib
     debuglib
     spdm_responder_lib
@@ -43,8 +43,8 @@ SET(test_spdm_respond_challenge_auth_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_respond_challenge_auth
-                   ${src_test_spdm_respond_challenge_auth}
+    ADD_EXECUTABLE(test_spdm_responder_challenge_auth
+                   ${src_test_spdm_responder_challenge_auth}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_responder_lib>
@@ -61,6 +61,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:cmockalib>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_respond_challenge_auth ${src_test_spdm_respond_challenge_auth})
-    TARGET_LINK_LIBRARIES(test_spdm_respond_challenge_auth ${test_spdm_respond_challenge_auth_LIBRARY})
+    ADD_EXECUTABLE(test_spdm_responder_challenge_auth ${src_test_spdm_responder_challenge_auth})
+    TARGET_LINK_LIBRARIES(test_spdm_responder_challenge_auth ${test_spdm_responder_challenge_auth_LIBRARY})
 endif()

@@ -10,13 +10,6 @@
 #include <spdm_responder_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
-spdm_challenge_request_t m_spdm_challenge_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
-	  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
-};
-uintn m_spdm_challenge_request_size = sizeof(m_spdm_challenge_request);
-
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;
@@ -66,11 +59,10 @@ void test_spdm_responder_challenge(void **State)
 	spdm_reset_message_c(spdm_context);
 
 	response_size = sizeof(response);
-	spdm_get_random_number(SPDM_NONCE_SIZE,
-			       m_spdm_challenge_request.nonce);
+
 	spdm_get_response_challenge_auth(spdm_context,
-					 m_spdm_challenge_request_size,
-					 &m_spdm_challenge_request,
+					 spdm_test_context->test_buffer_size,
+					 spdm_test_context->test_buffer,
 					 &response_size, response);
 }
 
