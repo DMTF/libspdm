@@ -78,14 +78,15 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 		    IN const uint8 *big_number, IN uintn bn_size)
 {
 	RSA *rsa_key;
-	BIGNUM *bn_n;
-	BIGNUM *bn_e;
-	BIGNUM *bn_d;
-	BIGNUM *bn_p;
-	BIGNUM *bn_q;
-	BIGNUM *bn_dp;
-	BIGNUM *bn_dq;
-	BIGNUM *bn_q_inv;
+	boolean status;
+	BIGNUM *bn_n, *bn_n_tmp;
+	BIGNUM *bn_e, *bn_e_tmp;
+	BIGNUM *bn_d, *bn_d_tmp;
+	BIGNUM *bn_p, *bn_p_tmp;
+	BIGNUM *bn_q, *bn_q_tmp;
+	BIGNUM *bn_dp, *bn_dp_tmp;
+	BIGNUM *bn_dq, *bn_dq_tmp;
+	BIGNUM *bn_q_inv, *bn_q_inv_tmp;
 
 	//
 	// Check input parameters.
@@ -102,6 +103,15 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 	bn_dp = NULL;
 	bn_dq = NULL;
 	bn_q_inv = NULL;
+
+	bn_n_tmp = NULL;
+	bn_e_tmp = NULL;
+	bn_d_tmp = NULL;
+	bn_p_tmp = NULL;
+	bn_q_tmp = NULL;
+	bn_dp_tmp = NULL;
+	bn_dq_tmp = NULL;
+	bn_q_inv_tmp = NULL;
 
 	//
 	// Retrieve the components from RSA object.
@@ -129,16 +139,20 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 	case RSA_KEY_D:
 		if (bn_n == NULL) {
 			bn_n = BN_new();
+			bn_n_tmp = bn_n;
 		}
 		if (bn_e == NULL) {
 			bn_e = BN_new();
+			bn_e_tmp = bn_e;
 		}
 		if (bn_d == NULL) {
 			bn_d = BN_new();
+			bn_d_tmp = bn_d;
 		}
 
 		if ((bn_n == NULL) || (bn_e == NULL) || (bn_d == NULL)) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		switch (key_tag) {
@@ -152,11 +166,13 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 			bn_d = BN_bin2bn(big_number, (uint32)bn_size, bn_d);
 			break;
 		default:
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 		if (RSA_set0_key(rsa_key, BN_dup(bn_n), BN_dup(bn_e),
 				 BN_dup(bn_d)) == 0) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		break;
@@ -168,12 +184,15 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 	case RSA_KEY_Q:
 		if (bn_p == NULL) {
 			bn_p = BN_new();
+			bn_p_tmp = bn_p;
 		}
 		if (bn_q == NULL) {
 			bn_q = BN_new();
+			bn_q_tmp = bn_q;
 		}
 		if ((bn_p == NULL) || (bn_q == NULL)) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		switch (key_tag) {
@@ -184,11 +203,13 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 			bn_q = BN_bin2bn(big_number, (uint32)bn_size, bn_q);
 			break;
 		default:
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 		if (RSA_set0_factors(rsa_key, BN_dup(bn_p), BN_dup(bn_q)) ==
 		    0) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		break;
@@ -202,15 +223,19 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 	case RSA_KEY_Q_INV:
 		if (bn_dp == NULL) {
 			bn_dp = BN_new();
+			bn_dp_tmp = bn_dp;
 		}
 		if (bn_dq == NULL) {
 			bn_dq = BN_new();
+			bn_dq_tmp = bn_dq;
 		}
 		if (bn_q_inv == NULL) {
 			bn_q_inv = BN_new();
+			bn_q_inv_tmp = bn_q_inv;
 		}
 		if ((bn_dp == NULL) || (bn_dq == NULL) || (bn_q_inv == NULL)) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		switch (key_tag) {
@@ -225,20 +250,35 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 					     bn_q_inv);
 			break;
 		default:
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 		if (RSA_set0_crt_params(rsa_key, BN_dup(bn_dp), BN_dup(bn_dq),
 					BN_dup(bn_q_inv)) == 0) {
-			return FALSE;
+			status = FALSE;
+			goto err;
 		}
 
 		break;
 
 	default:
-		return FALSE;
+		status = FALSE;
+		goto err;
 	}
 
-	return TRUE;
+	status = TRUE;
+
+err:
+	BN_free(bn_n_tmp);
+	BN_free(bn_e_tmp);
+	BN_free(bn_d_tmp);
+	BN_free(bn_p_tmp);
+	BN_free(bn_q_tmp);
+	BN_free(bn_dp_tmp);
+	BN_free(bn_dq_tmp);
+	BN_free(bn_q_inv_tmp);
+
+	return status;
 }
 
 /**
