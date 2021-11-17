@@ -559,8 +559,21 @@ endif()
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_psk_finish_rsp)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_psk_finish)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_challenge)
-    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_respond_challenge_auth)
-    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_respond_if_ready)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_challenge_auth)
+
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_encap_challenge)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_encap_challenge)
+    
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_encap_certificate)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_encap_get_certificate)
+    
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_encap_digests)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_encap_get_digests)
+
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_requester_encap_key_update)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_encap_key_update)
+
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_responder_if_ready)
 
     ADD_SUBDIRECTORY(os_stub/cryptlib_null)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
