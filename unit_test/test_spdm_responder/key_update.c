@@ -155,15 +155,15 @@ static void spdm_compute_secret_update(uintn hash_size,
 {
 	uint8_t    m_bin_str9[128];
 	uintn    m_bin_str9_size;
-	uint16   length;
+	uint16_t   length;
 
-	length = (uint16) hash_size;
-	copy_mem(m_bin_str9, &length, sizeof(uint16));
-	copy_mem(m_bin_str9 + sizeof(uint16), BIN_CONCAT_LABEL,
+	length = (uint16_t) hash_size;
+	copy_mem(m_bin_str9, &length, sizeof(uint16_t));
+	copy_mem(m_bin_str9 + sizeof(uint16_t), BIN_CONCAT_LABEL,
 		  sizeof(BIN_CONCAT_LABEL) - 1);
-	copy_mem(m_bin_str9 + sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1,
+	copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1,
 		  BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
-	m_bin_str9_size = sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1 +
+	m_bin_str9_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 +
 		  sizeof(BIN_STR_9_LABEL) - 1;
 	//context is NULL for key update
 

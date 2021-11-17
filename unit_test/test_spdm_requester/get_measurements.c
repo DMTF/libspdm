@@ -434,7 +434,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -464,15 +464,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -518,7 +518,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -548,15 +548,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -649,7 +649,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_hash_algo =
 				m_use_measurement_hash_algo;
 			measurment_sig_size =
-				SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			temp_buf_size = sizeof(spdm_measurements_response_t) +
 					sizeof(spdm_measurement_block_dmtf_t) +
@@ -680,7 +680,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_specification =
 				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 			measurment_block->Measurement_block_common_header
-				.measurement_size = (uint16)(
+				.measurement_size = (uint16_t)(
 				sizeof(spdm_measurement_block_dmtf_header_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo));
@@ -688,8 +688,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       measurment_sig_size);
 			spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 			ptr += SPDM_NONCE_SIZE;
-			*(uint16 *)ptr = 0;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = 0;
+			ptr += sizeof(uint16_t);
 			copy_mem(&m_local_buffer[m_local_buffer_size],
 				 spdm_response,
 				 (uintn)ptr - (uintn)spdm_response);
@@ -800,7 +800,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_hash_algo =
 				m_use_measurement_hash_algo;
 			measurment_sig_size =
-				SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+				SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 				spdm_get_asym_signature_size(m_use_asym_algo);
 			temp_buf_size = sizeof(spdm_measurements_response_t) +
 					sizeof(spdm_measurement_block_dmtf_t) +
@@ -831,7 +831,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_specification =
 				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 			measurment_block->Measurement_block_common_header
-				.measurement_size = (uint16)(
+				.measurement_size = (uint16_t)(
 				sizeof(spdm_measurement_block_dmtf_header_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo));
@@ -839,8 +839,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       measurment_sig_size);
 			spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 			ptr += SPDM_NONCE_SIZE;
-			*(uint16 *)ptr = 0;
-			ptr += sizeof(uint16);
+			*(uint16_t *)ptr = 0;
+			ptr += sizeof(uint16_t);
 			copy_mem(&m_local_buffer[m_local_buffer_size],
 				 spdm_response,
 				 (uintn)ptr - (uintn)spdm_response);
@@ -878,7 +878,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		uint8_t *ptr;
 		temp_buf_size =
 			sizeof(spdm_measurements_response_t)
-			+ SPDM_NONCE_SIZE + sizeof(uint16);
+			+ SPDM_NONCE_SIZE + sizeof(uint16_t);
 		spdm_response = (void *)temp_buf;
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
 		spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
@@ -891,7 +891,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		sizeof(spdm_measurements_response_t);
 		spdm_get_random_number(SPDM_NONCE_SIZE,ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
+		*(uint16_t *)ptr = 0;
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, temp_buf_size,
@@ -913,7 +913,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				sizeof(spdm_measurement_block_dmtf_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
-				SPDM_NONCE_SIZE + sizeof(uint16);
+				SPDM_NONCE_SIZE + sizeof(uint16_t);
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -937,7 +937,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		
@@ -947,7 +947,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			    spdm_get_measurement_hash_size(
 				    m_use_measurement_hash_algo);
 		spdm_get_random_number(SPDM_NONCE_SIZE,ptr);
-		*(uint16 *)(ptr + SPDM_NONCE_SIZE) = 0;
+		*(uint16_t *)(ptr + SPDM_NONCE_SIZE) = 0;
 
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, temp_buf_size,
@@ -976,7 +976,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			m_use_measurement_hash_algo;
 
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -1006,15 +1006,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		set_mem(ptr, sig_size, 0);
 		ptr += sig_size;
@@ -1046,7 +1046,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -1076,15 +1076,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -1149,7 +1149,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 
@@ -1180,7 +1180,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -1211,15 +1211,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -1265,7 +1265,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -1295,15 +1295,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -1368,7 +1368,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_specification =
 				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 			measurment_block->Measurement_block_common_header
-				.measurement_size = (uint16)(
+				.measurement_size = (uint16_t)(
 				sizeof(spdm_measurement_block_dmtf_header_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo));
@@ -1398,7 +1398,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				.measurement_specification =
 				SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 			measurment_block->Measurement_block_common_header
-				.measurement_size = (uint16)(
+				.measurement_size = (uint16_t)(
 				sizeof(spdm_measurement_block_dmtf_header_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo));
@@ -1495,7 +1495,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			.measurement_specification = BIT0 | BIT1;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 
@@ -1542,7 +1542,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			.measurement_specification = BIT2 | BIT1;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 
@@ -1590,7 +1590,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			(uint8_t)(m_use_measurement_spec << 1);
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 
@@ -1614,7 +1614,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				sizeof(spdm_measurement_block_dmtf_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
-				SPDM_NONCE_SIZE + sizeof(uint16);
+				SPDM_NONCE_SIZE + sizeof(uint16_t);
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1638,15 +1638,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
-		*(uint16 *)((uint8_t *)spdm_response +
+		*(uint16_t *)((uint8_t *)spdm_response +
 			    sizeof(spdm_measurements_response_t) +
 			    sizeof(spdm_measurement_block_dmtf_t) +
 			    spdm_get_measurement_hash_size(
 				    m_use_measurement_hash_algo)) = 0;
-		ptr = (uint8_t *)temp_buf - SPDM_NONCE_SIZE - sizeof(uint16);
+		ptr = (uint8_t *)temp_buf - SPDM_NONCE_SIZE - sizeof(uint16_t);
 		spdm_get_random_number(SPDM_NONCE_SIZE,ptr);
 		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
 						   FALSE, temp_buf_size,
@@ -1670,7 +1670,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
 				SPDM_NONCE_SIZE +
-				sizeof(uint16) + MAX_SPDM_OPAQUE_DATA_SIZE;
+				sizeof(uint16_t) + MAX_SPDM_OPAQUE_DATA_SIZE;
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1694,7 +1694,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		// adding extra fields: opaque_length, opaque_data
@@ -1705,8 +1705,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       m_use_measurement_hash_algo));
 		spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = MAX_SPDM_OPAQUE_DATA_SIZE; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = MAX_SPDM_OPAQUE_DATA_SIZE; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, MAX_SPDM_OPAQUE_DATA_SIZE, 255);
 		ptr += MAX_SPDM_OPAQUE_DATA_SIZE;
 
@@ -1731,7 +1731,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				sizeof(spdm_measurement_block_dmtf_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
-				sizeof(uint16) +
+				sizeof(uint16_t) +
 				(MAX_SPDM_OPAQUE_DATA_SIZE + 1);
 		spdm_response = (void *)temp_buf;
 
@@ -1756,7 +1756,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		// adding extra fields: opaque_length, opaque_data
@@ -1767,9 +1767,9 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       m_use_measurement_hash_algo));
 		// spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
 		// ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr =
+		*(uint16_t *)ptr =
 			(MAX_SPDM_OPAQUE_DATA_SIZE + 1); // opaque_length
-		ptr += sizeof(uint16);
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, (MAX_SPDM_OPAQUE_DATA_SIZE + 1), 255);
 		ptr += (MAX_SPDM_OPAQUE_DATA_SIZE + 1);
 
@@ -1789,7 +1789,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_measurement_block_dmtf_t *measurment_block;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+		uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
 
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.base_asym_algo =
@@ -1801,7 +1801,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + opaque_size_test +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_size_test +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -1831,7 +1831,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
@@ -1839,8 +1839,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
 
-		*(uint16 *)ptr = opaque_size_test; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_size_test; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += opaque_size_test;
 
@@ -1879,7 +1879,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 		uintn MissingBytes;
-		uint16 opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+		uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
 
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		MissingBytes = sig_size;
@@ -1894,7 +1894,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) +
 			(opaque_size_test - MissingBytes) +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
@@ -1925,7 +1925,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
@@ -1933,8 +1933,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
 
-		*(uint16 *)ptr = opaque_size_test; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_size_test; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test - MissingBytes, 255);
 		ptr += (opaque_size_test - MissingBytes);
 
@@ -1972,7 +1972,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
 		uintn MissingBytes;
-		uint16 opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+		uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
 
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 		MissingBytes = sig_size + 1;
@@ -1987,7 +1987,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) +
 			(opaque_size_test - MissingBytes) +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
@@ -2018,7 +2018,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
@@ -2026,8 +2026,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
 
-		*(uint16 *)ptr = opaque_size_test; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_size_test; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test - MissingBytes, 255);
 		ptr += (opaque_size_test - MissingBytes);
 
@@ -2064,8 +2064,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_measurement_block_dmtf_t *measurment_block;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
-		uint16 opaque_informed_size = opaque_size_test - 1;
+		uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+		uint16_t opaque_informed_size = opaque_size_test - 1;
 
 		sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
 
@@ -2079,7 +2079,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + opaque_size_test +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_size_test +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -2109,7 +2109,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
@@ -2117,8 +2117,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
 
-		*(uint16 *)ptr = opaque_informed_size; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_informed_size; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += (opaque_size_test);
 
@@ -2152,8 +2152,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_measurement_block_dmtf_t *measurment_block;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
-		uint16 opaque_informed_size = opaque_size_test - 1;
+		uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+		uint16_t opaque_informed_size = opaque_size_test - 1;
 
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.measurement_hash_algo =
@@ -2163,7 +2163,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
 				SPDM_NONCE_SIZE +
-				sizeof(uint16) + opaque_size_test;
+				sizeof(uint16_t) + opaque_size_test;
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2187,7 +2187,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		// adding extra fields: opaque_length, opaque_data
@@ -2198,8 +2198,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       m_use_measurement_hash_algo));
 		spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = opaque_informed_size; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_informed_size; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += opaque_size_test;
 
@@ -2216,8 +2216,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_measurement_block_dmtf_t *measurment_block;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 opaque_size_test = MAX_UINT16;
-		uint16 opaque_informed_size = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+		uint16_t opaque_size_test = MAX_UINT16;
+		uint16_t opaque_informed_size = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
 
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.measurement_hash_algo =
@@ -2226,7 +2226,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				sizeof(spdm_measurement_block_dmtf_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
-				sizeof(uint16) + opaque_size_test;
+				sizeof(uint16_t) + opaque_size_test;
 		spdm_response = (void *)temp_buf;
 
 		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2250,7 +2250,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		// adding extra fields: NONCE, opaque_length, opaque_data
@@ -2261,8 +2261,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       m_use_measurement_hash_algo));
 		// spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
 		// ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = opaque_informed_size; // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = opaque_informed_size; // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, opaque_size_test, 255);
 		ptr += opaque_size_test;
 
@@ -2279,7 +2279,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 		spdm_measurement_block_dmtf_t *measurment_block;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 opaque_size_test = MAX_UINT16;
+		uint16_t opaque_size_test = MAX_UINT16;
 
 		((spdm_context_t *)spdm_context)
 			->connection_info.algorithm.measurement_hash_algo =
@@ -2288,7 +2288,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				sizeof(spdm_measurement_block_dmtf_t) +
 				spdm_get_measurement_hash_size(
 					m_use_measurement_hash_algo) +
-				SPDM_NONCE_SIZE + sizeof(uint16) +
+				SPDM_NONCE_SIZE + sizeof(uint16_t) +
 				opaque_size_test;
 		spdm_response = (void *)temp_buf;
 
@@ -2313,7 +2313,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		// adding extra fields: NONCE, opaque_length, opaque_data
@@ -2324,8 +2324,8 @@ return_status spdm_requester_get_measurements_test_receive_message(
 				       m_use_measurement_hash_algo));
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = (opaque_size_test); // opaque_length
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = (opaque_size_test); // opaque_length
+		ptr += sizeof(uint16_t);
 		set_mem(ptr, (opaque_size_test), 255);
 		ptr += (opaque_size_test);
 
@@ -2373,7 +2373,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		measurment_block =
@@ -2387,7 +2387,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 	 	ptr =  (uint8_t *)temp_buf + temp_buf_size - SPDM_NONCE_SIZE;
@@ -2401,7 +2401,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 
   case 0x21:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -2450,7 +2450,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			->connection_info.algorithm.measurement_hash_algo =
 			m_use_measurement_hash_algo;
 		measurment_sig_size =
-			SPDM_NONCE_SIZE + sizeof(uint16) + 0 +
+			SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
 			spdm_get_asym_signature_size(m_use_asym_algo);
 		temp_buf_size = sizeof(spdm_measurements_response_t) +
 				sizeof(spdm_measurement_block_dmtf_t) +
@@ -2480,15 +2480,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
 			SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 		measurment_block->Measurement_block_common_header
 			.measurement_size =
-			(uint16)(sizeof(spdm_measurement_block_dmtf_header_t) +
+			(uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo));
 		ptr = (void *)((uint8_t *)spdm_response + temp_buf_size -
 			       measurment_sig_size);
 		spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
 		ptr += SPDM_NONCE_SIZE;
-		*(uint16 *)ptr = 0;
-		ptr += sizeof(uint16);
+		*(uint16_t *)ptr = 0;
+		ptr += sizeof(uint16_t);
 		copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
 			 (uintn)ptr - (uintn)spdm_response);
 		m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
@@ -3081,7 +3081,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
 	assert_int_equal(spdm_context->transcript.message_m.buffer_size,
 			 sizeof(spdm_message_header_t) +
 				 sizeof(spdm_measurements_response_t) +
-				 SPDM_NONCE_SIZE + sizeof(uint16));
+				 SPDM_NONCE_SIZE + sizeof(uint16_t));
 #endif
 	free(data);
 }
@@ -3142,7 +3142,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
 				 sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
-				 SPDM_NONCE_SIZE + sizeof(uint16));
+				 SPDM_NONCE_SIZE + sizeof(uint16_t));
 #endif
 	free(data);
 }
@@ -3823,7 +3823,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
 					 spdm_get_measurement_hash_size(
 						 m_use_measurement_hash_algo) +
 					 SPDM_NONCE_SIZE +
-					 sizeof(uint16)));
+					 sizeof(uint16_t)));
 #endif
 		} else {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -3897,7 +3897,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE + 
-				 sizeof(uint16) + MAX_SPDM_OPAQUE_DATA_SIZE);
+				 sizeof(uint16_t) + MAX_SPDM_OPAQUE_DATA_SIZE);
 #endif
 	free(data);
 }
@@ -4263,7 +4263,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
 				 SPDM_NONCE_SIZE +
-				 sizeof(uint16) +
+				 sizeof(uint16_t) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2 - 1);
 #endif
 	free(data);
@@ -4325,7 +4325,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
 				 sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
-				 sizeof(uint16) +
+				 sizeof(uint16_t) +
 				 MAX_SPDM_OPAQUE_DATA_SIZE / 2);
 #endif
 	free(data);
@@ -4390,7 +4390,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
 				 sizeof(spdm_measurement_block_dmtf_t) +
 				 spdm_get_measurement_hash_size(
 					 m_use_measurement_hash_algo) +
-				 sizeof(uint16) + MAX_UINT16);
+				 sizeof(uint16_t) + MAX_UINT16);
 #endif
 	free(data);
 }
@@ -4452,7 +4452,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
 				 2 * (sizeof(spdm_measurement_block_dmtf_t) +
 				      spdm_get_measurement_hash_size(
 					      m_use_measurement_hash_algo)) +
-				 sizeof(uint16) + SPDM_NONCE_SIZE);
+				 sizeof(uint16_t) + SPDM_NONCE_SIZE);
 #endif
 	free(data);
 }
@@ -4477,7 +4477,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
-  uint16               error_code;
+  uint16_t               error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

@@ -28,7 +28,7 @@ void *spdm_server_init(void)
 	void *spdm_context;
 	spdm_data_parameter_t parameter;
 	uint8_t data8;
-	uint16 data16;
+	uint16_t data16;
 	uint32_t data32;
 	boolean has_rsp_pub_cert;
 	boolean has_rsp_priv_key;

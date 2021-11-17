@@ -13,10 +13,10 @@
 
 typedef struct {
 	spdm_message_header_t header;
-	uint16 req_session_id;
-	uint16 psk_hint_length;
-	uint16 context_length;
-	uint16 opaque_length;
+	uint16_t req_session_id;
+	uint16_t psk_hint_length;
+	uint16_t context_length;
+	uint16_t opaque_length;
 	uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
 	uint8_t context[DEFAULT_CONTEXT_LENGTH];
 	uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
@@ -91,12 +91,12 @@ void test_spdm_responder_psk_exchange_case1(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -184,12 +184,12 @@ void test_spdm_responder_psk_exchange_case2(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request2.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request2.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request2.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request2.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request2.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -269,12 +269,12 @@ void test_spdm_responder_psk_exchange_case3(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -355,12 +355,12 @@ void test_spdm_responder_psk_exchange_case4(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -443,12 +443,12 @@ void test_spdm_responder_psk_exchange_case5(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -535,12 +535,12 @@ void test_spdm_responder_psk_exchange_case6(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,
@@ -619,12 +619,12 @@ void test_spdm_responder_psk_exchange_case7(void **state)
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
 	m_spdm_psk_exchange_request1.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
+		(uint16_t)spdm_context->local_context.psk_hint_size;
 	m_spdm_psk_exchange_request1.context_length = DEFAULT_CONTEXT_LENGTH;
 	opaque_psk_exchange_req_size =
 		spdm_get_opaque_data_supported_version_data_size(spdm_context);
 	m_spdm_psk_exchange_request1.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
+		(uint16_t)opaque_psk_exchange_req_size;
 	m_spdm_psk_exchange_request1.req_session_id = 0xFFFF;
 	ptr = m_spdm_psk_exchange_request1.psk_hint;
 	copy_mem(ptr, spdm_context->local_context.psk_hint,

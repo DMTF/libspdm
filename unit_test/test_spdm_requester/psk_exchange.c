@@ -228,7 +228,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		spdm_response->reserved = 0;
 		spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
 		spdm_response->opaque_length =
-			(uint16)opaque_psk_exchange_rsp_size;
+			(uint16_t)opaque_psk_exchange_rsp_size;
 		ptr = (void *)(spdm_response + 1);
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
@@ -261,7 +261,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		free(data);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				hash_data, (uint16)hash_size, hash_size,
+				hash_data, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -272,7 +272,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -343,7 +343,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		spdm_response->reserved = 0;
 		spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
 		spdm_response->opaque_length =
-			(uint16)opaque_psk_exchange_rsp_size;
+			(uint16_t)opaque_psk_exchange_rsp_size;
 		ptr = (void *)(spdm_response + 1);
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
@@ -376,7 +376,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		free(data);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				hash_data, (uint16)hash_size, hash_size,
+				hash_data, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -387,7 +387,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -507,7 +507,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			spdm_response->reserved = 0;
 			spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
 			spdm_response->opaque_length =
-				(uint16)opaque_psk_exchange_rsp_size;
+				(uint16_t)opaque_psk_exchange_rsp_size;
 			ptr = (void *)(spdm_response + 1);
 			// zero_mem (ptr, hash_size);
 			// ptr += hash_size;
@@ -548,7 +548,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			bin_str2_size = sizeof(bin_str2);
 			spdm_bin_concat(BIN_STR_2_LABEL,
 					sizeof(BIN_STR_2_LABEL) - 1, hash_data,
-					(uint16)hash_size, hash_size, bin_str2,
+					(uint16_t)hash_size, hash_size, bin_str2,
 					&bin_str2_size);
 			zero_mem(m_local_psk_hint, 32);
 			copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -561,7 +561,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			bin_str7_size = sizeof(bin_str7);
 			spdm_bin_concat(BIN_STR_7_LABEL,
 					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+					(uint16_t)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
 			spdm_hkdf_expand(m_use_hash_algo,
 					 response_handshake_secret, hash_size,
@@ -696,7 +696,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			spdm_response->reserved = 0;
 			spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
 			spdm_response->opaque_length =
-				(uint16)opaque_psk_exchange_rsp_size;
+				(uint16_t)opaque_psk_exchange_rsp_size;
 			ptr = (void *)(spdm_response + 1);
 			// zero_mem (ptr, hash_size);
 			// ptr += hash_size;
@@ -737,7 +737,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			bin_str2_size = sizeof(bin_str2);
 			spdm_bin_concat(BIN_STR_2_LABEL,
 					sizeof(BIN_STR_2_LABEL) - 1, hash_data,
-					(uint16)hash_size, hash_size, bin_str2,
+					(uint16_t)hash_size, hash_size, bin_str2,
 					&bin_str2_size);
 			zero_mem(m_local_psk_hint, 32);
 			copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -750,7 +750,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			bin_str7_size = sizeof(bin_str7);
 			spdm_bin_concat(BIN_STR_7_LABEL,
 					sizeof(BIN_STR_7_LABEL) - 1, NULL,
-					(uint16)hash_size, hash_size, bin_str7,
+					(uint16_t)hash_size, hash_size, bin_str7,
 					&bin_str7_size);
 			spdm_hkdf_expand(m_use_hash_algo,
 					 response_handshake_secret, hash_size,
@@ -771,7 +771,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 
   case 0xA:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -852,7 +852,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		spdm_response->reserved = 0;
 		spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
 		spdm_response->opaque_length =
-			(uint16)opaque_psk_exchange_rsp_size;
+			(uint16_t)opaque_psk_exchange_rsp_size;
 		ptr = (void *)(spdm_response + 1);
 		// zero_mem (ptr, hash_size);
 		// ptr += hash_size;
@@ -885,7 +885,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 		free(data);
 		bin_str2_size = sizeof(bin_str2);
 		spdm_bin_concat(BIN_STR_2_LABEL, sizeof(BIN_STR_2_LABEL) - 1,
-				hash_data, (uint16)hash_size, hash_size,
+				hash_data, (uint16_t)hash_size, hash_size,
 				bin_str2, &bin_str2_size);
 		zero_mem(m_local_psk_hint, 32);
 		copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
@@ -896,7 +896,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
 			response_handshake_secret, hash_size);
 		bin_str7_size = sizeof(bin_str7);
 		spdm_bin_concat(BIN_STR_7_LABEL, sizeof(BIN_STR_7_LABEL) - 1,
-				NULL, (uint16)hash_size, hash_size, bin_str7,
+				NULL, (uint16_t)hash_size, hash_size, bin_str7,
 				&bin_str7_size);
 		spdm_hkdf_expand(m_use_hash_algo, response_handshake_secret,
 				 hash_size, bin_str7, bin_str7_size,
@@ -1441,7 +1441,7 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
-  uint16               error_code;
+  uint16_t               error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

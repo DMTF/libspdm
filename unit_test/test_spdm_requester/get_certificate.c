@@ -51,7 +51,7 @@ boolean read_responder_public_certificate_chain_expiration(
 		free(file_data);
 		return FALSE;
 	}
-	cert_chain->length = (uint16)cert_chain_size;
+	cert_chain->length = (uint16_t)cert_chain_size;
 	cert_chain->reserved = 0;
 
 	//
@@ -149,8 +149,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -169,11 +169,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -213,8 +213,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -233,11 +233,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -323,8 +323,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 			spdm_certificate_response_t *spdm_response;
 			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
-			uint16 portion_length;
-			uint16 remainder_length;
+			uint16_t portion_length;
+			uint16_t remainder_length;
 			uintn count;
 			static uintn calling_index = 0;
 
@@ -343,12 +343,12 @@ return_status spdm_requester_get_certificate_test_receive_message(
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			if (calling_index != count - 1) {
 				portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-				remainder_length = (uint16)(
+				remainder_length = (uint16_t)(
 					m_local_certificate_chain_size -
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						(calling_index + 1));
 			} else {
-				portion_length = (uint16)(
+				portion_length = (uint16_t)(
 					m_local_certificate_chain_size -
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						(count - 1));
@@ -451,8 +451,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 			spdm_certificate_response_t *spdm_response;
 			uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 			uintn temp_buf_size;
-			uint16 portion_length;
-			uint16 remainder_length;
+			uint16_t portion_length;
+			uint16_t remainder_length;
 			uintn count;
 			static uintn calling_index = 0;
 
@@ -471,12 +471,12 @@ return_status spdm_requester_get_certificate_test_receive_message(
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			if (calling_index != count - 1) {
 				portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
-				remainder_length = (uint16)(
+				remainder_length = (uint16_t)(
 					m_local_certificate_chain_size -
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						(calling_index + 1));
 			} else {
-				portion_length = (uint16)(
+				portion_length = (uint16_t)(
 					m_local_certificate_chain_size -
 					MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						(count - 1));
@@ -520,8 +520,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -540,11 +540,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -584,8 +584,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -629,11 +629,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -673,8 +673,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -693,11 +693,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -737,8 +737,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -757,11 +757,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -801,9 +801,9 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
-		uint16 get_cert_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
+		uint16_t get_cert_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -824,11 +824,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = get_cert_length;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 get_cert_length * (calling_index + 1));
 		} else {
 			portion_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 get_cert_length * (count - 1));
 			remainder_length = 0;
 		}
@@ -867,8 +867,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -887,11 +887,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -929,7 +929,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
 
   case 0x10:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -960,8 +960,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -1021,11 +1021,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(cert_chain_without_root_size -
+				(uint16_t)(cert_chain_without_root_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				cert_chain_without_root_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -1067,8 +1067,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -1131,11 +1131,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(cert_chain_without_root_size -
+				(uint16_t)(cert_chain_without_root_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				cert_chain_without_root_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -1177,8 +1177,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		spdm_certificate_response_t *spdm_response;
 		uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 		uintn temp_buf_size;
-		uint16 portion_length;
-		uint16 remainder_length;
+		uint16_t portion_length;
+		uint16_t remainder_length;
 		uintn count;
 		static uintn calling_index = 0;
 
@@ -1196,11 +1196,11 @@ return_status spdm_requester_get_certificate_test_receive_message(
 		if (calling_index != count - 1) {
 			portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 			remainder_length =
-				(uint16)(m_local_certificate_chain_size -
+				(uint16_t)(m_local_certificate_chain_size -
 					 MAX_SPDM_CERT_CHAIN_BLOCK_LEN *
 						 (calling_index + 1));
 		} else {
-			portion_length = (uint16)(
+			portion_length = (uint16_t)(
 				m_local_certificate_chain_size -
 				MAX_SPDM_CERT_CHAIN_BLOCK_LEN * (count - 1));
 			remainder_length = 0;
@@ -1998,7 +1998,7 @@ void test_spdm_requester_get_certificate_case14(void **state)
 	uintn hash_size;
 	uint8_t *root_cert;
 	uintn root_cert_size;
-	uint16 get_cert_length;
+	uint16_t get_cert_length;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	uintn count;
 #endif
@@ -2137,7 +2137,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   uintn                hash_size;
   uint8_t                 *root_cert;
   uintn                root_cert_size;
-  uint16                error_code;
+  uint16_t                error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

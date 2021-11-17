@@ -414,7 +414,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
   case 0xA:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
     uint32_t                 session_id;
@@ -1433,7 +1433,7 @@ void test_spdm_requester_psk_finish_case10(void **state) {
   void                 *hash;
   uintn                hash_size;
   spdm_session_info_t    *session_info;
-  uint16               error_code;
+  uint16_t               error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;

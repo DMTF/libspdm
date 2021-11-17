@@ -179,11 +179,11 @@ uintn m_spdm_get_measurements_request_size = sizeof(spdm_message_header_t);
 
 typedef struct {
   spdm_message_header_t  header;
-  uint16               req_session_id;
-  uint16               reserved;
+  uint16_t               req_session_id;
+  uint16_t               reserved;
   uint8_t                random_data[SPDM_RANDOM_DATA_SIZE];
   uint8_t                exchange_data[MAX_DHE_KEY_SIZE];
-  uint16               opaque_length;
+  uint16_t               opaque_length;
   uint8_t                opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
@@ -195,10 +195,10 @@ typedef struct {
 
 typedef struct {
   spdm_message_header_t  header;
-  uint16               req_session_id;
-  uint16               psk_hint_length;
-  uint16               requester_context_length;
-  uint16               opaque_length;
+  uint16_t               req_session_id;
+  uint16_t               psk_hint_length;
+  uint16_t               requester_context_length;
+  uint16_t               opaque_length;
   uint8_t                psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
   uint8_t                requester_context[DEFAULT_CONTEXT_LENGTH];
   uint8_t                opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
@@ -450,7 +450,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request.nonce);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request3_size, &m_spdm_respond_if_ready_request3, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16) + 0 + spdm_get_asym_signature_size (m_use_asym_algo));
+  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo));
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
   assert_int_equal (spdm_response->header.param1, 0);
@@ -511,7 +511,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_get_measurements_request.nonce);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request4_size, &m_spdm_respond_if_ready_request4, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_measurements_response_t) + sizeof(uint16) + SPDM_NONCE_SIZE);
+  assert_int_equal (response_size, sizeof(spdm_measurements_response_t) + sizeof(uint16_t) + SPDM_NONCE_SIZE);
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
   assert_int_equal (spdm_response->header.param1, MEASUREMENT_BLOCK_NUMBER);
@@ -577,8 +577,8 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   ptr += dhe_key_size;
   spdm_dhe_free (m_use_dhe_algo, dhe_context);
   opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size (spdm_context);
-  *(uint16 *)ptr = (uint16)opaque_key_exchange_req_size;
-  ptr += sizeof(uint16);
+  *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+  ptr += sizeof(uint16_t);
   spdm_build_opaque_data_supported_version_data (spdm_context, &opaque_key_exchange_req_size, ptr);
   ptr += opaque_key_exchange_req_size;
 
@@ -765,10 +765,10 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
   spdm_context->local_context.psk_hint = local_psk_hint;
 
-  m_spdm_psk_exchange_request.psk_hint_length = (uint16)spdm_context->local_context.psk_hint_size;
+  m_spdm_psk_exchange_request.psk_hint_length = (uint16_t)spdm_context->local_context.psk_hint_size;
   m_spdm_psk_exchange_request.requester_context_length = DEFAULT_CONTEXT_LENGTH;
   OpaquePskExchangeReqSize = spdm_get_opaque_data_supported_version_data_size (spdm_context);
-  m_spdm_psk_exchange_request.opaque_length = (uint16)OpaquePskExchangeReqSize;
+  m_spdm_psk_exchange_request.opaque_length = (uint16_t)OpaquePskExchangeReqSize;
   m_spdm_psk_exchange_request.req_session_id = 0xFFFF;
   ptr = m_spdm_psk_exchange_request.psk_hint;
   copy_mem (ptr, spdm_context->local_context.psk_hint, spdm_context->local_context.psk_hint_size);

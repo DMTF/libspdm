@@ -605,7 +605,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 
   case 0x16:
   {
-    static uint16 error_code = SPDM_ERROR_CODE_RESERVED_00;
+    static uint16_t error_code = SPDM_ERROR_CODE_RESERVED_00;
 
     spdm_error_response_t    spdm_response;
 
@@ -1488,7 +1488,7 @@ void test_spdm_requester_get_digests_case22(void **state) {
   spdm_context_t  *spdm_context;
   uint8_t                 slot_mask;
   uint8_t                 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
-  uint16                error_code;
+  uint16_t                error_code;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
