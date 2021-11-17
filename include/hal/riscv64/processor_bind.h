@@ -19,47 +19,15 @@
 #pragma pack()
 #endif
 
-///
-/// 8-byte unsigned value
-///
-typedef unsigned long long uint64_t __attribute__((aligned(8)));
-///
-/// 8-byte signed value
-///
-typedef long long int64_t __attribute__((aligned(8)));
-///
-/// 4-byte unsigned value
-///
-typedef unsigned int uint32_t __attribute__((aligned(4)));
-///
-/// 4-byte signed value
-///
-typedef int int32_t __attribute__((aligned(4)));
-///
-/// 2-byte unsigned value
-///
-typedef unsigned short uint16_t __attribute__((aligned(2)));
-///
-/// 2-byte signed value
-///
-typedef short int16_t __attribute__((aligned(2)));
-///
-/// Logical Boolean.  1-byte value containing 0 for FALSE or a 1 for TRUE.  Other
-/// values are undefined.
-///
-typedef unsigned char boolean;
-///
-/// 1-byte unsigned value
-///
-typedef unsigned char uint8_t;
-///
-/// 1-byte Character
-///
+#ifndef LIBSPDM_STDINT_ALT
+#include <stdint.h>
+#else
+#include LIBSPDM_STDINT_ALT
+#endif
+
 typedef char char8;
-///
-/// 1-byte signed value
-///
-typedef signed char int8_t;
+typedef unsigned char boolean;
+
 ///
 /// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
 /// 8 bytes on supported 64-bit processor instructions)
