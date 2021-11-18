@@ -53,7 +53,7 @@ spdm_authentication(IN void *context, OUT uint8 *slot_mask,
 
 	#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
 	status = libspdm_challenge(context, slot_id, measurement_hash_type,
-				measurement_hash);
+				measurement_hash, slot_mask);
 	if (RETURN_ERROR(status)) {
 		return status;
 	}

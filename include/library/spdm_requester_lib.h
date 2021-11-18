@@ -217,7 +217,8 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
 **/
 return_status libspdm_challenge(IN void *spdm_context, IN uint8 slot_id,
 			     IN uint8 measurement_hash_type,
-			     OUT void *measurement_hash);
+			     OUT void *measurement_hash,
+			     OUT uint8 *slot_mask);
 
 /**
   This function sends CHALLENGE
@@ -245,7 +246,8 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8 slot_id,
 			     OUT void *measurement_hash,
 			     IN void *requester_nonce_in OPTIONAL,
 			     OUT void *requester_nonce OPTIONAL,
-			     OUT void *responder_nonce OPTIONAL);
+			     OUT void *responder_nonce OPTIONAL,
+			     OUT uint8 *slot_mask);
 
 /**
   This function sends GET_MEASUREMENT

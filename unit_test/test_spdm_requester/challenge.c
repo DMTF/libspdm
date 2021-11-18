@@ -81,6 +81,7 @@ return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
 	case 0x12:
 	case 0x13:
 	case 0x14:
+	case 0x15:
 		m_local_buffer_size = 0;
 		copy_mem(m_local_buffer, &ptr[1], request_size - 1);
 		m_local_buffer_size += (request_size - 1);
@@ -963,6 +964,51 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
+  case 0x15:  //correct CHALLENGE_AUTH message with multiple slot numbers
+  {
+    spdm_challenge_auth_response_t  *spdm_response;
+    void                          *data;
+    uintn                         data_size;
+    uint8                         *Ptr;
+    uint8                         hash_data[MAX_HASH_SIZE];
+    uintn                         sig_size;
+    uint8                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn                         temp_buf_size;
+
+    read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
+    ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision_size[0] = data_size;
+    ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision[0] = data;
+    ((spdm_context_t*)spdm_context)->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+    ((spdm_context_t*)spdm_context)->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
+              spdm_get_hash_size (m_use_hash_algo) +
+              SPDM_NONCE_SIZE +
+              0 +
+              sizeof(uint16) + 0 +
+              spdm_get_asym_signature_size (m_use_asym_algo);
+    spdm_response = (void *)temp_buf;
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0x71; //multiple slot numbers
+    Ptr = (void *)(spdm_response + 1);
+    spdm_hash_all (m_use_hash_algo, ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision[0], ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision_size[0], Ptr);
+    free(data);
+    Ptr += spdm_get_hash_size (m_use_hash_algo);
+    spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
+    Ptr += SPDM_NONCE_SIZE;
+    *(uint16 *)Ptr = 0;
+    Ptr += sizeof(uint16);
+    copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
+    m_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+    spdm_hash_all (m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
+    sig_size = spdm_get_asym_signature_size (m_use_asym_algo);
+    spdm_responder_data_sign (spdm_version, SPDM_CHALLENGE_AUTH,
+              m_use_asym_algo, m_use_hash_algo, FALSE, m_local_buffer, m_local_buffer_size, Ptr, &sig_size);
+    Ptr += sig_size;
+    spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf, response_size, response);
+  }
+    return RETURN_SUCCESS;
 	default:
 		return RETURN_DEVICE_ERROR;
 	}
@@ -983,6 +1029,7 @@ void test_spdm_requester_challenge_case1(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1014,7 +1061,7 @@ void test_spdm_requester_challenge_case1(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
@@ -1045,6 +1092,8 @@ void test_spdm_requester_challenge_case2(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_id = 0;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1074,10 +1123,11 @@ void test_spdm_requester_challenge_case2(void **state)
 
 	zero_mem(measurement_hash, sizeof(measurement_hash));
 	status = libspdm_challenge(
-		spdm_context, 0,
+		spdm_context, slot_id,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
 	free(data);
 }
 
@@ -1105,6 +1155,7 @@ void test_spdm_requester_challenge_case3(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1136,7 +1187,7 @@ void test_spdm_requester_challenge_case3(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_UNSUPPORTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
@@ -1160,6 +1211,7 @@ void test_spdm_requester_challenge_case4(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1191,7 +1243,7 @@ void test_spdm_requester_challenge_case4(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+	measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
@@ -1215,6 +1267,7 @@ void test_spdm_requester_challenge_case5(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1246,7 +1299,7 @@ void test_spdm_requester_challenge_case5(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_NO_RESPONSE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
@@ -1270,6 +1323,8 @@ void test_spdm_requester_challenge_case6(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
+	uint8 slot_id = 0;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1299,10 +1354,11 @@ void test_spdm_requester_challenge_case6(void **state)
 
 	zero_mem(measurement_hash, sizeof(measurement_hash));
 	status = libspdm_challenge(
-		spdm_context, 0,
+		spdm_context, slot_id,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
 	free(data);
 }
 
@@ -1323,6 +1379,7 @@ void test_spdm_requester_challenge_case7(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1354,7 +1411,7 @@ void test_spdm_requester_challenge_case7(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 	assert_int_equal(spdm_context->connection_info.connection_state,
 			 SPDM_CONNECTION_STATE_NOT_STARTED);
@@ -1380,6 +1437,7 @@ void test_spdm_requester_challenge_case8(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1411,7 +1469,7 @@ void test_spdm_requester_challenge_case8(void **state)
 	status = libspdm_challenge(
 		spdm_context, 0,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_DEVICE_ERROR);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 	assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
@@ -1436,6 +1494,8 @@ void test_spdm_requester_challenge_case9(void **state)
 	uintn data_size;
 	void *hash;
 	uintn hash_size;
+	uint8 slot_mask;
+	uint8 slot_id = 0;
 
 	spdm_test_context = *state;
 	spdm_context = spdm_test_context->spdm_context;
@@ -1465,10 +1525,11 @@ void test_spdm_requester_challenge_case9(void **state)
 
 	zero_mem(measurement_hash, sizeof(measurement_hash));
 	status = libspdm_challenge(
-		spdm_context, 0,
+		spdm_context, slot_id,
 		SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-		measurement_hash);
+		measurement_hash, &slot_mask);
 	assert_int_equal(status, RETURN_SUCCESS);
+	assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
 	free(data);
 }
 
@@ -1489,6 +1550,7 @@ void test_spdm_requester_challenge_case10(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1509,7 +1571,7 @@ void test_spdm_requester_challenge_case10(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_UNSUPPORTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
   assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
@@ -1531,6 +1593,7 @@ void test_spdm_requester_challenge_case11(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1551,7 +1614,7 @@ void test_spdm_requester_challenge_case11(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
   free(data);
 }
@@ -1571,6 +1634,7 @@ void test_spdm_requester_challenge_case12(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1591,7 +1655,7 @@ void test_spdm_requester_challenge_case12(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
   free(data);
 }
@@ -1612,6 +1676,7 @@ void test_spdm_requester_challenge_case13(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1632,7 +1697,7 @@ void test_spdm_requester_challenge_case13(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
   free(data);
 }
@@ -1652,6 +1717,7 @@ void test_spdm_requester_challenge_case14(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1672,7 +1738,7 @@ void test_spdm_requester_challenge_case14(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_DEVICE_ERROR);
   free(data);
 }
@@ -1693,6 +1759,7 @@ void test_spdm_requester_challenge_case15(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1713,7 +1780,7 @@ void test_spdm_requester_challenge_case15(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, MAX_SPDM_SLOT_COUNT, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, MAX_SPDM_SLOT_COUNT, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_INVALID_PARAMETER);;
   free(data);
 }
@@ -1740,6 +1807,8 @@ void test_spdm_requester_challenge_case16(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
+  uint8                slot_id = 0;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1760,8 +1829,9 @@ void test_spdm_requester_challenge_case16(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, slot_id, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
   free(data);
 }
 
@@ -1787,6 +1857,7 @@ void test_spdm_requester_challenge_case17(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1807,7 +1878,7 @@ void test_spdm_requester_challenge_case17(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_SECURITY_VIOLATION);
   free(data);
 }
@@ -1834,6 +1905,8 @@ void test_spdm_requester_challenge_case18(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
+  uint8                slot_id = 0;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1855,8 +1928,9 @@ void test_spdm_requester_challenge_case18(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, slot_id, SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
 }
 
 /**
@@ -1881,6 +1955,8 @@ void test_spdm_requester_challenge_case19(void **state) {
   uintn                data_size;
   void                 *hash;
   uintn                hash_size;
+  uint8                slot_mask;
+  uint8                slot_id = 0;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1902,8 +1978,9 @@ void test_spdm_requester_challenge_case19(void **state) {
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
 
   zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, measurement_hash);
+  status = libspdm_challenge (spdm_context, slot_id, SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, measurement_hash, &slot_mask);
   assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
 }
 
 /**
@@ -1924,6 +2001,7 @@ void test_spdm_requester_challenge_case20(void **state) {
   void                 *hash;
   uintn                hash_size;
   uint16                error_code;
+  uint8                 slot_mask;
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
@@ -1947,7 +2025,7 @@ void test_spdm_requester_challenge_case20(void **state) {
     libspdm_reset_message_c(spdm_context);
 
     zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
+    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1970,6 +2048,39 @@ void test_spdm_requester_challenge_case20(void **state) {
   free(data);
 }
 
+void test_spdm_requester_challenge_case21(void **state) {
+  return_status        status;
+  spdm_test_context_t    *spdm_test_context;
+  spdm_context_t  *spdm_context;
+  uint8                measurement_hash[MAX_HASH_SIZE];
+  void                 *data;
+  uintn                data_size;
+  void                 *hash;
+  uintn                hash_size;
+  uint8                slot_id=0;
+  uint8                slot_mask;
+  spdm_test_context = *state;
+  spdm_context = spdm_test_context->spdm_context;
+  spdm_test_context->case_id = 0x15;
+  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.capability.flags = 0;
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
+  libspdm_reset_message_a(spdm_context);
+  libspdm_reset_message_b(spdm_context);
+  libspdm_reset_message_c(spdm_context);
+  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
+  spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+  copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+  zero_mem (measurement_hash, sizeof(measurement_hash));
+  status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, &slot_mask);
+  assert_int_equal (status, RETURN_SUCCESS);
+  assert_int_equal(1<<slot_id, slot_mask & (1<<slot_id));
+  free(data);
+}
 spdm_test_context_t m_spdm_requester_challenge_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	TRUE,
@@ -2011,11 +2122,13 @@ int spdm_requester_challenge_test_main(void)
 		cmocka_unit_test(test_spdm_requester_challenge_case16),
 		// Signature check failed
 		cmocka_unit_test(test_spdm_requester_challenge_case17),
-		// Successful response
-		cmocka_unit_test(test_spdm_requester_challenge_case18),
-		cmocka_unit_test(test_spdm_requester_challenge_case19),
-		// Unexpected errors
-		cmocka_unit_test(test_spdm_requester_challenge_case20),
+        // Successful response
+        cmocka_unit_test(test_spdm_requester_challenge_case18),
+        cmocka_unit_test(test_spdm_requester_challenge_case19),
+        // Unexpected errors
+        cmocka_unit_test(test_spdm_requester_challenge_case20),
+        // Successful response
+        cmocka_unit_test(test_spdm_requester_challenge_case21),
 	};
 
 	setup_spdm_test_context(&m_spdm_requester_challenge_test_context);
