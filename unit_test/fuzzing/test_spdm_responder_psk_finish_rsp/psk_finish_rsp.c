@@ -25,12 +25,6 @@ typedef struct {
 	uint8 verify_data[MAX_HASH_SIZE];
 } spdm_psk_finish_request_mine_t;
 
-spdm_psk_finish_request_mine_t m_spdm_psk_finish_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
-};
-
-uintn m_spdm_psk_finish_request_size = sizeof(m_spdm_psk_finish_request);
-
 static void spdm_secured_message_set_request_finished_key(
 	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
 {
@@ -51,16 +45,12 @@ void test_spdm_responder_psk_finish_rsp(void **State)
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	void *data1;
 	uintn data_size1;
-	uint8 *ptr;
-	large_managed_buffer_t th_curr;
-	uint8 request_finished_key[MAX_HASH_SIZE];
 	static uint8 m_dummy_buffer[MAX_HASH_SIZE];
 
 	uint8 m_local_psk_hint[32];
 	spdm_session_info_t *session_info;
 	uint32 session_id;
 	uint32 hash_size;
-	uint32 hmac_size;
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -116,24 +106,11 @@ void test_spdm_responder_psk_finish_rsp(void **State)
 		session_info->secured_message_context,
 		SPDM_SESSION_STATE_HANDSHAKING);
 
-	hash_size = spdm_get_hash_size(m_use_hash_algo);
-	hmac_size = spdm_get_hash_size(m_use_hash_algo);
-	ptr = m_spdm_psk_finish_request.verify_data;
-	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_psk_finish_request,
-			      sizeof(spdm_psk_finish_request_t));
-	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
-	spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
-		      get_managed_buffer_size(&th_curr), request_finished_key,
-		      hash_size, ptr);
-	m_spdm_psk_finish_request_size =
-		sizeof(spdm_psk_finish_request_t) + hmac_size;
 	response_size = sizeof(response);
 	spdm_get_response_psk_finish(spdm_context,
-					      m_spdm_psk_finish_request_size,
-					      &m_spdm_psk_finish_request,
-					      &response_size, response);
+				     spdm_test_context->test_buffer_size,
+				     spdm_test_context->test_buffer,
+				     &response_size, response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

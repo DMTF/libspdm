@@ -9,16 +9,6 @@
 #include <spdm_device_secret_lib_internal.h>
 #include <spdm_responder_lib_internal.h>
 
-typedef struct {
-	spdm_message_header_t header;
-	uint16 req_session_id;
-	uint16 reserved;
-	uint8 random_data[SPDM_RANDOM_DATA_SIZE];
-	uint8 exchange_data[MAX_DHE_KEY_SIZE];
-	uint16 opaque_length;
-	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
-} spdm_key_exchange_request_mine_t;
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;
@@ -28,12 +18,6 @@ spdm_test_context_t m_spdm_responder_key_exchange_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
 };
-
-spdm_key_exchange_request_mine_t m_spdm_key_exchange_request2 = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-	  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
-};
-uintn m_spdm_key_exchange_request2_size = sizeof(spdm_key_exchange_request_t);
 
 void test_spdm_responder_key_exchange(void **State)
 {
@@ -73,8 +57,8 @@ void test_spdm_responder_key_exchange(void **State)
 
 	response_size = sizeof(response);
 	spdm_get_response_key_exchange(spdm_context,
-				       m_spdm_key_exchange_request2_size,
-				       &m_spdm_key_exchange_request2,
+				       spdm_test_context->test_buffer_size,
+				       spdm_test_context->test_buffer,
 				       &response_size, response);
 }
 

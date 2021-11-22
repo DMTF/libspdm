@@ -20,7 +20,6 @@ typedef struct {
 	uint8 opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;
@@ -31,17 +30,10 @@ spdm_test_context_t m_spdm_responder_psk_exchange_test_context = {
 	FALSE,
 };
 
-spdm_psk_exchange_request_mine_t m_spdm_psk_exchange_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-	  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
-};
-
-uintn m_spdm_psk_exchange_request1_size = sizeof(m_spdm_psk_exchange_request);
 void test_spdm_responder_psk_exchange(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uintn opaque_psk_exchange_req_size;
 	uintn response_size;
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	void *data;
@@ -84,19 +76,10 @@ void test_spdm_responder_psk_exchange(void **State)
 		sizeof(TEST_PSK_HINT_STRING);
 	spdm_context->local_context.psk_hint = m_local_psk_hint;
 
-	m_spdm_psk_exchange_request.psk_hint_length =
-		(uint16)spdm_context->local_context.psk_hint_size;
-	m_spdm_psk_exchange_request.context_length = DEFAULT_CONTEXT_LENGTH;
-	opaque_psk_exchange_req_size =
-		spdm_get_opaque_data_supported_version_data_size(spdm_context);
-	m_spdm_psk_exchange_request.opaque_length =
-		(uint16)opaque_psk_exchange_req_size;
-	m_spdm_psk_exchange_request.req_session_id = 0xFFFF;
-
 	response_size = sizeof(response);
 	spdm_get_response_psk_exchange(spdm_context,
-				       m_spdm_psk_exchange_request1_size,
-				       &m_spdm_psk_exchange_request,
+				       spdm_test_context->test_buffer_size,
+				       spdm_test_context->test_buffer,
 				       &response_size, response);
 }
 

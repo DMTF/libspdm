@@ -41,11 +41,24 @@ void test_spdm_requester_get_diges(void **State)
 	spdm_context_t *spdm_context;
 	uint8 slot_mask;
 	uint8 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+	uint8 m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->connection_info.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->local_context.peer_cert_chain_provision =
+		m_local_certificate_chain;
+	spdm_context->local_context.peer_cert_chain_provision_size =
+		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+	set_mem(m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE,
+		(uint8)(0xFF));
+	spdm_reset_message_b(spdm_context);
 	zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-
 	spdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
 }
 

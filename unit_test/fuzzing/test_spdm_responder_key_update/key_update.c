@@ -10,18 +10,11 @@
 #include <spdm_responder_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
-spdm_key_update_request_t m_spdm_key_update_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-	  SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x3 }
-};
-
-uintn m_spdm_key_update_request_size = sizeof(m_spdm_key_update_request);
-
-
-static void spdm_set_standard_key_update_test_state(
-	IN OUT spdm_context_t *spdm_context, IN OUT uint32 *session_id)
+static void
+spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
+					IN OUT uint32 *session_id)
 {
-	spdm_session_info_t    *session_info;
+	spdm_session_info_t *session_info;
 
 	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
 	spdm_context->connection_info.connection_state =
@@ -67,60 +60,57 @@ static void spdm_set_standard_key_update_test_secrets(
 	OUT uint8 *m_rsp_secret_buffer, IN uint8 rsp_secret_fill,
 	OUT uint8 *m_req_secret_buffer, IN uint8 req_secret_fill)
 {
-	set_mem(m_rsp_secret_buffer, secured_message_context
-		->hash_size, rsp_secret_fill);
-	set_mem(m_req_secret_buffer, secured_message_context
-			  ->hash_size, req_secret_fill);
+	set_mem(m_rsp_secret_buffer, secured_message_context->hash_size,
+		rsp_secret_fill);
+	set_mem(m_req_secret_buffer, secured_message_context->hash_size,
+		req_secret_fill);
 
-	copy_mem(secured_message_context->application_secret
-			 .response_data_secret, 
-		  m_rsp_secret_buffer, secured_message_context->aead_key_size);
-	copy_mem(secured_message_context->application_secret
-			 .request_data_secret,
-		  m_req_secret_buffer, secured_message_context->aead_key_size);
-
-	set_mem(secured_message_context->application_secret
-			 .response_data_encryption_key,
-		  secured_message_context->aead_key_size, (uint8)(0xFF));
-	set_mem(secured_message_context->application_secret
-			 .response_data_salt,
-		  secured_message_context->aead_iv_size, (uint8)(0xFF));
-
+	copy_mem(
+		secured_message_context->application_secret.response_data_secret,
+		m_rsp_secret_buffer, secured_message_context->aead_key_size);
+	copy_mem(
+		secured_message_context->application_secret.request_data_secret,
+		m_req_secret_buffer, secured_message_context->aead_key_size);
 
 	set_mem(secured_message_context->application_secret
-			 .request_data_encryption_key,
-		  secured_message_context->aead_key_size, (uint8)(0xEE));
-	set_mem(secured_message_context->application_secret
-			 .request_data_salt,
-		  secured_message_context->aead_iv_size, (uint8)(0xEE));
+			.response_data_encryption_key,
+		secured_message_context->aead_key_size, (uint8)(0xFF));
+	set_mem(secured_message_context->application_secret.response_data_salt,
+		secured_message_context->aead_iv_size, (uint8)(0xFF));
 
-	secured_message_context->application_secret.
-		  response_data_sequence_number = 0;
-	secured_message_context->application_secret.
-		  request_data_sequence_number = 0;
+	set_mem(secured_message_context->application_secret
+			.request_data_encryption_key,
+		secured_message_context->aead_key_size, (uint8)(0xEE));
+	set_mem(secured_message_context->application_secret.request_data_salt,
+		secured_message_context->aead_iv_size, (uint8)(0xEE));
+
+	secured_message_context->application_secret
+		.response_data_sequence_number = 0;
+	secured_message_context->application_secret
+		.request_data_sequence_number = 0;
 }
 
-
 static void spdm_compute_secret_update(uintn hash_size,
-	IN const uint8 *in_secret, OUT uint8 *out_secret,
-	IN uintn out_secret_size)
+				       IN const uint8 *in_secret,
+				       OUT uint8 *out_secret,
+				       IN uintn out_secret_size)
 {
-	uint8    m_bin_str9[128];
-	uintn    m_bin_str9_size;
-	uint16   length;
+	uint8 m_bin_str9[128];
+	uintn m_bin_str9_size;
+	uint16 length;
 
-	length = (uint16) hash_size;
+	length = (uint16)hash_size;
 	copy_mem(m_bin_str9, &length, sizeof(uint16));
 	copy_mem(m_bin_str9 + sizeof(uint16), BIN_CONCAT_LABEL,
-		  sizeof(BIN_CONCAT_LABEL) - 1);
+		 sizeof(BIN_CONCAT_LABEL) - 1);
 	copy_mem(m_bin_str9 + sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1,
-		  BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
+		 BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
 	m_bin_str9_size = sizeof(uint16) + sizeof(BIN_CONCAT_LABEL) - 1 +
-		  sizeof(BIN_STR_9_LABEL) - 1;
+			  sizeof(BIN_STR_9_LABEL) - 1;
 	//context is NULL for key update
 
 	spdm_hkdf_expand(m_use_hash_algo, in_secret, hash_size, m_bin_str9,
-		  m_bin_str9_size, out_secret, out_secret_size);
+			 m_bin_str9_size, out_secret, out_secret_size);
 }
 
 uintn get_max_buffer_size(void)
@@ -135,44 +125,37 @@ spdm_test_context_t m_spdm_responder_key_update_test_context = {
 
 void test_spdm_responder_key_update(void **State)
 {
-	spdm_test_context_t            *spdm_test_context;
+	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
-	uint32                         session_id;
-	spdm_session_info_t            *session_info;
+	uint32 session_id;
+	spdm_session_info_t *session_info;
 	spdm_secured_message_context_t *secured_message_context;
-
-	uintn                      response_size;
-	uint8                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-
-	uint8    m_req_secret_buffer[MAX_HASH_SIZE];
-	uint8    m_rsp_secret_buffer[MAX_HASH_SIZE];
+	uintn response_size;
+	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8 m_req_secret_buffer[MAX_HASH_SIZE];
+	uint8 m_rsp_secret_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
 
-	spdm_set_standard_key_update_test_state(
-		  spdm_context, &session_id);
+	spdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
 	session_info = &spdm_context->session_info[0];
 	secured_message_context = session_info->secured_message_context;
 
 	spdm_set_standard_key_update_test_secrets(
-		  session_info->secured_message_context,
-		  m_rsp_secret_buffer, (uint8)(0xFF),
-		  m_req_secret_buffer, (uint8)(0xEE));
+		session_info->secured_message_context, m_rsp_secret_buffer,
+		(uint8)(0xFF), m_req_secret_buffer, (uint8)(0xEE));
 
-	//request side updated
 	spdm_compute_secret_update(secured_message_context->hash_size,
-		  m_req_secret_buffer, m_req_secret_buffer,
-		  secured_message_context->hash_size);
-	//response side *not* updated
+				   m_req_secret_buffer, m_req_secret_buffer,
+				   secured_message_context->hash_size);
 
 	response_size = sizeof(response);
 	spdm_get_response_key_update(spdm_context,
-					     m_spdm_key_update_request_size,
-					     &m_spdm_key_update_request,
-					     &response_size, response);
-
+				     spdm_test_context->test_buffer_size,
+				     spdm_test_context->test_buffer,
+				     &response_size, response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

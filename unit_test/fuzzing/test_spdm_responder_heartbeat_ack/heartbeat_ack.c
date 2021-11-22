@@ -9,30 +9,17 @@
 #include <spdm_device_secret_lib_internal.h>
 #include <spdm_responder_lib_internal.h>
 
-spdm_heartbeat_request_t m_spdm_heartbeat_request1 = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
-};
-uintn m_spdm_heartbeat_request1_size = sizeof(m_spdm_heartbeat_request1);
-
-spdm_heartbeat_request_t m_spdm_heartbeat_request2 = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
-};
-
-uintn m_spdm_heartbeat_request2_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-
-static uint8 m_local_psk_hint[32];
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;
 }
 
-spdm_test_context_t m_spdm_responder_certificate_test_context = {
+spdm_test_context_t m_spdm_responder_heartbeat_test_context = {
 	SPDM_TEST_CONTEXT_SIGNATURE,
 	FALSE,
 };
 
-void test_spdm_responder_certificate(void **State)
+void test_spdm_responder_heartbeat(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
@@ -42,6 +29,7 @@ void test_spdm_responder_certificate(void **State)
 	uintn data_size1;
 	spdm_session_info_t *session_info;
 	uint32 session_id;
+	uint8 m_local_psk_hint[32];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -94,24 +82,24 @@ void test_spdm_responder_certificate(void **State)
 
 	response_size = sizeof(response);
 	spdm_get_response_heartbeat(spdm_context,
-				    m_spdm_heartbeat_request1_size,
-				    &m_spdm_heartbeat_request1, &response_size,
-				    response);
+				    spdm_test_context->test_buffer_size,
+				    spdm_test_context->test_buffer,
+				    &response_size, response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 {
 	void *State;
 
-	setup_spdm_test_context(&m_spdm_responder_certificate_test_context);
+	setup_spdm_test_context(&m_spdm_responder_heartbeat_test_context);
 
-	m_spdm_responder_certificate_test_context.test_buffer = test_buffer;
-	m_spdm_responder_certificate_test_context.test_buffer_size =
+	m_spdm_responder_heartbeat_test_context.test_buffer = test_buffer;
+	m_spdm_responder_heartbeat_test_context.test_buffer_size =
 		test_buffer_size;
 
 	spdm_unit_test_group_setup(&State);
 
-	test_spdm_responder_certificate(&State);
+	test_spdm_responder_heartbeat(&State);
 
 	spdm_unit_test_group_teardown(&State);
 }

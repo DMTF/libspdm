@@ -6,9 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <spdm_responder_lib_internal.h>
 #include <spdm_device_secret_lib_internal.h>
-
+#include <spdm_responder_lib_internal.h>
 
 uintn get_max_buffer_size(void)
 {
@@ -20,12 +19,6 @@ spdm_test_context_t m_spdm_responder_certificate_test_context = {
 	FALSE,
 };
 
-spdm_get_certificate_request_t m_spdm_get_certificate_request2 = {
-	{ SPDM_MESSAGE_VERSION_10, SPDM_GET_CERTIFICATE, 0, 0 },
-	0,
-	MAX_SPDM_CERT_CHAIN_BLOCK_LEN
-};
-
 void test_spdm_responder_certificate(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
@@ -35,17 +28,17 @@ void test_spdm_responder_certificate(void **State)
 	void *data;
 	uintn data_size;
 
-
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AFTER_DIGESTS;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-
 	spdm_context->connection_info.algorithm.base_hash_algo =
-		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
-
+		m_use_hash_algo;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, NULL, NULL);
 	spdm_context->local_context.local_cert_chain_provision[0] = data;
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
@@ -53,8 +46,8 @@ void test_spdm_responder_certificate(void **State)
 
 	response_size = sizeof(response);
 	spdm_get_response_certificate(spdm_context,
-				      MAX_SPDM_MESSAGE_BUFFER_SIZE,
-				      &m_spdm_get_certificate_request2,
+				      spdm_test_context->test_buffer_size,
+				      spdm_test_context->test_buffer,
 				      &response_size, response);
 }
 

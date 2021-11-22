@@ -38,17 +38,8 @@ void test_spdm_responder_finish(void **State)
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 	void *data;
 	uintn data_size;
-	uint8 *ptr;
-	uint8 *cert_buffer;
-	uintn cert_buffer_size;
-	uint8 cert_buffer_hash[MAX_HASH_SIZE];
-	large_managed_buffer_t th_curr;
-	uint8 request_finished_key[MAX_HASH_SIZE];
 	spdm_session_info_t *session_info;
 	uint32 session_id;
-	uint32 hash_size;
-	uint32 hmac_size;
-	uint8 m_dummy_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -84,8 +75,6 @@ void test_spdm_responder_finish(void **State)
 	spdm_context->latest_session_id = session_id;
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
-	hash_size = spdm_get_hash_size(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
-	set_mem(m_dummy_buffer, hash_size, (uint8)(0xFF));
 	spdm_secured_message_set_session_state(
 		session_info->secured_message_context,
 		SPDM_SESSION_STATE_HANDSHAKING);
@@ -94,27 +83,12 @@ void test_spdm_responder_finish(void **State)
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-	hash_size = spdm_get_hash_size(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
-	hmac_size = spdm_get_hash_size(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
-	ptr = m_spdm_finish_request1.signature;
-	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
-	cert_buffer = (uint8 *)data;
-	cert_buffer_size = data_size;
-	spdm_hash_all(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, cert_buffer, cert_buffer_size,
-		      cert_buffer_hash);
-	append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-	append_managed_buffer(&th_curr, (uint8 *)&m_spdm_finish_request1,
-			      sizeof(spdm_finish_request_t));
-	set_mem(request_finished_key, MAX_HASH_SIZE, (uint8)(0xFF));
-	spdm_hmac_all(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, get_managed_buffer(&th_curr),
-		      get_managed_buffer_size(&th_curr), request_finished_key,
-		      hash_size, ptr);
-	m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
+
 	response_size = sizeof(response);
 	spdm_get_response_finish(spdm_context,
-					  m_spdm_finish_request1_size,
-					  &m_spdm_finish_request1,
-					  &response_size, response);
+				 spdm_test_context->test_buffer_size,
+				 spdm_test_context->test_buffer, &response_size,
+				 response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

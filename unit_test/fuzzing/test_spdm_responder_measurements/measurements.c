@@ -4,10 +4,10 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
+#include "spdm_device_secret_lib_internal.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 #include <spdm_responder_lib_internal.h>
-#include "spdm_device_secret_lib_internal.h"
 
 uint8 m_use_measurement_spec = SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 uint32 m_use_measurement_hash_algo =
@@ -34,6 +34,7 @@ void test_spdm_responder_measurements(void **State)
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
+	spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=
@@ -50,11 +51,15 @@ void test_spdm_responder_measurements(void **State)
 	spdm_context->local_context.opaque_measurement_rsp_size = 0;
 	spdm_context->local_context.opaque_measurement_rsp = NULL;
 
+	spdm_reset_message_m(spdm_context, NULL);
+	spdm_context->local_context.opaque_measurement_rsp_size = 0;
+	spdm_context->local_context.opaque_measurement_rsp = NULL;
+
 	response_size = sizeof(response);
 	spdm_get_response_measurements(spdm_context,
-				  spdm_test_context->test_buffer_size,
-				  spdm_test_context->test_buffer,
-				  &response_size, response);
+				       spdm_test_context->test_buffer_size,
+				       spdm_test_context->test_buffer,
+				       &response_size, response);
 }
 
 spdm_test_context_t m_spdm_responder_measurements_test_context = {

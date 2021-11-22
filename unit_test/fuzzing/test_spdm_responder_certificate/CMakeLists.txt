@@ -21,6 +21,7 @@ SET(src_test_spdm_responder_certificate
     certificate.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
+    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
 SET(test_spdm_responder_certificate_LIBRARY

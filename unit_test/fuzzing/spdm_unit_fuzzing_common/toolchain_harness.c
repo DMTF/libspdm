@@ -69,10 +69,12 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 		exit(1);
 	}
 	fclose(file);
+	
 
 	if (buffer_size != NULL) {
 		*buffer_size = file_size;
 	}
+
 	return TRUE;
 }
 

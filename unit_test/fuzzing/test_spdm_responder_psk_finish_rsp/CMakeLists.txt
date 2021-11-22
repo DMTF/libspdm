@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_encap_challenge
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_psk_finish_rsp
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
@@ -43,7 +43,7 @@ SET(test_spdm_responder_psk_finish_rsp_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_responder_encap_challenge
+    ADD_EXECUTABLE(test_spdm_responder_psk_finish_rsp
                    ${src_test_spdm_responder_psk_finish_rsp}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -61,6 +61,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:cmockalib>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_responder_encap_challenge ${src_test_spdm_responder_psk_finish_rsp})
-    TARGET_LINK_LIBRARIES(test_spdm_responder_encap_challenge ${test_spdm_responder_psk_finish_rsp_LIBRARY})
+    ADD_EXECUTABLE(test_spdm_responder_psk_finish_rsp ${src_test_spdm_responder_psk_finish_rsp})
+    TARGET_LINK_LIBRARIES(test_spdm_responder_psk_finish_rsp ${test_spdm_responder_psk_finish_rsp_LIBRARY})
 endif()

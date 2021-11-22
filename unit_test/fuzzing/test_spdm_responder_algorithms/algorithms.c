@@ -24,10 +24,19 @@ void test_spdm_responder_algorithms(void **State)
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
 
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+	spdm_context->local_context.algorithm.measurement_spec =
+		m_use_measurement_spec;
+	spdm_context->local_context.algorithm.measurement_hash_algo =
+		m_use_measurement_hash_algo;
+
 	spdm_get_response_algorithms(spdm_context,
-				       spdm_test_context->test_buffer_size,
-				       spdm_test_context->test_buffer,
-				       &response_size, response);
+				     spdm_test_context->test_buffer_size,
+				     spdm_test_context->test_buffer,
+				     &response_size, response);
 }
 
 spdm_test_context_t test_spdm_responder_context = {

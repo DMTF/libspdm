@@ -10,11 +10,6 @@
 #include <spdm_responder_lib_internal.h>
 #include <spdm_secured_message_lib_internal.h>
 
-spdm_end_session_request_t m_spdm_end_session_request = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION, 0, 0 }
-};
-uintn m_spdm_end_session_request1_size = sizeof(m_spdm_end_session_request);
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;
@@ -33,14 +28,13 @@ void test_spdm_responder_end_session(void **State)
 	spdm_context_t *spdm_context;
 	uintn response_size;
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	void *data1;
-	uintn data_size1;
+	void *data;
+	uintn data_size;
 	spdm_session_info_t *session_info;
 	uint32 session_id;
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
-	
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_NEGOTIATED;
 	spdm_context->connection_info.capability.flags |=
@@ -60,14 +54,14 @@ void test_spdm_responder_end_session(void **State)
 	spdm_context->connection_info.algorithm.aead_cipher_suite =
 		m_use_aead_algo;
 	read_responder_public_certificate_chain(m_use_hash_algo,
-						m_use_asym_algo, &data1,
-						&data_size1, NULL, NULL);
-	spdm_context->local_context.local_cert_chain_provision[0] = data1;
+						m_use_asym_algo, &data,
+						&data_size, NULL, NULL);
+	spdm_context->local_context.local_cert_chain_provision[0] = data;
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
-		data_size1;
-	spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+		data_size;
+	spdm_context->connection_info.local_used_cert_chain_buffer = data;
 	spdm_context->connection_info.local_used_cert_chain_buffer_size =
-		data_size1;
+		data_size;
 	spdm_context->local_context.slot_count = 1;
 	spdm_reset_message_a(spdm_context);
 	spdm_context->local_context.mut_auth_requested = 0;
@@ -90,10 +84,9 @@ void test_spdm_responder_end_session(void **State)
 
 	response_size = sizeof(response);
 	spdm_get_response_end_session(spdm_context,
-					       m_spdm_end_session_request1_size,
-					       &m_spdm_end_session_request,
-					       &response_size, response);
-
+				      spdm_test_context->test_buffer_size,
+				      spdm_test_context->test_buffer,
+				      &response_size, response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

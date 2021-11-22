@@ -6,6 +6,10 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_get_dig
                     ${LIBSPDM_DIR}/library/spdm_common_lib
                     ${LIBSPDM_DIR}/library/spdm_requester_lib
                     ${LIBSPDM_DIR}/unit_test/include
+                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
+                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
+                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+                    ${LIBSPDM_DIR}/library/spdm_secured_message_lib
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
 )
 
@@ -17,6 +21,7 @@ SET(src_test_spdm_requester_get_digests
     get_digests.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
+    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
 SET(test_spdm_requester_get_digests_LIBRARY
@@ -32,6 +37,8 @@ SET(test_spdm_requester_get_digests_LIBRARY
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null
+    spdm_device_secret_lib_sample
+    cmockalib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -49,6 +56,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
+                   $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+                   $<TARGET_OBJECTS:cmockalib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_requester_get_digests ${src_test_spdm_requester_get_digests})

@@ -23,6 +23,9 @@ void test_spdm_responder_capabilities(void **State)
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
 
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_AFTER_VERSION;
+	
 	response_size = sizeof(response);
 	spdm_get_response_capabilities(spdm_context,
 				       spdm_test_context->test_buffer_size,

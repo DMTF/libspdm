@@ -19,9 +19,23 @@ void test_spdm_responder_digests(void **State)
 	spdm_context_t *spdm_context;
 	uintn response_size;
 	uint8 response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+	uint8 m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
+	spdm_context->connection_info.connection_state =
+		SPDM_CONNECTION_STATE_NEGOTIATED;
+	spdm_context->local_context.capability.flags |=
+		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+	spdm_context->connection_info.algorithm.base_hash_algo =
+		m_use_hash_algo;
+	spdm_context->local_context.local_cert_chain_provision[0] =
+		m_local_certificate_chain;
+	spdm_context->local_context.local_cert_chain_provision_size[0] =
+		MAX_SPDM_MESSAGE_BUFFER_SIZE;
+	set_mem(m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE,
+		(uint8)(0xFF));
+	spdm_context->local_context.slot_count = 1;
 
 	response_size = sizeof(response);
 	spdm_get_response_digests(spdm_context,
