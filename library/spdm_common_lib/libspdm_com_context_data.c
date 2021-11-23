@@ -129,6 +129,27 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
 		if (data_size != sizeof(uint32)) {
 			return RETURN_INVALID_PARAMETER;
 		}
+
+		#if !SPDM_ENABLE_CAPABILITY_CERT_CAP
+		ASSERT(((*(uint32 *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
+		#endif // !SPDM_ENABLE_CAPABILITY_CERT_CAP
+
+		#if !SPDM_ENABLE_CAPABILITY_CHAL_CAP
+		ASSERT(((*(uint32 *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
+		#endif // !SPDM_ENABLE_CAPABILITY_CHAL_CAP
+
+		#if !SPDM_ENABLE_CAPABILITY_MEAS_CAP
+		ASSERT(((*(uint32 *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
+		#endif // !SPDM_ENABLE_CAPABILITY_MEAS_CAP
+
+		#if !SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+		ASSERT(((*(uint32 *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
+		#endif // !SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
+		#if !SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+		ASSERT(((*(uint32 *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
+		#endif // !SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 		if (parameter->location == SPDM_DATA_LOCATION_CONNECTION) {
 			spdm_context->connection_info.capability.flags =
 				*(uint32 *)data;
