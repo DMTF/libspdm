@@ -486,6 +486,8 @@ return_status spdm_send_receive_key_exchange(
 	return_status status;
 
 	retry = spdm_context->retry_times;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	do {
 		status = try_spdm_send_receive_key_exchange(
 			spdm_context, measurement_hash_type, slot_id,
@@ -528,6 +530,8 @@ return_status spdm_send_receive_key_exchange_ex(
 	return_status status;
 
 	retry = spdm_context->retry_times;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	do {
 		status = try_spdm_send_receive_key_exchange(
 			spdm_context, measurement_hash_type, slot_id,

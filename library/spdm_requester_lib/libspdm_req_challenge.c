@@ -321,6 +321,8 @@ return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
 	return_status status;
 
 	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_challenge(spdm_context, slot_id,
@@ -367,6 +369,8 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
 	return_status status;
 
 	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_challenge(spdm_context, slot_id,

@@ -121,6 +121,8 @@ return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 	uintn retry;
 	return_status status;
 
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = spdm_context->connection_info.capability.st1;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_send_receive_end_session(

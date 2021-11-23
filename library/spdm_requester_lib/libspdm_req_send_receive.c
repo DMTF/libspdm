@@ -48,7 +48,7 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
 	}
 
 	status = spdm_context->send_message(spdm_context, message_size, message,
-					    0);
+					    spdm_context->req_timeout);
 	if (RETURN_ERROR(status)) {
 		DEBUG((DEBUG_INFO, "spdm_send_spdm_request[%x] status - %p\n",
 		       (session_id != NULL) ? *session_id : 0x0, status));
@@ -91,7 +91,7 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
 
 	message_size = sizeof(message);
 	status = spdm_context->receive_message(spdm_context, &message_size,
-					       message, 0);
+					       message, spdm_context->resp_timeout);
 	if (RETURN_ERROR(status)) {
 		DEBUG((DEBUG_INFO,
 		       "spdm_receive_spdm_response[%x] status - %p\n",

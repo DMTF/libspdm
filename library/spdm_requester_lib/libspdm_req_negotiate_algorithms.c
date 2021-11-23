@@ -392,6 +392,8 @@ return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 	return_status status;
 
 	retry = spdm_context->retry_times;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	do {
 		status = try_spdm_negotiate_algorithms(spdm_context);
 		if (RETURN_NO_RESPONSE != status) {

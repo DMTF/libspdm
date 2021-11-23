@@ -21,6 +21,7 @@ SET(src_test_size_of_spdm_requester
 
 SET(test_size_of_spdm_requester_LIBRARY
     memlib
+    sleeplib
     debuglib
     spdm_requester_lib
     spdm_common_lib
@@ -40,6 +41,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
     ADD_EXECUTABLE(test_size_of_spdm_requester
                    ${src_test_size_of_spdm_requester}
                    $<TARGET_OBJECTS:memlib>
+		   $<TARGET_OBJECTS:sleeplib>
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_requester_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>

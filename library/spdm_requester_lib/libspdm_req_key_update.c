@@ -249,6 +249,8 @@ return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
 
 	spdm_context = context;
 	key_updated = FALSE;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_key_update(context, session_id,

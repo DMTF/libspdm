@@ -45,12 +45,14 @@ SET(test_spdm_requester_LIBRARY
     spdm_device_secret_lib_sample
     spdm_transport_test_lib
     cmockalib
+    sleeplib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
     ADD_EXECUTABLE(test_spdm_requester
                    ${src_test_spdm_requester}
                    $<TARGET_OBJECTS:memlib>
+		   $<TARGET_OBJECTS:sleeplib>
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_requester_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>

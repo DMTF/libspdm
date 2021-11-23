@@ -551,6 +551,7 @@ endif()
     ADD_SUBDIRECTORY(os_stub/malloclib)
     ADD_SUBDIRECTORY(os_stub/spdm_device_secret_lib_sample)
     ADD_SUBDIRECTORY(os_stub/spdm_device_secret_lib_null)
+    ADD_SUBDIRECTORY(os_stub/sleeplib)
     ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
     ADD_SUBDIRECTORY(unit_test/cmockalib)
 

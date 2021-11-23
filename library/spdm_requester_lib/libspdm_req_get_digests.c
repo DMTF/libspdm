@@ -191,6 +191,8 @@ return_status libspdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
 	return_status status;
 
 	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = spdm_context->connection_info.capability.st1;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_get_digest(spdm_context, slot_mask,

@@ -494,6 +494,8 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
 	return_status status;
 
 	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	retry = spdm_context->retry_times;
 	do {
 		status = try_spdm_get_measurement(
@@ -549,6 +551,8 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
 
 	spdm_context = context;
 	retry = spdm_context->retry_times;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = 2 << spdm_context->connection_info.capability.ct_exponent;
 	do {
 		status = try_spdm_get_measurement(
 			spdm_context, session_id, request_attribute,

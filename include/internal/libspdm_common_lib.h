@@ -20,6 +20,8 @@ typedef struct {
 typedef struct {
 	uint8_t ct_exponent;
 	uint32_t flags;
+	uint32_t rtt;
+	uint32_t st1;
 } spdm_device_capability_t;
 
 typedef struct {
@@ -353,6 +355,9 @@ typedef struct {
 	// Register for the last KEY_UPDATE token and operation (responder only)
 	//
 	uint8_t last_update_request[4];
+
+	uint64_t req_timeout;
+	uint64_t resp_timeout;
 } spdm_context_t;
 
 /**

@@ -274,6 +274,12 @@ return_status libspdm_get_certificate(IN void *context, IN uint8_t slot_id,
 				   IN OUT uintn *cert_chain_size,
 				   OUT void *cert_chain)
 {
+	spdm_context_t *spdm_context;
+
+	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = spdm_context->connection_info.capability.st1;
+
 	return libspdm_get_certificate_choose_length(context, slot_id,
 						  MAX_SPDM_CERT_CHAIN_BLOCK_LEN,
 						  cert_chain_size, cert_chain);

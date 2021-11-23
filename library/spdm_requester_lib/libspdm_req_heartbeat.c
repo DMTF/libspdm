@@ -110,6 +110,8 @@ return_status libspdm_heartbeat(IN void *context, IN uint32_t session_id)
 
 	spdm_context = context;
 	retry = spdm_context->retry_times;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout = spdm_context->connection_info.capability.st1;
 	do {
 		status = try_spdm_heartbeat(spdm_context, session_id);
 		if (RETURN_NO_RESPONSE != status) {

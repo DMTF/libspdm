@@ -5,6 +5,7 @@
 **/
 
 #include "internal/libspdm_requester_lib.h"
+#include <hal/library/sleeplib.h>
 
 /**
   This function sends RESPOND_IF_READY and receives an expected SPDM response.
@@ -128,6 +129,9 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
 {
 	spdm_error_response_t *spdm_response;
 	spdm_error_data_response_not_ready_t *extend_error_data;
+	uint64_t wt, wt_max;
+	uintn retry;
+	return_status status;
 
 	spdm_response = response;
 	extend_error_data =
@@ -145,10 +149,24 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
 	spdm_context->error_data.token = extend_error_data->token;
 	spdm_context->error_data.rd_tm = extend_error_data->rd_tm;
 
-	return spdm_requester_respond_if_ready(spdm_context, session_id,
-					       response_size, response,
-					       expected_response_code,
-					       expected_response_size);
+	wt = 2 << extend_error_data->rd_exponent/1000;
+	wt_max = wt * extend_error_data->rd_tm - spdm_context->connection_info.capability.rtt;
+	retry = (wt == 0)? 1 : wt_max / wt;
+	retry = (retry < 1) ? 1 : retry;
+
+	do {
+		libspdm_sleep(wt);
+
+		status = spdm_requester_respond_if_ready(spdm_context, session_id,
+						       response_size, response,
+						       expected_response_code,
+						       expected_response_size);
+		if (RETURN_NO_RESPONSE != status) {
+			return status;
+		}
+	} while (retry-- != 0);
+
+	return status;
 }
 
 /**

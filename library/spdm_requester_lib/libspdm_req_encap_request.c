@@ -394,8 +394,15 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
 **/
-return_status libspdm_send_receive_encap_request(IN void *spdm_context,
+return_status libspdm_send_receive_encap_request(IN void *context,
 					      IN uint32_t *session_id)
 {
+	spdm_context_t *spdm_context;
+
+	spdm_context = context;
+	spdm_context->req_timeout = spdm_context->connection_info.capability.rtt;
+	spdm_context->resp_timeout =
+				2 << spdm_context->connection_info.capability.ct_exponent;
+
 	return spdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }
