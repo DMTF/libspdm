@@ -132,6 +132,10 @@ return_status try_spdm_send_receive_key_exchange(
 		spdm_context->connection_info.algorithm.dhe_named_group);
 	dhe_context = spdm_secured_message_dhe_new(
 		spdm_context->connection_info.algorithm.dhe_named_group);
+	if (dhe_context == NULL) {
+		return RETURN_DEVICE_ERROR;
+	}
+
 	spdm_secured_message_dhe_generate_key(
 		spdm_context->connection_info.algorithm.dhe_named_group,
 		dhe_context, ptr, &dhe_key_size);
