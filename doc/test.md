@@ -369,3 +369,30 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
 
    View report at http://localhost:8080/.
+
+### Collect Stack Usage
+
+1) Stack usage with GCC -fstack-usage flag
+
+   Build with -DSTACK_USAGE=ON
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<x64|ia32|arm|aarch64|riscv32|riscv64|arc> -DTOOLCHAIN=GCC -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> -DSTACK_USAGE=ON ..
+   make copy_sample_key
+   make
+   ```
+2) check the stack usage of individual functions in the .su file corresponding to every .c file
+
+   For example:
+   `<path_to_libspdm>/build/library/spdm_requester_lib/CMakeFiles/spdm_requester_lib.dir/libspdm_req_send_receive.c.su`
+   ```
+   <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:25:15:libspdm_send_request     4736    static
+   <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:76:15:libspdm_receive_response 4752    static
+   <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:167:15:spdm_send_spdm_request  64      static
+   <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:212:15:spdm_receive_spdm_response      64      static
+   ```
+3) useful tool
+
+   avstack.pl, daniel beer, https://dlbeer.co.nz/oss/avstack.html
