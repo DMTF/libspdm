@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_diges
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_digests
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
@@ -14,14 +14,14 @@ if(TOOLCHAIN STREQUAL "KLEE")
     INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_spdm_responder_diges
-    diges.c
+SET(src_test_spdm_responder_digests
+    digests.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
-SET(test_spdm_responder_diges_LIBRARY
+SET(test_spdm_responder_digests_LIBRARY
     memlib
     debuglib
     spdm_responder_lib
@@ -37,8 +37,8 @@ SET(test_spdm_responder_diges_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_responder_diges
-                   ${src_test_spdm_responder_diges}
+    ADD_EXECUTABLE(test_spdm_responder_digests
+                   ${src_test_spdm_responder_digests}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_responder_lib>
@@ -53,6 +53,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_responder_diges ${src_test_spdm_responder_diges})
-    TARGET_LINK_LIBRARIES(test_spdm_responder_diges ${test_spdm_responder_diges_LIBRARY})
+    ADD_EXECUTABLE(test_spdm_responder_digests ${src_test_spdm_responder_digests})
+    TARGET_LINK_LIBRARIES(test_spdm_responder_digests ${test_spdm_responder_digests_LIBRARY})
 endif()
