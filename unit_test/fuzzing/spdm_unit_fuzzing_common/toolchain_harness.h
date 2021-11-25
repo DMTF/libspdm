@@ -12,8 +12,13 @@
 #include <string.h>
 #include <assert.h>
 
+#define TEST_ALIGNMENT 4
+#define TEST_MESSAGE_TYPE_SPDM 0x01
+
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size);
 
 uintn get_max_buffer_size(void);
+
+uint8 judge_requster_name(IN char8 *file_name);
 
 #endif

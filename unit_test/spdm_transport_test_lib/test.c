@@ -171,10 +171,10 @@ return_status test_decode_message(OUT uint32 **session_id,
 				 *message_size);
 			return RETURN_SUCCESS;
 		}
-		ASSERT(*message_size >=
-		       transport_message_size - sizeof(test_message_header_t));
 		*message_size =
 			transport_message_size - sizeof(test_message_header_t);
+		ASSERT(*message_size >=
+		       transport_message_size - sizeof(test_message_header_t));
 		return RETURN_BUFFER_TOO_SMALL;
 	}
 	*message_size = transport_message_size - sizeof(test_message_header_t);
