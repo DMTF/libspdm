@@ -6,15 +6,15 @@
 
    The SPDM and secured message follow :
 
-   DSP0274  Security Protocol and Data Model (SPDM) Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.0.pdf) and version [1.1.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.0.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf) and version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf))
 
-   DSP0277  Secured Messages using SPDM Specification (version [1.0.0b](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.0b.pdf))
+   [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.0.pdf))
 
    The MCTP and secured MCTP follow :
 
-   DSP0275  Security Protocol and Data Model (SPDM) over MCTP Binding Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0275_1.0.0.pdf))
+   [DSP0275](https://www.dmtf.org/dsp/DSP0275)  Security Protocol and Data Model (SPDM) over MCTP Binding Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0275_1.0.0.pdf))
 
-   DSP0276  Secured MCTP Messages over MCTP Binding Specification (version [1.0.0a](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.0.0a.pdf))
+   [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured MCTP Messages over MCTP Binding Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.0.0.pdf))
 
    The PCI DOE / IDE follow :
 
@@ -101,9 +101,9 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
 
 ### Crypto library
 
-1) [mbedtls](https://tls.mbed.org) as Crypto library. Version 2.16.6.
+1) [mbedtls](https://tls.mbed.org) as Crypto library. Version 2.27.0.
 
-2) [openssl](https://www.openssl.org) as crypto library. Version 1.1.1g.
+2) [openssl](https://www.openssl.org) as crypto library. Version 1.1.1l.
 
 ### Unit Test framework
 
