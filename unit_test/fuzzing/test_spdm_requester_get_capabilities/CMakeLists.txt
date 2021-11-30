@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_get_capabilities
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_get_capabilities
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/include
@@ -11,19 +10,19 @@ if(TOOLCHAIN STREQUAL "KLEE")
     INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_spdm_responder_get_capabilities
+SET(src_test_spdm_requester_get_capabilities
     get_capabilities.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
 )
 
-SET(test_spdm_responder_get_capabilities_LIBRARY
+SET(test_spdm_requester_get_capabilities_LIBRARY
     memlib
     debuglib
     spdm_requester_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
-    rnglib
+    rnglib_std
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
@@ -33,14 +32,14 @@ SET(test_spdm_responder_get_capabilities_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_responder_get_capabilities
-                   ${src_test_spdm_responder_get_capabilities}
+    ADD_EXECUTABLE(test_spdm_requester_get_capabilities
+                   ${src_test_spdm_requester_get_capabilities}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_requester_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>
                    $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
+                   $<TARGET_OBJECTS:rnglib_std>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
@@ -49,6 +48,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_responder_get_capabilities ${src_test_spdm_responder_get_capabilities})
-    TARGET_LINK_LIBRARIES(test_spdm_responder_get_capabilities ${test_spdm_responder_get_capabilities_LIBRARY})
+    ADD_EXECUTABLE(test_spdm_requester_get_capabilities ${src_test_spdm_requester_get_capabilities})
+    TARGET_LINK_LIBRARIES(test_spdm_requester_get_capabilities ${test_spdm_requester_get_capabilities_LIBRARY})
 endif()
