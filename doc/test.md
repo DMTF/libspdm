@@ -134,6 +134,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Build it with `make`.
    Ensure AFL binary is in PATH environment variable.
    ```
+   tar zxvf afl-latest.tgz
+   cd afl-2.52b/
+   make
    export AFL_PATH=<AFL_PATH>
    export PATH=$PATH:$AFL_PATH
    ```
@@ -165,6 +168,41 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    afl-fuzz -i testcase_dir -o /dev/shm/findings_dir <test_app> @@
    ```
    Note: /dev/shm is tmpfs.
+
+   Fuzzing Code Coverage in Linux with [AFL](https://lcamtuf.coredump.cx/afl/) and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
+   Install lcov `sudo apt-get install lcov`.
+
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL -DGCOV=ON`.
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
+   make copy_sample_key
+   make
+   ```
+   You can launch the script `fuzzing.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   
+   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+
+   The usage of the script `fuzzing.sh` is as following:
+   ```
+   libspdm/unit_test/fuzzing/fuzzing.sh <CRYPTO> <GCOV> <duration>
+   <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <GCOV> means enable Code Coverage or not: ON or OFF
+   <duration> means the duration of every program keep fuzzing: NUMBER seconds
+   ```
+   For example: build with `mbedtls`, enable Code Coverage and every test case run 60 seconds.
+   ```
+   libspdm/unit_test/fuzzing/fuzzing.sh mbedtls ON 60
+   ```
+   Fuzzing output path and code coverage output path of the script `fuzzing.sh`: 
+   ```
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>/SummaryList.csv
+   libspdm/unit_test/fuzzing/out_mbedtls_ac992fd/SummaryList.csv
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>/coverage_log/index.html
+   libspdm/unit_test/fuzzing/out_mbedtls_ac992fd/coverage_log/index.html
+   ```
 
 2) fuzzing in Windows with [winafl](https://github.com/googleprojectzero/winafl)
 
