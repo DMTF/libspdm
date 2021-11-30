@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.6)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_algorithms
                     ${LIBSPDM_DIR}/include
+                    ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
+                    ${LIBSPDM_DIR}/library/spdm_common_lib
+                    ${LIBSPDM_DIR}/library/spdm_responder_lib
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
 )
@@ -15,6 +18,7 @@ SET(src_test_spdm_responder_algorithms
     algorithms.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
+    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
 SET(test_spdm_responder_algorithms_LIBRARY
@@ -23,7 +27,7 @@ SET(test_spdm_responder_algorithms_LIBRARY
     spdm_responder_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
-    rnglib
+    rnglib_std
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
@@ -40,7 +44,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_responder_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>
                    $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
+                   $<TARGET_OBJECTS:rnglib_std>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
