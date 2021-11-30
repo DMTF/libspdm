@@ -251,3 +251,27 @@ openssl pkey -inform PEM -outform DER -in end_requester.key -out end_requester.k
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
 popd
 
+=== long_chains Certificate Chains ===
+
+pushd long_chains
+
+For CA cert:
+openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_ca.key
+openssl req -nodes -x509 -days 3650 -key ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_ca.cert -sha256 -subj "/CN=intel test RSA CA"
+
+For inter cert:
+openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_inter47.key
+openssl req -new -key ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_inter47.req -sha256 -batch -subj '/CN=intel test RSA intermediate cert'
+openssl x509 -req -days 3650 -in ShorterMAXUINT16_inter47.req -CA ShorterMAXUINT16_inter46.cert -CAkey ShorterMAXUINT16_inter46.key -out ShorterMAXUINT16_inter47.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
+openssl asn1parse -in ShorterMAXUINT16_inter47.cert -out ShorterMAXUINT16_inter47.cert.der 
+
+For end cert:
+openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_end_responder.key
+openssl req -new -key horterMAXUINT16_end_responder.key -out ShorterMAXUINT16_end_responder.req -sha256 -batch -subj '/CN=intel test RSA responder cert'
+openssl x509 -req -days 3650 -in ShorterMAXUINT16_end_responder.req -CA ShorterMAXUINT16_inter47.cert -CAkey ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ShorterMAXUINT16_end_responder.cert -out ShorterMAXUINT16_end_responder.cert.der 
+
+Generate cert chain:
+cat ShorterMAXUINT16_ca.cert.der ShorterMAXUINT16_inter*.cert.der ShorterMAXUINT16_end_responder.cert.der >ShorterMAXUINT16_bundle_responder.certchain.der
+
+popd
