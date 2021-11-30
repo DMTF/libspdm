@@ -76,14 +76,6 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t
 	};
 
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t
-	m_shake_256_digest[SHAKE256_DIGEST_SIZE] = {
-		0x48, 0x33, 0x66, 0x60, 0x13, 0x60, 0xa8, 0x77,
-		0x1c, 0x68, 0x63, 0x08, 0x0c, 0xc4, 0x11, 0x4d,
-		0x8d, 0xb4, 0x45, 0x30, 0xf8, 0xf1, 0xe1, 0xee,
-		0x4f, 0x94, 0xea, 0x37, 0xe7, 0x8b, 0x57, 0x39
-	};
-
-GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t
 	m_sm3_256_digest[SM3_256_DIGEST_SIZE] = {
 		0x66, 0xc7, 0xf0, 0xf4, 0x62, 0xee, 0xed, 0xd9,
 		0xd1, 0xf2, 0xd4, 0x6b, 0xdc, 0x10, 0xe4, 0xe2,
@@ -413,52 +405,6 @@ return_status validate_crypt_digest(void)
 		my_print("HashAll... ");
 		zero_mem(digest, SHA3_512_DIGEST_SIZE);
 		status = sha3_512_hash_all(m_hash_data, data_size, digest);
-	}
-	if (status) {
-		my_print("[Pass]\n");
-	} else {
-		my_print("[Failed]\n");
-	}
-
-	my_print("- SHAKE256: ");
-	//
-	// SHAKE256 digest Validation
-	//
-	zero_mem(digest, MAX_DIGEST_SIZE);
-	hash_ctx = shake256_new();
-	if (hash_ctx != NULL) {
-		my_print("Init... ");
-		status = shake256_init(hash_ctx);
-	}
-
-	if (status) {
-		my_print("Update... ");
-		status = shake256_update(hash_ctx, m_hash_data, data_size);
-	}
-
-	if (status) {
-		my_print("Finalize... ");
-		status = shake256_final(hash_ctx, digest);
-	}
-
-	if (status) {
-		my_print("Check value... ");
-		if (const_compare_mem(digest, m_shake_256_digest,
-				SHAKE256_DIGEST_SIZE) == 0) {
-			status = TRUE;
-		} else {
-			status = FALSE;
-		}
-	}
-
-	if (hash_ctx != NULL) {
-		shake256_free(hash_ctx);
-	}
-
-	if (status) {
-		my_print("HashAll... ");
-		zero_mem(digest, SHAKE256_DIGEST_SIZE);
-		status = shake256_hash_all(m_hash_data, data_size, digest);
 	}
 	if (status) {
 		my_print("[Pass]\n");
