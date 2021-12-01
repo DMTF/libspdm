@@ -4,11 +4,6 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-
 #undef NULL
 #include <hal/base.h>
 #include <hal/library/memlib.h>
@@ -30,6 +25,10 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 	FILE *file;
 	uintn file_size;
 	uintn BytesRead;
+	uintn alignment;
+	uint8_t return_status;
+
+	alignment = TEST_ALIGNMENT;
 
 	// 1. Allocate buffer
 	buffer = malloc(max_buffer_size);
@@ -62,7 +61,13 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 	rewind(file);
 
 	file_size = file_size > max_buffer_size ? max_buffer_size : file_size;
-	BytesRead = fread((void *)buffer, 1, file_size, file);
+	return_status = judge_requster_name(file_name);
+	if (return_status == 1) {
+		*(uint8_t *)buffer = TEST_MESSAGE_TYPE_SPDM;
+		BytesRead = fread((void *)buffer + 1, 1, file_size, file);
+	} else {
+		BytesRead = fread((void *)buffer, 1, file_size, file);
+	}
 	if (BytesRead != file_size) {
 		fputs("file error", stderr);
 		free(buffer);
@@ -70,10 +75,48 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 	}
 	fclose(file);
 
+	if (((file_size) & (alignment - 1)) == 3)
+		file_size += 1;
+	if (((file_size) & (alignment - 1)) == 2)
+		file_size += 2;
+	if (((file_size) & (alignment - 1)) == 1)
+		file_size += 3;
+	file_size = file_size + return_status;
+
 	if (buffer_size != NULL) {
 		*buffer_size = file_size;
 	}
+
 	return TRUE;
+}
+
+uint8_t judge_requster_name(IN char8 *file_name)
+{
+	char *file_p = file_name, *requester_name_p = NULL, *pSave = NULL, flag;
+	char requester_name[] = "test_spdm_requester";
+
+	while (*file_p) {
+		if (*file_p == requester_name[0] &&
+		    strlen(file_p) >= strlen(requester_name)) {
+			pSave = file_p;
+			requester_name_p = &requester_name[0];
+			flag = 1;
+			while (*requester_name_p) {
+				if (*file_p != *requester_name_p) {
+					flag = 0;
+					break;
+				}
+				file_p++;
+				requester_name_p++;
+			}
+			if (flag == 1) {
+				return 1;
+			} else
+				file_p = pSave;
+		}
+		file_p++;
+	}
+	return 0;
 }
 
 #ifdef TEST_WITH_LIBFUZZER
