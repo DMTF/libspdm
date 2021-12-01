@@ -4,7 +4,6 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_get_mea
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
-                    ${LIBSPDM_DIR}/library/spdm_secured_message_lib
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
 )
 

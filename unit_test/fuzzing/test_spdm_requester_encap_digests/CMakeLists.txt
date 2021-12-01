@@ -6,7 +6,6 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_encap_d
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
-                    ${LIBSPDM_DIR}/library/spdm_secured_message_lib
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
 )
 

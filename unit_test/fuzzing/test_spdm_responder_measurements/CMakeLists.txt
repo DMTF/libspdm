@@ -2,10 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_responder_measurements
                     ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
-                    ${LIBSPDM_DIR}/library/spdm_common_lib
-                    ${LIBSPDM_DIR}/library/spdm_responder_lib
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
