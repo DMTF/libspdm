@@ -11,6 +11,7 @@
 #include <base.h>
 #include <library/debuglib.h>
 #include <library/malloclib.h>
+#include <stddef.h>
 
 //
 // Extra header to record the memory buffer size from malloc routine.
