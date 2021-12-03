@@ -5,7 +5,6 @@
 **/
 
 #include "internal/libspdm_requester_lib.h"
-#include <stdio.h>
 
 /**
   This function checks the compability of the received CAPABILITES flag.
