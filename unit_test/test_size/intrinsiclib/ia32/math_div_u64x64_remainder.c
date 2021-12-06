@@ -7,9 +7,9 @@
 #include <hal/base.h>
 
 uint64_t internal_math_div_rem_u64x32(IN uint64_t dividend, IN uint32_t divisor,
-				OUT uint32_t *remainder)
+                OUT uint32_t *remainder)
 {
-	_asm {
+    _asm {
     mov     ecx, divisor
     mov     eax, dword ptr [dividend + 4]
     xor     edx, edx
@@ -22,12 +22,12 @@ uint64_t internal_math_div_rem_u64x32(IN uint64_t dividend, IN uint32_t divisor,
     mov     [ecx], edx
 RemainderNull:
     pop     edx
-	}
+    }
 }
 
 __declspec(naked) uint64_t
-	internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
-				 OUT uint64_t *remainder OPTIONAL)
+    internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
+                 OUT uint64_t *remainder OPTIONAL)
 {
   _asm {
     mov     ecx, [esp + 16]             ; ecx <- divisor[32..63]
@@ -90,9 +90,9 @@ __Return:
 }
 
 uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
-			  OUT uint64_t *remainder OPTIONAL)
+              OUT uint64_t *remainder OPTIONAL)
 {
-	return internal_math_div_rem_u64x64(dividend, divisor, remainder);
+    return internal_math_div_rem_u64x64(dividend, divisor, remainder);
 }
 
 /*
@@ -101,14 +101,14 @@ uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
  */
 __declspec(naked) void __cdecl _aulldvrm(void)
 {
-	//
-	//    uint64_t
-	//      //    div_u64x64_remainder (
-	//      IN      uint64_t     dividend,
-	//      IN      uint64_t     divisor,
-	//      OUT     uint64_t     *remainder  OPTIONAL
-	//      )
-	//
+    //
+    //    uint64_t
+    //      //    div_u64x64_remainder (
+    //      IN      uint64_t     dividend,
+    //      IN      uint64_t     divisor,
+    //      OUT     uint64_t     *remainder  OPTIONAL
+    //      )
+    //
   _asm {
 
     ; Original local stack when calling _aulldvrm

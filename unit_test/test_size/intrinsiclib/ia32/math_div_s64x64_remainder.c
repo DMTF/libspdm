@@ -7,27 +7,27 @@
 #include <hal/base.h>
 
 uint64_t internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
-				OUT uint64_t *remainder OPTIONAL);
+                OUT uint64_t *remainder OPTIONAL);
 
 int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
-			       OUT int64_t *remainder OPTIONAL)
+                   OUT int64_t *remainder OPTIONAL)
 {
-	int64_t quot;
+    int64_t quot;
 
-	quot = internal_math_div_rem_u64x64(
-		(uint64_t)(dividend >= 0 ? dividend : -dividend),
-		(uint64_t)(divisor >= 0 ? divisor : -divisor),
-		(uint64_t *)remainder);
-	if (remainder != NULL && dividend < 0) {
-		*remainder = -*remainder;
-	}
-	return (dividend ^ divisor) >= 0 ? quot : -quot;
+    quot = internal_math_div_rem_u64x64(
+        (uint64_t)(dividend >= 0 ? dividend : -dividend),
+        (uint64_t)(divisor >= 0 ? divisor : -divisor),
+        (uint64_t *)remainder);
+    if (remainder != NULL && dividend < 0) {
+        *remainder = -*remainder;
+    }
+    return (dividend ^ divisor) >= 0 ? quot : -quot;
 }
 
 int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
-			 OUT int64_t *remainder OPTIONAL)
+             OUT int64_t *remainder OPTIONAL)
 {
-	return internal_math_div_rem_s64x64(dividend, divisor, remainder);
+    return internal_math_div_rem_s64x64(dividend, divisor, remainder);
 }
 
 /*
@@ -36,14 +36,14 @@ int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
  */
 __declspec(naked) void __cdecl _alldvrm(void)
 {
-	//
-	//    int64_t
-	//      //    div_s64x64_remainder (
-	//      IN      int64_t     dividend,
-	//      IN      int64_t     divisor,
-	//      OUT     int64_t     *remainder  OPTIONAL
-	//      )
-	//
+    //
+    //    int64_t
+    //      //    div_s64x64_remainder (
+    //      IN      int64_t     dividend,
+    //      IN      int64_t     divisor,
+    //      OUT     int64_t     *remainder  OPTIONAL
+    //      )
+    //
   _asm {
 
     ; Original local stack when calling _alldvrm

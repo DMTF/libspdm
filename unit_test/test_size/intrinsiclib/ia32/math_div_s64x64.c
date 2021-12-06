@@ -7,7 +7,7 @@
 #include <hal/base.h>
 
 int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
-			 OUT int64_t *remainder OPTIONAL);
+             OUT int64_t *remainder OPTIONAL);
 
 /*
  * Divides a 64-bit signed value with a 64-bit signed value and returns
@@ -15,14 +15,14 @@ int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
  */
 __declspec(naked) void __cdecl _alldiv(void)
 {
-	//
-	//    int64_t
-	//      //    div_s64x64_remainder (
-	//      IN      int64_t     dividend,
-	//      IN      int64_t     divisor,
-	//      OUT     int64_t     *remainder  OPTIONAL
-	//      )
-	//
+    //
+    //    int64_t
+    //      //    div_s64x64_remainder (
+    //      IN      int64_t     dividend,
+    //      IN      int64_t     divisor,
+    //      OUT     int64_t     *remainder  OPTIONAL
+    //      )
+    //
   _asm {
 
     ; Original local stack when calling _alldiv

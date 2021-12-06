@@ -9,348 +9,348 @@
 
 #pragma pack(1)
 typedef struct {
-	spdm_message_header_t header;
-	uint8_t reserved;
-	uint8_t version_number_entry_count;
-	spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
+    spdm_message_header_t header;
+    uint8_t reserved;
+    uint8_t version_number_entry_count;
+    spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 
 return_status spdm_requester_get_version_test_send_message(
-	IN void *spdm_context, IN uintn request_size, IN void *request,
-	IN uint64_t timeout)
+    IN void *spdm_context, IN uintn request_size, IN void *request,
+    IN uint64_t timeout)
 {
-	spdm_test_context_t *spdm_test_context;
+    spdm_test_context_t *spdm_test_context;
 
-	spdm_test_context = get_spdm_test_context();
-	switch (spdm_test_context->case_id) {
-	case 0x1:
-		return RETURN_DEVICE_ERROR;
-	case 0x2:
-		return RETURN_SUCCESS;
-	case 0x3:
-		return RETURN_SUCCESS;
-	case 0x4:
-		return RETURN_SUCCESS;
-	case 0x5:
-		return RETURN_SUCCESS;
-	case 0x6:
-		return RETURN_SUCCESS;
-	case 0x7:
-		return RETURN_SUCCESS;
-	case 0x8:
-		return RETURN_SUCCESS;
-	case 0x9:
-		return RETURN_SUCCESS;
-	case 0xA:
-		return RETURN_SUCCESS;
-	case 0xB:
-		return RETURN_SUCCESS;
-	case 0xC:
-		return RETURN_SUCCESS;
-	case 0xD:
-		return RETURN_SUCCESS;
-	case 0xE:
-		return RETURN_SUCCESS;
-	case 0xF:
-		return RETURN_SUCCESS;
-	default:
-		return RETURN_DEVICE_ERROR;
-	}
+    spdm_test_context = get_spdm_test_context();
+    switch (spdm_test_context->case_id) {
+    case 0x1:
+        return RETURN_DEVICE_ERROR;
+    case 0x2:
+        return RETURN_SUCCESS;
+    case 0x3:
+        return RETURN_SUCCESS;
+    case 0x4:
+        return RETURN_SUCCESS;
+    case 0x5:
+        return RETURN_SUCCESS;
+    case 0x6:
+        return RETURN_SUCCESS;
+    case 0x7:
+        return RETURN_SUCCESS;
+    case 0x8:
+        return RETURN_SUCCESS;
+    case 0x9:
+        return RETURN_SUCCESS;
+    case 0xA:
+        return RETURN_SUCCESS;
+    case 0xB:
+        return RETURN_SUCCESS;
+    case 0xC:
+        return RETURN_SUCCESS;
+    case 0xD:
+        return RETURN_SUCCESS;
+    case 0xE:
+        return RETURN_SUCCESS;
+    case 0xF:
+        return RETURN_SUCCESS;
+    default:
+        return RETURN_DEVICE_ERROR;
+    }
 }
 
 return_status spdm_requester_get_version_test_receive_message(
-	IN void *spdm_context, IN OUT uintn *response_size,
-	IN OUT void *response, IN uint64_t timeout)
+    IN void *spdm_context, IN OUT uintn *response_size,
+    IN OUT void *response, IN uint64_t timeout)
 {
-	spdm_test_context_t *spdm_test_context;
+    spdm_test_context_t *spdm_test_context;
 
-	spdm_test_context = get_spdm_test_context();
-	switch (spdm_test_context->case_id) {
-	case 0x1:
-		return RETURN_DEVICE_ERROR;
+    spdm_test_context = get_spdm_test_context();
+    switch (spdm_test_context->case_id) {
+    case 0x1:
+        return RETURN_DEVICE_ERROR;
 
-	case 0x2: {
-		spdm_version_response_mine_t spdm_response;
+    case 0x2: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 2;
-		spdm_response.version_number_entry[0].major_version = 1;
-		spdm_response.version_number_entry[0].minor_version = 0;
-		spdm_response.version_number_entry[1].major_version = 1;
-		spdm_response.version_number_entry[1].minor_version = 1;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 1;
+        spdm_response.version_number_entry[0].minor_version = 0;
+        spdm_response.version_number_entry[1].major_version = 1;
+        spdm_response.version_number_entry[1].minor_version = 1;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x3: {
-		spdm_version_response spdm_response;
+    case 0x3: {
+        spdm_version_response spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 0;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x4: {
-		spdm_error_response_t spdm_response;
+    case 0x4: {
+        spdm_error_response_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_ERROR;
-		spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-		spdm_response.header.param2 = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response.header.param2 = 0;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x5: {
-		spdm_error_response_t spdm_response;
+    case 0x5: {
+        spdm_error_response_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_ERROR;
-		spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-		spdm_response.header.param2 = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response.header.param2 = 0;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x6: {
-		static uintn sub_index1 = 0;
-		if (sub_index1 == 0) {
-			spdm_error_response_t spdm_response;
+    case 0x6: {
+        static uintn sub_index1 = 0;
+        if (sub_index1 == 0) {
+            spdm_error_response_t spdm_response;
 
-			zero_mem(&spdm_response, sizeof(spdm_response));
-			spdm_response.header.spdm_version =
-				SPDM_MESSAGE_VERSION_10;
-			spdm_response.header.request_response_code = SPDM_ERROR;
-			spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-			spdm_response.header.param2 = 0;
+            zero_mem(&spdm_response, sizeof(spdm_response));
+            spdm_response.header.spdm_version =
+                SPDM_MESSAGE_VERSION_10;
+            spdm_response.header.request_response_code = SPDM_ERROR;
+            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response.header.param2 = 0;
 
-			spdm_transport_test_encode_message(
-				spdm_context, NULL, FALSE, FALSE,
-				sizeof(spdm_response), &spdm_response,
-				response_size, response);
-		} else if (sub_index1 == 1) {
-			spdm_version_response_mine_t spdm_response;
+            spdm_transport_test_encode_message(
+                spdm_context, NULL, FALSE, FALSE,
+                sizeof(spdm_response), &spdm_response,
+                response_size, response);
+        } else if (sub_index1 == 1) {
+            spdm_version_response_mine_t spdm_response;
 
-			zero_mem(&spdm_response, sizeof(spdm_response));
-			spdm_response.header.spdm_version =
-				SPDM_MESSAGE_VERSION_10;
-			spdm_response.header.request_response_code =
-				SPDM_VERSION;
-			spdm_response.header.param1 = 0;
-			spdm_response.header.param2 = 0;
-			spdm_response.version_number_entry_count = 2;
-			spdm_response.version_number_entry[0].major_version = 1;
-			spdm_response.version_number_entry[0].minor_version = 0;
-			spdm_response.version_number_entry[1].major_version = 1;
-			spdm_response.version_number_entry[1].minor_version = 1;
+            zero_mem(&spdm_response, sizeof(spdm_response));
+            spdm_response.header.spdm_version =
+                SPDM_MESSAGE_VERSION_10;
+            spdm_response.header.request_response_code =
+                SPDM_VERSION;
+            spdm_response.header.param1 = 0;
+            spdm_response.header.param2 = 0;
+            spdm_response.version_number_entry_count = 2;
+            spdm_response.version_number_entry[0].major_version = 1;
+            spdm_response.version_number_entry[0].minor_version = 0;
+            spdm_response.version_number_entry[1].major_version = 1;
+            spdm_response.version_number_entry[1].minor_version = 1;
 
-			spdm_transport_test_encode_message(
-				spdm_context, NULL, FALSE, FALSE,
-				sizeof(spdm_response), &spdm_response,
-				response_size, response);
-		}
-		sub_index1++;
-	}
-		return RETURN_SUCCESS;
+            spdm_transport_test_encode_message(
+                spdm_context, NULL, FALSE, FALSE,
+                sizeof(spdm_response), &spdm_response,
+                response_size, response);
+        }
+        sub_index1++;
+    }
+        return RETURN_SUCCESS;
 
-	case 0x7: {
-		spdm_error_response_t spdm_response;
+    case 0x7: {
+        spdm_error_response_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_ERROR;
-		spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-		spdm_response.header.param2 = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response.header.param2 = 0;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x8: {
-		spdm_error_response_data_response_not_ready_t spdm_response;
+    case 0x8: {
+        spdm_error_response_data_response_not_ready_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_ERROR;
-		spdm_response.header.param1 =
-			SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-		spdm_response.header.param2 = 0;
-		spdm_response.extend_error_data.rd_exponent = 1;
-		spdm_response.extend_error_data.rd_tm = 1;
-		spdm_response.extend_error_data.request_code = SPDM_GET_VERSION;
-		spdm_response.extend_error_data.token = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 =
+            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response.header.param2 = 0;
+        spdm_response.extend_error_data.rd_exponent = 1;
+        spdm_response.extend_error_data.rd_tm = 1;
+        spdm_response.extend_error_data.request_code = SPDM_GET_VERSION;
+        spdm_response.extend_error_data.token = 0;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0x9: {
-		static uintn sub_index2 = 0;
-		if (sub_index2 == 0) {
-			spdm_error_response_data_response_not_ready_t
-				spdm_response;
+    case 0x9: {
+        static uintn sub_index2 = 0;
+        if (sub_index2 == 0) {
+            spdm_error_response_data_response_not_ready_t
+                spdm_response;
 
-			zero_mem(&spdm_response, sizeof(spdm_response));
-			spdm_response.header.spdm_version =
-				SPDM_MESSAGE_VERSION_10;
-			spdm_response.header.request_response_code = SPDM_ERROR;
-			spdm_response.header.param1 =
-				SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-			spdm_response.header.param2 = 0;
-			spdm_response.extend_error_data.rd_exponent = 1;
-			spdm_response.extend_error_data.rd_tm = 1;
-			spdm_response.extend_error_data.request_code =
-				SPDM_GET_VERSION;
-			spdm_response.extend_error_data.token = 1;
+            zero_mem(&spdm_response, sizeof(spdm_response));
+            spdm_response.header.spdm_version =
+                SPDM_MESSAGE_VERSION_10;
+            spdm_response.header.request_response_code = SPDM_ERROR;
+            spdm_response.header.param1 =
+                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response.header.param2 = 0;
+            spdm_response.extend_error_data.rd_exponent = 1;
+            spdm_response.extend_error_data.rd_tm = 1;
+            spdm_response.extend_error_data.request_code =
+                SPDM_GET_VERSION;
+            spdm_response.extend_error_data.token = 1;
 
-			spdm_transport_test_encode_message(
-				spdm_context, NULL, FALSE, FALSE,
-				sizeof(spdm_response), &spdm_response,
-				response_size, response);
-		} else if (sub_index2 == 1) {
-			spdm_version_response_mine_t spdm_response;
+            spdm_transport_test_encode_message(
+                spdm_context, NULL, FALSE, FALSE,
+                sizeof(spdm_response), &spdm_response,
+                response_size, response);
+        } else if (sub_index2 == 1) {
+            spdm_version_response_mine_t spdm_response;
 
-			zero_mem(&spdm_response, sizeof(spdm_response));
-			spdm_response.header.spdm_version =
-				SPDM_MESSAGE_VERSION_10;
-			spdm_response.header.request_response_code =
-				SPDM_VERSION;
-			spdm_response.header.param1 = 0;
-			spdm_response.header.param2 = 0;
-			spdm_response.version_number_entry_count = 2;
-			spdm_response.version_number_entry[0].major_version = 1;
-			spdm_response.version_number_entry[0].minor_version = 0;
-			spdm_response.version_number_entry[1].major_version = 1;
-			spdm_response.version_number_entry[1].minor_version = 1;
+            zero_mem(&spdm_response, sizeof(spdm_response));
+            spdm_response.header.spdm_version =
+                SPDM_MESSAGE_VERSION_10;
+            spdm_response.header.request_response_code =
+                SPDM_VERSION;
+            spdm_response.header.param1 = 0;
+            spdm_response.header.param2 = 0;
+            spdm_response.version_number_entry_count = 2;
+            spdm_response.version_number_entry[0].major_version = 1;
+            spdm_response.version_number_entry[0].minor_version = 0;
+            spdm_response.version_number_entry[1].major_version = 1;
+            spdm_response.version_number_entry[1].minor_version = 1;
 
-			spdm_transport_test_encode_message(
-				spdm_context, NULL, FALSE, FALSE,
-				sizeof(spdm_response), &spdm_response,
-				response_size, response);
-		}
-		sub_index2++;
-	}
-		return RETURN_SUCCESS;
+            spdm_transport_test_encode_message(
+                spdm_context, NULL, FALSE, FALSE,
+                sizeof(spdm_response), &spdm_response,
+                response_size, response);
+        }
+        sub_index2++;
+    }
+        return RETURN_SUCCESS;
 
-	case 0xA: {
-		spdm_version_response_mine_t spdm_response;
+    case 0xA: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 2;
-		spdm_response.version_number_entry[0].major_version = 1;
-		spdm_response.version_number_entry[0].minor_version = 0;
-		spdm_response.version_number_entry[1].major_version = 1;
-		spdm_response.version_number_entry[1].minor_version = 1;
-		spdm_response.version_number_entry[2].major_version = 1;
-		spdm_response.version_number_entry[2].minor_version = 2;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 1;
+        spdm_response.version_number_entry[0].minor_version = 0;
+        spdm_response.version_number_entry[1].major_version = 1;
+        spdm_response.version_number_entry[1].minor_version = 1;
+        spdm_response.version_number_entry[2].major_version = 1;
+        spdm_response.version_number_entry[2].minor_version = 2;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0xB: {
-		spdm_version_response_mine_t spdm_response;
+    case 0xB: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 2;
-		spdm_response.version_number_entry[0].major_version = 10;
-		spdm_response.version_number_entry[0].minor_version = 0;
-		spdm_response.version_number_entry[1].major_version = 10;
-		spdm_response.version_number_entry[1].minor_version = 1;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 10;
+        spdm_response.version_number_entry[0].minor_version = 0;
+        spdm_response.version_number_entry[1].major_version = 10;
+        spdm_response.version_number_entry[1].minor_version = 1;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0xC: {
-		spdm_version_response_mine_t spdm_response;
+    case 0xC: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 2;
-		spdm_response.version_number_entry[0].major_version = 1;
-		spdm_response.version_number_entry[0].minor_version = 0;
-		spdm_response.version_number_entry[1].major_version = 1;
-		spdm_response.version_number_entry[1].minor_version = 1;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 1;
+        spdm_response.version_number_entry[0].minor_version = 0;
+        spdm_response.version_number_entry[1].major_version = 1;
+        spdm_response.version_number_entry[1].minor_version = 1;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
-	case 0xD: {
-		spdm_version_response_mine_t spdm_response;
+    case 0xD: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_GET_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 2;
-		spdm_response.version_number_entry[0].major_version = 1;
-		spdm_response.version_number_entry[0].minor_version = 0;
-		spdm_response.version_number_entry[1].major_version = 1;
-		spdm_response.version_number_entry[1].minor_version = 1;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_GET_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 2;
+        spdm_response.version_number_entry[0].major_version = 1;
+        spdm_response.version_number_entry[0].minor_version = 0;
+        spdm_response.version_number_entry[1].major_version = 1;
+        spdm_response.version_number_entry[1].minor_version = 1;
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
 
   case 0xE:
   {
@@ -380,36 +380,36 @@ return_status spdm_requester_get_version_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-	case 0xF: {
-		spdm_version_response_mine_t spdm_response;
+    case 0xF: {
+        spdm_version_response_mine_t spdm_response;
 
-		zero_mem(&spdm_response, sizeof(spdm_response));
-		spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-		spdm_response.header.request_response_code = SPDM_VERSION;
-		spdm_response.header.param1 = 0;
-		spdm_response.header.param2 = 0;
-		spdm_response.version_number_entry_count = 5;
-		spdm_response.version_number_entry[0].major_version = 4;
-		spdm_response.version_number_entry[0].minor_version = 2;
-		spdm_response.version_number_entry[1].major_version = 5;
-		spdm_response.version_number_entry[1].minor_version = 2;
-		spdm_response.version_number_entry[2].major_version = 1;
-		spdm_response.version_number_entry[2].minor_version = 2;
-		spdm_response.version_number_entry[3].major_version = 1;
-		spdm_response.version_number_entry[3].minor_version = 1;
-		spdm_response.version_number_entry[4].major_version = 1;
-		spdm_response.version_number_entry[4].minor_version = 0;
+        zero_mem(&spdm_response, sizeof(spdm_response));
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.request_response_code = SPDM_VERSION;
+        spdm_response.header.param1 = 0;
+        spdm_response.header.param2 = 0;
+        spdm_response.version_number_entry_count = 5;
+        spdm_response.version_number_entry[0].major_version = 4;
+        spdm_response.version_number_entry[0].minor_version = 2;
+        spdm_response.version_number_entry[1].major_version = 5;
+        spdm_response.version_number_entry[1].minor_version = 2;
+        spdm_response.version_number_entry[2].major_version = 1;
+        spdm_response.version_number_entry[2].minor_version = 2;
+        spdm_response.version_number_entry[3].major_version = 1;
+        spdm_response.version_number_entry[3].minor_version = 1;
+        spdm_response.version_number_entry[4].major_version = 1;
+        spdm_response.version_number_entry[4].minor_version = 0;
 
 
-		spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-						   FALSE, sizeof(spdm_response),
-						   &spdm_response,
-						   response_size, response);
-	}
-		return RETURN_SUCCESS;
-	default:
-		return RETURN_DEVICE_ERROR;
-	}
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, sizeof(spdm_response),
+                           &spdm_response,
+                           response_size, response);
+    }
+        return RETURN_SUCCESS;
+    default:
+        return RETURN_DEVICE_ERROR;
+    }
 }
 
 /**
@@ -418,16 +418,16 @@ return_status spdm_requester_get_version_test_receive_message(
 **/
 void test_spdm_requester_get_version_case1(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x1;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -436,16 +436,16 @@ void test_spdm_requester_get_version_case1(void **state)
 **/
 void test_spdm_requester_get_version_case2(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x2;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_SUCCESS);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_SUCCESS);
 }
 
 /**
@@ -454,16 +454,16 @@ void test_spdm_requester_get_version_case2(void **state)
 **/
 void test_spdm_requester_get_version_case3(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x3;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -472,16 +472,16 @@ void test_spdm_requester_get_version_case3(void **state)
 **/
 void test_spdm_requester_get_version_case4(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x4;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -490,16 +490,16 @@ void test_spdm_requester_get_version_case4(void **state)
 **/
 void test_spdm_requester_get_version_case5(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x5;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_NO_RESPONSE);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_NO_RESPONSE);
 }
 
 /**
@@ -509,16 +509,16 @@ void test_spdm_requester_get_version_case5(void **state)
 **/
 void test_spdm_requester_get_version_case6(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x6;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_SUCCESS);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_SUCCESS);
 }
 
 /**
@@ -530,18 +530,18 @@ void test_spdm_requester_get_version_case6(void **state)
 **/
 void test_spdm_requester_get_version_case7(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x7;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
-	assert_int_equal(spdm_context->connection_info.connection_state,
-			 SPDM_CONNECTION_STATE_NOT_STARTED);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+             SPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 /**
@@ -552,16 +552,16 @@ void test_spdm_requester_get_version_case7(void **state)
 **/
 void test_spdm_requester_get_version_case8(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x8;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -573,16 +573,16 @@ void test_spdm_requester_get_version_case8(void **state)
 **/
 void test_spdm_requester_get_version_case9(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x9;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x9;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -594,16 +594,16 @@ void test_spdm_requester_get_version_case9(void **state)
 **/
 void test_spdm_requester_get_version_case10(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0xA;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_SUCCESS);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_SUCCESS);
 }
 
 /**
@@ -613,16 +613,16 @@ void test_spdm_requester_get_version_case10(void **state)
 **/
 void test_spdm_requester_get_version_case11(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0xB;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xB;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -632,16 +632,16 @@ void test_spdm_requester_get_version_case11(void **state)
 **/
 void test_spdm_requester_get_version_case12(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0xC;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -652,16 +652,16 @@ void test_spdm_requester_get_version_case12(void **state)
 **/
 void test_spdm_requester_get_version_case13(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0xD;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xD;
 
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_DEVICE_ERROR);
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
 /**
@@ -709,72 +709,72 @@ void test_spdm_requester_get_version_case14(void **state) {
 **/
 void test_spdm_requester_get_version_case15(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0xF;
-	spdm_context->local_context.version.spdm_version_count = 5;
-	spdm_context->local_context.version.spdm_version[0].major_version = 5;
-	spdm_context->local_context.version.spdm_version[0].minor_version = 5;
-	spdm_context->local_context.version.spdm_version[1].major_version = 4;
-	spdm_context->local_context.version.spdm_version[1].minor_version = 5;
-	spdm_context->local_context.version.spdm_version[2].major_version = 0;
-	spdm_context->local_context.version.spdm_version[2].minor_version = 9;
-	spdm_context->local_context.version.spdm_version[3].major_version = 1;
-	spdm_context->local_context.version.spdm_version[3].minor_version = 0;
-	spdm_context->local_context.version.spdm_version[4].major_version = 1;
-	spdm_context->local_context.version.spdm_version[4].minor_version = 1;
-	status = spdm_get_version(spdm_context);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(
-		spdm_context->connection_info.version.major_version, 1);
-	assert_int_equal(
-		spdm_context->connection_info.version.minor_version, 1);
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+    spdm_context->local_context.version.spdm_version_count = 5;
+    spdm_context->local_context.version.spdm_version[0].major_version = 5;
+    spdm_context->local_context.version.spdm_version[0].minor_version = 5;
+    spdm_context->local_context.version.spdm_version[1].major_version = 4;
+    spdm_context->local_context.version.spdm_version[1].minor_version = 5;
+    spdm_context->local_context.version.spdm_version[2].major_version = 0;
+    spdm_context->local_context.version.spdm_version[2].minor_version = 9;
+    spdm_context->local_context.version.spdm_version[3].major_version = 1;
+    spdm_context->local_context.version.spdm_version[3].minor_version = 0;
+    spdm_context->local_context.version.spdm_version[4].major_version = 1;
+    spdm_context->local_context.version.spdm_version[4].minor_version = 1;
+    status = spdm_get_version(spdm_context);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(
+        spdm_context->connection_info.version.major_version, 1);
+    assert_int_equal(
+        spdm_context->connection_info.version.minor_version, 1);
 }
 
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {
-	SPDM_TEST_CONTEXT_SIGNATURE,
-	TRUE,
-	spdm_requester_get_version_test_send_message,
-	spdm_requester_get_version_test_receive_message,
+    SPDM_TEST_CONTEXT_SIGNATURE,
+    TRUE,
+    spdm_requester_get_version_test_send_message,
+    spdm_requester_get_version_test_receive_message,
 };
 
 int spdm_requester_get_version_test_main(void)
 {
-	const struct CMUnitTest spdm_requester_get_version_tests[] = {
-		cmocka_unit_test(test_spdm_requester_get_version_case1),
-		cmocka_unit_test(test_spdm_requester_get_version_case2),
-		cmocka_unit_test(test_spdm_requester_get_version_case3),
-		// Error response: SPDM_ERROR_CODE_INVALID_REQUEST
-		cmocka_unit_test(test_spdm_requester_get_version_case4),
-		// Always SPDM_ERROR_CODE_BUSY
-		cmocka_unit_test(test_spdm_requester_get_version_case5),
-		// SPDM_ERROR_CODE_BUSY + Successful response
-		cmocka_unit_test(test_spdm_requester_get_version_case6),
-		// Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
-		cmocka_unit_test(test_spdm_requester_get_version_case7),
-		// Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
-		cmocka_unit_test(test_spdm_requester_get_version_case8),
-		// SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
-		cmocka_unit_test(test_spdm_requester_get_version_case9),
-		// Successful response
-		cmocka_unit_test(test_spdm_requester_get_version_case10),
-		// Successful response + device error
-		cmocka_unit_test(test_spdm_requester_get_version_case11),
-		cmocka_unit_test(test_spdm_requester_get_version_case12),
-		cmocka_unit_test(test_spdm_requester_get_version_case13),
-		// Unexpected errors
-		cmocka_unit_test(test_spdm_requester_get_version_case14),
-		// Successful response for unordered version set
-		cmocka_unit_test(test_spdm_requester_get_version_case15),
-	};
+    const struct CMUnitTest spdm_requester_get_version_tests[] = {
+        cmocka_unit_test(test_spdm_requester_get_version_case1),
+        cmocka_unit_test(test_spdm_requester_get_version_case2),
+        cmocka_unit_test(test_spdm_requester_get_version_case3),
+        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        cmocka_unit_test(test_spdm_requester_get_version_case4),
+        // Always SPDM_ERROR_CODE_BUSY
+        cmocka_unit_test(test_spdm_requester_get_version_case5),
+        // SPDM_ERROR_CODE_BUSY + Successful response
+        cmocka_unit_test(test_spdm_requester_get_version_case6),
+        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        cmocka_unit_test(test_spdm_requester_get_version_case7),
+        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        cmocka_unit_test(test_spdm_requester_get_version_case8),
+        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        cmocka_unit_test(test_spdm_requester_get_version_case9),
+        // Successful response
+        cmocka_unit_test(test_spdm_requester_get_version_case10),
+        // Successful response + device error
+        cmocka_unit_test(test_spdm_requester_get_version_case11),
+        cmocka_unit_test(test_spdm_requester_get_version_case12),
+        cmocka_unit_test(test_spdm_requester_get_version_case13),
+        // Unexpected errors
+        cmocka_unit_test(test_spdm_requester_get_version_case14),
+        // Successful response for unordered version set
+        cmocka_unit_test(test_spdm_requester_get_version_case15),
+    };
 
-	setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);
+    setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);
 
-	return cmocka_run_group_tests(spdm_requester_get_version_tests,
-				      spdm_unit_test_group_setup,
-				      spdm_unit_test_group_teardown);
+    return cmocka_run_group_tests(spdm_requester_get_version_tests,
+                      spdm_unit_test_group_setup,
+                      spdm_unit_test_group_teardown);
 }

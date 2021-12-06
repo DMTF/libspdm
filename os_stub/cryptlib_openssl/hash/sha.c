@@ -75,13 +75,13 @@ boolean hash_md_init(IN const EVP_MD *md, OUT void *md_ctx)
 **/
 boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx)
 {
-	if (md_ctx == NULL || new_md_ctx == NULL) {
-		return FALSE;
-	}
-	if (EVP_MD_CTX_copy(new_md_ctx, md_ctx) != 1) {
+    if (md_ctx == NULL || new_md_ctx == NULL) {
+        return FALSE;
+    }
+    if (EVP_MD_CTX_copy(new_md_ctx, md_ctx) != 1) {
     return FALSE;
   }
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -166,7 +166,7 @@ boolean hash_md_final(IN void *md_ctx, OUT void *hash_value)
 
 **/
 boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-			  OUT uint8_t *hash_value)
+              OUT uint8_t *hash_value)
 {
   if (hash_value == NULL) {
     return FALSE;
@@ -235,9 +235,9 @@ boolean sha256_init(OUT void *sha256_context)
 
 **/
 boolean sha256_duplicate(IN const void *sha256_context,
-			 OUT void *new_sha256_context)
+             OUT void *new_sha256_context)
 {
-	return hash_md_duplicate (sha256_context, new_sha256_context);
+    return hash_md_duplicate (sha256_context, new_sha256_context);
 }
 
 /**
@@ -259,9 +259,9 @@ boolean sha256_duplicate(IN const void *sha256_context,
 
 **/
 boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	return hash_md_update (sha256_context, data, data_size);
+    return hash_md_update (sha256_context, data, data_size);
 }
 
 /**
@@ -286,7 +286,7 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
 **/
 boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
-	return hash_md_final (sha256_context, hash_value);
+    return hash_md_final (sha256_context, hash_value);
 }
 
 /**
@@ -308,7 +308,7 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha256_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha256(), data, data_size, hash_value);
 }
@@ -369,9 +369,9 @@ boolean sha384_init(OUT void *sha384_context)
 
 **/
 boolean sha384_duplicate(IN const void *sha384_context,
-			 OUT void *new_sha384_context)
+             OUT void *new_sha384_context)
 {
-	return hash_md_duplicate (sha384_context, new_sha384_context);
+    return hash_md_duplicate (sha384_context, new_sha384_context);
 }
 
 /**
@@ -393,9 +393,9 @@ boolean sha384_duplicate(IN const void *sha384_context,
 
 **/
 boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	return hash_md_update (sha384_context, data, data_size);
+    return hash_md_update (sha384_context, data, data_size);
 }
 
 /**
@@ -420,7 +420,7 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 **/
 boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
-	return hash_md_final (sha384_context, hash_value);
+    return hash_md_final (sha384_context, hash_value);
 }
 
 /**
@@ -442,7 +442,7 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha384(), data, data_size, hash_value);
 }
@@ -503,9 +503,9 @@ boolean sha512_init(OUT void *sha512_context)
 
 **/
 boolean sha512_duplicate(IN const void *sha512_context,
-			 OUT void *new_sha512_context)
+             OUT void *new_sha512_context)
 {
-	return hash_md_duplicate (sha512_context, new_sha512_context);
+    return hash_md_duplicate (sha512_context, new_sha512_context);
 }
 
 /**
@@ -527,9 +527,9 @@ boolean sha512_duplicate(IN const void *sha512_context,
 
 **/
 boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	return hash_md_update (sha512_context, data, data_size);
+    return hash_md_update (sha512_context, data, data_size);
 }
 
 /**
@@ -554,7 +554,7 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 **/
 boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
-	return hash_md_final (sha512_context, hash_value);
+    return hash_md_final (sha512_context, hash_value);
 }
 
 /**
@@ -576,7 +576,7 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
   return hash_md_hash_all (EVP_sha512(), data, data_size, hash_value);
 }

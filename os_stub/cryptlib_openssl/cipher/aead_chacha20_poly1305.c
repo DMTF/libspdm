@@ -40,98 +40,98 @@
 
 **/
 boolean aead_chacha20_poly1305_encrypt(
-	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-	IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
-	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
+    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+    IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
+    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	EVP_CIPHER_CTX *ctx;
-	uintn temp_out_size;
-	boolean ret_value;
+    EVP_CIPHER_CTX *ctx;
+    uintn temp_out_size;
+    boolean ret_value;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	if (key_size != 32) {
-		return FALSE;
-	}
-	if (tag_size != 16) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    if (key_size != 32) {
+        return FALSE;
+    }
+    if (tag_size != 16) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	ctx = EVP_CIPHER_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
+    ctx = EVP_CIPHER_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
 
-	ret_value = (boolean)EVP_EncryptInit_ex(ctx, EVP_chacha20_poly1305(),
-						NULL, NULL, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptInit_ex(ctx, EVP_chacha20_poly1305(),
+                        NULL, NULL, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
-						 (int32_t)iv_size, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
+                         (int32_t)iv_size, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
-						 (int32_t)tag_size, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+                         (int32_t)tag_size, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptUpdate(
-		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptUpdate(
+        ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptUpdate(ctx, data_out,
-					       (int32_t *)&temp_out_size, data_in,
-					       (int32_t)data_in_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptUpdate(ctx, data_out,
+                           (int32_t *)&temp_out_size, data_in,
+                           (int32_t)data_in_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptFinal_ex(ctx, data_out,
-						 (int32_t *)&temp_out_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptFinal_ex(ctx, data_out,
+                         (int32_t *)&temp_out_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(
-		ctx, EVP_CTRL_AEAD_GET_TAG, (int32_t)tag_size, (void *)tag_out);
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(
+        ctx, EVP_CTRL_AEAD_GET_TAG, (int32_t)tag_size, (void *)tag_out);
 
 done:
-	EVP_CIPHER_CTX_free(ctx);
-	if (!ret_value) {
-		return ret_value;
-	}
+    EVP_CIPHER_CTX_free(ctx);
+    if (!ret_value) {
+        return ret_value;
+    }
 
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return ret_value;
+    return ret_value;
 }
 
 /**
@@ -160,90 +160,90 @@ done:
 
 **/
 boolean aead_chacha20_poly1305_decrypt(
-	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-	IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
-	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
+    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+    IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
+    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	EVP_CIPHER_CTX *ctx;
-	uintn temp_out_size;
-	boolean ret_value;
+    EVP_CIPHER_CTX *ctx;
+    uintn temp_out_size;
+    boolean ret_value;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	if (key_size != 32) {
-		return FALSE;
-	}
-	if (tag_size != 16) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    if (key_size != 32) {
+        return FALSE;
+    }
+    if (tag_size != 16) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	ctx = EVP_CIPHER_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
+    ctx = EVP_CIPHER_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
 
-	ret_value = (boolean)EVP_DecryptInit_ex(ctx, EVP_chacha20_poly1305(),
-						NULL, NULL, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptInit_ex(ctx, EVP_chacha20_poly1305(),
+                        NULL, NULL, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
-						 (int32_t)iv_size, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
+                         (int32_t)iv_size, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
-						 (int32_t)tag_size, (void *)tag);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+                         (int32_t)tag_size, (void *)tag);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptUpdate(
-		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptUpdate(
+        ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptUpdate(ctx, data_out,
-					       (int32_t *)&temp_out_size, data_in,
-					       (int32_t)data_in_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptUpdate(ctx, data_out,
+                           (int32_t *)&temp_out_size, data_in,
+                           (int32_t)data_in_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptFinal_ex(ctx, data_out,
-						 (int32_t *)&temp_out_size);
+    ret_value = (boolean)EVP_DecryptFinal_ex(ctx, data_out,
+                         (int32_t *)&temp_out_size);
 
 done:
-	EVP_CIPHER_CTX_free(ctx);
-	if (!ret_value) {
-		return ret_value;
-	}
+    EVP_CIPHER_CTX_free(ctx);
+    if (!ret_value) {
+        return ret_value;
+    }
 
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return ret_value;
+    return ret_value;
 }

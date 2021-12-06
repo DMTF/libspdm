@@ -38,72 +38,72 @@ static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 
 **/
 boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
-				   OUT uint8_t **single_x509_cert)
+                   OUT uint8_t **single_x509_cert)
 {
-	mbedtls_x509_crt *mbedtls_cert;
-	int32_t ret;
+    mbedtls_x509_crt *mbedtls_cert;
+    int32_t ret;
 
-	if (cert == NULL || single_x509_cert == NULL || cert_size == 0) {
-		return FALSE;
-	}
+    if (cert == NULL || single_x509_cert == NULL || cert_size == 0) {
+        return FALSE;
+    }
 
-	mbedtls_cert = allocate_pool(sizeof(mbedtls_x509_crt));
-	if (mbedtls_cert == NULL) {
-		return FALSE;
-	}
+    mbedtls_cert = allocate_pool(sizeof(mbedtls_x509_crt));
+    if (mbedtls_cert == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_x509_crt_init(mbedtls_cert);
+    mbedtls_x509_crt_init(mbedtls_cert);
 
-	*single_x509_cert = (uint8_t *)(void *)mbedtls_cert;
-	ret = mbedtls_x509_crt_parse_der(mbedtls_cert, cert, cert_size);
+    *single_x509_cert = (uint8_t *)(void *)mbedtls_cert;
+    ret = mbedtls_x509_crt_parse_der(mbedtls_cert, cert, cert_size);
 
-	return ret == 0;
+    return ret == 0;
 }
 
 static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
-					      IN VA_LIST args)
+                          IN VA_LIST args)
 {
-	uint8_t *cert;
-	uintn cert_size;
-	int32_t index;
-	int32_t ret;
+    uint8_t *cert;
+    uintn cert_size;
+    int32_t index;
+    int32_t ret;
 
-	if (x509_stack == NULL) {
-		return FALSE;
-	}
+    if (x509_stack == NULL) {
+        return FALSE;
+    }
 
-	ret = 0;
-	mbedtls_x509_crt *crt = (mbedtls_x509_crt *)*x509_stack;
-	if (crt == NULL) {
-		crt = allocate_pool(sizeof(mbedtls_x509_crt));
-		if (crt == NULL) {
-			return FALSE;
-		}
-		mbedtls_x509_crt_init(crt);
-		*x509_stack = (uint8_t *)crt;
-	}
+    ret = 0;
+    mbedtls_x509_crt *crt = (mbedtls_x509_crt *)*x509_stack;
+    if (crt == NULL) {
+        crt = allocate_pool(sizeof(mbedtls_x509_crt));
+        if (crt == NULL) {
+            return FALSE;
+        }
+        mbedtls_x509_crt_init(crt);
+        *x509_stack = (uint8_t *)crt;
+    }
 
-	for (index = 0;; index++) {
-		//
-		// If cert is NULL, then it is the end of the list.
-		//
-		cert = VA_ARG(args, uint8_t *);
-		if (cert == NULL) {
-			break;
-		}
+    for (index = 0;; index++) {
+        //
+        // If cert is NULL, then it is the end of the list.
+        //
+        cert = VA_ARG(args, uint8_t *);
+        if (cert == NULL) {
+            break;
+        }
 
-		cert_size = VA_ARG(args, uintn);
-		if (cert_size == 0) {
-			break;
-		}
+        cert_size = VA_ARG(args, uintn);
+        if (cert_size == 0) {
+            break;
+        }
 
-		ret = mbedtls_x509_crt_parse_der(crt, cert, cert_size);
+        ret = mbedtls_x509_crt_parse_der(crt, cert, cert_size);
 
-		if (ret != 0) {
-			break;
-		}
-	}
-	return ret == 0;
+        if (ret != 0) {
+            break;
+        }
+    }
+    return ret == 0;
 }
 
 /**
@@ -124,13 +124,13 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
 **/
 boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 {
-	VA_LIST args;
-	boolean result;
+    VA_LIST args;
+    boolean result;
 
-	VA_START(args, x509_stack);
-	result = X509ConstructCertificateStackV(x509_stack, args);
-	VA_END(args);
-	return result;
+    VA_START(args, x509_stack);
+    result = X509ConstructCertificateStackV(x509_stack, args);
+    VA_END(args);
+    return result;
 }
 
 /**
@@ -143,10 +143,10 @@ boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 **/
 void x509_free(IN void *x509_cert)
 {
-	if (x509_cert) {
-		mbedtls_x509_crt_free(x509_cert);
-		free_pool(x509_cert);
-	}
+    if (x509_cert) {
+        mbedtls_x509_crt_free(x509_cert);
+        free_pool(x509_cert);
+    }
 }
 
 /**
@@ -159,11 +159,11 @@ void x509_free(IN void *x509_cert)
 **/
 void x509_stack_free(IN void *x509_stack)
 {
-	if (x509_stack == NULL) {
-		return;
-	}
+    if (x509_stack == NULL) {
+        return;
+    }
 
-	mbedtls_x509_crt_free(x509_stack);
+    mbedtls_x509_crt_free(x509_stack);
 }
 
 /**
@@ -178,13 +178,13 @@ void x509_stack_free(IN void *x509_stack)
   @retval      FALSe  Failed to get tag or tag not match
 **/
 boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
-		     IN uint32_t tag)
+             IN uint32_t tag)
 {
-	if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
-		return TRUE;
-	} else {
-		return FALSE;
-	}
+    if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 /**
@@ -205,128 +205,128 @@ boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
 
 **/
 boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
-			      OUT uint8_t *cert_subject,
-			      IN OUT uintn *subject_size)
+                  OUT uint8_t *cert_subject,
+                  IN OUT uintn *subject_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	boolean status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    boolean status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = FALSE;
+    status = FALSE;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		if (*subject_size < crt.subject_raw.len) {
-			*subject_size = crt.subject_raw.len;
-			status = FALSE;
-			goto cleanup;
-		}
-		if (cert_subject != NULL) {
-			copy_mem(cert_subject, crt.subject_raw.p, crt.subject_raw.len);
-		}
-		*subject_size = crt.subject_raw.len;
-		status = TRUE;
-	}
+    if (ret == 0) {
+        if (*subject_size < crt.subject_raw.len) {
+            *subject_size = crt.subject_raw.len;
+            status = FALSE;
+            goto cleanup;
+        }
+        if (cert_subject != NULL) {
+            copy_mem(cert_subject, crt.subject_raw.p, crt.subject_raw.len);
+        }
+        *subject_size = crt.subject_raw.len;
+        status = TRUE;
+    }
 
 cleanup:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 return_status
 internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8_t *oid,
-			   IN uintn oid_size, IN OUT char8 *common_name,
-			   OPTIONAL IN OUT uintn *common_name_size)
+               IN uintn oid_size, IN OUT char8 *common_name,
+               OPTIONAL IN OUT uintn *common_name_size)
 {
-	mbedtls_asn1_named_data *data;
+    mbedtls_asn1_named_data *data;
 
-	data = mbedtls_asn1_find_named_data(name, oid, oid_size);
-	if (data != NULL) {
-		if (*common_name_size <= data->val.len) {
-			*common_name_size = data->val.len + 1;
-			return RETURN_BUFFER_TOO_SMALL;
-		}
-		if (common_name != NULL) {
-			copy_mem(common_name, data->val.p, data->val.len);
-			common_name[data->val.len] = '\0';
-		}
-		*common_name_size = data->val.len + 1;
-		return RETURN_SUCCESS;
-	} else {
-		return RETURN_NOT_FOUND;
-	}
+    data = mbedtls_asn1_find_named_data(name, oid, oid_size);
+    if (data != NULL) {
+        if (*common_name_size <= data->val.len) {
+            *common_name_size = data->val.len + 1;
+            return RETURN_BUFFER_TOO_SMALL;
+        }
+        if (common_name != NULL) {
+            copy_mem(common_name, data->val.p, data->val.len);
+            common_name[data->val.len] = '\0';
+        }
+        *common_name_size = data->val.len + 1;
+        return RETURN_SUCCESS;
+    } else {
+        return RETURN_NOT_FOUND;
+    }
 }
 
 return_status
 internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
-				   IN uint8_t *oid, IN uintn oid_size,
-				   OUT char8 *common_name,
-				   OPTIONAL IN OUT uintn *common_name_size)
+                   IN uint8_t *oid, IN uintn oid_size,
+                   OUT char8 *common_name,
+                   OPTIONAL IN OUT uintn *common_name_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	mbedtls_x509_name *name;
-	return_status status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    mbedtls_x509_name *name;
+    return_status status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		name = &(crt.subject);
-		status = internal_x509_get_nid_name(
-			name, oid, oid_size, common_name, common_name_size);
-	}
+    if (ret == 0) {
+        name = &(crt.subject);
+        status = internal_x509_get_nid_name(
+            name, oid, oid_size, common_name, common_name_size);
+    }
 
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 return_status
 internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
-				  IN uint8_t *oid, IN uintn oid_size,
-				  OUT char8 *common_name,
-				  OPTIONAL IN OUT uintn *common_name_size)
+                  IN uint8_t *oid, IN uintn oid_size,
+                  OUT char8 *common_name,
+                  OPTIONAL IN OUT uintn *common_name_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	mbedtls_x509_name *name;
-	return_status status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    mbedtls_x509_name *name;
+    return_status status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		name = &(crt.issuer);
-		status = internal_x509_get_nid_name(
-			name, oid, oid_size, common_name, common_name_size);
-	}
+    if (ret == 0) {
+        name = &(crt.issuer);
+        status = internal_x509_get_nid_name(
+            name, oid, oid_size, common_name, common_name_size);
+    }
 
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -356,12 +356,12 @@ internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-				   OUT char8 *common_name,
-				   OPTIONAL IN OUT uintn *common_name_size)
+                   OUT char8 *common_name,
+                   OPTIONAL IN OUT uintn *common_name_size)
 {
-	return internal_x509_get_subject_nid_name(
-		cert, cert_size, (uint8_t *)m_oid_common_name,
-		sizeof(m_oid_common_name), common_name, common_name_size);
+    return internal_x509_get_subject_nid_name(
+        cert, cert_size, (uint8_t *)m_oid_common_name,
+        sizeof(m_oid_common_name), common_name, common_name_size);
 }
 
 /**
@@ -392,12 +392,12 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-			   OUT char8 *name_buffer,
-			   OPTIONAL IN OUT uintn *name_buffer_size)
+               OUT char8 *name_buffer,
+               OPTIONAL IN OUT uintn *name_buffer_size)
 {
-	return internal_x509_get_subject_nid_name(
-		cert, cert_size, (uint8_t *)m_oid_organization_name,
-		sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
+    return internal_x509_get_subject_nid_name(
+        cert, cert_size, (uint8_t *)m_oid_organization_name,
+        sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -417,38 +417,38 @@ x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-				     OUT void **rsa_context)
+                     OUT void **rsa_context)
 {
-	mbedtls_x509_crt crt;
-	mbedtls_rsa_context *rsa;
-	int32_t ret;
+    mbedtls_x509_crt crt;
+    mbedtls_rsa_context *rsa;
+    int32_t ret;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
-		return FALSE;
-	}
+    if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
+        return FALSE;
+    }
 
-	if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_RSA) {
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
+    if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_RSA) {
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
 
-	rsa = rsa_new();
-	if (rsa == NULL) {
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
-	ret = mbedtls_rsa_copy(rsa, mbedtls_pk_rsa(crt.pk));
-	if (ret != 0) {
-		rsa_free(rsa);
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
-	mbedtls_x509_crt_free(&crt);
+    rsa = rsa_new();
+    if (rsa == NULL) {
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
+    ret = mbedtls_rsa_copy(rsa, mbedtls_pk_rsa(crt.pk));
+    if (ret != 0) {
+        rsa_free(rsa);
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
+    mbedtls_x509_crt_free(&crt);
 
-	*rsa_context = rsa;
-	return TRUE;
+    *rsa_context = rsa;
+    return TRUE;
 }
 
 /**
@@ -468,42 +468,42 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-				    OUT void **ec_context)
+                    OUT void **ec_context)
 {
-	mbedtls_x509_crt crt;
-	mbedtls_ecdh_context *ecdh;
-	int32_t ret;
+    mbedtls_x509_crt crt;
+    mbedtls_ecdh_context *ecdh;
+    int32_t ret;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
-		return FALSE;
-	}
+    if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
+        return FALSE;
+    }
 
-	if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_ECKEY) {
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
+    if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_ECKEY) {
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
 
-	ecdh = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
-	if (ecdh == NULL) {
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
-	mbedtls_ecdh_init(ecdh);
+    ecdh = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
+    if (ecdh == NULL) {
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
+    mbedtls_ecdh_init(ecdh);
 
-	ret = mbedtls_ecdh_get_params(ecdh, mbedtls_pk_ec(crt.pk),
-				      MBEDTLS_ECDH_OURS);
-	if (ret != 0) {
-		mbedtls_ecdh_free(ecdh);
-		free_pool(ecdh);
-		mbedtls_x509_crt_free(&crt);
-		return FALSE;
-	}
-	mbedtls_x509_crt_free(&crt);
+    ret = mbedtls_ecdh_get_params(ecdh, mbedtls_pk_ec(crt.pk),
+                      MBEDTLS_ECDH_OURS);
+    if (ret != 0) {
+        mbedtls_ecdh_free(ecdh);
+        free_pool(ecdh);
+        mbedtls_x509_crt_free(&crt);
+        return FALSE;
+    }
+    mbedtls_x509_crt_free(&crt);
 
-	*ec_context = ecdh;
-	return TRUE;
+    *ec_context = ecdh;
+    return TRUE;
 }
 
 /**
@@ -523,9 +523,9 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-				    OUT void **ecd_context)
+                    OUT void **ecd_context)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -545,9 +545,9 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-				     OUT void **sm2_context)
+                     OUT void **sm2_context)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -567,38 +567,38 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
-			 IN const uint8_t *ca_cert, IN uintn ca_cert_size)
+             IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
-	int32_t ret;
-	mbedtls_x509_crt ca, end;
-	uint32_t v_flag = 0;
-	mbedtls_x509_crt_profile profile = { 0 };
+    int32_t ret;
+    mbedtls_x509_crt ca, end;
+    uint32_t v_flag = 0;
+    mbedtls_x509_crt_profile profile = { 0 };
 
-	if (cert == NULL || ca_cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL || ca_cert == NULL) {
+        return FALSE;
+    }
 
-	copy_mem(&profile, &mbedtls_x509_crt_profile_default,
-		 sizeof(mbedtls_x509_crt_profile));
+    copy_mem(&profile, &mbedtls_x509_crt_profile_default,
+         sizeof(mbedtls_x509_crt_profile));
 
-	mbedtls_x509_crt_init(&ca);
-	mbedtls_x509_crt_init(&end);
+    mbedtls_x509_crt_init(&ca);
+    mbedtls_x509_crt_init(&end);
 
-	ret = mbedtls_x509_crt_parse_der(&ca, ca_cert, ca_cert_size);
+    ret = mbedtls_x509_crt_parse_der(&ca, ca_cert, ca_cert_size);
 
-	if (ret == 0) {
-		ret = mbedtls_x509_crt_parse_der(&end, cert, cert_size);
-	}
+    if (ret == 0) {
+        ret = mbedtls_x509_crt_parse_der(&end, cert, cert_size);
+    }
 
-	if (ret == 0) {
-		ret = mbedtls_x509_crt_verify_with_profile(
-			&end, &ca, NULL, &profile, NULL, &v_flag, NULL, NULL);
-	}
+    if (ret == 0) {
+        ret = mbedtls_x509_crt_verify_with_profile(
+            &end, &ca, NULL, &profile, NULL, &v_flag, NULL, NULL);
+    }
 
-	mbedtls_x509_crt_free(&ca);
-	mbedtls_x509_crt_free(&end);
+    mbedtls_x509_crt_free(&ca);
+    mbedtls_x509_crt_free(&end);
 
-	return ret == 0;
+    return ret == 0;
 }
 
 /**
@@ -620,59 +620,59 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
                   trusted CA.
 **/
 boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
-			       IN uint8_t *cert_chain, IN uintn cert_chain_length)
+                   IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
-	uintn asn1_len;
-	uintn preceding_cert_len;
-	uint8_t *preceding_cert;
-	uintn current_cert_len;
-	uint8_t *current_cert;
-	uint8_t *tmp_ptr;
-	uint32_t ret;
-	boolean verify_flag;
+    uintn asn1_len;
+    uintn preceding_cert_len;
+    uint8_t *preceding_cert;
+    uintn current_cert_len;
+    uint8_t *current_cert;
+    uint8_t *tmp_ptr;
+    uint32_t ret;
+    boolean verify_flag;
 
-	verify_flag = FALSE;
-	preceding_cert = root_cert;
-	preceding_cert_len = root_cert_length;
+    verify_flag = FALSE;
+    preceding_cert = root_cert;
+    preceding_cert_len = root_cert_length;
 
-	current_cert = cert_chain;
+    current_cert = cert_chain;
 
-	//
-	// Get Current certificate from certificates buffer and Verify with preciding cert
-	//
-	do {
-		tmp_ptr = current_cert;
-		ret = mbedtls_asn1_get_tag(
-			&tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
-			MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
-		if (ret != 0) {
-			break;
-		}
+    //
+    // Get Current certificate from certificates buffer and Verify with preciding cert
+    //
+    do {
+        tmp_ptr = current_cert;
+        ret = mbedtls_asn1_get_tag(
+            &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
+            MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
+        if (ret != 0) {
+            break;
+        }
 
-		current_cert_len = asn1_len + (tmp_ptr - current_cert);
+        current_cert_len = asn1_len + (tmp_ptr - current_cert);
 
-		if (x509_verify_cert(current_cert, current_cert_len,
-				     preceding_cert,
-				     preceding_cert_len) == FALSE) {
-			verify_flag = FALSE;
-			break;
-		} else {
-			verify_flag = TRUE;
-		}
+        if (x509_verify_cert(current_cert, current_cert_len,
+                     preceding_cert,
+                     preceding_cert_len) == FALSE) {
+            verify_flag = FALSE;
+            break;
+        } else {
+            verify_flag = TRUE;
+        }
 
-		//
-		// Save preceding certificate
-		//
-		preceding_cert = current_cert;
-		preceding_cert_len = current_cert_len;
+        //
+        // Save preceding certificate
+        //
+        preceding_cert = current_cert;
+        preceding_cert_len = current_cert_len;
 
-		//
-		// Move current certificate to next;
-		//
-		current_cert = current_cert + current_cert_len;
-	} while (TRUE);
+        //
+        // Move current certificate to next;
+        //
+        current_cert = current_cert + current_cert_len;
+    } while (TRUE);
 
-	return verify_flag;
+    return verify_flag;
 }
 
 /**
@@ -694,68 +694,68 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
   @retval  FALSE  Failed to get certificate from certificate chain.
 **/
 boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
-				      IN uintn cert_chain_length,
-				      IN int32_t cert_index, OUT uint8_t **cert,
-				      OUT uintn *cert_length)
+                      IN uintn cert_chain_length,
+                      IN int32_t cert_index, OUT uint8_t **cert,
+                      OUT uintn *cert_length)
 {
-	uintn asn1_len;
-	int32_t current_index;
-	uintn current_cert_len;
-	uint8_t *current_cert;
-	uint8_t *tmp_ptr;
-	int32_t ret;
+    uintn asn1_len;
+    int32_t current_index;
+    uintn current_cert_len;
+    uint8_t *current_cert;
+    uint8_t *tmp_ptr;
+    int32_t ret;
 
-	//
-	// Check input parameters.
-	//
-	if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
-	    (cert_length == NULL)) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
+        (cert_length == NULL)) {
+        return FALSE;
+    }
 
-	current_cert = cert_chain;
-	current_index = -1;
+    current_cert = cert_chain;
+    current_index = -1;
 
-	//
-	// Traverse the certificate chain
-	//
-	while (TRUE) {
-		//
-		// Get asn1 tag len
-		//
-		tmp_ptr = current_cert;
-		ret = mbedtls_asn1_get_tag(
-			&tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
-			MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
-		if (ret != 0) {
-			break;
-		}
+    //
+    // Traverse the certificate chain
+    //
+    while (TRUE) {
+        //
+        // Get asn1 tag len
+        //
+        tmp_ptr = current_cert;
+        ret = mbedtls_asn1_get_tag(
+            &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
+            MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
+        if (ret != 0) {
+            break;
+        }
 
-		current_cert_len = asn1_len + (tmp_ptr - current_cert);
-		current_index++;
+        current_cert_len = asn1_len + (tmp_ptr - current_cert);
+        current_index++;
 
-		if (current_index == cert_index) {
-			*cert = current_cert;
-			*cert_length = current_cert_len;
-			return TRUE;
-		}
+        if (current_index == cert_index) {
+            *cert = current_cert;
+            *cert_length = current_cert_len;
+            return TRUE;
+        }
 
-		//
-		// Move to next
-		//
-		current_cert = current_cert + current_cert_len;
-	}
+        //
+        // Move to next
+        //
+        current_cert = current_cert + current_cert_len;
+    }
 
-	//
-	// If cert_index is -1, Return the last certificate
-	//
-	if (cert_index == -1 && current_index >= 0) {
-		*cert = current_cert - current_cert_len;
-		*cert_length = current_cert_len;
-		return TRUE;
-	}
+    //
+    // If cert_index is -1, Return the last certificate
+    //
+    if (cert_index == -1 && current_index >= 0) {
+        *cert = current_cert - current_cert_len;
+        *cert_length = current_cert_len;
+        return TRUE;
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -775,9 +775,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 
 **/
 boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
-			  OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
+              OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -797,30 +797,30 @@ boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
-			       OUT uintn *version)
+                   OUT uintn *version)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	return_status status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    return_status status;
 
-	if (cert == NULL) {
-		return RETURN_INVALID_PARAMETER;
-	}
+    if (cert == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		*version = crt.version - 1;
-		status = RETURN_SUCCESS;
-	}
+    if (ret == 0) {
+        *version = crt.version - 1;
+        status = RETURN_SUCCESS;
+    }
 
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -847,40 +847,40 @@ return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
-				     OUT uint8_t *serial_number,
-				     OPTIONAL IN OUT uintn *serial_number_size)
+                     OUT uint8_t *serial_number,
+                     OPTIONAL IN OUT uintn *serial_number_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	return_status status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    return_status status;
 
-	if (cert == NULL) {
-		return RETURN_INVALID_PARAMETER;
-	}
+    if (cert == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		if (*serial_number_size <= crt.serial.len) {
-			*serial_number_size = crt.serial.len + 1;
-			status = RETURN_BUFFER_TOO_SMALL;
-			goto cleanup;
-		}
-		if (serial_number != NULL) {
-			copy_mem(serial_number, crt.serial.p, crt.serial.len);
-			serial_number[crt.serial.len] = '\0';
-		}
-		*serial_number_size = crt.serial.len + 1;
-		status = RETURN_SUCCESS;
-	}
+    if (ret == 0) {
+        if (*serial_number_size <= crt.serial.len) {
+            *serial_number_size = crt.serial.len + 1;
+            status = RETURN_BUFFER_TOO_SMALL;
+            goto cleanup;
+        }
+        if (serial_number != NULL) {
+            copy_mem(serial_number, crt.serial.p, crt.serial.len);
+            serial_number[crt.serial.len] = '\0';
+        }
+        *serial_number_size = crt.serial.len + 1;
+        status = RETURN_SUCCESS;
+    }
 cleanup:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -903,40 +903,40 @@ cleanup:
 
 **/
 boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
-			     OUT uint8_t *cert_issuer,
-			     IN OUT uintn *issuer_size)
+                 OUT uint8_t *cert_issuer,
+                 IN OUT uintn *issuer_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	boolean status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    boolean status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = FALSE;
+    status = FALSE;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		if (*issuer_size < crt.issuer_raw.len) {
-			*issuer_size = crt.issuer_raw.len;
-			status = FALSE;
-			goto cleanup;
-		}
-		if (cert_issuer != NULL) {
-			copy_mem(cert_issuer, crt.issuer_raw.p, crt.issuer_raw.len);
-		}
-		*issuer_size = crt.issuer_raw.len;
-		status = TRUE;
-	}
+    if (ret == 0) {
+        if (*issuer_size < crt.issuer_raw.len) {
+            *issuer_size = crt.issuer_raw.len;
+            status = FALSE;
+            goto cleanup;
+        }
+        if (cert_issuer != NULL) {
+            copy_mem(cert_issuer, crt.issuer_raw.p, crt.issuer_raw.len);
+        }
+        *issuer_size = crt.issuer_raw.len;
+        status = TRUE;
+    }
 
 cleanup:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -967,13 +967,13 @@ cleanup:
 **/
 return_status
 x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-			    OUT char8 *common_name,
-			    OPTIONAL IN OUT uintn *common_name_size)
+                OUT char8 *common_name,
+                OPTIONAL IN OUT uintn *common_name_size)
 {
-	return internal_x509_get_issuer_nid_name(cert, cert_size,
-						 (uint8_t *)m_oid_common_name,
-						 sizeof(m_oid_common_name),
-						 common_name, common_name_size);
+    return internal_x509_get_issuer_nid_name(cert, cert_size,
+                         (uint8_t *)m_oid_common_name,
+                         sizeof(m_oid_common_name),
+                         common_name, common_name_size);
 }
 
 /**
@@ -1004,12 +1004,12 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-				 OUT char8 *name_buffer,
-				 OPTIONAL IN OUT uintn *name_buffer_size)
+                 OUT char8 *name_buffer,
+                 OPTIONAL IN OUT uintn *name_buffer_size)
 {
-	return internal_x509_get_issuer_nid_name(
-		cert, cert_size, (uint8_t *)m_oid_organization_name,
-		sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
+    return internal_x509_get_issuer_nid_name(
+        cert, cert_size, (uint8_t *)m_oid_organization_name,
+        sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -1031,40 +1031,40 @@ x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status x509_get_signature_algorithm(IN const uint8_t *cert,
-					   IN uintn cert_size, OUT uint8_t *oid,
-					   OPTIONAL IN OUT uintn *oid_size)
+                       IN uintn cert_size, OUT uint8_t *oid,
+                       OPTIONAL IN OUT uintn *oid_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	return_status status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    return_status status;
 
-	if (cert == NULL || cert_size == 0 || oid_size == NULL) {
-		return RETURN_INVALID_PARAMETER;
-	}
+    if (cert == NULL || cert_size == 0 || oid_size == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		if (*oid_size < crt.sig_oid.len) {
-			*oid_size = crt.serial.len;
-			status = RETURN_BUFFER_TOO_SMALL;
-			goto cleanup;
-		}
-		if (oid != NULL) {
-			copy_mem(oid, crt.sig_oid.p, crt.sig_oid.len);
-		}
-		*oid_size = crt.sig_oid.len;
-		status = RETURN_SUCCESS;
-	}
+    if (ret == 0) {
+        if (*oid_size < crt.sig_oid.len) {
+            *oid_size = crt.serial.len;
+            status = RETURN_BUFFER_TOO_SMALL;
+            goto cleanup;
+        }
+        if (oid != NULL) {
+            copy_mem(oid, crt.sig_oid.p, crt.sig_oid.len);
+        }
+        *oid_size = crt.sig_oid.len;
+        status = RETURN_SUCCESS;
+    }
 
 cleanup:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -1080,71 +1080,71 @@ cleanup:
  **/
 static return_status
 internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
-				  uintn oid_size, uint8_t **find_extension_data,
-				  uintn *find_extension_data_len)
+                  uintn oid_size, uint8_t **find_extension_data,
+                  uintn *find_extension_data_len)
 {
-	uint8_t *ptr;
-	uint8_t *extension_ptr;
-	size_t obj_len;
-	int32_t ret;
-	return_status status;
-	size_t find_extension_len;
-	size_t header_len;
+    uint8_t *ptr;
+    uint8_t *extension_ptr;
+    size_t obj_len;
+    int32_t ret;
+    return_status status;
+    size_t find_extension_len;
+    size_t header_len;
 
-	status = RETURN_INVALID_PARAMETER;
-	ptr = start;
+    status = RETURN_INVALID_PARAMETER;
+    ptr = start;
 
-	ret = 0;
+    ret = 0;
 
-	while (TRUE) {
-		/*
+    while (TRUE) {
+        /*
     * Extension  ::=  SEQUENCE  {
     *      extnID      OBJECT IDENTIFIER,
     *      critical    boolean DEFAULT FALSE,
     *      extnValue   OCTET STRING  }
     */
-		extension_ptr = ptr;
-		ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
-					   MBEDTLS_ASN1_CONSTRUCTED |
-						   MBEDTLS_ASN1_SEQUENCE);
-		if (ret == 0) {
-			header_len = (size_t)(ptr - extension_ptr);
-			find_extension_len = obj_len;
-			// Get Object Identifier
-			ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
-						   MBEDTLS_ASN1_OID);
-		} else {
-			break;
-		}
+        extension_ptr = ptr;
+        ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
+                       MBEDTLS_ASN1_CONSTRUCTED |
+                           MBEDTLS_ASN1_SEQUENCE);
+        if (ret == 0) {
+            header_len = (size_t)(ptr - extension_ptr);
+            find_extension_len = obj_len;
+            // Get Object Identifier
+            ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
+                           MBEDTLS_ASN1_OID);
+        } else {
+            break;
+        }
 
-		if (ret == 0 && const_compare_mem(ptr, oid, oid_size) == 0) {
-			ptr += obj_len;
+        if (ret == 0 && const_compare_mem(ptr, oid, oid_size) == 0) {
+            ptr += obj_len;
 
-			ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
-						   MBEDTLS_ASN1_BOOLEAN);
-			if (ret == 0) {
-				ptr += obj_len;
-			}
+            ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
+                           MBEDTLS_ASN1_BOOLEAN);
+            if (ret == 0) {
+                ptr += obj_len;
+            }
 
-			ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
-						   MBEDTLS_ASN1_OCTET_STRING);
-		} else {
-			ret = 1;
-		}
+            ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
+                           MBEDTLS_ASN1_OCTET_STRING);
+        } else {
+            ret = 1;
+        }
 
-		if (ret == 0) {
-			*find_extension_data = ptr;
-			*find_extension_data_len = obj_len;
-			status = RETURN_SUCCESS;
-			break;
-		}
+        if (ret == 0) {
+            *find_extension_data = ptr;
+            *find_extension_data_len = obj_len;
+            status = RETURN_SUCCESS;
+            break;
+        }
 
-		// move to next
-		ptr = extension_ptr + header_len + find_extension_len;
-		ret = 0;
-	}
+        // move to next
+        ptr = extension_ptr + header_len + find_extension_len;
+        ret = 0;
+    }
 
-	return status;
+    return status;
 }
 
 /**
@@ -1168,58 +1168,58 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
-				      IN uint8_t *oid, IN uintn oid_size,
-				      OUT uint8_t *extension_data,
-				      IN OUT uintn *extension_data_size)
+                      IN uint8_t *oid, IN uintn oid_size,
+                      OUT uint8_t *extension_data,
+                      IN OUT uintn *extension_data_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	return_status status;
-	uint8_t *ptr;
-	uint8_t *end;
-	size_t obj_len;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    return_status status;
+    uint8_t *ptr;
+    uint8_t *end;
+    size_t obj_len;
 
-	if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
-	    extension_data_size == NULL) {
-		return RETURN_INVALID_PARAMETER;
-	}
+    if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
+        extension_data_size == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
 
-	status = RETURN_INVALID_PARAMETER;
+    status = RETURN_INVALID_PARAMETER;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		ptr = crt.v3_ext.p;
-		end = crt.v3_ext.p + crt.v3_ext.len;
-		ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
-					   MBEDTLS_ASN1_CONSTRUCTED |
-						   MBEDTLS_ASN1_SEQUENCE);
-	}
+    if (ret == 0) {
+        ptr = crt.v3_ext.p;
+        end = crt.v3_ext.p + crt.v3_ext.len;
+        ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
+                       MBEDTLS_ASN1_CONSTRUCTED |
+                           MBEDTLS_ASN1_SEQUENCE);
+    }
 
-	if (ret == 0) {
-		status = internal_x509_find_extension_data(
-			ptr, end, oid, oid_size, &ptr, &obj_len);
-	}
+    if (ret == 0) {
+        status = internal_x509_find_extension_data(
+            ptr, end, oid, oid_size, &ptr, &obj_len);
+    }
 
-	if (status == RETURN_SUCCESS) {
-		if (*extension_data_size < obj_len) {
-			*extension_data_size = obj_len;
-			status = RETURN_BUFFER_TOO_SMALL;
-			goto cleanup;
-		}
-		if (oid != NULL) {
-			copy_mem(extension_data, ptr, obj_len);
-		}
-		*extension_data_size = obj_len;
-		status = RETURN_SUCCESS;
-	}
+    if (status == RETURN_SUCCESS) {
+        if (*extension_data_size < obj_len) {
+            *extension_data_size = obj_len;
+            status = RETURN_BUFFER_TOO_SMALL;
+            goto cleanup;
+        }
+        if (oid != NULL) {
+            copy_mem(extension_data, ptr, obj_len);
+        }
+        *extension_data_size = obj_len;
+        status = RETURN_SUCCESS;
+    }
 
 cleanup:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -1244,53 +1244,53 @@ cleanup:
   @retval  FALSE  This interface is not supported.
 **/
 boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
-			  IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
-			  IN OUT uintn *to_size)
+              IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
+              IN OUT uintn *to_size)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	boolean status;
-	uintn t_size;
-	uintn f_size;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    boolean status;
+    uintn t_size;
+    uintn f_size;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = FALSE;
+    status = FALSE;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		f_size = sizeof(mbedtls_x509_time);
-		if (*from_size < f_size) {
-			*from_size = f_size;
-			goto done;
-		}
-		*from_size = f_size;
-		if (from != NULL) {
-			copy_mem(from, &(crt.valid_from), f_size);
-		}
+    if (ret == 0) {
+        f_size = sizeof(mbedtls_x509_time);
+        if (*from_size < f_size) {
+            *from_size = f_size;
+            goto done;
+        }
+        *from_size = f_size;
+        if (from != NULL) {
+            copy_mem(from, &(crt.valid_from), f_size);
+        }
 
-		t_size = sizeof(mbedtls_x509_time);
-		if (*to_size < t_size) {
-			*to_size = t_size;
-			goto done;
-		}
-		*to_size = t_size;
-		if (to != NULL) {
-			copy_mem(to, &(crt.valid_to),
-				 sizeof(mbedtls_x509_time));
-		}
-		status = TRUE;
-	}
+        t_size = sizeof(mbedtls_x509_time);
+        if (*to_size < t_size) {
+            *to_size = t_size;
+            goto done;
+        }
+        *to_size = t_size;
+        if (to != NULL) {
+            copy_mem(to, &(crt.valid_to),
+                 sizeof(mbedtls_x509_time));
+        }
+        status = TRUE;
+    }
 
 done:
-	mbedtls_x509_crt_free(&crt);
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -1305,29 +1305,29 @@ done:
   @retval  FALSE  This interface is not supported.
 **/
 boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
-			   OUT uintn *usage)
+               OUT uintn *usage)
 {
-	mbedtls_x509_crt crt;
-	int32_t ret;
-	boolean status;
+    mbedtls_x509_crt crt;
+    int32_t ret;
+    boolean status;
 
-	if (cert == NULL) {
-		return FALSE;
-	}
+    if (cert == NULL) {
+        return FALSE;
+    }
 
-	status = FALSE;
+    status = FALSE;
 
-	mbedtls_x509_crt_init(&crt);
+    mbedtls_x509_crt_init(&crt);
 
-	ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
+    ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
-	if (ret == 0) {
-		*usage = crt.key_usage;
-		status = TRUE;
-	}
-	mbedtls_x509_crt_free(&crt);
+    if (ret == 0) {
+        *usage = crt.key_usage;
+        status = TRUE;
+    }
+    mbedtls_x509_crt_free(&crt);
 
-	return status;
+    return status;
 }
 
 /**
@@ -1348,68 +1348,68 @@ boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status x509_get_extended_key_usage(IN const uint8_t *cert,
-					  IN uintn cert_size, OUT uint8_t *usage,
-					  IN OUT uintn *usage_size)
+                      IN uintn cert_size, OUT uint8_t *usage,
+                      IN OUT uintn *usage_size)
 {
-	return_status status;
+    return_status status;
 
-	if (cert == NULL || cert_size == 0 || usage_size == NULL) {
-		return RETURN_INVALID_PARAMETER;
-	}
+    if (cert == NULL || cert_size == 0 || usage_size == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
 
-	status = x509_get_extension_data((uint8_t *)cert, cert_size,
-					 (uint8_t *)m_oid_ext_key_usage,
-					 sizeof(m_oid_ext_key_usage), usage,
-					 usage_size);
+    status = x509_get_extension_data((uint8_t *)cert, cert_size,
+                     (uint8_t *)m_oid_ext_key_usage,
+                     sizeof(m_oid_ext_key_usage), usage,
+                     usage_size);
 
-	return status;
+    return status;
 }
 
 /**
   Return 0 if before <= after, 1 otherwise
 **/
 static intn internal_x509_check_time(const mbedtls_x509_time *before,
-				     const mbedtls_x509_time *after)
+                     const mbedtls_x509_time *after)
 {
-	if (before->year > after->year)
-		return (1);
+    if (before->year > after->year)
+        return (1);
 
-	if (before->year == after->year && before->mon > after->mon)
-		return (1);
+    if (before->year == after->year && before->mon > after->mon)
+        return (1);
 
-	if (before->year == after->year && before->mon == after->mon &&
-	    before->day > after->day)
-		return (1);
+    if (before->year == after->year && before->mon == after->mon &&
+        before->day > after->day)
+        return (1);
 
-	if (before->year == after->year && before->mon == after->mon &&
-	    before->day == after->day && before->hour > after->hour)
-		return (1);
+    if (before->year == after->year && before->mon == after->mon &&
+        before->day == after->day && before->hour > after->hour)
+        return (1);
 
-	if (before->year == after->year && before->mon == after->mon &&
-	    before->day == after->day && before->hour == after->hour &&
-	    before->min > after->min)
-		return (1);
+    if (before->year == after->year && before->mon == after->mon &&
+        before->day == after->day && before->hour == after->hour &&
+        before->min > after->min)
+        return (1);
 
-	if (before->year == after->year && before->mon == after->mon &&
-	    before->day == after->day && before->hour == after->hour &&
-	    before->min == after->min && before->sec > after->sec)
-		return (1);
+    if (before->year == after->year && before->mon == after->mon &&
+        before->day == after->day && before->hour == after->hour &&
+        before->min == after->min && before->sec > after->sec)
+        return (1);
 
-	return (0);
+    return (0);
 }
 
 static int32_t internal_atoi(char8 *p_start, char8 *p_end)
 {
-	char8 *p = p_start;
-	int32_t k = 0;
-	while (p < p_end) {
-		///
-		/// k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10
-		///
-		k = (k << 3) + (k << 1) + (*p) - '0';
-		p++;
-	}
-	return k;
+    char8 *p = p_start;
+    int32_t k = 0;
+    while (p < p_end) {
+        ///
+        /// k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10
+        ///
+        k = (k << 3) + (k << 1) + (*p) - '0';
+        p++;
+    }
+    return k;
 }
 
 /**
@@ -1436,52 +1436,52 @@ static int32_t internal_atoi(char8 *p_start, char8 *p_end)
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
-				 IN OUT uintn *date_time_size)
+                 IN OUT uintn *date_time_size)
 {
-	mbedtls_x509_time dt;
+    mbedtls_x509_time dt;
 
-	int32_t year;
-	int32_t month;
-	int32_t day;
-	int32_t hour;
-	int32_t minute;
-	int32_t second;
-	return_status status;
-	char8 *p;
+    int32_t year;
+    int32_t month;
+    int32_t day;
+    int32_t hour;
+    int32_t minute;
+    int32_t second;
+    return_status status;
+    char8 *p;
 
-	p = date_time_str;
+    p = date_time_str;
 
-	year = internal_atoi(p, p + 4);
-	p += 4;
-	month = internal_atoi(p, p + 2);
-	p += 2;
-	day = internal_atoi(p, p + 2);
-	p += 2;
-	hour = internal_atoi(p, p + 2);
-	p += 2;
-	minute = internal_atoi(p, p + 2);
-	p += 2;
-	second = internal_atoi(p, p + 2);
-	p += 2;
-	dt.year = (int)year;
-	dt.mon = (int)month;
-	dt.day = (int)day;
-	dt.hour = (int)hour;
-	dt.min = (int)minute;
-	dt.sec = (int)second;
+    year = internal_atoi(p, p + 4);
+    p += 4;
+    month = internal_atoi(p, p + 2);
+    p += 2;
+    day = internal_atoi(p, p + 2);
+    p += 2;
+    hour = internal_atoi(p, p + 2);
+    p += 2;
+    minute = internal_atoi(p, p + 2);
+    p += 2;
+    second = internal_atoi(p, p + 2);
+    p += 2;
+    dt.year = (int)year;
+    dt.mon = (int)month;
+    dt.day = (int)day;
+    dt.hour = (int)hour;
+    dt.min = (int)minute;
+    dt.sec = (int)second;
 
-	if (*date_time_size < sizeof(mbedtls_x509_time)) {
-		*date_time_size = sizeof(mbedtls_x509_time);
-		status = RETURN_BUFFER_TOO_SMALL;
-		goto cleanup;
-	}
-	if (date_time != NULL) {
-		copy_mem(date_time, &dt, sizeof(mbedtls_x509_time));
-	}
-	*date_time_size = sizeof(mbedtls_x509_time);
-	status = RETURN_SUCCESS;
+    if (*date_time_size < sizeof(mbedtls_x509_time)) {
+        *date_time_size = sizeof(mbedtls_x509_time);
+        status = RETURN_BUFFER_TOO_SMALL;
+        goto cleanup;
+    }
+    if (date_time != NULL) {
+        copy_mem(date_time, &dt, sizeof(mbedtls_x509_time));
+    }
+    *date_time_size = sizeof(mbedtls_x509_time);
+    status = RETURN_SUCCESS;
 cleanup:
-	return status;
+    return status;
 }
 
 /**
@@ -1502,17 +1502,17 @@ cleanup:
 **/
 intn x509_compare_date_time(IN void *date_time1, IN void *date_time2)
 {
-	if (date_time1 == NULL || date_time2 == NULL) {
-		return -2;
-	}
-	if (const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
-	    0) {
-		return 0;
-	}
-	if (internal_x509_check_time((mbedtls_x509_time *)date_time1,
-				     (mbedtls_x509_time *)date_time2) == 0) {
-		return -1;
-	} else {
-		return 1;
-	}
+    if (date_time1 == NULL || date_time2 == NULL) {
+        return -2;
+    }
+    if (const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
+        0) {
+        return 0;
+    }
+    if (internal_x509_check_time((mbedtls_x509_time *)date_time1,
+                     (mbedtls_x509_time *)date_time2) == 0) {
+        return -1;
+    } else {
+        return 1;
+    }
 }

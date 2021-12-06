@@ -24,85 +24,85 @@
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status spdm_get_response_heartbeat(IN void *context,
-					  IN uintn request_size,
-					  IN void *request,
-					  IN OUT uintn *response_size,
-					  OUT void *response)
+                      IN uintn request_size,
+                      IN void *request,
+                      IN OUT uintn *response_size,
+                      OUT void *response)
 {
-	spdm_heartbeat_response_t *spdm_response;
-	spdm_heartbeat_request_t *spdm_request;
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	spdm_session_state_t session_state;
+    spdm_heartbeat_response_t *spdm_response;
+    spdm_heartbeat_request_t *spdm_request;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    spdm_session_state_t session_state;
 
-	spdm_context = context;
-	spdm_request = request;
+    spdm_context = context;
+    spdm_request = request;
 
-	if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
-		return spdm_responder_handle_response_state(
-			spdm_context,
-			spdm_request->header.request_response_code,
-			response_size, response);
-	}
-	if (!spdm_is_capabilities_flag_supported(
-		    spdm_context, FALSE,
-		    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
-		    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
-		libspdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
-					     0, response_size, response);
-		return RETURN_SUCCESS;
-	}
-	if (spdm_context->connection_info.connection_state <
-	    SPDM_CONNECTION_STATE_NEGOTIATED) {
-		libspdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
-					     0, response_size, response);
-		return RETURN_SUCCESS;
-	}
+    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+        return spdm_responder_handle_response_state(
+            spdm_context,
+            spdm_request->header.request_response_code,
+            response_size, response);
+    }
+    if (!spdm_is_capabilities_flag_supported(
+            spdm_context, FALSE,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+        libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
+                         0, response_size, response);
+        return RETURN_SUCCESS;
+    }
+    if (spdm_context->connection_info.connection_state <
+        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
+                         0, response_size, response);
+        return RETURN_SUCCESS;
+    }
 
-	if (!spdm_context->last_spdm_request_session_id_valid) {
-		libspdm_generate_error_response(context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
-	session_info = libspdm_get_session_info_via_session_id(
-		spdm_context, spdm_context->last_spdm_request_session_id);
-	if (session_info == NULL) {
-		libspdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
-	session_state = spdm_secured_message_get_session_state(
-		session_info->secured_message_context);
-	if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
-		libspdm_generate_error_response(spdm_context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
+    if (!spdm_context->last_spdm_request_session_id_valid) {
+        libspdm_generate_error_response(context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+        return RETURN_SUCCESS;
+    }
+    session_info = libspdm_get_session_info_via_session_id(
+        spdm_context, spdm_context->last_spdm_request_session_id);
+    if (session_info == NULL) {
+        libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+        return RETURN_SUCCESS;
+    }
+    session_state = spdm_secured_message_get_session_state(
+        session_info->secured_message_context);
+    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+        libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+        return RETURN_SUCCESS;
+    }
 
-	if (request_size != sizeof(spdm_heartbeat_request_t)) {
-		libspdm_generate_error_response(context,
-					     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-					     response_size, response);
-		return RETURN_SUCCESS;
-	}
+    if (request_size != sizeof(spdm_heartbeat_request_t)) {
+        libspdm_generate_error_response(context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+        return RETURN_SUCCESS;
+    }
 
-	spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-						spdm_request->header.request_response_code);
+    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                        spdm_request->header.request_response_code);
 
-	ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));
-	*response_size = sizeof(spdm_heartbeat_response_t);
-	zero_mem(response, *response_size);
-	spdm_response = response;
+    ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));
+    *response_size = sizeof(spdm_heartbeat_response_t);
+    zero_mem(response, *response_size);
+    spdm_response = response;
 
-	spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-	spdm_response->header.request_response_code = SPDM_HEARTBEAT_ACK;
-	spdm_response->header.param1 = 0;
-	spdm_response->header.param2 = 0;
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.request_response_code = SPDM_HEARTBEAT_ACK;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }

@@ -21,19 +21,19 @@
 **/
 boolean get_random_number_64(OUT uint64 *rand_data)
 {
-	uint8 *ptr;
+    uint8 *ptr;
 
-	assert(rand_data != NULL);
+    assert(rand_data != NULL);
 
-	ptr = (uint8 *)rand_data;
-	ptr[0] = (uint8)rand();
-	ptr[1] = (uint8)rand();
-	ptr[2] = (uint8)rand();
-	ptr[3] = (uint8)rand();
-	ptr[4] = (uint8)rand();
-	ptr[5] = (uint8)rand();
-	ptr[6] = (uint8)rand();
-	ptr[7] = (uint8)rand();
+    ptr = (uint8 *)rand_data;
+    ptr[0] = (uint8)rand();
+    ptr[1] = (uint8)rand();
+    ptr[2] = (uint8)rand();
+    ptr[3] = (uint8)rand();
+    ptr[4] = (uint8)rand();
+    ptr[5] = (uint8)rand();
+    ptr[6] = (uint8)rand();
+    ptr[7] = (uint8)rand();
 
-	return TRUE;
+    return TRUE;
 }

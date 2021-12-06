@@ -21,14 +21,14 @@
 // DOE header
 //
 typedef struct {
-	uint16_t vendor_id;
-	uint8_t data_object_type;
-	uint8_t reserved;
-	// length of the data object being transfered in number of DW, including the header (2 DW)
-	// It only includes bit[0~17], bit[18~31] are reserved.
-	// A value of 00000h indicate 2^18 DW == 2^20 byte.
-	uint32_t length;
-	//uint32_t   data_object_dw[length];
+    uint16_t vendor_id;
+    uint8_t data_object_type;
+    uint8_t reserved;
+    // length of the data object being transfered in number of DW, including the header (2 DW)
+    // It only includes bit[0~17], bit[18~31] are reserved.
+    // A value of 00000h indicate 2^18 DW == 2^20 byte.
+    uint32_t length;
+    //uint32_t   data_object_dw[length];
 } pci_doe_data_object_header_t;
 
 #define PCI_DOE_VENDOR_ID_PCISIG 0x0001
@@ -44,14 +44,14 @@ typedef struct {
 // DOE Discovery
 //
 typedef struct {
-	uint8_t index;
-	uint8_t reserved[3];
+    uint8_t index;
+    uint8_t reserved[3];
 } pci_doe_discovery_request_t;
 
 typedef struct {
-	uint16_t vendor_id;
-	uint8_t data_object_type;
-	uint8_t next_index;
+    uint16_t vendor_id;
+    uint8_t data_object_type;
+    uint8_t next_index;
 } pci_doe_discovery_response_t;
 
 #pragma pack()

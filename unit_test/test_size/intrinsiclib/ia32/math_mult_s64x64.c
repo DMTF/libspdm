@@ -8,7 +8,7 @@
 
 uint64_t internal_math_mult_u64x64(IN uint64_t multiplicand, IN uint64_t multiplier)
 {
-	_asm {
+    _asm {
     mov     ebx, dword ptr [multiplicand + 0]
     mov     edx, dword ptr [multiplier + 0]
     mov     ecx, ebx
@@ -18,21 +18,21 @@ uint64_t internal_math_mult_u64x64(IN uint64_t multiplicand, IN uint64_t multipl
     add     ebx, edx
     mul     ecx
     add     edx, ebx
-	}
+    }
 }
 
 uint64_t mult_u64x64(IN uint64_t multiplicand, IN uint64_t multiplier)
 {
-	uint64_t result;
+    uint64_t result;
 
-	result = internal_math_mult_u64x64(multiplicand, multiplier);
+    result = internal_math_mult_u64x64(multiplicand, multiplier);
 
-	return result;
+    return result;
 }
 
 int64_t mult_s64x64(IN int64_t multiplicand, IN int64_t multiplier)
 {
-	return (int64_t)mult_u64x64((uint64_t)multiplicand, (uint64_t)multiplier);
+    return (int64_t)mult_u64x64((uint64_t)multiplicand, (uint64_t)multiplier);
 }
 
 /*
@@ -41,13 +41,13 @@ int64_t mult_s64x64(IN int64_t multiplicand, IN int64_t multiplier)
  */
 __declspec(naked) void __cdecl _allmul(void)
 {
-	//
-	//    int64_t
-	//      //    mult_s64x64 (
-	//      IN      int64_t      multiplicand,
-	//      IN      int64_t      multiplier
-	//      )
-	//
+    //
+    //    int64_t
+    //      //    mult_s64x64 (
+    //      IN      int64_t      multiplicand,
+    //      IN      int64_t      multiplier
+    //      )
+    //
   _asm {
     ; Original local stack when calling _allmul
     ;               -----------------

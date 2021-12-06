@@ -26,40 +26,40 @@
 **/
 void *ecx_new_by_nid(IN uintn nid)
 {
-	EVP_PKEY_CTX *pkey_ctx;
-	EVP_PKEY *pkey;
-	int32_t result;
-	int32_t openssl_pkey_type;
+    EVP_PKEY_CTX *pkey_ctx;
+    EVP_PKEY *pkey;
+    int32_t result;
+    int32_t openssl_pkey_type;
 
-	switch (nid) {
-	case CRYPTO_NID_CURVE_X25519:
-		openssl_pkey_type = NID_X25519;
-		break;
-	case CRYPTO_NID_CURVE_X448:
-		openssl_pkey_type = NID_X448;
-		break;
-	default:
-		return NULL;
-	}
+    switch (nid) {
+    case CRYPTO_NID_CURVE_X25519:
+        openssl_pkey_type = NID_X25519;
+        break;
+    case CRYPTO_NID_CURVE_X448:
+        openssl_pkey_type = NID_X448;
+        break;
+    default:
+        return NULL;
+    }
 
-	pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
-	if (pkey_ctx == NULL) {
-		return NULL;
-	}
-	result = EVP_PKEY_keygen_init(pkey_ctx);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return NULL;
-	}
-	pkey = NULL;
-	result = EVP_PKEY_keygen(pkey_ctx, &pkey);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return NULL;
-	}
-	EVP_PKEY_CTX_free(pkey_ctx);
+    pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
+    if (pkey_ctx == NULL) {
+        return NULL;
+    }
+    result = EVP_PKEY_keygen_init(pkey_ctx);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return NULL;
+    }
+    pkey = NULL;
+    result = EVP_PKEY_keygen(pkey_ctx, &pkey);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return NULL;
+    }
+    EVP_PKEY_CTX_free(pkey_ctx);
 
-	return (void *)pkey;
+    return (void *)pkey;
 }
 
 /**
@@ -70,7 +70,7 @@ void *ecx_new_by_nid(IN uintn nid)
 **/
 void ecx_free(IN void *ecx_context)
 {
-	EVP_PKEY_free((EVP_PKEY *)ecx_context);
+    EVP_PKEY_free((EVP_PKEY *)ecx_context);
 }
 
 /**
@@ -100,39 +100,39 @@ void ecx_free(IN void *ecx_context)
 
 **/
 boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
-			 IN OUT uintn *public_size)
+             IN OUT uintn *public_size)
 {
-	EVP_PKEY *pkey;
-	int32_t result;
-	uint32_t final_pub_key_size;
+    EVP_PKEY *pkey;
+    int32_t result;
+    uint32_t final_pub_key_size;
 
-	if (ecx_context == NULL || public == NULL || public_size == NULL) {
-		return FALSE;
-	}
+    if (ecx_context == NULL || public == NULL || public_size == NULL) {
+        return FALSE;
+    }
 
-	pkey = (EVP_PKEY *)ecx_context;
-	switch (EVP_PKEY_id(pkey)) {
-	case NID_X25519:
-		final_pub_key_size = 32;
-		break;
-	case NID_X448:
-		final_pub_key_size = 56;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_size < final_pub_key_size) {
-		*public_size = final_pub_key_size;
-		return FALSE;
-	}
-	*public_size = final_pub_key_size;
-	zero_mem(public, *public_size);
-	result = EVP_PKEY_get_raw_public_key(pkey, public, public_size);
-	if (result == 0) {
-		return FALSE;
-	}
+    pkey = (EVP_PKEY *)ecx_context;
+    switch (EVP_PKEY_id(pkey)) {
+    case NID_X25519:
+        final_pub_key_size = 32;
+        break;
+    case NID_X448:
+        final_pub_key_size = 56;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_size < final_pub_key_size) {
+        *public_size = final_pub_key_size;
+        return FALSE;
+    }
+    *public_size = final_pub_key_size;
+    zero_mem(public, *public_size);
+    result = EVP_PKEY_get_raw_public_key(pkey, public, public_size);
+    if (result == 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -163,71 +163,71 @@ boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
 
 **/
 boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
-			IN uintn peer_public_size, OUT uint8_t *key,
-			IN OUT uintn *key_size)
+            IN uintn peer_public_size, OUT uint8_t *key,
+            IN OUT uintn *key_size)
 {
-	EVP_PKEY_CTX *pkey_ctx;
-	EVP_PKEY *pkey;
-	EVP_PKEY *peer_key;
-	int32_t result;
-	uint32_t final_key_size;
-	int32_t openssl_pkey_type;
+    EVP_PKEY_CTX *pkey_ctx;
+    EVP_PKEY *pkey;
+    EVP_PKEY *peer_key;
+    int32_t result;
+    uint32_t final_key_size;
+    int32_t openssl_pkey_type;
 
-	if (ecx_context == NULL || peer_public == NULL) {
-		return FALSE;
-	}
+    if (ecx_context == NULL || peer_public == NULL) {
+        return FALSE;
+    }
 
-	pkey = (EVP_PKEY *)ecx_context;
-	switch (EVP_PKEY_id(pkey)) {
-	case NID_X25519:
-		openssl_pkey_type = NID_X25519;
-		final_key_size = 32;
-		break;
-	case NID_X448:
-		openssl_pkey_type = NID_X448;
-		final_key_size = 56;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*key_size < final_key_size) {
-		*key_size = final_key_size;
-		return FALSE;
-	}
-	*key_size = final_key_size;
-	zero_mem(key, *key_size);
+    pkey = (EVP_PKEY *)ecx_context;
+    switch (EVP_PKEY_id(pkey)) {
+    case NID_X25519:
+        openssl_pkey_type = NID_X25519;
+        final_key_size = 32;
+        break;
+    case NID_X448:
+        openssl_pkey_type = NID_X448;
+        final_key_size = 56;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*key_size < final_key_size) {
+        *key_size = final_key_size;
+        return FALSE;
+    }
+    *key_size = final_key_size;
+    zero_mem(key, *key_size);
 
-	// Derive key
-	pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
-	if (pkey_ctx == NULL) {
-		return FALSE;
-	}
-	result = EVP_PKEY_derive_init(pkey_ctx);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return FALSE;
-	}
+    // Derive key
+    pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (pkey_ctx == NULL) {
+        return FALSE;
+    }
+    result = EVP_PKEY_derive_init(pkey_ctx);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return FALSE;
+    }
 
-	peer_key = EVP_PKEY_new_raw_public_key(openssl_pkey_type, NULL,
-					       peer_public, peer_public_size);
-	if (peer_key == NULL) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return FALSE;
-	}
-	result = EVP_PKEY_derive_set_peer(pkey_ctx, peer_key);
-	if (result <= 0) {
-		EVP_PKEY_free(peer_key);
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return FALSE;
-	}
-	EVP_PKEY_free(peer_key);
+    peer_key = EVP_PKEY_new_raw_public_key(openssl_pkey_type, NULL,
+                           peer_public, peer_public_size);
+    if (peer_key == NULL) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return FALSE;
+    }
+    result = EVP_PKEY_derive_set_peer(pkey_ctx, peer_key);
+    if (result <= 0) {
+        EVP_PKEY_free(peer_key);
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return FALSE;
+    }
+    EVP_PKEY_free(peer_key);
 
-	result = EVP_PKEY_derive(pkey_ctx, key, key_size);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return FALSE;
-	}
+    result = EVP_PKEY_derive(pkey_ctx, key, key_size);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return FALSE;
+    }
 
-	EVP_PKEY_CTX_free(pkey_ctx);
-	return TRUE;
+    EVP_PKEY_CTX_free(pkey_ctx);
+    return TRUE;
 }

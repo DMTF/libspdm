@@ -8,12 +8,12 @@
 
 void *allocate_pool(IN uintn AllocationSize)
 {
-	return NULL;
+    return NULL;
 }
 
 void *allocate_zero_pool(IN uintn AllocationSize)
 {
-	return NULL;
+    return NULL;
 }
 
 void free_pool(IN void *buffer)

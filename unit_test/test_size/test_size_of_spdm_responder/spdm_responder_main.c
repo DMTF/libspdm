@@ -15,21 +15,21 @@
 
 void spdm_dispatch(void)
 {
-	void *spdm_context;
-	return_status status;
+    void *spdm_context;
+    return_status status;
 
-	spdm_context = spdm_server_init();
-	if (spdm_context == NULL) {
-		return;
-	}
+    spdm_context = spdm_server_init();
+    if (spdm_context == NULL) {
+        return;
+    }
 
-	while (TRUE) {
-		status = libspdm_responder_dispatch_message(spdm_context);
-		if (status != RETURN_UNSUPPORTED) {
-			continue;
-		}
-	}
-	return;
+    while (TRUE) {
+        status = libspdm_responder_dispatch_message(spdm_context);
+        if (status != RETURN_UNSUPPORTED) {
+            continue;
+        }
+    }
+    return;
 }
 
 /**
@@ -42,7 +42,7 @@ void spdm_dispatch(void)
 **/
 void ModuleEntryPoint(void)
 {
-	spdm_dispatch();
+    spdm_dispatch();
 
-	return;
+    return;
 }

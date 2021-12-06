@@ -12,21 +12,21 @@
 
 void spdm_dispatch(void)
 {
-	void *spdm_context;
-	return_status status;
+    void *spdm_context;
+    return_status status;
 
-	spdm_context = spdm_client_init();
-	if (spdm_context == NULL) {
-		return;
-	}
+    spdm_context = spdm_client_init();
+    if (spdm_context == NULL) {
+        return;
+    }
 
-	status = do_authentication_via_spdm(spdm_context);
-	if (RETURN_ERROR(status)) {
-		return;
-	}
+    status = do_authentication_via_spdm(spdm_context);
+    if (RETURN_ERROR(status)) {
+        return;
+    }
 
-	status = do_session_via_spdm(spdm_context);
-	return;
+    status = do_session_via_spdm(spdm_context);
+    return;
 }
 
 /**
@@ -39,7 +39,7 @@ void spdm_dispatch(void)
 **/
 void ModuleEntryPoint(void)
 {
-	spdm_dispatch();
+    spdm_dispatch();
 
-	return;
+    return;
 }

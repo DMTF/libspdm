@@ -27,16 +27,16 @@
 **/
 void *dh_new_by_nid(IN uintn nid)
 {
-	switch (nid) {
-	case CRYPTO_NID_FFDHE2048:
-		return DH_new_by_nid(NID_ffdhe2048);
-	case CRYPTO_NID_FFDHE3072:
-		return DH_new_by_nid(NID_ffdhe3072);
-	case CRYPTO_NID_FFDHE4096:
-		return DH_new_by_nid(NID_ffdhe4096);
-	default:
-		return NULL;
-	}
+    switch (nid) {
+    case CRYPTO_NID_FFDHE2048:
+        return DH_new_by_nid(NID_ffdhe2048);
+    case CRYPTO_NID_FFDHE3072:
+        return DH_new_by_nid(NID_ffdhe3072);
+    case CRYPTO_NID_FFDHE4096:
+        return DH_new_by_nid(NID_ffdhe4096);
+    default:
+        return NULL;
+    }
 }
 
 /**
@@ -49,10 +49,10 @@ void *dh_new_by_nid(IN uintn nid)
 **/
 void dh_free(IN void *dh_context)
 {
-	//
-	// Free OpenSSL DH context
-	//
-	DH_free((DH *)dh_context);
+    //
+    // Free OpenSSL DH context
+    //
+    DH_free((DH *)dh_context);
 }
 
 /**
@@ -78,32 +78,32 @@ void dh_free(IN void *dh_context)
 
 **/
 boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-			      IN uintn prime_length, OUT uint8_t *prime)
+                  IN uintn prime_length, OUT uint8_t *prime)
 {
-	boolean ret_val;
-	BIGNUM *bn_p;
+    boolean ret_val;
+    BIGNUM *bn_p;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
+        return FALSE;
+    }
 
-	if (generator != DH_GENERATOR_2 && generator != DH_GENERATOR_5) {
-		return FALSE;
-	}
+    if (generator != DH_GENERATOR_2 && generator != DH_GENERATOR_5) {
+        return FALSE;
+    }
 
-	ret_val = (boolean)DH_generate_parameters_ex(
-		dh_context, (uint32_t)prime_length, (uint32_t)generator, NULL);
-	if (!ret_val) {
-		return FALSE;
-	}
+    ret_val = (boolean)DH_generate_parameters_ex(
+        dh_context, (uint32_t)prime_length, (uint32_t)generator, NULL);
+    if (!ret_val) {
+        return FALSE;
+    }
 
-	DH_get0_pqg(dh_context, (const BIGNUM **)&bn_p, NULL, NULL);
-	BN_bn2bin(bn_p, prime);
+    DH_get0_pqg(dh_context, (const BIGNUM **)&bn_p, NULL, NULL);
+    BN_bn2bin(bn_p, prime);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -128,42 +128,42 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-			 IN uintn prime_length, IN const uint8_t *prime)
+             IN uintn prime_length, IN const uint8_t *prime)
 {
-	DH *dh;
-	BIGNUM *bn_p;
-	BIGNUM *bn_g;
+    DH *dh;
+    BIGNUM *bn_p;
+    BIGNUM *bn_g;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
+        return FALSE;
+    }
 
-	if (generator != DH_GENERATOR_2 && generator != DH_GENERATOR_5) {
-		return FALSE;
-	}
+    if (generator != DH_GENERATOR_2 && generator != DH_GENERATOR_5) {
+        return FALSE;
+    }
 
-	//
-	// Set the generator and prime parameters for DH object.
-	//
-	dh = (DH *)dh_context;
-	bn_p = BN_bin2bn((const unsigned char *)prime, (int)(prime_length / 8),
-			 NULL);
-	bn_g = BN_bin2bn((const unsigned char *)&generator, 1, NULL);
-	if ((bn_p == NULL) || (bn_g == NULL) ||
-	    !DH_set0_pqg(dh, bn_p, NULL, bn_g)) {
-		goto error;
-	}
+    //
+    // Set the generator and prime parameters for DH object.
+    //
+    dh = (DH *)dh_context;
+    bn_p = BN_bin2bn((const unsigned char *)prime, (int)(prime_length / 8),
+             NULL);
+    bn_g = BN_bin2bn((const unsigned char *)&generator, 1, NULL);
+    if ((bn_p == NULL) || (bn_g == NULL) ||
+        !DH_set0_pqg(dh, bn_p, NULL, bn_g)) {
+        goto error;
+    }
 
-	return TRUE;
+    return TRUE;
 
 error:
-	BN_free(bn_p);
-	BN_free(bn_g);
+    BN_free(bn_p);
+    BN_free(bn_g);
 
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -193,63 +193,63 @@ error:
 
 **/
 boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
-			IN OUT uintn *public_key_size)
+            IN OUT uintn *public_key_size)
 {
-	boolean ret_val;
-	DH *dh;
-	BIGNUM *dh_pub_key;
-	intn size;
-	uintn final_pub_key_size;
+    boolean ret_val;
+    DH *dh;
+    BIGNUM *dh_pub_key;
+    intn size;
+    uintn final_pub_key_size;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || public_key_size == NULL) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || public_key_size == NULL) {
+        return FALSE;
+    }
 
-	if (public_key == NULL && *public_key_size != 0) {
-		return FALSE;
-	}
+    if (public_key == NULL && *public_key_size != 0) {
+        return FALSE;
+    }
 
-	dh = (DH *)dh_context;
-	switch (DH_size(dh)) {
-	case 256:
-		final_pub_key_size = 256;
-		break;
-	case 384:
-		final_pub_key_size = 384;
-		break;
-	case 512:
-		final_pub_key_size = 512;
-		break;
-	default:
-		return FALSE;
-	}
+    dh = (DH *)dh_context;
+    switch (DH_size(dh)) {
+    case 256:
+        final_pub_key_size = 256;
+        break;
+    case 384:
+        final_pub_key_size = 384;
+        break;
+    case 512:
+        final_pub_key_size = 512;
+        break;
+    default:
+        return FALSE;
+    }
 
-	if (*public_key_size < final_pub_key_size) {
-		*public_key_size = final_pub_key_size;
-		return FALSE;
-	}
-	*public_key_size = final_pub_key_size;
+    if (*public_key_size < final_pub_key_size) {
+        *public_key_size = final_pub_key_size;
+        return FALSE;
+    }
+    *public_key_size = final_pub_key_size;
 
-	ret_val = (boolean)DH_generate_key(dh_context);
-	if (ret_val) {
-		DH_get0_key(dh, (const BIGNUM **)&dh_pub_key, NULL);
-		size = BN_num_bytes(dh_pub_key);
-		if (size <= 0) {
-			return FALSE;
-		}
-		ASSERT((uintn)size <= final_pub_key_size);
+    ret_val = (boolean)DH_generate_key(dh_context);
+    if (ret_val) {
+        DH_get0_key(dh, (const BIGNUM **)&dh_pub_key, NULL);
+        size = BN_num_bytes(dh_pub_key);
+        if (size <= 0) {
+            return FALSE;
+        }
+        ASSERT((uintn)size <= final_pub_key_size);
 
-		if (public_key != NULL) {
-			zero_mem(public_key, *public_key_size);
-			BN_bn2bin(dh_pub_key,
-				  &public_key[0 + final_pub_key_size - size]);
-		}
-	}
+        if (public_key != NULL) {
+            zero_mem(public_key, *public_key_size);
+            BN_bn2bin(dh_pub_key,
+                  &public_key[0 + final_pub_key_size - size]);
+        }
+    }
 
-	return ret_val;
+    return ret_val;
 }
 
 /**
@@ -281,61 +281,61 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
 
 **/
 boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
-		       IN uintn peer_public_key_size, OUT uint8_t *key,
-		       IN OUT uintn *key_size)
+               IN uintn peer_public_key_size, OUT uint8_t *key,
+               IN OUT uintn *key_size)
 {
-	BIGNUM *bn;
-	intn size;
-	DH *dh;
-	uintn final_key_size;
+    BIGNUM *bn;
+    intn size;
+    DH *dh;
+    uintn final_key_size;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
-	    key == NULL) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
+        key == NULL) {
+        return FALSE;
+    }
 
-	if (peer_public_key_size > INT_MAX) {
-		return FALSE;
-	}
+    if (peer_public_key_size > INT_MAX) {
+        return FALSE;
+    }
 
-	bn = BN_bin2bn(peer_public_key, (uint32_t)peer_public_key_size, NULL);
-	if (bn == NULL) {
-		return FALSE;
-	}
+    bn = BN_bin2bn(peer_public_key, (uint32_t)peer_public_key_size, NULL);
+    if (bn == NULL) {
+        return FALSE;
+    }
 
-	dh = (DH *)dh_context;
-	switch (DH_size(dh)) {
-	case 256:
-		final_key_size = 256;
-		break;
-	case 384:
-		final_key_size = 384;
-		break;
-	case 512:
-		final_key_size = 512;
-		break;
-	default:
-		BN_free(bn);
-		return FALSE;
-	}
-	if (*key_size < final_key_size) {
-		*key_size = final_key_size;
-		BN_free(bn);
-		return FALSE;
-	}
+    dh = (DH *)dh_context;
+    switch (DH_size(dh)) {
+    case 256:
+        final_key_size = 256;
+        break;
+    case 384:
+        final_key_size = 384;
+        break;
+    case 512:
+        final_key_size = 512;
+        break;
+    default:
+        BN_free(bn);
+        return FALSE;
+    }
+    if (*key_size < final_key_size) {
+        *key_size = final_key_size;
+        BN_free(bn);
+        return FALSE;
+    }
 
-	size = DH_compute_key_padded(key, bn, dh_context);
-	BN_free(bn);
-	if (size < 0) {
-		return FALSE;
-	}
-	if ((uintn)size != final_key_size) {
-		return FALSE;
-	}
+    size = DH_compute_key_padded(key, bn, dh_context);
+    BN_free(bn);
+    if (size < 0) {
+        return FALSE;
+    }
+    if ((uintn)size != final_key_size) {
+        return FALSE;
+    }
 
-	*key_size = size;
-	return TRUE;
+    *key_size = size;
+    return TRUE;
 }

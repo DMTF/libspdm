@@ -28,39 +28,39 @@
 **/
 void *ec_new_by_nid(IN uintn nid)
 {
-	EC_KEY *ec_key;
-	EC_GROUP *ec_group;
-	boolean ret_val;
-	int32_t openssl_nid;
+    EC_KEY *ec_key;
+    EC_GROUP *ec_group;
+    boolean ret_val;
+    int32_t openssl_nid;
 
-	ec_key = EC_KEY_new();
-	if (ec_key == NULL) {
-		return NULL;
-	}
-	switch (nid) {
-	case CRYPTO_NID_SECP256R1:
-		openssl_nid = NID_X9_62_prime256v1;
-		break;
-	case CRYPTO_NID_SECP384R1:
-		openssl_nid = NID_secp384r1;
-		break;
-	case CRYPTO_NID_SECP521R1:
-		openssl_nid = NID_secp521r1;
-		break;
-	default:
-		return NULL;
-	}
+    ec_key = EC_KEY_new();
+    if (ec_key == NULL) {
+        return NULL;
+    }
+    switch (nid) {
+    case CRYPTO_NID_SECP256R1:
+        openssl_nid = NID_X9_62_prime256v1;
+        break;
+    case CRYPTO_NID_SECP384R1:
+        openssl_nid = NID_secp384r1;
+        break;
+    case CRYPTO_NID_SECP521R1:
+        openssl_nid = NID_secp521r1;
+        break;
+    default:
+        return NULL;
+    }
 
-	ec_group = EC_GROUP_new_by_curve_name(openssl_nid);
-	if (ec_group == NULL) {
-		return NULL;
-	}
-	ret_val = (boolean)EC_KEY_set_group(ec_key, ec_group);
-	EC_GROUP_free(ec_group);
-	if (!ret_val) {
-		return NULL;
-	}
-	return (void *)ec_key;
+    ec_group = EC_GROUP_new_by_curve_name(openssl_nid);
+    if (ec_group == NULL) {
+        return NULL;
+    }
+    ret_val = (boolean)EC_KEY_set_group(ec_key, ec_group);
+    EC_GROUP_free(ec_group);
+    if (!ret_val) {
+        return NULL;
+    }
+    return (void *)ec_key;
 }
 
 /**
@@ -71,7 +71,7 @@ void *ec_new_by_nid(IN uintn nid)
 **/
 void ec_free(IN void *ec_context)
 {
-	EC_KEY_free((EC_KEY *)ec_context);
+    EC_KEY_free((EC_KEY *)ec_context);
 }
 
 /**
@@ -90,79 +90,79 @@ void ec_free(IN void *ec_context)
 
 **/
 boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
-		       IN uintn public_key_size)
+               IN uintn public_key_size)
 {
-	EC_KEY *ec_key;
-	const EC_GROUP *ec_group;
-	boolean ret_val;
-	BIGNUM *bn_x;
-	BIGNUM *bn_y;
-	EC_POINT *ec_point;
-	int32_t openssl_nid;
-	uintn half_size;
+    EC_KEY *ec_key;
+    const EC_GROUP *ec_group;
+    boolean ret_val;
+    BIGNUM *bn_x;
+    BIGNUM *bn_y;
+    EC_POINT *ec_point;
+    int32_t openssl_nid;
+    uintn half_size;
 
-	if (ec_context == NULL || public_key == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_key == NULL) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (public_key_size != half_size * 2) {
-		return FALSE;
-	}
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (public_key_size != half_size * 2) {
+        return FALSE;
+    }
 
-	ec_group = EC_KEY_get0_group(ec_key);
-	ec_point = NULL;
+    ec_group = EC_KEY_get0_group(ec_key);
+    ec_point = NULL;
 
-	bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
-	bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
-	if (bn_x == NULL || bn_y == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
-	ec_point = EC_POINT_new(ec_group);
-	if (ec_point == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
+    bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
+    bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
+    if (bn_x == NULL || bn_y == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
+    ec_point = EC_POINT_new(ec_group);
+    if (ec_point == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
 
-	ret_val = (boolean)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-							   bn_x, bn_y, NULL);
-	if (!ret_val) {
-		goto done;
-	}
+    ret_val = (boolean)EC_POINT_set_affine_coordinates(ec_group, ec_point,
+                               bn_x, bn_y, NULL);
+    if (!ret_val) {
+        goto done;
+    }
 
-	ret_val = (boolean)EC_KEY_set_public_key(ec_key, ec_point);
-	if (!ret_val) {
-		goto done;
-	}
+    ret_val = (boolean)EC_KEY_set_public_key(ec_key, ec_point);
+    if (!ret_val) {
+        goto done;
+    }
 
-	ret_val = TRUE;
+    ret_val = TRUE;
 
 done:
-	if (bn_x != NULL) {
-		BN_free(bn_x);
-	}
-	if (bn_y != NULL) {
-		BN_free(bn_y);
-	}
-	if (ec_point != NULL) {
-		EC_POINT_free(ec_point);
-	}
-	return ret_val;
+    if (bn_x != NULL) {
+        BN_free(bn_x);
+    }
+    if (bn_y != NULL) {
+        BN_free(bn_y);
+    }
+    if (ec_point != NULL) {
+        EC_POINT_free(ec_point);
+    }
+    return ret_val;
 }
 
 /**
@@ -182,91 +182,91 @@ done:
 
 **/
 boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
-		       IN OUT uintn *public_key_size)
+               IN OUT uintn *public_key_size)
 {
-	EC_KEY *ec_key;
-	const EC_GROUP *ec_group;
-	boolean ret_val;
-	const EC_POINT *ec_point;
-	BIGNUM *bn_x;
-	BIGNUM *bn_y;
-	int32_t openssl_nid;
-	uintn half_size;
-	intn x_size;
-	intn y_size;
+    EC_KEY *ec_key;
+    const EC_GROUP *ec_group;
+    boolean ret_val;
+    const EC_POINT *ec_point;
+    BIGNUM *bn_x;
+    BIGNUM *bn_y;
+    int32_t openssl_nid;
+    uintn half_size;
+    intn x_size;
+    intn y_size;
 
-	if (ec_context == NULL || public_key_size == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_key_size == NULL) {
+        return FALSE;
+    }
 
-	if (public_key == NULL && *public_key_size != 0) {
-		return FALSE;
-	}
+    if (public_key == NULL && *public_key_size != 0) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
+    ec_key = (EC_KEY *)ec_context;
 
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_key_size < half_size * 2) {
-		*public_key_size = half_size * 2;
-		return FALSE;
-	}
-	*public_key_size = half_size * 2;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_key_size < half_size * 2) {
+        *public_key_size = half_size * 2;
+        return FALSE;
+    }
+    *public_key_size = half_size * 2;
 
-	ec_group = EC_KEY_get0_group(ec_key);
-	ec_point = EC_KEY_get0_public_key(ec_key);
-	if (ec_point == NULL) {
-		return FALSE;
-	}
+    ec_group = EC_KEY_get0_group(ec_key);
+    ec_point = EC_KEY_get0_public_key(ec_key);
+    if (ec_point == NULL) {
+        return FALSE;
+    }
 
-	bn_x = BN_new();
-	bn_y = BN_new();
-	if (bn_x == NULL || bn_y == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
+    bn_x = BN_new();
+    bn_y = BN_new();
+    if (bn_x == NULL || bn_y == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
 
-	ret_val = (boolean)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-							   bn_x, bn_y, NULL);
-	if (!ret_val) {
-		goto done;
-	}
+    ret_val = (boolean)EC_POINT_get_affine_coordinates(ec_group, ec_point,
+                               bn_x, bn_y, NULL);
+    if (!ret_val) {
+        goto done;
+    }
 
-	x_size = BN_num_bytes(bn_x);
-	y_size = BN_num_bytes(bn_y);
-	if (x_size <= 0 || y_size <= 0) {
-		ret_val = FALSE;
-		goto done;
-	}
-	ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    x_size = BN_num_bytes(bn_x);
+    y_size = BN_num_bytes(bn_y);
+    if (x_size <= 0 || y_size <= 0) {
+        ret_val = FALSE;
+        goto done;
+    }
+    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
-	if (public_key != NULL) {
-		zero_mem(public_key, *public_key_size);
-		BN_bn2bin(bn_x, &public_key[0 + half_size - x_size]);
-		BN_bn2bin(bn_y, &public_key[half_size + half_size - y_size]);
-	}
-	ret_val = TRUE;
+    if (public_key != NULL) {
+        zero_mem(public_key, *public_key_size);
+        BN_bn2bin(bn_x, &public_key[0 + half_size - x_size]);
+        BN_bn2bin(bn_y, &public_key[half_size + half_size - y_size]);
+    }
+    ret_val = TRUE;
 
 done:
-	if (bn_x != NULL) {
-		BN_free(bn_x);
-	}
-	if (bn_y != NULL) {
-		BN_free(bn_y);
-	}
-	return ret_val;
+    if (bn_x != NULL) {
+        BN_free(bn_x);
+    }
+    if (bn_y != NULL) {
+        BN_free(bn_y);
+    }
+    return ret_val;
 }
 
 /**
@@ -284,21 +284,21 @@ done:
 **/
 boolean ec_check_key(IN void *ec_context)
 {
-	EC_KEY *ec_key;
-	boolean ret_val;
+    EC_KEY *ec_key;
+    boolean ret_val;
 
-	if (ec_context == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
+    ec_key = (EC_KEY *)ec_context;
 
-	ret_val = (boolean)EC_KEY_check_key(ec_key);
-	if (!ret_val) {
-		return FALSE;
-	}
+    ret_val = (boolean)EC_KEY_check_key(ec_key);
+    if (!ret_val) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -331,94 +331,94 @@ boolean ec_check_key(IN void *ec_context)
 
 **/
 boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
-			IN OUT uintn *public_size)
+            IN OUT uintn *public_size)
 {
-	EC_KEY *ec_key;
-	const EC_GROUP *ec_group;
-	boolean ret_val;
-	const EC_POINT *ec_point;
-	BIGNUM *bn_x;
-	BIGNUM *bn_y;
-	int32_t openssl_nid;
-	uintn half_size;
-	intn x_size;
-	intn y_size;
+    EC_KEY *ec_key;
+    const EC_GROUP *ec_group;
+    boolean ret_val;
+    const EC_POINT *ec_point;
+    BIGNUM *bn_x;
+    BIGNUM *bn_y;
+    int32_t openssl_nid;
+    uintn half_size;
+    intn x_size;
+    intn y_size;
 
-	if (ec_context == NULL || public_size == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_size == NULL) {
+        return FALSE;
+    }
 
-	if (public == NULL && *public_size != 0) {
-		return FALSE;
-	}
+    if (public == NULL && *public_size != 0) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
-	ret_val = (boolean)EC_KEY_generate_key(ec_key);
-	if (!ret_val) {
-		return FALSE;
-	}
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_size < half_size * 2) {
-		*public_size = half_size * 2;
-		return FALSE;
-	}
-	*public_size = half_size * 2;
+    ec_key = (EC_KEY *)ec_context;
+    ret_val = (boolean)EC_KEY_generate_key(ec_key);
+    if (!ret_val) {
+        return FALSE;
+    }
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_size < half_size * 2) {
+        *public_size = half_size * 2;
+        return FALSE;
+    }
+    *public_size = half_size * 2;
 
-	ec_group = EC_KEY_get0_group(ec_key);
-	ec_point = EC_KEY_get0_public_key(ec_key);
-	if (ec_point == NULL) {
-		return FALSE;
-	}
+    ec_group = EC_KEY_get0_group(ec_key);
+    ec_point = EC_KEY_get0_public_key(ec_key);
+    if (ec_point == NULL) {
+        return FALSE;
+    }
 
-	bn_x = BN_new();
-	bn_y = BN_new();
-	if (bn_x == NULL || bn_y == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
+    bn_x = BN_new();
+    bn_y = BN_new();
+    if (bn_x == NULL || bn_y == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
 
-	ret_val = (boolean)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-							   bn_x, bn_y, NULL);
-	if (!ret_val) {
-		goto done;
-	}
+    ret_val = (boolean)EC_POINT_get_affine_coordinates(ec_group, ec_point,
+                               bn_x, bn_y, NULL);
+    if (!ret_val) {
+        goto done;
+    }
 
-	x_size = BN_num_bytes(bn_x);
-	y_size = BN_num_bytes(bn_y);
-	if (x_size <= 0 || y_size <= 0) {
-		ret_val = FALSE;
-		goto done;
-	}
-	ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    x_size = BN_num_bytes(bn_x);
+    y_size = BN_num_bytes(bn_y);
+    if (x_size <= 0 || y_size <= 0) {
+        ret_val = FALSE;
+        goto done;
+    }
+    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
-	if (public != NULL) {
-		zero_mem(public, *public_size);
-		BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
-		BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
-	}
-	ret_val = TRUE;
+    if (public != NULL) {
+        zero_mem(public, *public_size);
+        BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
+        BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
+    }
+    ret_val = TRUE;
 
 done:
-	if (bn_x != NULL) {
-		BN_free(bn_x);
-	}
-	if (bn_y != NULL) {
-		BN_free(bn_y);
-	}
-	return ret_val;
+    if (bn_x != NULL) {
+        BN_free(bn_x);
+    }
+    if (bn_y != NULL) {
+        BN_free(bn_y);
+    }
+    return ret_val;
 }
 
 /**
@@ -452,95 +452,95 @@ done:
 
 **/
 boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
-		       IN uintn peer_public_size, OUT uint8_t *key,
-		       IN OUT uintn *key_size)
+               IN uintn peer_public_size, OUT uint8_t *key,
+               IN OUT uintn *key_size)
 {
-	EC_KEY *ec_key;
-	const EC_GROUP *ec_group;
-	boolean ret_val;
-	BIGNUM *bn_x;
-	BIGNUM *bn_y;
-	EC_POINT *ec_point;
-	int32_t openssl_nid;
-	uintn half_size;
-	intn size;
+    EC_KEY *ec_key;
+    const EC_GROUP *ec_group;
+    boolean ret_val;
+    BIGNUM *bn_x;
+    BIGNUM *bn_y;
+    EC_POINT *ec_point;
+    int32_t openssl_nid;
+    uintn half_size;
+    intn size;
 
-	if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
-	    key == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
+        key == NULL) {
+        return FALSE;
+    }
 
-	if (peer_public_size > INT_MAX) {
-		return FALSE;
-	}
+    if (peer_public_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (peer_public_size != half_size * 2) {
-		return FALSE;
-	}
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (peer_public_size != half_size * 2) {
+        return FALSE;
+    }
 
-	ec_group = EC_KEY_get0_group(ec_key);
-	ec_point = NULL;
+    ec_group = EC_KEY_get0_group(ec_key);
+    ec_point = NULL;
 
-	bn_x = BN_bin2bn(peer_public, (uint32_t)half_size, NULL);
-	bn_y = BN_bin2bn(peer_public + half_size, (uint32_t)half_size, NULL);
-	if (bn_x == NULL || bn_y == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
-	ec_point = EC_POINT_new(ec_group);
-	if (ec_point == NULL) {
-		ret_val = FALSE;
-		goto done;
-	}
+    bn_x = BN_bin2bn(peer_public, (uint32_t)half_size, NULL);
+    bn_y = BN_bin2bn(peer_public + half_size, (uint32_t)half_size, NULL);
+    if (bn_x == NULL || bn_y == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
+    ec_point = EC_POINT_new(ec_group);
+    if (ec_point == NULL) {
+        ret_val = FALSE;
+        goto done;
+    }
 
-	ret_val = (boolean)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-							   bn_x, bn_y, NULL);
-	if (!ret_val) {
-		goto done;
-	}
+    ret_val = (boolean)EC_POINT_set_affine_coordinates(ec_group, ec_point,
+                               bn_x, bn_y, NULL);
+    if (!ret_val) {
+        goto done;
+    }
 
-	size = ECDH_compute_key(key, *key_size, ec_point, ec_key, NULL);
-	if (size < 0) {
-		ret_val = FALSE;
-		goto done;
-	}
+    size = ECDH_compute_key(key, *key_size, ec_point, ec_key, NULL);
+    if (size < 0) {
+        ret_val = FALSE;
+        goto done;
+    }
 
-	if (*key_size < (uintn)size) {
-		*key_size = size;
-		ret_val = FALSE;
-		goto done;
-	}
+    if (*key_size < (uintn)size) {
+        *key_size = size;
+        ret_val = FALSE;
+        goto done;
+    }
 
-	*key_size = size;
+    *key_size = size;
 
-	ret_val = TRUE;
+    ret_val = TRUE;
 
 done:
-	if (bn_x != NULL) {
-		BN_free(bn_x);
-	}
-	if (bn_y != NULL) {
-		BN_free(bn_y);
-	}
-	if (ec_point != NULL) {
-		EC_POINT_free(ec_point);
-	}
-	return ret_val;
+    if (bn_x != NULL) {
+        BN_free(bn_x);
+    }
+    if (bn_y != NULL) {
+        BN_free(bn_y);
+    }
+    if (ec_point != NULL) {
+        EC_POINT_free(ec_point);
+    }
+    return ret_val;
 }
 
 /**
@@ -573,94 +573,94 @@ done:
 
 **/
 boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-		   IN const uint8_t *message_hash, IN uintn hash_size,
-		   OUT uint8_t *signature, IN OUT uintn *sig_size)
+           IN const uint8_t *message_hash, IN uintn hash_size,
+           OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	EC_KEY *ec_key;
-	ECDSA_SIG *ecdsa_sig;
-	int32_t openssl_nid;
-	uint8_t half_size;
-	BIGNUM *bn_r;
-	BIGNUM *bn_s;
-	intn r_size;
-	intn s_size;
+    EC_KEY *ec_key;
+    ECDSA_SIG *ecdsa_sig;
+    int32_t openssl_nid;
+    uint8_t half_size;
+    BIGNUM *bn_r;
+    BIGNUM *bn_s;
+    intn r_size;
+    intn s_size;
 
-	if (ec_context == NULL || message_hash == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || message_hash == NULL) {
+        return FALSE;
+    }
 
-	if (signature == NULL) {
-		return FALSE;
-	}
+    if (signature == NULL) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*sig_size < (uintn)(half_size * 2)) {
-		*sig_size = half_size * 2;
-		return FALSE;
-	}
-	*sig_size = half_size * 2;
-	zero_mem(signature, *sig_size);
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*sig_size < (uintn)(half_size * 2)) {
+        *sig_size = half_size * 2;
+        return FALSE;
+    }
+    *sig_size = half_size * 2;
+    zero_mem(signature, *sig_size);
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	ecdsa_sig = ECDSA_do_sign(message_hash, (uint32_t)hash_size,
-				  (EC_KEY *)ec_context);
-	if (ecdsa_sig == NULL) {
-		return FALSE;
-	}
+    ecdsa_sig = ECDSA_do_sign(message_hash, (uint32_t)hash_size,
+                  (EC_KEY *)ec_context);
+    if (ecdsa_sig == NULL) {
+        return FALSE;
+    }
 
-	ECDSA_SIG_get0(ecdsa_sig, (const BIGNUM **)&bn_r,
-		       (const BIGNUM **)&bn_s);
+    ECDSA_SIG_get0(ecdsa_sig, (const BIGNUM **)&bn_r,
+               (const BIGNUM **)&bn_s);
 
-	r_size = BN_num_bytes(bn_r);
-	s_size = BN_num_bytes(bn_s);
-	if (r_size <= 0 || s_size <= 0) {
-		ECDSA_SIG_free(ecdsa_sig);
-		return FALSE;
-	}
-	ASSERT((uintn)r_size <= half_size && (uintn)s_size <= half_size);
+    r_size = BN_num_bytes(bn_r);
+    s_size = BN_num_bytes(bn_s);
+    if (r_size <= 0 || s_size <= 0) {
+        ECDSA_SIG_free(ecdsa_sig);
+        return FALSE;
+    }
+    ASSERT((uintn)r_size <= half_size && (uintn)s_size <= half_size);
 
-	BN_bn2bin(bn_r, &signature[0 + half_size - r_size]);
-	BN_bn2bin(bn_s, &signature[half_size + half_size - s_size]);
+    BN_bn2bin(bn_r, &signature[0 + half_size - r_size]);
+    BN_bn2bin(bn_s, &signature[half_size + half_size - s_size]);
 
-	ECDSA_SIG_free(ecdsa_sig);
+    ECDSA_SIG_free(ecdsa_sig);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -687,91 +687,91 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 
 **/
 boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-		     IN const uint8_t *message_hash, IN uintn hash_size,
-		     IN const uint8_t *signature, IN uintn sig_size)
+             IN const uint8_t *message_hash, IN uintn hash_size,
+             IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32_t result;
-	EC_KEY *ec_key;
-	ECDSA_SIG *ecdsa_sig;
-	int32_t openssl_nid;
-	uint8_t half_size;
-	BIGNUM *bn_r;
-	BIGNUM *bn_s;
+    int32_t result;
+    EC_KEY *ec_key;
+    ECDSA_SIG *ecdsa_sig;
+    int32_t openssl_nid;
+    uint8_t half_size;
+    BIGNUM *bn_r;
+    BIGNUM *bn_s;
 
-	if (ec_context == NULL || message_hash == NULL || signature == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || message_hash == NULL || signature == NULL) {
+        return FALSE;
+    }
 
-	if (sig_size > INT_MAX || sig_size == 0) {
-		return FALSE;
-	}
+    if (sig_size > INT_MAX || sig_size == 0) {
+        return FALSE;
+    }
 
-	ec_key = (EC_KEY *)ec_context;
-	openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-	switch (openssl_nid) {
-	case NID_X9_62_prime256v1:
-		half_size = 32;
-		break;
-	case NID_secp384r1:
-		half_size = 48;
-		break;
-	case NID_secp521r1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (sig_size != (uintn)(half_size * 2)) {
-		return FALSE;
-	}
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (sig_size != (uintn)(half_size * 2)) {
+        return FALSE;
+    }
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	ecdsa_sig = ECDSA_SIG_new();
-	if (ecdsa_sig == NULL) {
-		ECDSA_SIG_free(ecdsa_sig);
-		return FALSE;
-	}
+    ecdsa_sig = ECDSA_SIG_new();
+    if (ecdsa_sig == NULL) {
+        ECDSA_SIG_free(ecdsa_sig);
+        return FALSE;
+    }
 
-	bn_r = BN_bin2bn(signature, (uint32_t)half_size, NULL);
-	bn_s = BN_bin2bn(signature + half_size, (uint32_t)half_size, NULL);
-	if (bn_r == NULL || bn_s == NULL) {
-		if (bn_r != NULL) {
-			BN_free(bn_r);
-		}
-		if (bn_s != NULL) {
-			BN_free(bn_s);
-		}
-		ECDSA_SIG_free(ecdsa_sig);
-		return FALSE;
-	}
-	ECDSA_SIG_set0(ecdsa_sig, bn_r, bn_s);
+    bn_r = BN_bin2bn(signature, (uint32_t)half_size, NULL);
+    bn_s = BN_bin2bn(signature + half_size, (uint32_t)half_size, NULL);
+    if (bn_r == NULL || bn_s == NULL) {
+        if (bn_r != NULL) {
+            BN_free(bn_r);
+        }
+        if (bn_s != NULL) {
+            BN_free(bn_s);
+        }
+        ECDSA_SIG_free(ecdsa_sig);
+        return FALSE;
+    }
+    ECDSA_SIG_set0(ecdsa_sig, bn_r, bn_s);
 
-	result = ECDSA_do_verify(message_hash, (uint32_t)hash_size, ecdsa_sig,
-				 (EC_KEY *)ec_context);
+    result = ECDSA_do_verify(message_hash, (uint32_t)hash_size, ecdsa_sig,
+                 (EC_KEY *)ec_context);
 
-	ECDSA_SIG_free(ecdsa_sig);
+    ECDSA_SIG_free(ecdsa_sig);
 
-	return (result == 1);
+    return (result == 1);
 }

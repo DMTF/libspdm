@@ -25,7 +25,7 @@
 **/
 void *ecx_new_by_nid(IN uintn nid)
 {
-	return NULL;
+    return NULL;
 }
 
 /**
@@ -65,9 +65,9 @@ void ecx_free(IN void *ecx_context)
 
 **/
 boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
-			 IN OUT uintn *public_size)
+             IN OUT uintn *public_size)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -98,8 +98,8 @@ boolean ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
 
 **/
 boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
-			IN uintn peer_public_size, OUT uint8_t *key,
-			IN OUT uintn *key_size)
+            IN uintn peer_public_size, OUT uint8_t *key,
+            IN OUT uintn *key_size)
 {
-	return FALSE;
+    return FALSE;
 }

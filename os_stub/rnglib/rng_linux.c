@@ -24,21 +24,21 @@
 **/
 boolean get_random_number_64(OUT uint64_t *rand_data)
 {
-	int fd;
+    int fd;
 
-	assert(rand_data != NULL);
+    assert(rand_data != NULL);
 
-	fd = open("/dev/urandom", O_RDONLY);
-	if (fd < 0) {
-		printf("cannot open /dev/urandom\n");
-		return FALSE;
-	}
-	if (read(fd, rand_data, sizeof(*rand_data)) != sizeof(*rand_data)) {
-		printf("Cannot read /dev/urandom\n");
-		close(fd);
-		return FALSE;
-	}
-	close(fd);
+    fd = open("/dev/urandom", O_RDONLY);
+    if (fd < 0) {
+        printf("cannot open /dev/urandom\n");
+        return FALSE;
+    }
+    if (read(fd, rand_data, sizeof(*rand_data)) != sizeof(*rand_data)) {
+        printf("Cannot read /dev/urandom\n");
+        close(fd);
+        return FALSE;
+    }
+    close(fd);
 
-	return TRUE;
+    return TRUE;
 }

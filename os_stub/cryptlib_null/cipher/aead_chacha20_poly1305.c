@@ -38,13 +38,13 @@
 
 **/
 boolean aead_chacha20_poly1305_encrypt(
-	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-	IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
-	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
+    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+    IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
+    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -73,11 +73,11 @@ boolean aead_chacha20_poly1305_encrypt(
 
 **/
 boolean aead_chacha20_poly1305_decrypt(
-	IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-	IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-	IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
-	IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
+    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
+    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
+    IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
+    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }

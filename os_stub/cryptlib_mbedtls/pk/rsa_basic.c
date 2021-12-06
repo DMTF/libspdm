@@ -29,15 +29,15 @@
 **/
 void *rsa_new(void)
 {
-	void *rsa_context;
+    void *rsa_context;
 
-	rsa_context = allocate_zero_pool(sizeof(mbedtls_rsa_context));
-	if (rsa_context == NULL) {
-		return rsa_context;
-	}
+    rsa_context = allocate_zero_pool(sizeof(mbedtls_rsa_context));
+    if (rsa_context == NULL) {
+        return rsa_context;
+    }
 
-	mbedtls_rsa_init(rsa_context, MBEDTLS_RSA_PKCS_V15, MBEDTLS_MD_NONE);
-	return rsa_context;
+    mbedtls_rsa_init(rsa_context, MBEDTLS_RSA_PKCS_V15, MBEDTLS_MD_NONE);
+    return rsa_context;
 }
 
 /**
@@ -48,8 +48,8 @@ void *rsa_new(void)
 **/
 void rsa_free(IN void *rsa_context)
 {
-	mbedtls_rsa_free(rsa_context);
-	free_pool(rsa_context);
+    mbedtls_rsa_free(rsa_context);
+    free_pool(rsa_context);
 }
 
 /**
@@ -75,61 +75,61 @@ void rsa_free(IN void *rsa_context)
 
 **/
 boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    IN const uint8_t *big_number, IN uintn bn_size)
+            IN const uint8_t *big_number, IN uintn bn_size)
 {
-	mbedtls_rsa_context *rsa_key;
-	int32_t ret;
-	mbedtls_mpi value;
+    mbedtls_rsa_context *rsa_key;
+    int32_t ret;
+    mbedtls_mpi value;
 
-	//
-	// Check input parameters.
-	//
-	if (rsa_context == NULL || bn_size > INT_MAX) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (rsa_context == NULL || bn_size > INT_MAX) {
+        return FALSE;
+    }
 
-	mbedtls_mpi_init(&value);
+    mbedtls_mpi_init(&value);
 
-	rsa_key = (mbedtls_rsa_context *)rsa_context;
+    rsa_key = (mbedtls_rsa_context *)rsa_context;
 
-	// if big_number is Null clear
-	if (big_number) {
-		ret = mbedtls_mpi_read_binary(&value, big_number, bn_size);
-		if (ret != 0) {
-			return FALSE;
-		}
-	}
+    // if big_number is Null clear
+    if (big_number) {
+        ret = mbedtls_mpi_read_binary(&value, big_number, bn_size);
+        if (ret != 0) {
+            return FALSE;
+        }
+    }
 
-	switch (key_tag) {
-	case RSA_KEY_N:
-		ret = mbedtls_rsa_import(rsa_key, &value, NULL, NULL, NULL,
-					 NULL);
-		break;
-	case RSA_KEY_E:
-		ret = mbedtls_rsa_import(rsa_key, NULL, NULL, NULL, NULL,
-					 &value);
-		break;
-	case RSA_KEY_D:
-		ret = mbedtls_rsa_import(rsa_key, NULL, NULL, NULL, &value,
-					 NULL);
-		break;
-	case RSA_KEY_Q:
-		ret = mbedtls_rsa_import(rsa_key, NULL, NULL, &value, NULL,
-					 NULL);
-		break;
-	case RSA_KEY_P:
-		ret = mbedtls_rsa_import(rsa_key, NULL, &value, NULL, NULL,
-					 NULL);
-		break;
-	case RSA_KEY_DP:
-	case RSA_KEY_DQ:
-	case RSA_KEY_Q_INV:
-	default:
-		ret = -1;
-		break;
-	}
-	mbedtls_rsa_complete(rsa_key);
-	return ret == 0;
+    switch (key_tag) {
+    case RSA_KEY_N:
+        ret = mbedtls_rsa_import(rsa_key, &value, NULL, NULL, NULL,
+                     NULL);
+        break;
+    case RSA_KEY_E:
+        ret = mbedtls_rsa_import(rsa_key, NULL, NULL, NULL, NULL,
+                     &value);
+        break;
+    case RSA_KEY_D:
+        ret = mbedtls_rsa_import(rsa_key, NULL, NULL, NULL, &value,
+                     NULL);
+        break;
+    case RSA_KEY_Q:
+        ret = mbedtls_rsa_import(rsa_key, NULL, NULL, &value, NULL,
+                     NULL);
+        break;
+    case RSA_KEY_P:
+        ret = mbedtls_rsa_import(rsa_key, NULL, &value, NULL, NULL,
+                     NULL);
+        break;
+    case RSA_KEY_DP:
+    case RSA_KEY_DQ:
+    case RSA_KEY_Q_INV:
+    default:
+        ret = -1;
+        break;
+    }
+    mbedtls_rsa_complete(rsa_key);
+    return ret == 0;
 }
 
 /**
@@ -153,61 +153,61 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 **/
 boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				  IN const uint8_t *message_hash,
-				  IN uintn hash_size, IN const uint8_t *signature,
-				  IN uintn sig_size)
+                  IN const uint8_t *message_hash,
+                  IN uintn hash_size, IN const uint8_t *signature,
+                  IN uintn sig_size)
 {
-	int32_t ret;
-	mbedtls_md_type_t md_alg;
+    int32_t ret;
+    mbedtls_md_type_t md_alg;
 
-	if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
-		return FALSE;
-	}
+    if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
+        return FALSE;
+    }
 
-	if (sig_size > INT_MAX || sig_size == 0) {
-		return FALSE;
-	}
+    if (sig_size > INT_MAX || sig_size == 0) {
+        return FALSE;
+    }
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		md_alg = MBEDTLS_MD_SHA256;
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        md_alg = MBEDTLS_MD_SHA256;
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		md_alg = MBEDTLS_MD_SHA384;
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        md_alg = MBEDTLS_MD_SHA384;
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		md_alg = MBEDTLS_MD_SHA512;
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        md_alg = MBEDTLS_MD_SHA512;
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	if (mbedtls_rsa_get_len(rsa_context) != sig_size) {
-		return FALSE;
-	}
+    if (mbedtls_rsa_get_len(rsa_context) != sig_size) {
+        return FALSE;
+    }
 
-	mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V15, md_alg);
+    mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V15, md_alg);
 
-	ret = mbedtls_rsa_pkcs1_verify(rsa_context, NULL, NULL,
-				       MBEDTLS_RSA_PUBLIC, md_alg,
-				       (uint32_t)hash_size, message_hash,
-				       signature);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_rsa_pkcs1_verify(rsa_context, NULL, NULL,
+                       MBEDTLS_RSA_PUBLIC, md_alg,
+                       (uint32_t)hash_size, message_hash,
+                       signature);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -233,58 +233,58 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-		       IN const uint8_t *message_hash, IN uintn hash_size,
-		       IN const uint8_t *signature, IN uintn sig_size)
+               IN const uint8_t *message_hash, IN uintn hash_size,
+               IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32_t ret;
-	mbedtls_md_type_t md_alg;
+    int32_t ret;
+    mbedtls_md_type_t md_alg;
 
-	if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
-		return FALSE;
-	}
+    if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
+        return FALSE;
+    }
 
-	if (sig_size > INT_MAX || sig_size == 0) {
-		return FALSE;
-	}
+    if (sig_size > INT_MAX || sig_size == 0) {
+        return FALSE;
+    }
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		md_alg = MBEDTLS_MD_SHA256;
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        md_alg = MBEDTLS_MD_SHA256;
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		md_alg = MBEDTLS_MD_SHA384;
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        md_alg = MBEDTLS_MD_SHA384;
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		md_alg = MBEDTLS_MD_SHA512;
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        md_alg = MBEDTLS_MD_SHA512;
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	if (mbedtls_rsa_get_len(rsa_context) != sig_size) {
-		return FALSE;
-	}
+    if (mbedtls_rsa_get_len(rsa_context) != sig_size) {
+        return FALSE;
+    }
 
-	mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V21, md_alg);
+    mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V21, md_alg);
 
-	ret = mbedtls_rsa_rsassa_pss_verify(rsa_context, NULL, NULL,
-					    MBEDTLS_RSA_PUBLIC, md_alg,
-					    (uint32_t)hash_size, message_hash,
-					    signature);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_rsa_rsassa_pss_verify(rsa_context, NULL, NULL,
+                        MBEDTLS_RSA_PUBLIC, md_alg,
+                        (uint32_t)hash_size, message_hash,
+                        signature);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }

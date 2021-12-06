@@ -27,15 +27,15 @@
   @retval RETURN_***                 Any other RETURN_error code indicating the type of measurement collection failure.
 **/
 return_status spdm_measurement_collection(
-				    IN spdm_version_number_t spdm_version,
-				    IN uint8_t measurement_specification,
-				    IN uint32_t measurement_hash_algo,
-				    IN uint8_t mesurements_index,
-				    OUT uint8_t *device_measurement_count,
-				    OUT void *device_measurement,
-				    IN OUT uintn *device_measurement_size)
+                    IN spdm_version_number_t spdm_version,
+                    IN uint8_t measurement_specification,
+                    IN uint32_t measurement_hash_algo,
+                    IN uint8_t mesurements_index,
+                    OUT uint8_t *device_measurement_count,
+                    OUT void *device_measurement,
+                    IN OUT uintn *device_measurement_size)
 {
-	return RETURN_UNSUPPORTED;
+    return RETURN_UNSUPPORTED;
 }
 
 /**
@@ -54,13 +54,13 @@ return_status spdm_measurement_collection(
   @retval FALSE signing fail.
 **/
 boolean spdm_requester_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
-				 IN uint16_t req_base_asym_alg,
-				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8_t *message, IN uintn message_size,
-				 OUT uint8_t *signature, IN OUT uintn *sig_size)
+                 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+                 IN uint16_t req_base_asym_alg,
+                 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+                 IN const uint8_t *message, IN uintn message_size,
+                 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -79,13 +79,13 @@ boolean spdm_requester_data_sign(
   @retval FALSE signing fail.
 **/
 boolean spdm_responder_data_sign(
-				 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
-				 IN uint32_t base_asym_algo,
-				 IN uint32_t base_hash_algo, IN boolean is_data_hash,
-				 IN const uint8_t *message, IN uintn message_size,
-				 OUT uint8_t *signature, IN OUT uintn *sig_size)
+                 IN spdm_version_number_t spdm_version, IN uint8_t op_code,
+                 IN uint32_t base_asym_algo,
+                 IN uint32_t base_hash_algo, IN boolean is_data_hash,
+                 IN const uint8_t *message, IN uintn message_size,
+                 OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -103,15 +103,15 @@ boolean spdm_responder_data_sign(
   @retval FALSE  Hkdf generation failed.
 **/
 boolean spdm_psk_handshake_secret_hkdf_expand(
-					      IN spdm_version_number_t spdm_version,
-					      IN uint32_t base_hash_algo,
-					      IN const uint8_t *psk_hint,
-					      OPTIONAL IN uintn psk_hint_size,
-					      OPTIONAL IN const uint8_t *info,
-					      IN uintn info_size,
-					      OUT uint8_t *out, IN uintn out_size)
+                          IN spdm_version_number_t spdm_version,
+                          IN uint32_t base_hash_algo,
+                          IN const uint8_t *psk_hint,
+                          OPTIONAL IN uintn psk_hint_size,
+                          OPTIONAL IN const uint8_t *info,
+                          IN uintn info_size,
+                          OUT uint8_t *out, IN uintn out_size)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -129,13 +129,13 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
   @retval FALSE  Hkdf generation failed.
 **/
 boolean spdm_psk_master_secret_hkdf_expand(
-					   IN spdm_version_number_t spdm_version,
-					   IN uint32_t base_hash_algo,
-					   IN const uint8_t *psk_hint,
-					   OPTIONAL IN uintn psk_hint_size,
-					   OPTIONAL IN const uint8_t *info,
-					   IN uintn info_size, OUT uint8_t *out,
-					   IN uintn out_size)
+                       IN spdm_version_number_t spdm_version,
+                       IN uint32_t base_hash_algo,
+                       IN const uint8_t *psk_hint,
+                       OPTIONAL IN uintn psk_hint_size,
+                       OPTIONAL IN const uint8_t *info,
+                       IN uintn info_size, OUT uint8_t *out,
+                       IN uintn out_size)
 {
-	return FALSE;
+    return FALSE;
 }

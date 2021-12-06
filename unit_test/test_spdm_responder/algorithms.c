@@ -41,17 +41,17 @@ typedef struct {
 #pragma pack()
 
 spdm_negotiate_algorithms_request_t m_spdm_negotiate_algorithms_request1 = {
-	{ SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
-	sizeof(spdm_negotiate_algorithms_request_t),
-	SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+    { SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
+    sizeof(spdm_negotiate_algorithms_request_t),
+    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
 uintn m_spdm_negotiate_algorithms_request1_size =
-	sizeof(m_spdm_negotiate_algorithms_request1);
+    sizeof(m_spdm_negotiate_algorithms_request1);
 
 spdm_negotiate_algorithms_request_t m_spdm_negotiate_algorithms_request2 = {
-	{ SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
-	sizeof(spdm_negotiate_algorithms_request_t),
-	SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+    { SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
+    sizeof(spdm_negotiate_algorithms_request_t),
+    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
 uintn m_spdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
 
@@ -698,206 +698,206 @@ uintn m_spdm_negotiate_algorithm_request16_size = sizeof(m_spdm_negotiate_algori
 
 void test_spdm_responder_algorithms_case1(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x1;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request1_size,
-		&m_spdm_negotiate_algorithms_request1, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
-	spdm_response = (void *)response;
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ALGORITHMS);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request1_size,
+        &m_spdm_negotiate_algorithms_request1, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ALGORITHMS);
 }
 
 void test_spdm_responder_algorithms_case2(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x2;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request2_size,
-		&m_spdm_negotiate_algorithms_request2, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size, sizeof(spdm_error_response_t));
-	spdm_response = (void *)response;
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ERROR);
-	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_INVALID_REQUEST);
-	assert_int_equal(spdm_response->header.param2, 0);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request2_size,
+        &m_spdm_negotiate_algorithms_request2, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void test_spdm_responder_algorithms_case3(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x3;
-	spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request1_size,
-		&m_spdm_negotiate_algorithms_request1, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size, sizeof(spdm_error_response_t));
-	spdm_response = (void *)response;
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ERROR);
-	assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
-	assert_int_equal(spdm_response->header.param2, 0);
-	assert_int_equal(spdm_context->response_state,
-			 SPDM_RESPONSE_STATE_BUSY);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request1_size,
+        &m_spdm_negotiate_algorithms_request1, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->response_state,
+             SPDM_RESPONSE_STATE_BUSY);
 }
 
 void test_spdm_responder_algorithms_case4(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x4;
-	spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request1_size,
-		&m_spdm_negotiate_algorithms_request1, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size, sizeof(spdm_error_response_t));
-	spdm_response = (void *)response;
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ERROR);
-	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_REQUEST_RESYNCH);
-	assert_int_equal(spdm_response->header.param2, 0);
-	assert_int_equal(spdm_context->response_state,
-			 SPDM_RESPONSE_STATE_NEED_RESYNC);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request1_size,
+        &m_spdm_negotiate_algorithms_request1, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->response_state,
+             SPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
 void test_spdm_responder_algorithms_case5(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
-	spdm_error_data_response_not_ready_t *error_data;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
+    spdm_error_data_response_not_ready_t *error_data;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x5;
-	spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request1_size,
-		&m_spdm_negotiate_algorithms_request1, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size,
-			 sizeof(spdm_error_response_t) +
-				 sizeof(spdm_error_data_response_not_ready_t));
-	spdm_response = (void *)response;
-	error_data =
-		(spdm_error_data_response_not_ready_t *)(&spdm_response->length);
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ERROR);
-	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_RESPONSE_NOT_READY);
-	assert_int_equal(spdm_response->header.param2, 0);
-	assert_int_equal(spdm_context->response_state,
-			 SPDM_RESPONSE_STATE_NOT_READY);
-	assert_int_equal(error_data->request_code, SPDM_NEGOTIATE_ALGORITHMS);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request1_size,
+        &m_spdm_negotiate_algorithms_request1, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size,
+             sizeof(spdm_error_response_t) +
+                 sizeof(spdm_error_data_response_not_ready_t));
+    spdm_response = (void *)response;
+    error_data =
+        (spdm_error_data_response_not_ready_t *)(&spdm_response->length);
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->response_state,
+             SPDM_RESPONSE_STATE_NOT_READY);
+    assert_int_equal(error_data->request_code, SPDM_NEGOTIATE_ALGORITHMS);
 }
 
 void test_spdm_responder_algorithms_case6(void **state)
 {
-	return_status status;
-	spdm_test_context_t *spdm_test_context;
-	spdm_context_t *spdm_context;
-	uintn response_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	spdm_algorithms_response_t *spdm_response;
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn response_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    spdm_algorithms_response_t *spdm_response;
 
-	spdm_test_context = *state;
-	spdm_context = spdm_test_context->spdm_context;
-	spdm_test_context->case_id = 0x6;
-	spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
-	spdm_context->connection_info.connection_state =
-		SPDM_CONNECTION_STATE_NOT_STARTED;
-	spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-	spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state =
+        SPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
 
-	response_size = sizeof(response);
-	status = spdm_get_response_algorithms(
-		spdm_context, m_spdm_negotiate_algorithms_request1_size,
-		&m_spdm_negotiate_algorithms_request1, &response_size,
-		response);
-	assert_int_equal(status, RETURN_SUCCESS);
-	assert_int_equal(response_size, sizeof(spdm_error_response_t));
-	spdm_response = (void *)response;
-	assert_int_equal(spdm_response->header.request_response_code,
-			 SPDM_ERROR);
-	assert_int_equal(spdm_response->header.param1,
-			 SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
-	assert_int_equal(spdm_response->header.param2, 0);
+    response_size = sizeof(response);
+    status = spdm_get_response_algorithms(
+        spdm_context, m_spdm_negotiate_algorithms_request1_size,
+        &m_spdm_negotiate_algorithms_request1, &response_size,
+        response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+             SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+             SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void test_spdm_responder_algorithms_case7(void **state) {
@@ -1555,12 +1555,12 @@ void test_spdm_responder_algorithms_case20(void **state) {
       SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
   spdm_context->local_context.algorithm.base_asym_algo = 
       SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
-	  SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
-	  SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
+      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
   spdm_context->local_context.algorithm.dhe_named_group =
-	  SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 |
+      SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 |
       SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1 |
-	  SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+      SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
   spdm_context->local_context.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->local_context.algorithm.req_base_asym_alg = m_use_req_asym_algo;
   spdm_context->local_context.algorithm.key_schedule = m_use_key_schedule_algo;
@@ -1605,101 +1605,101 @@ void test_spdm_responder_algorithms_case20(void **state) {
 }
 
 spdm_test_context_t m_spdm_responder_algorithms_test_context = {
-	SPDM_TEST_CONTEXT_SIGNATURE,
-	FALSE,
+    SPDM_TEST_CONTEXT_SIGNATURE,
+    FALSE,
 };
 
 int spdm_responder_algorithms_test_main(void)
 {
-	const struct CMUnitTest spdm_responder_algorithms_tests[] = {
-		// Success Case
-		cmocka_unit_test(test_spdm_responder_algorithms_case1),
-		// Bad request size
-		cmocka_unit_test(test_spdm_responder_algorithms_case2),
-		// response_state: SPDM_RESPONSE_STATE_BUSY
-		cmocka_unit_test(test_spdm_responder_algorithms_case3),
-		// response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
-		cmocka_unit_test(test_spdm_responder_algorithms_case4),
-		// response_state: SPDM_RESPONSE_STATE_NOT_READY
-		cmocka_unit_test(test_spdm_responder_algorithms_case5),
-		// connection_state Check
-		cmocka_unit_test(test_spdm_responder_algorithms_case6),
-		// Success case V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case7),
-		// No match for base_asym_algo
-		cmocka_unit_test(test_spdm_responder_algorithms_case8),
-		// No match for base_hash_algo
-		cmocka_unit_test(test_spdm_responder_algorithms_case9),
-		// No match for dhe_named_group
-		cmocka_unit_test(test_spdm_responder_algorithms_case10),
-		// No match for aead_cipher_suite
-		cmocka_unit_test(test_spdm_responder_algorithms_case11),
-		// No match for req_base_asym_alg
-		cmocka_unit_test(test_spdm_responder_algorithms_case12),
-		// No match for key_schedule
-		cmocka_unit_test(test_spdm_responder_algorithms_case13),
-		// Spdm length greater than 64 bytes for V1.0
-		cmocka_unit_test(test_spdm_responder_algorithms_case14),
-		// Spdm length greater than 128 bytes for V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case15),
-		// Multiple repeated Alg structs for V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case16),
-		// param1 is smaller than the number of Alg structs for V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case17),
-		// param1 is bigger than the number of  Alg structs for V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case18),
-		// Invalid  Alg structs + valid Alg Structs for V1.1
-		cmocka_unit_test(test_spdm_responder_algorithms_case19),
-		// When support multiple algorithms, then defaults to choose the strongest available algorithm
-		cmocka_unit_test(test_spdm_responder_algorithms_case20),
-	};
+    const struct CMUnitTest spdm_responder_algorithms_tests[] = {
+        // Success Case
+        cmocka_unit_test(test_spdm_responder_algorithms_case1),
+        // Bad request size
+        cmocka_unit_test(test_spdm_responder_algorithms_case2),
+        // response_state: SPDM_RESPONSE_STATE_BUSY
+        cmocka_unit_test(test_spdm_responder_algorithms_case3),
+        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        cmocka_unit_test(test_spdm_responder_algorithms_case4),
+        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        cmocka_unit_test(test_spdm_responder_algorithms_case5),
+        // connection_state Check
+        cmocka_unit_test(test_spdm_responder_algorithms_case6),
+        // Success case V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case7),
+        // No match for base_asym_algo
+        cmocka_unit_test(test_spdm_responder_algorithms_case8),
+        // No match for base_hash_algo
+        cmocka_unit_test(test_spdm_responder_algorithms_case9),
+        // No match for dhe_named_group
+        cmocka_unit_test(test_spdm_responder_algorithms_case10),
+        // No match for aead_cipher_suite
+        cmocka_unit_test(test_spdm_responder_algorithms_case11),
+        // No match for req_base_asym_alg
+        cmocka_unit_test(test_spdm_responder_algorithms_case12),
+        // No match for key_schedule
+        cmocka_unit_test(test_spdm_responder_algorithms_case13),
+        // Spdm length greater than 64 bytes for V1.0
+        cmocka_unit_test(test_spdm_responder_algorithms_case14),
+        // Spdm length greater than 128 bytes for V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case15),
+        // Multiple repeated Alg structs for V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case16),
+        // param1 is smaller than the number of Alg structs for V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case17),
+        // param1 is bigger than the number of  Alg structs for V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case18),
+        // Invalid  Alg structs + valid Alg Structs for V1.1
+        cmocka_unit_test(test_spdm_responder_algorithms_case19),
+        // When support multiple algorithms, then defaults to choose the strongest available algorithm
+        cmocka_unit_test(test_spdm_responder_algorithms_case20),
+    };
 
-	m_spdm_negotiate_algorithms_request1.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithms_request1.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithms_request2.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithms_request2.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request3.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request3.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request4.spdm_request_version10.base_asym_algo = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
-	m_spdm_negotiate_algorithm_request4.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request5.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request5.spdm_request_version10.base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512;
-	m_spdm_negotiate_algorithm_request6.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request6.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request7.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request7.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request8.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request8.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request9.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request9.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request10.ext_asym_count = 0x09;
-	m_spdm_negotiate_algorithm_request11.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request11.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request11.spdm_request_version10.ext_asym_count = 0x15;
-	m_spdm_negotiate_algorithm_request12.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request12.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request13.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request13.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request14.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request14.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_asym_algo = m_use_asym_algo;
-	m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_hash_algo = m_use_hash_algo;
-	m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_asym_algo = 
+    m_spdm_negotiate_algorithms_request1.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithms_request1.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithms_request2.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithms_request2.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request3.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request3.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request4.spdm_request_version10.base_asym_algo = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+    m_spdm_negotiate_algorithm_request4.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request5.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request5.spdm_request_version10.base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512;
+    m_spdm_negotiate_algorithm_request6.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request6.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request7.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request7.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request8.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request8.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request9.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request9.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request10.ext_asym_count = 0x09;
+    m_spdm_negotiate_algorithm_request11.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request11.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request11.spdm_request_version10.ext_asym_count = 0x15;
+    m_spdm_negotiate_algorithm_request12.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request12.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request13.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request13.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request14.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request14.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_asym_algo = m_use_asym_algo;
+    m_spdm_negotiate_algorithm_request15.spdm_request_version10.base_hash_algo = m_use_hash_algo;
+    m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_asym_algo = 
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
-		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
-		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 |
-		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 |
-		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
-	m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_hash_algo = 
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+    m_spdm_negotiate_algorithm_request16.spdm_request_version10.base_hash_algo = 
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512 |
-		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384 |
-		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384 |
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 
-	setup_spdm_test_context(&m_spdm_responder_algorithms_test_context);
+    setup_spdm_test_context(&m_spdm_responder_algorithms_test_context);
 
-	return cmocka_run_group_tests(spdm_responder_algorithms_tests,
-				      spdm_unit_test_group_setup,
-				      spdm_unit_test_group_teardown);
+    return cmocka_run_group_tests(spdm_responder_algorithms_tests,
+                      spdm_unit_test_group_setup,
+                      spdm_unit_test_group_teardown);
 }

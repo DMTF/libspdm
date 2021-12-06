@@ -65,7 +65,7 @@ void debug_print(IN uintn error_level, IN const char8 *format, ...);
 
 **/
 void debug_assert(IN const char8 *file_name, IN uintn line_number,
-		  IN const char8 *description);
+          IN const char8 *description);
 
 /**
   Internal worker macro that calls debug_assert().
@@ -92,9 +92,9 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 **/
 
 #define _DEBUG_PRINT(PrintLevel, ...)                                          \
-	do {                                                                   \
-		debug_print(PrintLevel, ##__VA_ARGS__);                        \
-	} while (FALSE)
+    do {                                                                   \
+        debug_print(PrintLevel, ##__VA_ARGS__);                        \
+    } while (FALSE)
 #define _DEBUG(expression) _DEBUG_PRINT expression
 
 /**
@@ -111,12 +111,12 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 **/
 #if !defined(MDEPKG_NDEBUG)
 #define ASSERT(expression)                                                     \
-	do {                                                                   \
-		if (!(expression)) {                                           \
-			_ASSERT(expression);                                   \
-			ANALYZER_UNREACHABLE();                                \
-		}                                                              \
-	} while (FALSE)
+    do {                                                                   \
+        if (!(expression)) {                                           \
+            _ASSERT(expression);                                   \
+            ANALYZER_UNREACHABLE();                                \
+        }                                                              \
+    } while (FALSE)
 #else
 #define ASSERT(expression)
 #endif
@@ -135,9 +135,9 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 **/
 #if !defined(MDEPKG_NDEBUG)
 #define DEBUG(expression)                                                      \
-	do {                                                                   \
-		_DEBUG(expression);                                            \
-	} while (FALSE)
+    do {                                                                   \
+        _DEBUG(expression);                                            \
+    } while (FALSE)
 #else
 #define DEBUG(expression)
 #endif
@@ -156,14 +156,14 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 **/
 #if !defined(MDEPKG_NDEBUG)
 #define ASSERT_RETURN_ERROR(status_parameter)                                  \
-	do {                                                                   \
-		if (RETURN_ERROR(status_parameter)) {                          \
-			DEBUG((DEBUG_ERROR,                                    \
-			       "\nASSERT_RETURN_ERROR (status = %p)\n",        \
-			       status_parameter));                             \
-			_ASSERT(!RETURN_ERROR(status_parameter));              \
-		}                                                              \
-	} while (FALSE)
+    do {                                                                   \
+        if (RETURN_ERROR(status_parameter)) {                          \
+            DEBUG((DEBUG_ERROR,                                    \
+                   "\nASSERT_RETURN_ERROR (status = %p)\n",        \
+                   status_parameter));                             \
+            _ASSERT(!RETURN_ERROR(status_parameter));              \
+        }                                                              \
+    } while (FALSE)
 #else
 #define ASSERT_RETURN_ERROR(status_parameter)
 #endif
@@ -178,8 +178,8 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 
 **/
 #define DEBUG_CODE_BEGIN()                                                     \
-	do {                                                                   \
-	uint8_t __debug_code_local
+    do {                                                                   \
+    uint8_t __debug_code_local
 
 /**
   The macro that marks the end of debug source code.
@@ -191,10 +191,10 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 
 **/
 #define DEBUG_CODE_END()                                                       \
-	__debug_code_local = 0;                                                \
-	__debug_code_local++;                                                  \
-	}                                                                      \
-	while (FALSE)
+    __debug_code_local = 0;                                                \
+    __debug_code_local++;                                                  \
+    }                                                                      \
+    while (FALSE)
 
 /**
   The macro that declares a section of debug source code.
@@ -207,8 +207,8 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
 
 #if !defined(MDEPKG_NDEBUG)
 #define DEBUG_CODE(expression)                                                 \
-	DEBUG_CODE_BEGIN();                                                    \
-	expression DEBUG_CODE_END()
+    DEBUG_CODE_BEGIN();                                                    \
+    expression DEBUG_CODE_END()
 #else
 #define DEBUG_CODE(expression)
 #endif

@@ -55,149 +55,149 @@
 #define SPDM_STATUS_ERROR_NO_MUTUAL_AUTH (SPDM_STATUS_ERROR + 0x41)
 
 typedef enum {
-	//
-	// SPDM parameter
-	//
-	SPDM_DATA_SPDM_VERSION,
-	SPDM_DATA_SECURED_MESSAGE_VERSION,
-	//
-	// SPDM capability
-	//
-	SPDM_DATA_CAPABILITY_FLAGS,
-	SPDM_DATA_CAPABILITY_CT_EXPONENT,
-	//
-	// SPDM algorithm setting
-	//
-	SPDM_DATA_MEASUREMENT_SPEC,
-	SPDM_DATA_MEASUREMENT_HASH_ALGO,
-	SPDM_DATA_BASE_ASYM_ALGO,
-	SPDM_DATA_BASE_HASH_ALGO,
-	SPDM_DATA_DHE_NAME_GROUP,
-	SPDM_DATA_AEAD_CIPHER_SUITE,
-	SPDM_DATA_REQ_BASE_ASYM_ALG,
-	SPDM_DATA_KEY_SCHEDULE,
-	//
-	// Connection State
-	//
-	SPDM_DATA_CONNECTION_STATE,
-	//
-	// response_state
-	//
-	SPDM_DATA_RESPONSE_STATE,
-	//
-	// Certificate info
-	//
-	SPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
-	SPDM_DATA_LOCAL_SLOT_COUNT,
-	SPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-	SPDM_DATA_PEER_PUBLIC_CERT_CHAIN,
-	SPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
-	SPDM_DATA_MUT_AUTH_REQUESTED,
-	SPDM_DATA_HEARTBEAT_PERIOD,
-	//
-	// Negotiated result
-	//
-	SPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER,
-	SPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER,
-	//
-	// Pre-shared key Hint
-	// If PSK is present, then PSK_EXCHANGE is used.
-	// Otherwise, the KEY_EXCHANGE is used.
-	//
-	SPDM_DATA_PSK_HINT,
-	//
-	// SessionData
-	//
-	SPDM_DATA_SESSION_USE_PSK,
-	SPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
-	SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
-	//
-	// Opaque data that can be used by the application
-	// during callback functions such libspdm_device_send_message_func.
-	//
-	SPDM_DATA_OPAQUE_CONTEXT_DATA,
-	//
-	// MAX
-	//
-	SPDM_DATA_MAX,
+    //
+    // SPDM parameter
+    //
+    SPDM_DATA_SPDM_VERSION,
+    SPDM_DATA_SECURED_MESSAGE_VERSION,
+    //
+    // SPDM capability
+    //
+    SPDM_DATA_CAPABILITY_FLAGS,
+    SPDM_DATA_CAPABILITY_CT_EXPONENT,
+    //
+    // SPDM algorithm setting
+    //
+    SPDM_DATA_MEASUREMENT_SPEC,
+    SPDM_DATA_MEASUREMENT_HASH_ALGO,
+    SPDM_DATA_BASE_ASYM_ALGO,
+    SPDM_DATA_BASE_HASH_ALGO,
+    SPDM_DATA_DHE_NAME_GROUP,
+    SPDM_DATA_AEAD_CIPHER_SUITE,
+    SPDM_DATA_REQ_BASE_ASYM_ALG,
+    SPDM_DATA_KEY_SCHEDULE,
+    //
+    // Connection State
+    //
+    SPDM_DATA_CONNECTION_STATE,
+    //
+    // response_state
+    //
+    SPDM_DATA_RESPONSE_STATE,
+    //
+    // Certificate info
+    //
+    SPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
+    SPDM_DATA_LOCAL_SLOT_COUNT,
+    SPDM_DATA_PEER_PUBLIC_ROOT_CERT,
+    SPDM_DATA_PEER_PUBLIC_CERT_CHAIN,
+    SPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
+    SPDM_DATA_MUT_AUTH_REQUESTED,
+    SPDM_DATA_HEARTBEAT_PERIOD,
+    //
+    // Negotiated result
+    //
+    SPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER,
+    SPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER,
+    //
+    // Pre-shared key Hint
+    // If PSK is present, then PSK_EXCHANGE is used.
+    // Otherwise, the KEY_EXCHANGE is used.
+    //
+    SPDM_DATA_PSK_HINT,
+    //
+    // SessionData
+    //
+    SPDM_DATA_SESSION_USE_PSK,
+    SPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
+    SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
+    //
+    // Opaque data that can be used by the application
+    // during callback functions such libspdm_device_send_message_func.
+    //
+    SPDM_DATA_OPAQUE_CONTEXT_DATA,
+    //
+    // MAX
+    //
+    SPDM_DATA_MAX,
 } spdm_data_type_t;
 
 typedef enum {
-	SPDM_DATA_LOCATION_LOCAL,
-	SPDM_DATA_LOCATION_CONNECTION,
-	SPDM_DATA_LOCATION_SESSION,
-	SPDM_DATA_LOCATION_MAX,
+    SPDM_DATA_LOCATION_LOCAL,
+    SPDM_DATA_LOCATION_CONNECTION,
+    SPDM_DATA_LOCATION_SESSION,
+    SPDM_DATA_LOCATION_MAX,
 } spdm_data_location_t;
 
 typedef struct {
-	spdm_data_location_t location;
-	// data_type specific:
-	//   session_id for the negoatiated key.
-	//   SlotId for the certificate.
-	//   req_slot_id + measurement_hash_type for SPDM_DATA_MUT_AUTH_REQUESTED
-	uint8_t additional_data[4];
+    spdm_data_location_t location;
+    // data_type specific:
+    //   session_id for the negoatiated key.
+    //   SlotId for the certificate.
+    //   req_slot_id + measurement_hash_type for SPDM_DATA_MUT_AUTH_REQUESTED
+    uint8_t additional_data[4];
 } spdm_data_parameter_t;
 
 typedef enum {
-	//
-	// Before GET_VERSION/VERSION
-	//
-	SPDM_CONNECTION_STATE_NOT_STARTED,
-	//
-	// After GET_VERSION/VERSION
-	//
-	SPDM_CONNECTION_STATE_AFTER_VERSION,
-	//
-	// After GET_CAPABILITIES/CAPABILITIES
-	//
-	SPDM_CONNECTION_STATE_AFTER_CAPABILITIES,
-	//
-	// After NEGOTIATE_ALGORITHMS/ALGORITHMS
-	//
-	SPDM_CONNECTION_STATE_NEGOTIATED,
-	//
-	// After GET_DIGESTS/DIGESTS
-	//
-	SPDM_CONNECTION_STATE_AFTER_DIGESTS,
-	//
-	// After GET_CERTIFICATE/CERTIFICATE
-	//
-	SPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
-	//
-	// After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled.
-	//
-	SPDM_CONNECTION_STATE_AUTHENTICATED,
-	//
-	// MAX
-	//
-	SPDM_CONNECTION_STATE_MAX,
+    //
+    // Before GET_VERSION/VERSION
+    //
+    SPDM_CONNECTION_STATE_NOT_STARTED,
+    //
+    // After GET_VERSION/VERSION
+    //
+    SPDM_CONNECTION_STATE_AFTER_VERSION,
+    //
+    // After GET_CAPABILITIES/CAPABILITIES
+    //
+    SPDM_CONNECTION_STATE_AFTER_CAPABILITIES,
+    //
+    // After NEGOTIATE_ALGORITHMS/ALGORITHMS
+    //
+    SPDM_CONNECTION_STATE_NEGOTIATED,
+    //
+    // After GET_DIGESTS/DIGESTS
+    //
+    SPDM_CONNECTION_STATE_AFTER_DIGESTS,
+    //
+    // After GET_CERTIFICATE/CERTIFICATE
+    //
+    SPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
+    //
+    // After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled.
+    //
+    SPDM_CONNECTION_STATE_AUTHENTICATED,
+    //
+    // MAX
+    //
+    SPDM_CONNECTION_STATE_MAX,
 } spdm_connection_state_t;
 
 typedef enum {
-	//
-	// Normal response.
-	//
-	SPDM_RESPONSE_STATE_NORMAL,
-	//
-	// Other component is busy.
-	//
-	SPDM_RESPONSE_STATE_BUSY,
-	//
-	// Hardware is not ready.
-	//
-	SPDM_RESPONSE_STATE_NOT_READY,
-	//
-	// Firmware Update is done. Need resync.
-	//
-	SPDM_RESPONSE_STATE_NEED_RESYNC,
-	//
-	// Processing Encapsulated message.
-	//
-	SPDM_RESPONSE_STATE_PROCESSING_ENCAP,
-	//
-	// MAX
-	//
-	SPDM_RESPONSE_STATE_MAX,
+    //
+    // Normal response.
+    //
+    SPDM_RESPONSE_STATE_NORMAL,
+    //
+    // Other component is busy.
+    //
+    SPDM_RESPONSE_STATE_BUSY,
+    //
+    // Hardware is not ready.
+    //
+    SPDM_RESPONSE_STATE_NOT_READY,
+    //
+    // Firmware Update is done. Need resync.
+    //
+    SPDM_RESPONSE_STATE_NEED_RESYNC,
+    //
+    // Processing Encapsulated message.
+    //
+    SPDM_RESPONSE_STATE_PROCESSING_ENCAP,
+    //
+    // MAX
+    //
+    SPDM_RESPONSE_STATE_MAX,
 } spdm_response_state_t;
 
 /**
@@ -216,9 +216,9 @@ typedef enum {
   @retval RETURN_NOT_READY             data is not ready to set.
 **/
 return_status libspdm_set_data(IN void *spdm_context,
-			    IN spdm_data_type_t data_type,
-			    IN spdm_data_parameter_t *parameter, IN void *data,
-			    IN uintn data_size);
+                IN spdm_data_type_t data_type,
+                IN spdm_data_parameter_t *parameter, IN void *data,
+                IN uintn data_size);
 
 /**
   Get an SPDM context data.
@@ -240,9 +240,9 @@ return_status libspdm_set_data(IN void *spdm_context,
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_get_data(IN void *spdm_context,
-			    IN spdm_data_type_t data_type,
-			    IN spdm_data_parameter_t *parameter,
-			    IN OUT void *data, IN OUT uintn *data_size);
+                IN spdm_data_type_t data_type,
+                IN spdm_data_parameter_t *parameter,
+                IN OUT void *data, IN OUT uintn *data_size);
 
 /**
   Get the last error of an SPDM context.
@@ -260,7 +260,7 @@ uint32_t libspdm_get_last_error(IN void *spdm_context);
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
 void libspdm_get_last_spdm_error_struct(IN void *spdm_context,
-				     OUT spdm_error_struct_t *last_spdm_error);
+                     OUT spdm_error_struct_t *last_spdm_error);
 
 /**
   Set the last SPDM error struct of an SPDM context.
@@ -269,7 +269,7 @@ void libspdm_get_last_spdm_error_struct(IN void *spdm_context,
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
 void libspdm_set_last_spdm_error_struct(IN void *spdm_context,
-				     IN spdm_error_struct_t *last_spdm_error);
+                     IN spdm_error_struct_t *last_spdm_error);
 
 /**
   Initialize an SPDM context.
@@ -325,9 +325,9 @@ uintn libspdm_get_context_size(void);
                                        to execute.
 **/
 typedef return_status (*libspdm_device_send_message_func)(IN void *spdm_context,
-						       IN uintn message_size,
-						       IN void *message,
-						       IN uint64_t timeout);
+                               IN uintn message_size,
+                               IN void *message,
+                               IN uint64_t timeout);
 
 /**
   Receive an SPDM transport layer message from a device.
@@ -359,8 +359,8 @@ typedef return_status (*libspdm_device_send_message_func)(IN void *spdm_context,
                                        to execute.
 **/
 typedef return_status (*libspdm_device_receive_message_func)(
-	IN void *spdm_context, IN OUT uintn *message_size, IN OUT void *message,
-	IN uint64_t timeout);
+    IN void *spdm_context, IN OUT uintn *message_size, IN OUT void *message,
+    IN uint64_t timeout);
 
 /**
   Register SPDM device input/output functions.
@@ -372,8 +372,8 @@ typedef return_status (*libspdm_device_receive_message_func)(
   @param  receive_message               The fuction to receive an SPDM transport layer message.
 **/
 void libspdm_register_device_io_func(
-	IN void *spdm_context, IN libspdm_device_send_message_func send_message,
-	IN libspdm_device_receive_message_func receive_message);
+    IN void *spdm_context, IN libspdm_device_send_message_func send_message,
+    IN libspdm_device_receive_message_func receive_message);
 
 /**
   Encode an SPDM or APP message to a transport layer message.
@@ -401,10 +401,10 @@ void libspdm_register_device_io_func(
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
 typedef return_status (*libspdm_transport_encode_message_func)(
-	IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
-	IN boolean is_requester, IN uintn spdm_message_size,
-	IN void *spdm_message, IN OUT uintn *transport_message_size,
-	OUT void *transport_message);
+    IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
+    IN boolean is_requester, IN uintn spdm_message_size,
+    IN void *spdm_message, IN OUT uintn *transport_message_size,
+    OUT void *transport_message);
 
 /**
   Decode an SPDM or APP message from a transport layer message.
@@ -433,10 +433,10 @@ typedef return_status (*libspdm_transport_encode_message_func)(
   @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
 **/
 typedef return_status (*libspdm_transport_decode_message_func)(
-	IN void *spdm_context, OUT uint32_t **session_id,
-	OUT boolean *is_app_message, IN boolean is_requester,
-	IN uintn transport_message_size, IN void *transport_message,
-	IN OUT uintn *message_size, OUT void *message);
+    IN void *spdm_context, OUT uint32_t **session_id,
+    OUT boolean *is_app_message, IN boolean is_requester,
+    IN uintn transport_message_size, IN void *transport_message,
+    IN OUT uintn *message_size, OUT void *message);
 
 /**
   Register SPDM transport layer encode/decode functions for SPDM or APP messages.
@@ -448,9 +448,9 @@ typedef return_status (*libspdm_transport_decode_message_func)(
   @param  transport_decode_message       The fuction to decode an SPDM or APP message from a transport layer message.
 **/
 void libspdm_register_transport_layer_func(
-	IN void *spdm_context,
-	IN libspdm_transport_encode_message_func transport_encode_message,
-	IN libspdm_transport_decode_message_func transport_decode_message);
+    IN void *spdm_context,
+    IN libspdm_transport_encode_message_func transport_encode_message,
+    IN libspdm_transport_decode_message_func transport_decode_message);
 
 /**
   Verify a SPDM cert chain in a slot.
@@ -476,17 +476,17 @@ void libspdm_register_transport_layer_func(
   @retval RETURN_SECURIY_VIOLATION      The cert chain verification fail.
 **/
 typedef return_status (*libspdm_verify_spdm_cert_chain_func)(
-	IN void *spdm_context, IN uint8_t slot_id,
-	IN uintn cert_chain_size, IN void *cert_chain,
-	OUT void **trust_anchor OPTIONAL,
-	OUT uintn *trust_anchor_size OPTIONAL);
+    IN void *spdm_context, IN uint8_t slot_id,
+    IN uintn cert_chain_size, IN void *cert_chain,
+    OUT void **trust_anchor OPTIONAL,
+    OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
   Register SPDM certificate verification functions for SPDM GET_CERTIFICATE in requester or responder.
   It is called after GET_CERTIFICATE gets a full certificate chain from peer.
 
   If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
-  	1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
+      1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
     2) The trust anchor, according SPDM_DATA_PEER_PUBLIC_ROOT_CERT or SPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
   If it is registered, SPDM lib will use this function to verify the certificate.
 
@@ -496,8 +496,8 @@ typedef return_status (*libspdm_verify_spdm_cert_chain_func)(
   @param  verify_certificate            The fuction to verify an SPDM certificate after GET_CERTIFICATE.
 **/
 void libspdm_register_verify_spdm_cert_chain_func(
-	IN void *spdm_context,
-	IN libspdm_verify_spdm_cert_chain_func verify_spdm_cert_chain);
+    IN void *spdm_context,
+    IN libspdm_verify_spdm_cert_chain_func verify_spdm_cert_chain);
 
 /**
   Reset message A cache in SPDM context.
@@ -571,7 +571,7 @@ void libspdm_reset_message_f(IN void *context, IN void *spdm_session_info);
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_a(IN void *spdm_context, IN void *message,
-				    IN uintn message_size);
+                    IN uintn message_size);
 
 /**
   Append message B cache in SPDM context.
@@ -584,7 +584,7 @@ return_status libspdm_append_message_a(IN void *spdm_context, IN void *message,
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_b(IN void *spdm_context, IN void *message,
-				    IN uintn message_size);
+                    IN uintn message_size);
 
 /**
   Append message C cache in SPDM context.
@@ -597,7 +597,7 @@ return_status libspdm_append_message_b(IN void *spdm_context, IN void *message,
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_c(IN void *spdm_context, IN void *message,
-				    IN uintn message_size);
+                    IN uintn message_size);
 
 /**
   Append message MutB cache in SPDM context.
@@ -610,7 +610,7 @@ return_status libspdm_append_message_c(IN void *spdm_context, IN void *message,
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_mut_b(IN void *spdm_context, IN void *message,
-					IN uintn message_size);
+                    IN uintn message_size);
 
 /**
   Append message MutC cache in SPDM context.
@@ -623,7 +623,7 @@ return_status libspdm_append_message_mut_b(IN void *spdm_context, IN void *messa
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_mut_c(IN void *spdm_context, IN void *message,
-					IN uintn message_size);
+                    IN uintn message_size);
 
 /**
   Append message M cache in SPDM context.
@@ -639,7 +639,7 @@ return_status libspdm_append_message_mut_c(IN void *spdm_context, IN void *messa
   @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
 **/
 return_status libspdm_append_message_m(IN void *context, IN void *session_info,
-					IN void *message, IN uintn message_size);
+                    IN void *message, IN uintn message_size);
 
 /**
   Append message K cache in SPDM context.
@@ -680,7 +680,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *spdm_session_i
   @return session info.
 **/
 void *libspdm_get_session_info_via_session_id(IN void *spdm_context,
-					   IN uint32_t session_id);
+                       IN uint32_t session_id);
 
 /**
   This function gets the secured message context via session ID.
@@ -691,7 +691,7 @@ void *libspdm_get_session_info_via_session_id(IN void *spdm_context,
   @return secured message context.
 **/
 void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
-						      IN uint32_t session_id);
+                              IN uint32_t session_id);
 
 /**
   This function gets the secured message context via session ID.
@@ -712,7 +712,7 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
   @return session info associated with this new session ID.
 **/
 void *libspdm_assign_session_id(IN void *spdm_context, IN uint32_t session_id,
-			     IN boolean use_psk);
+                 IN boolean use_psk);
 
 /**
   This function frees a session ID.
@@ -738,9 +738,9 @@ void *libspdm_free_session_id(IN void *spdm_context, IN uint32_t session_id);
   @retval RETURN_SUCCESS  current TH data is calculated.
 */
 boolean libspdm_calculate_th_for_exchange(
-	IN void *spdm_context, IN void *spdm_session_info,
-	IN uint8_t *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
-	OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
+    IN void *spdm_context, IN void *spdm_session_info,
+    IN uint8_t *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
+    OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
 #else
 /*
   This function calculates current TH hash with message A and message K.
@@ -753,8 +753,8 @@ boolean libspdm_calculate_th_for_exchange(
   @retval RETURN_SUCCESS  current TH hash is calculated.
 */
 boolean libspdm_calculate_th_hash_for_exchange(
-	IN void *context, IN void *spdm_session_info,
-	OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer);
+    IN void *context, IN void *spdm_session_info,
+    OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer);
 
 /*
   This function calculates current TH hmac with message A and message K, with response finished_key.
@@ -767,8 +767,8 @@ boolean libspdm_calculate_th_hash_for_exchange(
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_exchange_rsp(
-	IN void *context, IN void *spdm_session_info, IN boolean is_requester,
-	OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer);
+    IN void *context, IN void *spdm_session_info, IN boolean is_requester,
+    OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer);
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -787,13 +787,13 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
   @retval RETURN_SUCCESS  current TH data is calculated.
 */
 boolean libspdm_calculate_th_for_finish(IN void *spdm_context,
-				     IN void *spdm_session_info,
-				     IN uint8_t *cert_chain_buffer,
-				     OPTIONAL IN uintn cert_chain_buffer_size,
-				     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
-				     OPTIONAL IN uintn mut_cert_chain_buffer_size,
-				     OPTIONAL IN OUT uintn *th_data_buffer_size,
-				     OUT void *th_data_buffer);
+                     IN void *spdm_session_info,
+                     IN uint8_t *cert_chain_buffer,
+                     OPTIONAL IN uintn cert_chain_buffer_size,
+                     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
+                     OPTIONAL IN uintn mut_cert_chain_buffer_size,
+                     OPTIONAL IN OUT uintn *th_data_buffer_size,
+                     OUT void *th_data_buffer);
 #else
 /*
   This function calculates current TH hash with message A, message K and message F.
@@ -806,9 +806,9 @@ boolean libspdm_calculate_th_for_finish(IN void *spdm_context,
   @retval RETURN_SUCCESS  current TH hash is calculated.
 */
 boolean libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hash_buffer_size,
-				     OUT void *th_hash_buffer);
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hash_buffer_size,
+                     OUT void *th_hash_buffer);
 
 /*
   This function calculates current TH hmac with message A, message K and message F, with response finished_key.
@@ -821,9 +821,9 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-				     OUT void *th_hmac_buffer);
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                     OUT void *th_hmac_buffer);
 
 /*
   This function calculates current TH hmac with message A, message K and message F, with request finished_key.
@@ -836,9 +836,9 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-				     OUT void *th_hmac_buffer);
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                     OUT void *th_hmac_buffer);
 #endif
 
 /*
@@ -852,9 +852,9 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
   @retval RETURN_SUCCESS  th1 hash is calculated.
 */
 return_status libspdm_calculate_th1_hash(IN void *spdm_context,
-				      IN void *spdm_session_info,
-				      IN boolean is_requester,
-				      OUT uint8_t *th1_hash_data);
+                      IN void *spdm_session_info,
+                      IN boolean is_requester,
+                      OUT uint8_t *th1_hash_data);
 
 /*
   This function calculates th2 hash.
@@ -867,9 +867,9 @@ return_status libspdm_calculate_th1_hash(IN void *spdm_context,
   @retval RETURN_SUCCESS  th2 hash is calculated.
 */
 return_status libspdm_calculate_th2_hash(IN void *spdm_context,
-				      IN void *spdm_session_info,
-				      IN boolean is_requester,
-				      OUT uint8_t *th2_hash_data);
+                      IN void *spdm_session_info,
+                      IN boolean is_requester,
+                      OUT uint8_t *th2_hash_data);
 
 /**
   This function returns peer certificate chain buffer including spdm_cert_chain_t header.
@@ -882,8 +882,8 @@ return_status libspdm_calculate_th2_hash(IN void *spdm_context,
   @retval FALSE Peer certificate chain buffer including spdm_cert_chain_t header is not found.
 **/
 boolean libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
-					OUT void **cert_chain_buffer,
-					OUT uintn *cert_chain_buffer_size);
+                    OUT void **cert_chain_buffer,
+                    OUT uintn *cert_chain_buffer_size);
 
 /**
   This function returns peer certificate chain data without spdm_cert_chain_t header.
@@ -896,8 +896,8 @@ boolean libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
   @retval FALSE Peer certificate chain data without spdm_cert_chain_t header is not found.
 **/
 boolean libspdm_get_peer_cert_chain_data(IN void *spdm_context,
-				      OUT void **cert_chain_data,
-				      OUT uintn *cert_chain_data_size);
+                      OUT void **cert_chain_data,
+                      OUT uintn *cert_chain_data_size);
 
 /**
   This function returns local used certificate chain buffer including spdm_cert_chain_t header.
@@ -910,8 +910,8 @@ boolean libspdm_get_peer_cert_chain_data(IN void *spdm_context,
   @retval FALSE Local used certificate chain buffer including spdm_cert_chain_t header is not found.
 **/
 boolean libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
-					 OUT void **cert_chain_buffer,
-					 OUT uintn *cert_chain_buffer_size);
+                     OUT void **cert_chain_buffer,
+                     OUT uintn *cert_chain_buffer_size);
 
 /**
   This function returns local used certificate chain data without spdm_cert_chain_t header.
@@ -924,8 +924,8 @@ boolean libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
   @retval FALSE Local used certificate chain data without spdm_cert_chain_t header is not found.
 **/
 boolean libspdm_get_local_cert_chain_data(IN void *spdm_context,
-				       OUT void **cert_chain_data,
-				       OUT uintn *cert_chain_data_size);
+                       OUT void **cert_chain_data,
+                       OUT uintn *cert_chain_data_size);
 
 /**
   Reads a 24-bit value from memory that may be unaligned.

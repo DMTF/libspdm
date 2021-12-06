@@ -34,28 +34,28 @@
   @retval RETURN_SECURITY_VIOLATION    Any verification fails.
 **/
 return_status libspdm_process_message(IN void *context, IN OUT uint32_t **session_id,
-				   IN void *request, IN uintn request_size,
-				   OUT void *response,
-				   IN OUT uintn *response_size)
+                   IN void *request, IN uintn request_size,
+                   OUT void *response,
+                   IN OUT uintn *response_size)
 {
-	return_status status;
-	spdm_context_t *spdm_context;
-	boolean is_app_message;
+    return_status status;
+    spdm_context_t *spdm_context;
+    boolean is_app_message;
 
-	spdm_context = context;
+    spdm_context = context;
 
-	status = libspdm_process_request(spdm_context, session_id, &is_app_message,
-				      request_size, request);
-	if (RETURN_ERROR(status)) {
-		return status;
-	}
+    status = libspdm_process_request(spdm_context, session_id, &is_app_message,
+                      request_size, request);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
 
-	status = libspdm_build_response(spdm_context, *session_id, is_app_message,
-				     response_size, response);
-	if (RETURN_ERROR(status)) {
-		return status;
-	}
-	return RETURN_SUCCESS;
+    status = libspdm_build_response(spdm_context, *session_id, is_app_message,
+                     response_size, response);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
+    return RETURN_SUCCESS;
 }
 
 /**
@@ -73,32 +73,32 @@ return_status libspdm_process_message(IN void *context, IN OUT uint32_t **sessio
 **/
 return_status libspdm_responder_dispatch_message(IN void *context)
 {
-	return_status status;
-	spdm_context_t *spdm_context;
-	uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn request_size;
-	uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn response_size;
-	uint32_t *session_id;
+    return_status status;
+    spdm_context_t *spdm_context;
+    uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn request_size;
+    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn response_size;
+    uint32_t *session_id;
 
-	spdm_context = context;
+    spdm_context = context;
 
-	request_size = sizeof(request);
-	status = spdm_context->receive_message(spdm_context, &request_size,
-					       request, 0);
-	if (RETURN_ERROR(status)) {
-		return status;
-	}
+    request_size = sizeof(request);
+    status = spdm_context->receive_message(spdm_context, &request_size,
+                           request, 0);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
 
-	response_size = sizeof(response);
-	status = libspdm_process_message(spdm_context, &session_id, request,
-				      request_size, response, &response_size);
-	if (RETURN_ERROR(status)) {
-		return status;
-	}
+    response_size = sizeof(response);
+    status = libspdm_process_message(spdm_context, &session_id, request,
+                      request_size, response, &response_size);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
 
-	status = spdm_context->send_message(spdm_context, response_size,
-					    response, 0);
+    status = spdm_context->send_message(spdm_context, response_size,
+                        response, 0);
 
-	return status;
+    return status;
 }

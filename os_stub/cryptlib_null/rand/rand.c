@@ -30,8 +30,8 @@ int rand();
 **/
 boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
-	// TBD
-	return TRUE;
+    // TBD
+    return TRUE;
 }
 
 /**
@@ -48,12 +48,12 @@ boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 **/
 boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
-	return TRUE;
+    return TRUE;
 }
 
 int myrand(void *rng_state, unsigned char *output, size_t len)
 {
-	random_bytes(output, len);
+    random_bytes(output, len);
 
-	return 0;
+    return 0;
 }

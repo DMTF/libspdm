@@ -15,17 +15,17 @@
 #include <mbedtls/bignum.h>
 
 static const unsigned char m_ffehde2048_p[] =
-	MBEDTLS_DHM_RFC7919_FFDHE2048_P_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE2048_P_BIN;
 static const unsigned char m_ffehde3072_p[] =
-	MBEDTLS_DHM_RFC7919_FFDHE3072_P_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE3072_P_BIN;
 static const unsigned char m_ffehde4096_p[] =
-	MBEDTLS_DHM_RFC7919_FFDHE4096_P_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE4096_P_BIN;
 static const unsigned char m_ffehde2048_g[] =
-	MBEDTLS_DHM_RFC7919_FFDHE2048_G_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE2048_G_BIN;
 static const unsigned char m_ffehde3072_g[] =
-	MBEDTLS_DHM_RFC7919_FFDHE3072_G_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE3072_G_BIN;
 static const unsigned char m_ffehde4096_g[] =
-	MBEDTLS_DHM_RFC7919_FFDHE4096_G_BIN;
+    MBEDTLS_DHM_RFC7919_FFDHE4096_G_BIN;
 
 /**
   Allocates and Initializes one Diffie-Hellman context for subsequent use
@@ -39,61 +39,61 @@ static const unsigned char m_ffehde4096_g[] =
 **/
 void *dh_new_by_nid(IN uintn nid)
 {
-	mbedtls_dhm_context *ctx;
-	int32_t ret;
+    mbedtls_dhm_context *ctx;
+    int32_t ret;
 
-	ctx = allocate_zero_pool(sizeof(mbedtls_dhm_context));
-	if (ctx == NULL) {
-		return NULL;
-	}
+    ctx = allocate_zero_pool(sizeof(mbedtls_dhm_context));
+    if (ctx == NULL) {
+        return NULL;
+    }
 
-	mbedtls_dhm_init(ctx);
+    mbedtls_dhm_init(ctx);
 
-	switch (nid) {
-	case CRYPTO_NID_FFDHE2048:
-		ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde2048_p,
-					      sizeof(m_ffehde2048_p));
-		if (ret != 0) {
-			goto error;
-		}
-		ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde2048_g,
-					      sizeof(m_ffehde2048_g));
-		if (ret != 0) {
-			goto error;
-		}
-		break;
-	case CRYPTO_NID_FFDHE3072:
-		ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde3072_p,
-					      sizeof(m_ffehde3072_p));
-		if (ret != 0) {
-			goto error;
-		}
-		ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde3072_g,
-					      sizeof(m_ffehde3072_g));
-		if (ret != 0) {
-			goto error;
-		}
-		break;
-	case CRYPTO_NID_FFDHE4096:
-		ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde4096_p,
-					      sizeof(m_ffehde4096_p));
-		if (ret != 0) {
-			goto error;
-		}
-		ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde4096_g,
-					      sizeof(m_ffehde4096_g));
-		if (ret != 0) {
-			goto error;
-		}
-		break;
-	default:
-		goto error;
-	}
-	ctx->len = mbedtls_mpi_size(&ctx->P);
-	return ctx;
+    switch (nid) {
+    case CRYPTO_NID_FFDHE2048:
+        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde2048_p,
+                          sizeof(m_ffehde2048_p));
+        if (ret != 0) {
+            goto error;
+        }
+        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde2048_g,
+                          sizeof(m_ffehde2048_g));
+        if (ret != 0) {
+            goto error;
+        }
+        break;
+    case CRYPTO_NID_FFDHE3072:
+        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde3072_p,
+                          sizeof(m_ffehde3072_p));
+        if (ret != 0) {
+            goto error;
+        }
+        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde3072_g,
+                          sizeof(m_ffehde3072_g));
+        if (ret != 0) {
+            goto error;
+        }
+        break;
+    case CRYPTO_NID_FFDHE4096:
+        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde4096_p,
+                          sizeof(m_ffehde4096_p));
+        if (ret != 0) {
+            goto error;
+        }
+        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde4096_g,
+                          sizeof(m_ffehde4096_g));
+        if (ret != 0) {
+            goto error;
+        }
+        break;
+    default:
+        goto error;
+    }
+    ctx->len = mbedtls_mpi_size(&ctx->P);
+    return ctx;
 error:
-	free_pool(ctx);
-	return NULL;
+    free_pool(ctx);
+    return NULL;
 }
 
 /**
@@ -106,8 +106,8 @@ error:
 **/
 void dh_free(IN void *dh_context)
 {
-	mbedtls_dhm_free(dh_context);
-	free_pool(dh_context);
+    mbedtls_dhm_free(dh_context);
+    free_pool(dh_context);
 }
 
 /**
@@ -133,9 +133,9 @@ void dh_free(IN void *dh_context)
 
 **/
 boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-			      IN uintn prime_length, OUT uint8_t *prime)
+                  IN uintn prime_length, OUT uint8_t *prime)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -160,9 +160,9 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-			 IN uintn prime_length, IN const uint8_t *prime)
+             IN uintn prime_length, IN const uint8_t *prime)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -192,52 +192,52 @@ boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
 
 **/
 boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
-			IN OUT uintn *public_key_size)
+            IN OUT uintn *public_key_size)
 {
-	int32_t ret;
-	mbedtls_dhm_context *ctx;
-	uintn final_pub_key_size;
+    int32_t ret;
+    mbedtls_dhm_context *ctx;
+    uintn final_pub_key_size;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || public_key_size == NULL) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || public_key_size == NULL) {
+        return FALSE;
+    }
 
-	if (public_key == NULL && *public_key_size != 0) {
-		return FALSE;
-	}
+    if (public_key == NULL && *public_key_size != 0) {
+        return FALSE;
+    }
 
-	ctx = dh_context;
-	switch (mbedtls_mpi_size(&ctx->P)) {
-	case 256:
-		final_pub_key_size = 256;
-		break;
-	case 384:
-		final_pub_key_size = 384;
-		break;
-	case 512:
-		final_pub_key_size = 512;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_key_size < final_pub_key_size) {
-		*public_key_size = final_pub_key_size;
-		return FALSE;
-	}
-	*public_key_size = final_pub_key_size;
-	zero_mem(public_key, *public_key_size);
+    ctx = dh_context;
+    switch (mbedtls_mpi_size(&ctx->P)) {
+    case 256:
+        final_pub_key_size = 256;
+        break;
+    case 384:
+        final_pub_key_size = 384;
+        break;
+    case 512:
+        final_pub_key_size = 512;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_key_size < final_pub_key_size) {
+        *public_key_size = final_pub_key_size;
+        return FALSE;
+    }
+    *public_key_size = final_pub_key_size;
+    zero_mem(public_key, *public_key_size);
 
-	ret = mbedtls_dhm_make_public(dh_context, (uint32_t)*public_key_size,
-				      public_key, (uint32_t)*public_key_size,
-				      myrand, NULL);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_dhm_make_public(dh_context, (uint32_t)*public_key_size,
+                      public_key, (uint32_t)*public_key_size,
+                      myrand, NULL);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -269,64 +269,64 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
 
 **/
 boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
-		       IN uintn peer_public_key_size, OUT uint8_t *key,
-		       IN OUT uintn *key_size)
+               IN uintn peer_public_key_size, OUT uint8_t *key,
+               IN OUT uintn *key_size)
 {
-	int32_t ret;
-	mbedtls_dhm_context *ctx;
-	uintn return_size;
-	uintn dh_key_size;
+    int32_t ret;
+    mbedtls_dhm_context *ctx;
+    uintn return_size;
+    uintn dh_key_size;
 
-	//
-	// Check input parameters.
-	//
-	if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
-	    key == NULL) {
-		return FALSE;
-	}
+    //
+    // Check input parameters.
+    //
+    if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
+        key == NULL) {
+        return FALSE;
+    }
 
-	if (peer_public_key_size > INT_MAX) {
-		return FALSE;
-	}
-	
-	ctx = dh_context;
-	switch (mbedtls_mpi_size(&ctx->P)) {
-	case 256:
-		dh_key_size = 256;
-		break;
-	case 384:
-		dh_key_size = 384;
-		break;
-	case 512:
-		dh_key_size = 512;
-		break;
-	default:
-		return FALSE;
-	}
-	if (peer_public_key_size != dh_key_size) {
-		return FALSE;
-	}
-	if (*key_size < dh_key_size) {
-		return FALSE;
-	}
-	*key_size = dh_key_size;
+    if (peer_public_key_size > INT_MAX) {
+        return FALSE;
+    }
+    
+    ctx = dh_context;
+    switch (mbedtls_mpi_size(&ctx->P)) {
+    case 256:
+        dh_key_size = 256;
+        break;
+    case 384:
+        dh_key_size = 384;
+        break;
+    case 512:
+        dh_key_size = 512;
+        break;
+    default:
+        return FALSE;
+    }
+    if (peer_public_key_size != dh_key_size) {
+        return FALSE;
+    }
+    if (*key_size < dh_key_size) {
+        return FALSE;
+    }
+    *key_size = dh_key_size;
 
-	ret = mbedtls_dhm_read_public(dh_context, peer_public_key,
-				      peer_public_key_size);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_dhm_read_public(dh_context, peer_public_key,
+                      peer_public_key_size);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return_size = 0;
-	ret = mbedtls_dhm_calc_secret(dh_context, key, *key_size, &return_size,
-				      myrand, NULL);
-	if (ret != 0) {
-		return FALSE;
-	}
-	if (return_size < dh_key_size) {
+    return_size = 0;
+    ret = mbedtls_dhm_calc_secret(dh_context, key, *key_size, &return_size,
+                      myrand, NULL);
+    if (ret != 0) {
+        return FALSE;
+    }
+    if (return_size < dh_key_size) {
         copy_mem(key + dh_key_size - return_size, key, return_size);
         zero_mem(key, dh_key_size - return_size);
-	}
+    }
 
-	return TRUE;
+    return TRUE;
 }
