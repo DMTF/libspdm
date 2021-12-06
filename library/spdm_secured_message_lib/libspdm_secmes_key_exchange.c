@@ -99,6 +99,7 @@ boolean spdm_secured_message_dhe_compute_key(
     }
     copy_mem(secured_message_context->master_secret.dhe_secret, final_key,
          final_key_size);
+    zero_mem(final_key, final_key_size);
     secured_message_context->dhe_key_size = final_key_size;
     return TRUE;
 }
