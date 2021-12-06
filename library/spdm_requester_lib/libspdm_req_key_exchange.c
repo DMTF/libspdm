@@ -111,7 +111,9 @@ return_status try_spdm_send_receive_key_exchange(
     spdm_request.header.param1 = measurement_hash_type;
     spdm_request.header.param2 = slot_id;
     if (requester_random_in == NULL) {
-        spdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request.random_data);
+        if(!spdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request.random_data)) {
+            return RETURN_DEVICE_ERROR;
+        }
     } else {
         copy_mem (spdm_request.random_data, requester_random_in, SPDM_RANDOM_DATA_SIZE);
     }

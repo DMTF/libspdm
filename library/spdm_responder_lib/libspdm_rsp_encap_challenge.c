@@ -50,7 +50,9 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 =
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
-    spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce);
+    if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
+        return RETURN_DEVICE_ERROR;
+    }
     DEBUG((DEBUG_INFO, "Encap ClientNonce - "));
     internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));

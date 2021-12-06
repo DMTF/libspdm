@@ -260,7 +260,9 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     ptr += measurement_summary_hash_size;
 
     if (context_length != 0) {
-        spdm_get_random_number(context_length, ptr);
+        if(!spdm_get_random_number(context_length, ptr)) {
+            return RETURN_DEVICE_ERROR;
+        }
         ptr += context_length;
     }
 

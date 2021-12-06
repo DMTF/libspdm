@@ -156,7 +156,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
 
         if (requester_nonce_in == NULL) {
-            spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+            if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
+                return RETURN_DEVICE_ERROR;
+            }
         } else {
             copy_mem (spdm_request.nonce, requester_nonce_in, SPDM_NONCE_SIZE);
         }

@@ -42,7 +42,9 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                measurment_sig_size);
 
-    spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        return FALSE;
+    }
     ptr += SPDM_NONCE_SIZE;
 
     *(uint16_t *)ptr =
@@ -69,7 +71,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
   @param  response_message              The measurement response message with empty signature to be filled.
   @param  response_message_size          Total size in bytes of the response message including signature.
 **/
-void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
+boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
                     IN OUT void *response_message,
                     IN uintn response_message_size)
 {
@@ -83,7 +85,9 @@ void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                measurment_no_sig_size);
 
-    spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        return FALSE;
+    }
     ptr += SPDM_NONCE_SIZE;
     
     *(uint16_t *)ptr =
@@ -93,7 +97,7 @@ void spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
          spdm_context->local_context.opaque_measurement_rsp_size);
     ptr += spdm_context->local_context.opaque_measurement_rsp_size;
 
-    return;
+    return TRUE;
 }
 
 /**
@@ -422,8 +426,10 @@ return_status spdm_get_response_measurements(IN void *context,
             spdm_response->header.param2 = slot_id_param;
         }
     } else {
-        spdm_create_measurement_opaque(spdm_context, spdm_response,
-                           spdm_response_size);
+        if(!spdm_create_measurement_opaque(spdm_context, spdm_response,
+                           spdm_response_size)) {
+            return RETURN_DEVICE_ERROR;
+        }
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
