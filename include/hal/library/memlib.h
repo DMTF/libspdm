@@ -33,7 +33,7 @@
 
 **/
 void *copy_mem(OUT void *destination_buffer, IN const void *source_buffer,
-	       IN uintn length);
+           IN uintn length);
 
 /**
   Fills a target buffer with a byte value, and returns the target buffer.
@@ -89,6 +89,6 @@ void *zero_mem(OUT void *buffer, IN uintn length);
 
 **/
 intn const_compare_mem(IN const void *destination_buffer,
-		 IN const void *source_buffer, IN uintn length);
+         IN const void *source_buffer, IN uintn length);
 
 #endif

@@ -7,7 +7,7 @@
 #include <base.h>
 
 void debug_assert(IN const char8 *file_name, IN uintn line_number,
-		  IN const char8 *description)
+          IN const char8 *description)
 {
 }
 

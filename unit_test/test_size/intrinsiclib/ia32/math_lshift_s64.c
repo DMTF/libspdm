@@ -9,7 +9,7 @@
  */
 __declspec(naked) void __cdecl _allshl(void)
 {
-	_asm {
+    _asm {
     ;
     ; Handle shifting of 64 or more bits (return 0)
     ;
@@ -39,5 +39,5 @@ ReturnZero:
     xor     eax,eax
     xor     edx,edx
     ret
-	}
+    }
 }

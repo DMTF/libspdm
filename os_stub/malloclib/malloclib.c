@@ -13,21 +13,21 @@
 
 void *allocate_pool(IN uintn AllocationSize)
 {
-	return malloc(AllocationSize);
+    return malloc(AllocationSize);
 }
 
 void *allocate_zero_pool(IN uintn AllocationSize)
 {
-	void *buffer;
-	buffer = malloc(AllocationSize);
-	if (buffer == NULL) {
-		return NULL;
-	}
-	memset(buffer, 0, AllocationSize);
-	return buffer;
+    void *buffer;
+    buffer = malloc(AllocationSize);
+    if (buffer == NULL) {
+        return NULL;
+    }
+    memset(buffer, 0, AllocationSize);
+    return buffer;
 }
 
 void free_pool(IN void *buffer)
 {
-	free(buffer);
+    free(buffer);
 }

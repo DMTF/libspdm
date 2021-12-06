@@ -20,71 +20,71 @@
   @retval RETURN_SUCCESS  current TH data is calculated.
 */
 boolean libspdm_calculate_th_for_exchange(
-	IN void *context, IN void *spdm_session_info, IN uint8_t *cert_chain_buffer,
-	OPTIONAL IN uintn cert_chain_buffer_size,
-	OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer)
+    IN void *context, IN void *spdm_session_info, IN uint8_t *cert_chain_buffer,
+    OPTIONAL IN uintn cert_chain_buffer_size,
+    OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
-	uint32_t hash_size;
-	return_status status;
-	large_managed_buffer_t th_curr;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
+    uint32_t hash_size;
+    return_status status;
+    large_managed_buffer_t th_curr;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
+    spdm_context = context;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
-	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 
-	DEBUG((DEBUG_INFO, "message_a data :\n"));
-	internal_dump_hex(
-		get_managed_buffer(&spdm_context->transcript.message_a),
-		get_managed_buffer_size(&spdm_context->transcript.message_a));
-	status = append_managed_buffer(
-		&th_curr,
-		get_managed_buffer(&spdm_context->transcript.message_a),
-		get_managed_buffer_size(&spdm_context->transcript.message_a));
-	if (RETURN_ERROR(status)) {
-		return FALSE;
-	}
+    DEBUG((DEBUG_INFO, "message_a data :\n"));
+    internal_dump_hex(
+        get_managed_buffer(&spdm_context->transcript.message_a),
+        get_managed_buffer_size(&spdm_context->transcript.message_a));
+    status = append_managed_buffer(
+        &th_curr,
+        get_managed_buffer(&spdm_context->transcript.message_a),
+        get_managed_buffer_size(&spdm_context->transcript.message_a));
+    if (RETURN_ERROR(status)) {
+        return FALSE;
+    }
 
-	if (cert_chain_buffer != NULL) {
-		DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
-		internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
-		spdm_hash_all(
-			spdm_context->connection_info.algorithm.base_hash_algo,
-			cert_chain_buffer, cert_chain_buffer_size,
-			cert_chain_buffer_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
-					       hash_size);
-		if (RETURN_ERROR(status)) {
-			return FALSE;
-		}
-	}
+    if (cert_chain_buffer != NULL) {
+        DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
+        internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
+        spdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            cert_chain_buffer, cert_chain_buffer_size,
+            cert_chain_buffer_hash);
+        status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
+                           hash_size);
+        if (RETURN_ERROR(status)) {
+            return FALSE;
+        }
+    }
 
-	DEBUG((DEBUG_INFO, "message_k data :\n"));
-	internal_dump_hex(
-		get_managed_buffer(&session_info->session_transcript.message_k),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_k));
-	status = append_managed_buffer(
-		&th_curr,
-		get_managed_buffer(&session_info->session_transcript.message_k),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_k));
-	if (RETURN_ERROR(status)) {
-		return FALSE;
-	}
+    DEBUG((DEBUG_INFO, "message_k data :\n"));
+    internal_dump_hex(
+        get_managed_buffer(&session_info->session_transcript.message_k),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_k));
+    status = append_managed_buffer(
+        &th_curr,
+        get_managed_buffer(&session_info->session_transcript.message_k),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_k));
+    if (RETURN_ERROR(status)) {
+        return FALSE;
+    }
 
-	*th_data_buffer_size = get_managed_buffer_size(&th_curr);
-	copy_mem(th_data_buffer, get_managed_buffer(&th_curr),
-		 *th_data_buffer_size);
+    *th_data_buffer_size = get_managed_buffer_size(&th_curr);
+    copy_mem(th_data_buffer, get_managed_buffer(&th_curr),
+         *th_data_buffer_size);
 
-	return TRUE;
+    return TRUE;
 }
 #else
 /*
@@ -98,34 +98,34 @@ boolean libspdm_calculate_th_for_exchange(
   @retval RETURN_SUCCESS  current TH hash is calculated.
 */
 boolean libspdm_calculate_th_hash_for_exchange(
-	IN void *context, IN void *spdm_session_info,
-	OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer)
+    IN void *context, IN void *spdm_session_info,
+    OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	uint32_t hash_size;
-	void *digest_context_th;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    uint32_t hash_size;
+    void *digest_context_th;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
+    spdm_context = context;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_hash_buffer_size >= hash_size);
+    ASSERT(*th_hash_buffer_size >= hash_size);
 
-	// duplicate the th context, because we still need use original context to continue.
-	digest_context_th = spdm_hash_new (
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
-		session_info->session_transcript.digest_context_th, digest_context_th);
-	spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
-		digest_context_th, th_hash_buffer);
-	spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+    // duplicate the th context, because we still need use original context to continue.
+    digest_context_th = spdm_hash_new (
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
+        session_info->session_transcript.digest_context_th, digest_context_th);
+    spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        digest_context_th, th_hash_buffer);
+    spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
 
-	*th_hash_buffer_size = hash_size;
+    *th_hash_buffer_size = hash_size;
 
-	return TRUE;
+    return TRUE;
 }
 
 /*
@@ -139,41 +139,41 @@ boolean libspdm_calculate_th_hash_for_exchange(
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_exchange_rsp(
-	IN void *context, IN void *spdm_session_info, IN boolean is_requester,
-	OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer)
+    IN void *context, IN void *spdm_session_info, IN boolean is_requester,
+    OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	void *secured_message_context;
-	uint32_t hash_size;
-	void *hmac_context_th;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    void *secured_message_context;
+    uint32_t hash_size;
+    void *hmac_context_th;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
-	secured_message_context = session_info->secured_message_context;
+    spdm_context = context;
+    session_info = spdm_session_info;
+    secured_message_context = session_info->secured_message_context;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_hmac_buffer_size >= hash_size);
+    ASSERT(*th_hmac_buffer_size >= hash_size);
 
-	if (session_info->session_transcript.hmac_rsp_context_th == NULL) {
-		// trigger message_k to initialize hmac context after finished_key is ready.
-		libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
-		ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
-	}
+    if (session_info->session_transcript.hmac_rsp_context_th == NULL) {
+        // trigger message_k to initialize hmac context after finished_key is ready.
+        libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
+        ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
+    }
 
-	// duplicate the th context, because we still need use original context to continue.
-	hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
-	spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
-		session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
-	spdm_hmac_final_with_response_finished_key (secured_message_context,
-		hmac_context_th, th_hmac_buffer);
-	spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+    // duplicate the th context, because we still need use original context to continue.
+    hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
+    spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
+        session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
+    spdm_hmac_final_with_response_finished_key (secured_message_context,
+        hmac_context_th, th_hmac_buffer);
+    spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
 
-	*th_hmac_buffer_size = hash_size;
+    *th_hmac_buffer_size = hash_size;
 
-	return TRUE;
+    return TRUE;
 }
 #endif
 
@@ -193,105 +193,105 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
   @retval RETURN_SUCCESS  current TH data is calculated.
 */
 boolean libspdm_calculate_th_for_finish(IN void *context,
-				     IN void *spdm_session_info,
-				     IN uint8_t *cert_chain_buffer,
-				     OPTIONAL IN uintn cert_chain_buffer_size,
-				     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
-				     OPTIONAL IN uintn mut_cert_chain_buffer_size,
-				     OPTIONAL IN OUT uintn *th_data_buffer_size,
-				     OUT void *th_data_buffer)
+                     IN void *spdm_session_info,
+                     IN uint8_t *cert_chain_buffer,
+                     OPTIONAL IN uintn cert_chain_buffer_size,
+                     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
+                     OPTIONAL IN uintn mut_cert_chain_buffer_size,
+                     OPTIONAL IN OUT uintn *th_data_buffer_size,
+                     OUT void *th_data_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
-	uint8_t mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
-	uint32_t hash_size;
-	return_status status;
-	large_managed_buffer_t th_curr;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    uint8_t cert_chain_buffer_hash[MAX_HASH_SIZE];
+    uint8_t mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
+    uint32_t hash_size;
+    return_status status;
+    large_managed_buffer_t th_curr;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
+    spdm_context = context;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
-	init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    ASSERT(*th_data_buffer_size >= MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
 
-	DEBUG((DEBUG_INFO, "message_a data :\n"));
-	internal_dump_hex(
-		get_managed_buffer(&spdm_context->transcript.message_a),
-		get_managed_buffer_size(&spdm_context->transcript.message_a));
-	status = append_managed_buffer(
-		&th_curr,
-		get_managed_buffer(&spdm_context->transcript.message_a),
-		get_managed_buffer_size(&spdm_context->transcript.message_a));
-	if (RETURN_ERROR(status)) {
-		return FALSE;
-	}
+    DEBUG((DEBUG_INFO, "message_a data :\n"));
+    internal_dump_hex(
+        get_managed_buffer(&spdm_context->transcript.message_a),
+        get_managed_buffer_size(&spdm_context->transcript.message_a));
+    status = append_managed_buffer(
+        &th_curr,
+        get_managed_buffer(&spdm_context->transcript.message_a),
+        get_managed_buffer_size(&spdm_context->transcript.message_a));
+    if (RETURN_ERROR(status)) {
+        return FALSE;
+    }
 
-	if (cert_chain_buffer != NULL) {
-		DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
-		internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
-		spdm_hash_all(
-			spdm_context->connection_info.algorithm.base_hash_algo,
-			cert_chain_buffer, cert_chain_buffer_size,
-			cert_chain_buffer_hash);
-		status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
-					       hash_size);
-		if (RETURN_ERROR(status)) {
-			return FALSE;
-		}
-	}
+    if (cert_chain_buffer != NULL) {
+        DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
+        internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
+        spdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            cert_chain_buffer, cert_chain_buffer_size,
+            cert_chain_buffer_hash);
+        status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
+                           hash_size);
+        if (RETURN_ERROR(status)) {
+            return FALSE;
+        }
+    }
 
-	DEBUG((DEBUG_INFO, "message_k data :\n"));
-	internal_dump_hex(
-		get_managed_buffer(&session_info->session_transcript.message_k),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_k));
-	status = append_managed_buffer(
-		&th_curr,
-		get_managed_buffer(&session_info->session_transcript.message_k),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_k));
-	if (RETURN_ERROR(status)) {
-		return FALSE;
-	}
+    DEBUG((DEBUG_INFO, "message_k data :\n"));
+    internal_dump_hex(
+        get_managed_buffer(&session_info->session_transcript.message_k),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_k));
+    status = append_managed_buffer(
+        &th_curr,
+        get_managed_buffer(&session_info->session_transcript.message_k),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_k));
+    if (RETURN_ERROR(status)) {
+        return FALSE;
+    }
 
-	if (mut_cert_chain_buffer != NULL) {
-		DEBUG((DEBUG_INFO, "th_message_cm data :\n"));
-		internal_dump_hex(mut_cert_chain_buffer,
-				  mut_cert_chain_buffer_size);
-		spdm_hash_all(
-			spdm_context->connection_info.algorithm.base_hash_algo,
-			mut_cert_chain_buffer, mut_cert_chain_buffer_size,
-			mut_cert_chain_buffer_hash);
-		status = append_managed_buffer(&th_curr, mut_cert_chain_buffer_hash,
-					       hash_size);
-		if (RETURN_ERROR(status)) {
-			return FALSE;
-		}
-	}
+    if (mut_cert_chain_buffer != NULL) {
+        DEBUG((DEBUG_INFO, "th_message_cm data :\n"));
+        internal_dump_hex(mut_cert_chain_buffer,
+                  mut_cert_chain_buffer_size);
+        spdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            mut_cert_chain_buffer, mut_cert_chain_buffer_size,
+            mut_cert_chain_buffer_hash);
+        status = append_managed_buffer(&th_curr, mut_cert_chain_buffer_hash,
+                           hash_size);
+        if (RETURN_ERROR(status)) {
+            return FALSE;
+        }
+    }
 
-	DEBUG((DEBUG_INFO, "message_f data :\n"));
-	internal_dump_hex(
-		get_managed_buffer(&session_info->session_transcript.message_f),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_f));
-	status = append_managed_buffer(
-		&th_curr,
-		get_managed_buffer(&session_info->session_transcript.message_f),
-		get_managed_buffer_size(
-			&session_info->session_transcript.message_f));
-	if (RETURN_ERROR(status)) {
-		return FALSE;
-	}
+    DEBUG((DEBUG_INFO, "message_f data :\n"));
+    internal_dump_hex(
+        get_managed_buffer(&session_info->session_transcript.message_f),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_f));
+    status = append_managed_buffer(
+        &th_curr,
+        get_managed_buffer(&session_info->session_transcript.message_f),
+        get_managed_buffer_size(
+            &session_info->session_transcript.message_f));
+    if (RETURN_ERROR(status)) {
+        return FALSE;
+    }
 
-	*th_data_buffer_size = get_managed_buffer_size(&th_curr);
-	copy_mem(th_data_buffer, get_managed_buffer(&th_curr),
-		 *th_data_buffer_size);
+    *th_data_buffer_size = get_managed_buffer_size(&th_curr);
+    copy_mem(th_data_buffer, get_managed_buffer(&th_curr),
+         *th_data_buffer_size);
 
-	return TRUE;
+    return TRUE;
 }
 #else
 /*
@@ -305,35 +305,35 @@ boolean libspdm_calculate_th_for_finish(IN void *context,
   @retval RETURN_SUCCESS  current TH hash is calculated.
 */
 boolean libspdm_calculate_th_hash_for_finish(IN void *context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hash_buffer_size,
-				     OUT void *th_hash_buffer)
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hash_buffer_size,
+                     OUT void *th_hash_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	uint32_t hash_size;
-	void *digest_context_th;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    uint32_t hash_size;
+    void *digest_context_th;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
+    spdm_context = context;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_hash_buffer_size >= hash_size);
+    ASSERT(*th_hash_buffer_size >= hash_size);
 
-	// duplicate the th context, because we still need use original context to continue.
-	digest_context_th = spdm_hash_new (
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
-		session_info->session_transcript.digest_context_th, digest_context_th);
-	spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
-		digest_context_th, th_hash_buffer);
-	spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+    // duplicate the th context, because we still need use original context to continue.
+    digest_context_th = spdm_hash_new (
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
+        session_info->session_transcript.digest_context_th, digest_context_th);
+    spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        digest_context_th, th_hash_buffer);
+    spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
 
-	*th_hash_buffer_size = hash_size;
+    *th_hash_buffer_size = hash_size;
 
-	return TRUE;
+    return TRUE;
 }
 
 /*
@@ -347,38 +347,38 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *context,
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-				     OUT void *th_hmac_buffer)
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                     OUT void *th_hmac_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	void *secured_message_context;
-	uint32_t hash_size;
-	void *hmac_context_th;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    void *secured_message_context;
+    uint32_t hash_size;
+    void *hmac_context_th;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
-	secured_message_context = session_info->secured_message_context;
+    spdm_context = context;
+    session_info = spdm_session_info;
+    secured_message_context = session_info->secured_message_context;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_hmac_buffer_size >= hash_size);
+    ASSERT(*th_hmac_buffer_size >= hash_size);
 
-	ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
+    ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
 
-	// duplicate the th context, because we still need use original context to continue.
-	hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
-	spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
-		session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
-	spdm_hmac_final_with_response_finished_key (secured_message_context,
-		hmac_context_th, th_hmac_buffer);
-	spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+    // duplicate the th context, because we still need use original context to continue.
+    hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
+    spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
+        session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
+    spdm_hmac_final_with_response_finished_key (secured_message_context,
+        hmac_context_th, th_hmac_buffer);
+    spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
 
-	*th_hmac_buffer_size = hash_size;
+    *th_hmac_buffer_size = hash_size;
 
-	return TRUE;
+    return TRUE;
 }
 
 /*
@@ -392,38 +392,38 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
   @retval RETURN_SUCCESS  current TH hmac is calculated.
 */
 boolean libspdm_calculate_th_hmac_for_finish_req(IN void *context,
-				     IN void *spdm_session_info,
-				     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-				     OUT void *th_hmac_buffer)
+                     IN void *spdm_session_info,
+                     OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                     OUT void *th_hmac_buffer)
 {
-	spdm_context_t *spdm_context;
-	spdm_session_info_t *session_info;
-	void *secured_message_context;
-	uint32_t hash_size;
-	void *hmac_context_th;
+    spdm_context_t *spdm_context;
+    spdm_session_info_t *session_info;
+    void *secured_message_context;
+    uint32_t hash_size;
+    void *hmac_context_th;
 
-	spdm_context = context;
-	session_info = spdm_session_info;
-	secured_message_context = session_info->secured_message_context;
+    spdm_context = context;
+    session_info = spdm_session_info;
+    secured_message_context = session_info->secured_message_context;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	ASSERT(*th_hmac_buffer_size >= hash_size);
+    ASSERT(*th_hmac_buffer_size >= hash_size);
 
-	ASSERT(session_info->session_transcript.hmac_req_context_th != NULL);
+    ASSERT(session_info->session_transcript.hmac_req_context_th != NULL);
 
-	// duplicate the th context, because we still need use original context to continue.
-	hmac_context_th = spdm_hmac_new_with_request_finished_key (secured_message_context);
-	spdm_hmac_duplicate_with_request_finished_key (secured_message_context,
-		session_info->session_transcript.hmac_req_context_th, hmac_context_th);
-	spdm_hmac_final_with_request_finished_key (secured_message_context,
-		hmac_context_th, th_hmac_buffer);
-	spdm_hmac_free_with_request_finished_key (secured_message_context, hmac_context_th);
+    // duplicate the th context, because we still need use original context to continue.
+    hmac_context_th = spdm_hmac_new_with_request_finished_key (secured_message_context);
+    spdm_hmac_duplicate_with_request_finished_key (secured_message_context,
+        session_info->session_transcript.hmac_req_context_th, hmac_context_th);
+    spdm_hmac_final_with_request_finished_key (secured_message_context,
+        hmac_context_th, th_hmac_buffer);
+    spdm_hmac_free_with_request_finished_key (secured_message_context, hmac_context_th);
 
-	*th_hmac_buffer_size = hash_size;
+    *th_hmac_buffer_size = hash_size;
 
-	return TRUE;
+    return TRUE;
 }
 #endif
 
@@ -439,73 +439,73 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *context,
 **/
 boolean
 spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
-					 IN spdm_session_info_t *session_info,
-					 OUT uint8_t *signature)
+                     IN spdm_session_info_t *session_info,
+                     OUT uint8_t *signature)
 {
-	uint8_t hash_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	boolean result;
-	uintn signature_size;
-	uintn hash_size;
+    uint8_t hash_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    boolean result;
+    uintn signature_size;
+    uintn hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	signature_size = spdm_get_asym_signature_size(
-		spdm_context->connection_info.algorithm.base_asym_algo);
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    signature_size = spdm_get_asym_signature_size(
+        spdm_context->connection_info.algorithm.base_asym_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_local_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, hash_data);
+    // debug only
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_exchange(
-		spdm_context, session_info, &hash_size, hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_exchange(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hash - "));
-	internal_dump_data(hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hash - "));
+    internal_dump_data(hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	result = spdm_responder_data_sign(
-		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.base_hash_algo,
-		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
+    result = spdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
-	result = spdm_responder_data_sign(
-		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.base_hash_algo,
-		TRUE, hash_data, hash_size, signature, &signature_size);
+    result = spdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        TRUE, hash_data, hash_size, signature, &signature_size);
 #endif
-	if (result) {
-		DEBUG((DEBUG_INFO, "signature - "));
-		internal_dump_data(signature, signature_size);
-		DEBUG((DEBUG_INFO, "\n"));
-	}
-	return result;
+    if (result) {
+        DEBUG((DEBUG_INFO, "signature - "));
+        internal_dump_data(signature, signature_size);
+        DEBUG((DEBUG_INFO, "\n"));
+    }
+    return result;
 }
 
 /**
@@ -520,53 +520,53 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
 **/
 boolean
 spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-				    IN spdm_session_info_t *session_info,
-				    OUT uint8_t *hmac)
+                    IN spdm_session_info_t *session_info,
+                    OUT uint8_t *hmac)
 {
-	uint8_t hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uintn hash_size;
+    uint8_t hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uintn hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
-	boolean result;
+    boolean result;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_local_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_exchange_rsp(
-		spdm_context, session_info, FALSE, &hash_size, hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, FALSE, &hash_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
-	copy_mem(hmac, hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
+    copy_mem(hmac, hmac_data, hash_size);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -581,105 +581,105 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE signature verification fail.
 **/
 boolean spdm_verify_key_exchange_rsp_signature(
-	IN spdm_context_t *spdm_context, IN spdm_session_info_t *session_info,
-	IN void *sign_data, IN intn sign_data_size)
+    IN spdm_context_t *spdm_context, IN spdm_session_info_t *session_info,
+    IN void *sign_data, IN intn sign_data_size)
 {
-	uintn hash_size;
-	uint8_t hash_data[MAX_HASH_SIZE];
-	boolean result;
-	uint8_t *cert_chain_data;
-	uintn cert_chain_data_size;
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *cert_buffer;
-	uintn cert_buffer_size;
-	void *context;
+    uintn hash_size;
+    uint8_t hash_data[MAX_HASH_SIZE];
+    boolean result;
+    uint8_t *cert_chain_data;
+    uintn cert_chain_data_size;
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *cert_buffer;
+    uintn cert_buffer_size;
+    void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_peer_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, hash_data);
+    // debug only
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_exchange(
-		spdm_context, session_info, &hash_size, hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_exchange(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hash - "));
-	internal_dump_data(hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hash - "));
+    internal_dump_data(hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	DEBUG((DEBUG_INFO, "signature - "));
-	internal_dump_data(sign_data, sign_data_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "signature - "));
+    internal_dump_data(sign_data, sign_data_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	//
-	// Get leaf cert from cert chain
-	//
-	result = libspdm_get_peer_cert_chain_data(
-		spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
-	if (!result) {
-		return FALSE;
-	}
-	result = x509_get_cert_from_cert_chain(cert_chain_data,
-					       cert_chain_data_size, -1,
-					       &cert_buffer, &cert_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    //
+    // Get leaf cert from cert chain
+    //
+    result = libspdm_get_peer_cert_chain_data(
+        spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+    if (!result) {
+        return FALSE;
+    }
+    result = x509_get_cert_from_cert_chain(cert_chain_data,
+                           cert_chain_data_size, -1,
+                           &cert_buffer, &cert_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	result = spdm_asym_get_public_key_from_x509(
-		spdm_context->connection_info.algorithm.base_asym_algo,
-		cert_buffer, cert_buffer_size, &context);
-	if (!result) {
-		return FALSE;
-	}
+    result = spdm_asym_get_public_key_from_x509(
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        cert_buffer, cert_buffer_size, &context);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	result = spdm_asym_verify(
-		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.base_hash_algo, context,
-		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    result = spdm_asym_verify(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo, context,
+        th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 #else
-	result = spdm_asym_verify_hash(
-		spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-		spdm_context->connection_info.algorithm.base_asym_algo,
-		spdm_context->connection_info.algorithm.base_hash_algo, context,
-		hash_data, hash_size, sign_data, sign_data_size);
+    result = spdm_asym_verify_hash(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo, context,
+        hash_data, hash_size, sign_data, sign_data_size);
 #endif
-	spdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-		       context);
-	if (!result) {
-		DEBUG((DEBUG_INFO,
-		       "!!! verify_key_exchange_signature - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_key_exchange_signature - PASS !!!\n"));
+    spdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+               context);
+    if (!result) {
+        DEBUG((DEBUG_INFO,
+               "!!! verify_key_exchange_signature - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_key_exchange_signature - PASS !!!\n"));
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -694,61 +694,61 @@ boolean spdm_verify_key_exchange_rsp_signature(
   @retval FALSE HMAC verification fail.
 **/
 boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-					  IN spdm_session_info_t *session_info,
-					  IN void *hmac_data,
-					  IN uintn hmac_data_size)
+                      IN spdm_session_info_t *session_info,
+                      IN void *hmac_data,
+                      IN uintn hmac_data_size)
 {
-	uintn hash_size;
-	uint8_t calc_hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	boolean result;
+    uintn hash_size;
+    uint8_t calc_hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	ASSERT(hash_size == hmac_data_size);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    ASSERT(hash_size == hmac_data_size);
 
-	result = libspdm_get_peer_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, calc_hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, calc_hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_exchange_rsp(
-		spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(calc_hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(calc_hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
-		DEBUG((DEBUG_INFO,
-		       "!!! verify_key_exchange_hmac - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_key_exchange_hmac - PASS !!!\n"));
+    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+        DEBUG((DEBUG_INFO,
+               "!!! verify_key_exchange_hmac - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_key_exchange_hmac - PASS !!!\n"));
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -762,84 +762,84 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE finish signature is not generated.
 **/
 boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
-					   IN spdm_session_info_t *session_info,
-					   OUT uint8_t *signature)
+                       IN spdm_session_info_t *session_info,
+                       OUT uint8_t *signature)
 {
-	uint8_t hash_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	boolean result;
-	uintn signature_size;
-	uintn hash_size;
+    uint8_t hash_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    boolean result;
+    uintn signature_size;
+    uintn hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	signature_size = spdm_get_req_asym_signature_size(
-		spdm_context->connection_info.algorithm.req_base_asym_alg);
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    signature_size = spdm_get_req_asym_signature_size(
+        spdm_context->connection_info.algorithm.req_base_asym_alg);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_peer_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	result = libspdm_get_local_cert_chain_buffer(spdm_context,
-						(void **)&mut_cert_chain_buffer,
-						&mut_cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(spdm_context,
+                        (void **)&mut_cert_chain_buffer,
+                        &mut_cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, hash_data);
+    // debug only
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_finish(
-		spdm_context, session_info, &hash_size, hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_finish(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hash - "));
-	internal_dump_data(hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hash - "));
+    internal_dump_data(hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	result = spdm_requester_data_sign(
-		spdm_context->connection_info.version, SPDM_FINISH,
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.base_hash_algo,
-		FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
+    result = spdm_requester_data_sign(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        FALSE, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
-	result = spdm_requester_data_sign(
-		spdm_context->connection_info.version, SPDM_FINISH,
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.base_hash_algo,
-		TRUE, hash_data, hash_size, signature, &signature_size);
+    result = spdm_requester_data_sign(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        TRUE, hash_data, hash_size, signature, &signature_size);
 #endif
-	if (result) {
-		DEBUG((DEBUG_INFO, "signature - "));
-		internal_dump_data(signature, signature_size);
-		DEBUG((DEBUG_INFO, "\n"));
-	}
+    if (result) {
+        DEBUG((DEBUG_INFO, "signature - "));
+        internal_dump_data(signature, signature_size);
+        DEBUG((DEBUG_INFO, "\n"));
+    }
 
-	return result;
+    return result;
 }
 
 /**
@@ -853,69 +853,69 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
   @retval FALSE finish HMAC is not generated.
 **/
 boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
-				      IN spdm_session_info_t *session_info,
-				      OUT void *hmac)
+                      IN spdm_session_info_t *session_info,
+                      OUT void *hmac)
 {
-	uintn hash_size;
-	uint8_t calc_hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	boolean result;
+    uintn hash_size;
+    uint8_t calc_hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_peer_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	if (session_info->mut_auth_requested) {
-		result = libspdm_get_local_cert_chain_buffer(
-			spdm_context, (void **)&mut_cert_chain_buffer,
-			&mut_cert_chain_buffer_size);
-		if (!result) {
-			return FALSE;
-		}
-	} else {
-		mut_cert_chain_buffer = NULL;
-		mut_cert_chain_buffer_size = 0;
-	}
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_local_cert_chain_buffer(
+            spdm_context, (void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return FALSE;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_request_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, calc_hmac_data);
+    spdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, calc_hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_req(
-		spdm_context, session_info, &hash_size, calc_hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(calc_hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(calc_hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	copy_mem(hmac, calc_hmac_data, hash_size);
+    copy_mem(hmac, calc_hmac_data, hash_size);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -930,118 +930,118 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE signature verification fail.
 **/
 boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
-					 IN spdm_session_info_t *session_info,
-					 IN void *sign_data,
-					 IN intn sign_data_size)
+                     IN spdm_session_info_t *session_info,
+                     IN void *sign_data,
+                     IN intn sign_data_size)
 {
-	uintn hash_size;
-	uint8_t hash_data[MAX_HASH_SIZE];
-	boolean result;
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_data;
-	uintn mut_cert_chain_data_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	uint8_t *mut_cert_buffer;
-	uintn mut_cert_buffer_size;
-	void *context;
+    uintn hash_size;
+    uint8_t hash_data[MAX_HASH_SIZE];
+    boolean result;
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_data;
+    uintn mut_cert_chain_data_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    uint8_t *mut_cert_buffer;
+    uintn mut_cert_buffer_size;
+    void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_local_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	result = libspdm_get_peer_cert_chain_buffer(spdm_context,
-					       (void **)&mut_cert_chain_buffer,
-					       &mut_cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(spdm_context,
+                           (void **)&mut_cert_chain_buffer,
+                           &mut_cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	// debug only
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, hash_data);
+    // debug only
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_finish(
-		spdm_context, session_info, &hash_size, hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_finish(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hash - "));
-	internal_dump_data(hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hash - "));
+    internal_dump_data(hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	DEBUG((DEBUG_INFO, "signature - "));
-	internal_dump_data(sign_data, sign_data_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "signature - "));
+    internal_dump_data(sign_data, sign_data_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	//
-	// Get leaf cert from cert chain
-	//
-	result = libspdm_get_peer_cert_chain_data(spdm_context,
-					       (void **)&mut_cert_chain_data,
-					       &mut_cert_chain_data_size);
-	if (!result) {
-		return FALSE;
-	}
-	result = x509_get_cert_from_cert_chain(mut_cert_chain_data,
-					       mut_cert_chain_data_size, -1,
-					       &mut_cert_buffer,
-					       &mut_cert_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    //
+    // Get leaf cert from cert chain
+    //
+    result = libspdm_get_peer_cert_chain_data(spdm_context,
+                           (void **)&mut_cert_chain_data,
+                           &mut_cert_chain_data_size);
+    if (!result) {
+        return FALSE;
+    }
+    result = x509_get_cert_from_cert_chain(mut_cert_chain_data,
+                           mut_cert_chain_data_size, -1,
+                           &mut_cert_buffer,
+                           &mut_cert_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	result = spdm_req_asym_get_public_key_from_x509(
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		mut_cert_buffer, mut_cert_buffer_size, &context);
-	if (!result) {
-		return FALSE;
-	}
+    result = spdm_req_asym_get_public_key_from_x509(
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        mut_cert_buffer, mut_cert_buffer_size, &context);
+    if (!result) {
+        return FALSE;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	result = spdm_req_asym_verify(
-		spdm_context->connection_info.version, SPDM_FINISH,
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.base_hash_algo, context,
-		th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    result = spdm_req_asym_verify(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo, context,
+        th_curr_data, th_curr_data_size, sign_data, sign_data_size);
 #else
-	result = spdm_req_asym_verify_hash(
-		spdm_context->connection_info.version, SPDM_FINISH,
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		spdm_context->connection_info.algorithm.base_hash_algo, context,
-		hash_data, hash_size, sign_data, sign_data_size);
+    result = spdm_req_asym_verify_hash(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo, context,
+        hash_data, hash_size, sign_data, sign_data_size);
 #endif
-	spdm_req_asym_free(
-		spdm_context->connection_info.algorithm.req_base_asym_alg,
-		context);
-	if (!result) {
-		DEBUG((DEBUG_INFO, "!!! VerifyFinishSignature - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! VerifyFinishSignature - PASS !!!\n"));
+    spdm_req_asym_free(
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        context);
+    if (!result) {
+        DEBUG((DEBUG_INFO, "!!! VerifyFinishSignature - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! VerifyFinishSignature - PASS !!!\n"));
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1056,73 +1056,73 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
   @retval FALSE HMAC verification fail.
 **/
 boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
-				    IN spdm_session_info_t *session_info,
-				    IN uint8_t *hmac, IN uintn hmac_size)
+                    IN spdm_session_info_t *session_info,
+                    IN uint8_t *hmac, IN uintn hmac_size)
 {
-	uint8_t hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	uintn hash_size;
-	boolean result;
+    uint8_t hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    uintn hash_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	ASSERT(hmac_size == hash_size);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    ASSERT(hmac_size == hash_size);
 
-	result = libspdm_get_local_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	if (session_info->mut_auth_requested) {
-		result = libspdm_get_peer_cert_chain_buffer(
-			spdm_context, (void **)&mut_cert_chain_buffer,
-			&mut_cert_chain_buffer_size);
-		if (!result) {
-			return FALSE;
-		}
-	} else {
-		mut_cert_chain_buffer = NULL;
-		mut_cert_chain_buffer_size = 0;
-	}
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return FALSE;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_request_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, hmac_data);
+    spdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_req(
-		spdm_context, session_info, &hash_size, hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
-		DEBUG((DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_finish_req_hmac - PASS !!!\n"));
-	return TRUE;
+    if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
+        DEBUG((DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_finish_req_hmac - PASS !!!\n"));
+    return TRUE;
 }
 
 /**
@@ -1136,69 +1136,69 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE finish HMAC is not generated.
 **/
 boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-				      IN spdm_session_info_t *session_info,
-				      OUT uint8_t *hmac)
+                      IN spdm_session_info_t *session_info,
+                      OUT uint8_t *hmac)
 {
-	uint8_t hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	uintn hash_size;
-	boolean result;
+    uint8_t hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    uintn hash_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	result = libspdm_get_local_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	if (session_info->mut_auth_requested) {
-		result = libspdm_get_peer_cert_chain_buffer(
-			spdm_context, (void **)&mut_cert_chain_buffer,
-			&mut_cert_chain_buffer_size);
-		if (!result) {
-			return FALSE;
-		}
-	} else {
-		mut_cert_chain_buffer = NULL;
-		mut_cert_chain_buffer_size = 0;
-	}
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return FALSE;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_rsp(
-		spdm_context, session_info, &hash_size, hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_rsp(
+        spdm_context, session_info, &hash_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	copy_mem(hmac, hmac_data, hash_size);
+    copy_mem(hmac, hmac_data, hash_size);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1213,74 +1213,74 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE HMAC verification fail.
 **/
 boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-				    IN spdm_session_info_t *session_info,
-				    IN void *hmac_data, IN uintn hmac_data_size)
+                    IN spdm_session_info_t *session_info,
+                    IN void *hmac_data, IN uintn hmac_data_size)
 {
-	uintn hash_size;
-	uint8_t calc_hmac_data[MAX_HASH_SIZE];
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	boolean result;
+    uintn hash_size;
+    uint8_t calc_hmac_data[MAX_HASH_SIZE];
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	ASSERT(hash_size == hmac_data_size);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    ASSERT(hash_size == hmac_data_size);
 
-	result = libspdm_get_peer_cert_chain_buffer(
-		spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_get_peer_cert_chain_buffer(
+        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
 
-	if (session_info->mut_auth_requested) {
-		result = libspdm_get_local_cert_chain_buffer(
-			spdm_context, (void **)&mut_cert_chain_buffer,
-			&mut_cert_chain_buffer_size);
-		if (!result) {
-			return FALSE;
-		}
-	} else {
-		mut_cert_chain_buffer = NULL;
-		mut_cert_chain_buffer_size = 0;
-	}
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_local_cert_chain_buffer(
+            spdm_context, (void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return FALSE;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, calc_hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, calc_hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_rsp(
-		spdm_context, session_info, &hash_size, calc_hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_rsp(
+        spdm_context, session_info, &hash_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(calc_hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(calc_hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
-		DEBUG((DEBUG_INFO, "!!! verify_finish_rsp_hmac - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_finish_rsp_hmac - PASS !!!\n"));
+    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+        DEBUG((DEBUG_INFO, "!!! verify_finish_rsp_hmac - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_finish_rsp_hmac - PASS !!!\n"));
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1295,46 +1295,46 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
 **/
 boolean
 spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-				    IN spdm_session_info_t *session_info,
-				    OUT uint8_t *hmac)
+                    IN spdm_session_info_t *session_info,
+                    OUT uint8_t *hmac)
 {
-	uint8_t hmac_data[MAX_HASH_SIZE];
-	uintn hash_size;
-	boolean result;
+    uint8_t hmac_data[MAX_HASH_SIZE];
+    uintn hash_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
-						NULL, 0, &th_curr_data_size,
-						th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
+                        NULL, 0, &th_curr_data_size,
+                        th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_exchange_rsp(
-		spdm_context, session_info, FALSE, &hash_size, hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, FALSE, &hash_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	copy_mem(hmac, hmac_data, hash_size);
+    copy_mem(hmac, hmac_data, hash_size);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1349,53 +1349,53 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE HMAC verification fail.
 **/
 boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-					  IN spdm_session_info_t *session_info,
-					  IN void *hmac_data,
-					  IN uintn hmac_data_size)
+                      IN spdm_session_info_t *session_info,
+                      IN void *hmac_data,
+                      IN uintn hmac_data_size)
 {
-	uintn hash_size;
-	uint8_t calc_hmac_data[MAX_HASH_SIZE];
-	boolean result;
+    uintn hash_size;
+    uint8_t calc_hmac_data[MAX_HASH_SIZE];
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	ASSERT(hash_size == hmac_data_size);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    ASSERT(hash_size == hmac_data_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
-						NULL, 0, &th_curr_data_size,
-						th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
+                        NULL, 0, &th_curr_data_size,
+                        th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_response_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, calc_hmac_data);
+    spdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, calc_hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_exchange_rsp(
-		spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(calc_hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(calc_hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
-		DEBUG((DEBUG_INFO,
-		       "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - PASS !!!\n"));
+    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+        DEBUG((DEBUG_INFO,
+               "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - PASS !!!\n"));
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1410,46 +1410,46 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
 **/
 boolean
 spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
-				    IN spdm_session_info_t *session_info,
-				    OUT void *hmac)
+                    IN spdm_session_info_t *session_info,
+                    OUT void *hmac)
 {
-	uintn hash_size;
-	uint8_t calc_hmac_data[MAX_HASH_SIZE];
-	boolean result;
+    uintn hash_size;
+    uint8_t calc_hmac_data[MAX_HASH_SIZE];
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(spdm_context, session_info, NULL,
-					      0, NULL, 0, &th_curr_data_size,
-					      th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(spdm_context, session_info, NULL,
+                          0, NULL, 0, &th_curr_data_size,
+                          th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_request_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, calc_hmac_data);
+    spdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, calc_hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_req(
-		spdm_context, session_info, &hash_size, calc_hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th_curr hmac - "));
-	internal_dump_data(calc_hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th_curr hmac - "));
+    internal_dump_data(calc_hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	copy_mem(hmac, calc_hmac_data, hash_size);
+    copy_mem(hmac, calc_hmac_data, hash_size);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -1464,51 +1464,51 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
   @retval FALSE HMAC verification fail.
 **/
 boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
-					IN spdm_session_info_t *session_info,
-					IN uint8_t *hmac, IN uintn hmac_size)
+                    IN spdm_session_info_t *session_info,
+                    IN uint8_t *hmac, IN uintn hmac_size)
 {
-	uint8_t hmac_data[MAX_HASH_SIZE];
-	uintn hash_size;
-	boolean result;
+    uint8_t hmac_data[MAX_HASH_SIZE];
+    uintn hash_size;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
-	ASSERT(hmac_size == hash_size);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+    ASSERT(hmac_size == hash_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(spdm_context, session_info, NULL,
-					      0, NULL, 0, &th_curr_data_size,
-					      th_curr_data);
-	if (!result) {
-		return FALSE;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(spdm_context, session_info, NULL,
+                          0, NULL, 0, &th_curr_data_size,
+                          th_curr_data);
+    if (!result) {
+        return FALSE;
+    }
 
-	spdm_hmac_all_with_request_finished_key(
-		session_info->secured_message_context, th_curr_data,
-		th_curr_data_size, hmac_data);
+    spdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, th_curr_data,
+        th_curr_data_size, hmac_data);
 #else
-	result = libspdm_calculate_th_hmac_for_finish_req(
-		spdm_context, session_info, &hash_size, hmac_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "Calc th_curr hmac - "));
-	internal_dump_data(hmac_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "Calc th_curr hmac - "));
+    internal_dump_data(hmac_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
-		DEBUG((DEBUG_INFO,
-		       "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
-		return FALSE;
-	}
-	DEBUG((DEBUG_INFO, "!!! verify_psk_finish_req_hmac - PASS !!!\n"));
-	return TRUE;
+    if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
+        DEBUG((DEBUG_INFO,
+               "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
+        return FALSE;
+    }
+    DEBUG((DEBUG_INFO, "!!! verify_psk_finish_req_hmac - PASS !!!\n"));
+    return TRUE;
 }
 
 /*
@@ -1522,71 +1522,71 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
   @retval RETURN_SUCCESS  th1 hash is calculated.
 */
 return_status libspdm_calculate_th1_hash(IN void *context,
-				      IN void *spdm_session_info,
-				      IN boolean is_requester,
-				      OUT uint8_t *th1_hash_data)
+                      IN void *spdm_session_info,
+                      IN boolean is_requester,
+                      OUT uint8_t *th1_hash_data)
 {
-	spdm_context_t *spdm_context;
-	uintn hash_size;
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	spdm_session_info_t *session_info;
-	boolean result;
+    spdm_context_t *spdm_context;
+    uintn hash_size;
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    spdm_session_info_t *session_info;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	spdm_context = context;
+    spdm_context = context;
 
-	DEBUG((DEBUG_INFO, "Calc th1 hash ...\n"));
+    DEBUG((DEBUG_INFO, "Calc th1 hash ...\n"));
 
-	session_info = spdm_session_info;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	if (!session_info->use_psk) {
-		if (is_requester) {
-			result = libspdm_get_peer_cert_chain_buffer(
-				spdm_context, (void **)&cert_chain_buffer,
-				&cert_chain_buffer_size);
-		} else {
-			result = libspdm_get_local_cert_chain_buffer(
-				spdm_context, (void **)&cert_chain_buffer,
-				&cert_chain_buffer_size);
-		}
-		if (!result) {
-			return RETURN_UNSUPPORTED;
-		}
-	} else {
-		cert_chain_buffer = NULL;
-		cert_chain_buffer_size = 0;
-	}
+    if (!session_info->use_psk) {
+        if (is_requester) {
+            result = libspdm_get_peer_cert_chain_buffer(
+                spdm_context, (void **)&cert_chain_buffer,
+                &cert_chain_buffer_size);
+        } else {
+            result = libspdm_get_local_cert_chain_buffer(
+                spdm_context, (void **)&cert_chain_buffer,
+                &cert_chain_buffer_size);
+        }
+        if (!result) {
+            return RETURN_UNSUPPORTED;
+        }
+    } else {
+        cert_chain_buffer = NULL;
+        cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_exchange(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return RETURN_SECURITY_VIOLATION;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return RETURN_SECURITY_VIOLATION;
+    }
 
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, th1_hash_data);
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, th1_hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_exchange(
-		spdm_context, session_info, &hash_size, th1_hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_exchange(
+        spdm_context, session_info, &hash_size, th1_hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th1 hash - "));
-	internal_dump_data(th1_hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th1 hash - "));
+    internal_dump_data(th1_hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 /*
@@ -1600,93 +1600,93 @@ return_status libspdm_calculate_th1_hash(IN void *context,
   @retval RETURN_SUCCESS  th2 hash is calculated.
 */
 return_status libspdm_calculate_th2_hash(IN void *context,
-				      IN void *spdm_session_info,
-				      IN boolean is_requester,
-				      OUT uint8_t *th2_hash_data)
+                      IN void *spdm_session_info,
+                      IN boolean is_requester,
+                      OUT uint8_t *th2_hash_data)
 {
-	spdm_context_t *spdm_context;
-	uintn hash_size;
-	uint8_t *cert_chain_buffer;
-	uintn cert_chain_buffer_size;
-	uint8_t *mut_cert_chain_buffer;
-	uintn mut_cert_chain_buffer_size;
-	spdm_session_info_t *session_info;
-	boolean result;
+    spdm_context_t *spdm_context;
+    uintn hash_size;
+    uint8_t *cert_chain_buffer;
+    uintn cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    uintn mut_cert_chain_buffer_size;
+    spdm_session_info_t *session_info;
+    boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
-	uintn th_curr_data_size;
+    uint8_t th_curr_data[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uintn th_curr_data_size;
 #endif
 
-	spdm_context = context;
+    spdm_context = context;
 
-	DEBUG((DEBUG_INFO, "Calc th2 hash ...\n"));
+    DEBUG((DEBUG_INFO, "Calc th2 hash ...\n"));
 
-	session_info = spdm_session_info;
+    session_info = spdm_session_info;
 
-	hash_size = spdm_get_hash_size(
-		spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = spdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
 
-	if (!session_info->use_psk) {
-		if (is_requester) {
-			result = libspdm_get_peer_cert_chain_buffer(
-				spdm_context, (void **)&cert_chain_buffer,
-				&cert_chain_buffer_size);
-		} else {
-			result = libspdm_get_local_cert_chain_buffer(
-				spdm_context, (void **)&cert_chain_buffer,
-				&cert_chain_buffer_size);
-		}
-		if (!result) {
-			return RETURN_UNSUPPORTED;
-		}
-		if (session_info->mut_auth_requested) {
-			if (is_requester) {
-				result = libspdm_get_local_cert_chain_buffer(
-					spdm_context,
-					(void **)&mut_cert_chain_buffer,
-					&mut_cert_chain_buffer_size);
-			} else {
-				result = libspdm_get_peer_cert_chain_buffer(
-					spdm_context,
-					(void **)&mut_cert_chain_buffer,
-					&mut_cert_chain_buffer_size);
-			}
-			if (!result) {
-				return RETURN_UNSUPPORTED;
-			}
-		} else {
-			mut_cert_chain_buffer = NULL;
-			mut_cert_chain_buffer_size = 0;
-		}
-	} else {
-		cert_chain_buffer = NULL;
-		cert_chain_buffer_size = 0;
-		mut_cert_chain_buffer = NULL;
-		mut_cert_chain_buffer_size = 0;
-	}
+    if (!session_info->use_psk) {
+        if (is_requester) {
+            result = libspdm_get_peer_cert_chain_buffer(
+                spdm_context, (void **)&cert_chain_buffer,
+                &cert_chain_buffer_size);
+        } else {
+            result = libspdm_get_local_cert_chain_buffer(
+                spdm_context, (void **)&cert_chain_buffer,
+                &cert_chain_buffer_size);
+        }
+        if (!result) {
+            return RETURN_UNSUPPORTED;
+        }
+        if (session_info->mut_auth_requested) {
+            if (is_requester) {
+                result = libspdm_get_local_cert_chain_buffer(
+                    spdm_context,
+                    (void **)&mut_cert_chain_buffer,
+                    &mut_cert_chain_buffer_size);
+            } else {
+                result = libspdm_get_peer_cert_chain_buffer(
+                    spdm_context,
+                    (void **)&mut_cert_chain_buffer,
+                    &mut_cert_chain_buffer_size);
+            }
+            if (!result) {
+                return RETURN_UNSUPPORTED;
+            }
+        } else {
+            mut_cert_chain_buffer = NULL;
+            mut_cert_chain_buffer_size = 0;
+        }
+    } else {
+        cert_chain_buffer = NULL;
+        cert_chain_buffer_size = 0;
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-	th_curr_data_size = sizeof(th_curr_data);
-	result = libspdm_calculate_th_for_finish(
-		spdm_context, session_info, cert_chain_buffer,
-		cert_chain_buffer_size, mut_cert_chain_buffer,
-		mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
-	if (!result) {
-		return RETURN_SECURITY_VIOLATION;
-	}
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return RETURN_SECURITY_VIOLATION;
+    }
 
-	spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-		      th_curr_data, th_curr_data_size, th2_hash_data);
+    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+              th_curr_data, th_curr_data_size, th2_hash_data);
 #else
-	result = libspdm_calculate_th_hash_for_finish(
-		spdm_context, session_info, &hash_size, th2_hash_data);
-	if (!result) {
-		return FALSE;
-	}
+    result = libspdm_calculate_th_hash_for_finish(
+        spdm_context, session_info, &hash_size, th2_hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #endif
-	DEBUG((DEBUG_INFO, "th2 hash - "));
-	internal_dump_data(th2_hash_data, hash_size);
-	DEBUG((DEBUG_INFO, "\n"));
+    DEBUG((DEBUG_INFO, "th2 hash - "));
+    internal_dump_data(th2_hash_data, hash_size);
+    DEBUG((DEBUG_INFO, "\n"));
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }

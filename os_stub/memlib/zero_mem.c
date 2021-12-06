@@ -26,12 +26,12 @@
 **/
 void *zero_mem(OUT void *buffer, IN uintn length)
 {
-	volatile uint8_t *pointer;
+    volatile uint8_t *pointer;
 
-	pointer = (uint8_t *)buffer;
-	while (length-- != 0) {
-		*(pointer++) = 0;
-	}
+    pointer = (uint8_t *)buffer;
+    while (length-- != 0) {
+        *(pointer++) = 0;
+    }
 
-	return buffer;
+    return buffer;
 }

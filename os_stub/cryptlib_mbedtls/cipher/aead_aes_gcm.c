@@ -39,65 +39,65 @@
 
 **/
 boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
-			     IN const uint8_t *iv, IN uintn iv_size,
-			     IN const uint8_t *a_data, IN uintn a_data_size,
-			     IN const uint8_t *data_in, IN uintn data_in_size,
-			     OUT uint8_t *tag_out, IN uintn tag_size,
-			     OUT uint8_t *data_out, OUT uintn *data_out_size)
+                 IN const uint8_t *iv, IN uintn iv_size,
+                 IN const uint8_t *a_data, IN uintn a_data_size,
+                 IN const uint8_t *data_in, IN uintn data_in_size,
+                 OUT uint8_t *tag_out, IN uintn tag_size,
+                 OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	mbedtls_gcm_context ctx;
-	int32_t ret;
+    mbedtls_gcm_context ctx;
+    int32_t ret;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	switch (key_size) {
-	case 16:
-	case 24:
-	case 32:
-		break;
-	default:
-		return FALSE;
-	}
-	if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
-	    (tag_size != 15) && (tag_size != 16)) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    switch (key_size) {
+    case 16:
+    case 24:
+    case 32:
+        break;
+    default:
+        return FALSE;
+    }
+    if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
+        (tag_size != 15) && (tag_size != 16)) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	mbedtls_gcm_init(&ctx);
+    mbedtls_gcm_init(&ctx);
 
-	ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
-				 (uint32_t)(key_size * 8));
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
+                 (uint32_t)(key_size * 8));
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	ret = mbedtls_gcm_crypt_and_tag(&ctx, MBEDTLS_GCM_ENCRYPT,
-					(uint32_t)data_in_size, iv,
-					(uint32_t)iv_size, a_data,
-					(uint32_t)a_data_size, data_in, data_out,
-					tag_size, tag_out);
-	mbedtls_gcm_free(&ctx);
-	if (ret != 0) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    ret = mbedtls_gcm_crypt_and_tag(&ctx, MBEDTLS_GCM_ENCRYPT,
+                    (uint32_t)data_in_size, iv,
+                    (uint32_t)iv_size, a_data,
+                    (uint32_t)a_data_size, data_in, data_out,
+                    tag_size, tag_out);
+    mbedtls_gcm_free(&ctx);
+    if (ret != 0) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -126,62 +126,62 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
 
 **/
 boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
-			     IN const uint8_t *iv, IN uintn iv_size,
-			     IN const uint8_t *a_data, IN uintn a_data_size,
-			     IN const uint8_t *data_in, IN uintn data_in_size,
-			     IN const uint8_t *tag, IN uintn tag_size,
-			     OUT uint8_t *data_out, OUT uintn *data_out_size)
+                 IN const uint8_t *iv, IN uintn iv_size,
+                 IN const uint8_t *a_data, IN uintn a_data_size,
+                 IN const uint8_t *data_in, IN uintn data_in_size,
+                 IN const uint8_t *tag, IN uintn tag_size,
+                 OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	mbedtls_gcm_context ctx;
-	int32_t ret;
+    mbedtls_gcm_context ctx;
+    int32_t ret;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	switch (key_size) {
-	case 16:
-	case 24:
-	case 32:
-		break;
-	default:
-		return FALSE;
-	}
-	if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
-	    (tag_size != 15) && (tag_size != 16)) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    switch (key_size) {
+    case 16:
+    case 24:
+    case 32:
+        break;
+    default:
+        return FALSE;
+    }
+    if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
+        (tag_size != 15) && (tag_size != 16)) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	mbedtls_gcm_init(&ctx);
+    mbedtls_gcm_init(&ctx);
 
-	ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
-				 (uint32_t)(key_size * 8));
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
+                 (uint32_t)(key_size * 8));
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	ret = mbedtls_gcm_auth_decrypt(&ctx, (uint32_t)data_in_size, iv,
-				       (uint32_t)iv_size, a_data,
-				       (uint32_t)a_data_size, tag,
-				       (uint32_t)tag_size, data_in, data_out);
-	mbedtls_gcm_free(&ctx);
-	if (ret != 0) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    ret = mbedtls_gcm_auth_decrypt(&ctx, (uint32_t)data_in_size, iv,
+                       (uint32_t)iv_size, a_data,
+                       (uint32_t)a_data_size, tag,
+                       (uint32_t)tag_size, data_in, data_out);
+    mbedtls_gcm_free(&ctx);
+    if (ret != 0) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return TRUE;
+    return TRUE;
 }

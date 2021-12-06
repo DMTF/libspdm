@@ -19,8 +19,8 @@
 **/
 void *sha256_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -31,7 +31,7 @@ void *sha256_new(void)
 **/
 void sha256_free(IN void *sha256_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -48,8 +48,8 @@ void sha256_free(IN void *sha256_ctx)
 **/
 boolean sha256_init(OUT void *sha256_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -66,10 +66,10 @@ boolean sha256_init(OUT void *sha256_context)
 
 **/
 boolean sha256_duplicate(IN const void *sha256_context,
-			 OUT void *new_sha256_context)
+             OUT void *new_sha256_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -91,10 +91,10 @@ boolean sha256_duplicate(IN const void *sha256_context,
 
 **/
 boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -119,8 +119,8 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
 **/
 boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -142,10 +142,10 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha256_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -157,8 +157,8 @@ boolean sha256_hash_all(IN const void *data, IN uintn data_size,
 **/
 void *sha384_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -169,7 +169,7 @@ void *sha384_new(void)
 **/
 void sha384_free(IN void *sha384_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -186,8 +186,8 @@ void sha384_free(IN void *sha384_ctx)
 **/
 boolean sha384_init(OUT void *sha384_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -206,10 +206,10 @@ boolean sha384_init(OUT void *sha384_context)
 
 **/
 boolean sha384_duplicate(IN const void *sha384_context,
-			 OUT void *new_sha384_context)
+             OUT void *new_sha384_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -231,10 +231,10 @@ boolean sha384_duplicate(IN const void *sha384_context,
 
 **/
 boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -259,8 +259,8 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 **/
 boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -282,10 +282,10 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -297,8 +297,8 @@ boolean sha384_hash_all(IN const void *data, IN uintn data_size,
 **/
 void *sha512_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -309,7 +309,7 @@ void *sha512_new(void)
 **/
 void sha512_free(IN void *sha512_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -326,8 +326,8 @@ void sha512_free(IN void *sha512_ctx)
 **/
 boolean sha512_init(OUT void *sha512_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -346,10 +346,10 @@ boolean sha512_init(OUT void *sha512_context)
 
 **/
 boolean sha512_duplicate(IN const void *sha512_context,
-			 OUT void *new_sha512_context)
+             OUT void *new_sha512_context)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -371,10 +371,10 @@ boolean sha512_duplicate(IN const void *sha512_context,
 
 **/
 boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -399,8 +399,8 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 **/
 boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -422,8 +422,8 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }

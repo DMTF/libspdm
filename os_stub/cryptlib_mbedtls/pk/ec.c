@@ -29,37 +29,37 @@
 **/
 void *ec_new_by_nid(IN uintn nid)
 {
-	mbedtls_ecdh_context *ctx;
-	mbedtls_ecp_group_id grp_id;
-	int32_t ret;
+    mbedtls_ecdh_context *ctx;
+    mbedtls_ecp_group_id grp_id;
+    int32_t ret;
 
-	ctx = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
-	if (ctx == NULL) {
-		return NULL;
-	}
-	switch (nid) {
-	case CRYPTO_NID_SECP256R1:
-		grp_id = MBEDTLS_ECP_DP_SECP256R1;
-		break;
-	case CRYPTO_NID_SECP384R1:
-		grp_id = MBEDTLS_ECP_DP_SECP384R1;
-		break;
-	case CRYPTO_NID_SECP521R1:
-		grp_id = MBEDTLS_ECP_DP_SECP521R1;
-		break;
-	default:
-		goto error;
-	}
+    ctx = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
+    if (ctx == NULL) {
+        return NULL;
+    }
+    switch (nid) {
+    case CRYPTO_NID_SECP256R1:
+        grp_id = MBEDTLS_ECP_DP_SECP256R1;
+        break;
+    case CRYPTO_NID_SECP384R1:
+        grp_id = MBEDTLS_ECP_DP_SECP384R1;
+        break;
+    case CRYPTO_NID_SECP521R1:
+        grp_id = MBEDTLS_ECP_DP_SECP521R1;
+        break;
+    default:
+        goto error;
+    }
 
-	mbedtls_ecdh_init(ctx);
-	ret = mbedtls_ecdh_setup(ctx, grp_id);
-	if (ret != 0) {
-		goto error;
-	}
-	return ctx;
+    mbedtls_ecdh_init(ctx);
+    ret = mbedtls_ecdh_setup(ctx, grp_id);
+    if (ret != 0) {
+        goto error;
+    }
+    return ctx;
 error:
-	free_pool(ctx);
-	return NULL;
+    free_pool(ctx);
+    return NULL;
 }
 
 /**
@@ -70,8 +70,8 @@ error:
 **/
 void ec_free(IN void *ec_context)
 {
-	mbedtls_ecdh_free(ec_context);
-	free_pool(ec_context);
+    mbedtls_ecdh_free(ec_context);
+    free_pool(ec_context);
 }
 
 /**
@@ -90,49 +90,49 @@ void ec_free(IN void *ec_context)
 
 **/
 boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
-		       IN uintn public_key_size)
+               IN uintn public_key_size)
 {
-	mbedtls_ecdh_context *ctx;
-	int32_t ret;
-	uintn half_size;
+    mbedtls_ecdh_context *ctx;
+    int32_t ret;
+    uintn half_size;
 
-	if (ec_context == NULL || public_key == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_key == NULL) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (public_key_size != half_size * 2) {
-		return FALSE;
-	}
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (public_key_size != half_size * 2) {
+        return FALSE;
+    }
 
-	ret = mbedtls_mpi_read_binary(&ctx->Q.X, public_key, half_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_read_binary(&ctx->Q.Y, public_key + half_size,
-				      half_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_lset(&ctx->Q.Z, 1);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_mpi_read_binary(&ctx->Q.X, public_key, half_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_read_binary(&ctx->Q.Y, public_key + half_size,
+                      half_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_lset(&ctx->Q.Z, 1);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -152,59 +152,59 @@ boolean ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
 
 **/
 boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
-		       IN OUT uintn *public_key_size)
+               IN OUT uintn *public_key_size)
 {
-	mbedtls_ecdh_context *ctx;
-	int32_t ret;
-	uintn half_size;
-	uintn x_size;
-	uintn y_size;
+    mbedtls_ecdh_context *ctx;
+    int32_t ret;
+    uintn half_size;
+    uintn x_size;
+    uintn y_size;
 
-	if (ec_context == NULL || public_key_size == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_key_size == NULL) {
+        return FALSE;
+    }
 
-	if (public_key == NULL && *public_key_size != 0) {
-		return FALSE;
-	}
+    if (public_key == NULL && *public_key_size != 0) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_key_size < half_size * 2) {
-		*public_key_size = half_size * 2;
-		return FALSE;
-	}
-	*public_key_size = half_size * 2;
-	zero_mem(public_key, *public_key_size);
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_key_size < half_size * 2) {
+        *public_key_size = half_size * 2;
+        return FALSE;
+    }
+    *public_key_size = half_size * 2;
+    zero_mem(public_key, *public_key_size);
 
-	x_size = mbedtls_mpi_size(&ctx->Q.X);
-	y_size = mbedtls_mpi_size(&ctx->Q.Y);
-	ASSERT(x_size <= half_size && y_size <= half_size);
+    x_size = mbedtls_mpi_size(&ctx->Q.X);
+    y_size = mbedtls_mpi_size(&ctx->Q.Y);
+    ASSERT(x_size <= half_size && y_size <= half_size);
 
-	ret = mbedtls_mpi_write_binary(
-		&ctx->Q.X, &public_key[0 + half_size - x_size], x_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_write_binary(
-		&ctx->Q.Y, &public_key[half_size + half_size - y_size], y_size);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_mpi_write_binary(
+        &ctx->Q.X, &public_key[0 + half_size - x_size], x_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_write_binary(
+        &ctx->Q.Y, &public_key[half_size + half_size - y_size], y_size);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -222,8 +222,8 @@ boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
 **/
 boolean ec_check_key(IN void *ec_context)
 {
-	// TBD
-	return TRUE;
+    // TBD
+    return TRUE;
 }
 
 /**
@@ -256,65 +256,65 @@ boolean ec_check_key(IN void *ec_context)
 
 **/
 boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
-			IN OUT uintn *public_size)
+            IN OUT uintn *public_size)
 {
-	mbedtls_ecdh_context *ctx;
-	int32_t ret;
-	uintn half_size;
-	uintn x_size;
-	uintn y_size;
+    mbedtls_ecdh_context *ctx;
+    int32_t ret;
+    uintn half_size;
+    uintn x_size;
+    uintn y_size;
 
-	if (ec_context == NULL || public_size == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || public_size == NULL) {
+        return FALSE;
+    }
 
-	if (public == NULL && *public_size != 0) {
-		return FALSE;
-	}
+    if (public == NULL && *public_size != 0) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	ret = mbedtls_ecdh_gen_public(&ctx->grp, &ctx->d, &ctx->Q, myrand,
-				      NULL);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ctx = ec_context;
+    ret = mbedtls_ecdh_gen_public(&ctx->grp, &ctx->d, &ctx->Q, myrand,
+                      NULL);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_size < half_size * 2) {
-		*public_size = half_size * 2;
-		return FALSE;
-	}
-	*public_size = half_size * 2;
-	zero_mem(public, *public_size);
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_size < half_size * 2) {
+        *public_size = half_size * 2;
+        return FALSE;
+    }
+    *public_size = half_size * 2;
+    zero_mem(public, *public_size);
 
-	x_size = mbedtls_mpi_size(&ctx->Q.X);
-	y_size = mbedtls_mpi_size(&ctx->Q.Y);
-	ASSERT(x_size <= half_size && y_size <= half_size);
+    x_size = mbedtls_mpi_size(&ctx->Q.X);
+    y_size = mbedtls_mpi_size(&ctx->Q.Y);
+    ASSERT(x_size <= half_size && y_size <= half_size);
 
-	ret = mbedtls_mpi_write_binary(&ctx->Q.X,
-				       &public[0 + half_size - x_size], x_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_write_binary(
-		&ctx->Q.Y, &public[half_size + half_size - y_size], y_size);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_mpi_write_binary(&ctx->Q.X,
+                       &public[0 + half_size - x_size], x_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_write_binary(
+        &ctx->Q.Y, &public[half_size + half_size - y_size], y_size);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -348,71 +348,71 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
 
 **/
 boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
-		       IN uintn peer_public_size, OUT uint8_t *key,
-		       IN OUT uintn *key_size)
+               IN uintn peer_public_size, OUT uint8_t *key,
+               IN OUT uintn *key_size)
 {
-	mbedtls_ecdh_context *ctx;
-	uintn half_size;
-	int32_t ret;
+    mbedtls_ecdh_context *ctx;
+    uintn half_size;
+    int32_t ret;
 
-	if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
-	    key == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
+        key == NULL) {
+        return FALSE;
+    }
 
-	if (peer_public_size > INT_MAX) {
-		return FALSE;
-	}
+    if (peer_public_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (peer_public_size != half_size * 2) {
-		return FALSE;
-	}
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (peer_public_size != half_size * 2) {
+        return FALSE;
+    }
 
-	ret = mbedtls_mpi_read_binary(&ctx->Qp.X, peer_public, half_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_read_binary(&ctx->Qp.Y, peer_public + half_size,
-				      half_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_mpi_lset(&ctx->Qp.Z, 1);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_mpi_read_binary(&ctx->Qp.X, peer_public, half_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_read_binary(&ctx->Qp.Y, peer_public + half_size,
+                      half_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_mpi_lset(&ctx->Qp.Z, 1);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	ret = mbedtls_ecdh_compute_shared(&ctx->grp, &ctx->z, &ctx->Qp, &ctx->d,
-					  myrand, NULL);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_ecdh_compute_shared(&ctx->grp, &ctx->z, &ctx->Qp, &ctx->d,
+                      myrand, NULL);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	if (mbedtls_mpi_size(&ctx->z) > *key_size) {
-		return FALSE;
-	}
+    if (mbedtls_mpi_size(&ctx->z) > *key_size) {
+        return FALSE;
+    }
 
-	*key_size = ctx->grp.pbits / 8 + ((ctx->grp.pbits % 8) != 0);
-	ret = mbedtls_mpi_write_binary(&ctx->z, key, *key_size);
-	if (ret != 0) {
-		return FALSE;
-	}
+    *key_size = ctx->grp.pbits / 8 + ((ctx->grp.pbits % 8) != 0);
+    ret = mbedtls_mpi_write_binary(&ctx->z, key, *key_size);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -445,101 +445,101 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
 
 **/
 boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-		   IN const uint8_t *message_hash, IN uintn hash_size,
-		   OUT uint8_t *signature, IN OUT uintn *sig_size)
+           IN const uint8_t *message_hash, IN uintn hash_size,
+           OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-	int32_t ret;
-	mbedtls_ecdh_context *ctx;
-	mbedtls_mpi bn_r;
-	mbedtls_mpi bn_s;
-	uintn r_size;
-	uintn s_size;
-	uintn half_size;
+    int32_t ret;
+    mbedtls_ecdh_context *ctx;
+    mbedtls_mpi bn_r;
+    mbedtls_mpi bn_s;
+    uintn r_size;
+    uintn s_size;
+    uintn half_size;
 
-	if (ec_context == NULL || message_hash == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || message_hash == NULL) {
+        return FALSE;
+    }
 
-	if (signature == NULL) {
-		return FALSE;
-	}
+    if (signature == NULL) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*sig_size < (uintn)(half_size * 2)) {
-		*sig_size = half_size * 2;
-		return FALSE;
-	}
-	*sig_size = half_size * 2;
-	zero_mem(signature, *sig_size);
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*sig_size < (uintn)(half_size * 2)) {
+        *sig_size = half_size * 2;
+        return FALSE;
+    }
+    *sig_size = half_size * 2;
+    zero_mem(signature, *sig_size);
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	mbedtls_mpi_init(&bn_r);
-	mbedtls_mpi_init(&bn_s);
+    mbedtls_mpi_init(&bn_r);
+    mbedtls_mpi_init(&bn_s);
 
-	ret = mbedtls_ecdsa_sign(&ctx->grp, &bn_r, &bn_s, &ctx->d, message_hash,
-				 hash_size, myrand, NULL);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_ecdsa_sign(&ctx->grp, &bn_r, &bn_s, &ctx->d, message_hash,
+                 hash_size, myrand, NULL);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	r_size = mbedtls_mpi_size(&bn_r);
-	s_size = mbedtls_mpi_size(&bn_s);
-	ASSERT(r_size <= half_size && s_size <= half_size);
+    r_size = mbedtls_mpi_size(&bn_r);
+    s_size = mbedtls_mpi_size(&bn_s);
+    ASSERT(r_size <= half_size && s_size <= half_size);
 
-	ret = mbedtls_mpi_write_binary(
-		&bn_r, &signature[0 + half_size - r_size], r_size);
-	if (ret != 0) {
-		mbedtls_mpi_free(&bn_r);
-		mbedtls_mpi_free(&bn_s);
-		return FALSE;
-	}
-	ret = mbedtls_mpi_write_binary(
-		&bn_s, &signature[half_size + half_size - s_size], s_size);
-	if (ret != 0) {
-		mbedtls_mpi_free(&bn_r);
-		mbedtls_mpi_free(&bn_s);
-		return FALSE;
-	}
+    ret = mbedtls_mpi_write_binary(
+        &bn_r, &signature[0 + half_size - r_size], r_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return FALSE;
+    }
+    ret = mbedtls_mpi_write_binary(
+        &bn_s, &signature[half_size + half_size - s_size], s_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return FALSE;
+    }
 
-	mbedtls_mpi_free(&bn_r);
-	mbedtls_mpi_free(&bn_s);
+    mbedtls_mpi_free(&bn_r);
+    mbedtls_mpi_free(&bn_s);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -566,88 +566,88 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
 
 **/
 boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-		     IN const uint8_t *message_hash, IN uintn hash_size,
-		     IN const uint8_t *signature, IN uintn sig_size)
+             IN const uint8_t *message_hash, IN uintn hash_size,
+             IN const uint8_t *signature, IN uintn sig_size)
 {
-	int32_t ret;
-	mbedtls_ecdh_context *ctx;
-	mbedtls_mpi bn_r;
-	mbedtls_mpi bn_s;
-	uintn half_size;
+    int32_t ret;
+    mbedtls_ecdh_context *ctx;
+    mbedtls_mpi bn_r;
+    mbedtls_mpi bn_s;
+    uintn half_size;
 
-	if (ec_context == NULL || message_hash == NULL || signature == NULL) {
-		return FALSE;
-	}
+    if (ec_context == NULL || message_hash == NULL || signature == NULL) {
+        return FALSE;
+    }
 
-	if (sig_size > INT_MAX || sig_size == 0) {
-		return FALSE;
-	}
+    if (sig_size > INT_MAX || sig_size == 0) {
+        return FALSE;
+    }
 
-	ctx = ec_context;
-	switch (ctx->grp.id) {
-	case MBEDTLS_ECP_DP_SECP256R1:
-		half_size = 32;
-		break;
-	case MBEDTLS_ECP_DP_SECP384R1:
-		half_size = 48;
-		break;
-	case MBEDTLS_ECP_DP_SECP521R1:
-		half_size = 66;
-		break;
-	default:
-		return FALSE;
-	}
-	if (sig_size != (uintn)(half_size * 2)) {
-		return FALSE;
-	}
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return FALSE;
+    }
+    if (sig_size != (uintn)(half_size * 2)) {
+        return FALSE;
+    }
 
-	switch (hash_nid) {
-	case CRYPTO_NID_SHA256:
-		if (hash_size != SHA256_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_SHA256:
+        if (hash_size != SHA256_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA384:
-		if (hash_size != SHA384_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA384:
+        if (hash_size != SHA384_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	case CRYPTO_NID_SHA512:
-		if (hash_size != SHA512_DIGEST_SIZE) {
-			return FALSE;
-		}
-		break;
+    case CRYPTO_NID_SHA512:
+        if (hash_size != SHA512_DIGEST_SIZE) {
+            return FALSE;
+        }
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	mbedtls_mpi_init(&bn_r);
-	mbedtls_mpi_init(&bn_s);
+    mbedtls_mpi_init(&bn_r);
+    mbedtls_mpi_init(&bn_s);
 
-	ret = mbedtls_mpi_read_binary(&bn_r, signature, half_size);
-	if (ret != 0) {
-		mbedtls_mpi_free(&bn_r);
-		mbedtls_mpi_free(&bn_s);
-		return FALSE;
-	}
-	ret = mbedtls_mpi_read_binary(&bn_s, signature + half_size, half_size);
-	if (ret != 0) {
-		mbedtls_mpi_free(&bn_r);
-		mbedtls_mpi_free(&bn_s);
-		return FALSE;
-	}
+    ret = mbedtls_mpi_read_binary(&bn_r, signature, half_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return FALSE;
+    }
+    ret = mbedtls_mpi_read_binary(&bn_s, signature + half_size, half_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return FALSE;
+    }
 
-	ret = mbedtls_ecdsa_verify(&ctx->grp, message_hash, hash_size, &ctx->Q,
-				   &bn_r, &bn_s);
-	mbedtls_mpi_free(&bn_r);
-	mbedtls_mpi_free(&bn_s);
+    ret = mbedtls_ecdsa_verify(&ctx->grp, message_hash, hash_size, &ctx->Q,
+                   &bn_r, &bn_s);
+    mbedtls_mpi_free(&bn_r);
+    mbedtls_mpi_free(&bn_s);
 
-	if (ret != 0) {
-		return FALSE;
-	}
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }

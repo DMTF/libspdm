@@ -25,13 +25,13 @@
 //
 
 typedef struct {
-	uint32_t magic_number;
-	uint16_t version_major;
-	uint16_t version_minor;
-	int32_t this_zone;
-	uint32_t sig_figs;
-	uint32_t snap_len;
-	uint32_t network; // data Link Type
+    uint32_t magic_number;
+    uint16_t version_major;
+    uint16_t version_minor;
+    int32_t this_zone;
+    uint32_t sig_figs;
+    uint32_t snap_len;
+    uint32_t network; // data Link Type
 } pcap_global_header_t;
 
 #define PCAP_GLOBAL_HEADER_MAGIC 0xa1b2c3d4
@@ -44,12 +44,12 @@ typedef struct {
 #define PCAP_GLOBAL_HEADER_VERSION_MINOR 0x0004
 
 typedef struct {
-	uint32_t ts_sec;
-	// PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond
-	// PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond
-	uint32_t ts_usec;
-	uint32_t incl_len;
-	uint32_t orig_len;
+    uint32_t ts_sec;
+    // PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond
+    // PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond
+    uint32_t ts_usec;
+    uint32_t incl_len;
+    uint32_t orig_len;
 } pcap_packet_header_t;
 
 #pragma pack()

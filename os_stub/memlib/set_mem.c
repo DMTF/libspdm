@@ -22,12 +22,12 @@
 **/
 void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value)
 {
-	volatile uint8_t *pointer;
+    volatile uint8_t *pointer;
 
-	pointer = (uint8_t *)buffer;
-	while (length-- != 0) {
-		*(pointer++) = value;
-	}
+    pointer = (uint8_t *)buffer;
+    while (length-- != 0) {
+        *(pointer++) = value;
+    }
 
-	return buffer;
+    return buffer;
 }

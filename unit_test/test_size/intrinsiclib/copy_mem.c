@@ -15,17 +15,17 @@
 
 /* Copies bytes between buffers */
 static __attribute__((__used__)) void *__memcpy(void *dest, const void *src,
-						unsigned int count)
+                        unsigned int count)
 {
-	return copy_mem(dest, src, (uintn)count);
+    return copy_mem(dest, src, (uintn)count);
 }
 __attribute__((__alias__("__memcpy"))) void *memcpy(void *dest, const void *src,
-						    unsigned int count);
+                            unsigned int count);
 
 #else
 /* Copies bytes between buffers */
 void *memcpy(void *dest, const void *src, unsigned int count)
 {
-	return copy_mem(dest, src, (uintn)count);
+    return copy_mem(dest, src, (uintn)count);
 }
 #endif

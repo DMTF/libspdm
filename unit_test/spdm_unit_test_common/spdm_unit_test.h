@@ -55,18 +55,18 @@ extern uint16_t m_use_key_schedule_algo;
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
 typedef struct {
-	uint32_t signature;
-	boolean is_requester;
-	libspdm_device_send_message_func send_message;
-	libspdm_device_receive_message_func receive_message;
-	void *spdm_context;
-	uint32_t case_id;
+    uint32_t signature;
+    boolean is_requester;
+    libspdm_device_send_message_func send_message;
+    libspdm_device_receive_message_func receive_message;
+    void *spdm_context;
+    uint32_t case_id;
 } spdm_test_context_t;
 
 #define SPDM_TEST_CONTEXT_FROM_SPDM_PROTOCOL(a)                                \
-	BASE_CR(a, spdm_test_context_t, SpdmProtocol)
+    BASE_CR(a, spdm_test_context_t, SpdmProtocol)
 #define SPDM_TEST_CONTEXT_FROM_SPDM_CONTEXT(a)                                 \
-	BASE_CR(a, spdm_test_context_t, spdm_context)
+    BASE_CR(a, spdm_test_context_t, spdm_context)
 
 int spdm_unit_test_group_setup(void **state);
 
@@ -83,6 +83,6 @@ void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
 void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
 
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
-			OUT uintn *file_size);
+            OUT uintn *file_size);
 
 #endif

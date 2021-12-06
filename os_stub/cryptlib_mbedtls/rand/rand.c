@@ -29,8 +29,8 @@
 **/
 boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
-	// TBD
-	return TRUE;
+    // TBD
+    return TRUE;
 }
 
 /**
@@ -47,34 +47,34 @@ boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 **/
 boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
-	boolean ret;
-	uint64_t temp_rand;
+    boolean ret;
+    uint64_t temp_rand;
 
-	ret = FALSE;
+    ret = FALSE;
 
-	while (size > 0) {
-		// Use rnglib to get random number
-		ret = get_random_number_64(&temp_rand);
+    while (size > 0) {
+        // Use rnglib to get random number
+        ret = get_random_number_64(&temp_rand);
 
-		if (!ret) {
-			return ret;
-		}
-		if (size >= sizeof(temp_rand)) {
-			*((uint64_t *)output) = temp_rand;
-			output += sizeof(uint64_t);
-			size -= sizeof(temp_rand);
-		} else {
-			copy_mem(output, &temp_rand, size);
-			size = 0;
-		}
-	}
+        if (!ret) {
+            return ret;
+        }
+        if (size >= sizeof(temp_rand)) {
+            *((uint64_t *)output) = temp_rand;
+            output += sizeof(uint64_t);
+            size -= sizeof(temp_rand);
+        } else {
+            copy_mem(output, &temp_rand, size);
+            size = 0;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 int myrand(void *rng_state, unsigned char *output, size_t len)
 {
-	random_bytes(output, len);
+    random_bytes(output, len);
 
-	return 0;
+    return 0;
 }

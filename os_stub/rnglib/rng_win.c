@@ -26,20 +26,20 @@
 **/
 boolean get_random_number_64(OUT uint64_t *rand_data)
 {
-	BCRYPT_ALG_HANDLE Prov;
+    BCRYPT_ALG_HANDLE Prov;
 
-	assert(rand_data != NULL);
+    assert(rand_data != NULL);
 
-	if(!BCRYPT_SUCCESS(BCryptOpenAlgorithmProvider(&Prov, BCRYPT_RNG_ALGORITHM,
-				NULL, 0))) {
-		return FALSE;
-	}
-	if(!BCRYPT_SUCCESS(BCryptGenRandom(Prov, (PUCHAR)rand_data,
-				sizeof(*rand_data), 0))) {
-		BCryptCloseAlgorithmProvider(Prov, 0);
-		return FALSE;
-	}
-	BCryptCloseAlgorithmProvider(Prov, 0);
+    if(!BCRYPT_SUCCESS(BCryptOpenAlgorithmProvider(&Prov, BCRYPT_RNG_ALGORITHM,
+                NULL, 0))) {
+        return FALSE;
+    }
+    if(!BCRYPT_SUCCESS(BCryptGenRandom(Prov, (PUCHAR)rand_data,
+                sizeof(*rand_data), 0))) {
+        BCryptCloseAlgorithmProvider(Prov, 0);
+        return FALSE;
+    }
+    BCryptCloseAlgorithmProvider(Prov, 0);
 
-	return TRUE;
+    return TRUE;
 }

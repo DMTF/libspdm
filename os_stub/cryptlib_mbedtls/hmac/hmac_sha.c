@@ -20,14 +20,14 @@
 **/
 void *hmac_md_new(void)
 {
-	void *hmac_md_ctx;
+    void *hmac_md_ctx;
 
-	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_md_context_t));
-	if (hmac_md_ctx == NULL) {
-		return NULL;
-	}
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_md_context_t));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
 
-	return hmac_md_ctx;
+    return hmac_md_ctx;
 }
 
 /**
@@ -38,8 +38,8 @@ void *hmac_md_new(void)
 **/
 void hmac_md_free(IN void *hmac_md_ctx)
 {
-	mbedtls_md_free(hmac_md_ctx);
-	free_pool (hmac_md_ctx);
+    mbedtls_md_free(hmac_md_ctx);
+    free_pool (hmac_md_ctx);
 }
 
 /**
@@ -58,31 +58,31 @@ void hmac_md_free(IN void *hmac_md_ctx)
 
 **/
 boolean hmac_md_set_key(IN mbedtls_md_type_t md_type, OUT void *hmac_md_ctx,
-			IN const uint8_t *key, IN uintn key_size)
+            IN const uint8_t *key, IN uintn key_size)
 {
-	const mbedtls_md_info_t *md_info;
-	int32_t ret;
+    const mbedtls_md_info_t *md_info;
+    int32_t ret;
 
-	if (hmac_md_ctx == NULL || key_size > INT_MAX) {
-		return FALSE;
-	}
+    if (hmac_md_ctx == NULL || key_size > INT_MAX) {
+        return FALSE;
+    }
 
-	zero_mem(hmac_md_ctx, sizeof(mbedtls_md_context_t));
-	mbedtls_md_init(hmac_md_ctx);
+    zero_mem(hmac_md_ctx, sizeof(mbedtls_md_context_t));
+    mbedtls_md_init(hmac_md_ctx);
 
-	md_info = mbedtls_md_info_from_type(md_type);
-	ASSERT(md_info != NULL);
+    md_info = mbedtls_md_info_from_type(md_type);
+    ASSERT(md_info != NULL);
 
-	ret = mbedtls_md_setup(hmac_md_ctx, md_info, 1);
-	if (ret != 0) {
-		return FALSE;
-	}
+    ret = mbedtls_md_setup(hmac_md_ctx, md_info, 1);
+    if (ret != 0) {
+        return FALSE;
+    }
 
-	ret = mbedtls_md_hmac_starts(hmac_md_ctx, key, key_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_md_hmac_starts(hmac_md_ctx, key, key_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -125,34 +125,34 @@ int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
 **/
 boolean hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
 {
-	int32_t ret;
-	const mbedtls_md_info_t *md_info;
+    int32_t ret;
+    const mbedtls_md_info_t *md_info;
 
-	if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
-		return FALSE;
-	}
+    if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
+        return FALSE;
+    }
 
-	zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
-	mbedtls_md_init(new_hmac_md_ctx);
+    zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
+    mbedtls_md_init(new_hmac_md_ctx);
 
-	md_info = mbedtls_md_info_from_type(md_type);
-	ASSERT(md_info != NULL);
+    md_info = mbedtls_md_info_from_type(md_type);
+    ASSERT(md_info != NULL);
 
-	ret = mbedtls_md_setup(new_hmac_md_ctx, md_info, 1);
-	if (ret != 0) {
-		return FALSE;
-	}
-	ret = mbedtls_md_clone(new_hmac_md_ctx, hmac_md_ctx);
-	if (ret != 0) {
-		return FALSE;
-	}
-	//Temporary solution to the problem of context clone.
-	//There are not any standard function in mbedtls to clone a complete hmac context.
-	copy_mem(
-		((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
-		((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
-		hmac_md_get_blocksize(md_type) * 2);
-	return TRUE;
+    ret = mbedtls_md_setup(new_hmac_md_ctx, md_info, 1);
+    if (ret != 0) {
+        return FALSE;
+    }
+    ret = mbedtls_md_clone(new_hmac_md_ctx, hmac_md_ctx);
+    if (ret != 0) {
+        return FALSE;
+    }
+    //Temporary solution to the problem of context clone.
+    //There are not any standard function in mbedtls to clone a complete hmac context.
+    copy_mem(
+        ((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
+        ((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
+        hmac_md_get_blocksize(md_type) * 2);
+    return TRUE;
 }
 
 /**
@@ -174,26 +174,26 @@ boolean hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_c
 
 **/
 boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-		       IN uintn data_size)
+               IN uintn data_size)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (hmac_md_ctx == NULL) {
-		return FALSE;
-	}
+    if (hmac_md_ctx == NULL) {
+        return FALSE;
+    }
 
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_md_hmac_update(hmac_md_ctx, data, data_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_md_hmac_update(hmac_md_ctx, data, data_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -218,18 +218,18 @@ boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
 **/
 boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (hmac_md_ctx == NULL || hmac_value == NULL) {
-		return FALSE;
-	}
+    if (hmac_md_ctx == NULL || hmac_value == NULL) {
+        return FALSE;
+    }
 
-	ret = mbedtls_md_hmac_finish(hmac_md_ctx, hmac_value);
-	mbedtls_md_free(hmac_md_ctx);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_md_hmac_finish(hmac_md_ctx, hmac_value);
+    mbedtls_md_free(hmac_md_ctx);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -254,21 +254,21 @@ boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_md_all(IN mbedtls_md_type_t md_type, IN const void *data,
-		    IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-		    OUT uint8_t *hmac_value)
+            IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	const mbedtls_md_info_t *md_info;
-	int32_t ret;
+    const mbedtls_md_info_t *md_info;
+    int32_t ret;
 
-	md_info = mbedtls_md_info_from_type(md_type);
-	ASSERT(md_info != NULL);
+    md_info = mbedtls_md_info_from_type(md_type);
+    ASSERT(md_info != NULL);
 
-	ret = mbedtls_md_hmac(md_info, key, key_size, data, data_size,
-			      hmac_value);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_md_hmac(md_info, key, key_size, data, data_size,
+                  hmac_value);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -280,7 +280,7 @@ boolean hmac_md_all(IN mbedtls_md_type_t md_type, IN const void *data,
 **/
 void *hmac_sha256_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -291,7 +291,7 @@ void *hmac_sha256_new(void)
 **/
 void hmac_sha256_free(IN void *hmac_sha256_ctx)
 {
-	hmac_md_free(hmac_sha256_ctx);
+    hmac_md_free(hmac_sha256_ctx);
 }
 
 /**
@@ -309,10 +309,10 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx)
 
 **/
 boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(MBEDTLS_MD_SHA256, hmac_sha256_ctx, key,
-			       key_size);
+    return hmac_md_set_key(MBEDTLS_MD_SHA256, hmac_sha256_ctx, key,
+                   key_size);
 }
 
 /**
@@ -329,9 +329,9 @@ boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
-			      OUT void *new_hmac_sha256_ctx)
+                  OUT void *new_hmac_sha256_ctx)
 {
-	return hmac_md_duplicate(MBEDTLS_MD_SHA256, hmac_sha256_ctx, new_hmac_sha256_ctx);
+    return hmac_md_duplicate(MBEDTLS_MD_SHA256, hmac_sha256_ctx, new_hmac_sha256_ctx);
 }
 
 /**
@@ -353,9 +353,9 @@ boolean hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
 
 **/
 boolean hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha256_ctx, data, data_size);
+    return hmac_md_update(hmac_sha256_ctx, data, data_size);
 }
 
 /**
@@ -380,7 +380,7 @@ boolean hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
 **/
 boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha256_ctx, hmac_value);
+    return hmac_md_final(hmac_sha256_ctx, hmac_value);
 }
 
 /**
@@ -404,11 +404,11 @@ boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(MBEDTLS_MD_SHA256, data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(MBEDTLS_MD_SHA256, data, data_size, key, key_size,
+               hmac_value);
 }
 
 /**
@@ -420,7 +420,7 @@ boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha384_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -431,7 +431,7 @@ void *hmac_sha384_new(void)
 **/
 void hmac_sha384_free(IN void *hmac_sha384_ctx)
 {
-	hmac_md_free(hmac_sha384_ctx);
+    hmac_md_free(hmac_sha384_ctx);
 }
 
 /**
@@ -451,10 +451,10 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx)
 
 **/
 boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(MBEDTLS_MD_SHA384, hmac_sha384_ctx, key,
-			       key_size);
+    return hmac_md_set_key(MBEDTLS_MD_SHA384, hmac_sha384_ctx, key,
+                   key_size);
 }
 
 /**
@@ -473,9 +473,9 @@ boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
-			      OUT void *new_hmac_sha384_ctx)
+                  OUT void *new_hmac_sha384_ctx)
 {
-	return hmac_md_duplicate(MBEDTLS_MD_SHA384, hmac_sha384_ctx, new_hmac_sha384_ctx);
+    return hmac_md_duplicate(MBEDTLS_MD_SHA384, hmac_sha384_ctx, new_hmac_sha384_ctx);
 }
 
 /**
@@ -499,9 +499,9 @@ boolean hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
 
 **/
 boolean hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha384_ctx, data, data_size);
+    return hmac_md_update(hmac_sha384_ctx, data, data_size);
 }
 
 /**
@@ -528,7 +528,7 @@ boolean hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
 **/
 boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha384_ctx, hmac_value);
+    return hmac_md_final(hmac_sha384_ctx, hmac_value);
 }
 
 /**
@@ -552,11 +552,11 @@ boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(MBEDTLS_MD_SHA384, data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(MBEDTLS_MD_SHA384, data, data_size, key, key_size,
+               hmac_value);
 }
 
 /**
@@ -568,7 +568,7 @@ boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha512_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -579,7 +579,7 @@ void *hmac_sha512_new(void)
 **/
 void hmac_sha512_free(IN void *hmac_sha512_ctx)
 {
-	hmac_md_free(hmac_sha512_ctx);
+    hmac_md_free(hmac_sha512_ctx);
 }
 
 /**
@@ -599,10 +599,10 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx)
 
 **/
 boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(MBEDTLS_MD_SHA512, hmac_sha512_ctx, key,
-			       key_size);
+    return hmac_md_set_key(MBEDTLS_MD_SHA512, hmac_sha512_ctx, key,
+                   key_size);
 }
 
 /**
@@ -621,9 +621,9 @@ boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
-			      OUT void *new_hmac_sha512_ctx)
+                  OUT void *new_hmac_sha512_ctx)
 {
-	return hmac_md_duplicate(MBEDTLS_MD_SHA512, hmac_sha512_ctx, new_hmac_sha512_ctx);
+    return hmac_md_duplicate(MBEDTLS_MD_SHA512, hmac_sha512_ctx, new_hmac_sha512_ctx);
 }
 
 /**
@@ -647,9 +647,9 @@ boolean hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
 
 **/
 boolean hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha512_ctx, data, data_size);
+    return hmac_md_update(hmac_sha512_ctx, data, data_size);
 }
 
 /**
@@ -676,7 +676,7 @@ boolean hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
 **/
 boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha512_ctx, hmac_value);
+    return hmac_md_final(hmac_sha512_ctx, hmac_value);
 }
 
 /**
@@ -700,9 +700,9 @@ boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha512_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(MBEDTLS_MD_SHA512, data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(MBEDTLS_MD_SHA512, data, data_size, key, key_size,
+               hmac_value);
 }

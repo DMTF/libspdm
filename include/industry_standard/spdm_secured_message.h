@@ -51,17 +51,17 @@
 //
 
 typedef struct {
-	uint32_t session_id;
+    uint32_t session_id;
 } spdm_secured_message_a_data_header1_t;
 
 // The length of sequence_number between HEADER_1 and HEADER_2 is transport specific.
 
 typedef struct {
-	uint16_t length; // The length of the remaining data, including application_data_length(O), payload, Random(O) and MAC.
+    uint16_t length; // The length of the remaining data, including application_data_length(O), payload, Random(O) and MAC.
 } spdm_secured_message_a_data_header2_t;
 
 typedef struct {
-	uint16_t application_data_length; // The length of the payload
+    uint16_t application_data_length; // The length of the payload
 } spdm_secured_message_cipher_header_t;
 
 //
@@ -71,53 +71,53 @@ typedef struct {
 #define SECURED_MESSAGE_OPAQUE_VERSION 0x1
 
 typedef struct {
-	uint32_t spec_id; // SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID
-	uint8_t opaque_version; // SECURED_MESSAGE_OPAQUE_VERSION
-	uint8_t total_elements;
-	uint16_t reserved;
-	//opaque_element_table_t  opaque_list[];
+    uint32_t spec_id; // SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID
+    uint8_t opaque_version; // SECURED_MESSAGE_OPAQUE_VERSION
+    uint8_t total_elements;
+    uint16_t reserved;
+    //opaque_element_table_t  opaque_list[];
 } secured_message_general_opaque_data_table_header_t;
 
 typedef struct {
-	uint8_t id;
-	uint8_t vendor_len;
-	//uint8_t    vendor_id[vendor_len];
-	//uint16_t   opaque_element_data_len;
-	//uint8_t    opaque_element_data[opaque_element_data_len];
-	//uint8_t    align_padding[];
+    uint8_t id;
+    uint8_t vendor_len;
+    //uint8_t    vendor_id[vendor_len];
+    //uint16_t   opaque_element_data_len;
+    //uint8_t    opaque_element_data[opaque_element_data_len];
+    //uint8_t    align_padding[];
 } opaque_element_table_header_t;
 
 #define SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION 0x1
 
 typedef struct {
-	uint8_t id; // SPDM_REGISTRY_ID_DMTF
-	uint8_t vendor_len;
-	uint16_t opaque_element_data_len;
-	//uint8_t    sm_data_version;
-	//uint8_t    sm_data_id;
-	//uint8_t    sm_data[];
+    uint8_t id; // SPDM_REGISTRY_ID_DMTF
+    uint8_t vendor_len;
+    uint16_t opaque_element_data_len;
+    //uint8_t    sm_data_version;
+    //uint8_t    sm_data_id;
+    //uint8_t    sm_data[];
 } secured_message_opaque_element_table_header_t;
 
 typedef struct {
-	uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
-	uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION
+    uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
+    uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION
 } secured_message_opaque_element_header_t;
 
 #define SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION 0x0
 
 typedef struct {
-	uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
-	uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION
-	spdm_version_number_t selected_version;
+    uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
+    uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION
+    spdm_version_number_t selected_version;
 } secured_message_opaque_element_version_selection_t;
 
 #define SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION 0x1
 
 typedef struct {
-	uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
-	uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION
-	uint8_t version_count;
-	//spdm_version_number_t   versions_list[version_count];
+    uint8_t sm_data_version; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION
+    uint8_t sm_data_id; // SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION
+    uint8_t version_count;
+    //spdm_version_number_t   versions_list[version_count];
 } secured_message_opaque_element_supported_version_t;
 
 #pragma pack()

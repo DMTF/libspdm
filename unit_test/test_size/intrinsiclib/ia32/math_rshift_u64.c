@@ -9,7 +9,7 @@
  */
 __declspec(naked) void __cdecl _aullshr(void)
 {
-	_asm {
+    _asm {
     ;
     ; Checking: Only handle 64bit shifting or more
     ;
@@ -42,5 +42,5 @@ _Exit:
     xor     eax, eax
     xor     edx, edx
     ret
-	}
+    }
 }

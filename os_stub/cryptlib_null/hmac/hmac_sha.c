@@ -19,8 +19,8 @@
 **/
 void *hmac_sha256_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -31,7 +31,7 @@ void *hmac_sha256_new(void)
 **/
 void hmac_sha256_free(IN void *hmac_sha256_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -49,10 +49,10 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx)
 
 **/
 boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -69,10 +69,10 @@ boolean hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
-			      OUT void *new_hmac_sha256_ctx)
+                  OUT void *new_hmac_sha256_ctx)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -94,10 +94,10 @@ boolean hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
 
 **/
 boolean hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -122,8 +122,8 @@ boolean hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
 **/
 boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -147,11 +147,11 @@ boolean hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -163,8 +163,8 @@ boolean hmac_sha256_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha384_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -175,7 +175,7 @@ void *hmac_sha384_new(void)
 **/
 void hmac_sha384_free(IN void *hmac_sha384_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -195,10 +195,10 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx)
 
 **/
 boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -217,10 +217,10 @@ boolean hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
-			      OUT void *new_hmac_sha384_ctx)
+                  OUT void *new_hmac_sha384_ctx)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -244,10 +244,10 @@ boolean hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
 
 **/
 boolean hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -274,8 +274,8 @@ boolean hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
 **/
 boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -299,11 +299,11 @@ boolean hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -315,8 +315,8 @@ boolean hmac_sha384_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha512_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -327,7 +327,7 @@ void *hmac_sha512_new(void)
 **/
 void hmac_sha512_free(IN void *hmac_sha512_ctx)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -347,10 +347,10 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx)
 
 **/
 boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -369,10 +369,10 @@ boolean hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
 
 **/
 boolean hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
-			      OUT void *new_hmac_sha512_ctx)
+                  OUT void *new_hmac_sha512_ctx)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -396,10 +396,10 @@ boolean hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
 
 **/
 boolean hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -426,8 +426,8 @@ boolean hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
 **/
 boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -451,9 +451,9 @@ boolean hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
 
 **/
 boolean hmac_sha512_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }

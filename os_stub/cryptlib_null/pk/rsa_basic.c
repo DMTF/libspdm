@@ -27,8 +27,8 @@
 **/
 void *rsa_new(void)
 {
-	ASSERT(FALSE);
-	return NULL;
+    ASSERT(FALSE);
+    return NULL;
 }
 
 /**
@@ -39,7 +39,7 @@ void *rsa_new(void)
 **/
 void rsa_free(IN void *rsa_context)
 {
-	ASSERT(FALSE);
+    ASSERT(FALSE);
 }
 
 /**
@@ -65,10 +65,10 @@ void rsa_free(IN void *rsa_context)
 
 **/
 boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-		    IN const uint8_t *big_number, IN uintn bn_size)
+            IN const uint8_t *big_number, IN uintn bn_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -92,12 +92,12 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
 **/
 boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-				  IN const uint8_t *message_hash,
-				  IN uintn hash_size, IN const uint8_t *signature,
-				  IN uintn sig_size)
+                  IN const uint8_t *message_hash,
+                  IN uintn hash_size, IN const uint8_t *signature,
+                  IN uintn sig_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }
 
 /**
@@ -123,9 +123,9 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
 **/
 boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-		       IN const uint8_t *message_hash, IN uintn hash_size,
-		       IN const uint8_t *signature, IN uintn sig_size)
+               IN const uint8_t *message_hash, IN uintn hash_size,
+               IN const uint8_t *signature, IN uintn sig_size)
 {
-	ASSERT(FALSE);
-	return FALSE;
+    ASSERT(FALSE);
+    return FALSE;
 }

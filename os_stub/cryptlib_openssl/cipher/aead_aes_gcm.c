@@ -40,104 +40,104 @@
 
 **/
 boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
-			     IN const uint8_t *iv, IN uintn iv_size,
-			     IN const uint8_t *a_data, IN uintn a_data_size,
-			     IN const uint8_t *data_in, IN uintn data_in_size,
-			     OUT uint8_t *tag_out, IN uintn tag_size,
-			     OUT uint8_t *data_out, OUT uintn *data_out_size)
+                 IN const uint8_t *iv, IN uintn iv_size,
+                 IN const uint8_t *a_data, IN uintn a_data_size,
+                 IN const uint8_t *data_in, IN uintn data_in_size,
+                 OUT uint8_t *tag_out, IN uintn tag_size,
+                 OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	EVP_CIPHER_CTX *ctx;
-	const EVP_CIPHER *cipher;
-	uintn temp_out_size;
-	boolean ret_value;
+    EVP_CIPHER_CTX *ctx;
+    const EVP_CIPHER *cipher;
+    uintn temp_out_size;
+    boolean ret_value;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	switch (key_size) {
-	case 16:
-		cipher = EVP_aes_128_gcm();
-		break;
-	case 24:
-		cipher = EVP_aes_192_gcm();
-		break;
-	case 32:
-		cipher = EVP_aes_256_gcm();
-		break;
-	default:
-		return FALSE;
-	}
-	if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
-	    (tag_size != 15) && (tag_size != 16)) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    switch (key_size) {
+    case 16:
+        cipher = EVP_aes_128_gcm();
+        break;
+    case 24:
+        cipher = EVP_aes_192_gcm();
+        break;
+    case 32:
+        cipher = EVP_aes_256_gcm();
+        break;
+    default:
+        return FALSE;
+    }
+    if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
+        (tag_size != 15) && (tag_size != 16)) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	ctx = EVP_CIPHER_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
+    ctx = EVP_CIPHER_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
 
-	ret_value = (boolean)EVP_EncryptInit_ex(ctx, cipher, NULL, NULL, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptInit_ex(ctx, cipher, NULL, NULL, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
-						 (int32_t)iv_size, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
+                         (int32_t)iv_size, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptUpdate(
-		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptUpdate(
+        ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptUpdate(ctx, data_out,
-					       (int32_t *)&temp_out_size, data_in,
-					       (int32_t)data_in_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptUpdate(ctx, data_out,
+                           (int32_t *)&temp_out_size, data_in,
+                           (int32_t)data_in_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_EncryptFinal_ex(ctx, data_out,
-						 (int32_t *)&temp_out_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_EncryptFinal_ex(ctx, data_out,
+                         (int32_t *)&temp_out_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(
-		ctx, EVP_CTRL_GCM_GET_TAG, (int32_t)tag_size, (void *)tag_out);
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(
+        ctx, EVP_CTRL_GCM_GET_TAG, (int32_t)tag_size, (void *)tag_out);
 
 done:
-	EVP_CIPHER_CTX_free(ctx);
-	if (!ret_value) {
-		return ret_value;
-	}
+    EVP_CIPHER_CTX_free(ctx);
+    if (!ret_value) {
+        return ret_value;
+    }
 
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return ret_value;
+    return ret_value;
 }
 
 /**
@@ -166,102 +166,102 @@ done:
 
 **/
 boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
-			     IN const uint8_t *iv, IN uintn iv_size,
-			     IN const uint8_t *a_data, IN uintn a_data_size,
-			     IN const uint8_t *data_in, IN uintn data_in_size,
-			     IN const uint8_t *tag, IN uintn tag_size,
-			     OUT uint8_t *data_out, OUT uintn *data_out_size)
+                 IN const uint8_t *iv, IN uintn iv_size,
+                 IN const uint8_t *a_data, IN uintn a_data_size,
+                 IN const uint8_t *data_in, IN uintn data_in_size,
+                 IN const uint8_t *tag, IN uintn tag_size,
+                 OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
-	EVP_CIPHER_CTX *ctx;
-	const EVP_CIPHER *cipher;
-	uintn temp_out_size;
-	boolean ret_value;
+    EVP_CIPHER_CTX *ctx;
+    const EVP_CIPHER *cipher;
+    uintn temp_out_size;
+    boolean ret_value;
 
-	if (data_in_size > INT_MAX) {
-		return FALSE;
-	}
-	if (a_data_size > INT_MAX) {
-		return FALSE;
-	}
-	if (iv_size != 12) {
-		return FALSE;
-	}
-	switch (key_size) {
-	case 16:
-		cipher = EVP_aes_128_gcm();
-		break;
-	case 24:
-		cipher = EVP_aes_192_gcm();
-		break;
-	case 32:
-		cipher = EVP_aes_256_gcm();
-		break;
-	default:
-		return FALSE;
-	}
-	if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
-	    (tag_size != 15) && (tag_size != 16)) {
-		return FALSE;
-	}
-	if (data_out_size != NULL) {
-		if ((*data_out_size > INT_MAX) ||
-		    (*data_out_size < data_in_size)) {
-			return FALSE;
-		}
-	}
+    if (data_in_size > INT_MAX) {
+        return FALSE;
+    }
+    if (a_data_size > INT_MAX) {
+        return FALSE;
+    }
+    if (iv_size != 12) {
+        return FALSE;
+    }
+    switch (key_size) {
+    case 16:
+        cipher = EVP_aes_128_gcm();
+        break;
+    case 24:
+        cipher = EVP_aes_192_gcm();
+        break;
+    case 32:
+        cipher = EVP_aes_256_gcm();
+        break;
+    default:
+        return FALSE;
+    }
+    if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
+        (tag_size != 15) && (tag_size != 16)) {
+        return FALSE;
+    }
+    if (data_out_size != NULL) {
+        if ((*data_out_size > INT_MAX) ||
+            (*data_out_size < data_in_size)) {
+            return FALSE;
+        }
+    }
 
-	ctx = EVP_CIPHER_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
+    ctx = EVP_CIPHER_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
 
-	ret_value = (boolean)EVP_DecryptInit_ex(ctx, cipher, NULL, NULL, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptInit_ex(ctx, cipher, NULL, NULL, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
-						 (int32_t)iv_size, NULL);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
+                         (int32_t)iv_size, NULL);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptUpdate(
-		ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptUpdate(
+        ctx, NULL, (int32_t *)&temp_out_size, a_data, (int32_t)a_data_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptUpdate(ctx, data_out,
-					       (int32_t *)&temp_out_size, data_in,
-					       (int32_t)data_in_size);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_DecryptUpdate(ctx, data_out,
+                           (int32_t *)&temp_out_size, data_in,
+                           (int32_t)data_in_size);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
-						 (int32_t)tag_size, (void *)tag);
-	if (!ret_value) {
-		goto done;
-	}
+    ret_value = (boolean)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
+                         (int32_t)tag_size, (void *)tag);
+    if (!ret_value) {
+        goto done;
+    }
 
-	ret_value = (boolean)EVP_DecryptFinal_ex(ctx, data_out,
-						 (int32_t *)&temp_out_size);
+    ret_value = (boolean)EVP_DecryptFinal_ex(ctx, data_out,
+                         (int32_t *)&temp_out_size);
 
 done:
-	EVP_CIPHER_CTX_free(ctx);
-	if (!ret_value) {
-		return ret_value;
-	}
+    EVP_CIPHER_CTX_free(ctx);
+    if (!ret_value) {
+        return ret_value;
+    }
 
-	if (data_out_size != NULL) {
-		*data_out_size = data_in_size;
-	}
+    if (data_out_size != NULL) {
+        *data_out_size = data_in_size;
+    }
 
-	return ret_value;
+    return ret_value;
 }

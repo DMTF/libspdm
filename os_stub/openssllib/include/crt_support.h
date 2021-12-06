@@ -45,7 +45,7 @@
 #define CONFIG_HEADER_BN_H
 
 #if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) ||                        \
-	defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
+    defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
 //
 // With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
 // SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
@@ -53,7 +53,7 @@
 //
 #define SIXTY_FOUR_BIT
 #elif defined(MDE_CPU_IA32) || defined(MDE_CPU_ARM) || defined(MDE_CPU_EBC) || \
-	defined(MDE_CPU_RISCV32) || defined(MDE_CPU_ARC)
+    defined(MDE_CPU_RISCV32) || defined(MDE_CPU_ARC)
 #define THIRTY_TWO_BIT
 #else
 #error Unknown target architecture
@@ -120,28 +120,28 @@ typedef void *FILE;
 // Structures Definitions
 //
 struct tm {
-	int tm_sec; /* seconds after the minute [0-60] */
-	int tm_min; /* minutes after the hour [0-59] */
-	int tm_hour; /* hours since midnight [0-23] */
-	int tm_mday; /* day of the month [1-31] */
-	int tm_mon; /* months since January [0-11] */
-	int tm_year; /* years since 1900 */
-	int tm_wday; /* days since Sunday [0-6] */
-	int tm_yday; /* days since January 1 [0-365] */
-	int tm_isdst; /* Daylight Savings Time flag */
-	long tm_gmtoff; /* offset from CUT in seconds */
-	char *tm_zone; /* timezone abbreviation */
+    int tm_sec; /* seconds after the minute [0-60] */
+    int tm_min; /* minutes after the hour [0-59] */
+    int tm_hour; /* hours since midnight [0-23] */
+    int tm_mday; /* day of the month [1-31] */
+    int tm_mon; /* months since January [0-11] */
+    int tm_year; /* years since 1900 */
+    int tm_wday; /* days since Sunday [0-6] */
+    int tm_yday; /* days since January 1 [0-365] */
+    int tm_isdst; /* Daylight Savings Time flag */
+    long tm_gmtoff; /* offset from CUT in seconds */
+    char *tm_zone; /* timezone abbreviation */
 };
 
 struct timeval {
-	long tv_sec; /* time value, in seconds */
-	long tv_usec; /* time value, in microseconds */
+    long tv_sec; /* time value, in seconds */
+    long tv_usec; /* time value, in microseconds */
 };
 
 struct sockaddr {
-	__uint8_t sa_len; /* total length */
-	sa_family_t sa_family; /* address family */
-	char sa_data[14]; /* actually longer; address value */
+    __uint8_t sa_len; /* total length */
+    sa_family_t sa_family; /* address family */
+    char sa_data[14]; /* actually longer; address value */
 };
 
 //
@@ -214,9 +214,9 @@ int sprintf(char *string, char *format, ...);
 #define offsetof(type, member) OFFSET_OF(type, member)
 int atoi(const char *nptr);
 #define gettimeofday(tvp, tz)                                                  \
-	do {                                                                   \
-		(tvp)->tv_sec = time(NULL);                                    \
-		(tvp)->tv_usec = 0;                                            \
-	} while (0)
+    do {                                                                   \
+        (tvp)->tv_sec = time(NULL);                                    \
+        (tvp)->tv_usec = 0;                                            \
+    } while (0)
 
 #endif

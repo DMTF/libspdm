@@ -264,15 +264,15 @@ uintn m_spdm_end_session_request_size = sizeof(m_spdm_end_session_request);
 static uint8_t                  m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 
 static void spdm_secured_message_set_request_finished_key(
-	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+    IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
 {
-	spdm_secured_message_context_t *secured_message_context;
+    spdm_secured_message_context_t *secured_message_context;
 
-	secured_message_context = spdm_secured_message_context;
-	ASSERT(key_size == secured_message_context->hash_size);
-	copy_mem(secured_message_context->handshake_secret.request_finished_key,
-		 key, secured_message_context->hash_size);
-	secured_message_context->finished_key_ready = TRUE;
+    secured_message_context = spdm_secured_message_context;
+    ASSERT(key_size == secured_message_context->hash_size);
+    copy_mem(secured_message_context->handshake_secret.request_finished_key,
+         key, secured_message_context->hash_size);
+    secured_message_context->finished_key_ready = TRUE;
 }
 
 #if SPDM_ENABLE_CAPABILITY_CERT_CAP

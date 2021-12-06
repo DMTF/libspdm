@@ -24,27 +24,27 @@
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_generate_error_response(IN void *context,
-					   IN uint8_t error_code,
-					   IN uint8_t error_data,
-					   IN OUT uintn *response_size,
-					   OUT void *response)
+                       IN uint8_t error_code,
+                       IN uint8_t error_data,
+                       IN OUT uintn *response_size,
+                       OUT void *response)
 {
-	spdm_error_response_t *spdm_response;
+    spdm_error_response_t *spdm_response;
 
-	ASSERT(*response_size >= sizeof(spdm_error_response_t));
-	*response_size = sizeof(spdm_error_response_t);
-	spdm_response = response;
+    ASSERT(*response_size >= sizeof(spdm_error_response_t));
+    *response_size = sizeof(spdm_error_response_t);
+    spdm_response = response;
 
-	if (spdm_is_version_supported(context, SPDM_MESSAGE_VERSION_11)) {
-		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-	} else {
-		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-	}
-	spdm_response->header.request_response_code = SPDM_ERROR;
-	spdm_response->header.param1 = error_code;
-	spdm_response->header.param2 = error_data;
+    if (spdm_is_version_supported(context, SPDM_MESSAGE_VERSION_11)) {
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    } else {
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    }
+    spdm_response->header.request_response_code = SPDM_ERROR;
+    spdm_response->header.param1 = error_code;
+    spdm_response->header.param2 = error_data;
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 /**
@@ -67,28 +67,28 @@ return_status libspdm_generate_error_response(IN void *context,
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_generate_extended_error_response(
-	IN void *context, IN uint8_t error_code, IN uint8_t error_data,
-	IN uintn extended_error_data_size, IN uint8_t *extended_error_data,
-	IN OUT uintn *response_size, OUT void *response)
+    IN void *context, IN uint8_t error_code, IN uint8_t error_data,
+    IN uintn extended_error_data_size, IN uint8_t *extended_error_data,
+    IN OUT uintn *response_size, OUT void *response)
 {
-	spdm_error_response_t *spdm_response;
+    spdm_error_response_t *spdm_response;
 
-	ASSERT(*response_size >=
-	       sizeof(spdm_error_response_t) + extended_error_data_size);
-	*response_size =
-		sizeof(spdm_error_response_t) + extended_error_data_size;
-	spdm_response = response;
+    ASSERT(*response_size >=
+           sizeof(spdm_error_response_t) + extended_error_data_size);
+    *response_size =
+        sizeof(spdm_error_response_t) + extended_error_data_size;
+    spdm_response = response;
 
-	if (spdm_is_version_supported(context, SPDM_MESSAGE_VERSION_11)) {
-		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-	} else {
-		spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-	}
-	spdm_response->header.request_response_code = SPDM_ERROR;
-	spdm_response->header.param1 = error_code;
-	spdm_response->header.param2 = error_data;
-	copy_mem(spdm_response + 1, extended_error_data,
-		 extended_error_data_size);
+    if (spdm_is_version_supported(context, SPDM_MESSAGE_VERSION_11)) {
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    } else {
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    }
+    spdm_response->header.request_response_code = SPDM_ERROR;
+    spdm_response->header.param1 = error_code;
+    spdm_response->header.param2 = error_data;
+    copy_mem(spdm_response + 1, extended_error_data,
+         extended_error_data_size);
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }

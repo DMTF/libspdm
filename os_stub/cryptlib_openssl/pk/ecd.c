@@ -28,40 +28,40 @@
 **/
 void *ecd_new_by_nid(IN uintn nid)
 {
-	EVP_PKEY_CTX *pkey_ctx;
-	EVP_PKEY *pkey;
-	int32_t result;
-	int32_t openssl_pkey_type;
+    EVP_PKEY_CTX *pkey_ctx;
+    EVP_PKEY *pkey;
+    int32_t result;
+    int32_t openssl_pkey_type;
 
-	switch (nid) {
-	case CRYPTO_NID_EDDSA_ED25519:
-		openssl_pkey_type = EVP_PKEY_ED25519;
-		break;
-	case CRYPTO_NID_EDDSA_ED448:
-		openssl_pkey_type = EVP_PKEY_ED448;
-		break;
-	default:
-		return NULL;
-	}
+    switch (nid) {
+    case CRYPTO_NID_EDDSA_ED25519:
+        openssl_pkey_type = EVP_PKEY_ED25519;
+        break;
+    case CRYPTO_NID_EDDSA_ED448:
+        openssl_pkey_type = EVP_PKEY_ED448;
+        break;
+    default:
+        return NULL;
+    }
 
-	pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
-	if (pkey_ctx == NULL) {
-		return NULL;
-	}
-	result = EVP_PKEY_keygen_init(pkey_ctx);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return NULL;
-	}
-	pkey = NULL;
-	result = EVP_PKEY_keygen(pkey_ctx, &pkey);
-	if (result <= 0) {
-		EVP_PKEY_CTX_free(pkey_ctx);
-		return NULL;
-	}
-	EVP_PKEY_CTX_free(pkey_ctx);
+    pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
+    if (pkey_ctx == NULL) {
+        return NULL;
+    }
+    result = EVP_PKEY_keygen_init(pkey_ctx);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return NULL;
+    }
+    pkey = NULL;
+    result = EVP_PKEY_keygen(pkey_ctx, &pkey);
+    if (result <= 0) {
+        EVP_PKEY_CTX_free(pkey_ctx);
+        return NULL;
+    }
+    EVP_PKEY_CTX_free(pkey_ctx);
 
-	return (void *)pkey;
+    return (void *)pkey;
 }
 
 /**
@@ -72,7 +72,7 @@ void *ecd_new_by_nid(IN uintn nid)
 **/
 void ecd_free(IN void *ecd_context)
 {
-	EVP_PKEY_free((EVP_PKEY *)ecd_context);
+    EVP_PKEY_free((EVP_PKEY *)ecd_context);
 }
 
 /**
@@ -90,10 +90,10 @@ void ecd_free(IN void *ecd_context)
 
 **/
 boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
-			IN uintn public_key_size)
+            IN uintn public_key_size)
 {
-	// TBD
-	return FALSE;
+    // TBD
+    return FALSE;
 }
 
 /**
@@ -112,40 +112,40 @@ boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
 
 **/
 boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-			IN OUT uintn *public_key_size)
+            IN OUT uintn *public_key_size)
 {
-	EVP_PKEY *pkey;
-	int32_t result;
-	uint32_t final_pub_key_size;
+    EVP_PKEY *pkey;
+    int32_t result;
+    uint32_t final_pub_key_size;
 
-	if (ecd_context == NULL || public_key == NULL ||
-	    public_key_size == NULL) {
-		return FALSE;
-	}
+    if (ecd_context == NULL || public_key == NULL ||
+        public_key_size == NULL) {
+        return FALSE;
+    }
 
-	pkey = (EVP_PKEY *)ecd_context;
-	switch (EVP_PKEY_id(pkey)) {
-	case EVP_PKEY_ED25519:
-		final_pub_key_size = 32;
-		break;
-	case EVP_PKEY_ED448:
-		final_pub_key_size = 57;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*public_key_size < final_pub_key_size) {
-		*public_key_size = final_pub_key_size;
-		return FALSE;
-	}
-	*public_key_size = final_pub_key_size;
-	zero_mem(public_key, *public_key_size);
-	result = EVP_PKEY_get_raw_public_key(pkey, public_key, public_key_size);
-	if (result == 0) {
-		return FALSE;
-	}
+    pkey = (EVP_PKEY *)ecd_context;
+    switch (EVP_PKEY_id(pkey)) {
+    case EVP_PKEY_ED25519:
+        final_pub_key_size = 32;
+        break;
+    case EVP_PKEY_ED448:
+        final_pub_key_size = 57;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*public_key_size < final_pub_key_size) {
+        *public_key_size = final_pub_key_size;
+        return FALSE;
+    }
+    *public_key_size = final_pub_key_size;
+    zero_mem(public_key, *public_key_size);
+    result = EVP_PKEY_get_raw_public_key(pkey, public_key, public_key_size);
+    if (result == 0) {
+        return FALSE;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -163,8 +163,8 @@ boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 **/
 boolean ecd_check_key(IN void *ecd_context)
 {
-	// TBD
-	return FALSE;
+    // TBD
+    return FALSE;
 }
 
 /**
@@ -188,10 +188,10 @@ boolean ecd_check_key(IN void *ecd_context)
 
 **/
 boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-			 IN OUT uintn *public_key_size)
+             IN OUT uintn *public_key_size)
 {
-	// TBD
-	return TRUE;
+    // TBD
+    return TRUE;
 }
 
 /**
@@ -228,66 +228,66 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 
 **/
 boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-		   IN const uint8_t *context, IN uintn context_size,
-		   IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
-		   IN OUT uintn *sig_size)
+           IN const uint8_t *context, IN uintn context_size,
+           IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
+           IN OUT uintn *sig_size)
 {
-	EVP_PKEY *pkey;
-	EVP_MD_CTX *ctx;
-	uintn half_size;
-	int32_t result;
+    EVP_PKEY *pkey;
+    EVP_MD_CTX *ctx;
+    uintn half_size;
+    int32_t result;
 
-	if (ecd_context == NULL || message == NULL) {
-		return FALSE;
-	}
+    if (ecd_context == NULL || message == NULL) {
+        return FALSE;
+    }
 
-	if (signature == NULL || sig_size == NULL) {
-		return FALSE;
-	}
+    if (signature == NULL || sig_size == NULL) {
+        return FALSE;
+    }
 
-	pkey = (EVP_PKEY *)ecd_context;
-	switch (EVP_PKEY_id(pkey)) {
-	case EVP_PKEY_ED25519:
-		half_size = 32;
-		break;
-	case EVP_PKEY_ED448:
-		half_size = 57;
-		break;
-	default:
-		return FALSE;
-	}
-	if (*sig_size < (uintn)(half_size * 2)) {
-		*sig_size = half_size * 2;
-		return FALSE;
-	}
-	*sig_size = half_size * 2;
-	zero_mem(signature, *sig_size);
+    pkey = (EVP_PKEY *)ecd_context;
+    switch (EVP_PKEY_id(pkey)) {
+    case EVP_PKEY_ED25519:
+        half_size = 32;
+        break;
+    case EVP_PKEY_ED448:
+        half_size = 57;
+        break;
+    default:
+        return FALSE;
+    }
+    if (*sig_size < (uintn)(half_size * 2)) {
+        *sig_size = half_size * 2;
+        return FALSE;
+    }
+    *sig_size = half_size * 2;
+    zero_mem(signature, *sig_size);
 
-	switch (hash_nid) {
-	case CRYPTO_NID_NULL:
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_NULL:
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	ctx = EVP_MD_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
-	result = EVP_DigestSignInit(ctx, NULL, NULL, NULL, pkey);
-	if (result != 1) {
-		EVP_MD_CTX_free(ctx);
-		return FALSE;
-	}
-	result = EVP_DigestSign(ctx, signature, sig_size, message, size);
-	if (result != 1) {
-		EVP_MD_CTX_free(ctx);
-		return FALSE;
-	}
+    ctx = EVP_MD_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
+    result = EVP_DigestSignInit(ctx, NULL, NULL, NULL, pkey);
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return FALSE;
+    }
+    result = EVP_DigestSign(ctx, signature, sig_size, message, size);
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return FALSE;
+    }
 
-	EVP_MD_CTX_free(ctx);
-	return TRUE;
+    EVP_MD_CTX_free(ctx);
+    return TRUE;
 }
 
 /**
@@ -318,61 +318,61 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
 
 **/
 boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-		     IN const uint8_t *context, IN uintn context_size,
-		     IN const uint8_t *message, IN uintn size,
-		     IN const uint8_t *signature, IN uintn sig_size)
+             IN const uint8_t *context, IN uintn context_size,
+             IN const uint8_t *message, IN uintn size,
+             IN const uint8_t *signature, IN uintn sig_size)
 {
-	EVP_PKEY *pkey;
-	EVP_MD_CTX *ctx;
-	uintn half_size;
-	int32_t result;
+    EVP_PKEY *pkey;
+    EVP_MD_CTX *ctx;
+    uintn half_size;
+    int32_t result;
 
-	if (ecd_context == NULL || message == NULL || signature == NULL) {
-		return FALSE;
-	}
+    if (ecd_context == NULL || message == NULL || signature == NULL) {
+        return FALSE;
+    }
 
-	if (sig_size > INT_MAX || sig_size == 0) {
-		return FALSE;
-	}
+    if (sig_size > INT_MAX || sig_size == 0) {
+        return FALSE;
+    }
 
-	pkey = (EVP_PKEY *)ecd_context;
-	switch (EVP_PKEY_id(pkey)) {
-	case EVP_PKEY_ED25519:
-		half_size = 32;
-		break;
-	case EVP_PKEY_ED448:
-		half_size = 57;
-		break;
-	default:
-		return FALSE;
-	}
-	if (sig_size != (uintn)(half_size * 2)) {
-		return FALSE;
-	}
+    pkey = (EVP_PKEY *)ecd_context;
+    switch (EVP_PKEY_id(pkey)) {
+    case EVP_PKEY_ED25519:
+        half_size = 32;
+        break;
+    case EVP_PKEY_ED448:
+        half_size = 57;
+        break;
+    default:
+        return FALSE;
+    }
+    if (sig_size != (uintn)(half_size * 2)) {
+        return FALSE;
+    }
 
-	switch (hash_nid) {
-	case CRYPTO_NID_NULL:
-		break;
+    switch (hash_nid) {
+    case CRYPTO_NID_NULL:
+        break;
 
-	default:
-		return FALSE;
-	}
+    default:
+        return FALSE;
+    }
 
-	ctx = EVP_MD_CTX_new();
-	if (ctx == NULL) {
-		return FALSE;
-	}
-	result = EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey);
-	if (result != 1) {
-		EVP_MD_CTX_free(ctx);
-		return FALSE;
-	}
-	result = EVP_DigestVerify(ctx, signature, sig_size, message, size);
-	if (result != 1) {
-		EVP_MD_CTX_free(ctx);
-		return FALSE;
-	}
+    ctx = EVP_MD_CTX_new();
+    if (ctx == NULL) {
+        return FALSE;
+    }
+    result = EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey);
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return FALSE;
+    }
+    result = EVP_DigestVerify(ctx, signature, sig_size, message, size);
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return FALSE;
+    }
 
-	EVP_MD_CTX_free(ctx);
-	return TRUE;
+    EVP_MD_CTX_free(ctx);
+    return TRUE;
 }

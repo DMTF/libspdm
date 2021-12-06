@@ -21,14 +21,14 @@
 **/
 void *sha256_new(void)
 {
-	void *hmac_md_ctx;
+    void *hmac_md_ctx;
 
-	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha256_context));
-	if (hmac_md_ctx == NULL) {
-		return NULL;
-	}
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha256_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
 
-	return hmac_md_ctx;
+    return hmac_md_ctx;
 }
 
 /**
@@ -39,8 +39,8 @@ void *sha256_new(void)
 **/
 void sha256_free(IN void *sha256_ctx)
 {
-	mbedtls_sha256_free(sha256_ctx);
-	free_pool (sha256_ctx);
+    mbedtls_sha256_free(sha256_ctx);
+    free_pool (sha256_ctx);
 }
 
 /**
@@ -57,19 +57,19 @@ void sha256_free(IN void *sha256_ctx)
 **/
 boolean sha256_init(OUT void *sha256_context)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha256_context == NULL) {
-		return FALSE;
-	}
+    if (sha256_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha256_init(sha256_context);
+    mbedtls_sha256_init(sha256_context);
 
-	ret = mbedtls_sha256_starts_ret(sha256_context, FALSE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha256_starts_ret(sha256_context, FALSE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -86,15 +86,15 @@ boolean sha256_init(OUT void *sha256_context)
 
 **/
 boolean sha256_duplicate(IN const void *sha256_context,
-			 OUT void *new_sha256_context)
+             OUT void *new_sha256_context)
 {
-	if (sha256_context == NULL || new_sha256_context == NULL) {
-		return FALSE;
-	}
+    if (sha256_context == NULL || new_sha256_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha256_clone(new_sha256_context, sha256_context);
+    mbedtls_sha256_clone(new_sha256_context, sha256_context);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -116,26 +116,26 @@ boolean sha256_duplicate(IN const void *sha256_context,
 
 **/
 boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha256_context == NULL) {
-		return FALSE;
-	}
+    if (sha256_context == NULL) {
+        return FALSE;
+    }
 
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha256_update_ret(sha256_context, data, data_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha256_update_ret(sha256_context, data, data_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -160,18 +160,18 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
 **/
 boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha256_context == NULL || hash_value == NULL) {
-		return FALSE;
-	}
+    if (sha256_context == NULL || hash_value == NULL) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha256_finish_ret(sha256_context, hash_value);
-	mbedtls_sha256_free(sha256_context);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha256_finish_ret(sha256_context, hash_value);
+    mbedtls_sha256_free(sha256_context);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -193,25 +193,25 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha256_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (hash_value == NULL) {
-		return FALSE;
-	}
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (hash_value == NULL) {
+        return FALSE;
+    }
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha256_ret(data, data_size, hash_value, FALSE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha256_ret(data, data_size, hash_value, FALSE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -223,14 +223,14 @@ boolean sha256_hash_all(IN const void *data, IN uintn data_size,
 **/
 void *sha384_new(void)
 {
-	void *hmac_md_ctx;
+    void *hmac_md_ctx;
 
-	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
-	if (hmac_md_ctx == NULL) {
-		return NULL;
-	}
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
 
-	return hmac_md_ctx;
+    return hmac_md_ctx;
 }
 
 /**
@@ -241,8 +241,8 @@ void *sha384_new(void)
 **/
 void sha384_free(IN void *sha384_ctx)
 {
-	mbedtls_sha512_free(sha384_ctx);
-	free_pool (sha384_ctx);
+    mbedtls_sha512_free(sha384_ctx);
+    free_pool (sha384_ctx);
 }
 
 /**
@@ -259,19 +259,19 @@ void sha384_free(IN void *sha384_ctx)
 **/
 boolean sha384_init(OUT void *sha384_context)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha384_context == NULL) {
-		return FALSE;
-	}
+    if (sha384_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha512_init(sha384_context);
+    mbedtls_sha512_init(sha384_context);
 
-	ret = mbedtls_sha512_starts_ret(sha384_context, TRUE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_starts_ret(sha384_context, TRUE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -290,15 +290,15 @@ boolean sha384_init(OUT void *sha384_context)
 
 **/
 boolean sha384_duplicate(IN const void *sha384_context,
-			 OUT void *new_sha384_context)
+             OUT void *new_sha384_context)
 {
-	if (sha384_context == NULL || new_sha384_context == NULL) {
-		return FALSE;
-	}
+    if (sha384_context == NULL || new_sha384_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha512_clone(new_sha384_context, sha384_context);
+    mbedtls_sha512_clone(new_sha384_context, sha384_context);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -320,26 +320,26 @@ boolean sha384_duplicate(IN const void *sha384_context,
 
 **/
 boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha384_context == NULL) {
-		return FALSE;
-	}
+    if (sha384_context == NULL) {
+        return FALSE;
+    }
 
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_update_ret(sha384_context, data, data_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_update_ret(sha384_context, data, data_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -364,18 +364,18 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
 **/
 boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha384_context == NULL || hash_value == NULL) {
-		return FALSE;
-	}
+    if (sha384_context == NULL || hash_value == NULL) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_finish_ret(sha384_context, hash_value);
-	mbedtls_sha512_free(sha384_context);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_finish_ret(sha384_context, hash_value);
+    mbedtls_sha512_free(sha384_context);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -397,25 +397,25 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha384_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (hash_value == NULL) {
-		return FALSE;
-	}
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (hash_value == NULL) {
+        return FALSE;
+    }
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_ret(data, data_size, hash_value, TRUE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_ret(data, data_size, hash_value, TRUE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -427,14 +427,14 @@ boolean sha384_hash_all(IN const void *data, IN uintn data_size,
 **/
 void *sha512_new(void)
 {
-	void *hmac_md_ctx;
+    void *hmac_md_ctx;
 
-	hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
-	if (hmac_md_ctx == NULL) {
-		return NULL;
-	}
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha512_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
 
-	return hmac_md_ctx;
+    return hmac_md_ctx;
 }
 
 /**
@@ -445,8 +445,8 @@ void *sha512_new(void)
 **/
 void sha512_free(IN void *sha512_ctx)
 {
-	mbedtls_sha512_free(sha512_ctx);
-	free_pool (sha512_ctx);
+    mbedtls_sha512_free(sha512_ctx);
+    free_pool (sha512_ctx);
 }
 
 /**
@@ -463,19 +463,19 @@ void sha512_free(IN void *sha512_ctx)
 **/
 boolean sha512_init(OUT void *sha512_context)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha512_context == NULL) {
-		return FALSE;
-	}
+    if (sha512_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha512_init(sha512_context);
+    mbedtls_sha512_init(sha512_context);
 
-	ret = mbedtls_sha512_starts_ret(sha512_context, FALSE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_starts_ret(sha512_context, FALSE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -494,15 +494,15 @@ boolean sha512_init(OUT void *sha512_context)
 
 **/
 boolean sha512_duplicate(IN const void *sha512_context,
-			 OUT void *new_sha512_context)
+             OUT void *new_sha512_context)
 {
-	if (sha512_context == NULL || new_sha512_context == NULL) {
-		return FALSE;
-	}
+    if (sha512_context == NULL || new_sha512_context == NULL) {
+        return FALSE;
+    }
 
-	mbedtls_sha512_clone(new_sha512_context, sha512_context);
+    mbedtls_sha512_clone(new_sha512_context, sha512_context);
 
-	return TRUE;
+    return TRUE;
 }
 
 /**
@@ -524,26 +524,26 @@ boolean sha512_duplicate(IN const void *sha512_context,
 
 **/
 boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
-		      IN uintn data_size)
+              IN uintn data_size)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha512_context == NULL) {
-		return FALSE;
-	}
+    if (sha512_context == NULL) {
+        return FALSE;
+    }
 
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_update_ret(sha512_context, data, data_size);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_update_ret(sha512_context, data, data_size);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -568,18 +568,18 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
 **/
 boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (sha512_context == NULL || hash_value == NULL) {
-		return FALSE;
-	}
+    if (sha512_context == NULL || hash_value == NULL) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_finish_ret(sha512_context, hash_value);
-	mbedtls_sha512_free(sha512_context);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_finish_ret(sha512_context, hash_value);
+    mbedtls_sha512_free(sha512_context);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -601,23 +601,23 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 
 **/
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
-			OUT uint8_t *hash_value)
+            OUT uint8_t *hash_value)
 {
-	int32_t ret;
+    int32_t ret;
 
-	if (hash_value == NULL) {
-		return FALSE;
-	}
-	if (data == NULL && data_size != 0) {
-		return FALSE;
-	}
-	if (data_size > INT_MAX) {
-		return FALSE;
-	}
+    if (hash_value == NULL) {
+        return FALSE;
+    }
+    if (data == NULL && data_size != 0) {
+        return FALSE;
+    }
+    if (data_size > INT_MAX) {
+        return FALSE;
+    }
 
-	ret = mbedtls_sha512_ret(data, data_size, hash_value, FALSE);
-	if (ret != 0) {
-		return FALSE;
-	}
-	return TRUE;
+    ret = mbedtls_sha512_ret(data, data_size, hash_value, FALSE);
+    if (ret != 0) {
+        return FALSE;
+    }
+    return TRUE;
 }

@@ -27,23 +27,23 @@
 // MCTP header
 //
 typedef struct {
-	// B[0~3]: header_version
-	// B[4~7]: reserved
-	uint8_t header_version;
-	uint8_t destination_id;
-	uint8_t source_id;
-	// B[0~2]: message_tag
-	// B[3]:   tag_owner
-	// B[4~5]: packet_sequence_number
-	// B[6]:   end_of_message
-	// B[7]:   start_of_message
-	uint8_t message_tag;
+    // B[0~3]: header_version
+    // B[4~7]: reserved
+    uint8_t header_version;
+    uint8_t destination_id;
+    uint8_t source_id;
+    // B[0~2]: message_tag
+    // B[3]:   tag_owner
+    // B[4~5]: packet_sequence_number
+    // B[6]:   end_of_message
+    // B[7]:   start_of_message
+    uint8_t message_tag;
 } mctp_header_t;
 
 typedef struct {
-	// B[0~6]: message_type
-	// B[7]  : integrity_check
-	uint8_t message_type;
+    // B[0~6]: message_type
+    // B[7]  : integrity_check
+    uint8_t message_type;
 } mctp_message_header_t;
 
 #define MCTP_MESSAGE_TYPE_MCTP_CONTROL 0x00

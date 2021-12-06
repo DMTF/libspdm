@@ -14,14 +14,14 @@
 void *hmac_md_new(void);
 void hmac_md_free(IN void *hmac_md_ctx);
 boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
-			IN const uint8_t *key, IN uintn key_size);
+            IN const uint8_t *key, IN uintn key_size);
 boolean hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx);
 boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-		       IN uintn data_size);
+               IN uintn data_size);
 boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value);
 boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
-		    IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-		    OUT uint8_t *hmac_value);
+            IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value);
 
 /**
   Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_256 use.
@@ -32,7 +32,7 @@ boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
 **/
 void *hmac_sha3_256_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -43,7 +43,7 @@ void *hmac_sha3_256_new(void)
 **/
 void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx)
 {
-	hmac_md_free(hmac_sha3_256_ctx);
+    hmac_md_free(hmac_sha3_256_ctx);
 }
 
 /**
@@ -61,9 +61,9 @@ void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx)
 
 **/
 boolean hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(EVP_sha3_256(), hmac_sha3_256_ctx, key, key_size);
+    return hmac_md_set_key(EVP_sha3_256(), hmac_sha3_256_ctx, key, key_size);
 }
 
 /**
@@ -80,9 +80,9 @@ boolean hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8_t *key
 
 **/
 boolean hmac_sha3_256_duplicate(IN const void *hmac_sha3_256_ctx,
-			      OUT void *new_hmac_sha3_256_ctx)
+                  OUT void *new_hmac_sha3_256_ctx)
 {
-	return hmac_md_duplicate(hmac_sha3_256_ctx, new_hmac_sha3_256_ctx);
+    return hmac_md_duplicate(hmac_sha3_256_ctx, new_hmac_sha3_256_ctx);
 }
 
 /**
@@ -104,9 +104,9 @@ boolean hmac_sha3_256_duplicate(IN const void *hmac_sha3_256_ctx,
 
 **/
 boolean hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha3_256_ctx, data, data_size);
+    return hmac_md_update(hmac_sha3_256_ctx, data, data_size);
 }
 
 /**
@@ -131,7 +131,7 @@ boolean hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data
 **/
 boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha3_256_ctx, hmac_value);
+    return hmac_md_final(hmac_sha3_256_ctx, hmac_value);
 }
 
 /**
@@ -155,11 +155,11 @@ boolean hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8_t *hmac_va
 
 **/
 boolean hmac_sha3_256_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(EVP_sha3_256(), data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(EVP_sha3_256(), data, data_size, key, key_size,
+               hmac_value);
 }
 
 /**
@@ -171,7 +171,7 @@ boolean hmac_sha3_256_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha3_384_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -182,7 +182,7 @@ void *hmac_sha3_384_new(void)
 **/
 void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx)
 {
-	hmac_md_free(hmac_sha3_384_ctx);
+    hmac_md_free(hmac_sha3_384_ctx);
 }
 
 /**
@@ -202,9 +202,9 @@ void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx)
 
 **/
 boolean hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(EVP_sha3_384(), hmac_sha3_384_ctx, key, key_size);
+    return hmac_md_set_key(EVP_sha3_384(), hmac_sha3_384_ctx, key, key_size);
 }
 
 /**
@@ -223,9 +223,9 @@ boolean hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8_t *key
 
 **/
 boolean hmac_sha3_384_duplicate(IN const void *hmac_sha3_384_ctx,
-			      OUT void *new_hmac_sha3_384_ctx)
+                  OUT void *new_hmac_sha3_384_ctx)
 {
-	return hmac_md_duplicate(hmac_sha3_384_ctx, new_hmac_sha3_384_ctx);
+    return hmac_md_duplicate(hmac_sha3_384_ctx, new_hmac_sha3_384_ctx);
 }
 
 /**
@@ -249,9 +249,9 @@ boolean hmac_sha3_384_duplicate(IN const void *hmac_sha3_384_ctx,
 
 **/
 boolean hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha3_384_ctx, data, data_size);
+    return hmac_md_update(hmac_sha3_384_ctx, data, data_size);
 }
 
 /**
@@ -278,7 +278,7 @@ boolean hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data
 **/
 boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha3_384_ctx, hmac_value);
+    return hmac_md_final(hmac_sha3_384_ctx, hmac_value);
 }
 
 /**
@@ -302,11 +302,11 @@ boolean hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8_t *hmac_va
 
 **/
 boolean hmac_sha3_384_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(EVP_sha3_384(), data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(EVP_sha3_384(), data, data_size, key, key_size,
+               hmac_value);
 }
 
 /**
@@ -318,7 +318,7 @@ boolean hmac_sha3_384_all(IN const void *data, IN uintn data_size,
 **/
 void *hmac_sha3_512_new(void)
 {
-	return hmac_md_new();
+    return hmac_md_new();
 }
 
 /**
@@ -329,7 +329,7 @@ void *hmac_sha3_512_new(void)
 **/
 void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx)
 {
-	hmac_md_free(hmac_sha3_512_ctx);
+    hmac_md_free(hmac_sha3_512_ctx);
 }
 
 /**
@@ -349,9 +349,9 @@ void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx)
 
 **/
 boolean hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8_t *key,
-			    IN uintn key_size)
+                IN uintn key_size)
 {
-	return hmac_md_set_key(EVP_sha3_512(), hmac_sha3_512_ctx, key, key_size);
+    return hmac_md_set_key(EVP_sha3_512(), hmac_sha3_512_ctx, key, key_size);
 }
 
 /**
@@ -370,9 +370,9 @@ boolean hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8_t *key
 
 **/
 boolean hmac_sha3_512_duplicate(IN const void *hmac_sha3_512_ctx,
-			      OUT void *new_hmac_sha3_512_ctx)
+                  OUT void *new_hmac_sha3_512_ctx)
 {
-	return hmac_md_duplicate(hmac_sha3_512_ctx, new_hmac_sha3_512_ctx);
+    return hmac_md_duplicate(hmac_sha3_512_ctx, new_hmac_sha3_512_ctx);
 }
 
 /**
@@ -396,9 +396,9 @@ boolean hmac_sha3_512_duplicate(IN const void *hmac_sha3_512_ctx,
 
 **/
 boolean hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data,
-			   IN uintn data_size)
+               IN uintn data_size)
 {
-	return hmac_md_update(hmac_sha3_512_ctx, data, data_size);
+    return hmac_md_update(hmac_sha3_512_ctx, data, data_size);
 }
 
 /**
@@ -425,7 +425,7 @@ boolean hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data
 **/
 boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8_t *hmac_value)
 {
-	return hmac_md_final(hmac_sha3_512_ctx, hmac_value);
+    return hmac_md_final(hmac_sha3_512_ctx, hmac_value);
 }
 
 /**
@@ -449,9 +449,9 @@ boolean hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8_t *hmac_va
 
 **/
 boolean hmac_sha3_512_all(IN const void *data, IN uintn data_size,
-			IN const uint8_t *key, IN uintn key_size,
-			OUT uint8_t *hmac_value)
+            IN const uint8_t *key, IN uintn key_size,
+            OUT uint8_t *hmac_value)
 {
-	return hmac_md_all(EVP_sha3_512(), data, data_size, key, key_size,
-			   hmac_value);
+    return hmac_md_all(EVP_sha3_512(), data, data_size, key, key_size,
+               hmac_value);
 }

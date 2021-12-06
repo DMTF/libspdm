@@ -13,15 +13,15 @@
 #include <mbedtls/platform_time.h>
 
 struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
-				     struct tm *tm_buf)
+                     struct tm *tm_buf)
 {
-	struct tm *lt;
+    struct tm *lt;
 
-	lt = gmtime(tt);
+    lt = gmtime(tt);
 
-	if (lt != NULL) {
-		copy_mem(tm_buf, lt, sizeof(struct tm));
-	}
+    if (lt != NULL) {
+        copy_mem(tm_buf, lt, sizeof(struct tm));
+    }
 
-	return ((lt == NULL) ? NULL : tm_buf);
+    return ((lt == NULL) ? NULL : tm_buf);
 }

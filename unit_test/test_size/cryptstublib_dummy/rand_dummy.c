@@ -9,6 +9,6 @@
 
 int rand()
 {
-	ASSERT(FALSE);
-	return 1;
+    ASSERT(FALSE);
+    return 1;
 }

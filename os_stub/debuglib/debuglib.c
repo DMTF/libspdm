@@ -32,43 +32,43 @@
 #endif
 
 void debug_assert(IN const char8 *file_name, IN uintn line_number,
-		  IN const char8 *description)
+          IN const char8 *description)
 {
-	printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
-	       description);
+    printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
+           description);
 
 #if (DEBUG_ASSERT_CONFIG == DEBUG_ASSERT_DEADLOOP)
-	{
-		volatile intn ___i = 1;
-		while (___i)
-			;
-	}
+    {
+        volatile intn ___i = 1;
+        while (___i)
+            ;
+    }
 #elif (DEBUG_ASSERT_CONFIG == DEBUG_ASSERT_BREAKPOINT)
 #if defined(_MSC_EXTENSIONS)
-	__debugbreak();
+    __debugbreak();
 #endif
 #if defined(__GNUC__)
-	__asm__ __volatile__("int $3");
+    __asm__ __volatile__("int $3");
 #endif
 #endif
 
-	assert(FALSE);
+    assert(FALSE);
 }
 
 void debug_print(IN uintn error_level, IN const char8 *format, ...)
 {
-	char8 buffer[MAX_DEBUG_MESSAGE_LENGTH];
-	va_list marker;
+    char8 buffer[MAX_DEBUG_MESSAGE_LENGTH];
+    va_list marker;
 
-	if ((error_level & DEBUG_LEVEL_CONFIG) == 0) {
-		return;
-	}
+    if ((error_level & DEBUG_LEVEL_CONFIG) == 0) {
+        return;
+    }
 
-	va_start(marker, format);
+    va_start(marker, format);
 
-	vsnprintf(buffer, sizeof(buffer), format, marker);
+    vsnprintf(buffer, sizeof(buffer), format, marker);
 
-	va_end(marker);
+    va_end(marker);
 
-	printf("%s", buffer);
+    printf("%s", buffer);
 }

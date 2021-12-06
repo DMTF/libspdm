@@ -455,7 +455,7 @@ typedef int *va_list[1];
 #define VA_LIST va_list
 #else
 typedef struct __va_list {
-	void *__ap;
+    void *__ap;
 } va_list;
 #define VA_LIST va_list
 #endif
@@ -481,12 +481,12 @@ typedef struct __va_list {
 typedef char *VA_LIST;
 
 #define VA_START(marker, parameter)                                            \
-	__va_start(&marker, &parameter, _INT_SIZE_OF(parameter),               \
-		   __alignof(parameter), &parameter)
+    __va_start(&marker, &parameter, _INT_SIZE_OF(parameter),               \
+           __alignof(parameter), &parameter)
 #define VA_ARG(marker, TYPE)                                                   \
-	(*(TYPE *)((marker += _INT_SIZE_OF(TYPE) +                             \
-			      ((-(intn)marker) & (sizeof(TYPE) - 1))) -        \
-		   _INT_SIZE_OF(TYPE)))
+    (*(TYPE *)((marker += _INT_SIZE_OF(TYPE) +                             \
+                  ((-(intn)marker) & (sizeof(TYPE) - 1))) -        \
+           _INT_SIZE_OF(TYPE)))
 #define VA_END(marker) (marker = (VA_LIST)0)
 #define VA_COPY(dest, start) ((void)((dest) = (start)))
 
@@ -505,9 +505,9 @@ typedef __builtin_va_list VA_LIST;
 #define VA_START(marker, parameter) __builtin_va_start(marker, parameter)
 
 #define VA_ARG(marker, TYPE)                                                   \
-	((sizeof(TYPE) < sizeof(uintn)) ?                                      \
-		 (TYPE)(__builtin_va_arg(marker, uintn)) :                     \
-		 (TYPE)(__builtin_va_arg(marker, TYPE)))
+    ((sizeof(TYPE) < sizeof(uintn)) ?                                      \
+         (TYPE)(__builtin_va_arg(marker, uintn)) :                     \
+         (TYPE)(__builtin_va_arg(marker, TYPE)))
 
 #define VA_END(marker) __builtin_va_end(marker)
 
@@ -537,7 +537,7 @@ typedef char8 *VA_LIST;
 
 **/
 #define VA_START(marker, parameter)                                            \
-	(marker = (VA_LIST)((uintn) & (parameter) + _INT_SIZE_OF(parameter)))
+    (marker = (VA_LIST)((uintn) & (parameter) + _INT_SIZE_OF(parameter)))
 
 /**
   Returns an argument of a specified type from a variable argument list and updates
@@ -556,7 +556,7 @@ typedef char8 *VA_LIST;
 
 **/
 #define VA_ARG(marker, TYPE)                                                   \
-	(*(TYPE *)((marker += _INT_SIZE_OF(TYPE)) - _INT_SIZE_OF(TYPE)))
+    (*(TYPE *)((marker += _INT_SIZE_OF(TYPE)) - _INT_SIZE_OF(TYPE)))
 
 /**
   Terminates the use of a variable argument list.
@@ -598,7 +598,7 @@ typedef uintn *BASE_LIST;
   @return The size of TYPE in sizeof (uintn) units rounded up to the nearest uintn boundary.
 **/
 #define _BASE_INT_SIZE_OF(TYPE)                                                \
-	((sizeof(TYPE) + sizeof(uintn) - 1) / sizeof(uintn))
+    ((sizeof(TYPE) + sizeof(uintn) - 1) / sizeof(uintn))
 
 /**
   Returns an argument of a specified type from a variable argument list and updates
@@ -617,8 +617,8 @@ typedef uintn *BASE_LIST;
 
 **/
 #define BASE_ARG(marker, TYPE)                                                 \
-	(*(TYPE *)((marker += _BASE_INT_SIZE_OF(TYPE)) -                       \
-		   _BASE_INT_SIZE_OF(TYPE)))
+    (*(TYPE *)((marker += _BASE_INT_SIZE_OF(TYPE)) -                       \
+           _BASE_INT_SIZE_OF(TYPE)))
 
 /**
   The macro that returns the byte offset of a field in a data structure.
@@ -663,35 +663,35 @@ typedef uintn *BASE_LIST;
 //
 
 STATIC_ASSERT(
-	sizeof(boolean) == 1,
-	"sizeof (boolean) does not meet UEFI Specification data Type requirements");
+    sizeof(boolean) == 1,
+    "sizeof (boolean) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int8_t) == 1,
-	"sizeof (int8_t) does not meet UEFI Specification data Type requirements");
+    sizeof(int8_t) == 1,
+    "sizeof (int8_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint8_t) == 1,
-	"sizeof (uint8_t) does not meet UEFI Specification data Type requirements");
+    sizeof(uint8_t) == 1,
+    "sizeof (uint8_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int16_t) == 2,
-	"sizeof (int16_t) does not meet UEFI Specification data Type requirements");
+    sizeof(int16_t) == 2,
+    "sizeof (int16_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint16_t) == 2,
-	"sizeof (uint16_t) does not meet UEFI Specification data Type requirements");
+    sizeof(uint16_t) == 2,
+    "sizeof (uint16_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int32_t) == 4,
-	"sizeof (int32_t) does not meet UEFI Specification data Type requirements");
+    sizeof(int32_t) == 4,
+    "sizeof (int32_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint32_t) == 4,
-	"sizeof (uint32_t) does not meet UEFI Specification data Type requirements");
+    sizeof(uint32_t) == 4,
+    "sizeof (uint32_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(int64_t) == 8,
-	"sizeof (int64_t) does not meet UEFI Specification data Type requirements");
+    sizeof(int64_t) == 8,
+    "sizeof (int64_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(uint64_t) == 8,
-	"sizeof (uint64_t) does not meet UEFI Specification data Type requirements");
+    sizeof(uint64_t) == 8,
+    "sizeof (uint64_t) does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(char8) == 1,
-	"sizeof (char8) does not meet UEFI Specification data Type requirements");
+    sizeof(char8) == 1,
+    "sizeof (char8) does not meet UEFI Specification data Type requirements");
 
 //
 // The following three enum types are used to verify that the compiler
@@ -707,14 +707,14 @@ typedef enum { __VerifyUint16EnumValue = 0xffff } __VERIFY_UINT16_ENUM_SIZE;
 typedef enum { __VerifyUint32EnumValue = 0xffffffff } __VERIFY_UINT32_ENUM_SIZE;
 
 STATIC_ASSERT(
-	sizeof(__VERIFY_UINT8_ENUM_SIZE) == 4,
-	"size of enum does not meet UEFI Specification data Type requirements");
+    sizeof(__VERIFY_UINT8_ENUM_SIZE) == 4,
+    "size of enum does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(__VERIFY_UINT16_ENUM_SIZE) == 4,
-	"size of enum does not meet UEFI Specification data Type requirements");
+    sizeof(__VERIFY_UINT16_ENUM_SIZE) == 4,
+    "size of enum does not meet UEFI Specification data Type requirements");
 STATIC_ASSERT(
-	sizeof(__VERIFY_UINT32_ENUM_SIZE) == 4,
-	"size of enum does not meet UEFI Specification data Type requirements");
+    sizeof(__VERIFY_UINT32_ENUM_SIZE) == 4,
+    "size of enum does not meet UEFI Specification data Type requirements");
 
 /**
   Macro that returns a pointer to the data structure that contains a specified field of
@@ -736,7 +736,7 @@ STATIC_ASSERT(
 
 **/
 #define BASE_CR(record, TYPE, field)                                           \
-	((TYPE *)((char8 *)(record)-OFFSET_OF(TYPE, field)))
+    ((TYPE *)((char8 *)(record)-OFFSET_OF(TYPE, field)))
 
 /**
   Rounds a value up to the next boundary using a specified alignment.
@@ -751,7 +751,7 @@ STATIC_ASSERT(
 
 **/
 #define ALIGN_VALUE(value, alignment)                                          \
-	((value) + (((alignment) - (value)) & ((alignment)-1)))
+    ((value) + (((alignment) - (value)) & ((alignment)-1)))
 
 /**
   Adjust a pointer by adding the minimum offset required for it to be aligned on
@@ -767,7 +767,7 @@ STATIC_ASSERT(
 
 **/
 #define ALIGN_POINTER(pointer, alignment)                                      \
-	((void *)(ALIGN_VALUE((uintn)(pointer), (alignment))))
+    ((void *)(ALIGN_VALUE((uintn)(pointer), (alignment))))
 
 /**
   Rounds a value up to the next natural boundary for the current CPU.
@@ -1090,7 +1090,7 @@ typedef uintn return_status;
 
 **/
 #define SIGNATURE_32(A, B, C, D)                                               \
-	(SIGNATURE_16(A, B) | (SIGNATURE_16(C, D) << 16))
+    (SIGNATURE_16(A, B) | (SIGNATURE_16(C, D) << 16))
 
 /**
   Returns a 64-bit signature built from 8 ASCII characters.
@@ -1112,10 +1112,10 @@ typedef uintn return_status;
 
 **/
 #define SIGNATURE_64(A, B, C, D, E, F, G, H)                                   \
-	(SIGNATURE_32(A, B, C, D) | ((uint64_t)(SIGNATURE_32(E, F, G, H)) << 32))
+    (SIGNATURE_32(A, B, C, D) | ((uint64_t)(SIGNATURE_32(E, F, G, H)) << 32))
 
 #if defined(_MSC_EXTENSIONS) && !defined(__INTEL_COMPILER) &&                  \
-	!defined(MDE_CPU_EBC)
+    !defined(MDE_CPU_EBC)
 void *_ReturnAddress(void);
 #pragma intrinsic(_ReturnAddress)
 /**

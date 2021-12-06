@@ -18,17 +18,17 @@
 
 static uintn ascii_str_len(IN const char8 *string)
 {
-	uintn length;
+    uintn length;
 
-	ASSERT(string != NULL);
-	if (string == NULL) {
-		return 0;
-	}
+    ASSERT(string != NULL);
+    if (string == NULL) {
+        return 0;
+    }
 
-	for (length = 0; *string != '\0'; string++, length++) {
-		;
-	}
-	return length;
+    for (length = 0; *string != '\0'; string++, length++) {
+        ;
+    }
+    return length;
 }
 
 /**
@@ -49,72 +49,72 @@ static uintn ascii_str_len(IN const char8 *string)
 
 **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-				     IN uintn pem_size,
-				     IN const char8 *password,
-				     OUT void **rsa_context)
+                     IN uintn pem_size,
+                     IN const char8 *password,
+                     OUT void **rsa_context)
 {
-	int32_t ret;
-	mbedtls_pk_context pk;
-	mbedtls_rsa_context *rsa;
-	uint8_t *new_pem_data;
-	uintn password_len;
+    int32_t ret;
+    mbedtls_pk_context pk;
+    mbedtls_rsa_context *rsa;
+    uint8_t *new_pem_data;
+    uintn password_len;
 
-	if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
-		return FALSE;
-	}
+    if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
+        return FALSE;
+    }
 
-	new_pem_data = NULL;
-	if (pem_data[pem_size - 1] != 0) {
-		new_pem_data = allocate_pool(pem_size + 1);
-		if (new_pem_data == NULL) {
-			return FALSE;
-		}
-		copy_mem(new_pem_data, pem_data, pem_size + 1);
-		new_pem_data[pem_size] = 0;
-		pem_data = new_pem_data;
-		pem_size += 1;
-	}
+    new_pem_data = NULL;
+    if (pem_data[pem_size - 1] != 0) {
+        new_pem_data = allocate_pool(pem_size + 1);
+        if (new_pem_data == NULL) {
+            return FALSE;
+        }
+        copy_mem(new_pem_data, pem_data, pem_size + 1);
+        new_pem_data[pem_size] = 0;
+        pem_data = new_pem_data;
+        pem_size += 1;
+    }
 
-	mbedtls_pk_init(&pk);
+    mbedtls_pk_init(&pk);
 
-	if (password != NULL) {
-		password_len = ascii_str_len(password);
-	} else {
-		password_len = 0;
-	}
+    if (password != NULL) {
+        password_len = ascii_str_len(password);
+    } else {
+        password_len = 0;
+    }
 
-	ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
-				   (const uint8_t *)password, password_len);
+    ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
+                   (const uint8_t *)password, password_len);
 
-	if (new_pem_data != NULL) {
-		free_pool(new_pem_data);
-		new_pem_data = NULL;
-	}
+    if (new_pem_data != NULL) {
+        free_pool(new_pem_data);
+        new_pem_data = NULL;
+    }
 
-	if (ret != 0) {
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
+    if (ret != 0) {
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
 
-	if (mbedtls_pk_get_type(&pk) != MBEDTLS_PK_RSA) {
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
+    if (mbedtls_pk_get_type(&pk) != MBEDTLS_PK_RSA) {
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
 
-	rsa = rsa_new();
-	if (rsa == NULL) {
-		return FALSE;
-	}
-	ret = mbedtls_rsa_copy(rsa, mbedtls_pk_rsa(pk));
-	if (ret != 0) {
-		rsa_free(rsa);
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
-	mbedtls_pk_free(&pk);
+    rsa = rsa_new();
+    if (rsa == NULL) {
+        return FALSE;
+    }
+    ret = mbedtls_rsa_copy(rsa, mbedtls_pk_rsa(pk));
+    if (ret != 0) {
+        rsa_free(rsa);
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
+    mbedtls_pk_free(&pk);
 
-	*rsa_context = rsa;
-	return TRUE;
+    *rsa_context = rsa;
+    return TRUE;
 }
 
 /**
@@ -135,76 +135,76 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 
 **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-				    IN const char8 *password,
-				    OUT void **ec_context)
+                    IN const char8 *password,
+                    OUT void **ec_context)
 {
-	int32_t ret;
-	mbedtls_pk_context pk;
-	mbedtls_ecdh_context *ecdh;
-	uint8_t *new_pem_data;
-	uintn password_len;
+    int32_t ret;
+    mbedtls_pk_context pk;
+    mbedtls_ecdh_context *ecdh;
+    uint8_t *new_pem_data;
+    uintn password_len;
 
-	if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
-		return FALSE;
-	}
+    if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
+        return FALSE;
+    }
 
-	new_pem_data = NULL;
-	if (pem_data[pem_size - 1] != 0) {
-		new_pem_data = allocate_pool(pem_size + 1);
-		if (new_pem_data == NULL) {
-			return FALSE;
-		}
-		copy_mem(new_pem_data, pem_data, pem_size + 1);
-		new_pem_data[pem_size] = 0;
-		pem_data = new_pem_data;
-		pem_size += 1;
-	}
+    new_pem_data = NULL;
+    if (pem_data[pem_size - 1] != 0) {
+        new_pem_data = allocate_pool(pem_size + 1);
+        if (new_pem_data == NULL) {
+            return FALSE;
+        }
+        copy_mem(new_pem_data, pem_data, pem_size + 1);
+        new_pem_data[pem_size] = 0;
+        pem_data = new_pem_data;
+        pem_size += 1;
+    }
 
-	mbedtls_pk_init(&pk);
+    mbedtls_pk_init(&pk);
 
-	if (password != NULL) {
-		password_len = ascii_str_len(password);
-	} else {
-		password_len = 0;
-	}
+    if (password != NULL) {
+        password_len = ascii_str_len(password);
+    } else {
+        password_len = 0;
+    }
 
-	ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
-				   (const uint8_t *)password, password_len);
+    ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
+                   (const uint8_t *)password, password_len);
 
-	if (new_pem_data != NULL) {
-		free_pool(new_pem_data);
-		new_pem_data = NULL;
-	}
+    if (new_pem_data != NULL) {
+        free_pool(new_pem_data);
+        new_pem_data = NULL;
+    }
 
-	if (ret != 0) {
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
+    if (ret != 0) {
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
 
-	if (mbedtls_pk_get_type(&pk) != MBEDTLS_PK_ECKEY) {
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
+    if (mbedtls_pk_get_type(&pk) != MBEDTLS_PK_ECKEY) {
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
 
-	ecdh = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
-	if (ecdh == NULL) {
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
-	mbedtls_ecdh_init(ecdh);
+    ecdh = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
+    if (ecdh == NULL) {
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
+    mbedtls_ecdh_init(ecdh);
 
-	ret = mbedtls_ecdh_get_params(ecdh, mbedtls_pk_ec(pk),
-				      MBEDTLS_ECDH_OURS);
-	if (ret != 0) {
-		mbedtls_ecdh_free(ecdh);
-		free_pool(ecdh);
-		mbedtls_pk_free(&pk);
-		return FALSE;
-	}
-	mbedtls_pk_free(&pk);
+    ret = mbedtls_ecdh_get_params(ecdh, mbedtls_pk_ec(pk),
+                      MBEDTLS_ECDH_OURS);
+    if (ret != 0) {
+        mbedtls_ecdh_free(ecdh);
+        free_pool(ecdh);
+        mbedtls_pk_free(&pk);
+        return FALSE;
+    }
+    mbedtls_pk_free(&pk);
 
-	*ec_context = ecdh;
-	return TRUE;
+    *ec_context = ecdh;
+    return TRUE;
 }
 
 /**
@@ -225,11 +225,11 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
 
 **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-				     IN uintn pem_size,
-				     IN const char8 *password,
-				     OUT void **ecd_context)
+                     IN uintn pem_size,
+                     IN const char8 *password,
+                     OUT void **ecd_context)
 {
-	return FALSE;
+    return FALSE;
 }
 
 /**
@@ -250,9 +250,9 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
 
 **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-				     IN uintn pem_size,
-				     IN const char8 *password,
-				     OUT void **sm2_context)
+                     IN uintn pem_size,
+                     IN const char8 *password,
+                     OUT void **sm2_context)
 {
-	return FALSE;
+    return FALSE;
 }
