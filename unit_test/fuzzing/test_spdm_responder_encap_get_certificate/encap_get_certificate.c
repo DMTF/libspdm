@@ -26,7 +26,7 @@ void test_spdm_responder_encap_get_certificate(void **State)
 	spdm_context_t *spdm_context;
 	void *data;
 	uintn data_size;
-	boolean *need_continue;
+	boolean need_continue;
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -44,10 +44,10 @@ void test_spdm_responder_encap_get_certificate(void **State)
 		data_size;
 	spdm_context->local_context.slot_count = 1;
 
-	*need_continue = FALSE;
+	need_continue = FALSE;
 	spdm_process_encap_response_certificate(
 		spdm_context, spdm_test_context->test_buffer_size,
-		spdm_test_context->test_buffer, need_continue);
+		spdm_test_context->test_buffer, &need_continue);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

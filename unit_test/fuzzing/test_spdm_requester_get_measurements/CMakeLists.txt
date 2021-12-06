@@ -3,8 +3,8 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_get_mea
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/include
-                    ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+                    ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
@@ -31,6 +31,8 @@ SET(test_spdm_requester_get_measurements_LIBRARY
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null
+    spdm_device_secret_lib_sample
+    cmockalib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -48,6 +50,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
+                   $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+                   $<TARGET_OBJECTS:cmockalib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_requester_get_measurements ${src_test_spdm_requester_get_measurements})

@@ -7,6 +7,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 #include <internal/libspdm_requester_lib.h>
+#include <spdm_device_secret_lib_internal.h>
 
 uintn get_max_buffer_size(void)
 {
@@ -35,7 +36,6 @@ return_status spdm_device_receive_message(IN void *spdm_context,
 	return RETURN_SUCCESS;
 }
 
-
 void test_spdm_requester_get_measurement(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
@@ -46,6 +46,8 @@ void test_spdm_requester_get_measurement(void **State)
 	uint8_t request_attribute;
 	void *data;
 	uintn data_size;
+	void *hash;
+	uintn hash_size;
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -53,7 +55,10 @@ void test_spdm_requester_get_measurement(void **State)
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->connection_info.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
+	libspdm_reset_message_m(spdm_context, NULL);
 	spdm_context->connection_info.algorithm.measurement_spec =
 		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -73,6 +78,8 @@ void test_spdm_requester_get_measurement(void **State)
 	libspdm_get_measurement(spdm_context, NULL, request_attribute, 1, 0,
 			     &number_of_block, &measurement_record_length,
 			     measurement_record);
+
+
 }
 
 spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
@@ -81,13 +88,6 @@ spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
 	spdm_device_send_message,
 	spdm_device_receive_message,
 };
-
-// spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
-// 	SPDM_TEST_CONTEXT_SIGNATURE,
-// 	TRUE,
-// 	spdm_requester_get_measurements_test_send_message,
-// 	spdm_requester_get_measurements_test_receive_message,
-// };
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 {

@@ -6,8 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <spdm_device_secret_lib_internal.h>
 #include <internal/libspdm_responder_lib.h>
+#include <spdm_device_secret_lib_internal.h>
 
 uintn get_max_buffer_size(void)
 {
@@ -19,18 +19,19 @@ spdm_test_context_t m_spdm_responder_finish_test_context = {
 	FALSE,
 };
 
-typedef struct {
-	spdm_message_header_t header;
-	uint8_t signature[MAX_ASYM_KEY_SIZE];
-	uint8_t verify_data[MAX_HASH_SIZE];
-} spdm_finish_request_mine_t;
+void spdm_secured_message_set_request_finished_key(
+	IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+{
+	spdm_secured_message_context_t *secured_message_context;
 
-spdm_finish_request_mine_t m_spdm_finish_request1 = {
-	{ SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 0, 0 },
-};
-uintn m_spdm_finish_request1_size = sizeof(m_spdm_finish_request1);
+	secured_message_context = spdm_secured_message_context;
+	ASSERT(key_size == secured_message_context->hash_size);
+	copy_mem(secured_message_context->handshake_secret.request_finished_key,
+		 key, secured_message_context->hash_size);
+	secured_message_context->finished_key_ready = TRUE;
+}
 
-void test_spdm_responder_finish(void **State)
+void test_spdm_responder_finish_case1(void **State)
 {
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
@@ -40,6 +41,8 @@ void test_spdm_responder_finish(void **State)
 	uintn data_size;
 	spdm_session_info_t *session_info;
 	uint32_t session_id;
+	uint32_t hash_size;
+	uint8_t m_dummy_buffer[MAX_HASH_SIZE];
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -50,17 +53,22 @@ void test_spdm_responder_finish(void **State)
 	spdm_context->local_context.capability.flags |=
 		SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
 	spdm_context->connection_info.algorithm.base_hash_algo =
-		SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+		m_use_hash_algo;
 	spdm_context->connection_info.algorithm.base_asym_algo =
-		SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
+		m_use_asym_algo;
+	spdm_context->connection_info.algorithm.req_base_asym_alg =
+		m_use_req_asym_algo;
 	spdm_context->connection_info.algorithm.measurement_spec =
-		SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+		m_use_measurement_spec;
 	spdm_context->connection_info.algorithm.measurement_hash_algo =
-		SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256;
+		m_use_measurement_hash_algo;
 	spdm_context->connection_info.algorithm.dhe_named_group =
-		SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
+		m_use_dhe_algo;
 	spdm_context->connection_info.algorithm.aead_cipher_suite =
-		SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
+		m_use_aead_algo;
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, NULL, NULL);
 	spdm_context->local_context.local_cert_chain_provision[0] = data;
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
@@ -75,6 +83,11 @@ void test_spdm_responder_finish(void **State)
 	spdm_context->latest_session_id = session_id;
 	session_info = &spdm_context->session_info[0];
 	spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+	hash_size = spdm_get_hash_size(m_use_hash_algo);
+	set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+	spdm_secured_message_set_request_finished_key(
+		session_info->secured_message_context, m_dummy_buffer,
+		hash_size);
 	spdm_secured_message_set_session_state(
 		session_info->secured_message_context,
 		SPDM_SESSION_STATE_HANDSHAKING);
@@ -103,7 +116,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
 	spdm_unit_test_group_setup(&State);
 
-	test_spdm_responder_finish(&State);
+	test_spdm_responder_finish_case1(&State);
 
 	spdm_unit_test_group_teardown(&State);
 }

@@ -64,9 +64,9 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 	return_status = judge_requster_name(file_name);
 	if (return_status == 1) {
 		*(uint8_t *)buffer = TEST_MESSAGE_TYPE_SPDM;
-		BytesRead = fread((void *)buffer + 1, 1, file_size, file);
+		BytesRead = fread((char *)buffer + 1, 1, file_size, file);
 	} else {
-		BytesRead = fread((void *)buffer, 1, file_size, file);
+		BytesRead = fread((char *)buffer, 1, file_size, file);
 	}
 	if (BytesRead != file_size) {
 		fputs("file error", stderr);

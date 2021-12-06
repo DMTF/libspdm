@@ -26,7 +26,7 @@ void test_spdm_responder_encap_challenge(void **State)
 	spdm_context_t *spdm_context;
 	void *data;
 	uintn data_size;
-	boolean *need_continue;
+	boolean need_continue;
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
@@ -57,10 +57,10 @@ void test_spdm_responder_encap_challenge(void **State)
 	spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
 	libspdm_reset_message_c(spdm_context);
 
-	*need_continue = FALSE;
+	need_continue = FALSE;
 	spdm_process_encap_response_challenge_auth(
 		spdm_context, spdm_test_context->test_buffer_size,
-		spdm_test_context->test_buffer, need_continue);
+		spdm_test_context->test_buffer, &need_continue);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

@@ -9,8 +9,6 @@
 #include <internal/libspdm_requester_lib.h>
 #include <spdm_device_secret_lib_internal.h>
 
-static uintn m_local_buffer_size;
-static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
 static uint8_t m_local_psk_hint[32];
 
 uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
@@ -55,16 +53,6 @@ return_status spdm_device_send_message(IN void *spdm_context,
 				       IN uintn request_size, IN void *request,
 				       IN uint64_t timeout)
 {
-	uintn message_size;
-	uintn header_size;
-
-	m_local_buffer_size = 0;
-		message_size = spdm_test_get_psk_exchange_request_size(
-			spdm_context, (uint8_t *)request + header_size,
-			request_size - header_size);
-		copy_mem(m_local_buffer, (uint8_t *)request + header_size,
-			 message_size);
-		m_local_buffer_size += message_size;
 		return RETURN_SUCCESS;
 }
 
