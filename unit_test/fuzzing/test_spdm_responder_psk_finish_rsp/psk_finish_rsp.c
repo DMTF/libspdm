@@ -9,7 +9,6 @@
 #include <spdm_device_secret_lib_internal.h>
 #include <internal/libspdm_responder_lib.h>
 
-
 uintn get_max_buffer_size(void)
 {
 	return MAX_SPDM_MESSAGE_BUFFER_SIZE;

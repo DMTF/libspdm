@@ -4,7 +4,6 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include "spdm_device_secret_lib_internal.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 #include <internal/libspdm_responder_lib.h>
@@ -23,7 +22,6 @@ void test_spdm_responder_measurements(void **State)
 
 	spdm_test_context = *State;
 	spdm_context = spdm_test_context->spdm_context;
-	spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
 	spdm_context->connection_info.connection_state =
 		SPDM_CONNECTION_STATE_AUTHENTICATED;
 	spdm_context->local_context.capability.flags |=

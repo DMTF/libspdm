@@ -128,7 +128,7 @@ void test_spdm_responder_encap_get_digests(void **State)
 	spdm_test_context_t *spdm_test_context;
 	spdm_context_t *spdm_context;
 	uint32_t session_id;
-	boolean *need_continue;
+	boolean need_continue;
 	spdm_session_info_t *session_info;
 	spdm_secured_message_context_t *secured_message_context;
 	uint8_t m_req_secret_buffer[MAX_HASH_SIZE];
@@ -150,10 +150,10 @@ void test_spdm_responder_encap_get_digests(void **State)
 				   m_req_secret_buffer, m_req_secret_buffer,
 				   secured_message_context->hash_size);
 
-	*need_continue = FALSE;
+	need_continue = FALSE;
 	spdm_process_encap_response_key_update(
 		spdm_context, spdm_test_context->test_buffer_size,
-		spdm_test_context->test_buffer, need_continue);
+		spdm_test_context->test_buffer, &need_continue);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

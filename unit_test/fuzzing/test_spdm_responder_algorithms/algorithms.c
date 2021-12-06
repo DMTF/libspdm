@@ -424,8 +424,7 @@ void test_spdm_responder_algorithms_case10(void **State)
 		m_use_req_asym_algo;
 	spdm_context->local_context.algorithm.key_schedule =
 		m_use_key_schedule_algo;
-	spdm_context->connection_info.algorithm.measurement_spec =
-		m_use_measurement_hash_algo;
+	spdm_context->connection_info.algorithm.measurement_spec = 0;
 	libspdm_reset_message_a(spdm_context);
 
 	spdm_get_response_algorithms(spdm_context,

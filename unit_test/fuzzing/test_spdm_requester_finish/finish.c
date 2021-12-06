@@ -7,6 +7,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 #include <internal/libspdm_requester_lib.h>
+#include <spdm_device_secret_lib_internal.h>
 
 uintn get_max_buffer_size(void)
 {
@@ -54,6 +55,7 @@ void test_spdm_requester_get_version(void **State)
 	uintn data_size;
 	uint8_t req_slot_id_param;
 	uint32_t session_id;
+	void *hash;
 	uintn hash_size;
 	spdm_session_info_t *session_info;
 	uint8_t m_dummy_buffer[MAX_HASH_SIZE];
@@ -86,7 +88,9 @@ void test_spdm_requester_get_version(void **State)
 		SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
 	spdm_context->connection_info.algorithm.aead_cipher_suite =
 		SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
-
+	read_responder_public_certificate_chain(m_use_hash_algo,
+						m_use_asym_algo, &data,
+						&data_size, &hash, &hash_size);
 	spdm_context->local_context.local_cert_chain_provision[0] = data;
 	spdm_context->local_context.local_cert_chain_provision_size[0] =
 		data_size;
