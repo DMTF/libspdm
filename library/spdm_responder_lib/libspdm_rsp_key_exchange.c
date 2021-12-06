@@ -229,8 +229,10 @@ return_status spdm_get_response_key_exchange(IN void *context,
         spdm_response->req_slot_id_param = 0;
     }
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   spdm_response->random_data);
+    if(!spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                   spdm_response->random_data)) {
+        return RETURN_DEVICE_ERROR;
+    }
 
     ptr = (void *)(spdm_response + 1);
     dhe_context = spdm_secured_message_dhe_new(

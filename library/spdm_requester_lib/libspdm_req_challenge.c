@@ -100,7 +100,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     spdm_request.header.param1 = slot_id;
     spdm_request.header.param2 = measurement_hash_type;
     if (requester_nonce_in == NULL) {
-        spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce);
+        if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
+            return RETURN_DEVICE_ERROR;
+        }
     } else {
         copy_mem (spdm_request.nonce, requester_nonce_in, SPDM_NONCE_SIZE);
     }

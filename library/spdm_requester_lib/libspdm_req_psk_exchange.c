@@ -161,7 +161,9 @@ return_status try_spdm_send_receive_psk_exchange(
     ptr += spdm_request.psk_hint_length;
 
     if (requester_context_in == NULL) {
-        spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
+        if(!spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr)) {
+            return RETURN_DEVICE_ERROR;
+        }
     } else {
         copy_mem (ptr, requester_context_in, spdm_request.context_length);
     }

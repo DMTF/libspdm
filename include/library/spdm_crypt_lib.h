@@ -1176,7 +1176,7 @@ boolean spdm_aead_decryption(IN spdm_version_number_t secured_message_version,
   @param  size                         size of random bytes to generate.
   @param  rand                         Pointer to buffer to receive random value.
 **/
-void spdm_get_random_number(IN uintn size, OUT uint8_t *rand);
+boolean spdm_get_random_number(IN uintn size, OUT uint8_t *rand);
 
 /**
   Certificate Check for SPDM leaf cert.

@@ -113,7 +113,9 @@ return_status spdm_get_encap_response_challenge_auth(
     spdm_generate_cert_chain_hash(spdm_context, slot_id, ptr);
     ptr += hash_size;
 
-    spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        return RETURN_DEVICE_ERROR;
+    }
     ptr += SPDM_NONCE_SIZE;
 
     ptr += measurement_summary_hash_size;
