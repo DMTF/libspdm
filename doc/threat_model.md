@@ -1,4 +1,4 @@
-# openspdm threat model.
+# libspdm threat model.
 
 ## Trust Domain
 

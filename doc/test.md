@@ -1,6 +1,6 @@
-# Test in openspdm
+# Test in libspdm
 
-Besides spdm_emu and UnitTest introduced in readme, openspdm also supports some other tests.
+Besides spdm_emu and UnitTest introduced in readme, libspdm also supports some other tests.
 
 ## Prerequisit
 
@@ -85,13 +85,13 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Install Perl [ActivePerl 5.26](https://www.activestate.com/products/perl/downloads/).
 
    Build cases.
-   Goto openspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
+   Goto libspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
 
    Run all tests and generate log file :
    `%DRIO_PATH%\<bin64|bin32>\drrun.exe -c %DRIO_PATH%\tools\<lib64|lib32>\release\drcov.dll -- <test_app>`
    
    Generate coverage data with filter :
-   `%DRIO_PATH%\tools\<bin64|bin32>\drcov2lcov.exe -dir . -src_filter openspdm`
+   `%DRIO_PATH%\tools\<bin64|bin32>\drcov2lcov.exe -dir . -src_filter libspdm`
    
    Generate coverage report :
    `perl %DRIO_PATH%\tools\<bin64|bin32>\genhtml coverage.info`
@@ -113,7 +113,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make
    ```
 
-   Goto openspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
+   Goto libspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
 
    Run all tests.
 
@@ -325,9 +325,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Build cases with CBMC toolchain:
 
-   For Windowns, open visual studio 2019 command prompt at openspdm dir and build it with CBMC toolchain `-DARCH=ia32 -DTOOLCHAIN=LIBFUZZER`. (Use x86 command prompt for ARCH=ia32 only)
+   For Windowns, open visual studio 2019 command prompt at libspdm dir and build it with CBMC toolchain `-DARCH=ia32 -DTOOLCHAIN=LIBFUZZER`. (Use x86 command prompt for ARCH=ia32 only)
 
-   For Linux, open command prompt at openspdm dir and build it with CBMC toolchain `-DARCH=x64 -DTOOLCHAIN=CBMC`. (ARCH=x64 only)
+   For Linux, open command prompt at libspdm dir and build it with CBMC toolchain `-DARCH=x64 -DTOOLCHAIN=CBMC`. (ARCH=x64 only)
 
    The output binary is created by the [goto-cc](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/goto-cc.md).
 
@@ -349,12 +349,12 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    set KW_ROOT=%KW_HOME%\<version>\projects_root
    set KW_TABLE_ROOT=%KW_HOME%\Tables
    set KW_CONFIG=%KW_ROOT%\projects\workspace\rules\analysis_profile.pconf
-   set KW_PROJECT_NAME=openspdm
+   set KW_PROJECT_NAME=libspdm
    ```
 
    Run CMAKE to generate makefile.
 
-   Build openspdm with Klocwork :
+   Build libspdm with Klocwork :
    ```
    kwinject --output %KW_ROOT%\%KW_PROJECT_NAME%.out nmake
    ```

@@ -1,4 +1,4 @@
-# openspdm library design.
+# libspdm library design.
 
 1. Use static linking (Library) when there is one instance that can be linked to the device.
    For example, crypto engine.
@@ -100,7 +100,7 @@
 
    These APIs send and receive transport layer messages to or from a SPDM device.
 
-9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides the configuration to the openspdm library.
+9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides the configuration to the libspdm library.
 
 10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 

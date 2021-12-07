@@ -38,7 +38,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
    ```
 
    1.2, register the device io functions and transport layer functions.
-   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
+   The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
 
    ```
@@ -230,7 +230,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    ```
 
    1.2, register the device io functions and transport layer functions.
-   The openspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
+   The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
 
    ```
