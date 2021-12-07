@@ -663,23 +663,6 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
                        IN uint8_t measurement_summary_hash_type);
 
 /**
-  This function calculate the measurement summary hash.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  is_requester                  Is the function called from a requester.
-  @param  measurement_summary_hash_type   The type of the measurement summary hash.
-  @param  measurement_summary_hash       The buffer to store the measurement summary hash.
-
-  @retval TRUE  measurement summary hash is generated or skipped.
-  @retval FALSE measurement summary hash is not generated.
-**/
-boolean
-spdm_generate_measurement_summary_hash(IN spdm_context_t *spdm_context,
-                       IN boolean is_requester,
-                       IN uint8_t measurement_summary_hash_type,
-                       OUT uint8_t *measurement_summary_hash);
-
-/**
   This function generates the measurement signature to response message based upon l1l2.
   If session_info is NULL, this function will use M cache of SPDM context,
   else will use M cache of SPDM session context.

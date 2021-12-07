@@ -181,6 +181,35 @@ return_status spdm_measurement_collection(
                     IN OUT uintn *measurements_size);
 
 /**
+  This function calculates the measurement summary hash.
+
+  @param  spdm_version                  The spdm version.
+  @param  base_hash_algo                The hash algo to use on summary.
+  @param  measurement_specification     Indicates the measurement specification.
+                                        It must align with measurement_specification
+                                        (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
+  @param  measurement_hash_algo         Indicates the measurement hash algorithm.
+                                        It must align with measurement_hash_alg
+                                        (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
+
+  @param  measurement_summary_hash_type   The type of the measurement summary hash.
+  @param  measurement_summary_hash        The buffer to store the measurement summary hash.
+  @param  measurement_summary_hash_size   The size in bytes of the buffer.
+
+  @retval TRUE  measurement summary hash is generated or skipped.
+  @retval FALSE measurement summary hash is not generated.
+**/
+boolean
+spdm_generate_measurement_summary_hash(
+    IN spdm_version_number_t spdm_version,
+    IN uint32_t   base_hash_algo,
+    IN uint8_t    measurement_specification,
+    IN uint32_t   measurement_hash_algo,
+    IN uint8_t    measurement_summary_hash_type,
+    OUT uint8_t  *measurement_summary_hash,
+    IN OUT uintn *measurement_summary_hash_size);
+
+/**
   Sign an SPDM message data.
 
   @param  req_base_asym_alg               Indicates the signing algorithm.
