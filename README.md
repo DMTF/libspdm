@@ -63,15 +63,15 @@
 
    Free and Open Source Developers European Meeting 2021 - [openspdm](https://fosdem.org/2021/schedule/event/firmware_uoifaaffsdc/)
 
-2) openspdm library threat model:
+2) libspdm library threat model:
 
    The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md)
 
-3) openspdm library design:
+3) libspdm library design:
 
    The detailed design can be found at [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md)
 
-4) openspdm user guide:
+4) libspdm user guide:
 
    The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
 
@@ -197,7 +197,7 @@ Example cmake commands: (Note the `..` at the end of the cmake command).
 
 ### Other Test
 
-  openspdm also supports other test such as code coverage, fuzzing, symbolic execution, model checker.
+  libspdm also supports other test such as code coverage, fuzzing, symbolic execution, model checker.
 
   Please refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for detail. 
 
