@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_requester_get_cer
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
+                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
@@ -16,6 +17,7 @@ SET(src_test_spdm_requester_get_certificate
     get_certificate.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
+    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
 SET(test_spdm_requester_get_certificate_LIBRARY
@@ -31,6 +33,7 @@ SET(test_spdm_requester_get_certificate_LIBRARY
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null
+    spdm_device_secret_lib_sample
     cmockalib
 )
 
@@ -49,6 +52,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
+                   $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
     )
 else()
