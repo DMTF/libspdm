@@ -6,6 +6,7 @@
 
 #include <library/spdm_transport_mctp_lib.h>
 #include <library/spdm_secured_message_lib.h>
+#include "internal/libspdm_common_lib.h"
 
 /**
   Encode a normal message or secured message to a transport message.
@@ -113,10 +114,8 @@ return_status spdm_transport_mctp_encode_message(
 {
     return_status status;
     transport_encode_message_func transport_encode_message;
-    uint8_t app_message_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     void *app_message;
     uintn app_message_size;
-    uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
     spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
     void *secured_message_context;
@@ -143,12 +142,12 @@ return_status spdm_transport_mctp_encode_message(
 
         if (!is_app_message) {
             // SPDM message to APP message
-            app_message = app_message_buffer;
-            app_message_size = sizeof(app_message_buffer);
+            app_message = ((spdm_context_t *)spdm_context)->local_context.app_message;
+            app_message_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
             status = transport_encode_message(NULL, message_size,
                               message,
                               &app_message_size,
-                              app_message_buffer);
+                              ((spdm_context_t *)spdm_context)->local_context.app_message);
             if (RETURN_ERROR(status)) {
                 DEBUG((DEBUG_ERROR,
                        "transport_encode_message - %p\n",
@@ -160,11 +159,12 @@ return_status spdm_transport_mctp_encode_message(
             app_message_size = message_size;
         }
         // APP message to secured message
-        secured_message_size = sizeof(secured_message);
+        secured_message_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
         status = spdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
             app_message_size, app_message, &secured_message_size,
-            secured_message, &spdm_secured_message_callbacks_t);
+            ((spdm_context_t *)spdm_context)->local_context.secured_message,
+            &spdm_secured_message_callbacks_t);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
                    "spdm_encode_secured_message - %p\n", status));
@@ -173,7 +173,8 @@ return_status spdm_transport_mctp_encode_message(
 
         // secured message to secured MCTP message
         status = transport_encode_message(
-            session_id, secured_message_size, secured_message,
+            session_id, secured_message_size,
+            ((spdm_context_t *)spdm_context)->local_context.secured_message,
             transport_message_size, transport_message);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR, "transport_encode_message - %p\n",
@@ -230,9 +231,7 @@ return_status spdm_transport_mctp_decode_message(
     return_status status;
     transport_decode_message_func transport_decode_message;
     uint32_t *SecuredMessageSessionId;
-    uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
-    uint8_t app_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     uintn app_message_size;
     spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
     void *secured_message_context;
@@ -257,10 +256,11 @@ return_status spdm_transport_mctp_decode_message(
 
     SecuredMessageSessionId = NULL;
     // Detect received message
-    secured_message_size = sizeof(secured_message);
+    secured_message_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
     status = transport_decode_message(
         &SecuredMessageSessionId, transport_message_size,
-        transport_message, &secured_message_size, secured_message);
+        transport_message, &secured_message_size,
+       ((spdm_context_t *)spdm_context)->local_context.secured_message);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_ERROR, "transport_decode_message - %p\n", status));
         return RETURN_UNSUPPORTED;
@@ -281,11 +281,13 @@ return_status spdm_transport_mctp_decode_message(
         }
 
         // Secured message to APP message
-        app_message_size = sizeof(app_message);
+        app_message_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
         status = spdm_decode_secured_message(
             secured_message_context, *SecuredMessageSessionId,
-            is_requester, secured_message_size, secured_message,
-            &app_message_size, app_message,
+            is_requester, secured_message_size,
+            ((spdm_context_t *)spdm_context)->local_context.secured_message,
+            &app_message_size,
+            ((spdm_context_t *)spdm_context)->local_context.app_message,
             &spdm_secured_message_callbacks_t);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
@@ -299,7 +301,8 @@ return_status spdm_transport_mctp_decode_message(
 
         // APP message to SPDM message.
         status = transport_decode_message(&SecuredMessageSessionId,
-                          app_message_size, app_message,
+                          app_message_size,
+                          ((spdm_context_t *)spdm_context)->local_context.app_message,
                           message_size, message);
         if (RETURN_ERROR(status)) {
             *is_app_message = TRUE;
@@ -309,7 +312,8 @@ return_status spdm_transport_mctp_decode_message(
                 return RETURN_BUFFER_TOO_SMALL;
             }
             *message_size = app_message_size;
-            copy_mem(message, app_message, *message_size);
+            copy_mem(message,
+                     ((spdm_context_t *)spdm_context)->local_context.app_message, *message_size);
             return RETURN_SUCCESS;
         } else {
             *is_app_message = FALSE;

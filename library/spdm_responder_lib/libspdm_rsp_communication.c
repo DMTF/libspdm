@@ -75,30 +75,28 @@ return_status libspdm_responder_dispatch_message(IN void *context)
 {
     return_status status;
     spdm_context_t *spdm_context;
-    uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     uintn request_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
     uintn response_size;
     uint32_t *session_id;
 
     spdm_context = context;
 
-    request_size = sizeof(request);
+    request_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
     status = spdm_context->receive_message(spdm_context, &request_size,
-                           request, 0);
+                           spdm_context->local_context.request_buffer, 0);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
-    response_size = sizeof(response);
-    status = libspdm_process_message(spdm_context, &session_id, request,
-                      request_size, response, &response_size);
+    response_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    status = libspdm_process_message(spdm_context, &session_id, spdm_context->local_context.request_buffer,
+                      request_size, spdm_context->local_context.response_buffer, &response_size);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     status = spdm_context->send_message(spdm_context, response_size,
-                        response, 0);
+                        spdm_context->local_context.response_buffer, 0);
 
     return status;
 }

@@ -81,6 +81,12 @@ typedef struct {
     boolean basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
+
+    void *request_buffer;
+    void *response_buffer;
+
+    void *secured_message;
+    void *app_message;
 } spdm_local_context_t;
 
 typedef struct {
