@@ -34,7 +34,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
     spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
     uintn dhe_key_size;
-    uint32_t measurement_summary_hash_size;
+    uintn measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
     uint8_t *ptr;
@@ -266,8 +266,22 @@ return_status spdm_get_response_key_exchange(IN void *context,
 
     ptr += dhe_key_size;
 
-    result = spdm_generate_measurement_summary_hash(
-        spdm_context, FALSE, spdm_request->header.param1, ptr);
+    if (spdm_is_capabilities_flag_supported(
+        spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+
+        result = spdm_generate_measurement_summary_hash(
+            spdm_context->connection_info.version,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.measurement_spec,
+            spdm_context->connection_info.algorithm.measurement_hash_algo,
+            spdm_request->header.param1,
+            ptr,
+            &measurement_summary_hash_size);
+    }
+    else {
+        result = TRUE;
+    }
+
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         libspdm_generate_error_response(spdm_context,

@@ -322,6 +322,145 @@ return_status spdm_measurement_collection(
 }
 
 /**
+  This function calculates the measurement summary hash.
+
+  @param  spdm_version                  The spdm version.
+  @param  base_hash_algo                The hash algo to use on summary.
+  @param  measurement_specification     Indicates the measurement specification.
+                                        It must align with measurement_specification
+                                        (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
+  @param  measurement_hash_algo         Indicates the measurement hash algorithm.
+                                        It must align with measurement_hash_alg
+                                        (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
+
+  @param  measurement_summary_hash_type   The type of the measurement summary hash.
+  @param  measurement_summary_hash        The buffer to store the measurement summary hash.
+  @param  measurement_summary_hash_size   The size in bytes of the buffer.
+
+  @retval TRUE  measurement summary hash is generated or skipped.
+  @retval FALSE measurement summary hash is not generated.
+**/
+boolean spdm_generate_measurement_summary_hash(
+    IN spdm_version_number_t spdm_version, IN uint32_t base_hash_algo,
+    IN uint8_t measurement_specification, IN uint32_t measurement_hash_algo,
+    IN uint8_t measurement_summary_hash_type,
+    OUT uint8_t *measurement_summary_hash,
+    IN OUT uintn *measurement_summary_hash_size)
+{
+    uint8_t measurement_data[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uintn index;
+    spdm_measurement_block_dmtf_t *cached_measurment_block;
+    uintn measurment_data_size;
+    uintn measurment_block_size;
+    uint8_t device_measurement[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t device_measurement_count;
+    uintn device_measurement_size;
+    return_status status;
+
+    switch (measurement_summary_hash_type) {
+    case SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
+        break;
+
+    case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
+    case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
+        if (*measurement_summary_hash_size != spdm_get_hash_size(base_hash_algo)) {
+            return FALSE;
+        }
+
+        // get all measurement data
+        device_measurement_size = sizeof(device_measurement);
+        status = spdm_measurement_collection(
+            spdm_version, measurement_specification,
+            measurement_hash_algo,
+            0xFF, // Get all measurements
+            &device_measurement_count, device_measurement,
+            &device_measurement_size);
+        if (RETURN_ERROR(status)) {
+            return FALSE;
+        }
+
+        ASSERT(device_measurement_count <=
+               MAX_SPDM_MEASUREMENT_BLOCK_COUNT);
+
+        // double confirm that MeasurmentData internal size is correct
+        measurment_data_size = 0;
+        cached_measurment_block = (void *)device_measurement;
+        for (index = 0; index < device_measurement_count; index++) {
+            measurment_block_size =
+                sizeof(spdm_measurement_block_common_header_t) +
+                cached_measurment_block
+                    ->Measurement_block_common_header
+                    .measurement_size;
+            ASSERT(cached_measurment_block
+                       ->Measurement_block_common_header
+                       .measurement_size ==
+                   sizeof(spdm_measurement_block_dmtf_header_t) +
+                       cached_measurment_block
+                           ->Measurement_block_dmtf_header
+                           .dmtf_spec_measurement_value_size);
+            measurment_data_size +=
+                cached_measurment_block
+                    ->Measurement_block_common_header
+                    .measurement_size;
+            cached_measurment_block =
+                (void *)((uintn)cached_measurment_block +
+                     measurment_block_size);
+        }
+
+        ASSERT(measurment_data_size <=
+               MAX_SPDM_MEASUREMENT_RECORD_SIZE);
+
+        // get required data and hash them
+        cached_measurment_block = (void *)device_measurement;
+        measurment_data_size = 0;
+        for (index = 0; index < device_measurement_count; index++) {
+            measurment_block_size =
+                sizeof(spdm_measurement_block_common_header_t) +
+                cached_measurment_block
+                    ->Measurement_block_common_header
+                    .measurement_size;
+            // filter unneeded data
+            if (((measurement_summary_hash_type ==
+                  SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) &&
+                 ((cached_measurment_block
+                       ->Measurement_block_dmtf_header
+                       .dmtf_spec_measurement_value_type &
+                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) <
+                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MEASUREMENT_MANIFEST)) ||
+                ((cached_measurment_block
+                      ->Measurement_block_dmtf_header
+                      .dmtf_spec_measurement_value_type &
+                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) ==
+                 SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM)) {
+                copy_mem(
+                    &measurement_data[measurment_data_size],
+                    &cached_measurment_block
+                         ->Measurement_block_dmtf_header,
+                    cached_measurment_block
+                        ->Measurement_block_common_header
+                        .measurement_size);
+
+                measurment_data_size +=
+                    cached_measurment_block
+                        ->Measurement_block_common_header
+                        .measurement_size;
+            }
+            cached_measurment_block =
+                (void *)((uintn)cached_measurment_block +
+                     measurment_block_size);
+        }
+
+        spdm_hash_all(base_hash_algo, measurement_data,
+                  measurment_data_size, measurement_summary_hash);
+        break;
+    default:
+        return FALSE;
+        break;
+    }
+    return TRUE;
+}
+
+/**
   Sign an SPDM message data.
 
   @param  req_base_asym_alg               Indicates the signing algorithm.

@@ -39,7 +39,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     uintn signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
-    uint32_t measurement_summary_hash_size;
+    uintn    measurement_summary_hash_size;
     uint8_t *ptr;
     uintn total_size;
     spdm_context_t *spdm_context;
@@ -173,8 +173,22 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     }
     ptr += SPDM_NONCE_SIZE;
 
-    result = spdm_generate_measurement_summary_hash(
-        spdm_context, FALSE, spdm_request->header.param2, ptr);
+    if (spdm_is_capabilities_flag_supported(
+        spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+
+        result = spdm_generate_measurement_summary_hash(
+            spdm_context->connection_info.version,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.measurement_spec,
+            spdm_context->connection_info.algorithm.measurement_hash_algo,
+            spdm_request->header.param2,
+            ptr,
+            &measurement_summary_hash_size);
+    }
+    else {
+        result = TRUE;
+    }
+
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
