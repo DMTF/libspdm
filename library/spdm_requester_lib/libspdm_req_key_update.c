@@ -101,9 +101,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             DEBUG((DEBUG_INFO,
                    "spdm_create_update_session_data_key[%x] Responder\n",
                    session_id));
-            spdm_create_update_session_data_key(
+            status = spdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_RESPONDER);
+            if (RETURN_ERROR(status)) {
+                return status;
+            }
         }
 
         status = spdm_send_spdm_request(spdm_context, &session_id,
@@ -123,9 +126,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                 DEBUG((DEBUG_INFO,
                        "spdm_activate_update_session_data_key[%x] Responder old\n",
                        session_id));
-                spdm_activate_update_session_data_key(
+                status = spdm_activate_update_session_data_key(
                     session_info->secured_message_context,
                     SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
             }
             return RETURN_DEVICE_ERROR;
         }
@@ -141,9 +147,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                     DEBUG((DEBUG_INFO,
                            "spdm_activate_update_session_data_key[%x] Responder old\n",
                            session_id));
-                    spdm_activate_update_session_data_key(
+                    status = spdm_activate_update_session_data_key(
                         session_info->secured_message_context,
                         SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                    if (RETURN_ERROR(status)) {
+                        return status;
+                    }
                 }
                 return status;
             }
@@ -157,9 +166,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                 DEBUG((DEBUG_INFO,
                        "spdm_activate_update_session_data_key[%x] Responder old\n",
                        session_id));
-                spdm_activate_update_session_data_key(
+                status = spdm_activate_update_session_data_key(
                     session_info->secured_message_context,
                     SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
             }
             return RETURN_DEVICE_ERROR;
         }
@@ -168,23 +180,32 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             DEBUG((DEBUG_INFO,
                    "spdm_activate_update_session_data_key[%x] Responder new\n",
                    session_id, SPDM_KEY_UPDATE_ACTION_RESPONDER));
-            spdm_activate_update_session_data_key(
+            status = spdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+            if (RETURN_ERROR(status)) {
+                return status;
+            }
         }
 
         DEBUG((DEBUG_INFO,
                "spdm_create_update_session_data_key[%x] Requester\n",
                session_id));
-        spdm_create_update_session_data_key(
+        status = spdm_create_update_session_data_key(
             session_info->secured_message_context,
             SPDM_KEY_UPDATE_ACTION_REQUESTER);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
         DEBUG((DEBUG_INFO,
                "spdm_activate_update_session_data_key[%x] Requester new\n",
                session_id));
-        spdm_activate_update_session_data_key(
+        status = spdm_activate_update_session_data_key(
             session_info->secured_message_context,
             SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
     }
 
     *key_updated = TRUE;
