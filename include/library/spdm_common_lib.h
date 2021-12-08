@@ -277,8 +277,11 @@ void libspdm_set_last_spdm_error_struct(IN void *spdm_context,
   The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
 
   @param  spdm_context                  A pointer to the SPDM context.
+
+  @retval RETURN_SUCCESS       context is initialized.
+  @retval RETURN_DEVICE_ERROR  context initialization failed.
 */
-void libspdm_init_context(IN void *spdm_context);
+return_status libspdm_init_context(IN void *context);
 
 /**
   Reset an SPDM context.

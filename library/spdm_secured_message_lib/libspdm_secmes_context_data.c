@@ -30,8 +30,6 @@ void spdm_secured_message_init_context(IN void *spdm_secured_message_context)
     secured_message_context = spdm_secured_message_context;
     zero_mem(secured_message_context,
          sizeof(spdm_secured_message_context_t));
-
-    random_seed(NULL, 0);
 }
 
 /**
