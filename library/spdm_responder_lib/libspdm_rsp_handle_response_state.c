@@ -28,18 +28,21 @@ return_status spdm_responder_handle_response_state(IN void *context,
                            OUT void *response)
 {
     spdm_context_t *spdm_context;
+    return_status status;
 
     spdm_context = context;
     switch (spdm_context->response_state) {
     case SPDM_RESPONSE_STATE_BUSY:
-        libspdm_generate_error_response(spdm_context, SPDM_ERROR_CODE_BUSY,
+        return libspdm_generate_error_response(spdm_context, SPDM_ERROR_CODE_BUSY,
                          0, response_size, response);
         // NOTE: Need to reset status to Normal in up level
-        return RETURN_SUCCESS;
     case SPDM_RESPONSE_STATE_NEED_RESYNC:
-        libspdm_generate_error_response(spdm_context,
+        status = libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_REQUEST_RESYNCH, 0,
                          response_size, response);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
         // NOTE: Need to let SPDM_VERSION reset the State
         spdm_set_connection_state(spdm_context,
                       SPDM_CONNECTION_STATE_NOT_STARTED);
@@ -57,19 +60,17 @@ return_status spdm_responder_handle_response_state(IN void *context,
             spdm_context->error_data.request_code = request_code;
             spdm_context->error_data.token = spdm_context->current_token++;
         }
-        libspdm_generate_extended_error_response(
+        return libspdm_generate_extended_error_response(
             spdm_context, SPDM_ERROR_CODE_RESPONSE_NOT_READY, 0,
             sizeof(spdm_error_data_response_not_ready_t),
             (uint8_t *)(void *)&spdm_context->error_data,
             response_size, response);
         // NOTE: Need to reset status to Normal in up level
-        return RETURN_SUCCESS;
     case SPDM_RESPONSE_STATE_PROCESSING_ENCAP:
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_REQUEST_IN_FLIGHT,
                          0, response_size, response);
         // NOTE: Need let SPDM_ENCAPSULATED_RESPONSE_ACK reset the State
-        return RETURN_SUCCESS;
     default:
         return RETURN_SUCCESS;
     }

@@ -61,7 +61,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
-   }
+    }
     session_state = spdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
