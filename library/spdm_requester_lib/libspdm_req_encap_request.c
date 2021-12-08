@@ -96,7 +96,7 @@ return_status SpdmProcessEncapsulatedRequest(IN spdm_context_t *spdm_context,
 
     spdm_requester = encap_request;
     if (encap_request_size < sizeof(spdm_message_header_t)) {
-        libspdm_generate_encap_error_response(
+        return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_requester->request_response_code,
             encap_response_size, encap_response);
@@ -117,7 +117,7 @@ return_status SpdmProcessEncapsulatedRequest(IN spdm_context_t *spdm_context,
         status = RETURN_NOT_FOUND;
     }
     if (status != RETURN_SUCCESS) {
-        libspdm_generate_encap_error_response(
+        return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_requester->request_response_code,
             encap_response_size, encap_response);

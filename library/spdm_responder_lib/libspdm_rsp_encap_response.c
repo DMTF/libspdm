@@ -360,20 +360,18 @@ return_status spdm_get_response_encapsulated_request(
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
-        libspdm_generate_error_response(
+        return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_ENCAPSULATED_REQUEST, response_size, response);
-        return RETURN_SUCCESS;
     }
     if (spdm_context->response_state !=
         SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state ==
             SPDM_RESPONSE_STATE_NORMAL) {
-            libspdm_generate_error_response(
+            return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
-            return RETURN_SUCCESS;
         }
         return spdm_responder_handle_response_state(
             spdm_context,
@@ -382,10 +380,9 @@ return_status spdm_get_response_encapsulated_request(
     }
 
     if (request_size != sizeof(spdm_get_encapsulated_request_request_t)) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -407,11 +404,10 @@ return_status spdm_get_response_encapsulated_request(
     status = spdm_process_encapsulated_response(
         context, 0, NULL, &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
-        libspdm_generate_error_response(
+        return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
         spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
-        return RETURN_SUCCESS;
     }
     *response_size = sizeof(spdm_encapsulated_request_response_t) +
              encap_request_size;
@@ -462,21 +458,19 @@ return_status spdm_get_response_encapsulated_response_ack(
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
-        libspdm_generate_error_response(
+        return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_DELIVER_ENCAPSULATED_RESPONSE, response_size,
             response);
-        return RETURN_SUCCESS;
     }
     if (spdm_context->response_state !=
         SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state ==
             SPDM_RESPONSE_STATE_NORMAL) {
-            libspdm_generate_error_response(
+            return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
-            return RETURN_SUCCESS;
         }
         return spdm_responder_handle_response_state(
             spdm_context,
@@ -486,20 +480,18 @@ return_status spdm_get_response_encapsulated_response_ack(
 
     if (request_size <=
         sizeof(spdm_deliver_encapsulated_response_request_t)) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     spdm_request_size = request_size;
 
     if (spdm_request->header.param1 !=
         spdm_context->encap_context.request_id) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     encap_response = (spdm_request + 1);
@@ -523,10 +515,9 @@ return_status spdm_get_response_encapsulated_response_ack(
                  sizeof(spdm_encapsulated_response_ack_response_t);
     encap_request = spdm_response + 1;
     if (encap_response_size < sizeof(spdm_message_header_t)) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -536,11 +527,10 @@ return_status spdm_get_response_encapsulated_response_ack(
         context, encap_response_size, encap_response,
         &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
-        libspdm_generate_error_response(
+        return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
         spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
-        return RETURN_SUCCESS;
     }
 
     *response_size = sizeof(spdm_encapsulated_response_ack_response_t) +

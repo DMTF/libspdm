@@ -51,48 +51,42 @@ return_status spdm_get_response_key_update(IN void *context,
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
-        libspdm_generate_error_response(
+        return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_KEY_UPDATE, response_size, response);
-        return RETURN_SUCCESS;
     }
     if (spdm_context->connection_info.connection_state <
         SPDM_CONNECTION_STATE_NEGOTIATED) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                          0, response_size, response);
-        return RETURN_SUCCESS;
     }
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
     session_id = spdm_context->last_spdm_request_session_id;
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
     session_state = spdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     if (request_size != sizeof(spdm_key_update_request_t)) {
-        libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     prev_spdm_request = (spdm_key_update_request_t *) 
@@ -106,10 +100,9 @@ return_status spdm_get_response_key_update(IN void *context,
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
                  prev_spdm_request->header.param1 ==
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                libspdm_generate_error_response(context,
+                return libspdm_generate_error_response(context,
                                  SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                  response_size, response);
-                return RETURN_SUCCESS;
             }
 
             DEBUG((DEBUG_INFO,
@@ -127,10 +120,9 @@ return_status spdm_get_response_key_update(IN void *context,
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
                  prev_spdm_request->header.param1 ==
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                libspdm_generate_error_response(context,
+                return libspdm_generate_error_response(context,
                                  SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                  response_size, response);
-                return RETURN_SUCCESS;
             }
 
             DEBUG((DEBUG_INFO,
@@ -166,10 +158,9 @@ return_status spdm_get_response_key_update(IN void *context,
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY &&
                 prev_spdm_request->header.param1 !=
                       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                libspdm_generate_error_response(context,
+                return libspdm_generate_error_response(context,
                                  SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                  response_size, response);
-                return RETURN_SUCCESS;
             }
             DEBUG((DEBUG_INFO,
                    "spdm_activate_update_session_data_key[%x] Requester new\n",
@@ -183,10 +174,9 @@ return_status spdm_get_response_key_update(IN void *context,
             break;
         default:
             DEBUG((DEBUG_INFO, "espurious case\n"));
-            libspdm_generate_error_response(context,
+            return libspdm_generate_error_response(context,
                              SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                              response_size, response);
-            return RETURN_SUCCESS;
         }
     }
 

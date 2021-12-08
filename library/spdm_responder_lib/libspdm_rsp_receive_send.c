@@ -321,13 +321,13 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             // session ID is valid. Use it to encrypt the error message.
-            libspdm_generate_error_response(
+            status = libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                 &my_response_size, my_response);
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
             // don't use session ID, because we dont know which right session ID should be used.
-            libspdm_generate_extended_error_response(
+            status = libspdm_generate_extended_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_SESSION,
                 0, sizeof(uint32_t), (void *)session_id,
                 &my_response_size, my_response);
@@ -335,7 +335,11 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             break;
         default:
             ASSERT(FALSE);
-            return RETURN_UNSUPPORTED;
+            status = RETURN_UNSUPPORTED;
+        }
+
+        if (RETURN_ERROR(status)) {
+            return status;
         }
 
         DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
@@ -410,11 +414,14 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             status = RETURN_NOT_FOUND;
         }
     }
-    if (status != RETURN_SUCCESS) {
-        libspdm_generate_error_response(
+    if (RETURN_ERROR(status)) {
+        status = libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_request->request_response_code, &my_response_size,
             my_response);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
     }
 
     DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
