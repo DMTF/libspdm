@@ -138,9 +138,15 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_DEVICE_ERROR;
     }
 
-    spdm_secured_message_dhe_generate_key(
+    result = spdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
+    if (!result) {
+        spdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context);
+        return RETURN_DEVICE_ERROR;
+    }
     DEBUG((DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
     internal_dump_hex(ptr, dhe_key_size);
     ptr += dhe_key_size;

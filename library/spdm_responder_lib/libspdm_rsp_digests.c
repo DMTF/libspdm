@@ -39,6 +39,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     uint8_t *digest;
     spdm_context_t *spdm_context;
     return_status status;
+    boolean result;
 
     spdm_context = context;
     spdm_request = request;
@@ -122,8 +123,13 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
             return RETURN_SUCCESS;
         }
         spdm_response->header.param2 |= (1 << index);
-        spdm_generate_cert_chain_hash(spdm_context, index,
+        result = spdm_generate_cert_chain_hash(spdm_context, index,
                           &digest[hash_size * index]);
+        if (!result) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+                0, response_size, response);
+        }
     }
     //
     // Cache

@@ -43,6 +43,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     spdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     spdm_session_state_t session_state;
+    boolean result;
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
@@ -85,8 +86,11 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
+    result = spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
                         spdm_request.verify_data);
+    if (!result) {
+        return RETURN_SECURITY_VIOLATION;
+    }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE,
                        (uint8_t *)&spdm_request +

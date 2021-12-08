@@ -28,6 +28,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
     uint32_t session_id;
     spdm_session_info_t *session_info;
     spdm_session_state_t session_state;
+    return_status status;
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
@@ -86,15 +87,21 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
         DEBUG((DEBUG_INFO,
                "spdm_create_update_session_data_key[%x] Responder\n",
                session_id));
-        spdm_create_update_session_data_key(
+        status = spdm_create_update_session_data_key(
             session_info->secured_message_context,
             SPDM_KEY_UPDATE_ACTION_RESPONDER);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
         DEBUG((DEBUG_INFO,
                "spdm_activate_update_session_data_key[%x] Responder new\n",
                session_id));
-        spdm_activate_update_session_data_key(
+        status = spdm_activate_update_session_data_key(
             session_info->secured_message_context,
             SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
     }
 
     copy_mem(&spdm_context->encap_context.last_encap_request_header,

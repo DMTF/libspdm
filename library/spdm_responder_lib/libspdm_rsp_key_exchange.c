@@ -237,9 +237,18 @@ return_status spdm_get_response_key_exchange(IN void *context,
     ptr = (void *)(spdm_response + 1);
     dhe_context = spdm_secured_message_dhe_new(
         spdm_context->connection_info.algorithm.dhe_named_group);
-    spdm_secured_message_dhe_generate_key(
+    result = spdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
+    if (!result) {
+        spdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context);
+        libspdm_free_session_id(spdm_context, session_id);
+        return libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                         response_size, response);
+    }
     DEBUG((DEBUG_INFO, "Calc SelfKey (0x%x):\n", dhe_key_size));
     internal_dump_hex(ptr, dhe_key_size);
 
@@ -258,10 +267,9 @@ return_status spdm_get_response_key_exchange(IN void *context,
         dhe_context);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
-        libspdm_generate_error_response(spdm_context,
+        return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
                          response_size, response);
-        return RETURN_SUCCESS;
     }
 
     ptr += dhe_key_size;

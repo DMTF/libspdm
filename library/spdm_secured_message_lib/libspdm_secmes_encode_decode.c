@@ -512,24 +512,29 @@ return_status spdm_decode_secured_message(
             //
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                spdm_activate_update_session_data_key(
+                status = spdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
                     FALSE);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                } 
                 status = spdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
                     app_message, spdm_secured_message_callbacks_t);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
                 //
                 // Handle special case:
                 // If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
                 // Then later the responder will return SUCCESS, the requester need activate new key.
                 // So we need restore the environment by spdm_create_update_session_data_key() again.
                 //
-                spdm_create_update_session_data_key (secured_message_context,
+                return spdm_create_update_session_data_key (secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
-                return status;
             }
 
             spdm_secured_message_set_last_spdm_error_struct(
@@ -602,24 +607,29 @@ return_status spdm_decode_secured_message(
             //
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                spdm_activate_update_session_data_key(
+                status = spdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
                     FALSE);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
                 status = spdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
                     app_message, spdm_secured_message_callbacks_t);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
                 //
                 // Handle special case:
                 // If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
                 // Then later the responder will return SUCCESS, the requester need activate new key.
                 // So we need restore the environment by spdm_create_update_session_data_key() again.
                 //
-                spdm_create_update_session_data_key (secured_message_context,
+                return spdm_create_update_session_data_key (secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
-                return status;
             }
 
             spdm_secured_message_set_last_spdm_error_struct(
