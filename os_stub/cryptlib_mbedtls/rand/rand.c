@@ -74,7 +74,12 @@ boolean random_bytes(OUT uint8_t *output, IN uintn size)
 
 int myrand(void *rng_state, unsigned char *output, size_t len)
 {
-    random_bytes(output, len);
+    boolean result = random_bytes(output, len);
 
-    return 0;
+    //
+    // The MbedTLS function f_rng, which myrand implements, is not
+    // documented well. From looking at code: zero is considered success,
+    // while non-zero return value is considered failure.
+    //
+    return result ? 0 : -1;
 }

@@ -2702,6 +2702,7 @@ boolean spdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size)
     uintn issuer_name_len;
     uint8_t subject_name[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
     uintn subject_name_len;
+    boolean result;
 
     if (cert == NULL || cert_size == 0) {
         return FALSE;
@@ -2709,11 +2710,17 @@ boolean spdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size)
 
     // 1. issuer_name
     issuer_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
-    x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
+    result = x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
+    if (!result) {
+        return FALSE;
+    }
 
     // 2. subject_name
     subject_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
-    x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
+    result = x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
+    if (!result) {
+        return FALSE;
+    }
 
     if (issuer_name_len != subject_name_len) {
         return FALSE;

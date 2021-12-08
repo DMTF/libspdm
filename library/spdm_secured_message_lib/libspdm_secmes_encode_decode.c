@@ -179,7 +179,11 @@ return_status spdm_encode_secured_message(
                      ->get_max_random_number_count();
         if (max_rand_count != 0) {
             rand_count = 0;
-            random_bytes((uint8_t *)&rand_count, sizeof(rand_count));
+            result = spdm_get_random_number(sizeof(rand_count),
+                (uint8_t *)&rand_count);
+            if (!result) {
+                return RETURN_DEVICE_ERROR;
+            }
             rand_count = (uint8_t)((rand_count % max_rand_count) + 1);
         } else {
             rand_count = 0;
@@ -212,11 +216,13 @@ return_status spdm_encode_secured_message(
         enc_msg_header->application_data_length =
             (uint16_t)app_message_size;
         copy_mem(enc_msg_header + 1, app_message, app_message_size);
-        random_bytes(
+        result = spdm_get_random_number(rand_count,
             (uint8_t *)enc_msg_header +
                 sizeof(spdm_secured_message_cipher_header_t) +
-                app_message_size,
-            rand_count);
+                app_message_size);
+        if (!result) {
+            return RETURN_DEVICE_ERROR;
+        }
         zero_mem((uint8_t *)enc_msg_header + plain_text_size,
              aead_pad_size);
 

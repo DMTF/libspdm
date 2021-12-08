@@ -547,10 +547,15 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
             return FALSE;
         }
 
-        x509_get_cert_from_cert_chain(
+        result = x509_get_cert_from_cert_chain(
             (uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
             cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
             0, &received_root_cert, &received_root_cert_size);
+        if (!result) {
+            DEBUG((DEBUG_INFO,
+                "!!! verify_peer_cert_chain_buffer - FAIL (cert retrieval fail) !!!\n"));
+            return FALSE;
+        }
         if (spdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
             if (const_compare_mem(received_root_cert, root_cert, root_cert_size) != 0) {
                 DEBUG((DEBUG_INFO,

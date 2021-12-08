@@ -1553,8 +1553,11 @@ void libspdm_set_last_spdm_error_struct(IN void *context,
   The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
 
   @param  spdm_context                  A pointer to the SPDM context.
+
+  @retval RETURN_SUCCESS       context is initialized.
+  @retval RETURN_DEVICE_ERROR  context initialization failed.
 */
-void libspdm_init_context(IN void *context)
+return_status libspdm_init_context(IN void *context)
 {
     spdm_context_t *spdm_context;
     void *secured_message_context;
@@ -1616,8 +1619,15 @@ void libspdm_init_context(IN void *context)
                 .secured_message_context);
     }
 
-    random_seed(NULL, 0);
-    return;
+    //
+    // The random_seed function may or may not be implemented.
+    // If unimplemented, the stub should always return success.
+    // 
+    if (!random_seed(NULL, 0)) {
+        return RETURN_DEVICE_ERROR;
+    }
+    
+    return RETURN_SUCCESS;
 }
 
 /**

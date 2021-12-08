@@ -50,10 +50,3 @@ boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
     return TRUE;
 }
-
-int myrand(void *rng_state, unsigned char *output, size_t len)
-{
-    random_bytes(output, len);
-
-    return 0;
-}
