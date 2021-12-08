@@ -722,10 +722,8 @@ void *libspdm_assign_session_id(IN void *spdm_context, IN uint32_t session_id,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_id                    The SPDM session ID.
-
-  @return freed session info assicated with this session ID.
 **/
-void *libspdm_free_session_id(IN void *spdm_context, IN uint32_t session_id);
+void libspdm_free_session_id(IN void *spdm_context, IN uint32_t session_id);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
@@ -947,6 +945,6 @@ uint32_t libspdm_read_uint24(IN uint8_t *buffer);
 
   @return The 24-bit value to write to buffer.
 **/
-uint32_t libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value);
+void libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value);
 
 #endif

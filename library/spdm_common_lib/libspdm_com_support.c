@@ -80,15 +80,13 @@ uint32_t libspdm_read_uint24(IN uint8_t *buffer)
 
   @param  buffer  The pointer to a 24-bit value that may be unaligned.
   @param  value   24-bit value to write to buffer.
-
-  @return The 24-bit value to write to buffer.
 **/
-uint32_t libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value)
+void libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value)
 {
     buffer[0] = (uint8_t)(value & 0xFF);
     buffer[1] = (uint8_t)((value >> 8) & 0xFF);
     buffer[2] = (uint8_t)((value >> 16) & 0xFF);
-    return value;
+    return;
 }
 
 /**

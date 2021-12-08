@@ -147,6 +147,7 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
     void *secured_message_context;
     uint32_t hash_size;
     void *hmac_context_th;
+    return_status status;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -159,7 +160,10 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
 
     if (session_info->session_transcript.hmac_rsp_context_th == NULL) {
         // trigger message_k to initialize hmac context after finished_key is ready.
-        libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
+        status = libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
+        if (RETURN_ERROR(status)) {
+            return FALSE;
+        }
         ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
     }
 
