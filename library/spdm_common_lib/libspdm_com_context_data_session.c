@@ -259,10 +259,8 @@ uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_id                    The SPDM session ID.
-
-  @return freed session info assicated with this session ID.
 **/
-void *libspdm_free_session_id(IN void *context, IN uint32_t session_id)
+void libspdm_free_session_id(IN void *context, IN uint32_t session_id)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -274,7 +272,7 @@ void *libspdm_free_session_id(IN void *context, IN uint32_t session_id)
         DEBUG((DEBUG_ERROR,
                "libspdm_free_session_id - Invalid session_id\n"));
         ASSERT(FALSE);
-        return NULL;
+        return;
     }
 
     session_info = spdm_context->session_info;
@@ -283,11 +281,11 @@ void *libspdm_free_session_id(IN void *context, IN uint32_t session_id)
             spdm_session_info_init(spdm_context,
                            &session_info[index],
                            INVALID_SESSION_ID, FALSE);
-            return &session_info[index];
+            return;
         }
     }
 
     DEBUG((DEBUG_ERROR, "libspdm_free_session_id - MAX session_id\n"));
     ASSERT(FALSE);
-    return NULL;
+    return;
 }

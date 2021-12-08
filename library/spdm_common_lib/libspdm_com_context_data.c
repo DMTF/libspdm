@@ -1270,6 +1270,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
         uint8_t mut_cert_chain_buffer_hash[MAX_HASH_SIZE];
         uint32_t hash_size;
         boolean finished_key_ready;
+        return_status status;
 
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
@@ -1287,7 +1288,10 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
             if (spdm_session_info->session_transcript.digest_context_th == NULL ||
                 spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
                 spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
-                libspdm_append_message_k (context, session_info, is_requester, NULL, 0);
+                status = libspdm_append_message_k (context, session_info, is_requester, NULL, 0);
+                if (RETURN_ERROR(status)) {
+                    return status;
+                }
             }
 
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
