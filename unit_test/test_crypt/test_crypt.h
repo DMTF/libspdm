@@ -16,12 +16,12 @@
 #include <assert.h>
 #undef NULL
 
-#include <hal/base.h>
+#include "hal/base.h"
 
-#include <hal/library/debuglib.h>
-#include <hal/library/memlib.h>
-#include <library/malloclib.h>
-#include <hal/library/cryptlib.h>
+#include "hal/library/debuglib.h"
+#include "hal/library/memlib.h"
+#include "library/malloclib.h"
+#include "hal/library/cryptlib.h"
 
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
             OUT uintn *file_size);

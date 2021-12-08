@@ -15,10 +15,10 @@
 #undef _WIN64
 
 #include <base.h>
-#include <library/memlib.h>
-#include <library/malloclib.h>
-#include <library/debuglib.h>
-#include <library/cryptlib.h>
+#include "library/memlib.h"
+#include "library/malloclib.h"
+#include "library/debuglib.h"
+#include "library/cryptlib.h"
 
 #include "crt_support.h"
 

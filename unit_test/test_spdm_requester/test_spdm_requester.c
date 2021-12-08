@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_requester_lib.h>
+#include "internal/libspdm_requester_lib.h"
 
 int spdm_requester_get_version_test_main(void);
 int spdm_requester_get_capabilities_test_main(void);

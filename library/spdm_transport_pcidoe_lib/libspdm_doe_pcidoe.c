@@ -4,8 +4,8 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <library/spdm_transport_pcidoe_lib.h>
-#include <industry_standard/pcidoe.h>
+#include "library/spdm_transport_pcidoe_lib.h"
+#include "industry_standard/pcidoe.h"
 
 #define PCI_DOE_ALIGNMENT 4
 #define PCI_DOE_SEQUENCE_NUMBER_COUNT 0

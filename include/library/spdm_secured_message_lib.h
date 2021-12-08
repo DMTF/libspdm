@@ -13,14 +13,14 @@
 #include LIBSPDM_CONFIG
 #endif
 
-#include <hal/base.h>
-#include <industry_standard/spdm.h>
-#include <industry_standard/spdm_secured_message.h>
-#include <hal/library/debuglib.h>
-#include <hal/library/memlib.h>
-#include <hal/library/cryptlib.h>
-#include <library/spdm_crypt_lib.h>
-#include <library/spdm_device_secret_lib.h>
+#include "hal/base.h"
+#include "industry_standard/spdm.h"
+#include "industry_standard/spdm_secured_message.h"
+#include "hal/library/debuglib.h"
+#include "hal/library/memlib.h"
+#include "hal/library/cryptlib.h"
+#include "library/spdm_crypt_lib.h"
+#include "library/spdm_device_secret_lib.h"
 
 #define BIN_CONCAT_LABEL "spdm1.1 "
 #define BIN_STR_0_LABEL "derived"

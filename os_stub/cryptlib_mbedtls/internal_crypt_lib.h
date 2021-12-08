@@ -12,10 +12,10 @@
 #define __INTERNAL_CRYPT_LIB_H__
 
 #include <base.h>
-#include <library/memlib.h>
-#include <library/malloclib.h>
-#include <library/debuglib.h>
-#include <library/cryptlib.h>
+#include "library/memlib.h"
+#include "library/malloclib.h"
+#include "library/debuglib.h"
+#include "library/cryptlib.h"
 #include <stdio.h>
 
 //

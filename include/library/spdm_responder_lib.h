@@ -7,7 +7,7 @@
 #ifndef __SPDM_RESPONDER_LIB_H__
 #define __SPDM_RESPONDER_LIB_H__
 
-#include <library/spdm_common_lib.h>
+#include "library/spdm_common_lib.h"
 
 /**
   Process the SPDM or APP request and return the response.

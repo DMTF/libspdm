@@ -12,9 +12,9 @@
 #define __INTERNAL_CRYPT_LIB_H__
 
 #include <base.h>
-#include <library/debuglib.h>
-#include <library/memlib.h>
-#include <library/cryptlib.h>
+#include "library/debuglib.h"
+#include "library/memlib.h"
+#include "library/cryptlib.h"
 
 typedef uintn size_t;
 

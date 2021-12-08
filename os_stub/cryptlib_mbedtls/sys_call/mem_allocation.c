@@ -9,8 +9,8 @@
 **/
 
 #include <base.h>
-#include <library/debuglib.h>
-#include <library/malloclib.h>
+#include "library/debuglib.h"
+#include "library/malloclib.h"
 #include <stddef.h>
 
 //

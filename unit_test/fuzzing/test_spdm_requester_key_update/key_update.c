@@ -6,8 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <internal/libspdm_requester_lib.h>
-#include <spdm_device_secret_lib_internal.h>
+#include "internal/libspdm_requester_lib.h"
+#include "spdm_device_secret_lib_internal.h"
 
 static void
 spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,

@@ -12,7 +12,7 @@
 #ifndef __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 #define __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 
-#include <library/spdm_device_secret_lib.h>
+#include "library/spdm_device_secret_lib.h"
 
 #define MEASUREMENT_BLOCK_NUMBER 5
 #define MEASUREMENT_MANIFEST_SIZE 128

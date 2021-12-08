@@ -7,8 +7,8 @@
 #ifndef __SPDM_REQUESTER_LIB_INTERNAL_H__
 #define __SPDM_REQUESTER_LIB_INTERNAL_H__
 
-#include <library/spdm_requester_lib.h>
-#include <library/spdm_secured_message_lib.h>
+#include "library/spdm_requester_lib.h"
+#include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
 
 /**

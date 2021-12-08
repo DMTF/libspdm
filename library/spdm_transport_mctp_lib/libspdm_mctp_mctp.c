@@ -4,8 +4,8 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <library/spdm_transport_mctp_lib.h>
-#include <industry_standard/mctp.h>
+#include "library/spdm_transport_mctp_lib.h"
+#include "industry_standard/mctp.h"
 
 #define MCTP_ALIGNMENT 1
 #define MCTP_SEQUENCE_NUMBER_COUNT 2

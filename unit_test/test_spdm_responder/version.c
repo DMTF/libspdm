@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_responder_lib.h>
+#include "internal/libspdm_responder_lib.h"
 
 #define DEFAULT_SPDM_VERSION_ENTRY_COUNT 2
 

@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <stdarg.h>
 
-#include <library/debuglib.h>
+#include "library/debuglib.h"
 
 //
 // Define the maximum debug and assert message length that this library supports
