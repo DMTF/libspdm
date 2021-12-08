@@ -31,7 +31,33 @@ jobs:
           then exit 1
           fi
 
-  build:
+  mbedtls_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=mbedtls ..
+          make copy_sample_key
+          make -j2
+
+      - name: Test Requester
+        run: |
+          cd build/bin
+          ./test_spdm_requester
+
+      - name: Test Responder
+        run: |
+          cd build/bin
+          ./test_spdm_responder
+
+  openssl_build:
     runs-on: ubuntu-latest
 
     steps:
