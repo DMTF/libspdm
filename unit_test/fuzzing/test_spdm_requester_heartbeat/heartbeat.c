@@ -6,8 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <internal/libspdm_requester_lib.h>
-#include <spdm_device_secret_lib_internal.h>
+#include "internal/libspdm_requester_lib.h"
+#include "spdm_device_secret_lib_internal.h"
 
 static uint8_t m_local_psk_hint[32];
 static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];

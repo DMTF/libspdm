@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <hal/base.h>
+#include "hal/base.h"
 
 uint64_t internal_math_div_rem_u64x32(IN uint64_t dividend, IN uint32_t divisor,
                 OUT uint32_t *remainder)

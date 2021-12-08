@@ -7,7 +7,7 @@
 #ifndef __SPDM_MCTP_TRANSPORT_LIB_H__
 #define __SPDM_MCTP_TRANSPORT_LIB_H__
 
-#include <library/spdm_common_lib.h>
+#include "library/spdm_common_lib.h"
 
 /**
   Encode an SPDM or APP message to a transport layer message.

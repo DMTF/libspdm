@@ -5,7 +5,7 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_requester_lib.h>
+#include "internal/libspdm_requester_lib.h"
 
 static const uint32_t opaque_data = 0xDEADBEEF;
 

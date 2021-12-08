@@ -9,7 +9,7 @@
   It follows the SPDM Specification.
 **/
 
-#include <library/spdm_device_secret_lib.h>
+#include "library/spdm_device_secret_lib.h"
 
 /**
   Collect the device measurement.

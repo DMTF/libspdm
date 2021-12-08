@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_responder_lib.h>
-#include <internal/libspdm_secured_message_lib.h>
+#include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 #pragma pack(1)
 

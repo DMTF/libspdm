@@ -6,8 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <spdm_device_secret_lib_internal.h>
-#include <internal/libspdm_responder_lib.h>
+#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_responder_lib.h"
 
 
 static void

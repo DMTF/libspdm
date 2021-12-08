@@ -7,8 +7,8 @@
 #ifndef __SPDM_RESPONDER_LIB_INTERNAL_H__
 #define __SPDM_RESPONDER_LIB_INTERNAL_H__
 
-#include <library/spdm_responder_lib.h>
-#include <library/spdm_secured_message_lib.h>
+#include "library/spdm_responder_lib.h"
+#include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
 
 /**

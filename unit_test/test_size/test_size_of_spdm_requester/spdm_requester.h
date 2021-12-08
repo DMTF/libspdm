@@ -7,10 +7,10 @@
 #ifndef __SPDM_REQUESTER_H__
 #define __SPDM_REQUESTER_H__
 
-#include <hal/base.h>
-#include <library/spdm_requester_lib.h>
-#include <library/spdm_transport_mctp_lib.h>
-#include <library/malloclib.h>
+#include "hal/base.h"
+#include "library/spdm_requester_lib.h"
+#include "library/spdm_transport_mctp_lib.h"
+#include "library/malloclib.h"
 
 return_status do_authentication_via_spdm(IN void *spdm_context);
 

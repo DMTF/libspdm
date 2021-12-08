@@ -18,13 +18,13 @@
 #include <string.h>
 
 #undef NULL
-#include <hal/base.h>
-#include <hal/library/memlib.h>
-#include <library/spdm_requester_lib.h>
-#include <library/spdm_responder_lib.h>
-#include <library/spdm_transport_test_lib.h>
-#include <internal/libspdm_common_lib.h>
-#include <spdm_device_secret_lib_internal.h>
+#include "hal/base.h"
+#include "hal/library/memlib.h"
+#include "library/spdm_requester_lib.h"
+#include "library/spdm_responder_lib.h"
+#include "library/spdm_transport_test_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "spdm_device_secret_lib_internal.h"
 
 extern uint8_t m_use_measurement_spec;
 extern uint32_t m_use_measurement_hash_algo;

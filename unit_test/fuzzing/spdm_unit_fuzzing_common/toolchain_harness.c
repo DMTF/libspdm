@@ -5,8 +5,8 @@
 **/
 
 #undef NULL
-#include <hal/base.h>
-#include <hal/library/memlib.h>
+#include "hal/base.h"
+#include "hal/library/memlib.h"
 #include "toolchain_harness.h"
 
 #ifdef TEST_WITH_LIBFUZZER

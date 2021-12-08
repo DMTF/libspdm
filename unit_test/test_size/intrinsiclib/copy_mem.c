@@ -8,8 +8,8 @@
   Intrinsic Memory Routines Wrapper Implementation.
 **/
 
-#include <hal/base.h>
-#include <hal/library/memlib.h>
+#include "hal/base.h"
+#include "hal/library/memlib.h"
 
 #if defined(__clang__) && !defined(__APPLE__)
 

@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_requester_lib.h>
-#include <internal/libspdm_secured_message_lib.h>
+#include "internal/libspdm_requester_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 static uint8_t m_local_psk_hint[32];
 static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];

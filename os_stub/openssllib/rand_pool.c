@@ -8,7 +8,7 @@
 #include <openssl/aes.h>
 
 #include <base.h>
-#include <library/rnglib.h>
+#include "library/rnglib.h"
 
 /**
   Calls RandomNumber64 to fill

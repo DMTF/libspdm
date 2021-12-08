@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #include <base.h>
-#include <library/debuglib.h>
+#include "library/debuglib.h"
 #include <openssl/bio.h>
 
 /* Convert character to lowercase */
