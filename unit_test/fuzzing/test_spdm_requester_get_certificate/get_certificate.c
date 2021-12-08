@@ -33,7 +33,7 @@ return_status spdm_device_receive_message(IN void *spdm_context,
 	portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
 	spdm_test_context = get_spdm_test_context();
 	*response_size = spdm_test_context->test_buffer_size;
-	copy_mem(response + 1,
+	copy_mem(((uint8_t *)response + 1),
 		 (uint8_t *)spdm_test_context->test_buffer +
 			 MAX_SPDM_CERT_CHAIN_BLOCK_LEN * calling_index,
 		 portion_length);
