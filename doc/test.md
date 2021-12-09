@@ -396,3 +396,50 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 3) useful tool
 
    avstack.pl, daniel beer, https://dlbeer.co.nz/oss/avstack.html
+
+### Collect spdm_context Size
+
+libspdm requires an spdm_context as input parameter. The consumer of libspdm need allocate the spdm_context with size returned from libspdm_get_context_size().
+
+Usually the spdm_context is allocated in the heap. The size of spdm_context can be shown in the [spdm emulator](https://github.com/DMTF/spdm-emu) with `printf("context_size - 0x%x\n", (uint32_t)libspdm_get_context_size());`.
+
+### Collect libspdm Size
+
+The size of libspdm can be evaluated by [test_size_of_spdm_requester](https://github.com/DMTF/libspdm/tree/main/unit_test/test_size/test_size_of_spdm_requester) and [test_size_of_spdm_responder](https://github.com/DMTF/libspdm/tree/main/unit_test/test_size/test_size_of_spdm_responder).
+
+Please use a release build with `-DTARGET=Release`.
+
+You can find the a raw image at `bin/test_size_of_spdm_requester` and `bin/test_size_of_spdm_responder`.
+Those images includes all SPDM features. They do not include crypto library or std library.
+Those images are used for size evaluation. They cannot run in OS environment.
+
+The SPDM feature can be controled by [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
+
+```
+// Code space optimization for Optional request/response messages.
+//
+// Consumers of libspdm may wish to not fully implement all of the optional
+// SPDM request/response messages. Therefore we have provided these
+// SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
+// disable the code (#if 0) related to said optional capability, thereby
+// reducing the code space used in the image.
+//
+// A single switch may enable/disable a single capability or group of related
+// capabilities.
+//
+// SPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
+// SPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
+// SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
+//                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
+//
+// SPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
+// SPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
+
+#define SPDM_ENABLE_CAPABILITY_CERT_CAP 1
+#define SPDM_ENABLE_CAPABILITY_CHAL_CAP 1
+#define SPDM_ENABLE_CAPABILITY_MEAS_CAP 1
+
+#define SPDM_ENABLE_CAPABILITY_KEY_EX_CAP   1
+#define SPDM_ENABLE_CAPABILITY_PSK_EX_CAP   1
+```
+
