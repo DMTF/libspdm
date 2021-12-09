@@ -345,9 +345,9 @@ typedef struct {
     uint8_t retry_times;
 
     //
-    // Opaque context data for use by application
+    // App context data for use by application
     //
-    void *opaque_context_data_ptr;
+    void *app_context_data_ptr;
 
     //
     // Register for the last KEY_UPDATE token and operation (responder only)
