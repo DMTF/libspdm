@@ -238,7 +238,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             spdm_context->connection_info.algorithm.measurement_hash_algo,
             spdm_request->header.param1,
             ptr,
-	    &measurement_summary_hash_size);
+        &measurement_summary_hash_size);
     }
     else {
         result = TRUE;
