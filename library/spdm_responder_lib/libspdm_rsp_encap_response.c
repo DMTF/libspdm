@@ -404,10 +404,10 @@ return_status spdm_get_response_encapsulated_request(
     status = spdm_process_encapsulated_response(
         context, 0, NULL, &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
+        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
     }
     *response_size = sizeof(spdm_encapsulated_request_response_t) +
              encap_request_size;
@@ -527,10 +527,10 @@ return_status spdm_get_response_encapsulated_response_ack(
         context, encap_response_size, encap_response,
         &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
+        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
     }
 
     *response_size = sizeof(spdm_encapsulated_response_ack_response_t) +
