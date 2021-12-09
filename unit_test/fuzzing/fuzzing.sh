@@ -101,6 +101,11 @@ make
 pushd bin
 
 cmds=(
+test_spdm_requester_end_session
+test_spdm_requester_encap_digests
+test_spdm_requester_encap_certificate
+test_spdm_requester_encap_challenge_auth
+test_spdm_requester_encap_key_update
 test_spdm_requester_get_version
 test_spdm_requester_get_capabilities
 test_spdm_requester_negotiate_algorithms
