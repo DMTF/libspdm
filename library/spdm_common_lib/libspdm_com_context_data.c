@@ -391,11 +391,11 @@ return_status libspdm_set_data(IN void *context, IN spdm_data_type_t data_type,
         }
         session_info->end_session_attributes = *(uint8_t *)data;
         break;
-    case SPDM_DATA_OPAQUE_CONTEXT_DATA:
+    case SPDM_DATA_APP_CONTEXT_DATA:
         if (data_size != sizeof(void *) || *(void **)data == NULL) {
             return RETURN_INVALID_PARAMETER;
         }
-        spdm_context->opaque_context_data_ptr = *(void **)data;
+        spdm_context->app_context_data_ptr = *(void **)data;
         break;
     default:
         return RETURN_UNSUPPORTED;
@@ -578,9 +578,9 @@ return_status libspdm_get_data(IN void *context, IN spdm_data_type_t data_type,
         target_data_size = sizeof(uint8_t);
         target_data = &session_info->end_session_attributes;
         break;
-    case SPDM_DATA_OPAQUE_CONTEXT_DATA:
+    case SPDM_DATA_APP_CONTEXT_DATA:
         target_data_size = sizeof(void *);
-        target_data = &spdm_context->opaque_context_data_ptr;
+        target_data = &spdm_context->app_context_data_ptr;
         break;
     default:
         return RETURN_UNSUPPORTED;
