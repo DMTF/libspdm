@@ -20,7 +20,7 @@
 
 #undef NULL
 #include <base.h>
-#include <library/memlib.h>
+#include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
 boolean read_responder_private_certificate(IN uint32_t base_asym_algo,

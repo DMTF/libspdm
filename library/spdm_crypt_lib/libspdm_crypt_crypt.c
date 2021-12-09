@@ -4,7 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
-#include <library/spdm_crypt_lib.h>
+#include "library/spdm_crypt_lib.h"
 
 /**
   This function returns the SPDM hash algorithm size.

@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_responder_lib.h>
-#include <internal/libspdm_secured_message_lib.h>
+#include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 spdm_key_update_request_t m_spdm_key_update_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,

@@ -7,7 +7,7 @@
 #ifndef __PCI_DOE_TRANSPORT_LIB_H__
 #define __PCI_DOE_TRANSPORT_LIB_H__
 
-#include <library/spdm_common_lib.h>
+#include "library/spdm_common_lib.h"
 
 /**
   Encode an SPDM or APP message to a transport layer message.

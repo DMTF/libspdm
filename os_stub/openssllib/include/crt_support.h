@@ -13,8 +13,8 @@
 #define __CRT_LIB_SUPPORT_H__
 
 #include <base.h>
-#include <library/memlib.h>
-#include <library/debuglib.h>
+#include "library/memlib.h"
+#include "library/debuglib.h"
 
 #define OPENSSLDIR ""
 #define ENGINESDIR ""

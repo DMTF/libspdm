@@ -7,8 +7,8 @@
 #ifndef __SPDM_COMMON_LIB_INTERNAL_H__
 #define __SPDM_COMMON_LIB_INTERNAL_H__
 
-#include <library/spdm_common_lib.h>
-#include <library/spdm_secured_message_lib.h>
+#include "library/spdm_common_lib.h"
+#include "library/spdm_secured_message_lib.h"
 
 #define INVALID_SESSION_ID 0
 

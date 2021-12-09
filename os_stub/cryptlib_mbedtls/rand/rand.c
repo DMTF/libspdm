@@ -9,7 +9,7 @@
 **/
 
 #include "internal_crypt_lib.h"
-#include <library/rnglib.h>
+#include "library/rnglib.h"
 
 /**
   Sets up the seed value for the pseudorandom number generator.

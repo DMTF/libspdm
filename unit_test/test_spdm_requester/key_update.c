@@ -5,8 +5,8 @@
 **/
 
 #include "spdm_unit_test.h"
-#include <internal/libspdm_requester_lib.h>
-#include <internal/libspdm_secured_message_lib.h>
+#include "internal/libspdm_requester_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 static uint8_t my_last_token;
 static uint8_t my_last_rsp_enc_key[MAX_AEAD_KEY_SIZE];

@@ -9,8 +9,8 @@
 **/
 
 #include <base.h>
-#include <library/debuglib.h>
-#include <library/memlib.h>
+#include "library/debuglib.h"
+#include "library/memlib.h"
 #include <stddef.h>
 
 int my_printf(const char *fmt, ...)

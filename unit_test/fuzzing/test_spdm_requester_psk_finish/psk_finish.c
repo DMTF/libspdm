@@ -6,8 +6,8 @@
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include <spdm_device_secret_lib_internal.h>
-#include <internal/libspdm_requester_lib.h>
+#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_requester_lib.h"
 
 
 static void spdm_secured_message_set_dummy_finished_key(
