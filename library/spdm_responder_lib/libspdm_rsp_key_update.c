@@ -118,7 +118,7 @@ return_status spdm_get_response_key_update(IN void *context,
             status = spdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (!status) {
+            if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             break;
@@ -139,7 +139,7 @@ return_status spdm_get_response_key_update(IN void *context,
             status = spdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (!status) {
+            if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             DEBUG((DEBUG_INFO,
@@ -148,7 +148,7 @@ return_status spdm_get_response_key_update(IN void *context,
             status = spdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_RESPONDER);
-            if (!status) {
+            if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             DEBUG((DEBUG_INFO,
@@ -157,7 +157,7 @@ return_status spdm_get_response_key_update(IN void *context,
             status = spdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
-            if (!status) {
+            if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             break;
@@ -177,7 +177,7 @@ return_status spdm_get_response_key_update(IN void *context,
             status = spdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
-            if (!status) {
+            if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             break;
