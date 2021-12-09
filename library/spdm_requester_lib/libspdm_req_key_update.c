@@ -36,6 +36,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                   IN boolean single_direction, IN OUT boolean *key_updated)
 {
     return_status status;
+    return_status temp_status;
     spdm_key_update_request_t spdm_request;
     spdm_key_update_response_mine_t spdm_response;
     uintn spdm_response_size;
@@ -147,11 +148,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                     DEBUG((DEBUG_INFO,
                            "spdm_activate_update_session_data_key[%x] Responder old\n",
                            session_id));
-                    status = spdm_activate_update_session_data_key(
+                    temp_status = spdm_activate_update_session_data_key(
                         session_info->secured_message_context,
                         SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
-                    if (RETURN_ERROR(status)) {
-                        return status;
+                    // Try and return most relevant error
+                    if (RETURN_ERROR(temp_status)) {
+                        return temp_status;
                     }
                 }
                 return status;
