@@ -8,7 +8,6 @@ on:
     branches: [ main ]
     #Changes to the following files do not trigger deployment
     paths-ignore:
-     - README.md
      - 'os_stub/openssllib/openssl/**'
      - 'os_stub/mbedtlslib/mbedtls/**'
      - 'unit_test/cmockalib/cmocka/**'
@@ -22,12 +21,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-        # If any *.c *.h file(except:mbedtls/openssl/cmocka) have Tab, the check will the wrong.
+        # If any *.c *.h *.md file(except:mbedtls/openssl/cmocka) have Tab, the check will fail.
       - name: Check code format
         run: |
-          if [grep -rn "	" * --include=*.c --include=*.h --exclude-dir={os_stub/mbedtlslib/mbedtls,os_stub/openssllib/openssl,unit_test/cmockalib/cmocka}];
+          if grep -rn "	" * --include=*.c --include=*.h --include=*.md;
           then exit 1
           fi
 

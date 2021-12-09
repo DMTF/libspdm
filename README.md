@@ -81,9 +81,9 @@
 
 1) Compiler (Choose one)
 
-	a) [Visual Studio 2019](https://visualstudio.microsoft.com/) 
-	b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
-	c) [LLVM](https://llvm.org/) (LLVM9)
+    a) [Visual Studio 2019](https://visualstudio.microsoft.com/) 
+    b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
+    c) [LLVM](https://llvm.org/) (LLVM9)
 Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
 
 2) [cmake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
@@ -92,9 +92,9 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
 
 1) Compiler (Choose one)
 
-	a) [GCC](https://gcc.gnu.org/) (above GCC5)
-	b) [LLVM](https://llvm.org/) (LLVM9) 
-		Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
+    a) [GCC](https://gcc.gnu.org/) (above GCC5)
+    b) [LLVM](https://llvm.org/) (LLVM9) 
+Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
 
 2) [cmake](https://cmake.org/).
 
