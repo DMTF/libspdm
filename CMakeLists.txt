@@ -555,9 +555,11 @@ endif()
     ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
     ADD_SUBDIRECTORY(unit_test/cmockalib)
 
+    if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
     ADD_SUBDIRECTORY(unit_test/test_spdm_requester)
     ADD_SUBDIRECTORY(unit_test/test_spdm_responder)
     ADD_SUBDIRECTORY(unit_test/test_crypt)
+    endif()
 
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_get_version)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_version)
@@ -601,7 +603,10 @@ endif()
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
     ADD_SUBDIRECTORY(unit_test/test_size/intrinsiclib)
     ADD_SUBDIRECTORY(unit_test/test_size/malloclib_null)
+
+    if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
     ADD_SUBDIRECTORY(unit_test/test_spdm_common)
+    endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(ARCH STREQUAL "x64")
