@@ -237,13 +237,13 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 3) fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
-   Ensure LLVM binary in in PATH environment variable.
+   Ensure LLVM binary in PATH environment variable.
    ```
    export CLANG_PATH=<LLVM_PATH>/bin
    export ASAN_SYMBOLIZER_PATH=$CLANG_PATH/llvm-symbolizer
    ```
 
-   Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`.
+   Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unite test doesn't build when DTOOLCHAIN=LIBFUZZER).
 
    Run cases:
    ```
