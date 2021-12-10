@@ -129,15 +129,17 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;
 
+    if(*response_size != sizeof(spdm_error_response_t) +
+           sizeof(spdm_error_data_response_not_ready_t)) {
+        return RETURN_DEVICE_ERROR;
+    }
+
     spdm_response = response;
     extend_error_data =
         (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
     ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
     ASSERT(spdm_response->header.param1 ==
            SPDM_ERROR_CODE_RESPONSE_NOT_READY);
-    ASSERT(*response_size ==
-           sizeof(spdm_error_response_t) +
-               sizeof(spdm_error_data_response_not_ready_t));
     ASSERT(extend_error_data->request_code == original_request_code);
 
     spdm_context->error_data.rd_exponent = extend_error_data->rd_exponent;
