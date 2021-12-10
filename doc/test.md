@@ -243,7 +243,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    export ASAN_SYMBOLIZER_PATH=$CLANG_PATH/llvm-symbolizer
    ```
 
-   Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unite test doesn't build when DTOOLCHAIN=LIBFUZZER).
+   Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unit test doesn't build when DTOOLCHAIN=LIBFUZZER).
 
    Run cases:
    ```
