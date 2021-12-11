@@ -45,20 +45,22 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 
     spdm_context = context;
     spdm_request = request;
-
-    spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_NOT_STARTED);
+    
+    if (request_size != sizeof(spdm_get_version_request_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+    }    
 
     if (spdm_request->header.spdm_version != SPDM_MESSAGE_VERSION_10) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
     }
-    if (request_size != sizeof(spdm_get_version_request_t)) {
-        return libspdm_generate_error_response(spdm_context,
-                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                         response_size, response);
-    }
+
+    spdm_set_connection_state(spdm_context,
+                  SPDM_CONNECTION_STATE_NOT_STARTED);    
+    
     if ((spdm_context->response_state == SPDM_RESPONSE_STATE_NEED_RESYNC) ||
         (spdm_context->response_state ==
          SPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
