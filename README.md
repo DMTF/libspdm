@@ -81,8 +81,10 @@
 
 1) Compiler (Choose one)
 
-    a) [Visual Studio 2019](https://visualstudio.microsoft.com/) 
+    a) [Visual Studio 2019](https://visualstudio.microsoft.com/)
+
     b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
+
     c) [LLVM](https://llvm.org/) (LLVM9)
 Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
 
@@ -93,6 +95,7 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
 1) Compiler (Choose one)
 
     a) [GCC](https://gcc.gnu.org/) (above GCC5)
+
     b) [LLVM](https://llvm.org/) (above LLVM10), install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`. Use `llvm-ar -version` and `clang -v` to confirm the LLVM version. If LLVM  installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
 2) [cmake](https://cmake.org/).
@@ -119,7 +122,8 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
 
 ### Windows Builds
    For ia32 builds, use a `x86 Native Tools Command Prompt for Visual Studio...` command prompt.
-   For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt. 
+
+   For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt.
 
    General build steps: (Note the `..` at the end of the cmake command). 
    ```
@@ -140,8 +144,9 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
    ```
 
 ### Linux Builds
-    If ia32 builds on 64 bit Linux machine, need install `sudo apt-get install gcc-multilib`.
-General build steps: (Note the `..` at the end of the cmake command). 
+   If ia32 builds on 64 bit Linux machine, need install `sudo apt-get install gcc-multilib`.
+
+   General build steps: (Note the `..` at the end of the cmake command).
   
    ```
    cd libspdm
@@ -184,7 +189,7 @@ Example cmake commands: (Note the `..` at the end of the cmake command).
 ### Run [spdm_emu](https://github.com/DMTF/spdm-emu)
 
    The spdm_emu output is at spdm_emu/build/bin.
-   Open one command prompt at output dir to run `spdm_responder_emu` and another command prompt to run `spdm_requester_emu`.
+   Open one command prompt at output dir to run `spdm_responder_emu`. Then open another command prompt to run `spdm_requester_emu`.
 
    Please refer to [spdm_emu](https://github.com/DMTF/spdm-emu/blob/main/doc/spdm_emu.md) for detail.
 
