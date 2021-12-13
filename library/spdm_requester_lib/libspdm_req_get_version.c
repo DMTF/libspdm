@@ -110,7 +110,7 @@ boolean spdm_negotiate_connection_version(IN OUT void *context, IN spdm_version_
         req_version = spdm_get_version_from_version_number(req_ver_set[req_index]);
         res_index = 0;
         res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
-        while (res_index < res_ver_num && res_version > req_version) {
+        while (res_index < res_ver_num - 1 && res_version > req_version) {
             res_index++;
             res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
         }
