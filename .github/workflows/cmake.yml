@@ -28,7 +28,7 @@ jobs:
           then exit 1
           fi
 
-  mbedtls_build:
+  gcc_mbedtls_build:
     runs-on: ubuntu-latest
 
     steps:
@@ -54,7 +54,7 @@ jobs:
           cd build/bin
           ./test_spdm_responder
 
-  openssl_build:
+  gcc_openssl_build:
     runs-on: ubuntu-latest
 
     steps:
@@ -79,3 +79,33 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_responder
+
+  VS2019_mbedtls_build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+        #ilammy/msvc-dev-cmd@v1 is GitHub Action for configuring Developer Command Prompt for Microsoft Visual Studio on Windows.
+        #This sets up the environment for compiling C/C++ code from command line.
+      - name: Add msbuild to PATH
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+          nmake  copy_sample_key
+          nmake
+      - name: Test Requester
+        run: |
+          cd build/bin
+          ./test_spdm_requester.exe
+      - name: Test Responder
+        run: |
+          cd build/bin
+          ./test_spdm_responder.exe
