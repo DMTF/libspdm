@@ -85,9 +85,7 @@
 
     b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
 
-    c) [LLVM](https://llvm.org/) (LLVM9)
-Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
-
+    c) [LLVM](https://llvm.org/) (LLVM13)Download [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Add LLVM in PATH environment according to installation instruction. (LLVM13 is known to work. Other versions are not validated.)
 2) [cmake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
 ### Build Tools for Linux
@@ -142,6 +140,7 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
    cmake -G"NMake Makefiles" -DARCH=ia32 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
    
    ```
+   Note ia32 build is not supported for CLANG build on windows.
 
 ### Linux Builds
    If ia32 builds on 64 bit Linux machine, need install `sudo apt-get install gcc-multilib`.
