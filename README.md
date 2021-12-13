@@ -93,8 +93,7 @@ Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensu
 1) Compiler (Choose one)
 
     a) [GCC](https://gcc.gnu.org/) (above GCC5)
-    b) [LLVM](https://llvm.org/) (LLVM9) 
-Download and install [LLVM9](http://releases.llvm.org/download.html#9.0.0). Ensure LLVM9 executable directory is in PATH environment variable.
+    b) [LLVM](https://llvm.org/) (above LLVM10), install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`. Use `llvm-ar -version` and `clang -v` to confirm the LLVM version. If LLVM  installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
 2) [cmake](https://cmake.org/).
 
