@@ -111,8 +111,9 @@
 // if we are compiling as 64-bit. This 32-bit definition then does not agree with
 // the 64-bit definition defined in libspdm and generates compile errors.
 //
-// To workaround this issue, I created a _UNDEF_WINDOWS define that is only defined
-// for compilation via tha makefile of the openssl library portion of libspdm.
+// To workaround this issue, I created a LIBSPDM_OPENSSL_STDINT_WORKAROUND define
+// that is only defined for compilation via tha makefile of the openssl library
+// portion of libspdm.
 //
 // This will lead to _WIN32 and _WIN64 to be NOT defined when reaching the openssl
 // portions of a compilation unit (header files + c file), thus meeting the
