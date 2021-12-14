@@ -159,9 +159,15 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
         }
         return status;
     }
-    if (spdm_context->last_spdm_request_size <
-        sizeof(spdm_message_header_t)) {
-        return RETURN_UNSUPPORTED;
+
+    if (!(*is_app_message)) {
+        //
+        // check minimal SPDM message size
+        //
+        if (spdm_context->last_spdm_request_size <
+            sizeof(spdm_message_header_t)) {
+            return RETURN_UNSUPPORTED;
+        }
     }
 
     *session_id = message_session_id;
