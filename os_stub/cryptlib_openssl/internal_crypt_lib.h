@@ -11,9 +11,6 @@
 #ifndef __INTERNAL_CRYPT_LIB_H__
 #define __INTERNAL_CRYPT_LIB_H__
 
-#undef _WIN32
-#undef _WIN64
-
 #include <base.h>
 #include <library/memlib.h>
 #include <library/malloclib.h>
