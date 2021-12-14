@@ -140,7 +140,9 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
     ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
     ASSERT(spdm_response->header.param1 ==
            SPDM_ERROR_CODE_RESPONSE_NOT_READY);
-    ASSERT(extend_error_data->request_code == original_request_code);
+    if (extend_error_data->request_code != original_request_code) {
+        return RETURN_DEVICE_ERROR;
+    }
 
     spdm_context->error_data.rd_exponent = extend_error_data->rd_exponent;
     spdm_context->error_data.request_code = extend_error_data->request_code;
