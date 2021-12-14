@@ -95,7 +95,35 @@
 #endif
 
 #ifndef LIBSPDM_STDINT_ALT
+
 #include <stdint.h>
+
+// LIBSPDM_OPENSSL_STDINT_WORKAROUND
+//
+// This is a workaround for OpenSLL compilation problems when used with <stdint.h>
+// on Windows platforms built with Visual Studio. Including <stdint.h> pulls in
+// <vcruntime.h>, which causes the type size_t to be defined. The size_t type
+// depends on if _WIN32 or _WIN64 is defined. The default if neither is defined
+// is the 32-bit version of size_t.
+//
+// Our Openssl compilation requires _WIN32 and _WIN64 to NOT be defined.
+// This will force the <vcruntime.h> to use the wrong 32-bit definition of size_t
+// if we are compiling as 64-bit. This 32-bit definition then does not agree with
+// the 64-bit definition defined in libspdm and generates compile errors.
+//
+// To workaround this issue, I created a _UNDEF_WINDOWS define that is only defined
+// for compilation via tha makefile of the openssl library portion of libspdm.
+//
+// This will lead to _WIN32 and _WIN64 to be NOT defined when reaching the openssl
+// portions of a compilation unit (header files + c file), thus meeting the
+// no Win32/Win64 requirement for openssl, but will still be defined when compiling
+// the <vcruntime.h> file in the compilation unit (and getting the right size_t).
+
+#ifdef LIBSPDM_OPENSSL_STDINT_WORKAROUND
+#undef _WIN32
+#undef _WIN64
+#endif
+
 #else
 #include LIBSPDM_STDINT_ALT
 #endif
