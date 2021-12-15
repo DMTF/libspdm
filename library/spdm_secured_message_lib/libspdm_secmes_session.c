@@ -306,29 +306,38 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
                hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    spdm_generate_finished_key(
+    status = spdm_generate_finished_key(
         secured_message_context,
         secured_message_context->handshake_secret
             .request_handshake_secret,
         secured_message_context->handshake_secret.request_finished_key);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
 
-    spdm_generate_finished_key(
+    status = spdm_generate_finished_key(
         secured_message_context,
         secured_message_context->handshake_secret
             .response_handshake_secret,
         secured_message_context->handshake_secret.response_finished_key);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
 
-    spdm_generate_aead_key_and_iv(secured_message_context,
+    status = spdm_generate_aead_key_and_iv(secured_message_context,
                       secured_message_context->handshake_secret
                           .request_handshake_secret,
                       secured_message_context->handshake_secret
                           .request_handshake_encryption_key,
                       secured_message_context->handshake_secret
                           .request_handshake_salt);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
     secured_message_context->handshake_secret
         .request_handshake_sequence_number = 0;
 
-    spdm_generate_aead_key_and_iv(
+    status = spdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->handshake_secret
             .response_handshake_secret,
@@ -336,12 +345,15 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
             .response_handshake_encryption_key,
         secured_message_context->handshake_secret
             .response_handshake_salt);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
     secured_message_context->handshake_secret
         .response_handshake_sequence_number = 0;
 
     zero_mem(secured_message_context->master_secret.dhe_secret,
         MAX_DHE_KEY_SIZE);
-    
+   
     secured_message_context->finished_key_ready = TRUE;
     return RETURN_SUCCESS;
 }
@@ -513,21 +525,27 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
         hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    spdm_generate_aead_key_and_iv(
+    status = spdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->application_secret.request_data_secret,
         secured_message_context->application_secret
             .request_data_encryption_key,
         secured_message_context->application_secret.request_data_salt);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
     secured_message_context->application_secret
         .request_data_sequence_number = 0;
 
-    spdm_generate_aead_key_and_iv(
+    status = spdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->application_secret.response_data_secret,
         secured_message_context->application_secret
             .response_data_encryption_key,
         secured_message_context->application_secret.response_data_salt);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
     secured_message_context->application_secret
         .response_data_sequence_number = 0;
 
@@ -562,6 +580,9 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                  NULL, (uint16_t)hash_size, hash_size, bin_str9,
                  &bin_str9_size);
     ASSERT_RETURN_ERROR(status);
+    if (RETURN_ERROR(status)) {
+        return status;
+    }
     DEBUG((DEBUG_INFO, "bin_str9 (0x%x):\n", bin_str9_size));
     internal_dump_hex(bin_str9, bin_str9_size);
 
@@ -595,6 +616,9 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                 .request_data_secret,
             hash_size);
         ASSERT(ret_val);
+        if (!ret_val) {
+            return RETURN_DEVICE_ERROR;
+        }
         DEBUG((DEBUG_INFO, "RequestDataSecretUpdate (0x%x) - ",
                hash_size));
         internal_dump_data(secured_message_context->application_secret
@@ -602,7 +626,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                    hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
-        spdm_generate_aead_key_and_iv(
+        status = spdm_generate_aead_key_and_iv(
             secured_message_context,
             secured_message_context->application_secret
                 .request_data_secret,
@@ -610,6 +634,9 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                 .request_data_encryption_key,
             secured_message_context->application_secret
                 .request_data_salt);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
         secured_message_context->application_secret
             .request_data_sequence_number = 0;
 
@@ -646,6 +673,9 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                 .response_data_secret,
             hash_size);
         ASSERT(ret_val);
+        if (!ret_val) {
+            return RETURN_DEVICE_ERROR;
+        }
         DEBUG((DEBUG_INFO, "ResponseDataSecretUpdate (0x%x) - ",
                hash_size));
         internal_dump_data(secured_message_context->application_secret
@@ -653,7 +683,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                    hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
-        spdm_generate_aead_key_and_iv(
+        status = spdm_generate_aead_key_and_iv(
             secured_message_context,
             secured_message_context->application_secret
                 .response_data_secret,
@@ -661,6 +691,9 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
                 .response_data_encryption_key,
             secured_message_context->application_secret
                 .response_data_salt);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
         secured_message_context->application_secret
             .response_data_sequence_number = 0;
 
@@ -857,7 +890,7 @@ boolean spdm_hmac_init_with_request_finished_key(
   @retval TRUE   HMAC context copy succeeded.
   @retval FALSE  HMAC context copy failed.
 **/
-boolean spdm_hmac_duplicate_with_request_finished_key(
+boolean  spdm_hmac_duplicate_with_request_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx)
 {
@@ -880,7 +913,7 @@ boolean spdm_hmac_duplicate_with_request_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean spdm_hmac_update_with_request_finished_key(
+boolean  spdm_hmac_update_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size)
@@ -903,7 +936,7 @@ boolean spdm_hmac_update_with_request_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean spdm_hmac_final_with_request_finished_key(
+boolean  spdm_hmac_final_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
@@ -982,7 +1015,7 @@ void spdm_hmac_free_with_response_finished_key(
   @retval TRUE   The key is set successfully.
   @retval FALSE  The key is set unsuccessfully.
 **/
-boolean spdm_hmac_init_with_response_finished_key(
+boolean  spdm_hmac_init_with_response_finished_key(
     IN void *spdm_secured_message_context, OUT void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
@@ -1004,7 +1037,7 @@ boolean spdm_hmac_init_with_response_finished_key(
   @retval TRUE   HMAC context copy succeeded.
   @retval FALSE  HMAC context copy failed.
 **/
-boolean spdm_hmac_duplicate_with_response_finished_key(
+boolean  spdm_hmac_duplicate_with_response_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx)
 {
@@ -1027,7 +1060,7 @@ boolean spdm_hmac_duplicate_with_response_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean spdm_hmac_update_with_response_finished_key(
+boolean  spdm_hmac_update_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size)
@@ -1050,7 +1083,7 @@ boolean spdm_hmac_update_with_response_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean spdm_hmac_final_with_response_finished_key(
+boolean  spdm_hmac_final_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
@@ -1073,7 +1106,7 @@ boolean spdm_hmac_final_with_response_finished_key(
   @retval TRUE   HMAC computation succeeded.
   @retval FALSE  HMAC computation failed.
 **/
-boolean spdm_hmac_all_with_response_finished_key(
+boolean  spdm_hmac_all_with_response_finished_key(
     IN void *spdm_secured_message_context, IN const void *data,
     IN uintn data_size, OUT uint8_t *hmac_value)
 {
