@@ -890,7 +890,7 @@ boolean spdm_hmac_init_with_request_finished_key(
   @retval TRUE   HMAC context copy succeeded.
   @retval FALSE  HMAC context copy failed.
 **/
-boolean  spdm_hmac_duplicate_with_request_finished_key(
+boolean spdm_hmac_duplicate_with_request_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx)
 {
@@ -913,7 +913,7 @@ boolean  spdm_hmac_duplicate_with_request_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean  spdm_hmac_update_with_request_finished_key(
+boolean spdm_hmac_update_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size)
@@ -936,7 +936,7 @@ boolean  spdm_hmac_update_with_request_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean  spdm_hmac_final_with_request_finished_key(
+boolean spdm_hmac_final_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
@@ -1015,7 +1015,7 @@ void spdm_hmac_free_with_response_finished_key(
   @retval TRUE   The key is set successfully.
   @retval FALSE  The key is set unsuccessfully.
 **/
-boolean  spdm_hmac_init_with_response_finished_key(
+boolean spdm_hmac_init_with_response_finished_key(
     IN void *spdm_secured_message_context, OUT void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
@@ -1037,7 +1037,7 @@ boolean  spdm_hmac_init_with_response_finished_key(
   @retval TRUE   HMAC context copy succeeded.
   @retval FALSE  HMAC context copy failed.
 **/
-boolean  spdm_hmac_duplicate_with_response_finished_key(
+boolean spdm_hmac_duplicate_with_response_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx)
 {
@@ -1060,7 +1060,7 @@ boolean  spdm_hmac_duplicate_with_response_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean  spdm_hmac_update_with_response_finished_key(
+boolean spdm_hmac_update_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size)
@@ -1083,7 +1083,7 @@ boolean  spdm_hmac_update_with_response_finished_key(
   @retval TRUE   HMAC data digest succeeded.
   @retval FALSE  HMAC data digest failed.
 **/
-boolean  spdm_hmac_final_with_response_finished_key(
+boolean spdm_hmac_final_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
 {
@@ -1106,7 +1106,7 @@ boolean  spdm_hmac_final_with_response_finished_key(
   @retval TRUE   HMAC computation succeeded.
   @retval FALSE  HMAC computation failed.
 **/
-boolean  spdm_hmac_all_with_response_finished_key(
+boolean spdm_hmac_all_with_response_finished_key(
     IN void *spdm_secured_message_context, IN const void *data,
     IN uintn data_size, OUT uint8_t *hmac_value)
 {
