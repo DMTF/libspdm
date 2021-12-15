@@ -85,7 +85,11 @@
 
     b) [Visual Studio 2015](https://visualstudio.microsoft.com/) 
 
-    c) [LLVM](https://llvm.org/) (LLVM13)Download [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Add LLVM in PATH environment according to installation instruction. (LLVM13 is known to work. Other versions are not validated.)
+    c) [LLVM](https://llvm.org/) (LLVM13) Download: [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0).
+    - Add LLVM in PATH environment according to installation instruction.
+    - Change LLVM install path to C:/LLVM.
+    - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
+    - Because the libfuzzer lib path is hard code in CMakeLists, other versions are fail for libfuzzer build.
 2) [cmake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
 ### Build Tools for Linux

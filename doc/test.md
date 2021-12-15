@@ -238,10 +238,6 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 3) fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
    Ensure LLVM binary in PATH environment variable.
-   ```
-   export CLANG_PATH=<LLVM_PATH>/bin
-   export ASAN_SYMBOLIZER_PATH=$CLANG_PATH/llvm-symbolizer
-   ```
 
    Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unit test doesn't build when DTOOLCHAIN=LIBFUZZER).
 
@@ -253,13 +249,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 4) fuzzing in Windows with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
-   Note: Please install 64bit exe for x64 build (IA32 build is not supported with LLVM9)
+   Note: IA32 build is not supported with LLVM in Windows.
 
    Ensure LLVM binary in in PATH environment variable.
-   ```
-   set LLVM_PATH=<LLVM_PATH>
-   set PATH=%PATH%;%LLVM_PATH%\bin
-   ```
 
    Build cases with LIBFUZZER toolchain `-DARCH=x64 -DTOOLCHAIN=LIBFUZZER`.
 
