@@ -1112,7 +1112,7 @@ return_status spdm_requester_finish_test_receive_message(
             m_use_measurement_hash_algo;
         hash_size = spdm_get_hash_size(m_use_hash_algo);
         hmac_size = spdm_get_hash_size(m_use_hash_algo);
-        temp_buf_size = sizeof(spdm_finish_response_t) + 
+        temp_buf_size = sizeof(spdm_finish_response_t) +
                   2*hmac_size; // 2x HMAC size
         spdm_response = (void *)temp_buf;
 
@@ -1194,7 +1194,7 @@ return_status spdm_requester_finish_test_receive_message(
             m_use_measurement_hash_algo;
         hash_size = spdm_get_hash_size(m_use_hash_algo);
         hmac_size = spdm_get_hash_size(m_use_hash_algo);
-        temp_buf_size = sizeof(spdm_finish_response_t) + 
+        temp_buf_size = sizeof(spdm_finish_response_t) +
                   hmac_size/2;// half HMAC size
         spdm_response = (void *)temp_buf;
 
@@ -1270,7 +1270,7 @@ void test_spdm_requester_finish_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1324,9 +1324,9 @@ void test_spdm_requester_finish_case1(void **state)
 }
 
 /**
-  Test 2: receiving a correct FINISH_RSP message with only MAC (no 
+  Test 2: receiving a correct FINISH_RSP message with only MAC (no
   mutual authentication) and 'handshake in the clear'.
-  Expected behavior: client returns a Status of RETURN_SUCCESS and 
+  Expected behavior: client returns a Status of RETURN_SUCCESS and
   session is established.
 **/
 void test_spdm_requester_finish_case2(void **state)
@@ -1346,7 +1346,7 @@ void test_spdm_requester_finish_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1425,7 +1425,7 @@ void test_spdm_requester_finish_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1500,7 +1500,7 @@ void test_spdm_requester_finish_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1575,7 +1575,7 @@ void test_spdm_requester_finish_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1651,7 +1651,7 @@ void test_spdm_requester_finish_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1711,7 +1711,7 @@ void test_spdm_requester_finish_case6(void **state)
 /**
   Test 7: the requester is setup correctly (see Test 2), but receives an ERROR
   message indicating the RequestResynch status of the responder.
-  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the 
+  Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
   communication is reset to expect a new GET_VERSION message.
 **/
 void test_spdm_requester_finish_case7(void **state)
@@ -1731,7 +1731,7 @@ void test_spdm_requester_finish_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1782,7 +1782,7 @@ void test_spdm_requester_finish_case7(void **state)
                       req_slot_id_param);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
     free(data);
 }
 
@@ -1808,7 +1808,7 @@ void test_spdm_requester_finish_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1884,7 +1884,7 @@ void test_spdm_requester_finish_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1974,7 +1974,7 @@ void test_spdm_requester_finish_case10(void **state) {
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo; 
+  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
@@ -1986,7 +1986,7 @@ void test_spdm_requester_finish_case10(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     libspdm_reset_message_a(spdm_context);
 
     session_info = &spdm_context->session_info[0];
@@ -1996,7 +1996,7 @@ void test_spdm_requester_finish_case10(void **state) {
     spdm_secured_message_set_response_finished_key (session_info->secured_message_context, m_dummy_buffer, hash_size);
     spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_HANDSHAKING);
 
-    status = spdm_send_receive_finish (spdm_context, session_id, req_slot_id_param); 
+    status = spdm_send_receive_finish (spdm_context, session_id, req_slot_id_param);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
@@ -2032,7 +2032,7 @@ void test_spdm_requester_finish_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xb;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2133,7 +2133,7 @@ void test_spdm_requester_finish_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
@@ -2190,7 +2190,7 @@ void test_spdm_requester_finish_case12(void **state)
 /**
   Test 13: requester is not setup correctly to accept key exchange and
   finish at this point (at least NEGOTIATE_ALGORITHMS is required, if
-  the public key was provisioned before the key exchange). The 
+  the public key was provisioned before the key exchange). The
   responder would attempt to return a correct FINISH_RSP message.
   Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
 **/
@@ -2211,7 +2211,7 @@ void test_spdm_requester_finish_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2286,7 +2286,7 @@ void test_spdm_requester_finish_case14(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2341,7 +2341,7 @@ void test_spdm_requester_finish_case14(void **state)
 
 /**
   Test 15: requester is not setup correctly by not initializing a
-  session during KEY_EXCHANGE. The responder would attempt to 
+  session during KEY_EXCHANGE. The responder would attempt to
   return a correct FINISH_RSP message.
   Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
 **/
@@ -2362,7 +2362,7 @@ void test_spdm_requester_finish_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2416,9 +2416,9 @@ void test_spdm_requester_finish_case15(void **state)
 }
 
 /**
-  Test 16: receiving a correct FINISH_RSP message with a correct MAC, 
+  Test 16: receiving a correct FINISH_RSP message with a correct MAC,
   mutual authentication and 'handshake in the clear'.
-  Expected behavior: client returns a Status of RETURN_SUCCESS and 
+  Expected behavior: client returns a Status of RETURN_SUCCESS and
   session is established.
 **/
 void test_spdm_requester_finish_case16(void **state)
@@ -2438,7 +2438,7 @@ void test_spdm_requester_finish_case16(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2508,7 +2508,7 @@ void test_spdm_requester_finish_case16(void **state)
 }
 
 /**
-  Test 17: receiving a FINISH_RSP message with an incorrect MAC 
+  Test 17: receiving a FINISH_RSP message with an incorrect MAC
   (all-zero), mutual authentication, and 'handshake in the clear'.
   Expected behavior: client returns a Status of RETURN_SECURITY_VIOLATION.
 **/
@@ -2529,7 +2529,7 @@ void test_spdm_requester_finish_case17(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2616,7 +2616,7 @@ void test_spdm_requester_finish_case18(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2683,7 +2683,7 @@ void test_spdm_requester_finish_case18(void **state)
 
 /**
   Test 19: receiving a FINISH_RSP message with an incorrect MAC size (a
-  correct MAC repeated twice), mutual authentication, and 'handshake in 
+  correct MAC repeated twice), mutual authentication, and 'handshake in
   the clear'.
   Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
 **/
@@ -2704,7 +2704,7 @@ void test_spdm_requester_finish_case19(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2771,7 +2771,7 @@ void test_spdm_requester_finish_case19(void **state)
 
 /**
   Test 20: receiving a FINISH_RSP message an incorrect MAC size (only the
-  correct first half of the MAC), mutual authentication, and 'handshake 
+  correct first half of the MAC), mutual authentication, and 'handshake
   in the clear'.
   Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
 **/
@@ -2792,7 +2792,7 @@ void test_spdm_requester_finish_case20(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=

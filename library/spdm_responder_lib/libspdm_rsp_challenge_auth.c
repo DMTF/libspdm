@@ -49,7 +49,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
@@ -63,7 +63,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
             SPDM_CHALLENGE, response_size, response);
     }
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                          0, response_size, response);
@@ -242,7 +242,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 
     if (auth_attribute.basic_mut_auth_req == 0) {
         spdm_set_connection_state(spdm_context,
-                      SPDM_CONNECTION_STATE_AUTHENTICATED);
+                      LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
     }
 
     return RETURN_SUCCESS;

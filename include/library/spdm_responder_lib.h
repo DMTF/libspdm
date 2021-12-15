@@ -220,7 +220,7 @@ return_status libspdm_register_session_state_callback_func(
   @param  connection_state              Indicate the SPDM connection state.
 **/
 typedef void (*libspdm_connection_state_callback_func)(
-    IN void *spdm_context, IN spdm_connection_state_t connection_state);
+    IN void *spdm_context, IN libspdm_connection_state_t connection_state);
 
 /**
   Register an SPDM connection state callback function.

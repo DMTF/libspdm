@@ -17,7 +17,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
     uint8_t context[DEFAULT_CONTEXT_LENGTH];
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
 uintn get_max_buffer_size(void)
@@ -43,7 +43,7 @@ void test_spdm_responder_psk_exchange(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |=

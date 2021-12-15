@@ -58,7 +58,7 @@ void test_spdm_requester_get_certificate(void **State)
    spdm_test_context = *State;
    spdm_context = spdm_test_context->spdm_context;
    spdm_context->connection_info.connection_state =
-      SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+      LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
    spdm_context->connection_info.capability.flags |=
       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
    read_responder_public_certificate_chain(m_use_hash_algo,

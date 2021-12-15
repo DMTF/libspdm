@@ -18,7 +18,7 @@ typedef struct {
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
     uint8_t exchange_data[MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
 #pragma pack()
@@ -54,7 +54,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -133,7 +133,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -210,9 +210,9 @@ void test_spdm_responder_key_exchange_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -268,7 +268,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
     free(data1);
 }
 
@@ -290,9 +290,9 @@ void test_spdm_responder_key_exchange_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -349,7 +349,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     free(data1);
 }
 
@@ -372,9 +372,9 @@ void test_spdm_responder_key_exchange_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -435,7 +435,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_KEY_EXCHANGE);
     free(data1);
 }
@@ -458,9 +458,9 @@ void test_spdm_responder_key_exchange_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -538,7 +538,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=

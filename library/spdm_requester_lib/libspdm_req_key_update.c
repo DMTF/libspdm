@@ -54,7 +54,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     }
 
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
     session_info =
@@ -121,7 +121,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         status = spdm_receive_spdm_response(
             spdm_context, &session_id, &spdm_response_size, &spdm_response);
 
-        if (RETURN_ERROR(status) || 
+        if (RETURN_ERROR(status) ||
             spdm_response_size < sizeof(spdm_message_header_t)) {
             if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
                 DEBUG((DEBUG_INFO,
@@ -160,7 +160,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             }
         }
 
-        if ((spdm_response.header.request_response_code != 
+        if ((spdm_response.header.request_response_code !=
             SPDM_KEY_UPDATE_ACK) ||
             (spdm_response.header.param1 != spdm_request.header.param1) ||
             (spdm_response.header.param2 != spdm_request.header.param2)) {
@@ -236,7 +236,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     status = spdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
 
-    if (RETURN_ERROR(status) || 
+    if (RETURN_ERROR(status) ||
         spdm_response_size < sizeof(spdm_message_header_t)) {
         DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
         return RETURN_DEVICE_ERROR;
@@ -254,7 +254,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         }
     }
 
-    if ((spdm_response.header.request_response_code != 
+    if ((spdm_response.header.request_response_code !=
         SPDM_KEY_UPDATE_ACK) ||
         (spdm_response.header.param1 != spdm_request.header.param1) ||
         (spdm_response.header.param2 != spdm_request.header.param2)) {

@@ -54,7 +54,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
@@ -71,7 +71,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             SPDM_PSK_EXCHANGE, response_size, response);
     }
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                          0, response_size, response);
@@ -124,7 +124,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         if (spdm_context->encap_context.error_state !=
-            SPDM_STATUS_SUCCESS) {
+            LIBSPDM_STATUS_SUCCESS) {
             DEBUG((DEBUG_INFO,
                    "spdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
             return libspdm_generate_error_response(
@@ -278,7 +278,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
                          response_size, response);
     }
-    
+
     status = libspdm_append_message_k(spdm_context, session_info, FALSE, spdm_response,
                        (uintn)ptr - (uintn)spdm_response);
     if (RETURN_ERROR(status)) {

@@ -52,7 +52,7 @@ void test_spdm_requester_get_measurement(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,

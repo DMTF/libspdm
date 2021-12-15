@@ -18,7 +18,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
     uint8_t context[DEFAULT_CONTEXT_LENGTH];
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
 typedef struct {
@@ -29,7 +29,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t measurement_summary_hash[MAX_HASH_SIZE];
     uint8_t context[DEFAULT_CONTEXT_LENGTH];
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_psk_exchange_response_max_t;
 
@@ -99,7 +99,7 @@ return_status try_spdm_send_receive_psk_exchange(
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                 SPDM_PSK_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -131,7 +131,7 @@ return_status try_spdm_send_receive_psk_exchange(
         }
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_request.header.request_response_code = SPDM_PSK_EXCHANGE;
@@ -330,7 +330,7 @@ return_status try_spdm_send_receive_psk_exchange(
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         spdm_context->error_state =
-            SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
+            LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
         return RETURN_SECURITY_VIOLATION;
     }
 
@@ -348,7 +348,7 @@ return_status try_spdm_send_receive_psk_exchange(
     spdm_secured_message_set_session_state(
         session_info->secured_message_context,
         SPDM_SESSION_STATE_HANDSHAKING);
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,

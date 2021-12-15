@@ -480,7 +480,7 @@ void test_spdm_requester_end_session_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -544,7 +544,7 @@ void test_spdm_requester_end_session_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -635,7 +635,7 @@ void test_spdm_requester_end_session_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -722,7 +722,7 @@ void test_spdm_requester_end_session_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -809,7 +809,7 @@ void test_spdm_requester_end_session_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -896,7 +896,7 @@ void test_spdm_requester_end_session_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -987,7 +987,7 @@ void test_spdm_requester_end_session_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1056,7 +1056,7 @@ void test_spdm_requester_end_session_case7(void **state)
     status = spdm_send_receive_end_session(spdm_context, session_id, 0);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
     free(data);
 }
 
@@ -1076,7 +1076,7 @@ void test_spdm_requester_end_session_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1163,7 +1163,7 @@ void test_spdm_requester_end_session_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1262,7 +1262,7 @@ void test_spdm_requester_end_session_case10(void **state) {
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo; 
+  spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
   copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
@@ -1273,20 +1273,20 @@ void test_spdm_requester_end_session_case10(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     libspdm_reset_message_a(spdm_context);
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init (spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_ESTABLISHED);  
+    spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_ESTABLISHED);
     set_mem (m_dummy_key_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_encryption_key (session_info->secured_message_context, m_dummy_key_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size);
     set_mem (m_dummy_salt_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_salt (session_info->secured_message_context, m_dummy_salt_buffer, ((spdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size);
     ((spdm_secured_message_context_t*)(session_info->secured_message_context))->application_secret.response_data_sequence_number = 0;
-    
-    status = spdm_send_receive_end_session (spdm_context, session_id, 0); 
+
+    status = spdm_send_receive_end_session (spdm_context, session_id, 0);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
@@ -1321,7 +1321,7 @@ void test_spdm_requester_end_session_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=

@@ -34,7 +34,7 @@ void test_spdm_responder_heartbeat(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
     spdm_context->local_context.capability.flags |=

@@ -11,7 +11,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 
@@ -45,12 +45,12 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 
     spdm_context = context;
     spdm_request = request;
-    
+
     if (request_size != sizeof(spdm_get_version_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
-    }    
+    }
 
     if (spdm_request->header.spdm_version != SPDM_MESSAGE_VERSION_10) {
         return libspdm_generate_error_response(spdm_context,
@@ -59,15 +59,15 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
     }
 
     spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_NOT_STARTED);    
-    
-    if ((spdm_context->response_state == SPDM_RESPONSE_STATE_NEED_RESYNC) ||
+                  LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+
+    if ((spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) ||
         (spdm_context->response_state ==
-         SPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
+         LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
         // receiving a GET_VERSION resets a need to resynchronization
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
@@ -127,7 +127,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
     }
 
     spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_AFTER_VERSION);
+                  LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 
     return RETURN_SUCCESS;
 }

@@ -120,7 +120,7 @@ return_status spdm_process_encap_response_digest(
     digest_size = spdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     digest_count = 0;
-    for (index = 0; index < MAX_SPDM_SLOT_COUNT; index++) {
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_response->header.param2 & (1 << index)) {
             digest_count++;
         }

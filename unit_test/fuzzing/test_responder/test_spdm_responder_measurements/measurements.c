@@ -23,7 +23,7 @@ void test_spdm_responder_measurements(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =

@@ -89,7 +89,7 @@ boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
         return FALSE;
     }
     ptr += SPDM_NONCE_SIZE;
-    
+
     *(uint16_t *)ptr =
         (uint16_t)spdm_context->local_context.opaque_measurement_rsp_size;
     ptr += sizeof(uint16_t);
@@ -146,7 +146,7 @@ return_status spdm_get_response_measurements(IN void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
@@ -162,7 +162,7 @@ return_status spdm_get_response_measurements(IN void *context,
     }
     if (!spdm_context->last_spdm_request_session_id_valid) {
         if (spdm_context->connection_info.connection_state <
-            SPDM_CONNECTION_STATE_AUTHENTICATED) {
+            LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -171,7 +171,7 @@ return_status spdm_get_response_measurements(IN void *context,
         session_info = NULL;
     } else {
         if (spdm_context->connection_info.connection_state <
-            SPDM_CONNECTION_STATE_NEGOTIATED) {
+            LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,

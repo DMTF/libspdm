@@ -14,7 +14,7 @@
 
 typedef struct {
     uint8_t spdm_version_count;
-    spdm_version_number_t spdm_version[MAX_SPDM_VERSION_COUNT];
+    spdm_version_number_t spdm_version[SPDM_MAX_VERSION_COUNT];
 } spdm_device_version_t;
 
 typedef struct {
@@ -44,8 +44,8 @@ typedef struct {
     //
     // My Certificate
     //
-    void *local_cert_chain_provision[MAX_SPDM_SLOT_COUNT];
-    uintn local_cert_chain_provision_size[MAX_SPDM_SLOT_COUNT];
+    void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
+    uintn local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
     uint8_t slot_count;
     // My provisioned certificate (for slot_id - 0xFF, default 0)
     uint8_t provisioned_slot_id;
@@ -87,7 +87,7 @@ typedef struct {
     //
     // Connection State
     //
-    spdm_connection_state_t connection_state;
+    libspdm_connection_state_t connection_state;
     //
     // Peer device info (negotiated)
     //
@@ -331,7 +331,7 @@ typedef struct {
     //
     // Register for Responder state, be initial to Normal (responder only)
     //
-    spdm_response_state_t response_state;
+    libspdm_response_state_t response_state;
     //
     // Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY
     //

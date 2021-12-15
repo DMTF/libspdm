@@ -22,7 +22,7 @@ spdm_challenge_request_t m_spdm_challenge_request2 = {
 uintn m_spdm_challenge_request2_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
 
 spdm_challenge_request_t m_spdm_challenge_request3 = {
-  { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, MAX_SPDM_SLOT_COUNT,
+  { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, SPDM_MAX_SLOT_COUNT,
     SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
 uintn m_spdm_challenge_request3_size = sizeof(m_spdm_challenge_request3);
@@ -50,7 +50,7 @@ uint8_t m_opaque_challenge_auth_rsp[9] = "openspdm";
 /**
   Test 1: receiving a correct CHALLENGE message from the requester with
   no opaque data, no measurements, and slot number 0.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case1(void **state)
@@ -68,7 +68,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -80,7 +80,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -141,7 +141,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -153,7 +153,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -203,9 +203,9 @@ void test_spdm_responder_challenge_auth_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -217,7 +217,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -244,7 +244,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
     free(data1);
 }
 
@@ -268,9 +268,9 @@ void test_spdm_responder_challenge_auth_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -282,7 +282,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -310,7 +310,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     free(data1);
 }
 
@@ -335,9 +335,9 @@ void test_spdm_responder_challenge_auth_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -349,7 +349,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -381,7 +381,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_CHALLENGE);
     free(data1);
 }
@@ -407,9 +407,9 @@ void test_spdm_responder_challenge_auth_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -421,7 +421,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
         m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -454,7 +454,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
 /**
   Test 7: receiving a correct CHALLENGE from the requester, but the responder does not
   have the challenge capability set.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case7(void **state) {
@@ -470,14 +470,14 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x7;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   // spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -518,14 +518,14 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x8;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -550,7 +550,7 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
 /**
   Test 9: eceiving a correct CHALLENGE message from the requester with
   no opaque data, no measurements, and slot number 1.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case9(void **state) {
@@ -566,14 +566,14 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x9;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -614,14 +614,14 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xA;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -644,9 +644,9 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
 }
 
 /**
-  Test 11: receiving a correct CHALLENGE message from the requester with opaque 
+  Test 11: receiving a correct CHALLENGE message from the requester with opaque
   data as the bytes of the string "openspdm", no measurements, and slot number 0.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case11(void **state) {
@@ -662,14 +662,14 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xB;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -695,7 +695,7 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
 /**
   Test 12: receiving a correct CHALLENGE message from the requester with
   no opaque data, TCB measurement hash, and slot number 0.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case12(void **state) {
@@ -711,7 +711,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xC;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
@@ -719,7 +719,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -744,7 +744,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
 /**
   Test 13: receiving a correct CHALLENGE message from the requester with
   no opaque data, all measurement hashes, and slot number 0.
-  Expected behavior: the responder accepts the request and produces a valid 
+  Expected behavior: the responder accepts the request and produces a valid
   CHALLENGE_AUTH response message.
 **/
 void test_spdm_responder_challenge_auth_case13(void **state) {
@@ -760,7 +760,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xD;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
@@ -768,7 +768,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -810,7 +810,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xE;
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
   // spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //no measurement capability
@@ -818,7 +818,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data1, &data_size1, NULL, NULL);
@@ -852,11 +852,11 @@ int spdm_responder_challenge_auth_test_main(void)
         cmocka_unit_test(test_spdm_responder_challenge_auth_case1),
         // Bad request size
         cmocka_unit_test(test_spdm_responder_challenge_auth_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        // response_state: LIBSPDM_RESPONSE_STATE_BUSY
         cmocka_unit_test(test_spdm_responder_challenge_auth_case3),
-        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
         cmocka_unit_test(test_spdm_responder_challenge_auth_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
         cmocka_unit_test(test_spdm_responder_challenge_auth_case5),
         // connection_state Check
         cmocka_unit_test(test_spdm_responder_challenge_auth_case6),

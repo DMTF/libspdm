@@ -66,11 +66,11 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                             SPDM_GET_CERTIFICATE);
     if ((spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_NEGOTIATED) &&
+         LIBSPDM_CONNECTION_STATE_NEGOTIATED) &&
         (spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
+         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
         (spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
+         LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -78,11 +78,11 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
                 MAX_SPDM_MESSAGE_BUFFER_SIZE);
     length = MIN(length, MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
 
-    if (slot_id >= MAX_SPDM_SLOT_COUNT) {
+    if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return RETURN_INVALID_PARAMETER;
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     do {
         if (spdm_is_version_supported(spdm_context,
@@ -192,7 +192,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             goto done;
         }
         spdm_context->connection_info.connection_state =
-            SPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
+            LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
 
     } while (spdm_response.remainder_length != 0);
 
@@ -203,7 +203,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             trust_anchor, trust_anchor_size);
         if (RETURN_ERROR(status)) {
             spdm_context->error_state =
-                SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+                LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             status = RETURN_SECURITY_VIOLATION;
             goto done;
         }
@@ -214,7 +214,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             trust_anchor, trust_anchor_size);
         if (!result) {
             spdm_context->error_state =
-                SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+                LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             status = RETURN_SECURITY_VIOLATION;
             goto done;
         }
@@ -226,7 +226,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
          get_managed_buffer(&certificate_chain_buffer),
          get_managed_buffer_size(&certificate_chain_buffer));
 
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (cert_chain_size != NULL) {
         if (*cert_chain_size <

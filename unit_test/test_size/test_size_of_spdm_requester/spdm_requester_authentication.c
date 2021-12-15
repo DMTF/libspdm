@@ -63,14 +63,14 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 
 /**
   This function executes SPDM authentication.
-  
+
   @param[in]  spdm_context            The SPDM context for the device.
 **/
 return_status do_authentication_via_spdm(IN void *spdm_context)
 {
     return_status status;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
     uint8_t measurement_hash[MAX_HASH_SIZE];
     uintn cert_chain_size;
     uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];

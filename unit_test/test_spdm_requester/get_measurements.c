@@ -886,7 +886,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->number_of_blocks = 0;
         libspdm_write_uint24(spdm_response->measurement_record_length, 0);
-        
+
         ptr = (uint8_t *)spdm_response +
         sizeof(spdm_measurements_response_t);
         spdm_get_random_number(SPDM_NONCE_SIZE,ptr);
@@ -940,7 +940,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        
+
         ptr = (uint8_t *)spdm_response +
                 sizeof(spdm_measurements_response_t) +
                 sizeof(spdm_measurement_block_dmtf_t) +
@@ -1670,7 +1670,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 spdm_get_measurement_hash_size(
                     m_use_measurement_hash_algo) +
                 SPDM_NONCE_SIZE +
-                sizeof(uint16_t) + MAX_SPDM_OPAQUE_DATA_SIZE;
+                sizeof(uint16_t) + SPDM_MAX_OPAQUE_DATA_SIZE;
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1705,10 +1705,10 @@ return_status spdm_requester_get_measurements_test_receive_message(
                        m_use_measurement_hash_algo));
         spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = MAX_SPDM_OPAQUE_DATA_SIZE; // opaque_length
+        *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE; // opaque_length
         ptr += sizeof(uint16_t);
-        set_mem(ptr, MAX_SPDM_OPAQUE_DATA_SIZE, 255);
-        ptr += MAX_SPDM_OPAQUE_DATA_SIZE;
+        set_mem(ptr, SPDM_MAX_OPAQUE_DATA_SIZE, 255);
+        ptr += SPDM_MAX_OPAQUE_DATA_SIZE;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, temp_buf_size,
@@ -1732,7 +1732,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 spdm_get_measurement_hash_size(
                     m_use_measurement_hash_algo) +
                 sizeof(uint16_t) +
-                (MAX_SPDM_OPAQUE_DATA_SIZE + 1);
+                (SPDM_MAX_OPAQUE_DATA_SIZE + 1);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1768,10 +1768,10 @@ return_status spdm_requester_get_measurements_test_receive_message(
         // spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
         // ptr += SPDM_NONCE_SIZE;
         *(uint16_t *)ptr =
-            (MAX_SPDM_OPAQUE_DATA_SIZE + 1); // opaque_length
+            (SPDM_MAX_OPAQUE_DATA_SIZE + 1); // opaque_length
         ptr += sizeof(uint16_t);
-        set_mem(ptr, (MAX_SPDM_OPAQUE_DATA_SIZE + 1), 255);
-        ptr += (MAX_SPDM_OPAQUE_DATA_SIZE + 1);
+        set_mem(ptr, (SPDM_MAX_OPAQUE_DATA_SIZE + 1), 255);
+        ptr += (SPDM_MAX_OPAQUE_DATA_SIZE + 1);
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, temp_buf_size,
@@ -1789,7 +1789,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
-        uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+        uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
 
         ((spdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_asym_algo =
@@ -1879,7 +1879,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uintn MissingBytes;
-        uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+        uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
 
         sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
         MissingBytes = sig_size;
@@ -1972,7 +1972,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uintn MissingBytes;
-        uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE;
+        uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
 
         sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
         MissingBytes = sig_size + 1;
@@ -2064,7 +2064,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
-        uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+        uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
         uint16_t opaque_informed_size = opaque_size_test - 1;
 
         sig_size = spdm_get_asym_signature_size(m_use_asym_algo);
@@ -2152,7 +2152,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
-        uint16_t opaque_size_test = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+        uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
         uint16_t opaque_informed_size = opaque_size_test - 1;
 
         ((spdm_context_t *)spdm_context)
@@ -2217,7 +2217,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = MAX_UINT16;
-        uint16_t opaque_informed_size = MAX_SPDM_OPAQUE_DATA_SIZE / 2;
+        uint16_t opaque_informed_size = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
 
         ((spdm_context_t *)spdm_context)
             ->connection_info.algorithm.measurement_hash_algo =
@@ -2391,7 +2391,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
          ptr =  (uint8_t *)temp_buf + temp_buf_size - SPDM_NONCE_SIZE;
-        spdm_get_random_number(SPDM_NONCE_SIZE,ptr);    
+        spdm_get_random_number(SPDM_NONCE_SIZE,ptr);
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, temp_buf_size,
                            temp_buf, response_size,
@@ -2549,7 +2549,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2605,7 +2605,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2661,7 +2661,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2717,7 +2717,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2773,7 +2773,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2829,7 +2829,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2885,7 +2885,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2914,7 +2914,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
                       measurement_record);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
@@ -2943,7 +2943,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2996,7 +2996,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3050,7 +3050,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3108,7 +3108,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3168,11 +3168,11 @@ void test_spdm_requester_get_measurements_case12(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3227,11 +3227,11 @@ void test_spdm_requester_get_measurements_case13(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3286,11 +3286,11 @@ void test_spdm_requester_get_measurements_case14(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3345,11 +3345,11 @@ void test_spdm_requester_get_measurements_case15(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3405,11 +3405,11 @@ void test_spdm_requester_get_measurements_case16(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3478,11 +3478,11 @@ void test_spdm_requester_get_measurements_case17(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3541,11 +3541,11 @@ void test_spdm_requester_get_measurements_case18(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3602,11 +3602,11 @@ void test_spdm_requester_get_measurements_case19(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3660,11 +3660,11 @@ void test_spdm_requester_get_measurements_case20(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3718,11 +3718,11 @@ void test_spdm_requester_get_measurements_case21(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x15;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3778,11 +3778,11 @@ void test_spdm_requester_get_measurements_case22(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x16;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3858,11 +3858,11 @@ void test_spdm_requester_get_measurements_case23(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x17;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3896,7 +3896,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
                  sizeof(spdm_measurement_block_dmtf_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo) +
-                 SPDM_NONCE_SIZE + 
+                 SPDM_NONCE_SIZE +
                  sizeof(uint16_t) + MAX_SPDM_OPAQUE_DATA_SIZE);
 #endif
     free(data);
@@ -3923,11 +3923,11 @@ void test_spdm_requester_get_measurements_case24(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x18;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -3982,11 +3982,11 @@ void test_spdm_requester_get_measurements_case25(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x19;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4041,11 +4041,11 @@ void test_spdm_requester_get_measurements_case26(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1A;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4101,11 +4101,11 @@ void test_spdm_requester_get_measurements_case27(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1B;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4163,11 +4163,11 @@ void test_spdm_requester_get_measurements_case28(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1C;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4224,11 +4224,11 @@ void test_spdm_requester_get_measurements_case29(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1D;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4291,7 +4291,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1E;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4352,11 +4352,11 @@ void test_spdm_requester_get_measurements_case31(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1F;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4417,7 +4417,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x20;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -4494,7 +4494,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     libspdm_reset_message_m(spdm_context, NULL);
 
     measurement_record_length = sizeof(measurement_record);
@@ -4545,7 +4545,7 @@ void test_spdm_requester_get_measurements_case34(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x22;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     read_responder_public_certificate_chain(m_use_hash_algo,

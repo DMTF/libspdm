@@ -10,7 +10,7 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t digest[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t digest[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 } spdm_digests_response_max_t;
 
 #pragma pack()
@@ -56,11 +56,11 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                         SPDM_GET_DIGESTS);
     if (spdm_context->connection_info.connection_state !=
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
         spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -110,7 +110,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
         *slot_mask = spdm_response.header.param2;
     }
     digest_count = 0;
-    for (index = 0; index < MAX_SPDM_SLOT_COUNT; index++) {
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_response.header.param2 & (1 << index)) {
             digest_count++;
         }
@@ -150,11 +150,11 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
         spdm_context, spdm_response.digest, digest_count);
     if (!result) {
         spdm_context->error_state =
-            SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (total_digest_buffer != NULL) {
         copy_mem(total_digest_buffer, spdm_response.digest,
@@ -162,7 +162,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     }
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     return RETURN_SUCCESS;
 }
 

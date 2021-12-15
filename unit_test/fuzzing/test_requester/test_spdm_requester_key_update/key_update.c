@@ -20,7 +20,7 @@ spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
     spdm_session_info_t *session_info;
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->connection_info.capability.flags |=
