@@ -1152,7 +1152,7 @@ uint32_t spdm_get_asym_signature_size(IN uint32_t base_asym_algo)
 
   @return asymmetric GET_PUBLIC_KEY_FROM_X509 function
 **/
-asym_get_public_key_from_x509_func __attribute__((warn_unused_result))
+asym_get_public_key_from_x509_func
 get_spdm_asym_get_public_key_from_x509(IN uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
@@ -1432,7 +1432,7 @@ boolean spdm_asym_verify_hash(
 
   @return asymmetric GET_PRIVATE_KEY_FROM_PEM function
 **/
-asym_get_private_key_from_pem_func __attribute__((warn_unused_result))
+asym_get_private_key_from_pem_func
 get_spdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
@@ -1654,7 +1654,7 @@ uint32_t spdm_get_req_asym_signature_size(IN uint16_t req_base_asym_alg)
 
   @return requester asymmetric GET_PUBLIC_KEY_FROM_X509 function
 **/
-asym_get_public_key_from_x509_func __attribute__((warn_unused_result))
+asym_get_public_key_from_x509_func
 get_spdm_req_asym_get_public_key_from_x509(IN uint16_t req_base_asym_alg)
 {
     return get_spdm_asym_get_public_key_from_x509(req_base_asym_alg);
@@ -1842,7 +1842,7 @@ boolean spdm_req_asym_verify_hash(
 
   @return asymmetric GET_PRIVATE_KEY_FROM_PEM function
 **/
-asym_get_private_key_from_pem_func __attribute__((warn_unused_result))
+asym_get_private_key_from_pem_func
 get_spdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg)
 {
     return get_spdm_asym_get_private_key_from_pem(req_base_asym_alg);
@@ -2852,7 +2852,7 @@ return_status spdm_get_dmtf_subject_alt_name_from_bytes(
                                    name_buffer_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status __attribute__((warn_unused_result))
+return_status
 spdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
                    OUT char8 *name_buffer,
                    OPTIONAL IN OUT uintn *name_buffer_size,
