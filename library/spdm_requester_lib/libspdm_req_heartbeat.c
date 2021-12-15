@@ -45,7 +45,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
     }
 
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
     session_info =

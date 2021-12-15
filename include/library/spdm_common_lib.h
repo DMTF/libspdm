@@ -35,170 +35,163 @@
 //          The message exchange in a session is cipher text.
 //
 
-#define MAX_SPDM_VERSION_COUNT 5
-#define MAX_SPDM_SLOT_COUNT 8
-#define MAX_SPDM_OPAQUE_DATA_SIZE 1024
-
-#define SPDM_NONCE_SIZE 32
-#define SPDM_RANDOM_DATA_SIZE 32
-
-#define SPDM_STATUS_SUCCESS 0
-#define SPDM_STATUS_ERROR BIT31
-#define SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES (SPDM_STATUS_ERROR + 0x10)
-#define SPDM_STATUS_ERROR_DEVICE_ERROR (SPDM_STATUS_ERROR + 0x11)
-#define SPDM_STATUS_ERROR_TCG_EXTEND_TPM_PCR (SPDM_STATUS_ERROR + 0x20)
-#define SPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE (SPDM_STATUS_ERROR + 0x21)
-#define SPDM_STATUS_ERROR_CHALLENGE_FAILURE (SPDM_STATUS_ERROR + 0x30)
-#define SPDM_STATUS_ERROR_CERTIFICATE_FAILURE (SPDM_STATUS_ERROR + 0x31)
-#define SPDM_STATUS_ERROR_NO_CERT_PROVISION (SPDM_STATUS_ERROR + 0x32)
-#define SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE (SPDM_STATUS_ERROR + 0x40)
-#define SPDM_STATUS_ERROR_NO_MUTUAL_AUTH (SPDM_STATUS_ERROR + 0x41)
+#define LIBSPDM_STATUS_SUCCESS 0
+#define LIBSPDM_STATUS_ERROR BIT31
+#define LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES (LIBSPDM_STATUS_ERROR + 0x10)
+#define LIBSPDM_STATUS_ERROR_DEVICE_ERROR (LIBSPDM_STATUS_ERROR + 0x11)
+#define LIBSPDM_STATUS_ERROR_TCG_EXTEND_TPM_PCR (LIBSPDM_STATUS_ERROR + 0x20)
+#define LIBSPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE (LIBSPDM_STATUS_ERROR + 0x21)
+#define LIBSPDM_STATUS_ERROR_CHALLENGE_FAILURE (LIBSPDM_STATUS_ERROR + 0x30)
+#define LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE (LIBSPDM_STATUS_ERROR + 0x31)
+#define LIBSPDM_STATUS_ERROR_NO_CERT_PROVISION (LIBSPDM_STATUS_ERROR + 0x32)
+#define LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE (LIBSPDM_STATUS_ERROR + 0x40)
+#define LIBSPDM_STATUS_ERROR_NO_MUTUAL_AUTH (LIBSPDM_STATUS_ERROR + 0x41)
 
 typedef enum {
     //
     // SPDM parameter
     //
-    SPDM_DATA_SPDM_VERSION,
-    SPDM_DATA_SECURED_MESSAGE_VERSION,
+    LIBSPDM_DATA_SPDM_VERSION,
+    LIBSPDM_DATA_SECURED_MESSAGE_VERSION,
     //
     // SPDM capability
     //
-    SPDM_DATA_CAPABILITY_FLAGS,
-    SPDM_DATA_CAPABILITY_CT_EXPONENT,
+    LIBSPDM_DATA_CAPABILITY_FLAGS,
+    LIBSPDM_DATA_CAPABILITY_CT_EXPONENT,
     //
     // SPDM algorithm setting
     //
-    SPDM_DATA_MEASUREMENT_SPEC,
-    SPDM_DATA_MEASUREMENT_HASH_ALGO,
-    SPDM_DATA_BASE_ASYM_ALGO,
-    SPDM_DATA_BASE_HASH_ALGO,
-    SPDM_DATA_DHE_NAME_GROUP,
-    SPDM_DATA_AEAD_CIPHER_SUITE,
-    SPDM_DATA_REQ_BASE_ASYM_ALG,
-    SPDM_DATA_KEY_SCHEDULE,
+    LIBSPDM_DATA_MEASUREMENT_SPEC,
+    LIBSPDM_DATA_MEASUREMENT_HASH_ALGO,
+    LIBSPDM_DATA_BASE_ASYM_ALGO,
+    LIBSPDM_DATA_BASE_HASH_ALGO,
+    LIBSPDM_DATA_DHE_NAME_GROUP,
+    LIBSPDM_DATA_AEAD_CIPHER_SUITE,
+    LIBSPDM_DATA_REQ_BASE_ASYM_ALG,
+    LIBSPDM_DATA_KEY_SCHEDULE,
     //
     // Connection State
     //
-    SPDM_DATA_CONNECTION_STATE,
+    LIBSPDM_DATA_CONNECTION_STATE,
     //
     // response_state
     //
-    SPDM_DATA_RESPONSE_STATE,
+    LIBSPDM_DATA_RESPONSE_STATE,
     //
     // Certificate info
     //
-    SPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
-    SPDM_DATA_LOCAL_SLOT_COUNT,
-    SPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-    SPDM_DATA_PEER_PUBLIC_CERT_CHAIN,
-    SPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
-    SPDM_DATA_MUT_AUTH_REQUESTED,
-    SPDM_DATA_HEARTBEAT_PERIOD,
+    LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
+    LIBSPDM_DATA_LOCAL_SLOT_COUNT,
+    LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
+    LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN,
+    LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
+    LIBSPDM_DATA_MUT_AUTH_REQUESTED,
+    LIBSPDM_DATA_HEARTBEAT_PERIOD,
     //
     // Negotiated result
     //
-    SPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER,
-    SPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER,
+    LIBSPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER,
+    LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER,
     //
     // Pre-shared key Hint
     // If PSK is present, then PSK_EXCHANGE is used.
     // Otherwise, the KEY_EXCHANGE is used.
     //
-    SPDM_DATA_PSK_HINT,
+    LIBSPDM_DATA_PSK_HINT,
     //
     // SessionData
     //
-    SPDM_DATA_SESSION_USE_PSK,
-    SPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
-    SPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
+    LIBSPDM_DATA_SESSION_USE_PSK,
+    LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
+    LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
     //
     // App context data that can be used by the application
     // during callback functions such libspdm_device_send_message_func.
     //
-    SPDM_DATA_APP_CONTEXT_DATA,
+    LIBSPDM_DATA_APP_CONTEXT_DATA,
     //
     // MAX
     //
-    SPDM_DATA_MAX,
-} spdm_data_type_t;
+    LIBSPDM_DATA_MAX,
+} libspdm_data_type_t;
 
 typedef enum {
-    SPDM_DATA_LOCATION_LOCAL,
-    SPDM_DATA_LOCATION_CONNECTION,
-    SPDM_DATA_LOCATION_SESSION,
-    SPDM_DATA_LOCATION_MAX,
-} spdm_data_location_t;
+    LIBSPDM_DATA_LOCATION_LOCAL,
+    LIBSPDM_DATA_LOCATION_CONNECTION,
+    LIBSPDM_DATA_LOCATION_SESSION,
+    LIBSPDM_DATA_LOCATION_MAX,
+} libspdm_data_location_t;
 
 typedef struct {
-    spdm_data_location_t location;
+    libspdm_data_location_t location;
     // data_type specific:
     //   session_id for the negoatiated key.
     //   SlotId for the certificate.
-    //   req_slot_id + measurement_hash_type for SPDM_DATA_MUT_AUTH_REQUESTED
+    //   req_slot_id + measurement_hash_type for LIBSPDM_DATA_MUT_AUTH_REQUESTED
     uint8_t additional_data[4];
-} spdm_data_parameter_t;
+} libspdm_data_parameter_t;
 
 typedef enum {
     //
     // Before GET_VERSION/VERSION
     //
-    SPDM_CONNECTION_STATE_NOT_STARTED,
+    LIBSPDM_CONNECTION_STATE_NOT_STARTED,
     //
     // After GET_VERSION/VERSION
     //
-    SPDM_CONNECTION_STATE_AFTER_VERSION,
+    LIBSPDM_CONNECTION_STATE_AFTER_VERSION,
     //
     // After GET_CAPABILITIES/CAPABILITIES
     //
-    SPDM_CONNECTION_STATE_AFTER_CAPABILITIES,
+    LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES,
     //
     // After NEGOTIATE_ALGORITHMS/ALGORITHMS
     //
-    SPDM_CONNECTION_STATE_NEGOTIATED,
+    LIBSPDM_CONNECTION_STATE_NEGOTIATED,
     //
     // After GET_DIGESTS/DIGESTS
     //
-    SPDM_CONNECTION_STATE_AFTER_DIGESTS,
+    LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS,
     //
     // After GET_CERTIFICATE/CERTIFICATE
     //
-    SPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
+    LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
     //
     // After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled.
     //
-    SPDM_CONNECTION_STATE_AUTHENTICATED,
+    LIBSPDM_CONNECTION_STATE_AUTHENTICATED,
     //
     // MAX
     //
-    SPDM_CONNECTION_STATE_MAX,
-} spdm_connection_state_t;
+    LIBSPDM_CONNECTION_STATE_MAX,
+} libspdm_connection_state_t;
 
 typedef enum {
     //
     // Normal response.
     //
-    SPDM_RESPONSE_STATE_NORMAL,
+    LIBSPDM_RESPONSE_STATE_NORMAL,
     //
     // Other component is busy.
     //
-    SPDM_RESPONSE_STATE_BUSY,
+    LIBSPDM_RESPONSE_STATE_BUSY,
     //
     // Hardware is not ready.
     //
-    SPDM_RESPONSE_STATE_NOT_READY,
+    LIBSPDM_RESPONSE_STATE_NOT_READY,
     //
     // Firmware Update is done. Need resync.
     //
-    SPDM_RESPONSE_STATE_NEED_RESYNC,
+    LIBSPDM_RESPONSE_STATE_NEED_RESYNC,
     //
     // Processing Encapsulated message.
     //
-    SPDM_RESPONSE_STATE_PROCESSING_ENCAP,
+    LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP,
     //
     // MAX
     //
-    SPDM_RESPONSE_STATE_MAX,
-} spdm_response_state_t;
+    LIBSPDM_RESPONSE_STATE_MAX,
+} libspdm_response_state_t;
 
 /**
   Set an SPDM context data.
@@ -216,8 +209,8 @@ typedef enum {
   @retval RETURN_NOT_READY             data is not ready to set.
 **/
 return_status libspdm_set_data(IN void *spdm_context,
-                IN spdm_data_type_t data_type,
-                IN spdm_data_parameter_t *parameter, IN void *data,
+                IN libspdm_data_type_t data_type,
+                IN libspdm_data_parameter_t *parameter, IN void *data,
                 IN uintn data_size);
 
 /**
@@ -240,8 +233,8 @@ return_status libspdm_set_data(IN void *spdm_context,
   @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
 **/
 return_status libspdm_get_data(IN void *spdm_context,
-                IN spdm_data_type_t data_type,
-                IN spdm_data_parameter_t *parameter,
+                IN libspdm_data_type_t data_type,
+                IN libspdm_data_parameter_t *parameter,
                 IN OUT void *data, IN OUT uintn *data_size);
 
 /**
@@ -490,7 +483,7 @@ typedef return_status (*libspdm_verify_spdm_cert_chain_func)(
 
   If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
       1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
-    2) The trust anchor, according SPDM_DATA_PEER_PUBLIC_ROOT_CERT or SPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
+    2) The trust anchor, according LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT or LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
   If it is registered, SPDM lib will use this function to verify the certificate.
 
   This function must be called after libspdm_init_context, and before any SPDM communication.

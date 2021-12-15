@@ -110,7 +110,7 @@ return_status spdm_process_encap_response_challenge_auth(
     return_status status;
 
     spdm_context->encap_context.error_state =
-        SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+        LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -175,7 +175,7 @@ return_status spdm_process_encap_response_challenge_auth(
                             cert_chain_hash, hash_size);
     if (!result) {
         spdm_context->encap_context.error_state =
-            SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return RETURN_SECURITY_VIOLATION;
     }
 
@@ -194,7 +194,7 @@ return_status spdm_process_encap_response_challenge_auth(
     DEBUG((DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
-    if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
+    if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return RETURN_SECURITY_VIOLATION;
     }
     ptr += sizeof(uint16_t);
@@ -227,13 +227,13 @@ return_status spdm_process_encap_response_challenge_auth(
         spdm_context, FALSE, signature, signature_size);
     if (!result) {
         spdm_context->encap_context.error_state =
-            SPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_context->encap_context.error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->encap_context.error_state = LIBSPDM_STATUS_SUCCESS;
     spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_AUTHENTICATED);
+                  LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 
     *need_continue = FALSE;
 

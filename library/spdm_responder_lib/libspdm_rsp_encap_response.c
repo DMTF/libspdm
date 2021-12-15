@@ -200,7 +200,7 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     zero_mem(&spdm_context->encap_context.last_encap_request_header,
          sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
     //
     // Clear Cache
@@ -254,7 +254,7 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     zero_mem(&spdm_context->encap_context.last_encap_request_header,
          sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
     //
     // Clear Cache
@@ -313,7 +313,7 @@ void libspdm_init_key_update_encap_state(IN void *context)
     zero_mem(&spdm_context->encap_context.last_encap_request_header,
          sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
@@ -365,9 +365,9 @@ return_status spdm_get_response_encapsulated_request(
             SPDM_GET_ENCAPSULATED_REQUEST, response_size, response);
     }
     if (spdm_context->response_state !=
-        SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
+        LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state ==
-            SPDM_RESPONSE_STATE_NORMAL) {
+            LIBSPDM_RESPONSE_STATE_NORMAL) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -404,7 +404,7 @@ return_status spdm_get_response_encapsulated_request(
     status = spdm_process_encapsulated_response(
         context, 0, NULL, &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
@@ -414,7 +414,7 @@ return_status spdm_get_response_encapsulated_request(
     spdm_response->header.param1 = spdm_context->encap_context.request_id;
 
     if (encap_request_size == 0) {
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
 
     return RETURN_SUCCESS;
@@ -464,9 +464,9 @@ return_status spdm_get_response_encapsulated_response_ack(
             response);
     }
     if (spdm_context->response_state !=
-        SPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
+        LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state ==
-            SPDM_RESPONSE_STATE_NORMAL) {
+            LIBSPDM_RESPONSE_STATE_NORMAL) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -527,7 +527,7 @@ return_status spdm_get_response_encapsulated_response_ack(
         context, encap_response_size, encap_response,
         &encap_request_size, encap_request);
     if (RETURN_ERROR(status)) {
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
             response_size, response);
@@ -548,7 +548,7 @@ return_status spdm_get_response_encapsulated_response_ack(
             *(uint8_t *)(spdm_response + 1) =
                 spdm_context->encap_context.req_slot_id;
         }
-        spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
 
     return RETURN_SUCCESS;

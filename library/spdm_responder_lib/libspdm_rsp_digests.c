@@ -44,7 +44,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
@@ -58,7 +58,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
             SPDM_GET_DIGESTS, response_size, response);
     }
     if (spdm_context->connection_info.connection_state !=
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                          0, response_size, response);
@@ -76,7 +76,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     spdm_request_size = request_size;
 
     no_local_cert_chain = TRUE;
-    for (index = 0; index < MAX_SPDM_SLOT_COUNT; index++) {
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
                 .local_cert_chain_provision[index] != NULL) {
             no_local_cert_chain = FALSE;
@@ -146,7 +146,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     }
 
     spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_AFTER_DIGESTS);
+                  LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS);
 
     return RETURN_SUCCESS;
 }

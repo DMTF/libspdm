@@ -184,7 +184,7 @@ typedef struct {
   uint8_t                random_data[SPDM_RANDOM_DATA_SIZE];
   uint8_t                exchange_data[MAX_DHE_KEY_SIZE];
   uint16_t               opaque_length;
-  uint8_t                opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+  uint8_t                opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
 typedef struct {
@@ -201,7 +201,7 @@ typedef struct {
   uint16_t               opaque_length;
   uint8_t                psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
   uint8_t                requester_context[DEFAULT_CONTEXT_LENGTH];
-  uint8_t                opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+  uint8_t                opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
 typedef struct {
@@ -277,7 +277,7 @@ static void spdm_secured_message_set_request_finished_key(
 
 #if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
-  Test 1: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 1: receiving a correct RESPOND_IF_READY from the requester, after a
   GET_DIGESTS could not be processed.
   Expected behavior: the responder accepts the request and produces a valid DIGESTS
   response message.
@@ -293,14 +293,14 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -331,7 +331,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
-  Test 2: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 2: receiving a correct RESPOND_IF_READY from the requester, after a
   GET_CERTIFICATE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid CERTIFICATE
   response message.
@@ -352,15 +352,15 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x2;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_CERTIFICATE)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -395,7 +395,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
-  Test 3: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 3: receiving a correct RESPOND_IF_READY from the requester, after a
   CHALLENGE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid CHALLENGE_AUTH
   response message.
@@ -414,10 +414,10 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x3;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (CHALLENGE)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
@@ -425,7 +425,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -460,7 +460,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
-  Test 4: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 4: receiving a correct RESPOND_IF_READY from the requester, after a
   GET_MEASUREMENTS could not be processed.
   Expected behavior: the responder accepts the request and produces a valid MEASUREMENTS
   response message.
@@ -479,17 +479,17 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x4;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_MEASUREMENTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   spdm_context->local_context.opaque_measurement_rsp_size = 0;
@@ -520,7 +520,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
-  Test 5: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 5: receiving a correct RESPOND_IF_READY from the requester, after a
   KEY_EXCHANGE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid KEY_EXCHANGE_RSP
   response message.
@@ -544,10 +544,10 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x5;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (KEY_EXCHANGE)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
@@ -557,7 +557,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -609,7 +609,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
-  Test 6: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 6: receiving a correct RESPOND_IF_READY from the requester, after a
   FINISH could not be processed.
   Expected behavior: the responder accepts the request and produces a valid FINISH_RSP
   response message.
@@ -640,10 +640,10 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x6;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (FINISH)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
@@ -655,7 +655,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -684,7 +684,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_hash_all (m_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
   // Transcript.MessageA size is 0
   append_managed_buffer (&th_curr, cert_buffer_hash, hash_size);
-  // SessionTranscript.MessageK is 0 
+  // SessionTranscript.MessageK is 0
   append_managed_buffer (&th_curr, (uint8_t *)&m_spdm_finish_request, sizeof(spdm_finish_request_t));
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
@@ -714,7 +714,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
-  Test 7: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 7: receiving a correct RESPOND_IF_READY from the requester, after a
   PSK_EXCHANGE could not be processed.
   Expected behavior: the responder accepts the request and produces a valid PSK_EXCHANGE_RSP
   response message.
@@ -737,10 +737,10 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x7;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (PSK_EXCHANGE)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -751,7 +751,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
   spdm_context->connection_info.algorithm.key_schedule = m_use_key_schedule_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -804,7 +804,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
 #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
-  Test 8: receiving a correct RESPOND_IF_READY from the requester, after a 
+  Test 8: receiving a correct RESPOND_IF_READY from the requester, after a
   PSK_FINISH could not be processed.
   Expected behavior: the responder accepts the request and produces a valid PSK_FINISH_RSP
   response message.
@@ -832,10 +832,10 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x8;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (FINISH)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AUTHENTICATED;
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -847,7 +847,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
   spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
   spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-  
+
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -878,7 +878,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   ptr = m_spdm_psk_finish_request.verify_data;
   init_managed_buffer (&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
   // Transcript.MessageA size is 0
-  // SessionTranscript.MessageK is 0 
+  // SessionTranscript.MessageK is 0
   append_managed_buffer (&th_curr, (uint8_t *)&m_spdm_psk_finish_request, sizeof(spdm_psk_finish_request_t));
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
@@ -909,7 +909,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
 #if SPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
-  Test 9: receiving a RESPOND_IF_READY message larger than specified (more parameters 
+  Test 9: receiving a RESPOND_IF_READY message larger than specified (more parameters
   than the header), after a GET_DIGESTS could not be processed.
   Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
   ERROR message indicating the InvalidRequest.
@@ -925,10 +925,10 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x9;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -977,10 +977,10 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xA;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -1007,7 +1007,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
   assert_int_equal (spdm_response->header.param2, 0);
-  assert_int_equal (spdm_context->response_state, SPDM_RESPONSE_STATE_BUSY);
+  assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
@@ -1030,10 +1030,10 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xB;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -1060,7 +1060,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
   assert_int_equal (spdm_response->header.param2, 0);
-  assert_int_equal (spdm_context->response_state, SPDM_RESPONSE_STATE_NEED_RESYNC);
+  assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
 #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
@@ -1085,10 +1085,10 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xC;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -1116,7 +1116,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_RESPONSE_NOT_READY);
   assert_int_equal (spdm_response->header.param2, 0);
-  assert_int_equal (spdm_context->response_state, SPDM_RESPONSE_STATE_NOT_READY);
+  assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NOT_READY);
   assert_int_equal (error_data->request_code, SPDM_GET_DIGESTS);
   assert_int_equal (error_data->token, MY_TEST_TOKEN);
 }
@@ -1142,10 +1142,10 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xD;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
@@ -1177,7 +1177,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
 
 #if SPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
-  Test 14: receiving a correct RESPOND_IF_READY from the requester, with the correct token, 
+  Test 14: receiving a correct RESPOND_IF_READY from the requester, with the correct token,
   but with a request code different from the expected.
   Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
   ERROR message indicating the InvalidRequest.
@@ -1193,10 +1193,10 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xE;
-  spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+  spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
   //state for the the original request (GET_DIGESTS)
-  spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED; 
+  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;

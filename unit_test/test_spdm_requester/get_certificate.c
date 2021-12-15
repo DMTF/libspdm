@@ -14,7 +14,7 @@ static uintn m_local_certificate_chain_size;
 
 // Loading the target expiration certificate chain and saving root certificate hash
 // "rsa3072_Expiration/bundle_responder.certchain.der"
-boolean read_responder_public_certificate_chain_expiration( 
+boolean read_responder_public_certificate_chain_expiration(
     OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
     uint32_t base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
@@ -1262,7 +1262,7 @@ void test_spdm_requester_get_certificate_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1316,7 +1316,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1381,7 +1381,7 @@ void test_spdm_requester_get_certificate_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1432,7 +1432,7 @@ void test_spdm_requester_get_certificate_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1483,7 +1483,7 @@ void test_spdm_requester_get_certificate_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1536,7 +1536,7 @@ void test_spdm_requester_get_certificate_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1592,7 +1592,7 @@ void test_spdm_requester_get_certificate_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1616,7 +1616,7 @@ void test_spdm_requester_get_certificate_case7(void **state)
                       cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -1645,7 +1645,7 @@ void test_spdm_requester_get_certificate_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1696,7 +1696,7 @@ void test_spdm_requester_get_certificate_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1755,7 +1755,7 @@ void test_spdm_requester_get_certificate_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1814,7 +1814,7 @@ void test_spdm_requester_get_certificate_case11(void **state)
     spdm_test_context->case_id = 0xB;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     // Loading certificate chain and saving root certificate hash
@@ -1877,7 +1877,7 @@ void test_spdm_requester_get_certificate_case12(void **state)
     spdm_test_context->case_id = 0xC;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -1944,7 +1944,7 @@ void test_spdm_requester_get_certificate_case13(void **state)
     spdm_test_context->case_id = 0xD;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     // Loading Root certificate and saving its hash
@@ -2010,7 +2010,7 @@ void test_spdm_requester_get_certificate_case14(void **state)
     spdm_test_context->case_id = 0xE;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     // Loading Root certificate and saving its hash
@@ -2076,7 +2076,7 @@ void test_spdm_requester_get_certificate_case15(void **state)
     spdm_test_context->case_id = 0xF;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     // Loading Root certificate and saving its hash
@@ -2155,7 +2155,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     libspdm_reset_message_b(spdm_context);
 
     cert_chain_size = sizeof(cert_chain);
@@ -2179,7 +2179,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
-  
+
   free(data);
 }
 
@@ -2205,7 +2205,7 @@ void test_spdm_requester_get_certificate_case17(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2253,7 +2253,7 @@ void test_spdm_requester_get_certificate_case18(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     read_responder_public_certificate_chain(m_use_hash_algo,
@@ -2299,13 +2299,13 @@ void test_spdm_requester_get_certificate_case19(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uintn count;
 #endif
-    
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     // Setting SPDM context as the first steps of the protocol has been accomplished
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_DIGESTS;
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     // Loading the target expiration certificate chain and saving root certificate hash

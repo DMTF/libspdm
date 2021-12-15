@@ -252,7 +252,7 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
   @param  connection_state              Indicate the SPDM connection state.
 **/
 void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
-                        IN spdm_connection_state_t
+                        IN libspdm_connection_state_t
                             connection_state)
 {
     uintn index;
@@ -274,7 +274,7 @@ void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
   @param  connection_state              Indicate the SPDM connection state.
 */
 void spdm_set_connection_state(IN spdm_context_t *spdm_context,
-                   IN spdm_connection_state_t connection_state)
+                   IN libspdm_connection_state_t connection_state)
 {
     if (spdm_context->connection_info.connection_state !=
         connection_state) {

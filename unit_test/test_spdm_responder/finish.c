@@ -50,7 +50,7 @@ void spdm_secured_message_set_request_finished_key(
 }
 
 /**
-  Test 1: receiving a correct FINISH message from the requester with a 
+  Test 1: receiving a correct FINISH message from the requester with a
   correct MAC, no signature (no mutual authentication), and 'handshake in
   the clear'.
   Expected behavior: the responder accepts the request and produces a valid
@@ -81,7 +81,7 @@ void test_spdm_responder_finish_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -189,7 +189,7 @@ void test_spdm_responder_finish_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -298,9 +298,9 @@ void test_spdm_responder_finish_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -378,7 +378,7 @@ void test_spdm_responder_finish_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
     free(data1);
 }
 
@@ -412,9 +412,9 @@ void test_spdm_responder_finish_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -493,7 +493,7 @@ void test_spdm_responder_finish_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     free(data1);
 }
 
@@ -528,9 +528,9 @@ void test_spdm_responder_finish_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -613,7 +613,7 @@ void test_spdm_responder_finish_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_FINISH);
     free(data1);
 }
@@ -650,9 +650,9 @@ void test_spdm_responder_finish_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -758,7 +758,7 @@ void test_spdm_responder_finish_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -895,7 +895,7 @@ void test_spdm_responder_finish_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -957,7 +957,7 @@ void test_spdm_responder_finish_case8(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     hash_size = spdm_get_hash_size(m_use_hash_algo);
     hmac_size = spdm_get_hash_size(m_use_hash_algo);
-    req_asym_signature_size = 
+    req_asym_signature_size =
         spdm_get_req_asym_signature_size(m_use_req_asym_algo);
     ptr = m_spdm_finish_request3.signature;
     init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
@@ -985,7 +985,7 @@ void test_spdm_responder_finish_case8(void **state)
     spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
               get_managed_buffer_size(&th_curr), request_finished_key,
               hash_size, ptr);
-    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) + 
+    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
         req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
     status = spdm_get_response_finish(spdm_context,
@@ -1033,7 +1033,7 @@ void test_spdm_responder_finish_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
@@ -1147,7 +1147,7 @@ void test_spdm_responder_finish_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1254,7 +1254,7 @@ void test_spdm_responder_finish_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1350,7 +1350,7 @@ void test_spdm_responder_finish_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1453,7 +1453,7 @@ void test_spdm_responder_finish_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1566,7 +1566,7 @@ void test_spdm_responder_finish_case14(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1684,7 +1684,7 @@ void test_spdm_responder_finish_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1746,7 +1746,7 @@ void test_spdm_responder_finish_case15(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     hash_size = spdm_get_hash_size(m_use_hash_algo);
     hmac_size = spdm_get_hash_size(m_use_hash_algo);
-    req_asym_signature_size = 
+    req_asym_signature_size =
         spdm_get_req_asym_signature_size(m_use_req_asym_algo);
     ptr = m_spdm_finish_request3.signature;
     init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
@@ -1774,9 +1774,9 @@ void test_spdm_responder_finish_case15(void **state)
     spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
               get_managed_buffer_size(&th_curr), request_finished_key,
               hash_size, ptr);
-    set_mem(m_spdm_finish_request3.signature, 
+    set_mem(m_spdm_finish_request3.signature,
               req_asym_signature_size, (uint8_t) 0x00); //zero signature
-    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) + 
+    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
         req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
     status = spdm_get_response_finish(spdm_context,
@@ -1832,7 +1832,7 @@ void test_spdm_responder_finish_case16(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
@@ -1894,7 +1894,7 @@ void test_spdm_responder_finish_case16(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     hash_size = spdm_get_hash_size(m_use_hash_algo);
     hmac_size = spdm_get_hash_size(m_use_hash_algo);
-    req_asym_signature_size = 
+    req_asym_signature_size =
         spdm_get_req_asym_signature_size(m_use_req_asym_algo);
     ptr = m_spdm_finish_request3.signature;
     init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
@@ -1924,7 +1924,7 @@ void test_spdm_responder_finish_case16(void **state)
     spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
               get_managed_buffer_size(&th_curr), request_finished_key,
               hash_size, ptr);
-    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) + 
+    m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
         req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
     status = spdm_get_response_finish(spdm_context,
@@ -1959,7 +1959,7 @@ int spdm_responder_finish_test_main(void)
         cmocka_unit_test(test_spdm_responder_finish_case3),
         // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
         cmocka_unit_test(test_spdm_responder_finish_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
         cmocka_unit_test(test_spdm_responder_finish_case5),
         // connection_state Check
         cmocka_unit_test(test_spdm_responder_finish_case6),

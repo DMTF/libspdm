@@ -72,9 +72,9 @@ static void spdm_set_standard_key_update_test_state(
 {
     spdm_session_info_t    *session_info;
 
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -122,7 +122,7 @@ static void spdm_set_standard_key_update_test_secrets(
               ->hash_size, req_secret_fill);
 
     copy_mem(secured_message_context->application_secret
-             .response_data_secret, 
+             .response_data_secret,
           m_rsp_secret_buffer, secured_message_context->aead_key_size);
     copy_mem(secured_message_context->application_secret
              .request_data_secret,
@@ -329,7 +329,7 @@ void test_spdm_responder_key_update_case3(void **state)
           spdm_context, &session_id);
 
     //busy state
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -355,7 +355,7 @@ void test_spdm_responder_key_update_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
     assert_memory_equal(secured_message_context
               ->application_secret.request_data_secret,
           m_req_secret_buffer, secured_message_context->hash_size);
@@ -394,7 +394,7 @@ void test_spdm_responder_key_update_case4(void **state)
           spdm_context, &session_id);
 
     //need resync state
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -421,7 +421,7 @@ void test_spdm_responder_key_update_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     assert_memory_equal(secured_message_context
               ->application_secret.request_data_secret,
           m_req_secret_buffer, secured_message_context->hash_size);
@@ -462,7 +462,7 @@ void test_spdm_responder_key_update_case5(void **state)
           spdm_context, &session_id);
 
     //not ready state
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -493,7 +493,7 @@ void test_spdm_responder_key_update_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_KEY_UPDATE);
     assert_memory_equal(secured_message_context
               ->application_secret.request_data_secret,
@@ -536,7 +536,7 @@ void test_spdm_responder_key_update_case6(void **state)
 
     //not negotiated state
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -969,7 +969,7 @@ void test_spdm_responder_key_update_case12(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
@@ -1055,7 +1055,7 @@ void test_spdm_responder_key_update_case13(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
@@ -1145,13 +1145,13 @@ void test_spdm_responder_key_update_case14(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);
@@ -1246,13 +1246,13 @@ void test_spdm_responder_key_update_case15(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);
@@ -1405,7 +1405,7 @@ void test_spdm_responder_key_update_case17(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
@@ -1495,13 +1495,13 @@ void test_spdm_responder_key_update_case18(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);
@@ -1666,13 +1666,13 @@ void test_spdm_responder_key_update_case20(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);
@@ -1762,7 +1762,7 @@ void test_spdm_responder_key_update_case21(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
@@ -1854,13 +1854,13 @@ void test_spdm_responder_key_update_case22(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);
@@ -1947,7 +1947,7 @@ void test_spdm_responder_key_update_case23(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
@@ -2037,13 +2037,13 @@ void test_spdm_responder_key_update_case24(void **state)
              MAX_HASH_SIZE);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .request_data_secret, 
+                  .request_data_secret,
           secured_message_context->application_secret
                   .request_data_secret,
           secured_message_context->hash_size);
     spdm_compute_secret_update(secured_message_context->hash_size,
           secured_message_context->application_secret
-                  .response_data_secret, 
+                  .response_data_secret,
           secured_message_context->application_secret
                   .response_data_secret,
           secured_message_context->hash_size);

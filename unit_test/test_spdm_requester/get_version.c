@@ -12,7 +12,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 
@@ -541,7 +541,7 @@ void test_spdm_requester_get_version_case7(void **state)
     status = spdm_get_version(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 /**

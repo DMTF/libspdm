@@ -32,11 +32,11 @@ return_status spdm_responder_handle_response_state(IN void *context,
 
     spdm_context = context;
     switch (spdm_context->response_state) {
-    case SPDM_RESPONSE_STATE_BUSY:
+    case LIBSPDM_RESPONSE_STATE_BUSY:
         return libspdm_generate_error_response(spdm_context, SPDM_ERROR_CODE_BUSY,
                          0, response_size, response);
         // NOTE: Need to reset status to Normal in up level
-    case SPDM_RESPONSE_STATE_NEED_RESYNC:
+    case LIBSPDM_RESPONSE_STATE_NEED_RESYNC:
         status = libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_REQUEST_RESYNCH, 0,
                          response_size, response);
@@ -45,9 +45,9 @@ return_status spdm_responder_handle_response_state(IN void *context,
         }
         // NOTE: Need to let SPDM_VERSION reset the State
         spdm_set_connection_state(spdm_context,
-                      SPDM_CONNECTION_STATE_NOT_STARTED);
+                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
         return RETURN_SUCCESS;
-    case SPDM_RESPONSE_STATE_NOT_READY:
+    case LIBSPDM_RESPONSE_STATE_NOT_READY:
         //do not update ErrorData if a previous request has not been completed
         if(request_code != SPDM_RESPOND_IF_READY) {
             spdm_context->cache_spdm_request_size =
@@ -66,7 +66,7 @@ return_status spdm_responder_handle_response_state(IN void *context,
             (uint8_t *)(void *)&spdm_context->error_data,
             response_size, response);
         // NOTE: Need to reset status to Normal in up level
-    case SPDM_RESPONSE_STATE_PROCESSING_ENCAP:
+    case LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP:
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_REQUEST_IN_FLIGHT,
                          0, response_size, response);

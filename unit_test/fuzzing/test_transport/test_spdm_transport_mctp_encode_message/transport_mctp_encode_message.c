@@ -27,7 +27,7 @@ void test_spdm_transport_mctp_encode_message(void **State)
     is_requester = spdm_test_context->is_requester;
     is_app_message = FALSE;
 
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     transport_message_size = sizeof(transport_message);
 

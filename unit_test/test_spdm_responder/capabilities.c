@@ -405,7 +405,7 @@ void test_spdm_responder_capabilities_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
@@ -441,7 +441,7 @@ void test_spdm_responder_capabilities_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -471,9 +471,9 @@ void test_spdm_responder_capabilities_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -489,7 +489,7 @@ void test_spdm_responder_capabilities_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 void test_spdm_responder_capabilities_case4(void **state)
@@ -504,9 +504,9 @@ void test_spdm_responder_capabilities_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -523,7 +523,7 @@ void test_spdm_responder_capabilities_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
 // According to spec, a responder shall not answer a get_capabilties with a ResponseNotReady
@@ -540,9 +540,9 @@ void test_spdm_responder_capabilities_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -564,7 +564,7 @@ void test_spdm_responder_capabilities_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_GET_CAPABILITIES);
 }
 
@@ -580,9 +580,9 @@ void test_spdm_responder_capabilities_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -612,11 +612,11 @@ void test_spdm_responder_capabilities_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
 
@@ -649,7 +649,7 @@ void test_spdm_responder_capabilities_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -677,7 +677,7 @@ void test_spdm_responder_capabilities_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -705,7 +705,7 @@ void test_spdm_responder_capabilities_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xa;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -736,7 +736,7 @@ void test_spdm_responder_capabilities_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xb;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -767,7 +767,7 @@ void test_spdm_responder_capabilities_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xc;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -795,7 +795,7 @@ void test_spdm_responder_capabilities_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xd;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -826,7 +826,7 @@ void test_spdm_responder_capabilities_case14(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xe;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -857,7 +857,7 @@ void test_spdm_responder_capabilities_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xf;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -888,7 +888,7 @@ void test_spdm_responder_capabilities_case16(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -919,7 +919,7 @@ void test_spdm_responder_capabilities_case17(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -950,7 +950,7 @@ void test_spdm_responder_capabilities_case18(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -983,7 +983,7 @@ void test_spdm_responder_capabilities_case19(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -1014,7 +1014,7 @@ void test_spdm_responder_capabilities_case20(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -1045,7 +1045,7 @@ void test_spdm_responder_capabilities_case21(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x15;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -1076,7 +1076,7 @@ void test_spdm_responder_capabilities_case22(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x16;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
@@ -1103,11 +1103,11 @@ int spdm_responder_capabilities_test_main(void)
         cmocka_unit_test(test_spdm_responder_capabilities_case1),
         // Bad request size
         cmocka_unit_test(test_spdm_responder_capabilities_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        // response_state: LIBSPDM_RESPONSE_STATE_BUSY
         cmocka_unit_test(test_spdm_responder_capabilities_case3),
-        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
         cmocka_unit_test(test_spdm_responder_capabilities_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
         cmocka_unit_test(test_spdm_responder_capabilities_case5),
         // connection_state Check
         cmocka_unit_test(test_spdm_responder_capabilities_case6),

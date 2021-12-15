@@ -14,7 +14,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 
@@ -135,7 +135,7 @@ void test_spdm_responder_version_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     response_size = sizeof(response);
     status = spdm_get_response_version(spdm_context,
@@ -150,7 +150,7 @@ void test_spdm_responder_version_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 /**
@@ -171,7 +171,7 @@ void test_spdm_responder_version_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
     response_size = sizeof(response);
     status = spdm_get_response_version(spdm_context,
@@ -187,7 +187,7 @@ void test_spdm_responder_version_case4(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_VERSION);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NORMAL);
+             LIBSPDM_RESPONSE_STATE_NORMAL);
 }
 
 /**
@@ -209,7 +209,7 @@ void test_spdm_responder_version_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     response_size = sizeof(response);
     status = spdm_get_response_version(spdm_context,
@@ -230,7 +230,7 @@ void test_spdm_responder_version_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_GET_VERSION);
 }
 
@@ -252,7 +252,7 @@ void test_spdm_responder_version_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     response_size = sizeof(response);
     status = spdm_get_response_version(spdm_context,

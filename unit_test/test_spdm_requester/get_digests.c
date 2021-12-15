@@ -89,7 +89,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo) * MAX_SPDM_SLOT_COUNT;
+                spdm_get_hash_size(m_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -102,7 +102,7 @@ return_status spdm_requester_get_digests_test_receive_message(
         digest = (void *)(spdm_response + 1);
         //send all eight certchains digest
         //but only No.7 is right
-        digest += spdm_get_hash_size(m_use_hash_algo) * (MAX_SPDM_SLOT_COUNT - 2);
+        digest += spdm_get_hash_size(m_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
         spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   MAX_SPDM_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (0xFF << 0);
@@ -581,7 +581,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_message_header_t) +
-                MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT + 1;
+                MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + 1;
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -647,13 +647,13 @@ void test_spdm_requester_get_digests_case1(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -685,13 +685,13 @@ void test_spdm_requester_get_digests_case2(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -734,13 +734,13 @@ void test_spdm_requester_get_digests_case3(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -772,13 +772,13 @@ void test_spdm_requester_get_digests_case4(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -810,13 +810,13 @@ void test_spdm_requester_get_digests_case5(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -849,13 +849,13 @@ void test_spdm_requester_get_digests_case6(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -893,13 +893,13 @@ void test_spdm_requester_get_digests_case7(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -917,7 +917,7 @@ void test_spdm_requester_get_digests_case7(void **state)
         libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -934,13 +934,13 @@ void test_spdm_requester_get_digests_case8(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -970,13 +970,13 @@ void test_spdm_requester_get_digests_case9(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1014,13 +1014,13 @@ void test_spdm_requester_get_digests_case10(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_use_hash_algo;
@@ -1051,13 +1051,13 @@ void test_spdm_requester_get_digests_case11(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1091,13 +1091,13 @@ void test_spdm_requester_get_digests_case12(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1122,7 +1122,7 @@ void test_spdm_requester_get_digests_case12(void **state)
 
 /**
   Test 13: a request message is successfully sent but the request_response_code from the response message is different than the code of SPDM_DIGESTS
-  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received 
+  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
 **/
 void test_spdm_requester_get_digests_case13(void **state)
 {
@@ -1130,13 +1130,13 @@ void test_spdm_requester_get_digests_case13(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1169,13 +1169,13 @@ void test_spdm_requester_get_digests_case14(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1208,14 +1208,14 @@ void test_spdm_requester_get_digests_case15(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
-    
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1249,13 +1249,13 @@ void test_spdm_requester_get_digests_case16(void **state)
 #endif
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1282,7 +1282,7 @@ void test_spdm_requester_get_digests_case16(void **state)
 
 /**
   Test 17: a request message is successfully sent but the single digest received in the response message is invalid
-  Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state SPDM_STATUS_ERROR_CERTIFICATE_FAILURE
+  Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
 **/
 void test_spdm_requester_get_digests_case17(void **state)
 {
@@ -1290,13 +1290,13 @@ void test_spdm_requester_get_digests_case17(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1314,7 +1314,7 @@ void test_spdm_requester_get_digests_case17(void **state)
         libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
     assert_int_equal(spdm_context->error_state,
-             SPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
+             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
 }
 
 /**
@@ -1328,13 +1328,13 @@ void test_spdm_requester_get_digests_case18(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1359,7 +1359,7 @@ void test_spdm_requester_get_digests_case18(void **state)
 
 /**
   Test 19: a request message is successfully sent but several digests (except the first) received in the response message are invalid
-  Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state SPDM_STATUS_ERROR_CERTIFICATE_FAILURE
+  Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
 **/
 void test_spdm_requester_get_digests_case19(void **state)
 {
@@ -1367,13 +1367,13 @@ void test_spdm_requester_get_digests_case19(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1391,7 +1391,7 @@ void test_spdm_requester_get_digests_case19(void **state)
         libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
     assert_int_equal(spdm_context->error_state,
-             SPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
+             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
 }
 
 /**
@@ -1405,13 +1405,13 @@ void test_spdm_requester_get_digests_case20(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1445,13 +1445,13 @@ void test_spdm_requester_get_digests_case21(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x15;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1487,7 +1487,7 @@ void test_spdm_requester_get_digests_case22(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uint8_t                 slot_mask;
-  uint8_t                 total_digest_buffer[MAX_HASH_SIZE * MAX_SPDM_SLOT_COUNT];
+  uint8_t                 total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
   uint16_t                error_code;
 
   spdm_test_context = *state;
@@ -1501,9 +1501,9 @@ void test_spdm_requester_get_digests_case22(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     libspdm_reset_message_b(spdm_context);
-    
+
     zero_mem (total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest (spdm_context, &slot_mask, &total_digest_buffer);
     // assert_int_equal (status, RETURN_DEVICE_ERROR);

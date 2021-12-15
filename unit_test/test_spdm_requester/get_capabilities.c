@@ -753,7 +753,7 @@ void test_spdm_requester_get_capabilities_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -771,7 +771,7 @@ void test_spdm_requester_get_capabilities_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
                         spdm_context->transcript.message_m.max_buffer_size;
@@ -800,7 +800,7 @@ void test_spdm_requester_get_capabilities_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -818,7 +818,7 @@ void test_spdm_requester_get_capabilities_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -836,7 +836,7 @@ void test_spdm_requester_get_capabilities_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -854,7 +854,7 @@ void test_spdm_requester_get_capabilities_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -876,14 +876,14 @@ void test_spdm_requester_get_capabilities_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
     status = spdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
-             SPDM_CONNECTION_STATE_NOT_STARTED);
+             LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 void test_spdm_requester_get_capabilities_case8(void **state)
@@ -896,7 +896,7 @@ void test_spdm_requester_get_capabilities_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -914,7 +914,7 @@ void test_spdm_requester_get_capabilities_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -934,7 +934,7 @@ void test_spdm_requester_get_capabilities_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xa;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -960,7 +960,7 @@ void test_spdm_requester_get_capabilities_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xb;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -987,7 +987,7 @@ void test_spdm_requester_get_capabilities_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xc;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -1009,7 +1009,7 @@ void test_spdm_requester_get_capabilities_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xd;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -1027,7 +1027,7 @@ void test_spdm_requester_get_capabilities_case14(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xe;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -1045,7 +1045,7 @@ void test_spdm_requester_get_capabilities_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xf;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
@@ -1065,7 +1065,7 @@ void test_spdm_requester_get_capabilities_case16(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
@@ -1090,7 +1090,7 @@ void test_spdm_requester_get_capabilities_case17(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
@@ -1113,7 +1113,7 @@ void test_spdm_requester_get_capabilities_case18(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
@@ -1136,7 +1136,7 @@ void test_spdm_requester_get_capabilities_case19(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1160,7 +1160,7 @@ void test_spdm_requester_get_capabilities_case20(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1184,7 +1184,7 @@ void test_spdm_requester_get_capabilities_case21(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1208,7 +1208,7 @@ void test_spdm_requester_get_capabilities_case22(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1232,7 +1232,7 @@ void test_spdm_requester_get_capabilities_case23(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1256,7 +1256,7 @@ void test_spdm_requester_get_capabilities_case24(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1280,7 +1280,7 @@ void test_spdm_requester_get_capabilities_case25(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1304,7 +1304,7 @@ void test_spdm_requester_get_capabilities_case26(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1328,7 +1328,7 @@ void test_spdm_requester_get_capabilities_case27(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1350,7 +1350,7 @@ void test_spdm_requester_get_capabilities_case28(void **state)
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.capability.ct_exponent = 0;
@@ -1376,7 +1376,7 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     libspdm_reset_message_a(spdm_context);
 
     status = spdm_get_capabilities (spdm_context);

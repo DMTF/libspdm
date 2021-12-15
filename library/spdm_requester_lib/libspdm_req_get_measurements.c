@@ -16,7 +16,7 @@ typedef struct {
                  MAX_SPDM_MEASUREMENT_BLOCK_COUNT];
     uint8_t nonce[SPDM_NONCE_SIZE];
     uint16_t opaque_length;
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[MAX_ASYM_KEY_SIZE];
 } spdm_measurements_response_max_t;
 #pragma pack()
@@ -90,13 +90,13 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                                     SPDM_GET_MEASUREMENTS);
     if (session_id == NULL) {
         if (spdm_context->connection_info.connection_state <
-            SPDM_CONNECTION_STATE_AUTHENTICATED) {
+            LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
             return RETURN_UNSUPPORTED;
         }
         session_info = NULL;
     } else {
         if (spdm_context->connection_info.connection_state <
-            SPDM_CONNECTION_STATE_NEGOTIATED) {
+            LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
             return RETURN_UNSUPPORTED;
         }
         session_info = libspdm_get_session_info_via_session_id(
@@ -112,7 +112,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
     }
 
-    if ((slot_id_param >= MAX_SPDM_SLOT_COUNT) && (slot_id_param != 0xF)) {
+    if ((slot_id_param >= SPDM_MAX_SLOT_COUNT) && (slot_id_param != 0xF)) {
         return RETURN_INVALID_PARAMETER;
     }
     if ((slot_id_param == 0xF) &&
@@ -120,7 +120,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         return RETURN_INVALID_PARAMETER;
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     if (spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,
@@ -281,7 +281,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
 
         opaque_length = *(uint16_t *)ptr;
-        if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
+        if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
             return RETURN_SECURITY_VIOLATION;
         }
         ptr += sizeof(uint16_t);
@@ -326,7 +326,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             spdm_context, session_info, signature, signature_size);
         if (!result) {
             spdm_context->error_state =
-                SPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE;
+                LIBSPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE;
             libspdm_reset_message_m(spdm_context, session_info);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -350,14 +350,14 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
 
         opaque_length = *(uint16_t *)ptr;
-        if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
+        if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
             return RETURN_SECURITY_VIOLATION;
         }
         ptr += sizeof(uint16_t);
 
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length + SPDM_NONCE_SIZE + 
+                measurement_record_data_length + SPDM_NONCE_SIZE +
                 sizeof(uint16_t) + opaque_length) {
             return RETURN_DEVICE_ERROR;
         }
@@ -432,13 +432,13 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                 return RETURN_DEVICE_ERROR;
             }
             if (measurement_block_header->index == 0 ||
-                measurement_block_header->index == 0xFF) {    
+                measurement_block_header->index == 0xFF) {
                 return RETURN_DEVICE_ERROR;
             }
             if (measurement_operation !=
                 SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
-                if (measurement_block_header->index != 
-                        measurement_operation) {    
+                if (measurement_block_header->index !=
+                        measurement_operation) {
                     return RETURN_DEVICE_ERROR;
                 }
             }
@@ -457,7 +457,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
              measurement_record_data_length);
     }
 
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
     return RETURN_SUCCESS;
 }
 

@@ -14,6 +14,13 @@
 
 #pragma pack(1)
 
+#define SPDM_MAX_VERSION_COUNT 5
+#define SPDM_MAX_SLOT_COUNT 8
+#define SPDM_MAX_OPAQUE_DATA_SIZE 1024
+
+#define SPDM_NONCE_SIZE 32
+#define SPDM_RANDOM_DATA_SIZE 32
+
 ///
 /// SPDM response code (1.0)
 ///

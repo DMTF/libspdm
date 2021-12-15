@@ -32,14 +32,14 @@ void test_spdm_responder_respond_if_ready(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_get_digest_request_t m_spdm_get_digest_request = {
         { SPDM_MESSAGE_VERSION_11, SPDM_GET_DIGESTS, 0, 0 },
     };
     uintn m_spdm_get_digest_request_size = sizeof(spdm_message_header_t);
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;

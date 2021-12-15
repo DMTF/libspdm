@@ -653,6 +653,6 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
   @param  connection_state              Indicate the SPDM connection state.
 */
 void spdm_set_connection_state(IN spdm_context_t *spdm_context,
-                   IN spdm_connection_state_t connection_state);
+                   IN libspdm_connection_state_t connection_state);
 
 #endif

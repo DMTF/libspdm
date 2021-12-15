@@ -67,9 +67,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                     SPDM_NEGOTIATE_ALGORITHMS);
-    
+
     if (spdm_context->connection_info.connection_state !=
-        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
+        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -374,7 +374,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
     }
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     return RETURN_SUCCESS;
 }
 

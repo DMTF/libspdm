@@ -43,18 +43,18 @@ return_status spdm_get_response_certificate(IN void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_context->response_state != SPDM_RESPONSE_STATE_NORMAL) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
     if ((spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_NEGOTIATED) &&
+         LIBSPDM_CONNECTION_STATE_NEGOTIATED) &&
         (spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
+         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
         (spdm_context->connection_info.connection_state !=
-         SPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
+         LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                          0, response_size, response);
@@ -157,7 +157,7 @@ return_status spdm_get_response_certificate(IN void *context,
     }
 
     spdm_set_connection_state(spdm_context,
-                  SPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
+                  LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
 
     return RETURN_SUCCESS;
 }

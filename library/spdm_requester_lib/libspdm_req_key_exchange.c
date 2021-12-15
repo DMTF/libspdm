@@ -17,7 +17,7 @@ typedef struct {
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
     uint8_t exchange_data[MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
 typedef struct {
@@ -29,7 +29,7 @@ typedef struct {
     uint8_t exchange_data[MAX_DHE_KEY_SIZE];
     uint8_t measurement_summary_hash[MAX_HASH_SIZE];
     uint16_t opaque_length;
-    uint8_t opaque_data[MAX_SPDM_OPAQUE_DATA_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[MAX_ASYM_KEY_SIZE];
     uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_key_exchange_response_max_t;
@@ -92,11 +92,11 @@ return_status try_spdm_send_receive_key_exchange(
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                     SPDM_KEY_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
 
-    if ((slot_id >= MAX_SPDM_SLOT_COUNT) && (slot_id != 0xFF)) {
+    if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
         return RETURN_INVALID_PARAMETER;
     }
     if ((slot_id == 0xFF) &&
@@ -104,7 +104,7 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_INVALID_PARAMETER;
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_request.header.request_response_code = SPDM_KEY_EXCHANGE;
@@ -322,7 +322,7 @@ return_status try_spdm_send_receive_key_exchange(
     ptr += measurement_summary_hash_size;
 
     opaque_length = *(uint16_t *)ptr;
-    if (opaque_length > MAX_SPDM_OPAQUE_DATA_SIZE) {
+    if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return RETURN_SECURITY_VIOLATION;
     }
     ptr += sizeof(uint16_t);
@@ -389,7 +389,7 @@ return_status try_spdm_send_receive_key_exchange(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         spdm_context->error_state =
-            SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
+            LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
         return RETURN_SECURITY_VIOLATION;
     }
 
@@ -444,7 +444,7 @@ return_status try_spdm_send_receive_key_exchange(
         if (!result) {
             libspdm_free_session_id(spdm_context, *session_id);
             spdm_context->error_state =
-                SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
+                LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
             return RETURN_SECURITY_VIOLATION;
         }
         ptr += hmac_size;
@@ -466,7 +466,7 @@ return_status try_spdm_send_receive_key_exchange(
     spdm_secured_message_set_session_state(
         session_info->secured_message_context,
         SPDM_SESSION_STATE_HANDSHAKING);
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;
 }

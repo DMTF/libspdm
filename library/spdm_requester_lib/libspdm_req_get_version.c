@@ -11,7 +11,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[MAX_SPDM_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
 } spdm_version_response_max_t;
 #pragma pack()
 
@@ -148,7 +148,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     uintn spdm_response_size;
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
     spdm_request.header.request_response_code = SPDM_GET_VERSION;
@@ -198,7 +198,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     if (spdm_response_size > sizeof(spdm_response)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response.version_number_entry_count > MAX_SPDM_VERSION_COUNT) {
+    if (spdm_response.version_number_entry_count > SPDM_MAX_VERSION_COUNT) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.version_number_entry_count == 0) {
@@ -243,7 +243,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     }
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_VERSION;
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     return RETURN_SUCCESS;
 }
 

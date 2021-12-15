@@ -26,7 +26,7 @@ return_status SpdmResponderReceiveMessage(IN void *spdm_context,
 void *spdm_server_init(void)
 {
     void *spdm_context;
-    spdm_data_parameter_t parameter;
+    libspdm_data_parameter_t parameter;
     uint8_t data8;
     uint16_t data16;
     uint32_t data32;
@@ -51,8 +51,8 @@ void *spdm_server_init(void)
 
     data8 = 0;
     zero_mem(&parameter, sizeof(parameter));
-    parameter.location = SPDM_DATA_LOCATION_LOCAL;
-    libspdm_set_data(spdm_context, SPDM_DATA_CAPABILITY_CT_EXPONENT,
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT,
               &parameter, &data8, sizeof(data8));
 
     data32 =
@@ -91,23 +91,23 @@ void *spdm_server_init(void)
     } else {
         data32 |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     }
-    libspdm_set_data(spdm_context, SPDM_DATA_CAPABILITY_FLAGS, &parameter,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter,
               &data32, sizeof(data32));
 
     data32 = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
-    libspdm_set_data(spdm_context, SPDM_DATA_BASE_ASYM_ALGO, &parameter,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_BASE_ASYM_ALGO, &parameter,
               &data32, sizeof(data32));
     data32 = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
-    libspdm_set_data(spdm_context, SPDM_DATA_BASE_HASH_ALGO, &parameter,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_BASE_HASH_ALGO, &parameter,
               &data32, sizeof(data32));
     data16 = SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048;
-    libspdm_set_data(spdm_context, SPDM_DATA_DHE_NAME_GROUP, &parameter,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_DHE_NAME_GROUP, &parameter,
               &data16, sizeof(data16));
     data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
-    libspdm_set_data(spdm_context, SPDM_DATA_AEAD_CIPHER_SUITE, &parameter,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_AEAD_CIPHER_SUITE, &parameter,
               &data16, sizeof(data16));
     data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
-    libspdm_set_data(spdm_context, SPDM_DATA_KEY_SCHEDULE, &parameter, &data16,
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_KEY_SCHEDULE, &parameter, &data16,
               sizeof(data16));
 
     return spdm_context;

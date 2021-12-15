@@ -106,7 +106,7 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                 SPDM_GET_CAPABILITIES);
     if (spdm_context->connection_info.connection_state !=
-        SPDM_CONNECTION_STATE_AFTER_VERSION) {
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -188,7 +188,7 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     spdm_context->connection_info.capability.flags = spdm_response.flags;
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     return RETURN_SUCCESS;
 }

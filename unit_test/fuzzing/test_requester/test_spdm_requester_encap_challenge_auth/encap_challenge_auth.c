@@ -28,7 +28,7 @@ void test_spdm_requester_encap_challenge(void **State)
     spdm_context = spdm_test_context->spdm_context;
 
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NEGOTIATED;
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -50,7 +50,7 @@ void test_spdm_requester_encap_challenge(void **State)
         data_size;
     spdm_context->local_context.slot_count = 1;
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-    libspdm_reset_message_c(spdm_context);    
+    libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
     spdm_get_encap_response_challenge_auth(

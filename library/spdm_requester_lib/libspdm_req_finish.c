@@ -58,7 +58,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     if (spdm_context->connection_info.connection_state <
-        SPDM_CONNECTION_STATE_NEGOTIATED) {
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -86,7 +86,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         }
     }
 
-    spdm_context->error_state = SPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_request.header.request_response_code = SPDM_FINISH;
@@ -244,7 +244,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     spdm_secured_message_set_session_state(
         session_info->secured_message_context,
         SPDM_SESSION_STATE_ESTABLISHED);
-    spdm_context->error_state = SPDM_STATUS_SUCCESS;
+    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;
 }

@@ -115,7 +115,7 @@ void test_spdm_responder_measurements_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -170,7 +170,7 @@ void test_spdm_responder_measurements_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -220,9 +220,9 @@ void test_spdm_responder_measurements_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_BUSY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -251,7 +251,7 @@ void test_spdm_responder_measurements_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_BUSY);
+             LIBSPDM_RESPONSE_STATE_BUSY);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
@@ -273,9 +273,9 @@ void test_spdm_responder_measurements_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NEED_RESYNC;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -305,7 +305,7 @@ void test_spdm_responder_measurements_case4(void **state)
              SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NEED_RESYNC);
+             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
@@ -328,9 +328,9 @@ void test_spdm_responder_measurements_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -364,7 +364,7 @@ void test_spdm_responder_measurements_case5(void **state)
              SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             SPDM_RESPONSE_STATE_NOT_READY);
+             LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_GET_MEASUREMENTS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -388,9 +388,9 @@ void test_spdm_responder_measurements_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->response_state = SPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_NOT_STARTED;
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -442,7 +442,7 @@ void test_spdm_responder_measurements_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -496,7 +496,7 @@ void test_spdm_responder_measurements_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -550,7 +550,7 @@ void test_spdm_responder_measurements_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -601,7 +601,7 @@ void test_spdm_responder_measurements_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -661,7 +661,7 @@ void test_spdm_responder_measurements_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -721,7 +721,7 @@ void test_spdm_responder_measurements_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -800,7 +800,7 @@ void test_spdm_responder_measurements_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
@@ -810,7 +810,7 @@ void test_spdm_responder_measurements_case13(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -870,7 +870,7 @@ void test_spdm_responder_measurements_case14(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
@@ -880,7 +880,7 @@ void test_spdm_responder_measurements_case14(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -929,7 +929,7 @@ void test_spdm_responder_measurements_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
@@ -939,7 +939,7 @@ void test_spdm_responder_measurements_case15(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -984,7 +984,7 @@ void test_spdm_responder_measurements_case16(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x10;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
@@ -994,7 +994,7 @@ void test_spdm_responder_measurements_case16(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1037,7 +1037,7 @@ void test_spdm_responder_measurements_case17(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_use_hash_algo;
@@ -1045,7 +1045,7 @@ void test_spdm_responder_measurements_case17(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1095,7 +1095,7 @@ void test_spdm_responder_measurements_case18(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1104,7 +1104,7 @@ void test_spdm_responder_measurements_case18(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1115,7 +1115,7 @@ void test_spdm_responder_measurements_case18(void **state)
                         &data_size, NULL, NULL);
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                   spdm_get_asym_signature_size(m_use_asym_algo);
-    spdm_context->local_context.slot_count = MAX_SPDM_SLOT_COUNT;
+    spdm_context->local_context.slot_count = SPDM_MAX_SLOT_COUNT;
     for (int i = 1; i < spdm_context->local_context.slot_count; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] =
             data_size;
@@ -1167,7 +1167,7 @@ void test_spdm_responder_measurements_case19(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1176,7 +1176,7 @@ void test_spdm_responder_measurements_case19(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1221,7 +1221,7 @@ void test_spdm_responder_measurements_case20(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1230,7 +1230,7 @@ void test_spdm_responder_measurements_case20(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1274,7 +1274,7 @@ void test_spdm_responder_measurements_case21(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x15;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1283,7 +1283,7 @@ void test_spdm_responder_measurements_case21(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1329,7 +1329,7 @@ void test_spdm_responder_measurements_case22(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x16;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1338,7 +1338,7 @@ void test_spdm_responder_measurements_case22(void **state)
         m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_use_measurement_hash_algo;
-    
+
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     libspdm_reset_message_m(spdm_context, NULL);
@@ -1413,7 +1413,7 @@ void test_spdm_responder_measurements_case23(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x17;
     spdm_context->connection_info.connection_state =
-        SPDM_CONNECTION_STATE_AUTHENTICATED;
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -1474,8 +1474,8 @@ spdm_test_context_t m_spdm_responder_measurements_test_context = {
 
 int spdm_responder_measurements_test_main(void)
 {
-    m_spdm_get_measurements_request11.SlotIDParam = MAX_SPDM_SLOT_COUNT - 1;
-    m_spdm_get_measurements_request12.SlotIDParam = MAX_SPDM_SLOT_COUNT + 1;
+    m_spdm_get_measurements_request11.SlotIDParam = SPDM_MAX_SLOT_COUNT - 1;
+    m_spdm_get_measurements_request12.SlotIDParam = SPDM_MAX_SLOT_COUNT + 1;
 
     const struct CMUnitTest spdm_responder_measurements_tests[] = {
         // Success Case to get measurement number without signature
