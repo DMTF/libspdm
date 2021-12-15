@@ -37,7 +37,7 @@ void test_spdm_transport_mctp_decode_message(void **State)
                                        transport_message);
 }
 
-spdm_test_context_t m_spdm_responder_version_test_context = {
+spdm_test_context_t m_spdm_transport_mctp_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     FALSE,
 };
@@ -46,10 +46,10 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&m_spdm_responder_version_test_context);
+    setup_spdm_test_context(&m_spdm_transport_mctp_test_context);
 
-    m_spdm_responder_version_test_context.test_buffer = test_buffer;
-    m_spdm_responder_version_test_context.test_buffer_size = test_buffer_size;
+    m_spdm_transport_mctp_test_context.test_buffer = test_buffer;
+    m_spdm_transport_mctp_test_context.test_buffer_size = test_buffer_size;
 
     spdm_unit_test_group_setup(&State);
 
