@@ -289,7 +289,7 @@ void test_spdm_responder_algorithms_case12(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_context->connection_info.connection_state = SPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.version.major_version = 1;
     spdm_context->connection_info.version.minor_version = 1;
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
