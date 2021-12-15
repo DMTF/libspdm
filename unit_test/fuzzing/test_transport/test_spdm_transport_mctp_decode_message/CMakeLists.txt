@@ -16,6 +16,7 @@ SET(src_test_spdm_transport_mctp_decode_message
     spdm_transport_mctp_decode_message.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
+    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
 SET(test_spdm_transport_mctp_decode_message_LIBRARY
