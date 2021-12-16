@@ -297,6 +297,7 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
 {
     spdm_context_t *spdm_context;
     uint32_t hash_size;
+    boolean result;
 
     spdm_context = context;
 
@@ -304,15 +305,21 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (is_mut) {
-        spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->transcript.digest_context_mut_m1m2, m1m2_hash);
+        if (!result) {
+            return FALSE;
+        }
         DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
         internal_dump_data(m1m2_hash, hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
     } else {
-        spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->transcript.digest_context_m1m2, m1m2_hash);
+        if (!result) {
+            return FALSE;
+        }
         DEBUG((DEBUG_INFO, "m1m2 hash - "));
         internal_dump_data(m1m2_hash, hash_size);
         DEBUG((DEBUG_INFO, "\n"));
@@ -401,6 +408,7 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *spdm_session_info;
+    boolean result;
 
     uint32_t hash_size;
 
@@ -411,12 +419,15 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (spdm_session_info == NULL) {
-        spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->transcript.digest_context_l1l2, l1l2_hash);
     } else {
         DEBUG((DEBUG_INFO, "use message_m in session :\n"));
-        spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+        result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_session_info->session_transcript.digest_context_l1l2, l1l2_hash);
+    }
+    if (!result) {
+        return FALSE;
     }
     DEBUG((DEBUG_INFO, "l1l2 hash - "));
     internal_dump_data(l1l2_hash, hash_size);
