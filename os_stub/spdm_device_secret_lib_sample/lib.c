@@ -140,6 +140,7 @@ return_status spdm_measurement_collection(
     uint8_t index;
     uint8_t data[MEASUREMENT_MANIFEST_SIZE];
     uintn total_size_needed;
+    boolean result;
 
     ASSERT(measurement_specification ==
            SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF);
@@ -210,10 +211,13 @@ return_status spdm_measurement_collection(
                     (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                          (uint16_t)hash_size);
 
-                spdm_measurement_hash_all(
+                result = spdm_measurement_hash_all(
                     measurement_hash_algo, data,
                     sizeof(data),
                     (void *)(measurement_block + 1));
+                if (!result) {
+                    return RETURN_DEVICE_ERROR;
+                }
 
                 measurement_block =
                     (void *)((uint8_t *)measurement_block +
@@ -296,10 +300,12 @@ return_status spdm_measurement_collection(
                      (uint16_t)hash_size);
 
             // Hash directly to buffer after measurement block.
-            spdm_measurement_hash_all(
+            result = spdm_measurement_hash_all(
                 measurement_hash_algo, data, sizeof(data),
                 (void *)(measurement_block + 1));
-
+            if (!result) {
+                return RETURN_DEVICE_ERROR;
+            }
         } else {
             measurement_block->Measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_type =
@@ -356,6 +362,7 @@ boolean spdm_generate_measurement_summary_hash(
     uint8_t device_measurement_count;
     uintn device_measurement_size;
     return_status status;
+    boolean result;
 
     switch (measurement_summary_hash_type) {
     case SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
@@ -450,8 +457,11 @@ boolean spdm_generate_measurement_summary_hash(
                      measurment_block_size);
         }
 
-        spdm_hash_all(base_hash_algo, measurement_data,
+        result = spdm_hash_all(base_hash_algo, measurement_data,
                   measurment_data_size, measurement_summary_hash);
+        if (!result) {
+            return FALSE;
+        }
         break;
     default:
         return FALSE;
