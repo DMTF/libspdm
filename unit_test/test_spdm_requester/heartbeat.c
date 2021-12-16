@@ -85,7 +85,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
 
     case 0x2: {
         spdm_heartbeat_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -118,7 +118,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
 
     case 0x3: {
         spdm_heartbeat_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -232,7 +232,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
                 .response_data_sequence_number--;
         } else if (sub_index1 == 1) {
             spdm_heartbeat_response_t *spdm_response;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
             spdm_session_info_t *session_info;
@@ -361,7 +361,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
                 .response_data_sequence_number--;
         } else if (sub_index2 == 1) {
             spdm_heartbeat_response_t *spdm_response;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
             spdm_session_info_t *session_info;
@@ -430,7 +430,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     return RETURN_SUCCESS;
     case 0xB: {
         spdm_heartbeat_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;

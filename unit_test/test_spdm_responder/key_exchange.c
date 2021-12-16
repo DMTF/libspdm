@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 #pragma pack(1)
 
@@ -41,7 +41,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -120,7 +120,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -198,7 +198,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -278,7 +278,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -359,7 +359,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -446,7 +446,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -525,7 +525,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -648,4 +648,4 @@ int spdm_responder_key_exchange_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP

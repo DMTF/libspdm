@@ -7,13 +7,13 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 #define BIN_STR_2_LABEL "rsp hs data"
 #define BIN_STR_7_LABEL "finished"
 
 static uintn m_local_buffer_size;
-static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_local_psk_hint[32];
 
 uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
@@ -193,7 +193,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         uintn bin_str7_size;
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -214,7 +214,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_get_opaque_data_version_selection_data_size(
                 spdm_context);
         temp_buf_size = sizeof(spdm_psk_exchange_response_t) + 0 +
-                DEFAULT_CONTEXT_LENGTH +
+                LIBSPDM_PSK_CONTEXT_LENGTH +
                 opaque_psk_exchange_rsp_size + hmac_size;
         spdm_response = (void *)temp_buf;
 
@@ -226,14 +226,14 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->rsp_session_id =
             spdm_allocate_rsp_session_id(spdm_context);
         spdm_response->reserved = 0;
-        spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
+        spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
         // zero_mem (ptr, hash_size);
         // ptr += hash_size;
-        spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
-        ptr += DEFAULT_CONTEXT_LENGTH;
+        spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+        ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
@@ -243,7 +243,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         read_responder_public_certificate_chain(m_use_hash_algo,
                             m_use_asym_algo, &data,
                             &data_size, NULL, NULL);
@@ -308,7 +308,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         uintn bin_str7_size;
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -329,7 +329,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_get_opaque_data_version_selection_data_size(
                 spdm_context);
         temp_buf_size = sizeof(spdm_psk_exchange_response_t) + 0 +
-                DEFAULT_CONTEXT_LENGTH +
+                LIBSPDM_PSK_CONTEXT_LENGTH +
                 opaque_psk_exchange_rsp_size + hmac_size;
         spdm_response = (void *)temp_buf;
 
@@ -341,14 +341,14 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->rsp_session_id =
             spdm_allocate_rsp_session_id(spdm_context);
         spdm_response->reserved = 0;
-        spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
+        spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
         // zero_mem (ptr, hash_size);
         // ptr += hash_size;
-        spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
-        ptr += DEFAULT_CONTEXT_LENGTH;
+        spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+        ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
@@ -358,7 +358,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         read_responder_public_certificate_chain(m_use_hash_algo,
                             m_use_asym_algo, &data,
                             &data_size, NULL, NULL);
@@ -469,7 +469,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             uintn bin_str7_size;
             uint8_t response_handshake_secret[MAX_HASH_SIZE];
             uint8_t response_finished_key[MAX_HASH_SIZE];
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -491,7 +491,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                 spdm_get_opaque_data_version_selection_data_size(
                     spdm_context);
             temp_buf_size = sizeof(spdm_psk_exchange_response_t) +
-                    0 + DEFAULT_CONTEXT_LENGTH +
+                    0 + LIBSPDM_PSK_CONTEXT_LENGTH +
                     opaque_psk_exchange_rsp_size +
                     hmac_size;
             spdm_response = (void *)temp_buf;
@@ -505,14 +505,14 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_response->rsp_session_id =
                 spdm_allocate_rsp_session_id(spdm_context);
             spdm_response->reserved = 0;
-            spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
+            spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_response->opaque_length =
                 (uint16_t)opaque_psk_exchange_rsp_size;
             ptr = (void *)(spdm_response + 1);
             // zero_mem (ptr, hash_size);
             // ptr += hash_size;
-            spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
-            ptr += DEFAULT_CONTEXT_LENGTH;
+            spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+            ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_build_opaque_data_version_selection_data(
                 spdm_context, &opaque_psk_exchange_rsp_size,
                 ptr);
@@ -526,7 +526,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                    m_local_buffer_size));
             internal_dump_hex(m_local_buffer, m_local_buffer_size);
             init_managed_buffer(&th_curr,
-                        MAX_SPDM_MESSAGE_BUFFER_SIZE);
+                        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
                 &data_size, NULL, NULL);
@@ -658,7 +658,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             uintn bin_str7_size;
             uint8_t response_handshake_secret[MAX_HASH_SIZE];
             uint8_t response_finished_key[MAX_HASH_SIZE];
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -680,7 +680,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                 spdm_get_opaque_data_version_selection_data_size(
                     spdm_context);
             temp_buf_size = sizeof(spdm_psk_exchange_response_t) +
-                    0 + DEFAULT_CONTEXT_LENGTH +
+                    0 + LIBSPDM_PSK_CONTEXT_LENGTH +
                     opaque_psk_exchange_rsp_size +
                     hmac_size;
             spdm_response = (void *)temp_buf;
@@ -694,14 +694,14 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_response->rsp_session_id =
                 spdm_allocate_rsp_session_id(spdm_context);
             spdm_response->reserved = 0;
-            spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
+            spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_response->opaque_length =
                 (uint16_t)opaque_psk_exchange_rsp_size;
             ptr = (void *)(spdm_response + 1);
             // zero_mem (ptr, hash_size);
             // ptr += hash_size;
-            spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
-            ptr += DEFAULT_CONTEXT_LENGTH;
+            spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+            ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_build_opaque_data_version_selection_data(
                 spdm_context, &opaque_psk_exchange_rsp_size,
                 ptr);
@@ -715,7 +715,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                    m_local_buffer_size));
             internal_dump_hex(m_local_buffer, m_local_buffer_size);
             init_managed_buffer(&th_curr,
-                        MAX_SPDM_MESSAGE_BUFFER_SIZE);
+                        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
                 &data_size, NULL, NULL);
@@ -817,7 +817,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         uintn bin_str7_size;
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -838,7 +838,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_get_opaque_data_version_selection_data_size(
                 spdm_context);
         temp_buf_size = sizeof(spdm_psk_exchange_response_t) + 0 +
-                DEFAULT_CONTEXT_LENGTH +
+                LIBSPDM_PSK_CONTEXT_LENGTH +
                 opaque_psk_exchange_rsp_size + hmac_size;
         spdm_response = (void *)temp_buf;
 
@@ -850,14 +850,14 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->rsp_session_id =
             spdm_allocate_rsp_session_id(spdm_context);
         spdm_response->reserved = 0;
-        spdm_response->context_length = DEFAULT_CONTEXT_LENGTH;
+        spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
         // zero_mem (ptr, hash_size);
         // ptr += hash_size;
-        spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr);
-        ptr += DEFAULT_CONTEXT_LENGTH;
+        spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+        ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
@@ -867,7 +867,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         read_responder_public_certificate_chain(m_use_hash_algo,
                             m_use_asym_algo, &data,
                             &data_size, NULL, NULL);
@@ -1606,4 +1606,4 @@ int spdm_requester_psk_exchange_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP

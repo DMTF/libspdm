@@ -135,7 +135,7 @@ return_status spdm_requester_key_update_test_send_message(
         return RETURN_DEVICE_ERROR;
     case 0x2: {
         return_status       status;
-        uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn               decoded_message_size;
         uint32_t              session_id;
         uint32_t              *message_session_id;
@@ -173,7 +173,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -214,7 +214,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -255,7 +255,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -296,7 +296,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -340,7 +340,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index != 1) {
             return_status          status;
-            uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn decoded_message_size;
             uint32_t                 session_id;
             uint32_t *message_session_id;
@@ -390,7 +390,7 @@ return_status spdm_requester_key_update_test_send_message(
     case 0x14:
     case 0x15: {
         return_status       status;
-        uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn               decoded_message_size;
         uint32_t              session_id;
         uint32_t              *message_session_id;
@@ -428,7 +428,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index < 2) {
             return_status          status;
-            uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn decoded_message_size;
             uint32_t                 session_id;
             uint32_t *message_session_id;
@@ -471,7 +471,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index%2 == 0) {
             return_status          status;
-            uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn decoded_message_size;
             uint32_t                 session_id;
             uint32_t *message_session_id;
@@ -513,7 +513,7 @@ return_status spdm_requester_key_update_test_send_message(
     case 0x19:
     case 0x1A: {
         return_status       status;
-        uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn               decoded_message_size;
         uint32_t              session_id;
         uint32_t              *message_session_id;
@@ -548,7 +548,7 @@ return_status spdm_requester_key_update_test_send_message(
         return RETURN_SUCCESS;
     case 0x1B: {
         return_status       status;
-        uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn               decoded_message_size;
         uint32_t              session_id;
         uint32_t              *message_session_id;
@@ -586,7 +586,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -627,7 +627,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -668,7 +668,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status       status;
-            uint8_t               decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t               decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn               decoded_message_size;
             uint32_t              session_id;
             uint32_t              *message_session_id;
@@ -712,7 +712,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         if(sub_index != 1) {
             return_status          status;
-            uint8_t decoded_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn decoded_message_size;
             uint32_t                 session_id;
             uint32_t *message_session_id;

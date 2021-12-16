@@ -7,14 +7,14 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 #define BIN_CONCAT_LABEL "spdm1.1 "
 #define BIN_STR_0_LABEL "derived"
 #define BIN_STR_2_LABEL "rsp hs data"
 
 static uintn m_local_buffer_size;
-static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
 
@@ -213,7 +213,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         uint8_t handshake_secret[MAX_HASH_SIZE];
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -279,7 +279,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
@@ -364,7 +364,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         uint8_t handshake_secret[MAX_HASH_SIZE];
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -430,7 +430,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
@@ -561,7 +561,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             uint8_t handshake_secret[MAX_HASH_SIZE];
             uint8_t response_handshake_secret[MAX_HASH_SIZE];
             uint8_t response_finished_key[MAX_HASH_SIZE];
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -635,7 +635,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
                    m_local_buffer_size));
             internal_dump_hex(m_local_buffer, m_local_buffer_size);
             init_managed_buffer(&th_curr,
-                        MAX_SPDM_MESSAGE_BUFFER_SIZE);
+                        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
             cert_buffer = (uint8_t *)data;
             cert_buffer_size = data_size;
             spdm_hash_all(m_use_hash_algo, cert_buffer,
@@ -789,7 +789,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             uint8_t handshake_secret[MAX_HASH_SIZE];
             uint8_t response_handshake_secret[MAX_HASH_SIZE];
             uint8_t response_finished_key[MAX_HASH_SIZE];
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -863,7 +863,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
                    m_local_buffer_size));
             internal_dump_hex(m_local_buffer, m_local_buffer_size);
             init_managed_buffer(&th_curr,
-                        MAX_SPDM_MESSAGE_BUFFER_SIZE);
+                        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
             cert_buffer = (uint8_t *)data;
             cert_buffer_size = data_size;
             spdm_hash_all(m_use_hash_algo, cert_buffer,
@@ -986,7 +986,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         uint8_t handshake_secret[MAX_HASH_SIZE];
         uint8_t response_handshake_secret[MAX_HASH_SIZE];
         uint8_t response_finished_key[MAX_HASH_SIZE];
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1052,7 +1052,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
                m_local_buffer_size));
         internal_dump_hex(m_local_buffer, m_local_buffer_size);
-        init_managed_buffer(&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+        init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
@@ -1757,4 +1757,4 @@ int spdm_requester_key_exchange_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP

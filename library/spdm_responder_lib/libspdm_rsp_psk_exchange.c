@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
   Process the SPDM PSK_EXCHANGE request and return the response.
@@ -185,7 +185,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     if (spdm_is_capabilities_flag_supported(
             spdm_context, FALSE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
-        context_length = DEFAULT_CONTEXT_LENGTH;
+        context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     } else {
         context_length = 0;
     }
@@ -356,4 +356,4 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP

@@ -28,7 +28,7 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
 {
     spdm_context_t *spdm_context;
     return_status status;
-    uint8_t message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
 
     spdm_context = context;
@@ -80,14 +80,14 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
 {
     spdm_context_t *spdm_context;
     return_status status;
-    uint8_t message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
     uint32_t *message_session_id;
     boolean is_message_app_message;
 
     spdm_context = context;
 
-    ASSERT(*response_size <= MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    ASSERT(*response_size <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     message_size = sizeof(message);
     status = spdm_context->receive_message(spdm_context, &message_size,

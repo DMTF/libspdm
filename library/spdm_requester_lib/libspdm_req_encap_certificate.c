@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Process the SPDM encapsulated GET_CERTIFICATE request and return the response.
@@ -74,8 +74,8 @@ return_status spdm_get_encap_response_certificate(IN void *context,
 
     offset = spdm_request->offset;
     length = spdm_request->length;
-    if (length > MAX_SPDM_CERT_CHAIN_BLOCK_LEN) {
-        length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+    if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
+        length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     }
 
     if (offset >= spdm_context->local_context
@@ -142,4 +142,4 @@ return_status spdm_get_encap_response_certificate(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP

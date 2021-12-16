@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 static uint8_t m_local_psk_hint[32];
 static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
@@ -103,7 +103,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
     case 0x2: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -136,7 +136,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
     case 0x3: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -250,7 +250,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
                 .response_handshake_sequence_number--;
         } else if (sub_index1 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
             spdm_session_info_t *session_info;
@@ -379,7 +379,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
                 .response_handshake_sequence_number--;
         } else if (sub_index2 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
             spdm_session_info_t *session_info;
@@ -448,7 +448,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
     return RETURN_SUCCESS;
     case 0xB: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -481,7 +481,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
     case 0xC: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -514,7 +514,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
     case 0xD: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -547,7 +547,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
     case 0xE: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -1935,4 +1935,4 @@ int spdm_requester_psk_finish_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP

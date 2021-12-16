@@ -13,7 +13,7 @@ typedef struct {
     uint8_t measurement_record_length[3];
     uint8_t measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
                   MAX_HASH_SIZE) *
-                 MAX_SPDM_MEASUREMENT_BLOCK_COUNT];
+                 LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT];
     uint8_t nonce[SPDM_NONCE_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
@@ -21,7 +21,7 @@ typedef struct {
 } spdm_measurements_response_max_t;
 #pragma pack()
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
   This function sends GET_MEASUREMENT
@@ -566,4 +566,4 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
     return status;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP

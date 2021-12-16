@@ -7,7 +7,7 @@
 #include "internal/libspdm_responder_lib.h"
 
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
   Process the SPDM CHALLENGE request and return the response.
@@ -248,4 +248,4 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP

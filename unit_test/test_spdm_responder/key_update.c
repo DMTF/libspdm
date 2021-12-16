@@ -18,7 +18,7 @@ spdm_key_update_request_t m_spdm_key_update_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x3 }
 };
-uintn m_spdm_key_update_request2_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+uintn m_spdm_key_update_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request3 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
@@ -30,7 +30,7 @@ spdm_key_update_request_t m_spdm_key_update_request4 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
       SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS, 0x71 }
 };
-uintn m_spdm_key_update_request4_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+uintn m_spdm_key_update_request4_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request5 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
@@ -42,7 +42,7 @@ spdm_key_update_request_t m_spdm_key_update_request6 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
       SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY, 0x4A }
 };
-uintn m_spdm_key_update_request6_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+uintn m_spdm_key_update_request6_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request7 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
@@ -187,7 +187,7 @@ void test_spdm_responder_key_update_case1(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -254,7 +254,7 @@ void test_spdm_responder_key_update_case2(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -315,7 +315,7 @@ void test_spdm_responder_key_update_case3(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -380,7 +380,7 @@ void test_spdm_responder_key_update_case4(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -447,7 +447,7 @@ void test_spdm_responder_key_update_case5(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *error_data;
 
@@ -521,7 +521,7 @@ void test_spdm_responder_key_update_case6(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -580,7 +580,7 @@ void test_spdm_responder_key_update_case7(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -668,7 +668,7 @@ void test_spdm_responder_key_update_case8(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -736,7 +736,7 @@ void test_spdm_responder_key_update_case9(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -803,7 +803,7 @@ void test_spdm_responder_key_update_case10(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -873,7 +873,7 @@ void test_spdm_responder_key_update_case11(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -935,7 +935,7 @@ void test_spdm_responder_key_update_case12(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1021,7 +1021,7 @@ void test_spdm_responder_key_update_case13(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1106,7 +1106,7 @@ void test_spdm_responder_key_update_case14(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1207,7 +1207,7 @@ void test_spdm_responder_key_update_case15(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1307,7 +1307,7 @@ void test_spdm_responder_key_update_case16(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1371,7 +1371,7 @@ void test_spdm_responder_key_update_case17(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1456,7 +1456,7 @@ void test_spdm_responder_key_update_case18(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1557,7 +1557,7 @@ void test_spdm_responder_key_update_case19(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1627,7 +1627,7 @@ void test_spdm_responder_key_update_case20(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1728,7 +1728,7 @@ void test_spdm_responder_key_update_case21(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1815,7 +1815,7 @@ void test_spdm_responder_key_update_case22(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1913,7 +1913,7 @@ void test_spdm_responder_key_update_case23(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -1998,7 +1998,7 @@ void test_spdm_responder_key_update_case24(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -2096,7 +2096,7 @@ void test_spdm_responder_key_update_case25(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];
@@ -2162,7 +2162,7 @@ void test_spdm_responder_key_update_case26(void **state)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn                      response_size;
-    uint8_t                      response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                      response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_update_response_t *spdm_response;
 
     uint8_t    m_req_secret_buffer[MAX_HASH_SIZE];

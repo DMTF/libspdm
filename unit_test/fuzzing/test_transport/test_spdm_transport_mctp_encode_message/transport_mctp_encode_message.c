@@ -11,7 +11,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 void test_spdm_transport_mctp_encode_message(void **State)
@@ -19,7 +19,7 @@ void test_spdm_transport_mctp_encode_message(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn transport_message_size;
-    uint8_t transport_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     boolean is_app_message;
     boolean is_requester;
     spdm_test_context = *State;

@@ -102,7 +102,7 @@ spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request9 = {
     MY_TEST_TOKEN
   },
 };
-uintn m_spdm_respond_if_ready_request9_size = MAX_SPDM_MESSAGE_BUFFER_SIZE; //wrong size
+uintn m_spdm_respond_if_ready_request9_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE; //wrong size
 
 spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request10 = {
   {
@@ -124,7 +124,7 @@ spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request11 = {
 };
 uintn m_spdm_respond_if_ready_request11_size = sizeof(spdm_message_header_t);
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 spdm_get_digest_request_t    m_spdm_get_digest_request = {
   {
     SPDM_MESSAGE_VERSION_11,
@@ -143,13 +143,13 @@ spdm_get_certificate_request_t    m_spdm_get_certificate_request = {
     0
   },
   0,
-  MAX_SPDM_CERT_CHAIN_BLOCK_LEN
+  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
 uintn m_spdm_get_certificate_request_size = sizeof(m_spdm_get_certificate_request);
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 spdm_challenge_request_t    m_spdm_challenge_request = {
   {
@@ -161,9 +161,9 @@ spdm_challenge_request_t    m_spdm_challenge_request = {
 };
 uintn m_spdm_challenge_request_size = sizeof(m_spdm_challenge_request);
 
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   {
     SPDM_MESSAGE_VERSION_11,
@@ -173,7 +173,7 @@ spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   },
 };
 uintn m_spdm_get_measurements_request_size = sizeof(spdm_message_header_t);
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 #pragma pack(1)
 
@@ -199,8 +199,8 @@ typedef struct {
   uint16_t               psk_hint_length;
   uint16_t               requester_context_length;
   uint16_t               opaque_length;
-  uint8_t                psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
-  uint8_t                requester_context[DEFAULT_CONTEXT_LENGTH];
+  uint8_t                psk_hint[LIBSPDM_PSK_MAX_HINT_LENGTH];
+  uint8_t                requester_context[LIBSPDM_PSK_CONTEXT_LENGTH];
   uint8_t                opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
@@ -261,7 +261,7 @@ spdm_end_session_request_t    m_spdm_end_session_request = {
 };
 uintn m_spdm_end_session_request_size = sizeof(m_spdm_end_session_request);
 
-static uint8_t                  m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+static uint8_t                  m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static void spdm_secured_message_set_request_finished_key(
     IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
@@ -275,7 +275,7 @@ static void spdm_secured_message_set_request_finished_key(
     secured_message_context->finished_key_ready = TRUE;
 }
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 1: receiving a correct RESPOND_IF_READY from the requester, after a
   GET_DIGESTS could not be processed.
@@ -287,7 +287,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -304,8 +304,8 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_context->connection_info.version.major_version = 1;
   spdm_context->connection_info.version.minor_version = 1;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
 
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
@@ -328,7 +328,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_DIGESTS);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 2: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -337,14 +337,14 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   response message.
 **/
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 void test_spdm_responder_respond_if_ready_case2(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_certificate_response_t *spdm_response; //response to the original request (CERTIFICATE)
   void                 *data;
   uintn                data_size;
@@ -383,16 +383,16 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request2_size, &m_spdm_respond_if_ready_request2, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_certificate_response_t) + MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+  assert_int_equal (response_size, sizeof(spdm_certificate_response_t) + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CERTIFICATE);
   assert_int_equal (spdm_response->header.param1, 0);
-  assert_int_equal (spdm_response->portion_length, MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
-  assert_int_equal (spdm_response->remainder_length, data_size - MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+  assert_int_equal (spdm_response->portion_length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+  assert_int_equal (spdm_response->remainder_length, data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
   free(data);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 3: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -400,13 +400,13 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   Expected behavior: the responder accepts the request and produces a valid CHALLENGE_AUTH
   response message.
 **/
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 void test_spdm_responder_respond_if_ready_case3(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response; //response to the original request (CHALLENGE_AUTH)
   void                 *data;
   uintn                data_size;
@@ -457,7 +457,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   assert_int_equal (spdm_response->header.param2, 1 << 0);
   free(data);
 }
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
   Test 4: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -466,14 +466,14 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   response message.
 **/
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 void test_spdm_responder_respond_if_ready_case4(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_measurements_response_t *spdm_response; //response to the original request (MEASUREMENTS)
 
   spdm_test_context = *state;
@@ -517,7 +517,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   assert_int_equal (spdm_response->header.param1, MEASUREMENT_BLOCK_NUMBER);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
   Test 5: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -525,14 +525,14 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   Expected behavior: the responder accepts the request and produces a valid KEY_EXCHANGE_RSP
   response message.
 **/
-#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 void test_spdm_responder_respond_if_ready_case5(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_key_exchange_response_t *spdm_response; //response to the original request (KEY_EXCHANGE_RSP)
   void                 *data;
   uintn                data_size;
@@ -606,7 +606,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
   Test 6: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -614,14 +614,14 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   Expected behavior: the responder accepts the request and produces a valid FINISH_RSP
   response message.
 **/
-#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 void test_spdm_responder_respond_if_ready_case6(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_finish_response_t *spdm_response; //response to the original request (FINISH_RSP)
   void                 *data;
   uintn                data_size;
@@ -678,7 +678,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   hash_size = spdm_get_hash_size (m_use_hash_algo);
   hmac_size = spdm_get_hash_size (m_use_hash_algo);
   ptr = m_spdm_finish_request.signature;
-  init_managed_buffer (&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+  init_managed_buffer (&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
   cert_buffer = (uint8_t *)data;
   cert_buffer_size = data_size;
   spdm_hash_all (m_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
@@ -711,7 +711,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
   Test 7: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -719,14 +719,14 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   Expected behavior: the responder accepts the request and produces a valid PSK_EXCHANGE_RSP
   response message.
 **/
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 void test_spdm_responder_respond_if_ready_case7(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_psk_exchange_response_t *spdm_response; //response to the original request (PSK_EXCHANGE_RSP)
   void                 *data;
   uintn                data_size;
@@ -766,14 +766,14 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context->local_context.psk_hint = local_psk_hint;
 
   m_spdm_psk_exchange_request.psk_hint_length = (uint16_t)spdm_context->local_context.psk_hint_size;
-  m_spdm_psk_exchange_request.requester_context_length = DEFAULT_CONTEXT_LENGTH;
+  m_spdm_psk_exchange_request.requester_context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
   OpaquePskExchangeReqSize = spdm_get_opaque_data_supported_version_data_size (spdm_context);
   m_spdm_psk_exchange_request.opaque_length = (uint16_t)OpaquePskExchangeReqSize;
   m_spdm_psk_exchange_request.req_session_id = 0xFFFF;
   ptr = m_spdm_psk_exchange_request.psk_hint;
   copy_mem (ptr, spdm_context->local_context.psk_hint, spdm_context->local_context.psk_hint_size);
   ptr += m_spdm_psk_exchange_request.psk_hint_length;
-  spdm_get_random_number (DEFAULT_CONTEXT_LENGTH, ptr);
+  spdm_get_random_number (LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
   ptr += m_spdm_psk_exchange_request.requester_context_length;
   spdm_build_opaque_data_supported_version_data (spdm_context, &OpaquePskExchangeReqSize, ptr);
   ptr += OpaquePskExchangeReqSize;
@@ -793,7 +793,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request7_size, &m_spdm_respond_if_ready_request7, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_psk_exchange_response_t) + DEFAULT_CONTEXT_LENGTH + spdm_get_opaque_data_version_selection_data_size(spdm_context) + spdm_get_hash_size (m_use_hash_algo));
+  assert_int_equal (response_size, sizeof(spdm_psk_exchange_response_t) + LIBSPDM_PSK_CONTEXT_LENGTH + spdm_get_opaque_data_version_selection_data_size(spdm_context) + spdm_get_hash_size (m_use_hash_algo));
   assert_int_equal (spdm_secured_message_get_session_state (spdm_context->session_info[0].secured_message_context), SPDM_SESSION_STATE_HANDSHAKING);
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_PSK_EXCHANGE_RSP);
@@ -801,7 +801,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 /**
   Test 8: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -809,13 +809,13 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   Expected behavior: the responder accepts the request and produces a valid PSK_FINISH_RSP
   response message.
 **/
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 void test_spdm_responder_respond_if_ready_case8(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_psk_finish_response_t *spdm_response; //response to the original request (FINISH_PSK_RSP)
   void                 *data;
   uintn                data_size;
@@ -876,7 +876,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   hash_size = spdm_get_hash_size (m_use_hash_algo);
   hmac_size = spdm_get_hash_size (m_use_hash_algo);
   ptr = m_spdm_psk_finish_request.verify_data;
-  init_managed_buffer (&th_curr, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+  init_managed_buffer (&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
   // Transcript.MessageA size is 0
   // SessionTranscript.MessageK is 0
   append_managed_buffer (&th_curr, (uint8_t *)&m_spdm_psk_finish_request, sizeof(spdm_psk_finish_request_t));
@@ -904,9 +904,9 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 9: receiving a RESPOND_IF_READY message larger than specified (more parameters
@@ -919,7 +919,7 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -932,8 +932,8 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -957,9 +957,9 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   assert_int_equal (spdm_response->header.param2, 0);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 10: receiving a correct RESPOND_IF_READY from the requester, but the responder is in
   a Busy state.
@@ -971,7 +971,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -984,8 +984,8 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -1010,9 +1010,9 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 11: receiving a correct RESPOND_IF_READY from the requester, but the responder requires
   resynchronization with the requester.
@@ -1024,7 +1024,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -1037,8 +1037,8 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -1063,9 +1063,9 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 12: receiving a correct RESPOND_IF_READY from the requester, but the responder could not
@@ -1078,7 +1078,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
   spdm_error_data_response_not_ready_t *error_data;
 
@@ -1092,8 +1092,8 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -1121,9 +1121,9 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   assert_int_equal (error_data->token, MY_TEST_TOKEN);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Test 13: receiving a correct RESPOND_IF_READY from the requester, with the correct original
@@ -1136,7 +1136,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -1149,8 +1149,8 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -1173,9 +1173,9 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
   Test 14: receiving a correct RESPOND_IF_READY from the requester, with the correct token,
   but with a request code different from the expected.
@@ -1187,7 +1187,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
 
   spdm_test_context = *state;
@@ -1200,8 +1200,8 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
-  spdm_context->local_context.local_cert_chain_provision_size[0] = MAX_SPDM_MESSAGE_BUFFER_SIZE;
-  set_mem (m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
+  spdm_context->local_context.local_cert_chain_provision_size[0] = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+  set_mem (m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
   spdm_context->local_context.slot_count = 1;
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
@@ -1224,7 +1224,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
   SPDM_TEST_CONTEXT_SIGNATURE,
@@ -1234,37 +1234,37 @@ spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
 int spdm_responder_respond_if_ready_test_main(void) {
   const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
     // Success Case
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case1),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case2),
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case3),
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
-    #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case8),
-    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case9),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case10),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case11),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case12),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case13),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case14),
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
   };
 

@@ -8,13 +8,13 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 #define ALTERNATIVE_DEFAULT_SLOT_ID 2
 #define LARGE_MEASUREMENT_SIZE ((1 << 24) - 1)
 
 static uintn m_local_buffer_size;
-static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_local_psk_hint[32];
 
 uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
@@ -72,7 +72,7 @@ return_status spdm_requester_get_measurements_test_send_message(
     uint32_t *session_id;
     spdm_session_info_t *session_info;
     boolean is_app_message;
-    uint8_t app_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn app_message_size;
 
     spdm_test_context = get_spdm_test_context();
@@ -421,7 +421,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -505,7 +505,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -635,7 +635,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             uintn sig_size;
             uintn measurment_sig_size;
             spdm_measurement_block_dmtf_t *measurment_block;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -786,7 +786,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             uintn sig_size;
             uintn measurment_sig_size;
             spdm_measurement_block_dmtf_t *measurment_block;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             ((spdm_context_t *)spdm_context)
@@ -873,7 +873,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 
     case 0xA: {
         spdm_measurements_response_t *spdm_response;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint8_t *ptr;
         temp_buf_size =
@@ -903,7 +903,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0xB: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint8_t *ptr;
         ((spdm_context_t *)spdm_context)
@@ -962,7 +962,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1033,7 +1033,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1110,7 +1110,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0xE: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1167,7 +1167,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1252,7 +1252,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1334,7 +1334,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
 
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         temp_buf_size = sizeof(spdm_measurements_response_t);
 
@@ -1462,7 +1462,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x13: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1509,7 +1509,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x14: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1556,7 +1556,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x15: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1604,7 +1604,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x16: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint8_t *ptr;
         ((spdm_context_t *)spdm_context)
@@ -1659,7 +1659,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1721,7 +1721,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         ((spdm_context_t *)spdm_context)
@@ -1787,7 +1787,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
 
@@ -1876,7 +1876,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uintn MissingBytes;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
@@ -1969,7 +1969,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uintn MissingBytes;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
@@ -2062,7 +2062,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
         uint16_t opaque_informed_size = opaque_size_test - 1;
@@ -2150,7 +2150,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
         uint16_t opaque_informed_size = opaque_size_test - 1;
@@ -2214,7 +2214,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = MAX_UINT16;
         uint16_t opaque_informed_size = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
@@ -2277,7 +2277,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint16_t opaque_size_test = MAX_UINT16;
 
@@ -2339,7 +2339,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x20: {
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint8_t *ptr;
         ((spdm_context_t *)spdm_context)
@@ -2434,7 +2434,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         uintn sig_size;
         uintn measurment_sig_size;
         spdm_measurement_block_dmtf_t *measurment_block;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
         spdm_session_info_t *session_info;
@@ -2538,7 +2538,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2594,7 +2594,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2650,7 +2650,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2706,7 +2706,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2762,7 +2762,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2818,7 +2818,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2874,7 +2874,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2932,7 +2932,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -2985,7 +2985,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3097,7 +3097,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3158,7 +3158,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3217,7 +3217,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3276,7 +3276,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3335,7 +3335,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3394,7 +3394,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3531,7 +3531,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3592,7 +3592,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3650,7 +3650,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3708,7 +3708,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3766,7 +3766,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3848,7 +3848,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3913,7 +3913,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -3972,7 +3972,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4031,7 +4031,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4091,7 +4091,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4151,7 +4151,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4214,7 +4214,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4280,7 +4280,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4342,7 +4342,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4406,7 +4406,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4471,7 +4471,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
   spdm_context_t  *spdm_context;
   uint8_t                number_of_block;
   uint32_t               measurement_record_length;
-  uint8_t                measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+  uint8_t                measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
   uint8_t                request_attribute;
   void                 *data;
   uintn                data_size;
@@ -4534,7 +4534,7 @@ void test_spdm_requester_get_measurements_case34(void **state)
     spdm_session_info_t *session_info;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;
@@ -4695,4 +4695,4 @@ int spdm_requester_get_measurements_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
