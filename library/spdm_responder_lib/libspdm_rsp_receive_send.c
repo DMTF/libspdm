@@ -16,49 +16,49 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
     { SPDM_GET_CAPABILITIES, spdm_get_response_capabilities },
     { SPDM_NEGOTIATE_ALGORITHMS, spdm_get_response_algorithms },
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, spdm_get_response_digests },
     { SPDM_GET_CERTIFICATE, spdm_get_response_certificate },
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_response_challenge_auth },
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     { SPDM_GET_MEASUREMENTS, spdm_get_response_measurements },
-    #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     { SPDM_KEY_EXCHANGE, spdm_get_response_key_exchange },
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_PSK_EXCHANGE, spdm_get_response_psk_exchange },
-    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_GET_ENCAPSULATED_REQUEST,
       spdm_get_response_encapsulated_request },
     { SPDM_DELIVER_ENCAPSULATED_RESPONSE,
       spdm_get_response_encapsulated_response_ack },
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
     { SPDM_RESPOND_IF_READY, spdm_get_response_respond_if_ready },
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     { SPDM_FINISH, spdm_get_response_finish },
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_PSK_FINISH, spdm_get_response_psk_finish },
-    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_END_SESSION, spdm_get_response_end_session },
     { SPDM_HEARTBEAT, spdm_get_response_heartbeat },
     { SPDM_KEY_UPDATE, spdm_get_response_key_update },
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 };
 
 /**
@@ -205,7 +205,7 @@ void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
 {
     uintn index;
 
-    for (index = 0; index < MAX_SPDM_SESSION_STATE_CALLBACK_NUM; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
         if (spdm_context->spdm_session_state_callback[index] != 0) {
             ((libspdm_session_state_callback_func)spdm_context
                  ->spdm_session_state_callback[index])(
@@ -257,7 +257,7 @@ void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
 {
     uintn index;
 
-    for (index = 0; index < MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM;
+    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
          index++) {
         if (spdm_context->spdm_connection_state_callback[index] != 0) {
             ((libspdm_connection_state_callback_func)spdm_context
@@ -307,7 +307,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                   OUT void *response)
 {
     spdm_context_t *spdm_context;
-    uint8_t my_response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t my_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn my_response_size;
     return_status status;
     spdm_get_spdm_response_func get_response_func;
@@ -523,7 +523,7 @@ return_status libspdm_register_session_state_callback_func(
     uintn index;
 
     spdm_context = context;
-    for (index = 0; index < MAX_SPDM_SESSION_STATE_CALLBACK_NUM; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
         if (spdm_context->spdm_session_state_callback[index] == 0) {
             spdm_context->spdm_session_state_callback[index] =
                 (uintn)spdm_session_state_callback;
@@ -554,7 +554,7 @@ return_status libspdm_register_connection_state_callback_func(
     uintn index;
 
     spdm_context = context;
-    for (index = 0; index < MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM;
+    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
          index++) {
         if (spdm_context->spdm_connection_state_callback[index] == 0) {
             spdm_context->spdm_connection_state_callback[index] =

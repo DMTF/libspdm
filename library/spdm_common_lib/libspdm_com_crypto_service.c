@@ -167,7 +167,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
 
     spdm_context = context;
 
-    init_managed_buffer(&m1m2, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    init_managed_buffer(&m1m2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     hash_size = spdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -653,7 +653,7 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
     boolean result;
     uintn signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t m1m2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn m1m2_buffer_size;
 #else
     uint8_t m1m2_hash[MAX_HASH_SIZE];
@@ -794,7 +794,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
     uint8_t *cert_chain_data;
     uintn cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t m1m2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t m1m2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn m1m2_buffer_size;
 #else
     uint8_t m1m2_hash[MAX_HASH_SIZE];
@@ -952,7 +952,7 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
     uintn signature_size;
     boolean result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t l1l2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn l1l2_buffer_size;
 #else
     uint8_t l1l2_hash[MAX_HASH_SIZE];
@@ -1015,7 +1015,7 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
     uint8_t *cert_chain_data;
     uintn cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t l1l2_buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t l1l2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn l1l2_buffer_size;
 #else
     uint8_t l1l2_hash[MAX_HASH_SIZE];

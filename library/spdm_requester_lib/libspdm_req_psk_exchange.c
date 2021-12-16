@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 #pragma pack(1)
 
@@ -16,8 +16,8 @@ typedef struct {
     uint16_t psk_hint_length;
     uint16_t context_length;
     uint16_t opaque_length;
-    uint8_t psk_hint[MAX_SPDM_PSK_HINT_LENGTH];
-    uint8_t context[DEFAULT_CONTEXT_LENGTH];
+    uint8_t psk_hint[LIBSPDM_PSK_MAX_HINT_LENGTH];
+    uint8_t context[LIBSPDM_PSK_CONTEXT_LENGTH];
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
@@ -28,7 +28,7 @@ typedef struct {
     uint16_t context_length;
     uint16_t opaque_length;
     uint8_t measurement_summary_hash[MAX_HASH_SIZE];
-    uint8_t context[DEFAULT_CONTEXT_LENGTH];
+    uint8_t context[LIBSPDM_PSK_CONTEXT_LENGTH];
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t verify_data[MAX_HASH_SIZE];
 } spdm_psk_exchange_response_max_t;
@@ -45,7 +45,7 @@ typedef struct {
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
   @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
   @param  requester_context_in_size     The size of requester_context_in.
-                                        It must be 32 bytes at least, but not exceed DEFAULT_CONTEXT_LENGTH.
+                                        It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
   @param  requester_context             A buffer to hold the requester context, if not NULL.
   @param  requester_context_size        On input, the size of requester_context buffer.
                                         On output, the size of data returned in requester_context buffer.
@@ -140,9 +140,9 @@ return_status try_spdm_send_receive_psk_exchange(
     spdm_request.psk_hint_length =
         (uint16_t)spdm_context->local_context.psk_hint_size;
     if (requester_context_in == NULL) {
-        spdm_request.context_length = DEFAULT_CONTEXT_LENGTH;
+        spdm_request.context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     } else {
-        ASSERT (requester_context_in_size <= DEFAULT_CONTEXT_LENGTH);
+        ASSERT (requester_context_in_size <= LIBSPDM_PSK_CONTEXT_LENGTH);
         spdm_request.context_length = (uint16_t)requester_context_in_size;
     }
     opaque_psk_exchange_req_size =
@@ -161,7 +161,7 @@ return_status try_spdm_send_receive_psk_exchange(
     ptr += spdm_request.psk_hint_length;
 
     if (requester_context_in == NULL) {
-        if(!spdm_get_random_number(DEFAULT_CONTEXT_LENGTH, ptr)) {
+        if(!spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr)) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -421,7 +421,7 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
   @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
   @param  requester_context_in_size     The size of requester_context_in.
-                                        It must be 32 bytes at least, but not exceed DEFAULT_CONTEXT_LENGTH.
+                                        It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
   @param  requester_context             A buffer to hold the requester context, if not NULL.
   @param  requester_context_size        On input, the size of requester_context buffer.
                                         On output, the size of data returned in requester_context buffer.
@@ -465,4 +465,4 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
     return status;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP

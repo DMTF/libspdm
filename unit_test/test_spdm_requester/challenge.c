@@ -7,10 +7,10 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 static uintn m_local_buffer_size;
-static uint8_t m_local_buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 
 return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
                              IN uintn request_size,
@@ -109,7 +109,7 @@ return_status spdm_requester_challenge_test_receive_message(
         uint8_t *ptr;
         uint8_t hash_data[MAX_HASH_SIZE];
         uintn sig_size;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         read_responder_public_certificate_chain(m_use_hash_algo,
@@ -186,7 +186,7 @@ return_status spdm_requester_challenge_test_receive_message(
         uint8_t *ptr;
         uint8_t hash_data[MAX_HASH_SIZE];
         uintn sig_size;
-        uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
         read_responder_public_certificate_chain(m_use_hash_algo,
@@ -303,7 +303,7 @@ return_status spdm_requester_challenge_test_receive_message(
             uint8_t *ptr;
             uint8_t hash_data[MAX_HASH_SIZE];
             uintn sig_size;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             read_responder_public_certificate_chain(
@@ -441,7 +441,7 @@ return_status spdm_requester_challenge_test_receive_message(
             uint8_t *ptr;
             uint8_t hash_data[MAX_HASH_SIZE];
             uintn sig_size;
-            uint8_t temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
 
             read_responder_public_certificate_chain(
@@ -522,7 +522,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -567,7 +567,7 @@ return_status spdm_requester_challenge_test_receive_message(
   case 0xB: //CHALLENGE_AUTH message smaller than a SPDM header
   {
     spdm_challenge_auth_response_t  *spdm_response;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
     spdm_response = (void *)temp_buf;
     temp_buf_size = sizeof(spdm_challenge_auth_response_t) - 1; //smaller than standard message size
@@ -589,7 +589,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -639,7 +639,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -689,7 +689,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -739,7 +739,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -789,7 +789,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -841,7 +841,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);
@@ -893,7 +893,7 @@ return_status spdm_requester_challenge_test_receive_message(
     uint8_t                         *Ptr;
     uint8_t                         hash_data[MAX_HASH_SIZE];
     uintn                         sig_size;
-    uint8_t                         temp_buf[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
 
     read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, NULL, NULL);

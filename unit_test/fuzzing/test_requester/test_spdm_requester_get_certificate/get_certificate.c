@@ -11,7 +11,7 @@
 
 uintn get_max_buffer_size(void)
 {
-   return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+   return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 return_status spdm_device_send_message(IN void *spdm_context,
@@ -30,12 +30,12 @@ return_status spdm_device_receive_message(IN void *spdm_context,
    static uintn calling_index = 0;
    uint16_t portion_length;
 
-   portion_length = MAX_SPDM_CERT_CHAIN_BLOCK_LEN;
+   portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
    spdm_test_context = get_spdm_test_context();
    *response_size = spdm_test_context->test_buffer_size;
    copy_mem(((uint8_t *)response + 1),
        (uint8_t *)spdm_test_context->test_buffer +
-          MAX_SPDM_CERT_CHAIN_BLOCK_LEN * calling_index,
+          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
        portion_length);
 
    calling_index++;
@@ -47,7 +47,7 @@ void test_spdm_requester_get_certificate(void **State)
    spdm_test_context_t *spdm_test_context;
    spdm_context_t *spdm_context;
    uintn cert_chain_size;
-   uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+   uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
    void *data;
    uintn data_size;
    void *hash;

@@ -75,9 +75,9 @@ return_status libspdm_responder_dispatch_message(IN void *context)
 {
     return_status status;
     spdm_context_t *spdm_context;
-    uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn request_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn response_size;
     uint32_t *session_id;
 

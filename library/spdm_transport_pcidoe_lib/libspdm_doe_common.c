@@ -113,7 +113,7 @@ return_status spdm_transport_pci_doe_encode_message(
 {
     return_status status;
     transport_encode_message_func transport_encode_message;
-    uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
     spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
     void *secured_message_context;
@@ -209,7 +209,7 @@ return_status spdm_transport_pci_doe_decode_message(
     return_status status;
     transport_decode_message_func transport_decode_message;
     uint32_t *SecuredMessageSessionId;
-    uint8_t secured_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
     spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
     void *secured_message_context;

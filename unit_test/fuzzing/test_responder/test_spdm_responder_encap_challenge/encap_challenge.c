@@ -12,7 +12,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 spdm_test_context_t m_spdm_responder_encap_challenge_test_context = {

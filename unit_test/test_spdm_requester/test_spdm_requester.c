@@ -11,28 +11,28 @@ int spdm_requester_get_version_test_main(void);
 int spdm_requester_get_capabilities_test_main(void);
 int spdm_requester_negotiate_algorithms_test_main(void);
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 int spdm_requester_get_digests_test_main(void);
 int spdm_requester_get_certificate_test_main(void);
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 int spdm_requester_challenge_test_main(void);
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 int spdm_requester_get_measurements_test_main(void);
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-#if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 int spdm_requester_key_exchange_test_main(void);
 int spdm_requester_finish_test_main(void);
-#endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-#if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 int spdm_requester_psk_exchange_test_main(void);
 int spdm_requester_psk_finish_test_main(void);
-#endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 int spdm_requester_heartbeat_test_main(void);
 int spdm_requester_key_update_test_main(void);
@@ -54,7 +54,7 @@ int main(void)
         return_value = 1;
     }
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     if (spdm_requester_get_digests_test_main() != 0) {
         return_value = 1;
     }
@@ -62,43 +62,43 @@ int main(void)
     if (spdm_requester_get_certificate_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     if (spdm_requester_challenge_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (spdm_requester_get_measurements_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     if (spdm_requester_key_exchange_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     if (spdm_requester_finish_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     if (spdm_requester_psk_exchange_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     if (spdm_requester_psk_finish_test_main() != 0) {
         return_value = 1;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
     if (spdm_requester_heartbeat_test_main() != 0) {
         return_value = 1;

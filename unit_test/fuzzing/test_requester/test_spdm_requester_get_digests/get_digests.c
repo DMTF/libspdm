@@ -10,7 +10,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 return_status spdm_device_send_message(IN void *spdm_context,
@@ -41,7 +41,7 @@ void test_spdm_requester_get_diges(void **State)
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
     uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
-    uint8_t m_local_certificate_chain[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -54,8 +54,8 @@ void test_spdm_requester_get_diges(void **State)
     spdm_context->local_context.peer_cert_chain_provision =
         m_local_certificate_chain;
     spdm_context->local_context.peer_cert_chain_provision_size =
-        MAX_SPDM_MESSAGE_BUFFER_SIZE;
-    set_mem(m_local_certificate_chain, MAX_SPDM_MESSAGE_BUFFER_SIZE,
+        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
         (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
     zero_mem(total_digest_buffer, sizeof(total_digest_buffer));

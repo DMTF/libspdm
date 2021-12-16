@@ -15,7 +15,7 @@ typedef struct {
 
 #pragma pack()
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   This function sends GET_DIGEST
@@ -203,4 +203,4 @@ return_status libspdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     return status;
 }
 
-#endif //SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif //LIBSPDM_ENABLE_CAPABILITY_CERT_CAP

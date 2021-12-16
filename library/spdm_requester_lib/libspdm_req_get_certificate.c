@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 #pragma pack(1)
 
@@ -14,7 +14,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t portion_length;
     uint16_t remainder_length;
-    uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_BLOCK_LEN];
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN];
 } spdm_certificate_response_max_t;
 
 #pragma pack()
@@ -31,7 +31,7 @@ typedef struct {
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       length parameter in the get_certificate message (limited by MAX_SPDM_CERT_CHAIN_BLOCK_LEN).
+  @param  length                       length parameter in the get_certificate message (limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN).
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
   @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
@@ -75,8 +75,8 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     }
 
     init_managed_buffer(&certificate_chain_buffer,
-                MAX_SPDM_MESSAGE_BUFFER_SIZE);
-    length = MIN(length, MAX_SPDM_CERT_CHAIN_BLOCK_LEN);
+                LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    length = MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return RETURN_INVALID_PARAMETER;
@@ -148,7 +148,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             goto done;
         }
         if (spdm_response.portion_length >
-            MAX_SPDM_CERT_CHAIN_BLOCK_LEN) {
+            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
@@ -275,7 +275,7 @@ return_status libspdm_get_certificate(IN void *context, IN uint8_t slot_id,
                    OUT void *cert_chain)
 {
     return libspdm_get_certificate_choose_length(context, slot_id,
-                          MAX_SPDM_CERT_CHAIN_BLOCK_LEN,
+                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                           cert_chain_size, cert_chain);
 }
 
@@ -308,7 +308,7 @@ return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
                    OUT uintn *trust_anchor_size)
 {
     return libspdm_get_certificate_choose_length_ex(context, slot_id,
-                          MAX_SPDM_CERT_CHAIN_BLOCK_LEN,
+                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                           cert_chain_size, cert_chain,
                           trust_anchor, trust_anchor_size);
 }
@@ -325,7 +325,7 @@ return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       length parameter in the get_certificate message (limited by MAX_SPDM_CERT_CHAIN_BLOCK_LEN).
+  @param  length                       length parameter in the get_certificate message (limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN).
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
   @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
@@ -369,7 +369,7 @@ return_status libspdm_get_certificate_choose_length(IN void *context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       length parameter in the get_certificate message (limited by MAX_SPDM_CERT_CHAIN_BLOCK_LEN).
+  @param  length                       length parameter in the get_certificate message (limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN).
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
   @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
@@ -405,4 +405,4 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
     return status;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP

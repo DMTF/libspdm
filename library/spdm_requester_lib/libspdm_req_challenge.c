@@ -20,7 +20,7 @@ typedef struct {
 
 #pragma pack()
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
   This function sends CHALLENGE
@@ -384,4 +384,4 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
     return status;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP

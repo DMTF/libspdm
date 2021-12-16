@@ -46,18 +46,18 @@ typedef struct {
 } spdm_encap_response_struct_t;
 
 spdm_encap_response_struct_t m_encap_response_struct[] = {
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, spdm_get_encap_request_get_digest,
       spdm_process_encap_response_digest },
 
     { SPDM_GET_CERTIFICATE, spdm_get_encap_request_get_certificate,
       spdm_process_encap_response_certificate },
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_encap_request_challenge,
       spdm_process_encap_response_challenge_auth },
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
     { SPDM_KEY_UPDATE, spdm_get_encap_request_key_update,
       spdm_process_encap_response_key_update },

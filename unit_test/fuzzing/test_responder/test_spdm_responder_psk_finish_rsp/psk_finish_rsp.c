@@ -11,7 +11,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 spdm_test_context_t m_spdm_responder_psk_finish_rsp_test_context = {
@@ -41,7 +41,7 @@ void test_spdm_responder_psk_finish_rsp(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
     uintn data_size1;
     static uint8_t m_dummy_buffer[MAX_HASH_SIZE];

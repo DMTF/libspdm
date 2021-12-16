@@ -22,7 +22,7 @@ sudo apt-get install gcc-aarch64-linux-gnu
 sudo apt-get install gcc-riscv64-linux-gnu
 ```
     Build riscv32 compiler:
-    
+
 ```
 sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
 git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
@@ -47,7 +47,7 @@ git clone https://github.com/foss-for-synopsys-dwc-arc-processors/glibc.git # Fo
 git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux
 
 cd toolchain
-./build-all.sh --no-elf32 --cpu hs38 --install-dir $INSTALL_ROOT 
+./build-all.sh --no-elf32 --cpu hs38 --install-dir $INSTALL_ROOT
 # This command will build toolchain for arc HS Linux development, for other arc cores please refer to https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/blob/arc-releases/README.md
 
 sudo ln -s /<work_dir>/arc_gnu/toolchain/bin/* /usr/bin
@@ -89,10 +89,10 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Run all tests and generate log file :
    `%DRIO_PATH%\<bin64|bin32>\drrun.exe -c %DRIO_PATH%\tools\<lib64|lib32>\release\drcov.dll -- <test_app>`
-   
+
    Generate coverage data with filter :
    `%DRIO_PATH%\tools\<bin64|bin32>\drcov2lcov.exe -dir . -src_filter libspdm`
-   
+
    Generate coverage report :
    `perl %DRIO_PATH%\tools\<bin64|bin32>\genhtml coverage.info`
 
@@ -140,7 +140,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    export AFL_PATH=<AFL_PATH>
    export PATH=$PATH:$AFL_PATH
    ```
-   
+
    Then run commands as root (every time reboot the OS):
    ```
    sudo bash -c 'echo core >/proc/sys/kernel/core_pattern'
@@ -182,7 +182,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make
    ```
    You can launch the script `fuzzing.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
-   
+
    Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
    The usage of the script `fuzzing.sh` is as following:
@@ -196,7 +196,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    libspdm/unit_test/fuzzing/fuzzing.sh mbedtls ON 60
    ```
-   Fuzzing output path and code coverage output path of the script `fuzzing.sh`: 
+   Fuzzing output path and code coverage output path of the script `fuzzing.sh`:
    ```
    #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>/SummaryList.csv
    libspdm/unit_test/fuzzing/out_mbedtls_ac992fd/SummaryList.csv
@@ -419,19 +419,19 @@ The SPDM feature can be controled by [spdm_lib_config.h](https://github.com/DMTF
 // A single switch may enable/disable a single capability or group of related
 // capabilities.
 //
-// SPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
-// SPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
+// LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
+// LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
 // SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
 //                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
 //
-// SPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
-// SPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
+// LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
+// LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
 
-#define SPDM_ENABLE_CAPABILITY_CERT_CAP 1
-#define SPDM_ENABLE_CAPABILITY_CHAL_CAP 1
-#define SPDM_ENABLE_CAPABILITY_MEAS_CAP 1
+#define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
+#define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1
+#define LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP 1
 
-#define SPDM_ENABLE_CAPABILITY_KEY_EX_CAP   1
-#define SPDM_ENABLE_CAPABILITY_PSK_EX_CAP   1
+#define LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP   1
+#define LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP   1
 ```
 

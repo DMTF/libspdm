@@ -115,7 +115,7 @@ static void spdm_compute_secret_update(uintn hash_size,
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 void test_spdm_requester_encap_challenge(void **State)
@@ -127,7 +127,7 @@ void test_spdm_requester_encap_challenge(void **State)
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     uint8_t m_req_secret_buffer[MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[MAX_HASH_SIZE];

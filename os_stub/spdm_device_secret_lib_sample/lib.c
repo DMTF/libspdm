@@ -353,12 +353,12 @@ boolean spdm_generate_measurement_summary_hash(
     OUT uint8_t *measurement_summary_hash,
     IN OUT uintn *measurement_summary_hash_size)
 {
-    uint8_t measurement_data[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_data[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uintn index;
     spdm_measurement_block_dmtf_t *cached_measurment_block;
     uintn measurment_data_size;
     uintn measurment_block_size;
-    uint8_t device_measurement[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t device_measurement[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t device_measurement_count;
     uintn device_measurement_size;
     return_status status;
@@ -387,7 +387,7 @@ boolean spdm_generate_measurement_summary_hash(
         }
 
         ASSERT(device_measurement_count <=
-               MAX_SPDM_MEASUREMENT_BLOCK_COUNT);
+               LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
 
         // double confirm that MeasurmentData internal size is correct
         measurment_data_size = 0;
@@ -415,7 +415,7 @@ boolean spdm_generate_measurement_summary_hash(
         }
 
         ASSERT(measurment_data_size <=
-               MAX_SPDM_MEASUREMENT_RECORD_SIZE);
+               LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE);
 
         // get required data and hash them
         cached_measurment_block = (void *)device_measurement;

@@ -11,7 +11,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 return_status spdm_device_send_message(IN void *spdm_context,
@@ -42,7 +42,7 @@ void test_spdm_requester_get_measurement(void **State)
     spdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
-    uint8_t measurement_record[MAX_SPDM_MEASUREMENT_RECORD_SIZE];
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
     uintn data_size;

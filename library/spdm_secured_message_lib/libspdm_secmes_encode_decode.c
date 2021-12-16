@@ -329,7 +329,7 @@ return_status spdm_decode_secured_message(
     spdm_session_type_t session_type;
     spdm_session_state_t session_state;
     spdm_error_struct_t spdm_error;
-    uint8_t dec_message[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t dec_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     return_status status;
 
     spdm_error.error_code = 0;
@@ -514,7 +514,7 @@ return_status spdm_decode_secured_message(
         if (!result) {
             //
             // Try to use backup key to decrypt, because peer may use old key to encrypt error message.
-            // Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key(). 
+            // Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().
             //
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
@@ -524,7 +524,7 @@ return_status spdm_decode_secured_message(
                     FALSE);
                 if (RETURN_ERROR(status)) {
                     return status;
-                } 
+                }
                 status = spdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
@@ -609,7 +609,7 @@ return_status spdm_decode_secured_message(
         if (!result) {
             //
             // try to use backup key to decrypt, because peer may use old key to encrypt error message.
-            // recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key(). 
+            // recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().
             //
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {

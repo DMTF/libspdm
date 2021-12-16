@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 spdm_challenge_request_t m_spdm_challenge_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
@@ -19,7 +19,7 @@ spdm_challenge_request_t m_spdm_challenge_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
-uintn m_spdm_challenge_request2_size = MAX_SPDM_MESSAGE_BUFFER_SIZE;
+uintn m_spdm_challenge_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 spdm_challenge_request_t m_spdm_challenge_request3 = {
   { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, SPDM_MAX_SLOT_COUNT,
@@ -59,7 +59,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -132,7 +132,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -195,7 +195,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -260,7 +260,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -326,7 +326,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -399,7 +399,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     uintn data_size1;
@@ -462,7 +462,7 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -510,7 +510,7 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -558,7 +558,7 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -606,7 +606,7 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -654,7 +654,7 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -703,7 +703,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -752,7 +752,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -802,7 +802,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uintn                response_size;
-  uint8_t                response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+  uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
   spdm_challenge_auth_response_t *spdm_response;
   void                 *data1;
   uintn                data_size1;
@@ -877,4 +877,4 @@ int spdm_responder_challenge_auth_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP

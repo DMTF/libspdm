@@ -115,7 +115,7 @@ static void spdm_compute_secret_update(uintn hash_size,
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {

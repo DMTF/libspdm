@@ -98,7 +98,7 @@ typedef struct {
     //
     // Peer CertificateChain
     //
-    uint8_t peer_used_cert_chain_buffer[MAX_SPDM_CERT_CHAIN_SIZE];
+    uint8_t peer_used_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     uintn peer_used_cert_chain_buffer_size;
     //
     // Local Used CertificateChain (for responder, or requester in mut auth)
@@ -116,19 +116,19 @@ typedef struct {
 typedef struct {
     uintn max_buffer_size;
     uintn buffer_size;
-    uint8_t buffer[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 } large_managed_buffer_t;
 
 typedef struct {
     uintn max_buffer_size;
     uintn buffer_size;
-    uint8_t buffer[MAX_SPDM_MESSAGE_MEDIUM_BUFFER_SIZE];
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE];
 } medium_managed_buffer_t;
 
 typedef struct {
     uintn max_buffer_size;
     uintn buffer_size;
-    uint8_t buffer[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
     //
@@ -285,7 +285,7 @@ typedef struct {
     // Cached plain text command
     // If the command is cipher text, decrypt then cache it.
     //
-    uint8_t last_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t last_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn last_spdm_request_size;
     //
     // Cache session_id in this spdm_message, only valid for secured message.
@@ -310,20 +310,20 @@ typedef struct {
     // Register spdm_session_state_callback function (responder only)
     // Register can know the state after StartSession / EndSession.
     //
-    uintn spdm_session_state_callback[MAX_SPDM_SESSION_STATE_CALLBACK_NUM];
+    uintn spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
     //
     // Register spdm_connection_state_callback function (responder only)
     // Register can know the connection state such as negotiated.
     //
     uintn spdm_connection_state_callback
-        [MAX_SPDM_CONNECTION_STATE_CALLBACK_NUM];
+        [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
     spdm_local_context_t local_context;
 
     spdm_connection_info_t connection_info;
     spdm_transcript_t transcript;
 
-    spdm_session_info_t session_info[MAX_SPDM_SESSION_COUNT];
+    spdm_session_info_t session_info[LIBSPDM_MAX_SESSION_COUNT];
     //
     // Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR
     //
@@ -336,7 +336,7 @@ typedef struct {
     // Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY
     //
     spdm_error_data_response_not_ready_t error_data;
-    uint8_t cache_spdm_request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t cache_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn cache_spdm_request_size;
     uint8_t current_token;
     //

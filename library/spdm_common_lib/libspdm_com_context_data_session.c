@@ -100,7 +100,7 @@ void *libspdm_get_session_info_via_session_id(IN void *context,
     spdm_context = context;
 
     session_info = spdm_context->session_info;
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             return &session_info[index];
         }
@@ -179,7 +179,7 @@ void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
 
     session_info = spdm_context->session_info;
 
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_assign_session_id - Duplicated session_id\n"));
@@ -188,7 +188,7 @@ void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
         }
     }
 
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == INVALID_SESSION_ID) {
             spdm_session_info_init(spdm_context,
                            &session_info[index], session_id,
@@ -216,7 +216,7 @@ uint16_t spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
     uintn index;
 
     session_info = spdm_context->session_info;
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if ((session_info[index].session_id & 0xFFFF0000) ==
             (INVALID_SESSION_ID & 0xFFFF0000)) {
             req_session_id = (uint16_t)(0xFFFF - index);
@@ -242,7 +242,7 @@ uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
     uintn index;
 
     session_info = spdm_context->session_info;
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if ((session_info[index].session_id & 0xFFFF) ==
             (INVALID_SESSION_ID & 0xFFFF)) {
             rsp_session_id = (uint16_t)(0xFFFF - index);
@@ -276,7 +276,7 @@ void libspdm_free_session_id(IN void *context, IN uint32_t session_id)
     }
 
     session_info = spdm_context->session_info;
-    for (index = 0; index < MAX_SPDM_SESSION_COUNT; index++) {
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             spdm_session_info_init(spdm_context,
                            &session_info[index],

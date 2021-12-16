@@ -36,7 +36,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 
         status = RETURN_SUCCESS;
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     status = libspdm_get_digest(context, slot_mask, total_digest_buffer);
     if (RETURN_ERROR(status)) {
         return status;
@@ -49,15 +49,15 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
             return status;
         }
     }
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, slot_id, measurement_hash_type,
                 measurement_hash);
     if (RETURN_ERROR(status)) {
         return status;
     }
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     return status;
 }
 
@@ -73,7 +73,7 @@ return_status do_authentication_via_spdm(IN void *spdm_context)
     uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
     uint8_t measurement_hash[MAX_HASH_SIZE];
     uintn cert_chain_size;
-    uint8_t cert_chain[MAX_SPDM_CERT_CHAIN_SIZE];
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
     zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     cert_chain_size = sizeof(cert_chain);

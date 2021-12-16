@@ -151,7 +151,7 @@ return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       MAX_SPDM_CERT_CHAIN_BLOCK_LEN.
+  @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
   @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
@@ -178,7 +178,7 @@ return_status libspdm_get_certificate_choose_length(IN void *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       MAX_SPDM_CERT_CHAIN_BLOCK_LEN.
+  @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
   @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
                                        On output, indicate the size in bytes of the certificate chain.
   @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
@@ -358,7 +358,7 @@ return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
   @param  requester_random_in_size      The size of requester_random_in.
                                         If use_psk is FALSE, it must be 32 bytes.
                                         If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
-                                        but not exceed DEFAULT_CONTEXT_LENGTH.
+                                        but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
   @param  requester_random              A buffer to hold the requester random, if not NULL.
   @param  requester_random_size         On input, the size of requester_random buffer.
                                         On output, the size of data returned in requester_random buffer.

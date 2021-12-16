@@ -2698,9 +2698,9 @@ cleanup:
 **/
 boolean spdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size)
 {
-    uint8_t issuer_name[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+    uint8_t issuer_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
     uintn issuer_name_len;
-    uint8_t subject_name[MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE];
+    uint8_t subject_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
     uintn subject_name_len;
     boolean result;
 
@@ -2709,14 +2709,14 @@ boolean spdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size)
     }
 
     // 1. issuer_name
-    issuer_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+    issuer_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
     result = x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
     if (!result) {
         return FALSE;
     }
 
     // 2. subject_name
-    subject_name_len = MAX_SPDM_MESSAGE_SMALL_BUFFER_SIZE;
+    subject_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
     result = x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
     if (!result) {
         return FALSE;
@@ -2970,7 +2970,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
 
     hash_size = spdm_get_hash_size(base_hash_algo);
 
-    if (cert_chain_buffer_size > MAX_SPDM_MESSAGE_BUFFER_SIZE) {
+    if (cert_chain_buffer_size > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
         DEBUG((DEBUG_INFO,
                "!!! VerifyCertificateChainBuffer - FAIL (buffer too large) !!!\n"));
         return FALSE;
@@ -3011,7 +3011,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
     }
 
     //If the number of certificates in the certificate chain is more than 1,
-    //other certificates need to be verified. 
+    //other certificates need to be verified.
     if (cert_chain_data_size > first_cert_buffer_size) {
         if (!x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
                         cert_chain_data + first_cert_buffer_size,

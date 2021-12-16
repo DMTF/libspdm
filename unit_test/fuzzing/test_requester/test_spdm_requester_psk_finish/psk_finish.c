@@ -46,7 +46,7 @@ void spdm_secured_message_set_response_handshake_salt(
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 return_status spdm_device_receive_message(IN void *spdm_context,

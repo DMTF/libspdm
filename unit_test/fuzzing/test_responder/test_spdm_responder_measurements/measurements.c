@@ -10,7 +10,7 @@
 
 uintn get_max_buffer_size(void)
 {
-    return MAX_SPDM_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 void test_spdm_responder_measurements(void **State)
@@ -18,7 +18,7 @@ void test_spdm_responder_measurements(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;

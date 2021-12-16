@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
   This function creates the measurement signature to response message based upon l1l2.
@@ -308,7 +308,7 @@ return_status spdm_get_response_measurements(IN void *context,
         }
     }
 
-    ASSERT(measurements_count <= MAX_SPDM_MEASUREMENT_BLOCK_COUNT);
+    ASSERT(measurements_count <= LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
 
     switch (spdm_request->header.param2) {
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS:
@@ -464,4 +464,4 @@ return_status spdm_get_response_measurements(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP

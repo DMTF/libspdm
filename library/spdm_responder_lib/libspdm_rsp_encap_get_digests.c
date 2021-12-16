@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
   Get the SPDM encapsulated GET_DIGESTS request.
@@ -161,4 +161,4 @@ return_status spdm_process_encap_response_digest(
     return RETURN_SUCCESS;
 }
 
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP

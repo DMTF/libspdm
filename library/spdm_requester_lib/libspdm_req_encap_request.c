@@ -13,14 +13,14 @@ typedef struct {
 
 spdm_get_encap_response_struct_t m_spdm_get_encap_response_struct[] = {
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, spdm_get_encap_response_digest },
     { SPDM_GET_CERTIFICATE, spdm_get_encap_response_certificate },
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-    #if SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_encap_response_challenge_auth },
-    #endif // SPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
     { SPDM_KEY_UPDATE, spdm_get_encap_response_key_update },
 };
@@ -148,13 +148,13 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
                     OUT uint8_t *req_slot_id_param)
 {
     return_status status;
-    uint8_t request[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn spdm_request_size;
     spdm_get_encapsulated_request_request_t
         *spdm_get_encapsulated_request_request;
     spdm_deliver_encapsulated_response_request_t
         *spdm_deliver_encapsulated_response_request;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn spdm_response_size;
     spdm_encapsulated_request_response_t *spdm_encapsulated_request_response;
     spdm_encapsulated_response_ack_response_t
@@ -166,9 +166,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     void *encapsulated_response;
     uintn encapsulated_response_size;
 
-    #if SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     spdm_get_digest_request_t get_digests;
-    #endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
@@ -210,7 +210,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     if (mut_auth_requested ==
         SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
 
-#if SPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
         get_digests.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         get_digests.header.request_response_code = SPDM_GET_DIGESTS;
@@ -219,9 +219,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         encapsulated_request = (void *)&get_digests;
         encapsulated_request_size = sizeof(get_digests);
         request_id = 0;
-#else // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#else // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         return RETURN_UNSUPPORTED;
-#endif // SPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
     } else {
         spdm_get_encapsulated_request_request = (void *)request;

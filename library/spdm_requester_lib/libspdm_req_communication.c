@@ -73,16 +73,16 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
     return_status status;
     spdm_context_t *spdm_context;
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     spdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
 
     if (!use_psk) {
-        #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         status = spdm_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id,
             session_id, heartbeat_period, &req_slot_id_param,
@@ -134,12 +134,12 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
         DEBUG((DEBUG_INFO,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
-        #else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #else // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     } else {
-        #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange(
             spdm_context, measurement_hash_type, session_id,
             heartbeat_period, measurement_hash);
@@ -160,7 +160,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
                    "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
                    status));
         }
-        #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     }
     return status;
 }
@@ -184,7 +184,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
   @param  requester_random_in_size      The size of requester_random_in.
                                         If use_psk is FALSE, it must be 32 bytes.
                                         If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
-                                        but not exceed DEFAULT_CONTEXT_LENGTH.
+                                        but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
   @param  requester_random              A buffer to hold the requester random, if not NULL.
   @param  requester_random_size         On input, the size of requester_random buffer.
                                         On output, the size of data returned in requester_random buffer.
@@ -215,16 +215,16 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
     return_status status;
     spdm_context_t *spdm_context;
 
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     spdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
 
     if (!use_psk) {
-        #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         ASSERT (requester_random_in_size == 0 || requester_random_in_size == SPDM_RANDOM_DATA_SIZE);
         ASSERT (requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
         ASSERT (responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
@@ -280,12 +280,12 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
         DEBUG((DEBUG_INFO,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
-        #else // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #else // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     } else {
-        #if SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange_ex(
             spdm_context, measurement_hash_type, session_id,
             heartbeat_period, measurement_hash,
@@ -309,14 +309,14 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
                    "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
                    status));
         }
-        #else // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #else // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     }
-    #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     return status;
-    #endif // SPDM_ENABLE_CAPABILITY_KEY_EX_CAP || SPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 }
 
 /**
