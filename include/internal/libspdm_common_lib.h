@@ -357,6 +357,15 @@ typedef struct {
     /* Register for the last KEY_UPDATE token and operation (responder only)*/
     
     uint8_t last_update_request[4];
+
+    //
+    // reserved for request and response in the main
+    // dispatch function in SPDM responder
+    // this buffer is the transport message recived from spdm_context->receive_message()
+    // or sent to spdm_context->send_message(). This message may be SPDM transport message
+    // or secured SPDM transport message.
+    //
+    uint8_t request_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 } spdm_context_t;
 
 /**

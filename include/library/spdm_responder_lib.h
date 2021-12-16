@@ -103,6 +103,9 @@ return_status libspdm_build_response(IN void *spdm_context, IN uint32_t *session
   The alternative is: an SPDM responder may receive the request message directly
   and call this function to process it, then send the response message.
 
+  Note: request and response may point to the same buffer. The implementation^M
+  must handle that case.
+
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_id                    Indicates if it is a secured message protected via SPDM session.
                                        If *session_id is NULL, it is a normal message.
@@ -245,3 +248,4 @@ return_status libspdm_register_connection_state_callback_func(
 void libspdm_init_key_update_encap_state(IN void *spdm_context);
 
 #endif
+
