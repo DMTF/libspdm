@@ -586,7 +586,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
     DEBUG((DEBUG_INFO, "bin_str9 (0x%x):\n", bin_str9_size));
     internal_dump_hex(bin_str9, bin_str9_size);
 
-    if ((action & SPDM_KEY_UPDATE_ACTION_REQUESTER) != 0) {
+    if (action == SPDM_KEY_UPDATE_ACTION_REQUESTER) {
         copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -641,9 +641,7 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
             .request_data_sequence_number = 0;
 
         secured_message_context->requester_backup_valid = TRUE;
-    }
-
-    if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+    } else if (action == SPDM_KEY_UPDATE_ACTION_RESPONDER) {
         copy_mem(&secured_message_context->application_secret_backup
                   .response_data_secret,
              &secured_message_context->application_secret
@@ -698,7 +696,10 @@ spdm_create_update_session_data_key(IN void *spdm_secured_message_context,
             .response_data_sequence_number = 0;
 
         secured_message_context->responder_backup_valid = TRUE;
+    } else {
+        return RETURN_INVALID_PARAMETER;
     }
+
     return RETURN_SUCCESS;
 }
 
@@ -741,7 +742,7 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
     secured_message_context = spdm_secured_message_context;
 
     if (!use_new_key) {
-        if (((action & SPDM_KEY_UPDATE_ACTION_REQUESTER) != 0) &&
+        if ((action == SPDM_KEY_UPDATE_ACTION_REQUESTER) &&
             secured_message_context->requester_backup_valid) {
             copy_mem(&secured_message_context->application_secret
                       .request_data_secret,
@@ -766,8 +767,7 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
                 secured_message_context
                     ->application_secret_backup
                     .request_data_sequence_number;
-        }
-        if (((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) &&
+        } else if ((action == SPDM_KEY_UPDATE_ACTION_RESPONDER) &&
             secured_message_context->responder_backup_valid) {
             copy_mem(&secured_message_context->application_secret
                       .response_data_secret,
@@ -795,7 +795,7 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
         }
     }
 
-    if ((action & SPDM_KEY_UPDATE_ACTION_REQUESTER) != 0) {
+    if (action == SPDM_KEY_UPDATE_ACTION_REQUESTER) {
         zero_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              MAX_HASH_SIZE);
@@ -808,8 +808,7 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
         secured_message_context->application_secret_backup
             .request_data_sequence_number = 0;
         secured_message_context->requester_backup_valid = FALSE;
-    }
-    if ((action & SPDM_KEY_UPDATE_ACTION_RESPONDER) != 0) {
+    } else if (action == SPDM_KEY_UPDATE_ACTION_RESPONDER) {
         zero_mem(&secured_message_context->application_secret_backup
                   .response_data_secret,
              MAX_HASH_SIZE);
@@ -823,6 +822,7 @@ spdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
             .response_data_sequence_number = 0;
         secured_message_context->responder_backup_valid = FALSE;
     }
+
     return RETURN_SUCCESS;
 }
 

@@ -527,9 +527,9 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
                    IN uint8_t *th2_hash_data);
 
 typedef enum {
-    SPDM_KEY_UPDATE_ACTION_REQUESTER = 0x1,
-    SPDM_KEY_UPDATE_ACTION_RESPONDER = 0x2,
-    SPDM_KEY_UPDATE_ACTION_ALL = 0x3,
+    SPDM_KEY_UPDATE_ACTION_REQUESTER,
+    SPDM_KEY_UPDATE_ACTION_RESPONDER,
+    SPDM_KEY_UPDATE_ACTION_MAX,
 } spdm_key_update_action_t;
 
 /**
