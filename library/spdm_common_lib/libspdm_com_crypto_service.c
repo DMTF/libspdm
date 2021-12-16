@@ -205,14 +205,18 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
             return FALSE;
         }
 
-        // debug only
-        spdm_hash_all(
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            get_managed_buffer(&m1m2),
-            get_managed_buffer_size(&m1m2), hash_data);
-        DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
-        internal_dump_data(hash_data, hash_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        // Debug code only - calculate and print value of m1m2 mut hash
+        DEBUG_CODE(
+            if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                get_managed_buffer(&m1m2),
+                get_managed_buffer_size(&m1m2), hash_data)) {
+                return FALSE;
+            }
+            DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
+            internal_dump_data(hash_data, hash_size);
+            DEBUG((DEBUG_INFO, "\n"));
+        );
 
     } else {
         DEBUG((DEBUG_INFO, "message_a data :\n"));
@@ -257,14 +261,18 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
             return FALSE;
         }
 
-        // debug only
-        spdm_hash_all(
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            get_managed_buffer(&m1m2),
-            get_managed_buffer_size(&m1m2), hash_data);
-        DEBUG((DEBUG_INFO, "m1m2 hash - "));
-        internal_dump_data(hash_data, hash_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        // Debug code only - calculate and print value of m1m2 hash
+        DEBUG_CODE(
+            if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                get_managed_buffer(&m1m2),
+                get_managed_buffer_size(&m1m2), hash_data)) {
+                return FALSE;
+            }
+            DEBUG((DEBUG_INFO, "m1m2 hash - "));
+            internal_dump_data(hash_data, hash_size);
+            DEBUG((DEBUG_INFO, "\n"));
+        );
     }
 
     *m1m2_buffer_size = get_managed_buffer_size(&m1m2);
@@ -361,13 +369,17 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
     DEBUG((DEBUG_INFO, "message_m data :\n"));
     internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
 
-    // debug only
-    spdm_hash_all(
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        l1l2_buffer, *l1l2_buffer_size, hash_data);
-    DEBUG((DEBUG_INFO, "l1l2 hash - "));
-    internal_dump_data(hash_data, hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    // Debug code only - calculate and print value of l1l2 hash
+    DEBUG_CODE(
+        if (!spdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            l1l2_buffer, *l1l2_buffer_size, hash_data)) {
+            return FALSE;
+        }
+        DEBUG((DEBUG_INFO, "l1l2 hash - "));
+        internal_dump_data(hash_data, hash_size);
+        DEBUG((DEBUG_INFO, "\n"));
+    );
 
     return TRUE;
 }
@@ -430,13 +442,12 @@ boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
                       IN uintn slot_id, OUT uint8_t *hash)
 {
     ASSERT(slot_id < spdm_context->local_context.slot_count);
-    spdm_hash_all(
+    return spdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->local_context.local_cert_chain_provision[slot_id],
         spdm_context->local_context
             .local_cert_chain_provision_size[slot_id],
         hash);
-    return TRUE;
 }
 
 /**
@@ -458,6 +469,7 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
     uint8_t *cert_chain_buffer;
     uintn cert_chain_buffer_size;
     uintn index;
+    boolean result;
 
     cert_chain_buffer =
         spdm_context->local_context.peer_cert_chain_provision;
@@ -468,10 +480,14 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.base_hash_algo);
         hash_buffer = digest;
 
-        spdm_hash_all(
+        result = spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             cert_chain_buffer, cert_chain_buffer_size,
             cert_chain_buffer_hash);
+        if (!result) {
+            DEBUG((DEBUG_INFO, "!!! verify_peer_digests - FAIL (hash calculation) !!!\n"));
+            return FALSE;
+        }
 
         for (index = 0; index < digest_count; index++)
         {
@@ -536,9 +552,14 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
     if ((root_cert != NULL) && (root_cert_size != 0)) {
         root_cert_hash_size = spdm_get_hash_size(
             spdm_context->connection_info.algorithm.base_hash_algo);
-        spdm_hash_all(
+        result = spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             root_cert, root_cert_size, root_cert_hash);
+        if (!result) {
+            DEBUG((DEBUG_INFO,
+                "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
+            return FALSE;
+        }
         if (const_compare_mem((uint8_t *)cert_chain_buffer +
                     sizeof(spdm_cert_chain_t),
                 root_cert_hash, root_cert_hash_size) != 0) {
@@ -715,9 +736,14 @@ boolean spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
     hash_size = spdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+    result = spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
               cert_chain_buffer, cert_chain_buffer_size,
               cert_chain_buffer_hash);
+    if (!result) {
+        DEBUG((DEBUG_INFO,
+            "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
+        return FALSE;
+    }
 
     if (hash_size != certificate_chain_hash_size) {
         DEBUG((DEBUG_INFO,

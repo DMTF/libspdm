@@ -2966,6 +2966,7 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
     uint8_t calc_root_cert_hash[MAX_HASH_SIZE];
     uint8_t *leaf_cert_buffer;
     uintn leaf_cert_buffer_size;
+    boolean result;
 
     hash_size = spdm_get_hash_size(base_hash_algo);
 
@@ -2994,8 +2995,11 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
     }
 
     if (spdm_is_root_certificate(first_cert_buffer, first_cert_buffer_size)) {
-        spdm_hash_all(base_hash_algo, first_cert_buffer, first_cert_buffer_size,
+        result = spdm_hash_all(base_hash_algo, first_cert_buffer, first_cert_buffer_size,
                 calc_root_cert_hash);
+        if (!result) {
+            return FALSE;
+        }
         if (const_compare_mem((uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
                 calc_root_cert_hash, hash_size) != 0) {
             DEBUG((DEBUG_INFO,

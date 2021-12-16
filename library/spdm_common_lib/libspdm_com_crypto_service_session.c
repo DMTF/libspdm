@@ -30,6 +30,7 @@ boolean libspdm_calculate_th_for_exchange(
     uint32_t hash_size;
     return_status status;
     large_managed_buffer_t th_curr;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -55,10 +56,13 @@ boolean libspdm_calculate_th_for_exchange(
     if (cert_chain_buffer != NULL) {
         DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
         internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
-        spdm_hash_all(
+        result = spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             cert_chain_buffer, cert_chain_buffer_size,
             cert_chain_buffer_hash);
+        if (!result) {
+            return FALSE;
+        }
         status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
                            hash_size);
         if (RETURN_ERROR(status)) {
@@ -212,6 +216,7 @@ boolean libspdm_calculate_th_for_finish(IN void *context,
     uint32_t hash_size;
     return_status status;
     large_managed_buffer_t th_curr;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -237,10 +242,13 @@ boolean libspdm_calculate_th_for_finish(IN void *context,
     if (cert_chain_buffer != NULL) {
         DEBUG((DEBUG_INFO, "th_message_ct data :\n"));
         internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
-        spdm_hash_all(
+        result = spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             cert_chain_buffer, cert_chain_buffer_size,
             cert_chain_buffer_hash);
+        if (!result) {
+            return FALSE;
+        }
         status = append_managed_buffer(&th_curr, cert_chain_buffer_hash,
                            hash_size);
         if (RETURN_ERROR(status)) {
@@ -266,10 +274,13 @@ boolean libspdm_calculate_th_for_finish(IN void *context,
         DEBUG((DEBUG_INFO, "th_message_cm data :\n"));
         internal_dump_hex(mut_cert_chain_buffer,
                   mut_cert_chain_buffer_size);
-        spdm_hash_all(
+        result = spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             mut_cert_chain_buffer, mut_cert_chain_buffer_size,
             mut_cert_chain_buffer_hash);
+        if (!result) {
+            return FALSE;
+        }
         status = append_managed_buffer(&th_curr, mut_cert_chain_buffer_hash,
                            hash_size);
         if (RETURN_ERROR(status)) {
@@ -477,9 +488,14 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // debug only
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-              th_curr_data, th_curr_data_size, hash_data);
+    // Debug code only - required for debug print of th_curr hash below
+    DEBUG_CODE(
+        if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+            return FALSE;
+        }
+    );
 #else
     result = libspdm_calculate_th_hash_for_exchange(
         spdm_context, session_info, &hash_size, hash_data);
@@ -621,9 +637,14 @@ boolean spdm_verify_key_exchange_rsp_signature(
         return FALSE;
     }
 
-    // debug only
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-              th_curr_data, th_curr_data_size, hash_data);
+    // Debug code only - required for debug print of th_curr hash below
+    DEBUG_CODE(
+        if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+            return FALSE;
+        }
+    );
 #else
     result = libspdm_calculate_th_hash_for_exchange(
         spdm_context, session_info, &hash_size, hash_data);
@@ -810,9 +831,14 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // debug only
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-              th_curr_data, th_curr_data_size, hash_data);
+    // Debug code only - required for debug print of th_curr below
+    DEBUG_CODE(
+        if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+            return FALSE;
+        }
+    );
 #else
     result = libspdm_calculate_th_hash_for_finish(
         spdm_context, session_info, &hash_size, hash_data);
@@ -981,9 +1007,14 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // debug only
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
-              th_curr_data, th_curr_data_size, hash_data);
+    // Debug code only - required for debug print of th_curr below
+    DEBUG_CODE(
+        if (!spdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+            return FALSE;
+        }
+    );
 #else
     result = libspdm_calculate_th_hash_for_finish(
         spdm_context, session_info, &hash_size, hash_data);
@@ -1577,8 +1608,11 @@ return_status libspdm_calculate_th1_hash(IN void *context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+    result = spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
               th_curr_data, th_curr_data_size, th1_hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hash_for_exchange(
         spdm_context, session_info, &hash_size, th1_hash_data);
@@ -1679,8 +1713,11 @@ return_status libspdm_calculate_th2_hash(IN void *context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+    result = spdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
               th_curr_data, th_curr_data_size, th2_hash_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hash_for_finish(
         spdm_context, session_info, &hash_size, th2_hash_data);
