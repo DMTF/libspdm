@@ -16,6 +16,9 @@
   The alternative is: an SPDM responder may receive the request message directly
   and call this function to process it, then send the response message.
 
+  Note: request and response may point to the same buffer. The implementation
+  must handle that case.
+
   @param  spdm_context                  A pointer to the SPDM context.
   @param  session_id                    Indicates if it is a secured message protected via SPDM session.
                                        If *session_id is NULL, it is a normal message.
@@ -41,6 +44,8 @@ return_status libspdm_process_message(IN void *context, IN OUT uint32_t **sessio
     return_status status;
     spdm_context_t *spdm_context;
     boolean is_app_message;
+    uint32_t tmp_session_id;
+    uint32_t *session_id_ptr;
 
     spdm_context = context;
 
@@ -50,7 +55,16 @@ return_status libspdm_process_message(IN void *context, IN OUT uint32_t **sessio
         return status;
     }
 
-    status = libspdm_build_response(spdm_context, *session_id, is_app_message,
+    /* save the value of session_id */
+    if(*session_id != NULL) {
+        tmp_session_id = **session_id;
+        session_id_ptr = &tmp_session_id;
+    } else {
+        session_id_ptr = NULL;
+    }
+    zero_mem(response, *response_size);
+
+    status = libspdm_build_response(spdm_context, session_id_ptr, is_app_message,
                      response_size, response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -75,22 +89,24 @@ return_status libspdm_responder_dispatch_message(IN void *context)
 {
     return_status status;
     spdm_context_t *spdm_context;
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *request;
     uintn request_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *response;
     uintn response_size;
     uint32_t *session_id;
 
     spdm_context = context;
 
-    request_size = sizeof(request);
+    request_size = sizeof(spdm_context->request_response);
+    request = spdm_context->request_response;
     status = spdm_context->receive_message(spdm_context, &request_size,
                            request, 0);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
-    response_size = sizeof(response);
+    response_size = sizeof(spdm_context->request_response);
+    response = spdm_context->request_response;
     status = libspdm_process_message(spdm_context, &session_id, request,
                       request_size, response, &response_size);
     if (RETURN_ERROR(status)) {
