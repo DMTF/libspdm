@@ -109,6 +109,7 @@ boolean libspdm_calculate_th_hash_for_exchange(
     spdm_session_info_t *session_info;
     uint32_t hash_size;
     void *digest_context_th;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -121,11 +122,21 @@ boolean libspdm_calculate_th_hash_for_exchange(
     // duplicate the th context, because we still need use original context to continue.
     digest_context_th = spdm_hash_new (
         spdm_context->connection_info.algorithm.base_hash_algo);
-    spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
+    if (digest_context_th == NULL) {
+        return FALSE;
+    }
+    result = spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
         session_info->session_transcript.digest_context_th, digest_context_th);
-    spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+    if (!result) {
+        spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+        return FALSE;
+    }
+    result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
         digest_context_th, th_hash_buffer);
     spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+    if (!result) {
+        return FALSE;
+    }
 
     *th_hash_buffer_size = hash_size;
 
@@ -152,6 +163,7 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
     uint32_t hash_size;
     void *hmac_context_th;
     return_status status;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -173,11 +185,21 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
 
     // duplicate the th context, because we still need use original context to continue.
     hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
-    spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
+    if (hmac_context_th == NULL) {
+        return FALSE;
+    }
+    result = spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
         session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
-    spdm_hmac_final_with_response_finished_key (secured_message_context,
+    if (!result) {
+        spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+        return FALSE;
+    }
+    result = spdm_hmac_final_with_response_finished_key (secured_message_context,
         hmac_context_th, th_hmac_buffer);
     spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+    if (!result) {
+        return FALSE;
+    }
 
     *th_hmac_buffer_size = hash_size;
 
@@ -328,6 +350,7 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *context,
     spdm_session_info_t *session_info;
     uint32_t hash_size;
     void *digest_context_th;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -340,11 +363,21 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *context,
     // duplicate the th context, because we still need use original context to continue.
     digest_context_th = spdm_hash_new (
         spdm_context->connection_info.algorithm.base_hash_algo);
-    spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
+    if (digest_context_th == NULL) {
+        return FALSE;
+    }
+    result = spdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
         session_info->session_transcript.digest_context_th, digest_context_th);
-    spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+    if (!result) {
+        spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+        return FALSE;
+    }
+    result = spdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
         digest_context_th, th_hash_buffer);
     spdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo, digest_context_th);
+    if (!result) {
+        return FALSE;
+    }
 
     *th_hash_buffer_size = hash_size;
 
@@ -371,6 +404,7 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
     void *secured_message_context;
     uint32_t hash_size;
     void *hmac_context_th;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -385,11 +419,21 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
 
     // duplicate the th context, because we still need use original context to continue.
     hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
-    spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
+    if (hmac_context_th == NULL) {
+        return FALSE;
+    }
+    result = spdm_hmac_duplicate_with_response_finished_key (secured_message_context,
         session_info->session_transcript.hmac_rsp_context_th, hmac_context_th);
-    spdm_hmac_final_with_response_finished_key (secured_message_context,
+    if (!result) {
+        spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+        return FALSE;
+    }
+    result = spdm_hmac_final_with_response_finished_key (secured_message_context,
         hmac_context_th, th_hmac_buffer);
     spdm_hmac_free_with_response_finished_key (secured_message_context, hmac_context_th);
+    if (!result) {
+        return FALSE;
+    }
 
     *th_hmac_buffer_size = hash_size;
 
@@ -416,6 +460,7 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *context,
     void *secured_message_context;
     uint32_t hash_size;
     void *hmac_context_th;
+    boolean result;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -430,11 +475,21 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *context,
 
     // duplicate the th context, because we still need use original context to continue.
     hmac_context_th = spdm_hmac_new_with_request_finished_key (secured_message_context);
-    spdm_hmac_duplicate_with_request_finished_key (secured_message_context,
+    if (hmac_context_th == NULL) {
+        return FALSE;
+    }
+    result = spdm_hmac_duplicate_with_request_finished_key (secured_message_context,
         session_info->session_transcript.hmac_req_context_th, hmac_context_th);
-    spdm_hmac_final_with_request_finished_key (secured_message_context,
+    if (!result) {
+        spdm_hmac_free_with_request_finished_key (secured_message_context, hmac_context_th);
+        return FALSE;
+    }
+    result = spdm_hmac_final_with_request_finished_key (secured_message_context,
         hmac_context_th, th_hmac_buffer);
     spdm_hmac_free_with_request_finished_key (secured_message_context, hmac_context_th);
+    if (!result) {
+        return FALSE;
+    }
 
     *th_hmac_buffer_size = hash_size;
 
@@ -571,9 +626,12 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
         spdm_context, session_info, FALSE, &hash_size, hmac_data);
@@ -752,9 +810,12 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
         spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
@@ -929,9 +990,12 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_request_finished_key(
+    result = spdm_hmac_all_with_request_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_req(
         spdm_context, session_info, &hash_size, calc_hmac_data);
@@ -1138,9 +1202,12 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_request_finished_key(
+    result = spdm_hmac_all_with_request_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_req(
         spdm_context, session_info, &hash_size, hmac_data);
@@ -1217,9 +1284,12 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_rsp(
         spdm_context, session_info, &hash_size, hmac_data);
@@ -1295,9 +1365,12 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_rsp(
         spdm_context, session_info, &hash_size, calc_hmac_data);
@@ -1353,9 +1426,12 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
         spdm_context, session_info, FALSE, &hash_size, hmac_data);
@@ -1409,9 +1485,12 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_response_finished_key(
+    result = spdm_hmac_all_with_response_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
         spdm_context, session_info, TRUE, &hash_size, calc_hmac_data);
@@ -1468,9 +1547,12 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_request_finished_key(
+    result = spdm_hmac_all_with_request_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, calc_hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_req(
         spdm_context, session_info, &hash_size, calc_hmac_data);
@@ -1523,9 +1605,12 @@ boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    spdm_hmac_all_with_request_finished_key(
+    result = spdm_hmac_all_with_request_finished_key(
         session_info->secured_message_context, th_curr_data,
         th_curr_data_size, hmac_data);
+    if (!result) {
+        return FALSE;
+    }
 #else
     result = libspdm_calculate_th_hmac_for_finish_req(
         spdm_context, session_info, &hash_size, hmac_data);
