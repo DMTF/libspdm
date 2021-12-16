@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 )
 
 SET(src_spdm_common_lib
-    #libspdm_com_context_data.c
+    libspdm_com_context_data.c
     libspdm_com_context_data_session.c
     libspdm_com_crypto_service.c
     libspdm_com_crypto_service_session.c
