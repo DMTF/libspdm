@@ -101,6 +101,12 @@ make
 pushd bin
 
 cmds=(
+test_spdm_transport_mctp_encode_message
+test_spdm_transport_mctp_decode_message
+test_spdm_transport_pci_doe_encode_message
+test_spdm_transport_pci_doe_decode_message
+test_spdm_decode_secured_message
+test_spdm_encode_secured_message
 test_spdm_requester_end_session
 test_spdm_requester_encap_digests
 test_spdm_requester_encap_certificate
@@ -134,6 +140,7 @@ test_spdm_responder_psk_finish_rsp
 test_spdm_responder_heartbeat_ack
 test_spdm_responder_key_update
 test_spdm_responder_end_session
+test_spdm_responder_if_ready
 )
 for ((i=0;i<${#cmds[*]};i++))
 do
