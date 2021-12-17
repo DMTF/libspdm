@@ -603,6 +603,8 @@ endif()
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_transport/test_spdm_transport_mctp_decode_message)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_encode_message)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_decode_message)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_secured_message/test_spdm_decode_secured_message)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_secured_message/test_spdm_encode_secured_message)
 
     ADD_SUBDIRECTORY(os_stub/cryptlib_null)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
