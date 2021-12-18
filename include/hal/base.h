@@ -196,7 +196,6 @@
 
 //
 // Modifiers for data Types used to self document code.
-// This concept is borrowed for UEFI specification.
 //
 
 ///
@@ -215,20 +214,13 @@
 ///
 #define OPTIONAL
 
-//
-//  UEFI specification claims 1 and 0. We are concerned about the
-//  compiler portability so we did it this way.
-//
-
 ///
-/// Boolean true value.  UEFI Specification defines this value to be 1,
-/// but this form is more portable.
+/// Boolean true value.
 ///
 #define TRUE ((boolean)(1 == 1))
 
 ///
-/// Boolean false value.  UEFI Specification defines this value to be 0,
-/// but this form is more portable.
+/// Boolean false value.
 ///
 #define FALSE ((boolean)(0 == 1))
 
@@ -238,7 +230,7 @@
 #define NULL ((void *)0)
 
 ///
-/// Maximum values for common UEFI data Types
+/// Maximum values for common data Types
 ///
 #define MAX_INT8 ((int8_t)0x7F)
 #define MAX_UINT8 ((uint8_t)0xFF)
@@ -250,7 +242,7 @@
 #define MAX_UINT64 ((uint64_t)0xFFFFFFFFFFFFFFFFULL)
 
 ///
-/// Minimum values for the signed UEFI data Types
+/// Minimum values for the signed data Types
 ///
 #define MIN_INT8 (((int8_t)-127) - 1)
 #define MIN_INT16 (((int16_t)-32767) - 1)
@@ -658,45 +650,43 @@ typedef uintn *BASE_LIST;
 #endif
 
 //
-// Verify that processor_bind.h produced UEFI data Types that are compliant with
-// Section 2.3.1 of the UEFI 2.3 Specification.
+// Verify that processor_bind.h produced data Types
 //
 
 STATIC_ASSERT(
     sizeof(boolean) == 1,
-    "sizeof (boolean) does not meet UEFI Specification data Type requirements");
+    "sizeof (boolean) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(int8_t) == 1,
-    "sizeof (int8_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (int8_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(uint8_t) == 1,
-    "sizeof (uint8_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (uint8_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(int16_t) == 2,
-    "sizeof (int16_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (int16_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(uint16_t) == 2,
-    "sizeof (uint16_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (uint16_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(int32_t) == 4,
-    "sizeof (int32_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (int32_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(uint32_t) == 4,
-    "sizeof (uint32_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (uint32_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(int64_t) == 8,
-    "sizeof (int64_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (int64_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(uint64_t) == 8,
-    "sizeof (uint64_t) does not meet UEFI Specification data Type requirements");
+    "sizeof (uint64_t) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(char8) == 1,
-    "sizeof (char8) does not meet UEFI Specification data Type requirements");
+    "sizeof (char8) does not meet data Type requirements");
 
 //
 // The following three enum types are used to verify that the compiler
-// configuration for enum types is compliant with Section 2.3.1 of the
-// UEFI 2.3 Specification. These enum types and enum values are not
+// configuration for enum types. These enum types and enum values are not
 // intended to be used. A prefix of '__' is used avoid conflicts with
 // other types.
 //
@@ -708,13 +698,13 @@ typedef enum { __VerifyUint32EnumValue = 0xffffffff } __VERIFY_UINT32_ENUM_SIZE;
 
 STATIC_ASSERT(
     sizeof(__VERIFY_UINT8_ENUM_SIZE) == 4,
-    "size of enum does not meet UEFI Specification data Type requirements");
+    "size of enum does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(__VERIFY_UINT16_ENUM_SIZE) == 4,
-    "size of enum does not meet UEFI Specification data Type requirements");
+    "size of enum does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(__VERIFY_UINT32_ENUM_SIZE) == 4,
-    "size of enum does not meet UEFI Specification data Type requirements");
+    "size of enum does not meet data Type requirements");
 
 /**
   Macro that returns a pointer to the data structure that contains a specified field of
@@ -1056,7 +1046,7 @@ typedef uintn return_status;
 #define RETURN_WARN_STALE_DATA ENCODE_WARNING(5)
 
 ///
-/// The resulting buffer contains UEFI-compliant file system.
+/// The resulting buffer contains file system.
 ///
 #define RETURN_WARN_FILE_SYSTEM ENCODE_WARNING(6)
 

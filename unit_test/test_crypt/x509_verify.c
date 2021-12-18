@@ -8,7 +8,7 @@
 static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
 /**
-  Validate UEFI-Crypto  X509 certificate Verify
+  Validate Crypto X509 certificate Verify
 
   @retval  RETURN_SUCCESS  Validation succeeded.
   @retval  RETURN_ABORTED  Validation failed.

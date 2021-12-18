@@ -90,8 +90,6 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
 }
 
 /*
- * Implementation for UEFI
- *
  * This is OpenSSL required interface.
  */
 int rand_pool_add_nonce_data(RAND_POOL *pool)
@@ -103,8 +101,6 @@ int rand_pool_add_nonce_data(RAND_POOL *pool)
 }
 
 /*
- * Implementation for UEFI
- *
  * This is OpenSSL required interface.
  */
 int rand_pool_add_additional_data(RAND_POOL *pool)
@@ -116,7 +112,7 @@ int rand_pool_add_additional_data(RAND_POOL *pool)
 }
 
 /*
- * Dummy Implementation for UEFI
+ * Dummy Implementation
  *
  * This is OpenSSL required interface.
  */
@@ -126,7 +122,7 @@ int rand_pool_init(void)
 }
 
 /*
- * Dummy Implementation for UEFI
+ * Dummy Implementation
  *
  * This is OpenSSL required interface.
  */
@@ -135,7 +131,7 @@ void rand_pool_cleanup(void)
 }
 
 /*
- * Dummy Implementation for UEFI
+ * Dummy Implementation
  *
  * This is OpenSSL required interface.
  */

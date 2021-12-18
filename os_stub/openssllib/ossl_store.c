@@ -7,7 +7,7 @@
 /*
  * This function is cleanup ossl store.
  *
- * Dummy Implement for UEFI
+ * Dummy Implement
  */
 void ossl_store_cleanup_int(void)
 {
