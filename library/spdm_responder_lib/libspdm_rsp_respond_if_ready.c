@@ -50,7 +50,6 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
                          response_size, response);
     }
 
-    ASSERT(spdm_request->request_response_code == SPDM_RESPOND_IF_READY);
     if (spdm_request->param1 != spdm_context->error_data.request_code) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
