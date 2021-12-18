@@ -29,9 +29,6 @@ void my_print(IN char8 *message)
 /**
   entrypoint of Cryptographic Validation Utility.
 
-  @param  ImageHandle  The image handle of the UEFI Application.
-  @param  SystemTable  A pointer to the EFI System table.
-
   @retval RETURN_SUCCESS       The entry point is executed successfully.
   @retval other             Some error occurs when executing this entry point.
 

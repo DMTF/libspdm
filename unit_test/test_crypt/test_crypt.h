@@ -85,7 +85,7 @@ return_status validate_crypt_rsa(void);
 return_status validate_crypt_rsa_2(void);
 
 /**
-  Validate UEFI-Crypto  X509 certificate Verify
+  Validate Crypto X509 certificate Verify
 
   @retval  RETURN_SUCCESS  Validation succeeded.
   @retval  RETURN_ABORTED  Validation failed.

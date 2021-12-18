@@ -7,7 +7,7 @@
 /** @file
   Defines base cryptographic library APIs.
   The Base Cryptographic Library provides implementations of basic cryptography
-  primitives (hash Serials, HMAC, AES, RSA, Diffie-Hellman, Elliptic Curve, etc) for UEFI security
+  primitives (hash Serials, HMAC, AES, RSA, Diffie-Hellman, Elliptic Curve, etc) for security
   functionality enabling.
 **/
 

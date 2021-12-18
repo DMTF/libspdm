@@ -78,7 +78,7 @@ int sscanf(const char *buffer, const char *format, ...)
 {
     //
     // Null sscanf() function implementation to satisfy the linker, since
-    // no direct functionality logic dependency in present UEFI cases.
+    // no direct functionality logic dependency in present cases.
     //
     return 0;
 }
