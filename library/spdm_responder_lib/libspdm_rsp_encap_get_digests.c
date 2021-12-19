@@ -54,9 +54,9 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_mut_b(spdm_context, spdm_request,
                        *encap_request_size);
     if (RETURN_ERROR(status)) {
@@ -134,9 +134,9 @@ return_status spdm_process_encap_response_digest(
     }
     spdm_response_size =
         sizeof(spdm_digest_response_t) + digest_count * digest_size;
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_mut_b(spdm_context, spdm_response,
                        spdm_response_size);
     if (RETURN_ERROR(status)) {
@@ -161,4 +161,4 @@ return_status spdm_process_encap_response_digest(
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

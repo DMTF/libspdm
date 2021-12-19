@@ -59,9 +59,9 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_mut_b(spdm_context, spdm_request,
                        *encap_request_size);
     if (RETURN_ERROR(status)) {
@@ -133,9 +133,9 @@ return_status spdm_process_encap_response_certificate(
     }
     spdm_response_size = sizeof(spdm_certificate_response_t) +
                  spdm_response->portion_length;
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_mut_b(spdm_context, spdm_response,
                        spdm_response_size);
     if (RETURN_ERROR(status)) {
@@ -206,4 +206,4 @@ return_status spdm_process_encap_response_certificate(
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

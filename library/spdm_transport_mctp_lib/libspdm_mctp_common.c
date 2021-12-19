@@ -142,7 +142,7 @@ return_status spdm_transport_mctp_encode_message(
         }
 
         if (!is_app_message) {
-            // SPDM message to APP message
+            /* SPDM message to APP message*/
             app_message = app_message_buffer;
             app_message_size = sizeof(app_message_buffer);
             status = transport_encode_message(NULL, message_size,
@@ -159,7 +159,7 @@ return_status spdm_transport_mctp_encode_message(
             app_message = message;
             app_message_size = message_size;
         }
-        // APP message to secured message
+        /* APP message to secured message*/
         secured_message_size = sizeof(secured_message);
         status = spdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
@@ -171,7 +171,7 @@ return_status spdm_transport_mctp_encode_message(
             return status;
         }
 
-        // secured message to secured MCTP message
+        /* secured message to secured MCTP message*/
         status = transport_encode_message(
             session_id, secured_message_size, secured_message,
             transport_message_size, transport_message);
@@ -181,7 +181,7 @@ return_status spdm_transport_mctp_encode_message(
             return RETURN_UNSUPPORTED;
         }
     } else {
-        // SPDM message to normal MCTP message
+        /* SPDM message to normal MCTP message*/
         status = transport_encode_message(NULL, message_size, message,
                           transport_message_size,
                           transport_message);
@@ -256,7 +256,7 @@ return_status spdm_transport_mctp_decode_message(
     transport_decode_message = mctp_decode_message;
 
     SecuredMessageSessionId = NULL;
-    // Detect received message
+    /* Detect received message*/
     secured_message_size = sizeof(secured_message);
     status = transport_decode_message(
         &SecuredMessageSessionId, transport_message_size,
@@ -280,7 +280,7 @@ return_status spdm_transport_mctp_decode_message(
             return RETURN_UNSUPPORTED;
         }
 
-        // Secured message to APP message
+        /* Secured message to APP message*/
         app_message_size = sizeof(app_message);
         status = spdm_decode_secured_message(
             secured_message_context, *SecuredMessageSessionId,
@@ -297,13 +297,13 @@ return_status spdm_transport_mctp_decode_message(
             return RETURN_UNSUPPORTED;
         }
 
-        // APP message to SPDM message.
+        /* APP message to SPDM message.*/
         status = transport_decode_message(&SecuredMessageSessionId,
                           app_message_size, app_message,
                           message_size, message);
         if (RETURN_ERROR(status)) {
             *is_app_message = TRUE;
-            // just return APP message.
+            /* just return APP message.*/
             if (*message_size < app_message_size) {
                 *message_size = app_message_size;
                 return RETURN_BUFFER_TOO_SMALL;
@@ -316,7 +316,7 @@ return_status spdm_transport_mctp_decode_message(
             if (SecuredMessageSessionId == NULL) {
                 return RETURN_SUCCESS;
             } else {
-                // get encapsulated secured message - cannot handle it.
+                /* get encapsulated secured message - cannot handle it.*/
                 DEBUG((DEBUG_ERROR,
                        "transport_decode_message - expect encapsulated normal but got session (%08x)\n",
                        *SecuredMessageSessionId));
@@ -324,7 +324,7 @@ return_status spdm_transport_mctp_decode_message(
             }
         }
     } else {
-        // get non-secured message
+        /* get non-secured message*/
         status = transport_decode_message(&SecuredMessageSessionId,
                           transport_message_size,
                           transport_message,

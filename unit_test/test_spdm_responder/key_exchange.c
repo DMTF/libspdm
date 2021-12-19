@@ -625,19 +625,19 @@ spdm_test_context_t m_spdm_responder_key_exchange_test_context = {
 int spdm_responder_key_exchange_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_exchange_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case3),
-        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case6),
-        // Buffer reset
+        /* Buffer reset*/
         cmocka_unit_test(test_spdm_responder_key_exchange_case7),
     };
 
@@ -648,4 +648,4 @@ int spdm_responder_key_exchange_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

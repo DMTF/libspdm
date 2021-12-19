@@ -17,12 +17,12 @@
 
 #pragma pack(1)
 
-//
-// PCAP file format:
-// +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+
-// | Global header | Packet header | Packet data | Packet header | Packet data | Packet header | Packet data | ... |
-// +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+
-//
+
+/* PCAP file format:*/
+/* +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+*/
+/* | Global header | Packet header | Packet data | Packet header | Packet data | Packet header | Packet data | ... |*/
+/* +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+*/
+
 
 typedef struct {
     uint32_t magic_number;
@@ -31,7 +31,7 @@ typedef struct {
     int32_t this_zone;
     uint32_t sig_figs;
     uint32_t snap_len;
-    uint32_t network; // data Link Type
+    uint32_t network; /* data Link Type*/
 } pcap_global_header_t;
 
 #define PCAP_GLOBAL_HEADER_MAGIC 0xa1b2c3d4
@@ -45,8 +45,8 @@ typedef struct {
 
 typedef struct {
     uint32_t ts_sec;
-    // PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond
-    // PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond
+    /* PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond*/
+    /* PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond*/
     uint32_t ts_usec;
     uint32_t incl_len;
     uint32_t orig_len;

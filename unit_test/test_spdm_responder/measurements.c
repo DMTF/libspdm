@@ -76,8 +76,8 @@ uintn m_spdm_get_measurements_request10_size =
 spdm_get_measurements_request_t m_spdm_get_measurements_request11 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
-    // nonce
-    // SlotId != 0
+    /* nonce*/
+    /* SlotId != 0*/
 };
 uintn m_spdm_get_measurements_request11_size =
     sizeof(m_spdm_get_measurements_request11);
@@ -85,8 +85,8 @@ uintn m_spdm_get_measurements_request11_size =
 spdm_get_measurements_request_t m_spdm_get_measurements_request12 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
-    // nonce
-    // SlotId >= MAX_SPDM_SLOT_COUNT
+    /* nonce*/
+    /* SlotId >= MAX_SPDM_SLOT_COUNT*/
 };
 uintn m_spdm_get_measurements_request12_size =
     sizeof(m_spdm_get_measurements_request12);
@@ -923,7 +923,7 @@ void test_spdm_responder_measurements_case15(void **state)
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_measurements_response_t *spdm_response;
-    // uintn                measurment_sig_size;
+    /* uintn                measurment_sig_size;*/
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -945,7 +945,7 @@ void test_spdm_responder_measurements_case15(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
-    // measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);
+    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
     spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -978,7 +978,7 @@ void test_spdm_responder_measurements_case16(void **state)
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_measurements_response_t *spdm_response;
-    // uintn                measurment_sig_size;
+    /* uintn                measurment_sig_size;*/
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1000,7 +1000,7 @@ void test_spdm_responder_measurements_case16(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
-    // measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);
+    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
     status = spdm_get_response_measurements(
@@ -1031,7 +1031,7 @@ void test_spdm_responder_measurements_case17(void **state)
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_measurements_response_t *spdm_response;
-    // uintn                measurment_sig_size;
+    /* uintn                measurment_sig_size;*/
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1052,7 +1052,7 @@ void test_spdm_responder_measurements_case17(void **state)
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
     ;
-    // measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);
+    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
     spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1161,7 +1161,7 @@ void test_spdm_responder_measurements_case19(void **state)
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_measurements_response_t *spdm_response;
-    // uintn                measurment_sig_size;
+    /* uintn                measurment_sig_size;*/
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1182,7 +1182,7 @@ void test_spdm_responder_measurements_case19(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
-    // measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);
+    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
     spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1215,7 +1215,7 @@ void test_spdm_responder_measurements_case20(void **state)
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_measurements_response_t *spdm_response;
-    // uintn                measurment_sig_size;
+    /* uintn                measurment_sig_size;*/
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1236,7 +1236,7 @@ void test_spdm_responder_measurements_case20(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
-    // measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);
+    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
     spdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1478,51 +1478,51 @@ int spdm_responder_measurements_test_main(void)
     m_spdm_get_measurements_request12.SlotIDParam = SPDM_MAX_SLOT_COUNT + 1;
 
     const struct CMUnitTest spdm_responder_measurements_tests[] = {
-        // Success Case to get measurement number without signature
+        /* Success Case to get measurement number without signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case1),
-        // Bad request size to get measurement number without signature
+        /* Bad request size to get measurement number without signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_measurements_case3),
-        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_measurements_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_measurements_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_measurements_case6),
-        // Success Case to get measurement number with signature
+        /* Success Case to get measurement number with signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case7),
-        // Success Case to get one measurement with signature
+        /* Success Case to get one measurement with signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case8),
-        // Bad request size to get one measurement with signature
+        /* Bad request size to get one measurement with signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case9),
-        // Success Case to get one measurement without signature
+        /* Success Case to get one measurement without signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case10),
-        // Success Case to get all measurements with signature
+        /* Success Case to get all measurements with signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case11),
-        // Success Case to get all measurements without signature
+        /* Success Case to get all measurements without signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case12),
-        // Error Case: no sig required, but there is nonce and/or slotID (special case of Test Case 2)
+        /* Error Case: no sig required, but there is nonce and/or slotID (special case of Test Case 2)*/
         cmocka_unit_test(test_spdm_responder_measurements_case13),
-        // Error Case: sig required, but no nonce and/or SlotID
+        /* Error Case: sig required, but no nonce and/or SlotID*/
         cmocka_unit_test(test_spdm_responder_measurements_case14),
-        // Error Case: sig required, but meas_cap = 01b (including nonce and SlotId on request)
+        /* Error Case: sig required, but meas_cap = 01b (including nonce and SlotId on request)*/
         cmocka_unit_test(test_spdm_responder_measurements_case15),
-        // Error Case: sig required, but meas_cap = 01b (not including nonce and SlotId on request)
+        /* Error Case: sig required, but meas_cap = 01b (not including nonce and SlotId on request)*/
         cmocka_unit_test(test_spdm_responder_measurements_case16),
-        // Error Case: meas_cap = 00b
+        /* Error Case: meas_cap = 00b*/
         cmocka_unit_test(test_spdm_responder_measurements_case17),
-        // Success Case: SlotId different from default
+        /* Success Case: SlotId different from default*/
         cmocka_unit_test(test_spdm_responder_measurements_case18),
-        // Bad SlotId parameter (>= MAX_SPDM_SLOT_COUNT)
+        /* Bad SlotId parameter (>= MAX_SPDM_SLOT_COUNT)*/
         cmocka_unit_test(test_spdm_responder_measurements_case19),
-        // Bad SlotId parameter (slot_count < SlotId < MAX_SPDM_SLOT_COUNT)
+        /* Bad SlotId parameter (slot_count < SlotId < MAX_SPDM_SLOT_COUNT)*/
         cmocka_unit_test(test_spdm_responder_measurements_case20),
-        // Error Case: request a measurement out of bounds
+        /* Error Case: request a measurement out of bounds*/
         cmocka_unit_test(test_spdm_responder_measurements_case21),
-        // Large number of requests before requiring a signature
+        /* Large number of requests before requiring a signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case22),
-        // Successful response to get a session based measurement with signature
+        /* Successful response to get a session based measurement with signature*/
         cmocka_unit_test(test_spdm_responder_measurements_case23),
     };
 
@@ -1533,4 +1533,4 @@ int spdm_responder_measurements_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

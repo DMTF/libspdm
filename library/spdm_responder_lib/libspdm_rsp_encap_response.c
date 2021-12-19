@@ -52,12 +52,12 @@ spdm_encap_response_struct_t m_encap_response_struct[] = {
 
     { SPDM_GET_CERTIFICATE, spdm_get_encap_request_get_certificate,
       spdm_process_encap_response_certificate },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_encap_request_challenge,
       spdm_process_encap_response_challenge_auth },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     { SPDM_KEY_UPDATE, spdm_get_encap_request_key_update,
       spdm_process_encap_response_key_update },
@@ -125,7 +125,7 @@ return_status spdm_process_encapsulated_response(
     boolean need_continue;
     spdm_encap_response_struct_t *encap_response_struct;
 
-    // Process previous response
+    /* Process previous response*/
     need_continue = FALSE;
 
     if (spdm_context->encap_context.current_request_op_code != 0) {
@@ -150,19 +150,19 @@ return_status spdm_process_encapsulated_response(
 
     spdm_context->encap_context.request_id += 1;
 
-    // Move to next request
+    /* Move to next request*/
     if (!need_continue) {
         spdm_encap_move_to_next_op_code(spdm_context);
     }
 
     if (spdm_context->encap_context.current_request_op_code == 0) {
-        // No more work to do - stop
+        /* No more work to do - stop*/
         *encap_request_size = 0;
         spdm_context->encap_context.current_request_op_code = 0;
         return RETURN_SUCCESS;
     }
 
-    // Process the next request
+    /* Process the next request*/
     encap_response_struct = spdm_get_encap_struct_via_op_code(
         spdm_context,
         spdm_context->encap_context.current_request_op_code);
@@ -202,28 +202,28 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    //
-    // Clear Cache
-    //
+    
+    /* Clear Cache*/
+    
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
-    //
-    // Possible Sequence:
-    // 2. Session Mutual Auth: (spdm_context->last_spdm_request_session_id_valid)
-    //    2.1 GET_DIGEST/GET_CERTIFICATE (spdm_context->encap_context.req_slot_id != 0xFF)
-    //    2.2 GET_DIGEST (spdm_context->encap_context.req_slot_id == 0xFF)
-    //    2.3 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)
-    //
+    
+    /* Possible Sequence:*/
+    /* 2. Session Mutual Auth: (spdm_context->last_spdm_request_session_id_valid)*/
+    /*    2.1 GET_DIGEST/GET_CERTIFICATE (spdm_context->encap_context.req_slot_id != 0xFF)*/
+    /*    2.2 GET_DIGEST (spdm_context->encap_context.req_slot_id == 0xFF)*/
+    /*    2.3 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
+    
     zero_mem(spdm_context->encap_context.request_op_code_sequence,
          sizeof(spdm_context->encap_context.request_op_code_sequence));
-    // Session Mutual Auth
+    /* Session Mutual Auth*/
     if (spdm_is_capabilities_flag_supported(
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0) ||
         (mut_auth_requested ==
          SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED)) {
-        // no encap is required
+        /* no encap is required*/
         spdm_context->encap_context.request_op_code_count = 0;
     } else if (spdm_context->encap_context.req_slot_id != 0xFF) {
         spdm_context->encap_context.request_op_code_count = 2;
@@ -256,22 +256,22 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    //
-    // Clear Cache
-    //
+    
+    /* Clear Cache*/
+    
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
-    //
-    // Possible Sequence:
-    // 1. Basic Mutual Auth:
-    //    1.1 GET_DIGEST/GET_CERTIFICATE/CHALLENGE (spdm_context->encap_context.req_slot_id != 0xFF)
-    //    1.2 GET_DIGEST/CHALLENGE (spdm_context->encap_context.req_slot_id == 0xFF)
-    //    1.3 CHALLENGE (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)
-    //
+    
+    /* Possible Sequence:*/
+    /* 1. Basic Mutual Auth:*/
+    /*    1.1 GET_DIGEST/GET_CERTIFICATE/CHALLENGE (spdm_context->encap_context.req_slot_id != 0xFF)*/
+    /*    1.2 GET_DIGEST/CHALLENGE (spdm_context->encap_context.req_slot_id == 0xFF)*/
+    /*    1.3 CHALLENGE (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
+    
     zero_mem(spdm_context->encap_context.request_op_code_sequence,
          sizeof(spdm_context->encap_context.request_op_code_sequence));
-    // Basic Mutual Auth
+    /* Basic Mutual Auth*/
     if (spdm_is_capabilities_flag_supported(
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0)) {
@@ -565,9 +565,9 @@ return_status spdm_get_response_encapsulated_response_ack(
 return_status spdm_handle_encap_error_response_main(
     IN spdm_context_t *spdm_context, IN uint8_t error_code)
 {
-    //
-    // According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.
-    // RESPONSE_NOT_READY should not be sent by requester. No need to check it.
-    //
+    
+    /* According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.*/
+    /* RESPONSE_NOT_READY should not be sent by requester. No need to check it.*/
+    
     return RETURN_DEVICE_ERROR;
 }

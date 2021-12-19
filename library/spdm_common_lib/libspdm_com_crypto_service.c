@@ -205,7 +205,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
             return FALSE;
         }
 
-        // Debug code only - calculate and print value of m1m2 mut hash
+        /* Debug code only - calculate and print value of m1m2 mut hash*/
         DEBUG_CODE(
             if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -261,7 +261,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
             return FALSE;
         }
 
-        // Debug code only - calculate and print value of m1m2 hash
+        /* Debug code only - calculate and print value of m1m2 hash*/
         DEBUG_CODE(
             if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -376,7 +376,7 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
     DEBUG((DEBUG_INFO, "message_m data :\n"));
     internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
 
-    // Debug code only - calculate and print value of l1l2 hash
+    /* Debug code only - calculate and print value of l1l2 hash*/
     DEBUG_CODE(
         if (!spdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -609,8 +609,8 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
             *trust_anchor_size = root_cert_size;
         }
     } else if ((cert_chain_data != NULL) && (cert_chain_data_size != 0)) {
-        // Whether it contains the root certificate or not,
-        // it should be equal to the one provisioned in trusted environment
+        /* Whether it contains the root certificate or not,*/
+        /* it should be equal to the one provisioned in trusted environment*/
         if (cert_chain_data_size != cert_chain_buffer_size) {
             DEBUG((DEBUG_INFO,
                    "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
@@ -820,9 +820,9 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    //
-    // Get leaf cert from cert chain
-    //
+    
+    /* Get leaf cert from cert chain*/
+    
     result = x509_get_cert_from_cert_chain(cert_chain_data,
                            cert_chain_data_size, -1,
                            &cert_buffer, &cert_buffer_size);
@@ -1041,9 +1041,9 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    //
-    // Get leaf cert from cert chain
-    //
+    
+    /* Get leaf cert from cert chain*/
+    
     result = x509_get_cert_from_cert_chain(cert_chain_data,
                            cert_chain_data_size, -1,
                            &cert_buffer, &cert_buffer_size);

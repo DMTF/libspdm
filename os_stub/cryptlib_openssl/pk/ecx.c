@@ -197,7 +197,7 @@ boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
     *key_size = final_key_size;
     zero_mem(key, *key_size);
 
-    // Derive key
+    /* Derive key*/
     pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (pkey_ctx == NULL) {
         return FALSE;

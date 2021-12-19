@@ -6,28 +6,28 @@
 
 #include "test_crypt.h"
 
-//
-// Max Known digest size is SHA512 output (64 bytes) by far
-//
+
+/* Max Known digest size is SHA512 output (64 bytes) by far*/
+
 #define MAX_DIGEST_SIZE 64
 
-//
-// message string for digest validation
-//
+
+/* message string for digest validation*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_hash_data = "abc";
 
-//
-// result for SHA-256("abc"). (from "B.1 SHA-256 Example" of NIST FIPS 180-2)
-//
+
+/* result for SHA-256("abc"). (from "B.1 SHA-256 Example" of NIST FIPS 180-2)*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sha256_digest[SHA256_DIGEST_SIZE] = {
     0xba, 0x78, 0x16, 0xbf, 0x8f, 0x01, 0xcf, 0xea, 0x41, 0x41, 0x40,
     0xde, 0x5d, 0xae, 0x22, 0x23, 0xb0, 0x03, 0x61, 0xa3, 0x96, 0x17,
     0x7a, 0x9c, 0xb4, 0x10, 0xff, 0x61, 0xf2, 0x00, 0x15, 0xad
 };
 
-//
-// result for SHA-384("abc"). (from "D.1 SHA-384 Example" of NIST FIPS 180-2)
-//
+
+/* result for SHA-384("abc"). (from "D.1 SHA-384 Example" of NIST FIPS 180-2)*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sha384_digest[SHA384_DIGEST_SIZE] = {
     0xcb, 0x00, 0x75, 0x3f, 0x45, 0xa3, 0x5e, 0x8b, 0xb5, 0xa0, 0x3d, 0x69,
     0x9a, 0xc6, 0x50, 0x07, 0x27, 0x2c, 0x32, 0xab, 0x0e, 0xde, 0xd1, 0x63,
@@ -35,9 +35,9 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sha384_digest[SHA384_DIGEST_SIZE] 
     0xa1, 0xe7, 0xcc, 0x23, 0x58, 0xba, 0xec, 0xa1, 0x34, 0xc8, 0x25, 0xa7
 };
 
-//
-// result for SHA-512("abc"). (from "C.1 SHA-512 Example" of NIST FIPS 180-2)
-//
+
+/* result for SHA-512("abc"). (from "C.1 SHA-512 Example" of NIST FIPS 180-2)*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sha512_digest[SHA512_DIGEST_SIZE] = {
     0xdd, 0xaf, 0x35, 0xa1, 0x93, 0x61, 0x7a, 0xba, 0xcc, 0x41, 0x73,
     0x49, 0xae, 0x20, 0x41, 0x31, 0x12, 0xe6, 0xfa, 0x4e, 0x89, 0xa9,
@@ -102,9 +102,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA256: ");
 
-    //
-    // SHA256 digest Validation
-    //
+    
+    /* SHA256 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha256_new();
     if (hash_ctx == NULL) {
@@ -160,9 +160,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA384: ");
 
-    //
-    // SHA384 digest Validation
-    //
+    
+    /* SHA384 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha384_new();
     if (hash_ctx == NULL) {
@@ -218,9 +218,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA512: ");
 
-    //
-    // SHA512 digest Validation
-    //
+    
+    /* SHA512 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha512_new();
     if (hash_ctx == NULL) {
@@ -275,9 +275,9 @@ return_status validate_crypt_digest(void)
     my_print("[Pass]\n");
 
     my_print("- SHA3_256: ");
-    //
-    // SHA3_256 digest Validation
-    //
+    
+    /* SHA3_256 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_256_new();
     if (hash_ctx != NULL) {
@@ -321,9 +321,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SHA3_384: ");
-    //
-    // SHA3_384 digest Validation
-    //
+    
+    /* SHA3_384 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_384_new();
     if (hash_ctx != NULL) {
@@ -367,9 +367,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SHA3_512: ");
-    //
-    // SHA3_512 digest Validation
-    //
+    
+    /* SHA3_512 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_512_new();
     if (hash_ctx != NULL) {
@@ -413,9 +413,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SM3_256: ");
-    //
-    // SM3_256 digest Validation
-    //
+    
+    /* SM3_256 digest Validation*/
+    
     my_print("HashAll... ");
     zero_mem(digest, SM3_256_DIGEST_SIZE);
     status = sm3_256_hash_all(m_hash_data, data_size, digest);

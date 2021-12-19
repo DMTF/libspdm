@@ -10,7 +10,7 @@ return_status SpdmRequesterSendMessage(IN void *spdm_context,
                        IN uintn message_size, IN void *message,
                        IN uint64_t timeout)
 {
-    // Dummy
+    /* Dummy*/
     return RETURN_SUCCESS;
 }
 
@@ -19,7 +19,7 @@ return_status SpdmRequesterReceiveMessage(IN void *spdm_context,
                       IN OUT void *message,
                       IN uint64_t timeout)
 {
-    // Dummy
+    /* Dummy*/
     return RETURN_SUCCESS;
 }
 
@@ -56,10 +56,10 @@ void *spdm_client_init(void)
            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |*/
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
-        //           SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        /*           SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |*/
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
-        //           SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+        /*           SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |*/
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP /* |

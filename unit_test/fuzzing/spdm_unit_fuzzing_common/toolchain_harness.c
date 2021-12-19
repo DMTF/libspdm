@@ -30,21 +30,21 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
 
     alignment = TEST_ALIGNMENT;
 
-    // 1. Allocate buffer
+    /* 1. Allocate buffer*/
     buffer = malloc(max_buffer_size);
     if (buffer == NULL) {
         return FALSE;
     }
 
-    // 2. Assign to test_buffer and buffer_size
+    /* 2. Assign to test_buffer and buffer_size*/
     *test_buffer = buffer;
     if (buffer_size != NULL) {
         *buffer_size = max_buffer_size;
     }
 
-    // 3. Initialize test_buffer
+    /* 3. Initialize test_buffer*/
 #ifdef TEST_WITH_KLEE
-    // 3.1 For test with KLEE: write symbolic values to test_buffer
+    /* 3.1 For test with KLEE: write symbolic values to test_buffer*/
     klee_make_symbolic((uint8_t *)buffer, max_buffer_size, "buffer");
     return TRUE;
 #endif
@@ -129,7 +129,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     void *test_buffer;
     uintn max_buffer_size;
 
-    // 1. Initialize test_buffer
+    /* 1. Initialize test_buffer*/
     max_buffer_size = get_max_buffer_size();
     test_buffer = allocate_zero_pool(max_buffer_size);
     if (test_buffer == NULL) {
@@ -139,9 +139,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         size = max_buffer_size;
     }
     copy_mem(test_buffer, data, size);
-    // 2. Run test
+    /* 2. Run test*/
     run_test_harness(test_buffer, size);
-    // 3. Clean up
+    /* 3. Clean up*/
     free(test_buffer);
     return 0;
 }
@@ -160,16 +160,16 @@ int main(int argc, char **argv)
 
     file_name = argv[1];
 
-    // 1. Initialize test_buffer
+    /* 1. Initialize test_buffer*/
     res = init_test_buffer(file_name, get_max_buffer_size(), &test_buffer,
                    &test_buffer_size);
     if (!res) {
         printf("error - fail to init test buffer\n");
         return 0;
     }
-    // 2. Run test
+    /* 2. Run test*/
     run_test_harness(test_buffer, test_buffer_size);
-    // 3. Clean up
+    /* 3. Clean up*/
     free(test_buffer);
     return 0;
 }

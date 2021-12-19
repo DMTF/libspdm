@@ -227,9 +227,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
         return RETURN_SECURITY_VIOLATION;
     }
     ptr += sizeof(uint16_t);
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_c(spdm_context, &spdm_request,
                        sizeof(spdm_request));
     if (RETURN_ERROR(status)) {
@@ -384,4 +384,4 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

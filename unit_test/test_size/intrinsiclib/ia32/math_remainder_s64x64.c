@@ -15,14 +15,14 @@ int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
  */
 __declspec(naked) void __cdecl _allrem(void)
 {
-    //
-    //    int64_t
-    //      //    div_s64x64_remainder (
-    //      IN      int64_t     dividend,
-    //      IN      int64_t     divisor,
-    //      OUT     int64_t     *remainder  OPTIONAL
-    //      )
-    //
+    
+    /*    int64_t*/
+    /*            div_s64x64_remainder (*/
+    /*      IN      int64_t     dividend,*/
+    /*      IN      int64_t     divisor,*/
+    /*      OUT     int64_t     *remainder  OPTIONAL*/
+    /*      )*/
+    
   _asm {
     ; Original local stack when calling _allrem
     ;               -----------------

@@ -70,14 +70,14 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-        // No handshake in clear, then it must be in a session.
+        /* No handshake in clear, then it must be in a session.*/
         if (!spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                 response_size, response);
         }
     } else {
-        // handshake in clear, then it must not be in a session.
+        /* handshake in clear, then it must not be in a session.*/
         if (spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -267,4 +267,4 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

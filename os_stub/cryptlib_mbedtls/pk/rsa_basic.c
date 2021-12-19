@@ -81,9 +81,9 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     int32_t ret;
     mbedtls_mpi value;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || bn_size > INT_MAX) {
         return FALSE;
     }
@@ -92,7 +92,7 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
     rsa_key = (mbedtls_rsa_context *)rsa_context;
 
-    // if big_number is Null clear
+    /* if big_number is Null clear*/
     if (big_number) {
         ret = mbedtls_mpi_read_binary(&value, big_number, bn_size);
         if (ret != 0) {

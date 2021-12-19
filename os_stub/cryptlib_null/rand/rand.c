@@ -30,7 +30,7 @@ int rand();
 **/
 boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
-    // TBD
+    /* TBD*/
     return TRUE;
 }
 

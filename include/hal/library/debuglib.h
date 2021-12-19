@@ -18,13 +18,13 @@
 #ifndef __DEBUG_LIB_H__
 #define __DEBUG_LIB_H__
 
-//
-// Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of debug_print()
-//
-#define DEBUG_INFO 0x00000040 // Informational debug messages
-// Detailed debug messages that may significantly impact boot performance
+
+/* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of debug_print()*/
+
+#define DEBUG_INFO 0x00000040 /* Informational debug messages*/
+/* Detailed debug messages that may significantly impact boot performance*/
 #define DEBUG_VERBOSE 0x00400000
-#define DEBUG_ERROR 0x80000000 // Error
+#define DEBUG_ERROR 0x80000000 /* Error*/
 
 /**
   Prints a debug message to the debug output device if the specified error level is enabled.

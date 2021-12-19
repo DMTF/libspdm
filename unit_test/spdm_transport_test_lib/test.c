@@ -158,11 +158,11 @@ return_status test_decode_message(OUT uint32_t **session_id,
 
     if (*message_size <
         transport_message_size - sizeof(test_message_header_t)) {
-        //
-        // Handle special case for the side effect of alignment
-        // Caller may allocate a good enough buffer without considering alignment.
-        // Here we will not copy all the message and ignore the the last padding bytes.
-        //
+        
+        /* Handle special case for the side effect of alignment*/
+        /* Caller may allocate a good enough buffer without considering alignment.*/
+        /* Here we will not copy all the message and ignore the the last padding bytes.*/
+        
         if (*message_size + alignment - 1 >=
             transport_message_size - sizeof(test_message_header_t)) {
             copy_mem(message,

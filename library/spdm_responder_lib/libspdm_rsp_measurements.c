@@ -152,7 +152,7 @@ return_status spdm_get_response_measurements(IN void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    // check local context here, because meas_cap is reserved for requester.
+    /* check local context here, because meas_cap is reserved for requester.*/
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, FALSE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
@@ -266,12 +266,12 @@ return_status spdm_get_response_measurements(IN void *context,
     measurements_index = spdm_request->header.param2;
     measurements_count = 0;
 
-    // The response buffer must hold the spdm_measurements_response_t,
-    // followed by the actual measurements, followed by the signature,
-    // if there is one. Here we calculate the maximum size allowed for
-    // measurements and store it in "measurements_size", by subtracting
-    // out "spdm_responze_size", which contains the sizeof the
-    // spdm_measurements_response_t + signature if there is one.
+    /* The response buffer must hold the spdm_measurements_response_t,*/
+    /* followed by the actual measurements, followed by the signature,*/
+    /* if there is one. Here we calculate the maximum size allowed for*/
+    /* measurements and store it in "measurements_size", by subtracting*/
+    /* out "spdm_responze_size", which contains the sizeof the*/
+    /* spdm_measurements_response_t + signature if there is one.*/
 
     measurements_size = *response_size;
     if (measurements_size > spdm_response_size) {
@@ -313,7 +313,7 @@ return_status spdm_get_response_measurements(IN void *context,
     switch (spdm_request->header.param2) {
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS:
 
-        spdm_response_size += 0; // Just to match code pattern in other case blocks
+        spdm_response_size += 0; /* Just to match code pattern in other case blocks*/
         ASSERT(*response_size >= spdm_response_size);
         *response_size = spdm_response_size;
         spdm_response = response;
@@ -447,7 +447,7 @@ return_status spdm_get_response_measurements(IN void *context,
             libspdm_reset_message_m(spdm_context, session_info);
             return status;
         }
-        //reset
+        /*reset*/
         libspdm_reset_message_m(spdm_context, session_info);
     } else {
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
@@ -464,4 +464,4 @@ return_status spdm_get_response_measurements(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

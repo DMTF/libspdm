@@ -160,18 +160,18 @@ return_status spdm_measurement_collection(
     } else if (measurements_index ==
             SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
-        // Calculate total_size_needed based on hash algo selected.
-        // If we have an hash algo, then the first N-1 elements will be
-        // hash values, otherwise N-1 raw bitstream values.
-        // Last one (N) is always raw bitstream data.
+        /* Calculate total_size_needed based on hash algo selected.*/
+        /* If we have an hash algo, then the first N-1 elements will be*/
+        /* hash values, otherwise N-1 raw bitstream values.*/
+        /* Last one (N) is always raw bitstream data.*/
         if (measurement_hash_algo
             != SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
-            total_size_needed = // N-1 hash_size + 1 raw data
+            total_size_needed = /* N-1 hash_size + 1 raw data*/
                 (MEASUREMENT_BLOCK_NUMBER - 1) *
                     (sizeof(spdm_measurement_block_dmtf_t) + hash_size) +
                 (sizeof(spdm_measurement_block_dmtf_t) + sizeof(data));
         } else {
-            total_size_needed = // All N items raw data
+            total_size_needed = /* All N items raw data*/
                 (MEASUREMENT_BLOCK_NUMBER *
                  (sizeof(spdm_measurement_block_dmtf_t) +
                   sizeof(data)));
@@ -194,8 +194,8 @@ return_status spdm_measurement_collection(
 
             set_mem(data, sizeof(data), (uint8_t)(index + 1));
 
-            // The first N-1 blocks may be hash values,
-            // while the last one is always a raw bitstream.
+            /* The first N-1 blocks may be hash values,*/
+            /* while the last one is always a raw bitstream.*/
             if ((index < MEASUREMENT_BLOCK_NUMBER) &&
                 measurement_hash_algo !=
                     SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
@@ -299,7 +299,7 @@ return_status spdm_measurement_collection(
                 (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                      (uint16_t)hash_size);
 
-            // Hash directly to buffer after measurement block.
+            /* Hash directly to buffer after measurement block.*/
             result = spdm_measurement_hash_all(
                 measurement_hash_algo, data, sizeof(data),
                 (void *)(measurement_block + 1));
@@ -374,12 +374,12 @@ boolean spdm_generate_measurement_summary_hash(
             return FALSE;
         }
 
-        // get all measurement data
+        /* get all measurement data*/
         device_measurement_size = sizeof(device_measurement);
         status = spdm_measurement_collection(
             spdm_version, measurement_specification,
             measurement_hash_algo,
-            0xFF, // Get all measurements
+            0xFF, /* Get all measurements*/
             &device_measurement_count, device_measurement,
             &device_measurement_size);
         if (RETURN_ERROR(status)) {
@@ -389,7 +389,7 @@ boolean spdm_generate_measurement_summary_hash(
         ASSERT(device_measurement_count <=
                LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
 
-        // double confirm that MeasurmentData internal size is correct
+        /* double confirm that MeasurmentData internal size is correct*/
         measurment_data_size = 0;
         cached_measurment_block = (void *)device_measurement;
         for (index = 0; index < device_measurement_count; index++) {
@@ -417,7 +417,7 @@ boolean spdm_generate_measurement_summary_hash(
         ASSERT(measurment_data_size <=
                LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE);
 
-        // get required data and hash them
+        /* get required data and hash them*/
         cached_measurment_block = (void *)device_measurement;
         measurment_data_size = 0;
         for (index = 0; index < device_measurement_count; index++) {
@@ -426,7 +426,7 @@ boolean spdm_generate_measurement_summary_hash(
                 cached_measurment_block
                     ->Measurement_block_common_header
                     .measurement_size;
-            // filter unneeded data
+            /* filter unneeded data*/
             if (((measurement_summary_hash_type ==
                   SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) &&
                  ((cached_measurment_block
@@ -574,9 +574,9 @@ boolean spdm_responder_data_sign(
 
 uint8_t m_my_zero_filled_buffer[64];
 uint8_t m_bin_str0[0x11] = {
-    0x00, 0x00, // length - to be filled
-    0x73, 0x70, 0x64, 0x6d, 0x31, 0x2e, 0x31, 0x20, // version: 'spdm1.1 '
-    0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64, // label: 'derived'
+    0x00, 0x00, /* length - to be filled*/
+    0x73, 0x70, 0x64, 0x6d, 0x31, 0x2e, 0x31, 0x20, /* version: 'spdm1.1 '*/
+    0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64, /* label: 'derived'*/
 };
 
 /**

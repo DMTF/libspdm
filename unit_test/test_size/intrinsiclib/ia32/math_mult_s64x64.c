@@ -41,13 +41,13 @@ int64_t mult_s64x64(IN int64_t multiplicand, IN int64_t multiplier)
  */
 __declspec(naked) void __cdecl _allmul(void)
 {
-    //
-    //    int64_t
-    //      //    mult_s64x64 (
-    //      IN      int64_t      multiplicand,
-    //      IN      int64_t      multiplier
-    //      )
-    //
+    
+    /*    int64_t*/
+    /*            mult_s64x64 (*/
+    /*      IN      int64_t      multiplicand,*/
+    /*      IN      int64_t      multiplier*/
+    /*      )*/
+    
   _asm {
     ; Original local stack when calling _allmul
     ;               -----------------

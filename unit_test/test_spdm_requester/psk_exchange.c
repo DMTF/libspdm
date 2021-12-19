@@ -45,7 +45,7 @@ uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
         return buffer_size;
     }
 
-    // Good message, return actual size
+    /* Good message, return actual size*/
     return message_size;
 }
 
@@ -230,8 +230,8 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
-        // zero_mem (ptr, hash_size);
-        // ptr += hash_size;
+        /* zero_mem (ptr, hash_size);*/
+        /* ptr += hash_size;*/
         spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
@@ -253,7 +253,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             data_size - (sizeof(spdm_cert_chain_t) + hash_size);
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -345,8 +345,8 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
-        // zero_mem (ptr, hash_size);
-        // ptr += hash_size;
+        /* zero_mem (ptr, hash_size);*/
+        /* ptr += hash_size;*/
         spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
@@ -368,7 +368,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             data_size - (sizeof(spdm_cert_chain_t) + hash_size);
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -509,8 +509,8 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_response->opaque_length =
                 (uint16_t)opaque_psk_exchange_rsp_size;
             ptr = (void *)(spdm_response + 1);
-            // zero_mem (ptr, hash_size);
-            // ptr += hash_size;
+            /* zero_mem (ptr, hash_size);*/
+            /* ptr += hash_size;*/
             spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
             ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_build_opaque_data_version_selection_data(
@@ -537,7 +537,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                 (sizeof(spdm_cert_chain_t) + hash_size);
             spdm_hash_all(m_use_hash_algo, cert_buffer,
                       cert_buffer_size, cert_buffer_hash);
-            // transcript.message_a size is 0
+            /* transcript.message_a size is 0*/
             append_managed_buffer(&th_curr, m_local_buffer,
                           m_local_buffer_size);
             spdm_hash_all(m_use_hash_algo,
@@ -698,8 +698,8 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             spdm_response->opaque_length =
                 (uint16_t)opaque_psk_exchange_rsp_size;
             ptr = (void *)(spdm_response + 1);
-            // zero_mem (ptr, hash_size);
-            // ptr += hash_size;
+            /* zero_mem (ptr, hash_size);*/
+            /* ptr += hash_size;*/
             spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
             ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_build_opaque_data_version_selection_data(
@@ -726,7 +726,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
                 (sizeof(spdm_cert_chain_t) + hash_size);
             spdm_hash_all(m_use_hash_algo, cert_buffer,
                       cert_buffer_size, cert_buffer_hash);
-            // transcript.message_a size is 0
+            /* transcript.message_a size is 0*/
             append_managed_buffer(&th_curr, m_local_buffer,
                           m_local_buffer_size);
             spdm_hash_all(m_use_hash_algo,
@@ -786,13 +786,13 @@ return_status spdm_requester_psk_exchange_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -854,8 +854,8 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         spdm_response->opaque_length =
             (uint16_t)opaque_psk_exchange_rsp_size;
         ptr = (void *)(spdm_response + 1);
-        // zero_mem (ptr, hash_size);
-        // ptr += hash_size;
+        /* zero_mem (ptr, hash_size);*/
+        /* ptr += hash_size;*/
         spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_build_opaque_data_version_selection_data(
@@ -877,7 +877,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             data_size - (sizeof(spdm_cert_chain_t) + hash_size);
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         spdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
@@ -1469,17 +1469,17 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
     zero_mem(measurement_hash, sizeof(measurement_hash));
     status = spdm_send_receive_psk_exchange (spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
              &session_id, &heartbeat_period, measurement_hash);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1577,25 +1577,25 @@ spdm_test_context_t m_spdm_requester_psk_exchange_test_context = {
 int spdm_requester_psk_exchange_test_main(void)
 {
     const struct CMUnitTest spdm_requester_psk_exchange_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case9),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_psk_exchange_case10),
     };
 
@@ -1606,4 +1606,4 @@ int spdm_requester_psk_exchange_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

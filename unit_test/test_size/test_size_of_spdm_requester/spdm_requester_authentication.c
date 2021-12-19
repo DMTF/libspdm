@@ -49,7 +49,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
             return status;
         }
     }
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, slot_id, measurement_hash_type,
@@ -57,7 +57,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
     if (RETURN_ERROR(status)) {
         return status;
     }
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
     return status;
 }
 

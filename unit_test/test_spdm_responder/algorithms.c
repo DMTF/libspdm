@@ -1534,7 +1534,7 @@ void test_spdm_responder_algorithms_case19(void **state) {
   assert_int_equal (spdm_response->struct_table[3].alg_supported, spdm_context->local_context.algorithm.key_schedule);
 }
 
-// When both of requester and responder support multiple algorithms, then defaults to choose the strongest available algorithm
+/* When both of requester and responder support multiple algorithms, then defaults to choose the strongest available algorithm*/
 void test_spdm_responder_algorithms_case20(void **state) {
   return_status        status;
   spdm_test_context_t    *spdm_test_context;
@@ -1612,45 +1612,45 @@ spdm_test_context_t m_spdm_responder_algorithms_test_context = {
 int spdm_responder_algorithms_test_main(void)
 {
     const struct CMUnitTest spdm_responder_algorithms_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_algorithms_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_algorithms_case2),
-        // response_state: LIBSPDM_RESPONSE_STATE_BUSY
+        /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_algorithms_case3),
-        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_algorithms_case4),
-        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_algorithms_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_algorithms_case6),
-        // Success case V1.1
+        /* Success case V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case7),
-        // No match for base_asym_algo
+        /* No match for base_asym_algo*/
         cmocka_unit_test(test_spdm_responder_algorithms_case8),
-        // No match for base_hash_algo
+        /* No match for base_hash_algo*/
         cmocka_unit_test(test_spdm_responder_algorithms_case9),
-        // No match for dhe_named_group
+        /* No match for dhe_named_group*/
         cmocka_unit_test(test_spdm_responder_algorithms_case10),
-        // No match for aead_cipher_suite
+        /* No match for aead_cipher_suite*/
         cmocka_unit_test(test_spdm_responder_algorithms_case11),
-        // No match for req_base_asym_alg
+        /* No match for req_base_asym_alg*/
         cmocka_unit_test(test_spdm_responder_algorithms_case12),
-        // No match for key_schedule
+        /* No match for key_schedule*/
         cmocka_unit_test(test_spdm_responder_algorithms_case13),
-        // Spdm length greater than 64 bytes for V1.0
+        /* Spdm length greater than 64 bytes for V1.0*/
         cmocka_unit_test(test_spdm_responder_algorithms_case14),
-        // Spdm length greater than 128 bytes for V1.1
+        /* Spdm length greater than 128 bytes for V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case15),
-        // Multiple repeated Alg structs for V1.1
+        /* Multiple repeated Alg structs for V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case16),
-        // param1 is smaller than the number of Alg structs for V1.1
+        /* param1 is smaller than the number of Alg structs for V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case17),
-        // param1 is bigger than the number of  Alg structs for V1.1
+        /* param1 is bigger than the number of  Alg structs for V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case18),
-        // Invalid  Alg structs + valid Alg Structs for V1.1
+        /* Invalid  Alg structs + valid Alg Structs for V1.1*/
         cmocka_unit_test(test_spdm_responder_algorithms_case19),
-        // When support multiple algorithms, then defaults to choose the strongest available algorithm
+        /* When support multiple algorithms, then defaults to choose the strongest available algorithm*/
         cmocka_unit_test(test_spdm_responder_algorithms_case20),
     };
 

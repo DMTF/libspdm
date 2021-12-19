@@ -296,9 +296,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                      measurement_record_data_length +
                      SPDM_NONCE_SIZE + sizeof(uint16_t) +
                      opaque_length + signature_size;
-        //
-        // Cache data
-        //
+        
+        /* Cache data*/
+        
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_request,
                         spdm_request_size);
         if (RETURN_ERROR(status)) {
@@ -365,9 +365,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                      measurement_record_data_length +
                      SPDM_NONCE_SIZE + sizeof(uint16_t) +
                      opaque_length;
-        //
-        // Cache data
-        //
+        
+        /* Cache data*/
+        
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_request,
                         spdm_request_size);
         if (RETURN_ERROR(status)) {
@@ -386,11 +386,11 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         *number_of_blocks = spdm_response.header.param1;
         if (*number_of_blocks == 0xFF) {
-            // the number of block cannot be 0xFF, because index 0xFF will brings confusing.
+            /* the number of block cannot be 0xFF, because index 0xFF will brings confusing.*/
             return RETURN_DEVICE_ERROR;
         }
         if (*number_of_blocks == 0x0) {
-            // the number of block cannot be 0x0, because a responder without measurement should clear capability flags.
+            /* the number of block cannot be 0x0, because a responder without measurement should clear capability flags.*/
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -566,4 +566,4 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

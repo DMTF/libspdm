@@ -34,17 +34,17 @@ return_status validate_crypt_sm2(void)
 
     my_print("\nCrypto SM2 key Exchange Testing:\n");
 
-    //
-    // Initialize key length
-    //
+    
+    /* Initialize key length*/
+    
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-    //
-    // Generate & Initialize SM2 context
-    //
+    
+    /* Generate & Initialize SM2 context*/
+    
     my_print("- Context1 ... ");
     Sm2_1 = sm2_key_exchange_new_by_nid(CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
     if (Sm2_1 == NULL) {
@@ -78,9 +78,9 @@ return_status validate_crypt_sm2(void)
         goto Exit;
     }
 
-    //
-    // Verify SM2-KeyExchange
-    //
+    
+    /* Verify SM2-KeyExchange*/
+    
     my_print("Generate key1 ... ");
     status = sm2_key_exchange_generate_key(Sm2_1, public1, &public1_length);
     if (!status || public1_length != 32 * 2) {
@@ -154,9 +154,9 @@ return_status validate_crypt_sm2(void)
         goto Exit;
     }
 
-    //
-    // Verify SM2 signing/verification
-    //
+    
+    /* Verify SM2 signing/verification*/
+    
     sig_size = sizeof(signature);
     my_print("\n- SM2 Signing ... ");
     status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,
@@ -226,9 +226,9 @@ return_status validate_crypt_sm2(void)
         goto Exit;
     }
 
-    //
-    // Verify EC-DSA
-    //
+    
+    /* Verify EC-DSA*/
+    
     sig_size = sizeof(signature);
     my_print("\n- sm2 Signing in Context1 ... ");
     status = sm2_dsa_sign(Sm2_1, CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID, sizeof(DEFAULT_SM2_ID) - 1, message,

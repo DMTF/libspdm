@@ -126,9 +126,9 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
                 0, response_size, response);
         }
     }
-    //
-    // Cache
-    //
+    
+    /* Cache*/
+    
     status = libspdm_append_message_b(spdm_context, spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
@@ -151,4 +151,4 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

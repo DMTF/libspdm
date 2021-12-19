@@ -20,9 +20,9 @@
 **/
 void *hmac_md_new(void)
 {
-    //
-    // Allocates & Initializes HMAC_CTX context by OpenSSL HMAC_CTX_new()
-    //
+    
+    /* Allocates & Initializes HMAC_CTX context by OpenSSL HMAC_CTX_new()*/
+    
     return (void *)HMAC_CTX_new();
 }
 
@@ -34,9 +34,9 @@ void *hmac_md_new(void)
 **/
 void hmac_md_free(IN void *hmac_md_ctx)
 {
-    //
-    // Free OpenSSL HMAC_CTX context
-    //
+    
+    /* Free OpenSSL HMAC_CTX context*/
+    
     HMAC_CTX_free((HMAC_CTX *)hmac_md_ctx);
 }
 
@@ -58,9 +58,9 @@ void hmac_md_free(IN void *hmac_md_ctx)
 boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
             IN const uint8_t *key, IN uintn key_size)
 {
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (hmac_md_ctx == NULL || key_size > INT_MAX) {
         return FALSE;
     }
@@ -88,9 +88,9 @@ boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
 **/
 boolean hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
 {
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
         return FALSE;
     }
@@ -124,23 +124,23 @@ boolean hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
 boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
                IN uintn data_size)
 {
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (hmac_md_ctx == NULL) {
         return FALSE;
     }
 
-    //
-    // Check invalid parameters, in case that only DataLength was checked in OpenSSL
-    //
+    
+    /* Check invalid parameters, in case that only DataLength was checked in OpenSSL*/
+    
     if (data == NULL && data_size != 0) {
         return FALSE;
     }
 
-    //
-    // OpenSSL HMAC-MD digest update
-    //
+    
+    /* OpenSSL HMAC-MD digest update*/
+    
     if (HMAC_Update((HMAC_CTX *)hmac_md_ctx, data, data_size) != 1) {
         return FALSE;
     }
@@ -172,16 +172,16 @@ boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
 {
     uint32_t length;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (hmac_md_ctx == NULL || hmac_value == NULL) {
         return FALSE;
     }
 
-    //
-    // OpenSSL HMAC-MD digest finalization
-    //
+    
+    /* OpenSSL HMAC-MD digest finalization*/
+    
     if (HMAC_Final((HMAC_CTX *)hmac_md_ctx, hmac_value, &length) != 1) {
         return FALSE;
     }

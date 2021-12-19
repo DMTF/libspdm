@@ -6,11 +6,11 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-//
-// current version libspdm does not support any ext algo.
-// the responder will ignore the ext algo in request.
-// the responder will not build ext algo in response.
-//
+
+/* current version libspdm does not support any ext algo.*/
+/* the responder will ignore the ext algo in request.*/
+/* the responder will not build ext algo in response.*/
+
 
 #pragma pack(1)
 typedef struct {
@@ -268,7 +268,7 @@ return_status spdm_get_response_algorithms(IN void *context,
         }
     }
     ext_alg_total_count += (spdm_request->ext_asym_count + spdm_request->ext_hash_count);
-    // Algorithm count check and message size check
+    /* Algorithm count check and message size check*/
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (ext_alg_total_count > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11) {
             return RETURN_DEVICE_ERROR;
@@ -301,7 +301,7 @@ return_status spdm_get_response_algorithms(IN void *context,
     if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.param1 =
-            4; // Number of Algorithms Structure Tables
+            4; /* Number of Algorithms Structure Tables*/
     } else {
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.param1 = 0;

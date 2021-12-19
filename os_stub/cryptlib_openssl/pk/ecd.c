@@ -92,7 +92,7 @@ void ecd_free(IN void *ecd_context)
 boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
             IN uintn public_key_size)
 {
-    // TBD
+    /* TBD*/
     return FALSE;
 }
 
@@ -163,7 +163,7 @@ boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
 **/
 boolean ecd_check_key(IN void *ecd_context)
 {
-    // TBD
+    /* TBD*/
     return FALSE;
 }
 
@@ -190,7 +190,7 @@ boolean ecd_check_key(IN void *ecd_context)
 boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
              IN OUT uintn *public_key_size)
 {
-    // TBD
+    /* TBD*/
     return TRUE;
 }
 

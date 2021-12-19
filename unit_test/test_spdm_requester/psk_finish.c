@@ -435,13 +435,13 @@ return_status spdm_requester_psk_finish_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -525,7 +525,7 @@ return_status spdm_requester_psk_finish_test_receive_message(
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
-            SPDM_FINISH_RSP; //wrong response code
+            SPDM_FINISH_RSP; /*wrong response code*/
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
@@ -1473,17 +1473,17 @@ void test_spdm_requester_psk_finish_case10(void **state) {
     spdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
 
     status = spdm_send_receive_psk_finish (spdm_context, session_id);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1627,7 +1627,7 @@ void test_spdm_requester_psk_finish_case12(void **state)
     spdm_test_context->case_id = 0xC;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    //no PSK capabilities
+    /*no PSK capabilities*/
     spdm_context->connection_info.capability.flags &=
         ~(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP);
     spdm_context->connection_info.capability.flags |=
@@ -1721,7 +1721,7 @@ void test_spdm_requester_psk_finish_case13(void **state)
     spdm_test_context->case_id = 0xD;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    //no PSK capabilities
+    /*no PSK capabilities*/
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1816,7 +1816,7 @@ void test_spdm_requester_psk_finish_case14(void **state)
     spdm_test_context->case_id = 0xE;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    //no PSK capabilities
+    /*no PSK capabilities*/
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -1898,33 +1898,33 @@ spdm_test_context_t m_spdm_requester_psk_finish_test_context = {
 int spdm_requester_psk_finish_test_main(void)
 {
     const struct CMUnitTest spdm_requester_psk_finish_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case9),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case10),
-        // Buffer reset
+        /* Buffer reset*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case11),
-        // No correct setup
+        /* No correct setup*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case12),
-        // Wrong response code
+        /* Wrong response code*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case13),
-        // Uninitialized session
+        /* Uninitialized session*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case14),
     };
 
@@ -1935,4 +1935,4 @@ int spdm_requester_psk_finish_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

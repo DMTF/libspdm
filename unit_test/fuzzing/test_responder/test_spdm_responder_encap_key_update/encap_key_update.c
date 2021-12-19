@@ -107,7 +107,7 @@ static void spdm_compute_secret_update(uintn hash_size,
          BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
     m_bin_str9_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 +
               sizeof(BIN_STR_9_LABEL) - 1;
-    //context is NULL for key update
+    /*context is NULL for key update*/
 
     spdm_hkdf_expand(m_use_hash_algo, in_secret, hash_size, m_bin_str9,
              m_bin_str9_size, out_secret, out_secret_size);

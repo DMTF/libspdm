@@ -34,75 +34,75 @@ typedef struct {
 } spdm_device_algorithm_t;
 
 typedef struct {
-    //
-    // Local device info
-    //
+    
+    /* Local device info*/
+    
     spdm_device_version_t version;
     spdm_device_capability_t capability;
     spdm_device_algorithm_t algorithm;
     spdm_device_version_t secured_message_version;
-    //
-    // My Certificate
-    //
+    
+    /* My Certificate*/
+    
     void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     uintn local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
     uint8_t slot_count;
-    // My provisioned certificate (for slot_id - 0xFF, default 0)
+    /* My provisioned certificate (for slot_id - 0xFF, default 0)*/
     uint8_t provisioned_slot_id;
-    //
-    // Peer Root Certificate
-    //
+    
+    /* Peer Root Certificate*/
+    
     void *peer_root_cert_provision;
     uintn peer_root_cert_provision_size;
-    //
-    // Peer CertificateChain
-    // Whether it contains the root certificate or not,
-    // it should be equal to the one returned from peer by get_certificate
-    //
+    
+    /* Peer CertificateChain*/
+    /* Whether it contains the root certificate or not,*/
+    /* it should be equal to the one returned from peer by get_certificate*/
+    
     void *peer_cert_chain_provision;
     uintn peer_cert_chain_provision_size;
-    // Peer Cert verify
+    /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
-    //
-    // PSK provision locally
-    //
+    
+    /* PSK provision locally*/
+    
     uintn psk_hint_size;
     void *psk_hint;
-    //
-    // opaque_data provision locally
-    //
+    
+    /* opaque_data provision locally*/
+    
     uintn opaque_challenge_auth_rsp_size;
     uint8_t *opaque_challenge_auth_rsp;
     uintn opaque_measurement_rsp_size;
     uint8_t *opaque_measurement_rsp;
-    //
-    // Responder policy
-    //
+    
+    /* Responder policy*/
+    
     boolean basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
 } spdm_local_context_t;
 
 typedef struct {
-    //
-    // Connection State
-    //
+    
+    /* Connection State*/
+    
     libspdm_connection_state_t connection_state;
-    //
-    // Peer device info (negotiated)
-    //
+    
+    /* Peer device info (negotiated)*/
+    
     spdm_version_number_t version;
     spdm_device_capability_t capability;
     spdm_device_algorithm_t algorithm;
     spdm_version_number_t secured_message_version;
-    //
-    // Peer CertificateChain
-    //
+    
+    /* Peer CertificateChain*/
+    
     uint8_t peer_used_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     uintn peer_used_cert_chain_buffer_size;
-    //
-    // Local Used CertificateChain (for responder, or requester in mut auth)
-    //
+    
+    /* Local Used CertificateChain (for responder, or requester in mut auth)*/
+    
     uint8_t *local_used_cert_chain_buffer;
     uintn local_used_cert_chain_buffer_size;
 } spdm_connection_info_t;
@@ -110,7 +110,7 @@ typedef struct {
 typedef struct {
     uintn max_buffer_size;
     uintn buffer_size;
-    //uint8_t   buffer[max_buffer_size];
+    /*uint8_t   buffer[max_buffer_size];*/
 } managed_buffer_t;
 
 typedef struct {
@@ -131,27 +131,27 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 } small_managed_buffer_t;
 
-    //
-    // signature = Sign(SK, hash(M1))
-    // Verify(PK, hash(M2), signature)
-    //
-    // M1/M2 = Concatenate (A, B, C)
-    // A = Concatenate (GET_VERSION, VERSION, GET_CAPABILITIES, CAPABILITIES, NEGOTIATE_ALGORITHMS, ALGORITHMS)
-    // B = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)
-    // C = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)
-    //
-    // Mut M1/M2 = Concatenate (MutB, MutC)
-    // MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)
-    // MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)
-    //
-    // signature = Sign(SK, hash(L1))
-    // Verify(PK, hash(L2), signature)
-    //
-    // L1/L2 = Concatenate (M)
-    // M = Concatenate (GET_MEASUREMENT, MEASUREMENT\signature)
-    //
+    
+    /* signature = Sign(SK, hash(M1))*/
+    /* Verify(PK, hash(M2), signature)*/
+    
+    /* M1/M2 = Concatenate (A, B, C)*/
+    /* A = Concatenate (GET_VERSION, VERSION, GET_CAPABILITIES, CAPABILITIES, NEGOTIATE_ALGORITHMS, ALGORITHMS)*/
+    /* B = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)*/
+    /* C = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
+    
+    /* Mut M1/M2 = Concatenate (MutB, MutC)*/
+    /* MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)*/
+    /* MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
+    
+    /* signature = Sign(SK, hash(L1))*/
+    /* Verify(PK, hash(L2), signature)*/
+    
+    /* L1/L2 = Concatenate (M)*/
+    /* M = Concatenate (GET_MEASUREMENT, MEASUREMENT\signature)*/
+    
 typedef struct {
-    // the message_a must be plan text because we do not know the algorithm yet.
+    /* the message_a must be plan text because we do not know the algorithm yet.*/
     small_managed_buffer_t message_a;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     large_managed_buffer_t message_b;
@@ -166,63 +166,63 @@ typedef struct {
 #endif
 } spdm_transcript_t;
 
-    //
-    // TH for KEY_EXCHANGE response signature: Concatenate (A, Ct, K)
-    // Ct = certificate chain
-    // K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\signature+verify_data)
-    //
-    // TH for KEY_EXCHANGE response HMAC: Concatenate (A, Ct, K)
-    // Ct = certificate chain
-    // K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\verify_data)
-    //
-    // TH for FINISH request signature: Concatenate (A, Ct, K, CM, F)
-    // Ct = certificate chain
-    // K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
-    // CM = mutual certificate chain *
-    // F  = Concatenate (FINISH request\signature+verify_data)
-    //
-    // TH for FINISH response HMAC: Concatenate (A, Ct, K, CM, F)
-    // Ct = certificate chain
-    // K = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
-    // CM = mutual certificate chain *
-    // F = Concatenate (FINISH request\verify_data)
-    //
-    // th1: Concatenate (A, Ct, K)
-    // Ct = certificate chain
-    // K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
-    //
-    // th2: Concatenate (A, Ct, K, CM, F)
-    // Ct = certificate chain
-    // K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
-    // CM = mutual certificate chain *
-    // F  = Concatenate (FINISH request, FINISH response)
-    //
-    //
-    // TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
-    // K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)
-    //
-    // TH for PSK_FINISH response HMAC: Concatenate (A, K, F)
-    // K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)
-    // F  = Concatenate (PSK_FINISH request\verify_data)
-    //
-    // TH1_PSK1: Concatenate (A, K)
-    // K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)
-    //
-    // TH1_PSK2: Concatenate (A, K, F)
-    // K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)
-    // F  = Concatenate (PSK_FINISH request\verify_data)
-    //
-    // TH2_PSK: Concatenate (A, K, F)
-    // K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)
-    // F  = Concatenate (PSK_FINISH request, PSK_FINISH response)
-    //
+    
+    /* TH for KEY_EXCHANGE response signature: Concatenate (A, Ct, K)*/
+    /* Ct = certificate chain*/
+    /* K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\signature+verify_data)*/
+    
+    /* TH for KEY_EXCHANGE response HMAC: Concatenate (A, Ct, K)*/
+    /* Ct = certificate chain*/
+    /* K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\verify_data)*/
+    
+    /* TH for FINISH request signature: Concatenate (A, Ct, K, CM, F)*/
+    /* Ct = certificate chain*/
+    /* K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
+    /* CM = mutual certificate chain *
+       F  = Concatenate (FINISH request\signature+verify_data)*/
+    
+    /* TH for FINISH response HMAC: Concatenate (A, Ct, K, CM, F)*/
+    /* Ct = certificate chain*/
+    /* K = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
+    /* CM = mutual certificate chain *
+       F = Concatenate (FINISH request\verify_data)*/
+    
+    /* th1: Concatenate (A, Ct, K)*/
+    /* Ct = certificate chain*/
+    /* K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
+    
+    /* th2: Concatenate (A, Ct, K, CM, F)*/
+    /* Ct = certificate chain*/
+    /* K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
+    /* CM = mutual certificate chain *
+       F  = Concatenate (FINISH request, FINISH response)*/
+    
+    
+    /* TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)*/
+    /* K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)*/
+    
+    /* TH for PSK_FINISH response HMAC: Concatenate (A, K, F)*/
+    /* K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)*/
+    /* F  = Concatenate (PSK_FINISH request\verify_data)*/
+    
+    /* TH1_PSK1: Concatenate (A, K)*/
+    /* K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)*/
+    
+    /* TH1_PSK2: Concatenate (A, K, F)*/
+    /* K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)*/
+    /* F  = Concatenate (PSK_FINISH request\verify_data)*/
+    
+    /* TH2_PSK: Concatenate (A, K, F)*/
+    /* K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response)*/
+    /* F  = Concatenate (PSK_FINISH request, PSK_FINISH response)*/
+    
 typedef struct {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     large_managed_buffer_t message_k;
     large_managed_buffer_t message_f;
     large_managed_buffer_t message_m;
 #else
-    // the message_k must be plan text because we do not know the finished_key yet.
+    /* the message_k must be plan text because we do not know the finished_key yet.*/
     medium_managed_buffer_t temp_message_k;
     boolean                message_f_initialized;
     boolean                finished_key_ready;
@@ -230,7 +230,7 @@ typedef struct {
     void                   *digest_context_l1l2;
     void                   *hmac_rsp_context_th;
     void                   *hmac_req_context_th;
-    // this is back up for message F reset.
+    /* this is back up for message F reset.*/
     void                   *digest_context_th_backup;
     void                   *hmac_rsp_context_th_backup;
     void                   *hmac_req_context_th_backup;
@@ -249,8 +249,8 @@ typedef struct {
 #define MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
     uint32_t error_state;
-    // Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
-    // The last one is 0x00, as terminator.
+    /* Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE*/
+    /* The last one is 0x00, as terminator.*/
     uint8_t request_op_code_sequence[MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT +
                        1];
     uint8_t request_op_code_count;
@@ -266,55 +266,55 @@ typedef struct {
 
 typedef struct {
     uint32_t version;
-    //
-    // IO information
-    //
+    
+    /* IO information*/
+    
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
-    //
-    // Transport Layer infomration
-    //
+    
+    /* Transport Layer infomration*/
+    
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
 
-    //
-    // command status
-    //
+    
+    /* command status*/
+    
     uint32_t error_state;
-    //
-    // Cached plain text command
-    // If the command is cipher text, decrypt then cache it.
-    //
+    
+    /* Cached plain text command*/
+    /* If the command is cipher text, decrypt then cache it.*/
+    
     uint8_t last_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn last_spdm_request_size;
-    //
-    // Cache session_id in this spdm_message, only valid for secured message.
-    //
+    
+    /* Cache session_id in this spdm_message, only valid for secured message.*/
+    
     uint32_t last_spdm_request_session_id;
     boolean last_spdm_request_session_id_valid;
-    //
-    // Cache the error in libspdm_process_request. It is handled in libspdm_build_response.
-    //
+    
+    /* Cache the error in libspdm_process_request. It is handled in libspdm_build_response.*/
+    
     spdm_error_struct_t last_spdm_error;
 
-    //
-    // Register GetResponse function (responder only)
-    //
+    
+    /* Register GetResponse function (responder only)*/
+    
     uintn get_response_func;
-    //
-    // Register GetEncapResponse function (requester only)
-    //
+    
+    /* Register GetEncapResponse function (requester only)*/
+    
     uintn get_encap_response_func;
     spdm_encap_context_t encap_context;
-    //
-    // Register spdm_session_state_callback function (responder only)
-    // Register can know the state after StartSession / EndSession.
-    //
+    
+    /* Register spdm_session_state_callback function (responder only)*/
+    /* Register can know the state after StartSession / EndSession.*/
+    
     uintn spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
-    //
-    // Register spdm_connection_state_callback function (responder only)
-    // Register can know the connection state such as negotiated.
-    //
+    
+    /* Register spdm_connection_state_callback function (responder only)*/
+    /* Register can know the connection state such as negotiated.*/
+    
     uintn spdm_connection_state_callback
         [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
@@ -324,34 +324,34 @@ typedef struct {
     spdm_transcript_t transcript;
 
     spdm_session_info_t session_info[LIBSPDM_MAX_SESSION_COUNT];
-    //
-    // Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR
-    //
+    
+    /* Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR*/
+    
     uint32_t latest_session_id;
-    //
-    // Register for Responder state, be initial to Normal (responder only)
-    //
+    
+    /* Register for Responder state, be initial to Normal (responder only)*/
+    
     libspdm_response_state_t response_state;
-    //
-    // Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY
-    //
+    
+    /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY*/
+    
     spdm_error_data_response_not_ready_t error_data;
     uint8_t cache_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn cache_spdm_request_size;
     uint8_t current_token;
-    //
-    // Register for the retry times when receive "BUSY" Error response (requester only)
-    //
+    
+    /* Register for the retry times when receive "BUSY" Error response (requester only)*/
+    
     uint8_t retry_times;
 
-    //
-    // App context data for use by application
-    //
+    
+    /* App context data for use by application*/
+    
     void *app_context_data_ptr;
 
-    //
-    // Register for the last KEY_UPDATE token and operation (responder only)
-    //
+    
+    /* Register for the last KEY_UPDATE token and operation (responder only)*/
+    
     uint8_t last_update_request[4];
 } spdm_context_t;
 

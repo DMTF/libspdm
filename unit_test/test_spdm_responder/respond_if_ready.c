@@ -99,14 +99,14 @@ spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request9 = {
     MY_TEST_TOKEN
   },
 };
-uintn m_spdm_respond_if_ready_request9_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE; //wrong size
+uintn m_spdm_respond_if_ready_request9_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE; /*wrong size*/
 
 spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request10 = {
   {
     SPDM_MESSAGE_VERSION_11,
     SPDM_RESPOND_IF_READY,
     SPDM_GET_DIGESTS,
-    MY_WRONG_TEST_TOKEN //wrong token
+    MY_WRONG_TEST_TOKEN /*wrong token*/
   },
 };
 uintn m_spdm_respond_if_ready_request10_size = sizeof(spdm_message_header_t);
@@ -115,7 +115,7 @@ spdm_response_if_ready_request_t    m_spdm_respond_if_ready_request11 = {
   {
     SPDM_MESSAGE_VERSION_11,
     SPDM_RESPOND_IF_READY,
-    SPDM_GET_CERTIFICATE, //wrong original request code
+    SPDM_GET_CERTIFICATE, /*wrong original request code*/
     MY_TEST_TOKEN
   },
 };
@@ -144,7 +144,7 @@ spdm_get_certificate_request_t    m_spdm_get_certificate_request = {
 };
 uintn m_spdm_get_certificate_request_size = sizeof(m_spdm_get_certificate_request);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
@@ -158,7 +158,7 @@ spdm_challenge_request_t    m_spdm_challenge_request = {
 };
 uintn m_spdm_challenge_request_size = sizeof(m_spdm_challenge_request);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
@@ -170,7 +170,7 @@ spdm_get_measurements_request_t    m_spdm_get_measurements_request = {
   },
 };
 uintn m_spdm_get_measurements_request_size = sizeof(spdm_message_header_t);
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 #pragma pack(1)
 
@@ -285,14 +285,14 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x1;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -308,7 +308,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -316,7 +316,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check DIGESTS response
+  /*check DIGESTS response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size, &m_spdm_respond_if_ready_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -325,7 +325,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
   assert_int_equal (spdm_response->header.request_response_code, SPDM_DIGESTS);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 /**
   Test 2: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -342,7 +342,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_certificate_response_t *spdm_response; //response to the original request (CERTIFICATE)
+  spdm_certificate_response_t *spdm_response; /*response to the original request (CERTIFICATE)*/
   void                 *data;
   uintn                data_size;
 
@@ -351,7 +351,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   spdm_test_context->case_id = 0x2;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_CERTIFICATE)
+  /*state for the the original request (GET_CERTIFICATE)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -368,7 +368,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_certificate_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_certificate_request, m_spdm_get_certificate_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -376,7 +376,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_CERTIFICATE;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check CERTIFICATE response
+  /*check CERTIFICATE response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request2_size, &m_spdm_respond_if_ready_request2, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -389,7 +389,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
   free(data);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 /**
   Test 3: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -404,7 +404,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_challenge_auth_response_t *spdm_response; //response to the original request (CHALLENGE_AUTH)
+  spdm_challenge_auth_response_t *spdm_response; /*response to the original request (CHALLENGE_AUTH)*/
   void                 *data;
   uintn                data_size;
 
@@ -413,7 +413,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_test_context->case_id = 0x3;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (CHALLENGE)
+  /*state for the the original request (CHALLENGE)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -434,7 +434,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_challenge_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_challenge_request, m_spdm_challenge_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -442,7 +442,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   spdm_context->error_data.request_code = SPDM_CHALLENGE;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check CHALLENGE response
+  /*check CHALLENGE response*/
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request.nonce);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request3_size, &m_spdm_respond_if_ready_request3, &response_size, response);
@@ -454,7 +454,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
   assert_int_equal (spdm_response->header.param2, 1 << 0);
   free(data);
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
 /**
   Test 4: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -471,14 +471,14 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_measurements_response_t *spdm_response; //response to the original request (MEASUREMENTS)
+  spdm_measurements_response_t *spdm_response; /*response to the original request (MEASUREMENTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x4;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_MEASUREMENTS)
+  /*state for the the original request (GET_MEASUREMENTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
@@ -495,7 +495,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_measurements_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_measurements_request, m_spdm_get_measurements_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -503,7 +503,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_MEASUREMENTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check MEASUREMENT response
+  /*check MEASUREMENT response*/
   response_size = sizeof(response);
   spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_get_measurements_request.nonce);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request4_size, &m_spdm_respond_if_ready_request4, &response_size, response);
@@ -514,7 +514,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
   assert_int_equal (spdm_response->header.param1, MEASUREMENT_BLOCK_NUMBER);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 /**
   Test 5: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -530,7 +530,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_key_exchange_response_t *spdm_response; //response to the original request (KEY_EXCHANGE_RSP)
+  spdm_key_exchange_response_t *spdm_response; /*response to the original request (KEY_EXCHANGE_RSP)*/
   void                 *data;
   uintn                data_size;
   uint8_t                *ptr;
@@ -543,7 +543,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_test_context->case_id = 0x5;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (KEY_EXCHANGE)
+  /*state for the the original request (KEY_EXCHANGE)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
@@ -582,7 +582,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_key_exchange_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_key_exchange_request, m_spdm_key_exchange_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -590,7 +590,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   spdm_context->error_data.request_code = SPDM_KEY_EXCHANGE;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check KEY_EXCHANGE_RSP response
+  /*check KEY_EXCHANGE_RSP response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request5_size, &m_spdm_respond_if_ready_request5, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -603,7 +603,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
 /**
   Test 6: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -619,7 +619,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_finish_response_t *spdm_response; //response to the original request (FINISH_RSP)
+  spdm_finish_response_t *spdm_response; /*response to the original request (FINISH_RSP)*/
   void                 *data;
   uintn                data_size;
   uint8_t                *ptr;
@@ -639,7 +639,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_test_context->case_id = 0x6;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (FINISH)
+  /*state for the the original request (FINISH)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
@@ -679,9 +679,9 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   cert_buffer = (uint8_t *)data;
   cert_buffer_size = data_size;
   spdm_hash_all (m_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
-  // Transcript.MessageA size is 0
+  /* Transcript.MessageA size is 0*/
   append_managed_buffer (&th_curr, cert_buffer_hash, hash_size);
-  // SessionTranscript.MessageK is 0
+  /* SessionTranscript.MessageK is 0*/
   append_managed_buffer (&th_curr, (uint8_t *)&m_spdm_finish_request, sizeof(spdm_finish_request_t));
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
@@ -689,7 +689,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_context->last_spdm_request_size = sizeof(spdm_finish_request_t) + hmac_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_finish_request, m_spdm_finish_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -697,10 +697,10 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   spdm_context->error_data.request_code = SPDM_FINISH;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check FINISH_RSP response
+  /*check FINISH_RSP response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request6_size, &m_spdm_respond_if_ready_request6, &response_size, response);
-  // status = SpdmGetResponseFinish (spdm_context, mSpdmFinishRequest1_size, &mSpdmFinishRequest1, &response_size, response);
+  /* status = SpdmGetResponseFinish (spdm_context, mSpdmFinishRequest1_size, &mSpdmFinishRequest1, &response_size, response);*/
   assert_int_equal (status, RETURN_SUCCESS);
   assert_int_equal (response_size, sizeof(spdm_finish_response_t) + hmac_size);
   spdm_response = (void *)response;
@@ -708,7 +708,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
 /**
   Test 7: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -724,7 +724,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_psk_exchange_response_t *spdm_response; //response to the original request (PSK_EXCHANGE_RSP)
+  spdm_psk_exchange_response_t *spdm_response; /*response to the original request (PSK_EXCHANGE_RSP)*/
   void                 *data;
   uintn                data_size;
   uint8_t                *ptr;
@@ -736,7 +736,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_test_context->case_id = 0x7;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (PSK_EXCHANGE)
+  /*state for the the original request (PSK_EXCHANGE)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
@@ -778,7 +778,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_psk_exchange_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_psk_exchange_request, m_spdm_psk_exchange_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -786,7 +786,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   spdm_context->error_data.request_code = SPDM_PSK_EXCHANGE;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check PSK_EXCHANGE_RSP response
+  /*check PSK_EXCHANGE_RSP response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request7_size, &m_spdm_respond_if_ready_request7, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -798,7 +798,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
 /**
   Test 8: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -813,7 +813,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_psk_finish_response_t *spdm_response; //response to the original request (FINISH_PSK_RSP)
+  spdm_psk_finish_response_t *spdm_response; /*response to the original request (FINISH_PSK_RSP)*/
   void                 *data;
   uintn                data_size;
   uint8_t                *ptr;
@@ -831,7 +831,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_test_context->case_id = 0x8;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (FINISH)
+  /*state for the the original request (FINISH)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
@@ -874,8 +874,8 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   hmac_size = spdm_get_hash_size (m_use_hash_algo);
   ptr = m_spdm_psk_finish_request.verify_data;
   init_managed_buffer (&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-  // Transcript.MessageA size is 0
-  // SessionTranscript.MessageK is 0
+  /* Transcript.MessageA size is 0*/
+  /* SessionTranscript.MessageK is 0*/
   append_managed_buffer (&th_curr, (uint8_t *)&m_spdm_psk_finish_request, sizeof(spdm_psk_finish_request_t));
   set_mem (request_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
   spdm_hmac_all (m_use_hash_algo, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), request_finished_key, hash_size, ptr);
@@ -883,7 +883,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_context->last_spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_psk_finish_request, m_spdm_psk_finish_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -891,7 +891,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   spdm_context->error_data.request_code = SPDM_PSK_FINISH;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check FINISH_PSK_RSP response
+  /*check FINISH_PSK_RSP response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request8_size, &m_spdm_respond_if_ready_request8, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -901,7 +901,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
   free(data);
   libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
@@ -917,14 +917,14 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x9;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -935,7 +935,7 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -943,7 +943,7 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request9_size, &m_spdm_respond_if_ready_request9, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -954,7 +954,7 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
   assert_int_equal (spdm_response->header.param2, 0);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
@@ -969,14 +969,14 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xA;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -987,7 +987,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -995,7 +995,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size, &m_spdm_respond_if_ready_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -1007,7 +1007,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
   assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
@@ -1022,14 +1022,14 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xB;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -1040,7 +1040,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -1048,7 +1048,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size, &m_spdm_respond_if_ready_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -1060,7 +1060,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
   assert_int_equal (spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
@@ -1076,7 +1076,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
   spdm_error_data_response_not_ready_t *error_data;
 
   spdm_test_context = *state;
@@ -1084,7 +1084,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_test_context->case_id = 0xC;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -1095,7 +1095,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -1103,7 +1103,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size, &m_spdm_respond_if_ready_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -1118,7 +1118,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
   assert_int_equal (error_data->token, MY_TEST_TOKEN);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
@@ -1134,14 +1134,14 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xD;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -1152,7 +1152,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -1160,7 +1160,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request10_size, &m_spdm_respond_if_ready_request10, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -1170,7 +1170,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
@@ -1185,14 +1185,14 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_context_t  *spdm_context;
   uintn                response_size;
   uint8_t                response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-  spdm_digest_response_t *spdm_response; //response to the original request (DIGESTS)
+  spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
 
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xE;
   spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-  //state for the the original request (GET_DIGESTS)
+  /*state for the the original request (GET_DIGESTS)*/
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -1203,7 +1203,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
   copy_mem (spdm_context->last_spdm_request, &m_spdm_get_digest_request, m_spdm_get_digest_request_size);
 
-  //RESPOND_IF_READY specific data
+  /*RESPOND_IF_READY specific data*/
   spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
   copy_mem (spdm_context->cache_spdm_request, spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
   spdm_context->error_data.rd_exponent = 1;
@@ -1211,7 +1211,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
   spdm_context->error_data.token       = MY_TEST_TOKEN;
 
-  //check ERROR response
+  /*check ERROR response*/
   response_size = sizeof(response);
   status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request11_size, &m_spdm_respond_if_ready_request11, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
@@ -1221,7 +1221,7 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
   assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
   assert_int_equal (spdm_response->header.param2, 0);
 }
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
   SPDM_TEST_CONTEXT_SIGNATURE,
@@ -1230,29 +1230,29 @@ spdm_test_context_t       m_spdm_responder_respond_if_ready_test_context = {
 
 int spdm_responder_respond_if_ready_test_main(void) {
   const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
-    // Success Case
+    /* Success Case*/
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case1),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case2),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case3),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case8),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case9),
@@ -1261,7 +1261,7 @@ int spdm_responder_respond_if_ready_test_main(void) {
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case12),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case13),
     cmocka_unit_test(test_spdm_responder_respond_if_ready_case14),
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
   };
 

@@ -13,10 +13,10 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request1 = {
         SPDM_GET_CAPABILITIES,
     },
 };
-// version 1.0 message consists of only header (size 0x04).
-// However, spdm_get_capabilities_request has a size of 0x0c.
-// Therefore, sending a v1.0 request with this structure results in a wrong size request.
-// size information was corrected to reflect the actual size of a get_capabilities 1.0 message.
+/* version 1.0 message consists of only header (size 0x04).*/
+/* However, spdm_get_capabilities_request has a size of 0x0c.*/
+/* Therefore, sending a v1.0 request with this structure results in a wrong size request.*/
+/* size information was corrected to reflect the actual size of a get_capabilities 1.0 message.*/
 uintn m_spdm_get_capabilities_request1_size = sizeof(spdm_message_header_t);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request2 = {
@@ -31,11 +31,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request3 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    0x12345678 //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    0x12345678 /*flags*/
 };
 uintn m_spdm_get_capabilities_request3_size =
     sizeof(m_spdm_get_capabilities_request3);
@@ -44,11 +44,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request4 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -67,11 +67,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request5 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (0x01 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (0x01 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -90,12 +90,12 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request6 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG |
-     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -114,12 +114,12 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request7 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP |
-     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -138,11 +138,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request8 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (0x100000 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (0x100000 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -161,12 +161,12 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request9 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP |
-     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -185,17 +185,17 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request10 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     //
-     //
+     
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
@@ -208,17 +208,17 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request11 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     //
-     //
+     
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
@@ -231,21 +231,21 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request12 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     //
-     //
+     
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP
-     //
+     
      )
 };
 uintn m_spdm_get_capabilities_request12_size =
@@ -255,21 +255,21 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request13 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     //
-     //
+     
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP
-     //
+     
      )
 };
 uintn m_spdm_get_capabilities_request13_size =
@@ -279,18 +279,18 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request14 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
@@ -302,11 +302,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request15 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -326,16 +326,16 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request16 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     //
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
@@ -349,14 +349,14 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request17 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     //
-     //
+     
+     
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
@@ -372,11 +372,11 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request18 = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_GET_CAPABILITIES,
-    }, //header
-    0x00, //reserved
-    0x01, //ct_exponent
-    0x0000, //reserved, 2 bytes
-    ( // //flags
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    ( /*flags*/
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -526,7 +526,7 @@ void test_spdm_responder_capabilities_case4(void **state)
              LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-// According to spec, a responder shall not answer a get_capabilties with a ResponseNotReady
+/* According to spec, a responder shall not answer a get_capabilties with a ResponseNotReady*/
 void test_spdm_responder_capabilities_case5(void **state)
 {
     return_status status;
@@ -599,7 +599,7 @@ void test_spdm_responder_capabilities_case6(void **state)
              SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
-//New from here
+/*New from here*/
 void test_spdm_responder_capabilities_case7(void **state)
 {
     return_status status;
@@ -1099,49 +1099,49 @@ spdm_test_context_t m_spdm_responder_capabilities_test_context = {
 int spdm_responder_capabilities_test_main(void)
 {
     const struct CMUnitTest spdm_responder_capabilities_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_capabilities_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_capabilities_case2),
-        // response_state: LIBSPDM_RESPONSE_STATE_BUSY
+        /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_capabilities_case3),
-        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_capabilities_case4),
-        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_capabilities_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_capabilities_case6),
-        // Invalid requester capabilities flag (random flag)
+        /* Invalid requester capabilities flag (random flag)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case7),
-        // V1.1 Success case, all possible flags set
+        /* V1.1 Success case, all possible flags set*/
         cmocka_unit_test(test_spdm_responder_capabilities_case8),
-        // Requester capabilities flag bit 0 is set. reserved value should ne ignored
+        /* Requester capabilities flag bit 0 is set. reserved value should ne ignored*/
         cmocka_unit_test(test_spdm_responder_capabilities_case9),
-        // meas_cap is set (meas_cap shall be cleared)
+        /* meas_cap is set (meas_cap shall be cleared)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case10),
-        // meas_fresh_cap is set (meas_fresh_cap shall be cleared)
+        /* meas_fresh_cap is set (meas_fresh_cap shall be cleared)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case11),
-        // Requester capabilities flag byte 2 bit 1 is set. reserved value should ne ignored
+        /* Requester capabilities flag byte 2 bit 1 is set. reserved value should ne ignored*/
         cmocka_unit_test(test_spdm_responder_capabilities_case12),
-        // pub_key_id_cap and cert_cap set (flags are mutually exclusive)
+        /* pub_key_id_cap and cert_cap set (flags are mutually exclusive)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case13),
-        // encrypt_cap set and key_ex_cap and psk_cap cleared (encrypt_cap demands key_ex_cap or psk_cap to be set)
+        /* encrypt_cap set and key_ex_cap and psk_cap cleared (encrypt_cap demands key_ex_cap or psk_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case14),
-        // mac_cap set and key_ex_cap and psk_cap cleared (mac_cap demands key_ex_cap or psk_cap to be set)
+        /* mac_cap set and key_ex_cap and psk_cap cleared (mac_cap demands key_ex_cap or psk_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case15),
-        // key_ex_cap set and encrypt_cap and mac_cap cleared (key_ex_cap demands encrypt_cap or mac_cap to be set)
+        /* key_ex_cap set and encrypt_cap and mac_cap cleared (key_ex_cap demands encrypt_cap or mac_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case16),
-        // psk_cap set and encrypt_cap and mac_cap cleared (psk_cap demands encrypt_cap or mac_cap to be set)
+        /* psk_cap set and encrypt_cap and mac_cap cleared (psk_cap demands encrypt_cap or mac_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case17),
-        // encap_cap cleared and MUT_AUTH set (MUT_AUTH demands encap_cap to be set)
+        /* encap_cap cleared and MUT_AUTH set (MUT_AUTH demands encap_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case18),
-        // cert_cap set and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)
+        /* cert_cap set and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case19),
-        // key_ex_cap cleared and handshake_in_the_clear_cap set (handshake_in_the_clear_cap demands key_ex_cap to be set)
+        /* key_ex_cap cleared and handshake_in_the_clear_cap set (handshake_in_the_clear_cap demands key_ex_cap to be set)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case20),
-        // encrypt_cap and mac_cap cleared and handshake_in_the_clear_cap set (handshake_in_the_clear_cap shall be cleared if encrypt_cap and mac_cap are cleared)
+        /* encrypt_cap and mac_cap cleared and handshake_in_the_clear_cap set (handshake_in_the_clear_cap shall be cleared if encrypt_cap and mac_cap are cleared)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case21),
-        // cert_cap cleared and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)
+        /* cert_cap cleared and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)*/
         cmocka_unit_test(test_spdm_responder_capabilities_case22),
     };
 

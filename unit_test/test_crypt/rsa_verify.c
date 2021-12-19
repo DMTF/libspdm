@@ -8,13 +8,13 @@
 
 #define RSA_MODULUS_LENGTH 512
 
-//
-// RSA PKCS#1 Validation data from OpenSSL "Fips_rsa_selftest.c"
-//
 
-//
-// public Modulus of RSA key
-//
+/* RSA PKCS#1 Validation data from OpenSSL "Fips_rsa_selftest.c"*/
+
+
+
+/* public Modulus of RSA key*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_n[] = {
     0xBB, 0xF8, 0x2F, 0x09, 0x06, 0x82, 0xCE, 0x9C, 0x23, 0x38, 0xAC, 0x2B,
     0x9D, 0xA8, 0x71, 0xF7, 0x36, 0x8D, 0x07, 0xEE, 0xD4, 0x10, 0x43, 0xA4,
@@ -29,14 +29,14 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_n[] = {
     0x46, 0xF8, 0xE5, 0xFD, 0x09, 0x1D, 0xBD, 0xCB
 };
 
-//
-// public Exponent of RSA key
-//
+
+/* public Exponent of RSA key*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_e[] = { 0x11 };
 
-//
-// Private Exponent of RSA key
-//
+
+/* Private Exponent of RSA key*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_d[] = {
     0xA5, 0xDA, 0xFC, 0x53, 0x41, 0xFA, 0xF2, 0x89, 0xC4, 0xB9, 0x88, 0xDB,
     0x30, 0xC1, 0xCD, 0xF8, 0x3F, 0x31, 0x25, 0x1E, 0x06, 0x68, 0xB4, 0x27,
@@ -51,15 +51,15 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_d[] = {
     0x46, 0x3A, 0x4B, 0xC8, 0x5B, 0x1C, 0xB3, 0xC1
 };
 
-//
-// Known Answer Test (KAT) data for RSA PKCS#1 Signing
-//
+
+/* Known Answer Test (KAT) data for RSA PKCS#1 Signing*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const char8 m_rsa_sign_data[] =
     "OpenSSL FIPS 140-2 public key RSA KAT";
 
-//
-// Known signature for the above message, under SHA-1 digest
-//
+
+/* Known signature for the above message, under SHA-1 digest*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_pkcs1_signature[] = {
     0x71, 0xEE, 0x1A, 0xC0, 0xFE, 0x01, 0x93, 0x54, 0x79, 0x5C, 0xF2, 0x4C,
     0x4A, 0xFD, 0x1A, 0x05, 0x8F, 0x64, 0xB1, 0x6D, 0x61, 0x33, 0x8D, 0x9B,
@@ -74,9 +74,9 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_pkcs1_signature[] = {
     0xDF, 0xF1, 0x5F, 0x84, 0x80, 0xD9, 0x46, 0xB4
 };
 
-//
-// Default public key 0x10001 = 65537
-//
+
+/* Default public key 0x10001 = 65537*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_default_public_key[] = { 0x01, 0x00,
                                      0x01 };
 
@@ -101,9 +101,9 @@ return_status validate_crypt_rsa(void)
 
     my_print("\nCrypto RSA Engine Testing: ");
 
-    //
-    // Generate & Initialize RSA context
-    //
+    
+    /* Generate & Initialize RSA context*/
+    
     rsa = rsa_new();
     my_print("\n- Generate RSA context ... ");
     if (rsa == NULL) {
@@ -111,14 +111,14 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Set/Get RSA key Components
-    //
+    
+    /* Set/Get RSA key Components*/
+    
     my_print("Set/Get RSA key Components ... ");
 
-    //
-    // Set/Get RSA key N
-    //
+    
+    /* Set/Get RSA key N*/
+    
     status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
     if (!status) {
         my_print("[Fail]");
@@ -157,9 +157,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    //
-    // Set/Get RSA key E
-    //
+    
+    /* Set/Get RSA key E*/
+    
     status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
     if (!status) {
         my_print("[Fail]");
@@ -198,14 +198,14 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    //
-    // Clear/Get RSA key Components
-    //
+    
+    /* Clear/Get RSA key Components*/
+    
     my_print("Clear/Get RSA key Components ... ");
 
-    //
-    // Clear/Get RSA key N
-    //
+    
+    /* Clear/Get RSA key N*/
+    
     status = rsa_set_key(rsa, RSA_KEY_N, NULL, 0);
     if (!status) {
         my_print("[Fail]");
@@ -221,9 +221,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Clear/Get RSA key E
-    //
+    
+    /* Clear/Get RSA key E*/
+    
     status = rsa_set_key(rsa, RSA_KEY_E, NULL, 0);
     if (!status) {
         my_print("[Fail]");
@@ -239,9 +239,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Generate RSA key Components
-    //
+    
+    /* Generate RSA key Components*/
+    
     my_print("Generate RSA key Components ... ");
 
     status = rsa_generate_key(rsa, RSA_MODULUS_LENGTH, NULL, 0);
@@ -297,9 +297,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Check invalid RSA key components
-    //
+    
+    /* Check invalid RSA key components*/
+    
     my_print("Check Invalid RSA key Components ... ");
 
     status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
@@ -349,9 +349,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    //
-    // SHA-256 digest message for PKCS#1 signature
-    //
+    
+    /* SHA-256 digest message for PKCS#1 signature*/
+    
     my_print("hash Original message ... ");
     hash_size = SHA256_DIGEST_SIZE;
     zero_mem(hash_value, hash_size);
@@ -389,9 +389,9 @@ return_status validate_crypt_rsa(void)
 
     sha256_free(sha256_ctx);
 
-    //
-    // Sign RSA PKCS#1-encoded signature
-    //
+    
+    /* Sign RSA PKCS#1-encoded signature*/
+    
     my_print("PKCS#1 signature ... ");
 
     rsa_free(rsa);
@@ -454,9 +454,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify RSA PKCS#1-encoded signature
-    //
+    
+    /* Verify RSA PKCS#1-encoded signature*/
+    
 
     my_print("PKCS#1 signature Verification ... ");
 
@@ -471,9 +471,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(signature);
 
-    //
-    // Sign RSA PSS-encoded signature
-    //
+    
+    /* Sign RSA PSS-encoded signature*/
+    
     my_print("PSS signature ... ");
 
     rsa_free(rsa);
@@ -529,9 +529,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify RSA PSS-encoded signature
-    //
+    
+    /* Verify RSA PSS-encoded signature*/
+    
 
     my_print("PSS signature Verification ... ");
 
@@ -545,9 +545,9 @@ return_status validate_crypt_rsa(void)
     }
 
     free_pool(signature);
-    //
-    // Release Resources
-    //
+    
+    /* Release Resources*/
+    
     rsa_free(rsa);
     my_print("Release RSA context ... [Pass]");
 

@@ -9,9 +9,9 @@
 
 typedef int time_t;
 
-//
-// Structures Definitions
-//
+
+/* Structures Definitions*/
+
 struct tm {
     int tm_sec; /* seconds after the minute [0-60] */
     int tm_min; /* minutes after the hour [0-59] */
@@ -26,9 +26,9 @@ struct tm {
     char *tm_zone; /* timezone abbreviation */
 };
 
-//
-// -- Time Management Routines --
-//
+
+/* -- Time Management Routines --*/
+
 
 time_t time(time_t *timer)
 {

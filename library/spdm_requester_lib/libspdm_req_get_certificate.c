@@ -163,9 +163,9 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
         }
         spdm_response_size = sizeof(spdm_certificate_response_t) +
                      spdm_response.portion_length;
-        //
-        // Cache data
-        //
+        
+        /* Cache data*/
+        
         status = libspdm_append_message_b(spdm_context, &spdm_request,
                            sizeof(spdm_request));
         if (RETURN_ERROR(status)) {
@@ -405,4 +405,4 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

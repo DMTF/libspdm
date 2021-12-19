@@ -472,7 +472,7 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   spdm_test_context->case_id = 0x7;
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
-  // spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+  /* spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;*/
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
@@ -714,7 +714,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; /*additional measurement capability*/
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
@@ -763,7 +763,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
+  spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; /*additional measurement capability*/
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
@@ -813,7 +813,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->local_context.capability.flags = 0;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  // spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //no measurement capability
+  /* spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;   no measurement capability*/
   spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
   spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
   spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
@@ -848,17 +848,17 @@ spdm_test_context_t m_spdm_responder_challenge_auth_test_context = {
 int spdm_responder_challenge_auth_test_main(void)
 {
     const struct CMUnitTest spdm_responder_challenge_auth_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case2),
-        // response_state: LIBSPDM_RESPONSE_STATE_BUSY
+        /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case3),
-        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case4),
-        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_challenge_auth_case6),
         cmocka_unit_test(test_spdm_responder_challenge_auth_case7),
         cmocka_unit_test(test_spdm_responder_challenge_auth_case8),
@@ -877,4 +877,4 @@ int spdm_responder_challenge_auth_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

@@ -368,13 +368,13 @@ return_status spdm_requester_get_version_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -684,18 +684,18 @@ void test_spdm_requester_get_version_case14(void **state) {
 
   error_code = SPDM_ERROR_CODE_RESERVED_00;
   while(error_code <= 0xff) {
-    // no additional state control is necessary as a new GET_VERSION resets the state
+    /* no additional state control is necessary as a new GET_VERSION resets the state*/
     status = spdm_get_version (spdm_context);
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -748,27 +748,27 @@ int spdm_requester_get_version_test_main(void)
         cmocka_unit_test(test_spdm_requester_get_version_case1),
         cmocka_unit_test(test_spdm_requester_get_version_case2),
         cmocka_unit_test(test_spdm_requester_get_version_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_get_version_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_get_version_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_version_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_get_version_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_get_version_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_version_case9),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_get_version_case10),
-        // Successful response + device error
+        /* Successful response + device error*/
         cmocka_unit_test(test_spdm_requester_get_version_case11),
         cmocka_unit_test(test_spdm_requester_get_version_case12),
         cmocka_unit_test(test_spdm_requester_get_version_case13),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_get_version_case14),
-        // Successful response for unordered version set
+        /* Successful response for unordered version set*/
         cmocka_unit_test(test_spdm_requester_get_version_case15),
     };
 

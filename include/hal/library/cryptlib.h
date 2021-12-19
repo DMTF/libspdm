@@ -16,7 +16,7 @@
 
 #define CRYPTO_NID_NULL 0x0000
 
-// hash
+/* hash*/
 #define CRYPTO_NID_SHA256 0x0001
 #define CRYPTO_NID_SHA384 0x0002
 #define CRYPTO_NID_SHA512 0x0003
@@ -25,7 +25,7 @@
 #define CRYPTO_NID_SHA3_512 0x0006
 #define CRYPTO_NID_SM3_256 0x0007
 
-// Signing
+/* Signing*/
 #define CRYPTO_NID_RSASSA2048 0x0101
 #define CRYPTO_NID_RSASSA3072 0x0102
 #define CRYPTO_NID_RSASSA4096 0x0103
@@ -39,7 +39,7 @@
 #define CRYPTO_NID_EDDSA_ED25519 0x010A
 #define CRYPTO_NID_EDDSA_ED448 0x010B
 
-// key Exchange
+/* key Exchange*/
 #define CRYPTO_NID_FFDHE2048 0x0201
 #define CRYPTO_NID_FFDHE3072 0x0202
 #define CRYPTO_NID_FFDHE4096 0x0203
@@ -50,28 +50,28 @@
 #define CRYPTO_NID_CURVE_X25519 0x0208
 #define CRYPTO_NID_CURVE_X448 0x0209
 
-// AEAD
+/* AEAD*/
 #define CRYPTO_NID_AES_128_GCM 0x0301
 #define CRYPTO_NID_AES_256_GCM 0x0302
 #define CRYPTO_NID_CHACHA20_POLY1305 0x0303
 #define CRYPTO_NID_SM4_128_GCM 0x0304
 
-///
-/// X.509 v3 key usage Extension flags
-///
-#define CRYPTO_X509_KU_DIGITAL_SIGNATURE (0x80) // bit 0
-#define CRYPTO_X509_KU_NON_REPUDIATION (0x40) // bit 1
-#define CRYPTO_X509_KU_KEY_ENCIPHERMENT (0x20) // bit 2
-#define CRYPTO_X509_KU_DATA_ENCIPHERMENT (0x10) // bit 3
-#define CRYPTO_X509_KU_KEY_AGREEMENT (0x08) // bit 4
-#define CRYPTO_X509_KU_KEY_CERT_SIGN (0x04) // bit 5
-#define CRYPTO_X509_KU_CRL_SIGN (0x02) // bit 6
-#define CRYPTO_X509_KU_ENCIPHER_ONLY (0x01) // bit 7
-#define CRYPTO_X509_KU_DECIPHER_ONLY (0x8000) // bit 8
 
-///
-/// These constants comply with the DER encoded ASN.1 type tags.
-///
+/* X.509 v3 key usage Extension flags*/
+
+#define CRYPTO_X509_KU_DIGITAL_SIGNATURE (0x80) /* bit 0*/
+#define CRYPTO_X509_KU_NON_REPUDIATION (0x40) /* bit 1*/
+#define CRYPTO_X509_KU_KEY_ENCIPHERMENT (0x20) /* bit 2*/
+#define CRYPTO_X509_KU_DATA_ENCIPHERMENT (0x10) /* bit 3*/
+#define CRYPTO_X509_KU_KEY_AGREEMENT (0x08) /* bit 4*/
+#define CRYPTO_X509_KU_KEY_CERT_SIGN (0x04) /* bit 5*/
+#define CRYPTO_X509_KU_CRL_SIGN (0x02) /* bit 6*/
+#define CRYPTO_X509_KU_ENCIPHER_ONLY (0x01) /* bit 7*/
+#define CRYPTO_X509_KU_DECIPHER_ONLY (0x8000) /* bit 8*/
+
+
+/* These constants comply with the DER encoded ASN.1 type tags.*/
+
 #define CRYPTO_ASN1_BOOLEAN 0x01
 #define CRYPTO_ASN1_INTEGER 0x02
 #define CRYPTO_ASN1_BIT_STRING 0x03
@@ -96,63 +96,63 @@
 #define CRYPTO_ASN1_TAG_PC_MASK 0x20
 #define CRYPTO_ASN1_TAG_VALUE_MASK 0x1F
 
-///
-/// SHA-256 digest size in bytes
-///
+
+/* SHA-256 digest size in bytes*/
+
 #define SHA256_DIGEST_SIZE 32
 
-///
-/// SHA-384 digest size in bytes
-///
+
+/* SHA-384 digest size in bytes*/
+
 #define SHA384_DIGEST_SIZE 48
 
-///
-/// SHA-512 digest size in bytes
-///
+
+/* SHA-512 digest size in bytes*/
+
 #define SHA512_DIGEST_SIZE 64
 
-///
-/// SHA3-256 digest size in bytes
-///
+
+/* SHA3-256 digest size in bytes*/
+
 #define SHA3_256_DIGEST_SIZE 32
 
-///
-/// SHA3-384 digest size in bytes
-///
+
+/* SHA3-384 digest size in bytes*/
+
 #define SHA3_384_DIGEST_SIZE 48
 
-///
-/// SHA3-512 digest size in bytes
-///
+
+/* SHA3-512 digest size in bytes*/
+
 #define SHA3_512_DIGEST_SIZE 64
 
-///
-/// SM3_256 digest size in bytes
-///
+
+/* SM3_256 digest size in bytes*/
+
 #define SM3_256_DIGEST_SIZE 32
 
-///
-/// AES block size in bytes
-///
+
+/* AES block size in bytes*/
+
 #define AES_BLOCK_SIZE 16
 
-///
-/// RSA key Tags Definition used in rsa_set_key() function for key component identification.
-///
+
+/* RSA key Tags Definition used in rsa_set_key() function for key component identification.*/
+
 typedef enum {
-    RSA_KEY_N, ///< RSA public Modulus (N)
-    RSA_KEY_E, ///< RSA public exponent (e)
-    RSA_KEY_D, ///< RSA Private exponent (d)
-    RSA_KEY_P, ///< RSA secret prime factor of Modulus (p)
-    RSA_KEY_Q, ///< RSA secret prime factor of Modules (q)
-    RSA_KEY_DP, ///< p's CRT exponent (== d mod (p - 1))
-    RSA_KEY_DQ, ///< q's CRT exponent (== d mod (q - 1))
-    RSA_KEY_Q_INV ///< The CRT coefficient (== 1/q mod p)
+    RSA_KEY_N, /*< RSA public Modulus (N)*/
+    RSA_KEY_E, /*< RSA public exponent (e)*/
+    RSA_KEY_D, /*< RSA Private exponent (d)*/
+    RSA_KEY_P, /*< RSA secret prime factor of Modulus (p)*/
+    RSA_KEY_Q, /*< RSA secret prime factor of Modules (q)*/
+    RSA_KEY_DP, /*< p's CRT exponent (== d mod (p - 1))*/
+    RSA_KEY_DQ, /*< q's CRT exponent (== d mod (q - 1))*/
+    RSA_KEY_Q_INV /*< The CRT coefficient (== 1/q mod p)*/
 } rsa_key_tag_t;
 
-//=====================================================================================
-//    One-Way Cryptographic hash SHA Primitives
-//=====================================================================================
+/*=====================================================================================*/
+/*    One-Way Cryptographic hash SHA Primitives*/
+/*=====================================================================================*/
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent SHA256 use.
@@ -493,9 +493,9 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value);
 boolean sha512_hash_all(IN const void *data, IN uintn data_size,
             OUT uint8_t *hash_value);
 
-//=====================================================================================
-//    One-Way Cryptographic hash SHA3 Primitives
-//=====================================================================================
+/*=====================================================================================*/
+/*    One-Way Cryptographic hash SHA3 Primitives*/
+/*=====================================================================================*/
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
@@ -836,9 +836,9 @@ boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value);
 boolean sha3_512_hash_all(IN const void *data, IN uintn data_size,
               OUT uint8_t *hash_value);
 
-//=====================================================================================
-//    One-Way Cryptographic hash SM3 Primitives
-//=====================================================================================
+/*=====================================================================================*/
+/*    One-Way Cryptographic hash SM3 Primitives*/
+/*=====================================================================================*/
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent SM3-256 use.
@@ -953,9 +953,9 @@ boolean sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value);
 boolean sm3_256_hash_all(IN const void *data, IN uintn data_size,
              OUT uint8_t *hash_value);
 
-//=====================================================================================
-//    MAC (message Authentication Code) Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    MAC (message Authentication Code) Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA256 use.
@@ -1816,9 +1816,9 @@ boolean hmac_sm3_256_all(IN const void *data, IN uintn data_size,
             IN const uint8_t *key, IN uintn key_size,
             OUT uint8_t *hmac_value);
 
-//=====================================================================================
-//    Authenticated Encryption with Associated data (AEAD) Cryptography Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Authenticated Encryption with Associated data (AEAD) Cryptography Primitive*/
+/*=====================================================================================*/
 
 /**
   Performs AEAD AES-GCM authenticated encryption on a data buffer and additional authenticated data (AAD).
@@ -2007,9 +2007,9 @@ boolean aead_sm4_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
                  IN const uint8_t *tag, IN uintn tag_size,
                  OUT uint8_t *data_out, OUT uintn *data_out_size);
 
-//=====================================================================================
-//    Asymmetric Cryptography Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Asymmetric Cryptography Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and initializes one RSA context for subsequent use.
@@ -2946,9 +2946,9 @@ void x509_stack_free(IN void *x509_stack);
 boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
               OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size);
 
-//=====================================================================================
-//    DH key Exchange Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    DH key Exchange Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and Initializes one Diffie-Hellman context for subsequent use
@@ -3091,9 +3091,9 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_ke
                IN uintn peer_public_key_size, OUT uint8_t *key,
                IN OUT uintn *key_size);
 
-//=====================================================================================
-//    Elliptic Curve Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Elliptic Curve Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and Initializes one Elliptic Curve context for subsequent use
@@ -3293,9 +3293,9 @@ boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
              IN const uint8_t *message_hash, IN uintn hash_size,
              IN const uint8_t *signature, IN uintn sig_size);
 
-//=====================================================================================
-//    Edwards-Curve Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Edwards-Curve Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and Initializes one Edwards-Curve context for subsequent use
@@ -3462,9 +3462,9 @@ boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
              IN const uint8_t *message, IN uintn size,
              IN const uint8_t *signature, IN uintn sig_size);
 
-//=====================================================================================
-//    Montgomery-Curve Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Montgomery-Curve Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and Initializes one Montgomery-Curve Context for subsequent use
@@ -3546,9 +3546,9 @@ boolean ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
             IN uintn peer_public_size, OUT uint8_t *key,
             IN OUT uintn *key_size);
 
-//=====================================================================================
-//    Shang-Mi2 Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Shang-Mi2 Primitive*/
+/*=====================================================================================*/
 
 /**
   Allocates and Initializes one Shang-Mi2 context for subsequent use.
@@ -3817,9 +3817,9 @@ boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
              IN const uint8_t *message, IN uintn size,
              IN const uint8_t *signature, IN uintn sig_size);
 
-//=====================================================================================
-//    Pseudo-Random Generation Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    Pseudo-Random Generation Primitive*/
+/*=====================================================================================*/
 
 /**
   Sets up the seed value for the pseudorandom number generator.
@@ -3857,9 +3857,9 @@ boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size);
 **/
 boolean random_bytes(OUT uint8_t *output, IN uintn size);
 
-//=====================================================================================
-//    key Derivation Function Primitive
-//=====================================================================================
+/*=====================================================================================*/
+/*    key Derivation Function Primitive*/
+/*=====================================================================================*/
 
 /**
   Derive key data using HMAC-SHA256 based KDF.
@@ -4260,4 +4260,4 @@ boolean hkdf_sm3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
                IN const uint8_t *info, IN uintn info_size,
                OUT uint8_t *out, IN uintn out_size);
 
-#endif // __BASE_CRYPT_LIB_H__
+#endif /* __BASE_CRYPT_LIB_H__*/

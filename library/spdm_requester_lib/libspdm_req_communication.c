@@ -76,7 +76,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     spdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
@@ -134,10 +134,10 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
         DEBUG((DEBUG_INFO,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
-        #else // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
         #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange(
@@ -150,7 +150,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
             return status;
         }
 
-        // send PSK_FINISH only if Responder supports context.
+        /* send PSK_FINISH only if Responder supports context.*/
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, TRUE, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
@@ -160,7 +160,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
                    "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
                    status));
         }
-        #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
     return status;
 }
@@ -218,7 +218,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     spdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
@@ -280,10 +280,10 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
         DEBUG((DEBUG_INFO,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
-        #else // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
         #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange_ex(
@@ -299,7 +299,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
             return status;
         }
 
-        // send PSK_FINISH only if Responder supports context.
+        /* send PSK_FINISH only if Responder supports context.*/
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, TRUE, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
@@ -309,14 +309,14 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
                    "libspdm_start_session - spdm_send_receive_psk_finish - %p\n",
                    status));
         }
-        #else // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #else /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
-        #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     return status;
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 }
 
 /**

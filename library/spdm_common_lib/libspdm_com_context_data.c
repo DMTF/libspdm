@@ -132,23 +132,23 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
 
         #if !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
-        #endif // !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
         #if !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
-        #endif // !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+        #endif /* !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
         #if !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
         ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
-        #endif // !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+        #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
         #if !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
-        #endif // !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
         #if !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
-        #endif // !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             spdm_context->connection_info.capability.flags =
@@ -1271,9 +1271,9 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
             }
         }
 
-        //
-        // prepare digest_context_th
-        //
+        
+        /* prepare digest_context_th*/
+        
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
             spdm_session_info->session_transcript.digest_context_th = spdm_hash_new (
                 spdm_context->connection_info.algorithm.base_hash_algo);
@@ -1299,27 +1299,27 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
         spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_session_info->session_transcript.digest_context_th, message, message_size);
         if (!finished_key_ready) {
-            //
-            // append message only if finished_key is NOT ready.
-            //
+            
+            /* append message only if finished_key is NOT ready.*/
+            
             append_managed_buffer(
                 &spdm_session_info->session_transcript.temp_message_k, message, message_size);
         }
 
-        //
-        // Above action is to calculate HASH for message_k.
-        // However, we cannot use similar way to calculate HMAC. (chicken-egg problem)
-        // HMAC need finished_key, and finished_key calculation need message_k.
-        // If the finished_key is NOT ready, then we cannot calculate HMAC. We have to cache to temp_message_k and stop here.
-        // If the finished_key is ready, then we can start calculating HMAC. No need to cache temp_message_k.
-        //
+        
+        /* Above action is to calculate HASH for message_k.*/
+        /* However, we cannot use similar way to calculate HMAC. (chicken-egg problem)*/
+        /* HMAC need finished_key, and finished_key calculation need message_k.*/
+        /* If the finished_key is NOT ready, then we cannot calculate HMAC. We have to cache to temp_message_k and stop here.*/
+        /* If the finished_key is ready, then we can start calculating HMAC. No need to cache temp_message_k.*/
+        
         if (!finished_key_ready) {
             return RETURN_SUCCESS;
         }
 
-        //
-        // prepare hmac_rsp_context_th
-        //
+        
+        /* prepare hmac_rsp_context_th*/
+        
         if (spdm_session_info->session_transcript.hmac_rsp_context_th == NULL) {
             spdm_session_info->session_transcript.hmac_rsp_context_th = spdm_hmac_new_with_response_finished_key (
                 secured_message_context);
@@ -1333,9 +1333,9 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
         spdm_hmac_update_with_response_finished_key (secured_message_context,
             spdm_session_info->session_transcript.hmac_rsp_context_th, message, message_size);
 
-        //
-        // prepare hmac_req_context_th
-        //
+        
+        /* prepare hmac_req_context_th*/
+        
         if (spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
             spdm_session_info->session_transcript.hmac_req_context_th = spdm_hmac_new_with_request_finished_key (
                 secured_message_context);
@@ -1393,13 +1393,13 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
         ASSERT (finished_key_ready);
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
-            //
-            // digest_context_th might be NULL in unit test, where message_k is hardcoded.
-            // hmac_{rsp,req}_context_th might be NULL in real case, because
-            //   after finished_key_ready is generated, no one trigger libspdm_append_message_k.
-            // trigger message_k to initialize by using zero length message_k, no impact to hash or HMAC.
-            //   only temp_message_k is appended.
-            //
+            
+            /* digest_context_th might be NULL in unit test, where message_k is hardcoded.*/
+            /* hmac_{rsp,req}_context_th might be NULL in real case, because*/
+            /*   after finished_key_ready is generated, no one trigger libspdm_append_message_k.*/
+            /* trigger message_k to initialize by using zero length message_k, no impact to hash or HMAC.*/
+            /*   only temp_message_k is appended.*/
+            
             if (spdm_session_info->session_transcript.digest_context_th == NULL ||
                 spdm_session_info->session_transcript.hmac_rsp_context_th == NULL ||
                 spdm_session_info->session_transcript.hmac_req_context_th == NULL) {
@@ -1436,10 +1436,10 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
                 }
             }
 
-            //
-            // It is first time call, backup current message_k context
-            // this backup will be used in reset_message_f.
-            //
+            
+            /* It is first time call, backup current message_k context*/
+            /* this backup will be used in reset_message_f.*/
+            
             ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
             spdm_session_info->session_transcript.digest_context_th_backup = spdm_hash_new (
                 spdm_context->connection_info.algorithm.base_hash_algo);
@@ -1462,9 +1462,9 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
                 spdm_session_info->session_transcript.hmac_req_context_th_backup);
         }
 
-        //
-        // prepare digest_context_th
-        //
+        
+        /* prepare digest_context_th*/
+        
         ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
@@ -1475,9 +1475,9 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
         spdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_session_info->session_transcript.digest_context_th, message, message_size);
 
-        //
-        // prepare hmac_rsp_context_th
-        //
+        
+        /* prepare hmac_rsp_context_th*/
+        
         ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
@@ -1488,9 +1488,9 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
         spdm_hmac_update_with_response_finished_key (secured_message_context,
             spdm_session_info->session_transcript.hmac_rsp_context_th, message, message_size);
 
-        //
-        // prepare hmac_req_context_th
-        //
+        
+        /* prepare hmac_req_context_th*/
+        
         ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
@@ -1741,10 +1741,10 @@ return_status libspdm_init_context(IN void *context)
                 .secured_message_context);
     }
 
-    //
-    // The random_seed function may or may not be implemented.
-    // If unimplemented, the stub should always return success.
-    //
+    
+    /* The random_seed function may or may not be implemented.*/
+    /* If unimplemented, the stub should always return success.*/
+    
     if (!random_seed(NULL, 0)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -1765,7 +1765,7 @@ void libspdm_reset_context(IN void *context)
     uintn index;
 
     spdm_context = context;
-    //Clear all info about last connection
+    /*Clear all info about last connection*/
     zero_mem(&spdm_context->connection_info.capability, sizeof(spdm_device_capability_t));
     zero_mem(&spdm_context->connection_info.algorithm, sizeof(spdm_device_algorithm_t));
     zero_mem(&spdm_context->last_spdm_error, sizeof(spdm_error_struct_t));

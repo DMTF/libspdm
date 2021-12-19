@@ -20,19 +20,19 @@
 boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
                          IN uint8_t version)
 {
-    //uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;
+    /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
-    //uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;
+    /*uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;*/
     uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
-    //uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag>>5)&0x01;
+    /*uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag>>5)&0x01;*/
     uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
     uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
     uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
     uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
     uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
     uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
-    //uint8_t hbeat_cap = (uint8_t)(capabilities_flag>>13)&0x01;
-    //uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;
+    /*uint8_t hbeat_cap = (uint8_t)(capabilities_flag>>13)&0x01;*/
+    /*uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;*/
     uint8_t handshake_in_the_clear_cap =
         (uint8_t)(capabilities_flag >> 15) & 0x01;
     uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
@@ -42,40 +42,40 @@ boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
         return TRUE;
 
     case SPDM_MESSAGE_VERSION_11: {
-        //Encrypt_cap set and psk_cap+key_ex_cap cleared
+        /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
         if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
             return FALSE;
         }
-        //MAC_cap set and psk_cap+key_ex_cap cleared
+        /*MAC_cap set and psk_cap+key_ex_cap cleared*/
         if (mac_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
             return FALSE;
         }
-        //Key_ex_cap set and encrypt_cap+mac_cap cleared
+        /*Key_ex_cap set and encrypt_cap+mac_cap cleared*/
         if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
             return FALSE;
         }
-        //PSK_cap set and encrypt_cap+mac_cap cleared
+        /*PSK_cap set and encrypt_cap+mac_cap cleared*/
         if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
             return FALSE;
         }
-        //Muth_auth_cap set and encap_cap cleared
+        /*Muth_auth_cap set and encap_cap cleared*/
         if (mut_auth_cap != 0 && encap_cap == 0) {
             return FALSE;
         }
-        //Handshake_in_the_clear_cap set and key_ex_cap cleared
+        /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/
         if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
             return FALSE;
         }
-        //Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
-        //It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
-        //"Handshake_in_the_clear_cap set and key_ex_cap cleared" in above if statement,
-        //so we don't add new if statement.
+        /*Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"*/
+        /*It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and*/
+        /*"Handshake_in_the_clear_cap set and key_ex_cap cleared" in above if statement,*/
+        /*so we don't add new if statement.*/
 
-        //Pub_key_id_cap set and cert_cap set
+        /*Pub_key_id_cap set and cert_cap set*/
         if (pub_key_id_cap != 0 && cert_cap != 0) {
             return FALSE;
         }
-        //reserved values selected in flags
+        /*reserved values selected in flags*/
         if (meas_cap == 3 || psk_cap == 3) {
             return FALSE;
         }
@@ -156,7 +156,7 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     if (spdm_response_size > sizeof(spdm_response)) {
         return RETURN_DEVICE_ERROR;
     }
-    //Check if received message version matches sent message version
+    /*Check if received message version matches sent message version*/
     if (spdm_request.header.spdm_version !=
         spdm_response.header.spdm_version) {
         return RETURN_DEVICE_ERROR;
@@ -168,9 +168,9 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_a(spdm_context, &spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {

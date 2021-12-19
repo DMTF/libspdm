@@ -6,27 +6,27 @@
 
 #include "test_crypt.h"
 
-//
-// Max Known digest size is SHA512 output (64 bytes) by far
-//
+
+/* Max Known digest size is SHA512 output (64 bytes) by far*/
+
 #define MAX_DIGEST_SIZE 64
 
-//
-// data string for HMAC validation
-//
+
+/* data string for HMAC validation*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_hmac_data = "Hi There";
 
-//
-// key value for HMAC-SHA-256 validation. (from "4. Test Vectors" of IETF RFC4231)
-//
+
+/* key value for HMAC-SHA-256 validation. (from "4. Test Vectors" of IETF RFC4231)*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_hmac_sha256_key[20] = {
     0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
     0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b
 };
 
-//
-// result for HMAC-SHA-256 ("Hi There"). (from "4. Test Vectors" of IETF RFC4231)
-//
+
+/* result for HMAC-SHA-256 ("Hi There"). (from "4. Test Vectors" of IETF RFC4231)*/
+
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_hmac_sha256_digest[] = {
     0xb0, 0x34, 0x4c, 0x61, 0xd8, 0xdb, 0x38, 0x53, 0x5c, 0xa8, 0xaf,
     0xce, 0xaf, 0x0b, 0xf1, 0x2b, 0x88, 0x1d, 0xc2, 0x00, 0xc9, 0x83,
@@ -49,9 +49,9 @@ return_status validate_crypt_hmac(void)
     my_print(" \nCrypto HMAC Engine Testing:\n");
 
     my_print("- HMAC-SHA256: ");
-    //
-    // HMAC-SHA-256 digest Validation
-    //
+    
+    /* HMAC-SHA-256 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sha256_new();
     if (hmac_ctx == NULL) {
@@ -94,9 +94,9 @@ return_status validate_crypt_hmac(void)
     my_print("[Pass]\n");
 
     my_print("- HMAC-SHA3_256: ");
-    //
-    // HMAC-SHA3-256 digest Validation
-    //
+    
+    /* HMAC-SHA3-256 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sha3_256_new();
     if (hmac_ctx == NULL) {
@@ -131,9 +131,9 @@ return_status validate_crypt_hmac(void)
     my_print("[Pass]\n");
 
     my_print("- HMAC-SM3_256: ");
-    //
-    // HMAC-SM3-256 digest Validation
-    //
+    
+    /* HMAC-SM3-256 digest Validation*/
+    
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sm3_256_new();
     if (hmac_ctx == NULL) {

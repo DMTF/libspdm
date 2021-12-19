@@ -165,7 +165,7 @@ static void spdm_compute_secret_update(uintn hash_size,
           BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
     m_bin_str9_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 +
           sizeof(BIN_STR_9_LABEL) - 1;
-    //context is NULL for key update
+    /*context is NULL for key update*/
 
     spdm_hkdf_expand(m_use_hash_algo, in_secret, hash_size, m_bin_str9,
           m_bin_str9_size, out_secret, out_secret_size);
@@ -208,11 +208,11 @@ void test_spdm_responder_key_update_case1(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -275,7 +275,7 @@ void test_spdm_responder_key_update_case2(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -328,7 +328,7 @@ void test_spdm_responder_key_update_case3(void **state)
     spdm_set_standard_key_update_test_state(
           spdm_context, &session_id);
 
-    //busy state
+    /*busy state*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     session_info = &spdm_context->session_info[0];
@@ -339,7 +339,7 @@ void test_spdm_responder_key_update_case3(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -393,7 +393,7 @@ void test_spdm_responder_key_update_case4(void **state)
     spdm_set_standard_key_update_test_state(
           spdm_context, &session_id);
 
-    //need resync state
+    /*need resync state*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
     session_info = &spdm_context->session_info[0];
@@ -404,7 +404,7 @@ void test_spdm_responder_key_update_case4(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -461,7 +461,7 @@ void test_spdm_responder_key_update_case5(void **state)
     spdm_set_standard_key_update_test_state(
           spdm_context, &session_id);
 
-    //not ready state
+    /*not ready state*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     session_info = &spdm_context->session_info[0];
@@ -472,7 +472,7 @@ void test_spdm_responder_key_update_case5(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -534,7 +534,7 @@ void test_spdm_responder_key_update_case6(void **state)
     spdm_set_standard_key_update_test_state(
           spdm_context, &session_id);
 
-    //not negotiated state
+    /*not negotiated state*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
@@ -546,7 +546,7 @@ void test_spdm_responder_key_update_case6(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -594,7 +594,7 @@ void test_spdm_responder_key_update_case7(void **state)
           spdm_context, &session_id);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    //"filling" buffers
+    /*"filling" buffers*/
     spdm_context->transcript.message_m.buffer_size =
                             spdm_context->transcript.message_m.max_buffer_size;
     spdm_context->transcript.message_b.buffer_size =
@@ -615,11 +615,11 @@ void test_spdm_responder_key_update_case7(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -681,7 +681,7 @@ void test_spdm_responder_key_update_case8(void **state)
     spdm_set_standard_key_update_test_state(
           spdm_context, &session_id);
 
-    //no capabilities
+    /*no capabilities*/
     spdm_context->connection_info.capability.flags &=
         !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->local_context.capability.flags &=
@@ -695,7 +695,7 @@ void test_spdm_responder_key_update_case8(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -752,7 +752,7 @@ void test_spdm_responder_key_update_case9(void **state)
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
 
-    //uninitialized session
+    /*uninitialized session*/
     spdm_secured_message_set_session_state(
         session_info->secured_message_context,
         SPDM_SESSION_STATE_NOT_STARTED);
@@ -762,7 +762,7 @@ void test_spdm_responder_key_update_case9(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -824,11 +824,11 @@ void test_spdm_responder_key_update_case10(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated
+    /*response side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -894,7 +894,7 @@ void test_spdm_responder_key_update_case11(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -956,12 +956,12 @@ void test_spdm_responder_key_update_case12(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateKey
+    /*last request: UpdateKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request1,
           m_spdm_key_update_request1_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -974,11 +974,11 @@ void test_spdm_responder_key_update_case12(void **state)
                   .request_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1042,12 +1042,12 @@ void test_spdm_responder_key_update_case13(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateKey
+    /*last request: UpdateKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request1,
           m_spdm_key_update_request1_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1060,11 +1060,11 @@ void test_spdm_responder_key_update_case13(void **state)
                   .request_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1127,12 +1127,12 @@ void test_spdm_responder_key_update_case14(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateallKeys
+    /*last request: UpdateallKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request3,
           m_spdm_key_update_request3_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1156,11 +1156,11 @@ void test_spdm_responder_key_update_case14(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated
+    /*response side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -1228,12 +1228,12 @@ void test_spdm_responder_key_update_case15(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateAllKeys
+    /*last request: UpdateAllKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request3,
           m_spdm_key_update_request3_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1257,11 +1257,11 @@ void test_spdm_responder_key_update_case15(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated
+    /*request side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated
+    /*response side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -1328,9 +1328,9 @@ void test_spdm_responder_key_update_case16(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no mocked major secret update
+    /*no mocked major secret update*/
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1392,12 +1392,12 @@ void test_spdm_responder_key_update_case17(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateKey
+    /*last request: UpdateKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request1,
           m_spdm_key_update_request1_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1410,11 +1410,11 @@ void test_spdm_responder_key_update_case17(void **state)
                   .request_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1477,12 +1477,12 @@ void test_spdm_responder_key_update_case18(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateAllKeys
+    /*last request: UpdateAllKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request3,
           m_spdm_key_update_request3_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1506,11 +1506,11 @@ void test_spdm_responder_key_update_case18(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated (once)
+    /*response side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -1578,12 +1578,12 @@ void test_spdm_responder_key_update_case19(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: VerifyNewKey
+    /*last request: VerifyNewKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request5,
           m_spdm_key_update_request5_size);
 
-    //no keys updated (already activated)
+    /*no keys updated (already activated)*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1648,12 +1648,12 @@ void test_spdm_responder_key_update_case20(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateAllKeys
+    /*last request: UpdateAllKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request5,
           m_spdm_key_update_request5_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1677,11 +1677,11 @@ void test_spdm_responder_key_update_case20(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated (once)
+    /*response side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -1749,12 +1749,12 @@ void test_spdm_responder_key_update_case21(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateKey
+    /*last request: UpdateKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request1,
           m_spdm_key_update_request1_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1767,11 +1767,11 @@ void test_spdm_responder_key_update_case21(void **state)
                   .request_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -1836,12 +1836,12 @@ void test_spdm_responder_key_update_case22(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateAllKeys
+    /*last request: UpdateAllKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request3,
           m_spdm_key_update_request3_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1865,11 +1865,11 @@ void test_spdm_responder_key_update_case22(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated
+    /*response side updated*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -1934,12 +1934,12 @@ void test_spdm_responder_key_update_case23(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateKey
+    /*last request: UpdateKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request1,
           m_spdm_key_update_request1_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -1952,11 +1952,11 @@ void test_spdm_responder_key_update_case23(void **state)
                   .request_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side *not* updated
+    /*response side *not* updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -2019,12 +2019,12 @@ void test_spdm_responder_key_update_case24(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: UpdateAllKeys
+    /*last request: UpdateAllKeys*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request3,
           m_spdm_key_update_request3_size);
 
-    //mocked major secret update
+    /*mocked major secret update*/
     copy_mem(&secured_message_context->application_secret_backup
                   .request_data_secret,
              &secured_message_context->application_secret
@@ -2048,11 +2048,11 @@ void test_spdm_responder_key_update_case24(void **state)
                   .response_data_secret,
           secured_message_context->hash_size);
 
-    //request side updated (once)
+    /*request side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_req_secret_buffer, m_req_secret_buffer,
           secured_message_context->hash_size);
-    //response side updated (once)
+    /*response side updated (once)*/
     spdm_compute_secret_update(secured_message_context->hash_size,
           m_rsp_secret_buffer, m_rsp_secret_buffer,
           secured_message_context->hash_size);
@@ -2117,12 +2117,12 @@ void test_spdm_responder_key_update_case25(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //last request: VerifyNewKey
+    /*last request: VerifyNewKey*/
     copy_mem(spdm_context->last_update_request,
           &m_spdm_key_update_request5,
           m_spdm_key_update_request5_size);
 
-    //no keys updated (already activated)
+    /*no keys updated (already activated)*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -2183,7 +2183,7 @@ void test_spdm_responder_key_update_case26(void **state)
           m_rsp_secret_buffer, (uint8_t)(0xFF),
           m_req_secret_buffer, (uint8_t)(0xEE));
 
-    //no keys are updated
+    /*no keys are updated*/
 
     response_size = sizeof(response);
     status = spdm_get_response_key_update(spdm_context,
@@ -2215,54 +2215,54 @@ spdm_test_context_t m_spdm_responder_key_update_test_context = {
 int spdm_responder_key_update_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
-        // Success Case -- UpdateKey
+        /* Success Case -- UpdateKey*/
         cmocka_unit_test(test_spdm_responder_key_update_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_key_update_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_key_update_case3),
-        // response_state: SPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_key_update_case4),
-        // response_state: SPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_key_update_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_key_update_case6),
-        // Buffer reset
+        /* Buffer reset*/
         cmocka_unit_test(test_spdm_responder_key_update_case7),
-        // Unsupported KEY_UPD capabilities
+        /* Unsupported KEY_UPD capabilities*/
         cmocka_unit_test(test_spdm_responder_key_update_case8),
-        // Uninitialized session
+        /* Uninitialized session*/
         cmocka_unit_test(test_spdm_responder_key_update_case9),
-        // Success Case -- UpdateAllKeys
+        /* Success Case -- UpdateAllKeys*/
         cmocka_unit_test(test_spdm_responder_key_update_case10),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_key_update_case11),
-        // Success Case -- VerifyNewKey (from UpdateKey)
+        /* Success Case -- VerifyNewKey (from UpdateKey)*/
         cmocka_unit_test(test_spdm_responder_key_update_case12),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_key_update_case13),
-        // Success Case -- VerifyNewKey (from UpdateAllKeys)
+        /* Success Case -- VerifyNewKey (from UpdateAllKeys)*/
         cmocka_unit_test(test_spdm_responder_key_update_case14),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_key_update_case15),
-        // Uninitialized key update
+        /* Uninitialized key update*/
         cmocka_unit_test(test_spdm_responder_key_update_case16),
-        // Retry -- UpdateKey
+        /* Retry -- UpdateKey*/
         cmocka_unit_test(test_spdm_responder_key_update_case17),
-        // Retry -- UpdateAllKeys
+        /* Retry -- UpdateAllKeys*/
         cmocka_unit_test(test_spdm_responder_key_update_case18),
-        // Retry -- VerifyNewKey (from UpdateKey)
+        /* Retry -- VerifyNewKey (from UpdateKey)*/
         cmocka_unit_test(test_spdm_responder_key_update_case19),
-        // Retry -- VerifyNewKey (from UpdateAllKeys)
+        /* Retry -- VerifyNewKey (from UpdateAllKeys)*/
         cmocka_unit_test(test_spdm_responder_key_update_case20),
-        // VerifyNewKey expected
+        /* VerifyNewKey expected*/
         cmocka_unit_test(test_spdm_responder_key_update_case21),
         cmocka_unit_test(test_spdm_responder_key_update_case22),
-        // Retry -- wrong token
+        /* Retry -- wrong token*/
         cmocka_unit_test(test_spdm_responder_key_update_case23),
         cmocka_unit_test(test_spdm_responder_key_update_case24),
         cmocka_unit_test(test_spdm_responder_key_update_case25),
-        // Invalid operation
+        /* Invalid operation*/
         cmocka_unit_test(test_spdm_responder_key_update_case26),
     };
 

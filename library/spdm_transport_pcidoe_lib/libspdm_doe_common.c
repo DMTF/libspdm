@@ -138,7 +138,7 @@ return_status spdm_transport_pci_doe_encode_message(
             return RETURN_UNSUPPORTED;
         }
 
-        // message to secured message
+        /* message to secured message*/
         secured_message_size = sizeof(secured_message);
         status = spdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
@@ -150,7 +150,7 @@ return_status spdm_transport_pci_doe_encode_message(
             return status;
         }
 
-        // secured message to secured PCI DOE message
+        /* secured message to secured PCI DOE message*/
         status = transport_encode_message(
             session_id, secured_message_size, secured_message,
             transport_message_size, transport_message);
@@ -160,7 +160,7 @@ return_status spdm_transport_pci_doe_encode_message(
             return RETURN_UNSUPPORTED;
         }
     } else {
-        // SPDM message to normal PCI DOE message
+        /* SPDM message to normal PCI DOE message*/
         status = transport_encode_message(NULL, message_size, message,
                           transport_message_size,
                           transport_message);
@@ -234,7 +234,7 @@ return_status spdm_transport_pci_doe_decode_message(
     transport_decode_message = pci_doe_decode_message;
 
     SecuredMessageSessionId = NULL;
-    // Detect received message
+    /* Detect received message*/
     secured_message_size = sizeof(secured_message);
     status = transport_decode_message(
         &SecuredMessageSessionId, transport_message_size,
@@ -258,7 +258,7 @@ return_status spdm_transport_pci_doe_decode_message(
             return RETURN_UNSUPPORTED;
         }
 
-        // Secured message to message
+        /* Secured message to message*/
         status = spdm_decode_secured_message(
             secured_message_context, *SecuredMessageSessionId,
             is_requester, secured_message_size, secured_message,
@@ -275,7 +275,7 @@ return_status spdm_transport_pci_doe_decode_message(
         }
         return RETURN_SUCCESS;
     } else {
-        // get non-secured message
+        /* get non-secured message*/
         status = transport_decode_message(&SecuredMessageSessionId,
                           transport_message_size,
                           transport_message,

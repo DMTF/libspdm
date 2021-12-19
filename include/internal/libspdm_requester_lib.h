@@ -107,7 +107,7 @@ return_status spdm_send_receive_key_exchange(
     IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
 /**
   This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
@@ -136,7 +136,7 @@ return_status spdm_send_receive_key_exchange_ex(
     OUT void *requester_random OPTIONAL,
     OUT void *responder_random OPTIONAL);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
 /**
   This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -172,7 +172,7 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
                          OUT uint8_t *heartbeat_period,
                          OUT void *measurement_hash);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
 /**
   This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
@@ -211,7 +211,7 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
                          OUT void *responder_context OPTIONAL,
                          OUT uintn *responder_context_size OPTIONAL);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
 /**
   This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
@@ -227,7 +227,7 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
                        IN uint32_t session_id);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
 /**
   This function sends END_SESSION and receives END_SESSION_ACK for SPDM session end.
@@ -312,7 +312,7 @@ return_status spdm_get_encap_response_certificate(IN void *context,
                           IN OUT uintn *response_size,
                           OUT void *response);
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 /**
   Process the SPDM encapsulated CHALLENGE request and return the response.

@@ -29,17 +29,17 @@ return_status validate_crypt_ecx(void)
 
     my_print("\nCrypto Montgomery Curve key Exchange Testing:\n");
 
-    //
-    // Initialize key Length
-    //
+    
+    /* Initialize key Length*/
+    
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-    //
-    // Generate & Initialize EC Context
-    //
+    
+    /* Generate & Initialize EC Context*/
+    
     my_print("- Context1 ... ");
     ecx1 = ecx_new_by_nid(CRYPTO_NID_CURVE_X25519);
     if (ecx1 == NULL) {
@@ -55,9 +55,9 @@ return_status validate_crypt_ecx(void)
         goto Exit;
     }
 
-    //
-    // Verify EC-DH x25519/x448
-    //
+    
+    /* Verify EC-DH x25519/x448*/
+    
     my_print("Generate key1 ... ");
     Status = ecx_generate_key(ecx1, public1, &public1_length);
     if (!Status) {
@@ -116,17 +116,17 @@ return_status validate_crypt_ecx(void)
     ecx_free(ecx1);
     ecx_free(ecx2);
 
-    //
-    // Initialize key Length
-    //
+    
+    /* Initialize key Length*/
+    
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-    //
-    // Generate & Initialize EC Context
-    //
+    
+    /* Generate & Initialize EC Context*/
+    
     my_print("- Context1 ... ");
     ecx1 = ecx_new_by_nid(CRYPTO_NID_CURVE_X448);
     if (ecx1 == NULL) {
@@ -142,9 +142,9 @@ return_status validate_crypt_ecx(void)
         goto Exit;
     }
 
-    //
-    // Verify EC-DH x25519/x448
-    //
+    
+    /* Verify EC-DH x25519/x448*/
+    
     my_print("Generate key1 ... ");
     Status = ecx_generate_key(ecx1, public1, &public1_length);
     if (!Status) {

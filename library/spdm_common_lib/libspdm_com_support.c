@@ -123,7 +123,7 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
     ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
     if (buffer_size >
         managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
-        // Do not ASSERT here, because command processor will append message from external.
+        /* Do not ASSERT here, because command processor will append message from external.*/
         DEBUG((DEBUG_ERROR,
                "append_managed_buffer 0x%x fail, rest 0x%x only\n",
                (uint32_t)buffer_size,

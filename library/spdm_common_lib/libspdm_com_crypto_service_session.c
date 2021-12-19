@@ -119,7 +119,7 @@ boolean libspdm_calculate_th_hash_for_exchange(
 
     ASSERT(*th_hash_buffer_size >= hash_size);
 
-    // duplicate the th context, because we still need use original context to continue.
+    /* duplicate the th context, because we still need use original context to continue.*/
     digest_context_th = spdm_hash_new (
         spdm_context->connection_info.algorithm.base_hash_algo);
     if (digest_context_th == NULL) {
@@ -175,7 +175,7 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
     ASSERT(*th_hmac_buffer_size >= hash_size);
 
     if (session_info->session_transcript.hmac_rsp_context_th == NULL) {
-        // trigger message_k to initialize hmac context after finished_key is ready.
+        /* trigger message_k to initialize hmac context after finished_key is ready.*/
         status = libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
         if (RETURN_ERROR(status)) {
             return FALSE;
@@ -183,7 +183,7 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
         ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
     }
 
-    // duplicate the th context, because we still need use original context to continue.
+    /* duplicate the th context, because we still need use original context to continue.*/
     hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
     if (hmac_context_th == NULL) {
         return FALSE;
@@ -360,7 +360,7 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *context,
 
     ASSERT(*th_hash_buffer_size >= hash_size);
 
-    // duplicate the th context, because we still need use original context to continue.
+    /* duplicate the th context, because we still need use original context to continue.*/
     digest_context_th = spdm_hash_new (
         spdm_context->connection_info.algorithm.base_hash_algo);
     if (digest_context_th == NULL) {
@@ -417,7 +417,7 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
 
     ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
 
-    // duplicate the th context, because we still need use original context to continue.
+    /* duplicate the th context, because we still need use original context to continue.*/
     hmac_context_th = spdm_hmac_new_with_response_finished_key (secured_message_context);
     if (hmac_context_th == NULL) {
         return FALSE;
@@ -473,7 +473,7 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *context,
 
     ASSERT(session_info->session_transcript.hmac_req_context_th != NULL);
 
-    // duplicate the th context, because we still need use original context to continue.
+    /* duplicate the th context, because we still need use original context to continue.*/
     hmac_context_th = spdm_hmac_new_with_request_finished_key (secured_message_context);
     if (hmac_context_th == NULL) {
         return FALSE;
@@ -543,7 +543,7 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // Debug code only - required for debug print of th_curr hash below
+    /* Debug code only - required for debug print of th_curr hash below*/
     DEBUG_CODE(
         if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -695,7 +695,7 @@ boolean spdm_verify_key_exchange_rsp_signature(
         return FALSE;
     }
 
-    // Debug code only - required for debug print of th_curr hash below
+    /* Debug code only - required for debug print of th_curr hash below*/
     DEBUG_CODE(
         if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -718,9 +718,9 @@ boolean spdm_verify_key_exchange_rsp_signature(
     internal_dump_data(sign_data, sign_data_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    //
-    // Get leaf cert from cert chain
-    //
+    
+    /* Get leaf cert from cert chain*/
+    
     result = libspdm_get_peer_cert_chain_data(
         spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
     if (!result) {
@@ -892,7 +892,7 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // Debug code only - required for debug print of th_curr below
+    /* Debug code only - required for debug print of th_curr below*/
     DEBUG_CODE(
         if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1071,7 +1071,7 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    // Debug code only - required for debug print of th_curr below
+    /* Debug code only - required for debug print of th_curr below*/
     DEBUG_CODE(
         if (!spdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1094,9 +1094,9 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
     internal_dump_data(sign_data, sign_data_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    //
-    // Get leaf cert from cert chain
-    //
+    
+    /* Get leaf cert from cert chain*/
+    
     result = libspdm_get_peer_cert_chain_data(spdm_context,
                            (void **)&mut_cert_chain_data,
                            &mut_cert_chain_data_size);

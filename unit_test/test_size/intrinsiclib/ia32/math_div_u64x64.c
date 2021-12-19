@@ -15,14 +15,14 @@ uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
  */
 __declspec(naked) void __cdecl _aulldiv(void)
 {
-    //
-    //    uint64_t
-    //      //    div_u64x64_remainder (
-    //      IN      uint64_t     dividend,
-    //      IN      uint64_t     divisor,
-    //      OUT     uint64_t     *remainder  OPTIONAL
-    //      )
-    //
+    
+    /*    uint64_t*/
+    /*            div_u64x64_remainder (*/
+    /*      IN      uint64_t     dividend,*/
+    /*      IN      uint64_t     divisor,*/
+    /*      OUT     uint64_t     *remainder  OPTIONAL*/
+    /*      )*/
+    
   _asm {
 
     ; Original local stack when calling _aulldiv

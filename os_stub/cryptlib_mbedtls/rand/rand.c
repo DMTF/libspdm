@@ -29,7 +29,7 @@
 **/
 boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
-    // TBD
+    /* TBD*/
     return TRUE;
 }
 
@@ -53,7 +53,7 @@ boolean random_bytes(OUT uint8_t *output, IN uintn size)
     ret = FALSE;
 
     while (size > 0) {
-        // Use rnglib to get random number
+        /* Use rnglib to get random number*/
         ret = get_random_number_64(&temp_rand);
 
         if (!ret) {
@@ -76,10 +76,10 @@ int myrand(void *rng_state, unsigned char *output, size_t len)
 {
     boolean result = random_bytes(output, len);
 
-    //
-    // The MbedTLS function f_rng, which myrand implements, is not
-    // documented well. From looking at code: zero is considered success,
-    // while non-zero return value is considered failure.
-    //
+    
+    /* The MbedTLS function f_rng, which myrand implements, is not*/
+    /* documented well. From looking at code: zero is considered success,*/
+    /* while non-zero return value is considered failure.*/
+    
     return result ? 0 : -1;
 }

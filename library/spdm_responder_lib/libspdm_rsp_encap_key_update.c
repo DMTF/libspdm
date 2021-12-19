@@ -83,7 +83,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
             return RETURN_DEVICE_ERROR;
         }
 
-        // Create new key
+        /* Create new key*/
         DEBUG((DEBUG_INFO,
                "spdm_create_update_session_data_key[%x] Responder\n",
                session_id));

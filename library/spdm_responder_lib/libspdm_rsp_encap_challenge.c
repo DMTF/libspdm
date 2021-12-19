@@ -60,9 +60,9 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_mut_c(spdm_context, spdm_request,
                        *encap_request_size);
     if (RETURN_ERROR(status)) {
@@ -240,4 +240,4 @@ return_status spdm_process_encap_response_challenge_auth(
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

@@ -32,9 +32,9 @@
 **/
 void *rsa_new(void)
 {
-    //
-    // Allocates & Initializes RSA context by OpenSSL RSA_new()
-    //
+    
+    /* Allocates & Initializes RSA context by OpenSSL RSA_new()*/
+    
     return (void *)RSA_new();
 }
 
@@ -46,9 +46,9 @@ void *rsa_new(void)
 **/
 void rsa_free(IN void *rsa_context)
 {
-    //
-    // Free OpenSSL RSA context
-    //
+    
+    /* Free OpenSSL RSA context*/
+    
     RSA_free((RSA *)rsa_context);
 }
 
@@ -88,9 +88,9 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     BIGNUM *bn_dq, *bn_dq_tmp;
     BIGNUM *bn_q_inv, *bn_q_inv_tmp;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || bn_size > INT_MAX) {
         return FALSE;
     }
@@ -113,9 +113,9 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     bn_dq_tmp = NULL;
     bn_q_inv_tmp = NULL;
 
-    //
-    // Retrieve the components from RSA object.
-    //
+    
+    /* Retrieve the components from RSA object.*/
+    
     rsa_key = (RSA *)rsa_context;
     RSA_get0_key(rsa_key, (const BIGNUM **)&bn_n, (const BIGNUM **)&bn_e,
              (const BIGNUM **)&bn_d);
@@ -125,15 +125,15 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
                 (const BIGNUM **)&bn_dq,
                 (const BIGNUM **)&bn_q_inv);
 
-    //
-    // Set RSA key Components by converting octet string to OpenSSL BN representation.
-    // NOTE: For RSA public key (used in signature verification), only public components
-    //       (N, e) are needed.
-    //
+    
+    /* Set RSA key Components by converting octet string to OpenSSL BN representation.*/
+    /* NOTE: For RSA public key (used in signature verification), only public components*/
+    /*       (N, e) are needed.*/
+    
     switch (key_tag) {
-    //
-    // RSA public Modulus (N), public Exponent (e) and Private Exponent (d)
-    //
+    
+    /* RSA public Modulus (N), public Exponent (e) and Private Exponent (d)*/
+    
     case RSA_KEY_N:
     case RSA_KEY_E:
     case RSA_KEY_D:
@@ -177,9 +177,9 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
         break;
 
-    //
-    // RSA Secret prime Factor of Modulus (p and q)
-    //
+    
+    /* RSA Secret prime Factor of Modulus (p and q)*/
+    
     case RSA_KEY_P:
     case RSA_KEY_Q:
         if (bn_p == NULL) {
@@ -214,10 +214,10 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
         break;
 
-    //
-    // p's CRT Exponent (== d mod (p - 1)),  q's CRT Exponent (== d mod (q - 1)),
-    // and CRT Coefficient (== 1/q mod p)
-    //
+    
+    /* p's CRT Exponent (== d mod (p - 1)),  q's CRT Exponent (== d mod (q - 1)),*/
+    /* and CRT Coefficient (== 1/q mod p)*/
+    
     case RSA_KEY_DP:
     case RSA_KEY_DQ:
     case RSA_KEY_Q_INV:
@@ -309,9 +309,9 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
     int32_t digest_type;
     uint8_t *sig_buf;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
         return FALSE;
     }

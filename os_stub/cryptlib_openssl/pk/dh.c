@@ -49,9 +49,9 @@ void *dh_new_by_nid(IN uintn nid)
 **/
 void dh_free(IN void *dh_context)
 {
-    //
-    // Free OpenSSL DH context
-    //
+    
+    /* Free OpenSSL DH context*/
+    
     DH_free((DH *)dh_context);
 }
 
@@ -83,9 +83,9 @@ boolean dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
     boolean ret_val;
     BIGNUM *bn_p;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
         return FALSE;
     }
@@ -134,9 +134,9 @@ boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
     BIGNUM *bn_p;
     BIGNUM *bn_g;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || prime == NULL || prime_length > INT_MAX) {
         return FALSE;
     }
@@ -145,9 +145,9 @@ boolean dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
         return FALSE;
     }
 
-    //
-    // Set the generator and prime parameters for DH object.
-    //
+    
+    /* Set the generator and prime parameters for DH object.*/
+    
     dh = (DH *)dh_context;
     bn_p = BN_bin2bn((const unsigned char *)prime, (int)(prime_length / 8),
              NULL);
@@ -201,9 +201,9 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
     intn size;
     uintn final_pub_key_size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || public_key_size == NULL) {
         return FALSE;
     }
@@ -289,9 +289,9 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_ke
     DH *dh;
     uintn final_key_size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
         key == NULL) {
         return FALSE;
