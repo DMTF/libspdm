@@ -33,17 +33,17 @@ return_status validate_crypt_ec(void)
 
     my_print("\nCrypto EC-DH key Exchange Testing:\n");
 
-    //
-    // Initialize key length
-    //
+    
+    /* Initialize key length*/
+    
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-    //
-    // Generate & Initialize EC context
-    //
+    
+    /* Generate & Initialize EC context*/
+    
     my_print("- Context1 ... ");
     ec1 = ec_new_by_nid(CRYPTO_NID_SECP384R1);
     if (ec1 == NULL) {
@@ -59,9 +59,9 @@ return_status validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify EC-DH
-    //
+    
+    /* Verify EC-DH*/
+    
     my_print("Generate key1 ... ");
     status = ec_generate_key(ec1, public1, &public1_length);
     if (!status || public1_length != 48 * 2) {
@@ -120,17 +120,17 @@ return_status validate_crypt_ec(void)
     ec_free(ec1);
     ec_free(ec2);
 
-    //
-    // Initialize key length
-    //
+    
+    /* Initialize key length*/
+    
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-    //
-    // Generate & Initialize EC context
-    //
+    
+    /* Generate & Initialize EC context*/
+    
     my_print("- Context1 ... ");
     ec1 = ec_new_by_nid(CRYPTO_NID_SECP521R1);
     if (ec1 == NULL) {
@@ -146,9 +146,9 @@ return_status validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify EC-DH
-    //
+    
+    /* Verify EC-DH*/
+    
     my_print("Generate key1 ... ");
     status = ec_generate_key(ec1, public1, &public1_length);
     if (!status || public1_length != 66 * 2) {
@@ -245,9 +245,9 @@ return_status validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify EC-DSA
-    //
+    
+    /* Verify EC-DSA*/
+    
     hash_size = sizeof(hash_value);
     sig_size = sizeof(signature);
     my_print("\n- EC-DSA Signing ... ");
@@ -347,9 +347,9 @@ return_status validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    //
-    // Verify EC-DSA
-    //
+    
+    /* Verify EC-DSA*/
+    
     hash_size = sizeof(hash_value);
     sig_size = sizeof(signature);
     my_print("\n- EC-DSA Signing in Context1 ... ");

@@ -10,7 +10,7 @@ return_status SpdmResponderSendMessage(IN void *spdm_context,
                        IN uintn message_size, IN void *message,
                        IN uint64_t timeout)
 {
-    // Dummy
+    /* Dummy*/
     return RETURN_SUCCESS;
 }
 
@@ -19,7 +19,7 @@ return_status SpdmResponderReceiveMessage(IN void *spdm_context,
                       IN OUT void *message,
                       IN uint64_t timeout)
 {
-    // Dummy
+    /* Dummy*/
     return RETURN_SUCCESS;
 }
 
@@ -58,13 +58,13 @@ void *spdm_server_init(void)
     data32 =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
-        //           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG |
+        /*           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG |*/
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
-        //           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER |
+        /*           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER |*/
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP |

@@ -100,8 +100,8 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        //send all eight certchains digest
-        //but only No.7 is right
+        /*send all eight certchains digest*/
+        /*but only No.7 is right*/
         digest += spdm_get_hash_size(m_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
         spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
@@ -620,13 +620,13 @@ return_status spdm_requester_get_digests_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1506,21 +1506,21 @@ void test_spdm_requester_get_digests_case22(void **state) {
 
     zero_mem (total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest (spdm_context, &slot_mask, &total_digest_buffer);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
-    // assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
+    /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
 #endif
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1536,51 +1536,51 @@ spdm_test_context_t m_spdm_requester_get_digests_test_context = {
 int spdm_requester_get_digests_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_digests_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_get_digests_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_get_digests_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_get_digests_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_get_digests_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_get_digests_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_digests_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_get_digests_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_get_digests_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_digests_case9),
-        // capability flags check failed
+        /* capability flags check failed*/
         cmocka_unit_test(test_spdm_requester_get_digests_case10),
-        // ReceiveResponse failed
+        /* ReceiveResponse failed*/
         cmocka_unit_test(test_spdm_requester_get_digests_case11),
-        // size of response < spdm_message_header_t
-        //cmocka_unit_test(test_spdm_requester_get_digests_case12),
-        // request_response_code wrong in response
+        /* size of response < spdm_message_header_t*/
+        /*cmocka_unit_test(test_spdm_requester_get_digests_case12),*/
+        /* request_response_code wrong in response*/
         cmocka_unit_test(test_spdm_requester_get_digests_case13),
-        // Zero digests received
+        /* Zero digests received*/
         cmocka_unit_test(test_spdm_requester_get_digests_case14),
-        // Internal cache full (request message)
-        // If request text is appending when reponse successfully instead of request,
-        // case15 will useless and will cause a bug
-        // cmocka_unit_test(test_spdm_requester_get_digests_case15),
-        // Internal cache full (response message)
+        /* Internal cache full (request message)*/
+        /* If request text is appending when reponse successfully instead of request,*/
+        /* case15 will useless and will cause a bug*/
+        /* cmocka_unit_test(test_spdm_requester_get_digests_case15),*/
+        /* Internal cache full (response message)*/
         cmocka_unit_test(test_spdm_requester_get_digests_case16),
-        // Invalid digest
+        /* Invalid digest*/
         cmocka_unit_test(test_spdm_requester_get_digests_case17),
-        // Slot mask != number of digests
+        /* Slot mask != number of digests*/
         cmocka_unit_test(test_spdm_requester_get_digests_case18),
-        // Several invalid digests
-        //cmocka_unit_test(test_spdm_requester_get_digests_case19),
-        // size of response < spdm_digest_response_t
-        //cmocka_unit_test(test_spdm_requester_get_digests_case20),
-        // size of response > Max size of SPDM DIGESTS response
-        //cmocka_unit_test(test_spdm_requester_get_digests_case21),
-        // Unexpected errors
+        /* Several invalid digests*/
+        /*cmocka_unit_test(test_spdm_requester_get_digests_case19),*/
+        /* size of response < spdm_digest_response_t*/
+        /*cmocka_unit_test(test_spdm_requester_get_digests_case20),*/
+        /* size of response > Max size of SPDM DIGESTS response*/
+        /*cmocka_unit_test(test_spdm_requester_get_digests_case21),*/
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_get_digests_case22),
     };
 
@@ -1591,4 +1591,4 @@ int spdm_requester_get_digests_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

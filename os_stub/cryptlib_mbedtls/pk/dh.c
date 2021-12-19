@@ -198,9 +198,9 @@ boolean dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
     mbedtls_dhm_context *ctx;
     uintn final_pub_key_size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || public_key_size == NULL) {
         return FALSE;
     }
@@ -277,9 +277,9 @@ boolean dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_ke
     uintn return_size;
     uintn dh_key_size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (dh_context == NULL || peer_public_key == NULL || key_size == NULL ||
         key == NULL) {
         return FALSE;

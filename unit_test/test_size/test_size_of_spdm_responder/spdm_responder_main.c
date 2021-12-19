@@ -6,9 +6,9 @@
 
 #include "spdm_responder.h"
 
-//
-// Disable optimization to avoid code removal with VS2019.
-//
+
+/* Disable optimization to avoid code removal with VS2019.*/
+
 #if defined(_MSC_EXTENSIONS)
 #pragma optimize("", off)
 #endif

@@ -205,9 +205,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -272,9 +272,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -390,10 +390,10 @@ return_status spdm_requester_finish_test_receive_message(
             cert_buffer_size = data_size;
             spdm_hash_all(m_use_hash_algo, cert_buffer,
                       cert_buffer_size, cert_buffer_hash);
-            // transcript.message_a size is 0
+            /* transcript.message_a size is 0*/
             append_managed_buffer(&th_curr, cert_buffer_hash,
                           hash_size);
-            // session_transcript.message_k is 0
+            /* session_transcript.message_k is 0*/
             append_managed_buffer(&th_curr, m_local_buffer,
                           m_local_buffer_size);
             set_mem(response_finished_key, MAX_HASH_SIZE,
@@ -523,10 +523,10 @@ return_status spdm_requester_finish_test_receive_message(
             cert_buffer_size = data_size;
             spdm_hash_all(m_use_hash_algo, cert_buffer,
                       cert_buffer_size, cert_buffer_hash);
-            // transcript.message_a size is 0
+            /* transcript.message_a size is 0*/
             append_managed_buffer(&th_curr, cert_buffer_hash,
                           hash_size);
-            // session_transcript.message_k is 0
+            /* session_transcript.message_k is 0*/
             append_managed_buffer(&th_curr, m_local_buffer,
                           m_local_buffer_size);
             set_mem(response_finished_key, MAX_HASH_SIZE,
@@ -562,13 +562,13 @@ return_status spdm_requester_finish_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -622,9 +622,9 @@ return_status spdm_requester_finish_test_receive_message(
     cert_buffer_size = data_size;
     spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                 cert_buffer_hash);
-    // transcript.message_a size is 0
+    /* transcript.message_a size is 0*/
     append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-    // session_transcript.message_k is 0
+    /* session_transcript.message_k is 0*/
     append_managed_buffer(&th_curr, m_local_buffer,
                     m_local_buffer_size);
     set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -689,9 +689,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -756,9 +756,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -808,7 +808,7 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        //wrong response code
+        /*wrong response code*/
         spdm_response->header.request_response_code = SPDM_FINISH;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -824,9 +824,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -891,9 +891,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, m_local_buffer,
                       m_local_buffer_size);
         set_mem(response_finished_key, MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -969,9 +969,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   req_cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, req_cert_buffer_hash,
                   hash_size);
         append_managed_buffer(&th_curr, m_local_buffer,
@@ -1021,7 +1021,7 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        set_mem(ptr, hmac_size, (uint8_t)(0x00)); //all-zero MAC
+        set_mem(ptr, hmac_size, (uint8_t)(0x00)); /*all-zero MAC*/
         ptr += hmac_size;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
@@ -1113,7 +1113,7 @@ return_status spdm_requester_finish_test_receive_message(
         hash_size = spdm_get_hash_size(m_use_hash_algo);
         hmac_size = spdm_get_hash_size(m_use_hash_algo);
         temp_buf_size = sizeof(spdm_finish_response_t) +
-                  2*hmac_size; // 2x HMAC size
+                  2*hmac_size; /* 2x HMAC size*/
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1139,9 +1139,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   req_cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, req_cert_buffer_hash,
                   hash_size);
         append_managed_buffer(&th_curr, m_local_buffer,
@@ -1150,7 +1150,7 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                   get_managed_buffer_size(&th_curr),
                   response_finished_key, hash_size, ptr);
-        copy_mem(ptr, ptr + hmac_size, hmac_size); // 2x HMAC size
+        copy_mem(ptr, ptr + hmac_size, hmac_size); /* 2x HMAC size*/
         ptr += 2*hmac_size;
         free(data);
 
@@ -1195,7 +1195,7 @@ return_status spdm_requester_finish_test_receive_message(
         hash_size = spdm_get_hash_size(m_use_hash_algo);
         hmac_size = spdm_get_hash_size(m_use_hash_algo);
         temp_buf_size = sizeof(spdm_finish_response_t) +
-                  hmac_size/2;// half HMAC size
+                  hmac_size/2;/* half HMAC size*/
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1221,9 +1221,9 @@ return_status spdm_requester_finish_test_receive_message(
         cert_buffer_size = data_size;
         spdm_hash_all(m_use_hash_algo, cert_buffer, cert_buffer_size,
                   req_cert_buffer_hash);
-        // transcript.message_a size is 0
+        /* transcript.message_a size is 0*/
         append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        // session_transcript.message_k is 0
+        /* session_transcript.message_k is 0*/
         append_managed_buffer(&th_curr, req_cert_buffer_hash,
                   hash_size);
         append_managed_buffer(&th_curr, m_local_buffer,
@@ -1232,7 +1232,7 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                   get_managed_buffer_size(&th_curr),
                   response_finished_key, hash_size, ptr);
-        ptr += hmac_size/2; // half HMAC size
+        ptr += hmac_size/2; /* half HMAC size*/
         set_mem(ptr, hmac_size/2, (uint8_t) 0x00);
         free(data);
 
@@ -1997,17 +1997,17 @@ void test_spdm_requester_finish_case10(void **state) {
     spdm_secured_message_set_session_state (session_info->secured_message_context, SPDM_SESSION_STATE_HANDSHAKING);
 
     status = spdm_send_receive_finish (spdm_context, session_id, req_slot_id_param);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -2142,7 +2142,7 @@ void test_spdm_requester_finish_case12(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags = 0;
-    // no key exchange capabilities (requester)
+    /* no key exchange capabilities (requester)*/
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |=
@@ -2867,39 +2867,39 @@ spdm_test_context_t m_spdm_requester_finish_test_context = {
 int spdm_requester_finish_test_main(void)
 {
     const struct CMUnitTest spdm_requester_finish_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_finish_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_finish_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_finish_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_finish_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_finish_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_finish_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_finish_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_finish_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_finish_case9),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_finish_case10),
-        // Buffer reset
+        /* Buffer reset*/
         cmocka_unit_test(test_spdm_requester_finish_case11),
-        // No correct setup
+        /* No correct setup*/
         cmocka_unit_test(test_spdm_requester_finish_case12),
         cmocka_unit_test(test_spdm_requester_finish_case13),
         cmocka_unit_test(test_spdm_requester_finish_case14),
         cmocka_unit_test(test_spdm_requester_finish_case15),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_finish_case16),
-        // Response with invalid MAC
+        /* Response with invalid MAC*/
         cmocka_unit_test(test_spdm_requester_finish_case17),
         cmocka_unit_test(test_spdm_requester_finish_case18),
-        // Response with invalid MAC size
+        /* Response with invalid MAC size*/
         cmocka_unit_test(test_spdm_requester_finish_case19),
         cmocka_unit_test(test_spdm_requester_finish_case20),
     };
@@ -2911,4 +2911,4 @@ int spdm_requester_finish_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

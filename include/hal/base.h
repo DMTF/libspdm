@@ -7,231 +7,231 @@
 #ifndef __BASE_H__
 #define __BASE_H__
 
-//
-// Include processor specific binding
-//
+
+/* Include processor specific binding*/
+
 #include <processor_bind.h>
 
 #if defined(_MSC_EXTENSIONS)
-//
-// Disable warning when last field of data structure is a zero sized array.
-//
+
+/* Disable warning when last field of data structure is a zero sized array.*/
+
 #pragma warning(disable : 4200)
 #endif
 
-//
-// The Microsoft* C compiler can removed references to unreferenced data items
-//  if the /OPT:REF linker option is used. We defined a macro as this is a
-//  a non standard extension
-//
+
+/* The Microsoft* C compiler can removed references to unreferenced data items*/
+/*  if the /OPT:REF linker option is used. We defined a macro as this is a*/
+/*  a non standard extension*/
+
 #if defined(_MSC_EXTENSIONS) && _MSC_VER < 1800 && !defined(MDE_CPU_EBC)
-///
-/// Remove global variable from the linked image if there are no references to
-/// it after all compiler and linker optimizations have been performed.
-///
-///
+
+/* Remove global variable from the linked image if there are no references to*/
+/* it after all compiler and linker optimizations have been performed.*/
+
+
 #define GLOBAL_REMOVE_IF_UNREFERENCED __declspec(selectany)
 #else
-///
-/// Remove the global variable from the linked image if there are no references
-///  to it after all compiler and linker optimizations have been performed.
-///
-///
+
+/* Remove the global variable from the linked image if there are no references*/
+/*  to it after all compiler and linker optimizations have been performed.*/
+
+
 #define GLOBAL_REMOVE_IF_UNREFERENCED
 #endif
 
-//
-// Should be used in combination with NORETURN to avoid 'noreturn' returns
-// warnings.
-//
+
+/* Should be used in combination with NORETURN to avoid 'noreturn' returns*/
+/* warnings.*/
+
 #ifndef UNREACHABLE
 #ifdef __GNUC__
-///
-/// Signal compilers and analyzers that this call is not reachable.  It is
-/// up to the compiler to remove any code past that point.
-///
+
+/* Signal compilers and analyzers that this call is not reachable.  It is*/
+/* up to the compiler to remove any code past that point.*/
+
 #define UNREACHABLE() __builtin_unreachable()
 #elif defined(__has_feature)
 #if __has_builtin(__builtin_unreachable)
-///
-/// Signal compilers and analyzers that this call is not reachable.  It is
-/// up to the compiler to remove any code past that point.
-///
+
+/* Signal compilers and analyzers that this call is not reachable.  It is*/
+/* up to the compiler to remove any code past that point.*/
+
 #define UNREACHABLE() __builtin_unreachable()
 #endif
 #endif
 
 #ifndef UNREACHABLE
-///
-/// Signal compilers and analyzers that this call is not reachable.  It is
-/// up to the compiler to remove any code past that point.
-///
+
+/* Signal compilers and analyzers that this call is not reachable.  It is*/
+/* up to the compiler to remove any code past that point.*/
+
 #define UNREACHABLE()
 #endif
 #endif
 
-//
-// Signaling compilers and analyzers that a certain function cannot return may
-// remove all following code and thus lead to better optimization and less
-// false positives.
-//
+
+/* Signaling compilers and analyzers that a certain function cannot return may*/
+/* remove all following code and thus lead to better optimization and less*/
+/* false positives.*/
+
 #ifndef NORETURN
 #if defined(__GNUC__) || defined(__clang__)
-///
-/// Signal compilers and analyzers that the function cannot return.
-/// It is up to the compiler to remove any code past a call to functions
-/// flagged with this attribute.
-///
+
+/* Signal compilers and analyzers that the function cannot return.*/
+/* It is up to the compiler to remove any code past a call to functions*/
+/* flagged with this attribute.*/
+
 #define NORETURN __attribute__((noreturn))
 #elif defined(_MSC_EXTENSIONS) && !defined(MDE_CPU_EBC)
-///
-/// Signal compilers and analyzers that the function cannot return.
-/// It is up to the compiler to remove any code past a call to functions
-/// flagged with this attribute.
-///
+
+/* Signal compilers and analyzers that the function cannot return.*/
+/* It is up to the compiler to remove any code past a call to functions*/
+/* flagged with this attribute.*/
+
 #define NORETURN __declspec(noreturn)
 #else
-///
-/// Signal compilers and analyzers that the function cannot return.
-/// It is up to the compiler to remove any code past a call to functions
-/// flagged with this attribute.
-///
+
+/* Signal compilers and analyzers that the function cannot return.*/
+/* It is up to the compiler to remove any code past a call to functions*/
+/* flagged with this attribute.*/
+
 #define NORETURN
 #endif
 #endif
 
-//
-// Should be used in combination with ANALYZER_NORETURN to avoid 'noreturn'
-// returns warnings.
-//
+
+/* Should be used in combination with ANALYZER_NORETURN to avoid 'noreturn'*/
+/* returns warnings.*/
+
 #ifndef ANALYZER_UNREACHABLE
 #ifdef __clang_analyzer__
 #if __has_builtin(__builtin_unreachable)
-///
-/// Signal the analyzer that this call is not reachable.
-/// This excludes compilers.
-///
+
+/* Signal the analyzer that this call is not reachable.*/
+/* This excludes compilers.*/
+
 #define ANALYZER_UNREACHABLE() __builtin_unreachable()
 #endif
 #endif
 
 #ifndef ANALYZER_UNREACHABLE
-///
-/// Signal the analyzer that this call is not reachable.
-/// This excludes compilers.
-///
+
+/* Signal the analyzer that this call is not reachable.*/
+/* This excludes compilers.*/
+
 #define ANALYZER_UNREACHABLE()
 #endif
 #endif
 
-//
-// Static Analyzers may issue errors about potential NULL-dereferences when
-// dereferencing a pointer, that has been checked before, outside of a
-// NULL-check.  This may lead to false positives, such as when using ASSERT()
-// for verification.
-//
+
+/* Static Analyzers may issue errors about potential NULL-dereferences when*/
+/* dereferencing a pointer, that has been checked before, outside of a*/
+/* NULL-check.  This may lead to false positives, such as when using ASSERT()*/
+/* for verification.*/
+
 #ifndef ANALYZER_NORETURN
 #ifdef __has_feature
 #if __has_feature(attribute_analyzer_noreturn)
-///
-/// Signal analyzers that the function cannot return.
-/// This excludes compilers.
-///
+
+/* Signal analyzers that the function cannot return.*/
+/* This excludes compilers.*/
+
 #define ANALYZER_NORETURN __attribute__((analyzer_noreturn))
 #endif
 #endif
 
 #ifndef ANALYZER_NORETURN
-///
-/// Signal the analyzer that the function cannot return.
-/// This excludes compilers.
-///
+
+/* Signal the analyzer that the function cannot return.*/
+/* This excludes compilers.*/
+
 #define ANALYZER_NORETURN
 #endif
 #endif
 
-///
-/// Tell the code optimizer that the function will return twice.
-/// This prevents wrong optimizations which can cause bugs.
-///
+
+/* Tell the code optimizer that the function will return twice.*/
+/* This prevents wrong optimizations which can cause bugs.*/
+
 #ifndef RETURNS_TWICE
 #if defined(__GNUC__) || defined(__clang__)
-///
-/// Tell the code optimizer that the function will return twice.
-/// This prevents wrong optimizations which can cause bugs.
-///
+
+/* Tell the code optimizer that the function will return twice.*/
+/* This prevents wrong optimizations which can cause bugs.*/
+
 #define RETURNS_TWICE __attribute__((returns_twice))
 #else
-///
-/// Tell the code optimizer that the function will return twice.
-/// This prevents wrong optimizations which can cause bugs.
-///
+
+/* Tell the code optimizer that the function will return twice.*/
+/* This prevents wrong optimizations which can cause bugs.*/
+
 #define RETURNS_TWICE
 #endif
 #endif
 
-//
-// For symbol name in assembly code, an extra "_" is sometimes necessary
-//
+
+/* For symbol name in assembly code, an extra "_" is sometimes necessary*/
+
 
 #if __APPLE__
-//
-// Apple extension that is used by the linker to optimize code size
-// with assembly functions. Put at the end of your .S files
-//
+
+/* Apple extension that is used by the linker to optimize code size*/
+/* with assembly functions. Put at the end of your .S files*/
+
 #define ASM_FUNCTION_REMOVE_IF_UNREFERENCED .subsections_via_symbols
 #else
 #define ASM_FUNCTION_REMOVE_IF_UNREFERENCED
 #endif
 
 #ifdef __CC_arm
-//
-// Older RVCT arm compilers don't fully support #pragma pack and require __packed
-// as a prefix for the structure.
-//
+
+/* Older RVCT arm compilers don't fully support #pragma pack and require __packed*/
+/* as a prefix for the structure.*/
+
 #define PACKED __packed
 #else
 #define PACKED
 #endif
 
-//
-// Modifiers for data Types used to self document code.
-//
 
-///
-/// Datum is passed to the function.
-///
+/* Modifiers for data Types used to self document code.*/
+
+
+
+/* Datum is passed to the function.*/
+
 #define IN
 
-///
-/// Datum is returned from the function.
-///
+
+/* Datum is returned from the function.*/
+
 #define OUT
 
-///
-/// Passing the datum to the function is optional, and a NULL
-/// is passed if the value is not supplied.
-///
+
+/* Passing the datum to the function is optional, and a NULL*/
+/* is passed if the value is not supplied.*/
+
 #define OPTIONAL
 
-///
-/// Boolean true value.
-///
+
+/* Boolean true value.*/
+
 #define TRUE ((boolean)(1 == 1))
 
-///
-/// Boolean false value.
-///
+
+/* Boolean false value.*/
+
 #define FALSE ((boolean)(0 == 1))
 
-///
-/// NULL pointer (void *)
-///
+
+/* NULL pointer (void *)*/
+
 #define NULL ((void *)0)
 
-///
-/// Maximum values for common data Types
-///
+
+/* Maximum values for common data Types*/
+
 #define MAX_INT8 ((int8_t)0x7F)
 #define MAX_UINT8 ((uint8_t)0xFF)
 #define MAX_INT16 ((int16_t)0x7FFF)
@@ -241,9 +241,9 @@
 #define MAX_INT64 ((int64_t)0x7FFFFFFFFFFFFFFFULL)
 #define MAX_UINT64 ((uint64_t)0xFFFFFFFFFFFFFFFFULL)
 
-///
-/// Minimum values for the signed data Types
-///
+
+/* Minimum values for the signed data Types*/
+
 #define MIN_INT8 (((int8_t)-127) - 1)
 #define MIN_INT16 (((int16_t)-32767) - 1)
 #define MIN_INT32 (((int32_t)-2147483647) - 1)
@@ -434,14 +434,14 @@
 #define _INT_SIZE_OF(n) ((sizeof(n) + sizeof(uintn) - 1) & ~(sizeof(uintn) - 1))
 
 #if defined(__CC_arm)
-//
-// RVCT arm variable argument list support.
-//
 
-///
-/// Variable used to traverse the list of arguments. This type can vary by
-/// implementation and could be an array or structure.
-///
+/* RVCT arm variable argument list support.*/
+
+
+
+/* Variable used to traverse the list of arguments. This type can vary by*/
+/* implementation and could be an array or structure.*/
+
 #ifdef __APCS_ADSABI
 typedef int *va_list[1];
 #define VA_LIST va_list
@@ -458,7 +458,7 @@ typedef struct __va_list {
 
 #define VA_END(marker) ((void)0)
 
-// For some arm RVCT compilers, __va_copy is not defined
+/* For some arm RVCT compilers, __va_copy is not defined*/
 #ifndef __va_copy
 #define __va_copy(dest, src) ((void)((dest) = (src)))
 #endif
@@ -466,9 +466,9 @@ typedef struct __va_list {
 #define VA_COPY(dest, start) __va_copy(dest, start)
 
 #elif defined(_M_arm) || defined(_M_arm64)
-//
-// MSFT arm variable argument list support.
-//
+
+/* MSFT arm variable argument list support.*/
+
 
 typedef char *VA_LIST;
 
@@ -484,14 +484,14 @@ typedef char *VA_LIST;
 
 #elif defined(__GNUC__) || defined(__clang__)
 
-//
-// Use GCC built-in macros for variable argument lists.
-//
 
-///
-/// Variable used to traverse the list of arguments. This type can vary by
-/// implementation and could be an array or structure.
-///
+/* Use GCC built-in macros for variable argument lists.*/
+
+
+
+/* Variable used to traverse the list of arguments. This type can vary by*/
+/* implementation and could be an array or structure.*/
+
 typedef __builtin_va_list VA_LIST;
 
 #define VA_START(marker, parameter) __builtin_va_start(marker, parameter)
@@ -506,10 +506,10 @@ typedef __builtin_va_list VA_LIST;
 #define VA_COPY(dest, start) __builtin_va_copy(dest, start)
 
 #else
-///
-/// Variable used to traverse the list of arguments. This type can vary by
-/// implementation and could be an array or structure.
-///
+
+/* Variable used to traverse the list of arguments. This type can vary by*/
+/* implementation and could be an array or structure.*/
+
 typedef char8 *VA_LIST;
 
 /**
@@ -577,9 +577,9 @@ typedef char8 *VA_LIST;
 
 #endif
 
-///
-/// Pointer to the start of a variable argument list stored in a memory buffer. Same as uint8_t *.
-///
+
+/* Pointer to the start of a variable argument list stored in a memory buffer. Same as uint8_t *.*/
+
 typedef uintn *BASE_LIST;
 
 /**
@@ -649,9 +649,9 @@ typedef uintn *BASE_LIST;
 #define STATIC_ASSERT _Static_assert
 #endif
 
-//
-// Verify that processor_bind.h produced data Types
-//
+
+/* Verify that processor_bind.h produced data Types*/
+
 
 STATIC_ASSERT(
     sizeof(boolean) == 1,
@@ -684,12 +684,12 @@ STATIC_ASSERT(
     sizeof(char8) == 1,
     "sizeof (char8) does not meet data Type requirements");
 
-//
-// The following three enum types are used to verify that the compiler
-// configuration for enum types. These enum types and enum values are not
-// intended to be used. A prefix of '__' is used avoid conflicts with
-// other types.
-//
+
+/* The following three enum types are used to verify that the compiler*/
+/* configuration for enum types. These enum types and enum values are not*/
+/* intended to be used. A prefix of '__' is used avoid conflicts with*/
+/* other types.*/
+
 typedef enum { __VerifyUint8EnumValue = 0xff } __VERIFY_UINT8_ENUM_SIZE;
 
 typedef enum { __VerifyUint16EnumValue = 0xffff } __VERIFY_UINT16_ENUM_SIZE;
@@ -802,9 +802,9 @@ STATIC_ASSERT(
 **/
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-//
-// status codes common to all execution phases
-//
+
+/* status codes common to all execution phases*/
+
 typedef uintn return_status;
 
 /**
@@ -842,212 +842,212 @@ typedef uintn return_status;
 **/
 #define RETURN_ERROR(status_code) (((intn)(return_status)(status_code)) < 0)
 
-///
-/// The operation completed successfully.
-///
+
+/* The operation completed successfully.*/
+
 #define RETURN_SUCCESS 0
 
-///
-/// The image failed to load.
-///
+
+/* The image failed to load.*/
+
 #define RETURN_LOAD_ERROR ENCODE_ERROR(1)
 
-///
-/// The parameter was incorrect.
-///
+
+/* The parameter was incorrect.*/
+
 #define RETURN_INVALID_PARAMETER ENCODE_ERROR(2)
 
-///
-/// The operation is not supported.
-///
+
+/* The operation is not supported.*/
+
 #define RETURN_UNSUPPORTED ENCODE_ERROR(3)
 
-///
-/// The buffer was not the proper size for the request.
-///
+
+/* The buffer was not the proper size for the request.*/
+
 #define RETURN_BAD_BUFFER_SIZE ENCODE_ERROR(4)
 
-///
-/// The buffer was not large enough to hold the requested data.
-/// The required buffer size is returned in the appropriate
-/// parameter when this error occurs.
-///
+
+/* The buffer was not large enough to hold the requested data.*/
+/* The required buffer size is returned in the appropriate*/
+/* parameter when this error occurs.*/
+
 #define RETURN_BUFFER_TOO_SMALL ENCODE_ERROR(5)
 
-///
-/// There is no data pending upon return.
-///
+
+/* There is no data pending upon return.*/
+
 #define RETURN_NOT_READY ENCODE_ERROR(6)
 
-///
-/// The physical device reported an error while attempting the
-/// operation.
-///
+
+/* The physical device reported an error while attempting the*/
+/* operation.*/
+
 #define RETURN_DEVICE_ERROR ENCODE_ERROR(7)
 
-///
-/// The device can not be written to.
-///
+
+/* The device can not be written to.*/
+
 #define RETURN_WRITE_PROTECTED ENCODE_ERROR(8)
 
-///
-/// The resource has run out.
-///
+
+/* The resource has run out.*/
+
 #define RETURN_OUT_OF_RESOURCES ENCODE_ERROR(9)
 
-///
-/// An inconsistency was detected on the file system causing the
-/// operation to fail.
-///
+
+/* An inconsistency was detected on the file system causing the*/
+/* operation to fail.*/
+
 #define RETURN_VOLUME_CORRUPTED ENCODE_ERROR(10)
 
-///
-/// There is no more space on the file system.
-///
+
+/* There is no more space on the file system.*/
+
 #define RETURN_VOLUME_FULL ENCODE_ERROR(11)
 
-///
-/// The device does not contain any medium to perform the
-/// operation.
-///
+
+/* The device does not contain any medium to perform the*/
+/* operation.*/
+
 #define RETURN_NO_MEDIA ENCODE_ERROR(12)
 
-///
-/// The medium in the device has changed since the last
-/// access.
-///
+
+/* The medium in the device has changed since the last*/
+/* access.*/
+
 #define RETURN_MEDIA_CHANGED ENCODE_ERROR(13)
 
-///
-/// The item was not found.
-///
+
+/* The item was not found.*/
+
 #define RETURN_NOT_FOUND ENCODE_ERROR(14)
 
-///
-/// Access was denied.
-///
+
+/* Access was denied.*/
+
 #define RETURN_ACCESS_DENIED ENCODE_ERROR(15)
 
-///
-/// The server was not found or did not respond to the request.
-///
+
+/* The server was not found or did not respond to the request.*/
+
 #define RETURN_NO_RESPONSE ENCODE_ERROR(16)
 
-///
-/// A mapping to the device does not exist.
-///
+
+/* A mapping to the device does not exist.*/
+
 #define RETURN_NO_MAPPING ENCODE_ERROR(17)
 
-///
-/// A timeout time expired.
-///
+
+/* A timeout time expired.*/
+
 #define RETURN_TIMEOUT ENCODE_ERROR(18)
 
-///
-/// The protocol has not been started.
-///
+
+/* The protocol has not been started.*/
+
 #define RETURN_NOT_STARTED ENCODE_ERROR(19)
 
-///
-/// The protocol has already been started.
-///
+
+/* The protocol has already been started.*/
+
 #define RETURN_ALREADY_STARTED ENCODE_ERROR(20)
 
-///
-/// The operation was aborted.
-///
+
+/* The operation was aborted.*/
+
 #define RETURN_ABORTED ENCODE_ERROR(21)
 
-///
-/// An ICMP error occurred during the network operation.
-///
+
+/* An ICMP error occurred during the network operation.*/
+
 #define RETURN_ICMP_ERROR ENCODE_ERROR(22)
 
-///
-/// A TFTP error occurred during the network operation.
-///
+
+/* A TFTP error occurred during the network operation.*/
+
 #define RETURN_TFTP_ERROR ENCODE_ERROR(23)
 
-///
-/// A protocol error occurred during the network operation.
-///
+
+/* A protocol error occurred during the network operation.*/
+
 #define RETURN_PROTOCOL_ERROR ENCODE_ERROR(24)
 
-///
-/// A function encountered an internal version that was
-/// incompatible with a version requested by the caller.
-///
+
+/* A function encountered an internal version that was*/
+/* incompatible with a version requested by the caller.*/
+
 #define RETURN_INCOMPATIBLE_VERSION ENCODE_ERROR(25)
 
-///
-/// The function was not performed due to a security violation.
-///
+
+/* The function was not performed due to a security violation.*/
+
 #define RETURN_SECURITY_VIOLATION ENCODE_ERROR(26)
 
-///
-/// A CRC error was detected.
-///
+
+/* A CRC error was detected.*/
+
 #define RETURN_CRC_ERROR ENCODE_ERROR(27)
 
-///
-/// The beginning or end of media was reached.
-///
+
+/* The beginning or end of media was reached.*/
+
 #define RETURN_END_OF_MEDIA ENCODE_ERROR(28)
 
-///
-/// The end of the file was reached.
-///
+
+/* The end of the file was reached.*/
+
 #define RETURN_END_OF_FILE ENCODE_ERROR(31)
 
-///
-/// The language specified was invalid.
-///
+
+/* The language specified was invalid.*/
+
 #define RETURN_INVALID_LANGUAGE ENCODE_ERROR(32)
 
-///
-/// The security status of the data is unknown or compromised
-/// and the data must be updated or replaced to restore a valid
-/// security status.
-///
+
+/* The security status of the data is unknown or compromised*/
+/* and the data must be updated or replaced to restore a valid*/
+/* security status.*/
+
 #define RETURN_COMPROMISED_DATA ENCODE_ERROR(33)
 
-///
-/// A HTTP error occurred during the network operation.
-///
+
+/* A HTTP error occurred during the network operation.*/
+
 #define RETURN_HTTP_ERROR ENCODE_ERROR(35)
 
-///
-/// The string contained one or more characters that
-/// the device could not render and were skipped.
-///
+
+/* The string contained one or more characters that*/
+/* the device could not render and were skipped.*/
+
 #define RETURN_WARN_UNKNOWN_GLYPH ENCODE_WARNING(1)
 
-///
-/// The handle was closed, but the file was not deleted.
-///
+
+/* The handle was closed, but the file was not deleted.*/
+
 #define RETURN_WARN_DELETE_FAILURE ENCODE_WARNING(2)
 
-///
-/// The handle was closed, but the data to the file was not
-/// flushed properly.
-///
+
+/* The handle was closed, but the data to the file was not*/
+/* flushed properly.*/
+
 #define RETURN_WARN_WRITE_FAILURE ENCODE_WARNING(3)
 
-///
-/// The resulting buffer was too small, and the data was
-/// truncated to the buffer size.
-///
+
+/* The resulting buffer was too small, and the data was*/
+/* truncated to the buffer size.*/
+
 #define RETURN_WARN_BUFFER_TOO_SMALL ENCODE_WARNING(4)
 
-///
-/// The data has not been updated within the timeframe set by
-/// local policy for this type of data.
-///
+
+/* The data has not been updated within the timeframe set by*/
+/* local policy for this type of data.*/
+
 #define RETURN_WARN_STALE_DATA ENCODE_WARNING(5)
 
-///
-/// The resulting buffer contains file system.
-///
+
+/* The resulting buffer contains file system.*/
+
 #define RETURN_WARN_FILE_SYSTEM ENCODE_WARNING(6)
 
 /**

@@ -64,9 +64,9 @@ typedef struct {
     boolean responder_backup_valid;
     uintn psk_hint_size;
     void *psk_hint;
-    //
-    // Cache the error in spdm_decode_secured_message. It is handled in libspdm_build_response.
-    //
+    
+    /* Cache the error in spdm_decode_secured_message. It is handled in libspdm_build_response.*/
+    
     spdm_error_struct_t last_spdm_error;
 } spdm_secured_message_context_t;
 

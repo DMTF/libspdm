@@ -90,9 +90,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         goto cleanup;
     }
 
-    //
-    // X509 Certificate Verification.
-    //
+    
+    /* X509 Certificate Verification.*/
+    
     my_print("\n- X509 Certificate Verification with Trusted CA ...");
     status = x509_verify_cert(test_cert, test_cert_len, test_ca_cert,
                   test_ca_cert_len);
@@ -103,9 +103,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]\n");
     }
 
-    //
-    // X509 Certificate Chain Verification.
-    //
+    
+    /* X509 Certificate Chain Verification.*/
+    
     DEBUG((DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
     status = x509_verify_cert_chain((uint8_t *)test_ca_cert, test_ca_cert_len,
                     (uint8_t *)test_bundle_cert,
@@ -117,9 +117,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]\n");
     }
 
-    //
-    // X509 Get leaf certificate from cert_chain Verificate
-    //
+    
+    /* X509 Get leaf certificate from cert_chain Verificate*/
+    
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -140,9 +140,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]\n");
     }
 
-    //
-    // X509 Get leaf certificate from cert_chain Verificate
-    //
+    
+    /* X509 Get leaf certificate from cert_chain Verificate*/
+    
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -163,9 +163,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]\n");
     }
 
-    //
-    // X509 Get root certificate from cert_chain Verificate
-    //
+    
+    /* X509 Get root certificate from cert_chain Verificate*/
+    
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get root certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -186,9 +186,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]\n");
     }
 
-    //
-    // X509 Certificate subject Retrieving.
-    //
+    
+    /* X509 Certificate subject Retrieving.*/
+    
     my_print("- X509 Certificate subject Bytes Retrieving ... ");
     subject_size = 0;
     status = x509_get_subject_name(test_cert, test_cert_len, NULL,
@@ -205,9 +205,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
     }
 
     my_print("\n- X509 Certificate context Retrieving ... ");
-    //
-    // Get common_name from X509 Certificate subject
-    //
+    
+    /* Get common_name from X509 Certificate subject*/
+    
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_common_name(test_cert, test_cert_len, common_name,
@@ -222,9 +222,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print(" - [PASS]");
     }
 
-    //
-    // Get Issuer OrganizationName from X509 Certificate subject
-    //
+    
+    /* Get Issuer OrganizationName from X509 Certificate subject*/
+    
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_organization_name(test_cert, test_cert_len, common_name,
@@ -236,9 +236,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("\n  - Retrieving Oraganization name - [PASS]");
     }
 
-    //
-    // Get version from X509 Certificate
-    //
+    
+    /* Get version from X509 Certificate*/
+    
     cert_version = 0;
     ret = x509_get_version(test_cert, test_cert_len, &cert_version);
     if (RETURN_ERROR(ret)) {
@@ -250,9 +250,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]");
     }
 
-    //
-    // Get Serial from X509 Certificate
-    //
+    
+    /* Get Serial from X509 Certificate*/
+    
     asn1_buffer_len = 1024;
     zero_mem(asn1_buffer, asn1_buffer_len);
     ret = x509_get_serial_number(test_cert, test_cert_len, asn1_buffer,
@@ -266,9 +266,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]");
     }
 
-    //
-    // X509 Certificate subject Retrieving.
-    //
+    
+    /* X509 Certificate subject Retrieving.*/
+    
     my_print("\n  - Retrieving issuer Bytes ... ");
     subject_size = 0;
     status = x509_get_issuer_name(test_cert, test_cert_len, NULL,
@@ -284,9 +284,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print(" - [Pass]");
     }
 
-    //
-    // Get Issuer common_name from X509 Certificate subject
-    //
+    
+    /* Get Issuer common_name from X509 Certificate subject*/
+    
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_issuer_common_name(test_cert, test_cert_len, common_name,
@@ -301,9 +301,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("[Pass]");
     }
 
-    //
-    // Get Issuer OrganizationName from X509 Certificate subject
-    //
+    
+    /* Get Issuer OrganizationName from X509 Certificate subject*/
+    
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_issuer_orgnization_name(test_cert, test_cert_len,
@@ -315,9 +315,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("\n  - Retrieving Issuer Oraganization name - [Pass]");
     }
 
-    //
-    // Get X509GetSubjectAltName
-    //
+    
+    /* Get X509GetSubjectAltName*/
+    
     asn1_buffer_len = 1024;
     zero_mem(asn1_buffer, asn1_buffer_len);
     ret = x509_get_extension_data(test_end_cert, test_end_cert_len,
@@ -334,9 +334,9 @@ return_status validate_crypt_x509(char8 *Path, uintn len)
         my_print("- [Pass]");
     }
 
-    //
-    // Get X509 Validity
-    //
+    
+    /* Get X509 Validity*/
+    
     end_cert_from_len = 64;
     end_cert_to_len = 64;
     status = x509_get_validity(test_end_cert, test_end_cert_len,

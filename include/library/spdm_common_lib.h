@@ -22,18 +22,18 @@
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_device_secret_lib.h"
 
-//
-// Connection: When a host sends messgages to a device, they create a connection.
-//             The host can and only can create one connection with one device.
-//             The host may create multiple connections with multiple devices at same time.
-//             A connection can be unique identified by the connected device.
-//             The message exchange in a connection is plain text.
-//
-// Session: In one connection with one device, a host may create multiple sessions.
-//          The session starts with via KEY_EXCHANGE or PSK_EXCHANGE, and step with END_SESSION.
-//          A session can be unique identified by a session ID, returned from the device.
-//          The message exchange in a session is cipher text.
-//
+
+/* Connection: When a host sends messgages to a device, they create a connection.*/
+/*             The host can and only can create one connection with one device.*/
+/*             The host may create multiple connections with multiple devices at same time.*/
+/*             A connection can be unique identified by the connected device.*/
+/*             The message exchange in a connection is plain text.*/
+
+/* Session: In one connection with one device, a host may create multiple sessions.*/
+/*          The session starts with via KEY_EXCHANGE or PSK_EXCHANGE, and step with END_SESSION.*/
+/*          A session can be unique identified by a session ID, returned from the device.*/
+/*          The message exchange in a session is cipher text.*/
+
 
 #define LIBSPDM_STATUS_SUCCESS 0
 #define LIBSPDM_STATUS_ERROR BIT31
@@ -48,19 +48,19 @@
 #define LIBSPDM_STATUS_ERROR_NO_MUTUAL_AUTH (LIBSPDM_STATUS_ERROR + 0x41)
 
 typedef enum {
-    //
-    // SPDM parameter
-    //
+    
+    /* SPDM parameter*/
+    
     LIBSPDM_DATA_SPDM_VERSION,
     LIBSPDM_DATA_SECURED_MESSAGE_VERSION,
-    //
-    // SPDM capability
-    //
+    
+    /* SPDM capability*/
+    
     LIBSPDM_DATA_CAPABILITY_FLAGS,
     LIBSPDM_DATA_CAPABILITY_CT_EXPONENT,
-    //
-    // SPDM algorithm setting
-    //
+    
+    /* SPDM algorithm setting*/
+    
     LIBSPDM_DATA_MEASUREMENT_SPEC,
     LIBSPDM_DATA_MEASUREMENT_HASH_ALGO,
     LIBSPDM_DATA_BASE_ASYM_ALGO,
@@ -69,17 +69,17 @@ typedef enum {
     LIBSPDM_DATA_AEAD_CIPHER_SUITE,
     LIBSPDM_DATA_REQ_BASE_ASYM_ALG,
     LIBSPDM_DATA_KEY_SCHEDULE,
-    //
-    // Connection State
-    //
+    
+    /* Connection State*/
+    
     LIBSPDM_DATA_CONNECTION_STATE,
-    //
-    // response_state
-    //
+    
+    /* response_state*/
+    
     LIBSPDM_DATA_RESPONSE_STATE,
-    //
-    // Certificate info
-    //
+    
+    /* Certificate info*/
+    
     LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
     LIBSPDM_DATA_LOCAL_SLOT_COUNT,
     LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
@@ -87,31 +87,31 @@ typedef enum {
     LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_HEARTBEAT_PERIOD,
-    //
-    // Negotiated result
-    //
+    
+    /* Negotiated result*/
+    
     LIBSPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER,
     LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER,
-    //
-    // Pre-shared key Hint
-    // If PSK is present, then PSK_EXCHANGE is used.
-    // Otherwise, the KEY_EXCHANGE is used.
-    //
+    
+    /* Pre-shared key Hint*/
+    /* If PSK is present, then PSK_EXCHANGE is used.*/
+    /* Otherwise, the KEY_EXCHANGE is used.*/
+    
     LIBSPDM_DATA_PSK_HINT,
-    //
-    // SessionData
-    //
+    
+    /* SessionData*/
+    
     LIBSPDM_DATA_SESSION_USE_PSK,
     LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
-    //
-    // App context data that can be used by the application
-    // during callback functions such libspdm_device_send_message_func.
-    //
+    
+    /* App context data that can be used by the application*/
+    /* during callback functions such libspdm_device_send_message_func.*/
+    
     LIBSPDM_DATA_APP_CONTEXT_DATA,
-    //
-    // MAX
-    //
+    
+    /* MAX*/
+    
     LIBSPDM_DATA_MAX,
 } libspdm_data_type_t;
 
@@ -124,72 +124,72 @@ typedef enum {
 
 typedef struct {
     libspdm_data_location_t location;
-    // data_type specific:
-    //   session_id for the negoatiated key.
-    //   SlotId for the certificate.
-    //   req_slot_id + measurement_hash_type for LIBSPDM_DATA_MUT_AUTH_REQUESTED
+    /* data_type specific:*/
+    /*   session_id for the negoatiated key.*/
+    /*   SlotId for the certificate.*/
+    /*   req_slot_id + measurement_hash_type for LIBSPDM_DATA_MUT_AUTH_REQUESTED*/
     uint8_t additional_data[4];
 } libspdm_data_parameter_t;
 
 typedef enum {
-    //
-    // Before GET_VERSION/VERSION
-    //
+    
+    /* Before GET_VERSION/VERSION*/
+    
     LIBSPDM_CONNECTION_STATE_NOT_STARTED,
-    //
-    // After GET_VERSION/VERSION
-    //
+    
+    /* After GET_VERSION/VERSION*/
+    
     LIBSPDM_CONNECTION_STATE_AFTER_VERSION,
-    //
-    // After GET_CAPABILITIES/CAPABILITIES
-    //
+    
+    /* After GET_CAPABILITIES/CAPABILITIES*/
+    
     LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES,
-    //
-    // After NEGOTIATE_ALGORITHMS/ALGORITHMS
-    //
+    
+    /* After NEGOTIATE_ALGORITHMS/ALGORITHMS*/
+    
     LIBSPDM_CONNECTION_STATE_NEGOTIATED,
-    //
-    // After GET_DIGESTS/DIGESTS
-    //
+    
+    /* After GET_DIGESTS/DIGESTS*/
+    
     LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS,
-    //
-    // After GET_CERTIFICATE/CERTIFICATE
-    //
+    
+    /* After GET_CERTIFICATE/CERTIFICATE*/
+    
     LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
-    //
-    // After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled.
-    //
+    
+    /* After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled.*/
+    
     LIBSPDM_CONNECTION_STATE_AUTHENTICATED,
-    //
-    // MAX
-    //
+    
+    /* MAX*/
+    
     LIBSPDM_CONNECTION_STATE_MAX,
 } libspdm_connection_state_t;
 
 typedef enum {
-    //
-    // Normal response.
-    //
+    
+    /* Normal response.*/
+    
     LIBSPDM_RESPONSE_STATE_NORMAL,
-    //
-    // Other component is busy.
-    //
+    
+    /* Other component is busy.*/
+    
     LIBSPDM_RESPONSE_STATE_BUSY,
-    //
-    // Hardware is not ready.
-    //
+    
+    /* Hardware is not ready.*/
+    
     LIBSPDM_RESPONSE_STATE_NOT_READY,
-    //
-    // Firmware Update is done. Need resync.
-    //
+    
+    /* Firmware Update is done. Need resync.*/
+    
     LIBSPDM_RESPONSE_STATE_NEED_RESYNC,
-    //
-    // Processing Encapsulated message.
-    //
+    
+    /* Processing Encapsulated message.*/
+    
     LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP,
-    //
-    // MAX
-    //
+    
+    /* MAX*/
+    
     LIBSPDM_RESPONSE_STATE_MAX,
 } libspdm_response_state_t;
 

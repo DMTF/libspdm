@@ -53,15 +53,15 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     mbedtls_mpi value;
     uintn size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || *bn_size > INT_MAX) {
         return FALSE;
     }
-    //
-    // Init mbedtls_mpi
-    //
+    
+    /* Init mbedtls_mpi*/
+    
     mbedtls_mpi_init(&value);
     size = *bn_size;
     *bn_size = 0;
@@ -167,9 +167,9 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
     int32_t pe;
     mbedtls_mpi e;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || modulus_length > INT_MAX ||
         public_exponent_size > INT_MAX) {
         return FALSE;
@@ -182,7 +182,7 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
     if (public_exponent == NULL) {
         pe = 0x10001;
     } else {
-        // TBD
+        /* TBD*/
         ret = mbedtls_mpi_read_binary(&e, public_exponent,
                           public_exponent_size);
         pe = 0x10001;
@@ -381,9 +381,9 @@ boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
     }
 
     if (signature == NULL) {
-        //
-        // If signature is NULL, return safe signature_size
-        //
+        
+        /* If signature is NULL, return safe signature_size*/
+        
         *sig_size = MBEDTLS_MPI_MAX_SIZE;
         return FALSE;
     }

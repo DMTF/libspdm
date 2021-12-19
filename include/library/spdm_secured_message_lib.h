@@ -42,22 +42,22 @@ typedef enum {
 } spdm_session_type_t;
 
 typedef enum {
-    //
-    // Before send KEY_EXCHANGE/PSK_EXCHANGE
-    // or after END_SESSION
-    //
+    
+    /* Before send KEY_EXCHANGE/PSK_EXCHANGE*/
+    /* or after END_SESSION*/
+    
     SPDM_SESSION_STATE_NOT_STARTED,
-    //
-    // After send KEY_EXHCNAGE, before send FINISH
-    //
+    
+    /* After send KEY_EXHCNAGE, before send FINISH*/
+    
     SPDM_SESSION_STATE_HANDSHAKING,
-    //
-    // After send FINISH, before END_SESSION
-    //
+    
+    /* After send FINISH, before END_SESSION*/
+    
     SPDM_SESSION_STATE_ESTABLISHED,
-    //
-    // MAX
-    //
+    
+    /* MAX*/
+    
     SPDM_SESSION_STATE_MAX,
 } spdm_session_state_t;
 
@@ -188,12 +188,12 @@ typedef struct {
     uint32_t version;
     uint32_t aead_key_size;
     uint32_t aead_iv_size;
-    //  uint8_t                request_data_encryption_key[aead_key_size];
-    //  uint8_t                request_data_salt[aead_iv_size];
-    //  uint64_t               request_data_sequence_number;
-    //  uint8_t                response_data_encryption_key[aead_key_size];
-    //  uint8_t                response_data_salt[aead_iv_size];
-    //  uint64_t               response_data_sequence_number;
+    /*  uint8_t                request_data_encryption_key[aead_key_size];*/
+    /*  uint8_t                request_data_salt[aead_iv_size];*/
+    /*  uint64_t               request_data_sequence_number;*/
+    /*  uint8_t                response_data_encryption_key[aead_key_size];*/
+    /*  uint8_t                response_data_salt[aead_iv_size];*/
+    /*  uint64_t               response_data_sequence_number;*/
 } spdm_secure_session_keys_struct_t;
 #pragma pack()
 

@@ -610,19 +610,19 @@ spdm_test_context_t m_spdm_responder_end_session_test_context = {
 int spdm_responder_end_session_test_main(void)
 {
     const struct CMUnitTest spdm_responder_end_session_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_end_session_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_end_session_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_end_session_case3),
-        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_end_session_case4),
-        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_end_session_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_end_session_case6),
-        // Buffer reset
+        /* Buffer reset*/
         cmocka_unit_test(test_spdm_responder_end_session_case7),
     };
 

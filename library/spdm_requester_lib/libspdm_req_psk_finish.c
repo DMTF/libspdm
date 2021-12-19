@@ -180,4 +180,4 @@ return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

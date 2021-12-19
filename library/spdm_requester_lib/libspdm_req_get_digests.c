@@ -124,9 +124,9 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     }
     spdm_response_size =
         sizeof(spdm_digest_response_t) + digest_count * digest_size;
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_b(spdm_context, &spdm_request,
                        sizeof(spdm_request));
     if (RETURN_ERROR(status)) {
@@ -203,4 +203,4 @@ return_status libspdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     return status;
 }
 
-#endif //LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

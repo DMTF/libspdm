@@ -54,11 +54,11 @@ uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
                        sizeof(spdm_request->SlotIDParam);
         }
     } else {
-        // already checked before if buffer_size < sizeof(spdm_message_header_t)
+        /* already checked before if buffer_size < sizeof(spdm_message_header_t)*/
         message_size = sizeof(spdm_message_header_t);
     }
 
-    // Good message, return actual size
+    /* Good message, return actual size*/
     return message_size;
 }
 
@@ -1697,7 +1697,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        // adding extra fields: opaque_length, opaque_data
+        /* adding extra fields: opaque_length, opaque_data*/
         ptr = (void *)((uint8_t *)spdm_response +
                    sizeof(spdm_measurements_response_t) +
                    sizeof(spdm_measurement_block_dmtf_t) +
@@ -1705,7 +1705,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                        m_use_measurement_hash_algo));
         spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE; // opaque_length
+        *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, SPDM_MAX_OPAQUE_DATA_SIZE, 255);
         ptr += SPDM_MAX_OPAQUE_DATA_SIZE;
@@ -1759,16 +1759,16 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        // adding extra fields: opaque_length, opaque_data
+        /* adding extra fields: opaque_length, opaque_data*/
         ptr = (void *)((uint8_t *)spdm_response +
                    sizeof(spdm_measurements_response_t) +
                    sizeof(spdm_measurement_block_dmtf_t) +
                    spdm_get_measurement_hash_size(
                        m_use_measurement_hash_algo));
-        // spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
-        // ptr += SPDM_NONCE_SIZE;
+        /* spdm_get_random_number (SPDM_NONCE_SIZE, ptr);*/
+        /* ptr += SPDM_NONCE_SIZE;*/
         *(uint16_t *)ptr =
-            (SPDM_MAX_OPAQUE_DATA_SIZE + 1); // opaque_length
+            (SPDM_MAX_OPAQUE_DATA_SIZE + 1); /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, (SPDM_MAX_OPAQUE_DATA_SIZE + 1), 255);
         ptr += (SPDM_MAX_OPAQUE_DATA_SIZE + 1);
@@ -1839,7 +1839,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint16_t *)ptr = opaque_size_test; // opaque_length
+        *(uint16_t *)ptr = opaque_size_test; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test, 255);
         ptr += opaque_size_test;
@@ -1933,7 +1933,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint16_t *)ptr = opaque_size_test; // opaque_length
+        *(uint16_t *)ptr = opaque_size_test; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test - MissingBytes, 255);
         ptr += (opaque_size_test - MissingBytes);
@@ -2026,7 +2026,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint16_t *)ptr = opaque_size_test; // opaque_length
+        *(uint16_t *)ptr = opaque_size_test; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test - MissingBytes, 255);
         ptr += (opaque_size_test - MissingBytes);
@@ -2117,7 +2117,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint16_t *)ptr = opaque_informed_size; // opaque_length
+        *(uint16_t *)ptr = opaque_informed_size; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test, 255);
         ptr += (opaque_size_test);
@@ -2190,7 +2190,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        // adding extra fields: opaque_length, opaque_data
+        /* adding extra fields: opaque_length, opaque_data*/
         ptr = (void *)((uint8_t *)spdm_response +
                    sizeof(spdm_measurements_response_t) +
                    sizeof(spdm_measurement_block_dmtf_t) +
@@ -2198,7 +2198,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                        m_use_measurement_hash_algo));
         spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = opaque_informed_size; // opaque_length
+        *(uint16_t *)ptr = opaque_informed_size; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test, 255);
         ptr += opaque_size_test;
@@ -2253,15 +2253,15 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        // adding extra fields: NONCE, opaque_length, opaque_data
+        /* adding extra fields: NONCE, opaque_length, opaque_data*/
         ptr = (void *)((uint8_t *)spdm_response +
                    sizeof(spdm_measurements_response_t) +
                    sizeof(spdm_measurement_block_dmtf_t) +
                    spdm_get_measurement_hash_size(
                        m_use_measurement_hash_algo));
-        // spdm_get_random_number (SPDM_NONCE_SIZE, ptr);
-        // ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = opaque_informed_size; // opaque_length
+        /* spdm_get_random_number (SPDM_NONCE_SIZE, ptr);*/
+        /* ptr += SPDM_NONCE_SIZE;*/
+        *(uint16_t *)ptr = opaque_informed_size; /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, opaque_size_test, 255);
         ptr += opaque_size_test;
@@ -2316,7 +2316,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                  spdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo));
-        // adding extra fields: NONCE, opaque_length, opaque_data
+        /* adding extra fields: NONCE, opaque_length, opaque_data*/
         ptr = (void *)((uint8_t *)spdm_response +
                    sizeof(spdm_measurements_response_t) +
                    sizeof(spdm_measurement_block_dmtf_t) +
@@ -2324,7 +2324,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                        m_use_measurement_hash_algo));
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = (opaque_size_test); // opaque_length
+        *(uint16_t *)ptr = (opaque_size_test); /* opaque_length*/
         ptr += sizeof(uint16_t);
         set_mem(ptr, (opaque_size_test), 255);
         ptr += (opaque_size_test);
@@ -2416,13 +2416,13 @@ return_status spdm_requester_get_measurements_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -3504,9 +3504,9 @@ void test_spdm_requester_get_measurements_case17(void **state)
     request_attribute = 0;
 
     for (int i = 0; i < 3; i++) {
-        // i=0 => both number_of_blocks and measurement_record_length are non 0
-        // i=1 => only number_of_blocks is non 0
-        // i=2 => only is measurement_record_length is non 0
+        /* i=0 => both number_of_blocks and measurement_record_length are non 0*/
+        /* i=1 => only number_of_blocks is non 0*/
+        /* i=2 => only is measurement_record_length is non 0*/
         status = libspdm_get_measurement(
             spdm_context, NULL, request_attribute,
             SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
@@ -3633,9 +3633,9 @@ void test_spdm_requester_get_measurements_case19(void **state)
                       &measurement_record_length,
                       measurement_record);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
-// #endif
+/* #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
+    /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/
+/* #endif*/
     free(data);
 }
 
@@ -3691,9 +3691,9 @@ void test_spdm_requester_get_measurements_case20(void **state)
                       &measurement_record_length,
                       measurement_record);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
-// #endif
+/* #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
+    /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/
+/* #endif*/
     free(data);
 }
 
@@ -3749,9 +3749,9 @@ void test_spdm_requester_get_measurements_case21(void **state)
                       &measurement_record_length,
                       measurement_record);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
-// #endif
+/* #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
+    /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/
+/* #endif*/
     free(data);
 }
 
@@ -3811,7 +3811,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
                           &number_of_block,
                           &measurement_record_length,
                           measurement_record);
-        // It may fail due to transcript.message_m overflow
+        /* It may fail due to transcript.message_m overflow*/
         if (status == RETURN_SUCCESS) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
             assert_int_equal(
@@ -4499,21 +4499,21 @@ void test_spdm_requester_get_measurements_case33(void **state) {
 
     measurement_record_length = sizeof(measurement_record);
     status = libspdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, &number_of_block, &measurement_record_length, measurement_record);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    // assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);
+    /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0, error_code);
 #endif
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -4617,73 +4617,73 @@ spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
 int spdm_requester_get_measurements_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_measurements_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case1),
-        // Successful response to get measurement with signature
+        /* Successful response to get measurement with signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case9),
-        // Successful response to get total measurement number without signature
+        /* Successful response to get total measurement number without signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case10),
-        // Successful response to get one measurement without signature
+        /* Successful response to get one measurement without signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case11),
-        // error: request signature, but response contains null signature
+        /* error: request signature, but response contains null signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case12),
-        // error: request signature, but response contains wrong non-null signature
+        /* error: request signature, but response contains wrong non-null signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case13),
-        // error: request signature, but response does not contain signature
+        /* error: request signature, but response does not contain signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case14),
-        // error: wrong response code
+        /* error: wrong response code*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case15),
-        // error: SlotID mismatch
+        /* error: SlotID mismatch*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case16),
-        // error: get total measurement number (no signature), but there is a measurement block
+        /* error: get total measurement number (no signature), but there is a measurement block*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case17),
-        // Large measurement block
-        // cmocka_unit_test(test_spdm_requester_get_measurements_case18), // test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
-        // error: measurement_specification has 2 bits set (bit 0 is one of them)
+        /* Large measurement block*/
+        /* cmocka_unit_test(test_spdm_requester_get_measurements_case18),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer*/
+        /* error: measurement_specification has 2 bits set (bit 0 is one of them)*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case19),
-        // error: measurement_specification has 2 bits set (bit 0 is not one of them)
+        /* error: measurement_specification has 2 bits set (bit 0 is not one of them)*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case20),
-        // error: measurement_specification does not "match the selected measurement specification in the ALGORITHMS message"
+        /* error: measurement_specification does not "match the selected measurement specification in the ALGORITHMS message"*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case21),
-        // request a large number of measurement blocks before requesting a signature
+        /* request a large number of measurement blocks before requesting a signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case22),
-        // Successful response to get one measurement with opaque data without signature
+        /* Successful response to get one measurement with opaque data without signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case23),
-        // error: get one measurement with opaque data larger than 1024, without signature
+        /* error: get one measurement with opaque data larger than 1024, without signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case24),
-        // Successful response to get one measurement with opaque data with signature
+        /* Successful response to get one measurement with opaque data with signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case25),
-        // error: response to get one measurement with opaque data with signature, opaque data is S bytes shorter than announced
+        /* error: response to get one measurement with opaque data with signature, opaque data is S bytes shorter than announced*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case26),
-        // error: response to get one measurement with opaque data with signature, opaque data is S+1 bytes shorter than announced
+        /* error: response to get one measurement with opaque data with signature, opaque data is S+1 bytes shorter than announced*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case27),
-        // error: response to get one measurement with opaque data with signature, opaque data is 1 byte longer than announced
+        /* error: response to get one measurement with opaque data with signature, opaque data is 1 byte longer than announced*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case28),
-        // response to get one measurement with opaque data without signature, opaque data is 1 byte longer than announced
+        /* response to get one measurement with opaque data without signature, opaque data is 1 byte longer than announced*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case29),
-        // response to get one measurement with opaque data without signature, opaque data has MAX_UINT16, but opaque data size is valid
-        // cmocka_unit_test(test_spdm_requester_get_measurements_case30), // test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
-        // error: get one measurement with opaque data too large, without signature
-        // cmocka_unit_test(test_spdm_requester_get_measurements_case31), // test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
-        // Successful response to get all measurements without signature
+        /* response to get one measurement with opaque data without signature, opaque data has MAX_UINT16, but opaque data size is valid*/
+        /* cmocka_unit_test(test_spdm_requester_get_measurements_case30),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer*/
+        /* error: get one measurement with opaque data too large, without signature*/
+        /* cmocka_unit_test(test_spdm_requester_get_measurements_case31),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer*/
+        /* Successful response to get all measurements without signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case32),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case33),
-        // Successful response to get a session based measurement with signature
+        /* Successful response to get a session based measurement with signature*/
         cmocka_unit_test(test_spdm_requester_get_measurements_case34),
     };
 
@@ -4695,4 +4695,4 @@ int spdm_requester_get_measurements_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

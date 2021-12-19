@@ -64,7 +64,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
     if ((spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) ||
         (spdm_context->response_state ==
          LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
-        // receiving a GET_VERSION resets a need to resynchronization
+        /* receiving a GET_VERSION resets a need to resynchronization*/
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
@@ -78,9 +78,9 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    //
-    // Cache
-    //
+    
+    /* Cache*/
+    
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
@@ -114,9 +114,9 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
         sizeof(spdm_version_number_t) *
             spdm_context->local_context.version.spdm_version_count);
 
-    //
-    // Cache
-    //
+    
+    /* Cache*/
+    
     status = libspdm_append_message_a(spdm_context, spdm_response,
                        *response_size);
     if (RETURN_ERROR(status)) {

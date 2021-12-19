@@ -19,46 +19,46 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, spdm_get_response_digests },
     { SPDM_GET_CERTIFICATE, spdm_get_response_certificate },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_response_challenge_auth },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     { SPDM_GET_MEASUREMENTS, spdm_get_response_measurements },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     { SPDM_KEY_EXCHANGE, spdm_get_response_key_exchange },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_PSK_EXCHANGE, spdm_get_response_psk_exchange },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_GET_ENCAPSULATED_REQUEST,
       spdm_get_response_encapsulated_request },
     { SPDM_DELIVER_ENCAPSULATED_RESPONSE,
       spdm_get_response_encapsulated_response_ack },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
     { SPDM_RESPOND_IF_READY, spdm_get_response_respond_if_ready },
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     { SPDM_FINISH, spdm_get_response_finish },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_PSK_FINISH, spdm_get_response_psk_finish },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     { SPDM_END_SESSION, spdm_get_response_end_session },
     { SPDM_HEARTBEAT, spdm_get_response_heartbeat },
     { SPDM_KEY_UPDATE, spdm_get_response_key_update },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 };
 
 /**
@@ -149,10 +149,10 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
-            //
-            // If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
-            // In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.
-            //
+            
+            /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.*/
+            /* In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
+            
             *session_id = &spdm_context->last_spdm_error.session_id;
             *is_app_message = FALSE;
             return RETURN_SUCCESS;
@@ -161,9 +161,9 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
     }
 
     if (!(*is_app_message)) {
-        //
-        // check minimal SPDM message size
-        //
+        
+        /* check minimal SPDM message size*/
+        
         if (spdm_context->last_spdm_request_size <
             sizeof(spdm_message_header_t)) {
             return RETURN_UNSUPPORTED;
@@ -319,20 +319,20 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     status = RETURN_UNSUPPORTED;
 
     if (spdm_context->last_spdm_error.error_code != 0) {
-        //
-        // Error in libspdm_process_request(), and we need send error message directly.
-        //
+        
+        /* Error in libspdm_process_request(), and we need send error message directly.*/
+        
         my_response_size = sizeof(my_response);
         zero_mem(my_response, sizeof(my_response));
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
-            // session ID is valid. Use it to encrypt the error message.
+            /* session ID is valid. Use it to encrypt the error message.*/
             status = libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                 &my_response_size, my_response);
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
-            // don't use session ID, because we dont know which right session ID should be used.
+            /* don't use session ID, because we dont know which right session ID should be used.*/
             status = libspdm_generate_extended_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_SESSION,
                 0, sizeof(uint32_t), (void *)session_id,

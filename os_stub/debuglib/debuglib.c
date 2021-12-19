@@ -14,9 +14,9 @@
 
 #include "library/debuglib.h"
 
-//
-// Define the maximum debug and assert message length that this library supports
-//
+
+/* Define the maximum debug and assert message length that this library supports*/
+
 #define MAX_DEBUG_MESSAGE_LENGTH 0x100
 
 #define DEBUG_ASSERT_NATIVE 0

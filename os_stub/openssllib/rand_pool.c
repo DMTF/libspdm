@@ -33,12 +33,12 @@ static boolean rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
         DEBUG((DEBUG_ERROR,
                "[OPENSSL_RAND_POOL] NULL RandBuffer. No random numbers are generated and your system is not secure\n"));
         ASSERT(RandBuffer !=
-               NULL); // Since we can't generate random numbers, we should assert. Otherwise we will just blow up later.
+               NULL); /* Since we can't generate random numbers, we should assert. Otherwise we will just blow up later.*/
         return ret;
     }
 
     while (length > 0) {
-        // Use rnglib to get random number
+        /* Use rnglib to get random number*/
         ret = get_random_number_64(&temp_rand);
 
         if (!ret) {

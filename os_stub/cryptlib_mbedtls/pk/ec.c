@@ -222,7 +222,7 @@ boolean ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
 **/
 boolean ec_check_key(IN void *ec_context)
 {
-    // TBD
+    /* TBD*/
     return TRUE;
 }
 

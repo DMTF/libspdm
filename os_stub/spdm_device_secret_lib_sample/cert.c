@@ -283,9 +283,9 @@ boolean read_responder_public_certificate_chain(
         return res;
     }
 
-    //
-    // Get Root Certificate and calculate hash value
-    //
+    
+    /* Get Root Certificate and calculate hash value*/
+    
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {
@@ -393,9 +393,9 @@ boolean read_requester_public_certificate_chain(
         return res;
     }
 
-    //
-    // Get Root Certificate and calculate hash value
-    //
+    
+    /* Get Root Certificate and calculate hash value*/
+    
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {
@@ -452,13 +452,13 @@ boolean read_responder_root_public_certificate_by_size(
     case TEST_CERT_SMALL:
         file = "long_chains/Shorter1024B_ca.cert.der";
         break;
-    case TEST_CERT_MAXINT16: // data_size slightly smaller than MAX_INT16
+    case TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
         file = "long_chains/ShorterMAXINT16_ca.cert.der";
         break;
-    case TEST_CERT_MAXUINT16: // data_size slightly smaller than MAX_UINT16
+    case TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
         file = "long_chains/ShorterMAXUINT16_ca.cert.der";
         break;
-    case TEST_CERT_MAXUINT16_LARGER: // data_size larger than MAX_UINT16
+    case TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
         file = "long_chains/LongerMAXUINT16_ca.cert.der";
         break;
     default:
@@ -528,16 +528,16 @@ boolean read_responder_public_certificate_chain_by_size(
     }
 
     switch (chain_id) {
-    case TEST_CERT_SMALL: // data_size smaller than 1024 Bytes
+    case TEST_CERT_SMALL: /* data_size smaller than 1024 Bytes*/
         file = "long_chains/Shorter1024B_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXINT16: // data_size slightly smaller than MAX_INT16
+    case TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
         file = "long_chains/ShorterMAXINT16_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXUINT16: // data_size slightly smaller than MAX_UINT16
+    case TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
         file = "long_chains/ShorterMAXUINT16_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXUINT16_LARGER: // data_size larger than MAX_UINT16
+    case TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
         file = "long_chains/LongerMAXUINT16_bundle_responder.certchain.der";
         break;
     default:
@@ -567,9 +567,9 @@ boolean read_responder_public_certificate_chain_by_size(
         return res;
     }
 
-    //
-    // Get Root Certificate and calculate hash value
-    //
+    
+    /* Get Root Certificate and calculate hash value*/
+    
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {

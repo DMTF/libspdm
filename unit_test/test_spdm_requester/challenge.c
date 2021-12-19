@@ -102,7 +102,7 @@ return_status spdm_requester_challenge_test_receive_message(
     case 0x1:
         return RETURN_DEVICE_ERROR;
 
-    case 0x2: { //correct CHALLENGE_AUTH message
+    case 0x2: { /*correct CHALLENGE_AUTH message*/
         spdm_challenge_auth_response_t *spdm_response;
         void *data;
         uintn data_size;
@@ -150,8 +150,8 @@ return_status spdm_requester_challenge_test_receive_message(
         ptr += spdm_get_hash_size(m_use_hash_algo);
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        // zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
-        // ptr += spdm_get_hash_size (m_use_hash_algo);
+        /* zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));*/
+        /* ptr += spdm_get_hash_size (m_use_hash_algo);*/
         *(uint16_t *)ptr = 0;
         ptr += sizeof(uint16_t);
         copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
@@ -179,7 +179,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x3: { //correct CHALLENGE_AUTH message
+    case 0x3: { /*correct CHALLENGE_AUTH message*/
         spdm_challenge_auth_response_t *spdm_response;
         void *data;
         uintn data_size;
@@ -227,8 +227,8 @@ return_status spdm_requester_challenge_test_receive_message(
         ptr += spdm_get_hash_size(m_use_hash_algo);
         spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        // zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
-        // ptr += spdm_get_hash_size (m_use_hash_algo);
+        /* zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));*/
+        /* ptr += spdm_get_hash_size (m_use_hash_algo);*/
         *(uint16_t *)ptr = 0;
         ptr += sizeof(uint16_t);
         copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
@@ -250,7 +250,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x4: { //correct ERROR message (invalid request)
+    case 0x4: { /*correct ERROR message (invalid request)*/
         spdm_error_response_t spdm_response;
 
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -265,7 +265,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x5: { //correct ERROR message (busy)
+    case 0x5: { /*correct ERROR message (busy)*/
         spdm_error_response_t spdm_response;
 
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -280,7 +280,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x6: { //correct ERROR message (busy) + correct CHALLENGE_AUTH message
+    case 0x6: { /*correct ERROR message (busy) + correct CHALLENGE_AUTH message*/
         static uintn sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t spdm_response;
@@ -348,8 +348,8 @@ return_status spdm_requester_challenge_test_receive_message(
             ptr += spdm_get_hash_size(m_use_hash_algo);
             spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
             ptr += SPDM_NONCE_SIZE;
-            // zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
-            // ptr += spdm_get_hash_size (m_use_hash_algo);
+            /* zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));*/
+            /* ptr += spdm_get_hash_size (m_use_hash_algo);*/
             *(uint16_t *)ptr = 0;
             ptr += sizeof(uint16_t);
             copy_mem(&m_local_buffer[m_local_buffer_size],
@@ -376,7 +376,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x7: { //correct ERROR message (request resync)
+    case 0x7: { /*correct ERROR message (request resync)*/
         spdm_error_response_t spdm_response;
 
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -391,7 +391,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x8: { //correct ERROR message (response net ready)
+    case 0x8: { /*correct ERROR message (response net ready)*/
         spdm_error_response_data_response_not_ready_t spdm_response;
 
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -411,7 +411,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    case 0x9: { //correct ERROR message (response not ready) + correct CHALLENGE_AUTH message
+    case 0x9: { /*correct ERROR message (response not ready) + correct CHALLENGE_AUTH message*/
         static uintn sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
@@ -486,8 +486,8 @@ return_status spdm_requester_challenge_test_receive_message(
             ptr += spdm_get_hash_size(m_use_hash_algo);
             spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
             ptr += SPDM_NONCE_SIZE;
-            // zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));
-            // ptr += spdm_get_hash_size (m_use_hash_algo);
+            /* zero_mem (ptr, spdm_get_hash_size (m_use_hash_algo));*/
+            /* ptr += spdm_get_hash_size (m_use_hash_algo);*/
             *(uint16_t *)ptr = 0;
             ptr += sizeof(uint16_t);
             copy_mem(&m_local_buffer[m_local_buffer_size],
@@ -514,7 +514,7 @@ return_status spdm_requester_challenge_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-  case 0xA:  //correct CHALLENGE_AUTH message
+  case 0xA:  /*correct CHALLENGE_AUTH message*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -548,8 +548,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -564,13 +564,13 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0xB: //CHALLENGE_AUTH message smaller than a SPDM header
+  case 0xB: /*CHALLENGE_AUTH message smaller than a SPDM header*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     uint8_t                         temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn                         temp_buf_size;
     spdm_response = (void *)temp_buf;
-    temp_buf_size = sizeof(spdm_challenge_auth_response_t) - 1; //smaller than standard message size
+    temp_buf_size = sizeof(spdm_challenge_auth_response_t) - 1; /*smaller than standard message size*/
 
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
@@ -581,7 +581,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0xC: //CHALLENGE_AUTH message with wrong version (1.0)
+  case 0xC: /*CHALLENGE_AUTH message with wrong version (1.0)*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -605,7 +605,7 @@ return_status spdm_requester_challenge_test_receive_message(
               spdm_get_asym_signature_size (m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10; //wrong version
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10; /*wrong version*/
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = (1 << 0);
@@ -615,8 +615,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -631,7 +631,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0xD: //SPDM (mostly CHALLENGE_AUTH) message with wrong response code (0x83)
+  case 0xD: /*SPDM (mostly CHALLENGE_AUTH) message with wrong response code (0x83)*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -656,7 +656,7 @@ return_status spdm_requester_challenge_test_receive_message(
     spdm_response = (void *)temp_buf;
 
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_response->header.request_response_code = SPDM_CHALLENGE; //wrong response code
+    spdm_response->header.request_response_code = SPDM_CHALLENGE; /*wrong response code*/
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = (1 << 0);
     Ptr = (void *)(spdm_response + 1);
@@ -665,8 +665,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -681,7 +681,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0xE:  //correct CHALLENGE_AUTH message with wrong slot number
+  case 0xE:  /*correct CHALLENGE_AUTH message with wrong slot number*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -708,15 +708,15 @@ return_status spdm_requester_challenge_test_receive_message(
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     spdm_response->header.param1 = 1;
-    spdm_response->header.param2 = (1 << 1); //wrong slot number
+    spdm_response->header.param2 = (1 << 1); /*wrong slot number*/
     Ptr = (void *)(spdm_response + 1);
     spdm_hash_all (m_use_hash_algo, ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision[0], ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision_size[0], Ptr);
     free(data);
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -731,7 +731,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0xF: //CHALLENGE_AUTH message with slot number overflow
+  case 0xF: /*CHALLENGE_AUTH message with slot number overflow*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -757,7 +757,7 @@ return_status spdm_requester_challenge_test_receive_message(
 
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-    spdm_response->header.param1 = 8; //slot number overflow
+    spdm_response->header.param1 = 8; /*slot number overflow*/
     spdm_response->header.param2 = (1 << 0);
     Ptr = (void *)(spdm_response + 1);
     spdm_hash_all (m_use_hash_algo, ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision[0], ((spdm_context_t*)spdm_context)->local_context.local_cert_chain_provision_size[0], Ptr);
@@ -765,8 +765,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -781,7 +781,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0x10: //correct CHALLENGE_AUTH message with "openspdm" opaque data
+  case 0x10: /*correct CHALLENGE_AUTH message with "openspdm" opaque data*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -815,8 +815,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 8;
     Ptr += sizeof(uint16_t);
     copy_mem (Ptr, "openspdm", 8);
@@ -833,7 +833,7 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0x11: //correct CHALLENGE_AUTH message with invalid signature
+  case 0x11: /*correct CHALLENGE_AUTH message with invalid signature*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -867,8 +867,8 @@ return_status spdm_requester_challenge_test_receive_message(
     Ptr += spdm_get_hash_size (m_use_hash_algo);
     spdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
     Ptr += SPDM_NONCE_SIZE;
-    // zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));
-    // Ptr += spdm_get_hash_size (m_use_hash_algo);
+    /* zero_mem (Ptr, spdm_get_hash_size (m_use_hash_algo));*/
+    /* Ptr += spdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)Ptr = 0;
     Ptr += sizeof(uint16_t);
     copy_mem (&m_local_buffer[m_local_buffer_size], spdm_response, (uintn)Ptr - (uintn)spdm_response);
@@ -884,8 +884,8 @@ return_status spdm_requester_challenge_test_receive_message(
   }
     return RETURN_SUCCESS;
 
-  case 0x12:  //correct CHALLENGE_AUTH message
-  case 0x13:  //correct CHALLENGE_AUTH message
+  case 0x12:  /*correct CHALLENGE_AUTH message*/
+  case 0x13:  /*correct CHALLENGE_AUTH message*/
   {
     spdm_challenge_auth_response_t  *spdm_response;
     void                          *data;
@@ -951,13 +951,13 @@ return_status spdm_requester_challenge_test_receive_message(
     }
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1495,7 +1495,7 @@ void test_spdm_requester_challenge_case10(void **state) {
   spdm_test_context->case_id = 0xA;
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->connection_info.capability.flags = 0;
-  // spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+  /* spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;*/
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   libspdm_reset_message_a(spdm_context);
   libspdm_reset_message_b(spdm_context);
@@ -1841,7 +1841,7 @@ void test_spdm_requester_challenge_case18(void **state) {
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; /*additional measurement capability*/
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   libspdm_reset_message_a(spdm_context);
   libspdm_reset_message_b(spdm_context);
@@ -1888,7 +1888,7 @@ void test_spdm_requester_challenge_case19(void **state) {
   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
   spdm_context->connection_info.capability.flags = 0;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; //additional measurement capability
+  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP; /*additional measurement capability*/
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   libspdm_reset_message_a(spdm_context);
   libspdm_reset_message_b(spdm_context);
@@ -1948,21 +1948,21 @@ void test_spdm_requester_challenge_case20(void **state) {
 
     zero_mem (measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash);
-    // assert_int_equal (status, RETURN_DEVICE_ERROR);
+    /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
     ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    // assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
+    /* assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);*/
     ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_c.buffer_size, 0, error_code);
 #endif
 
     error_code++;
-    if(error_code == SPDM_ERROR_CODE_BUSY) { //busy is treated in cases 5 and 6
+    if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
       error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
     }
-    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { //skip some reserved error codes (0d to 3e)
+    if(error_code == SPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
       error_code = SPDM_ERROR_CODE_RESERVED_3F;
     }
-    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { //skip response not ready, request resync, and some reserved codes (44 to fc)
+    if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
       error_code = SPDM_ERROR_CODE_RESERVED_FD;
     }
   }
@@ -1980,41 +1980,41 @@ spdm_test_context_t m_spdm_requester_challenge_test_context = {
 int spdm_requester_challenge_test_main(void)
 {
     const struct CMUnitTest spdm_requester_challenge_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(test_spdm_requester_challenge_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_challenge_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(test_spdm_requester_challenge_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(test_spdm_requester_challenge_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(test_spdm_requester_challenge_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(test_spdm_requester_challenge_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(test_spdm_requester_challenge_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(test_spdm_requester_challenge_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(test_spdm_requester_challenge_case9),
-        // SpdmCmdReceiveState check failed
+        /* SpdmCmdReceiveState check failed*/
         cmocka_unit_test(test_spdm_requester_challenge_case10),
-        // Successful response + device error
+        /* Successful response + device error*/
         cmocka_unit_test(test_spdm_requester_challenge_case11),
         cmocka_unit_test(test_spdm_requester_challenge_case12),
         cmocka_unit_test(test_spdm_requester_challenge_case13),
         cmocka_unit_test(test_spdm_requester_challenge_case14),
-        // Invalid parameter
+        /* Invalid parameter*/
         cmocka_unit_test(test_spdm_requester_challenge_case15),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_challenge_case16),
-        // Signature check failed
+        /* Signature check failed*/
         cmocka_unit_test(test_spdm_requester_challenge_case17),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(test_spdm_requester_challenge_case18),
         cmocka_unit_test(test_spdm_requester_challenge_case19),
-        // Unexpected errors
+        /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_challenge_case20),
     };
 
@@ -2025,4 +2025,4 @@ int spdm_requester_challenge_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // SPDM_ENABLE_CHALLEGE
+#endif /* SPDM_ENABLE_CHALLEGE*/

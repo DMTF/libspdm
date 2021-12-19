@@ -24,4 +24,4 @@
 **/
 boolean get_random_number_64(OUT uint64_t *rand_data);
 
-#endif // __RNG_LIB_H__
+#endif /* __RNG_LIB_H__*/

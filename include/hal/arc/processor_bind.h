@@ -7,14 +7,14 @@
 #ifndef __PROCESSOR_BIND_H__
 #define __PROCESSOR_BIND_H__
 
-///
-/// Define the processor type so other code can make processor based choices
-///
+
+/* Define the processor type so other code can make processor based choices*/
+
 #define MDE_CPU_ARC
 
-//
-// Make sure we are using the correct packing rules per EFI specification
-//
+
+/* Make sure we are using the correct packing rules per EFI specification*/
+
 #if !defined(__GNUC__)
 #pragma pack()
 #endif
@@ -28,23 +28,23 @@
 typedef char char8;
 typedef unsigned char boolean;
 
-//
-// Processor specific defines
-//
 
-///
-/// A value of native width with the highest bit set.
-///
+/* Processor specific defines*/
+
+
+
+/* A value of native width with the highest bit set.*/
+
 #define MAX_BIT 0x80000000
 
-///
-/// Maximum legal arc address
-///
+
+/* Maximum legal arc address*/
+
 #define MAX_ADDRESS 0xFFFFFFFF
 
-///
-/// Maximum legal arc intn values.
-///
+
+/* Maximum legal arc intn values.*/
+
 #define MAX_INTN ((intn)0x7FFFFFFF)
 
 #endif

@@ -6,11 +6,11 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-//
-// current version libspdm does not support any ext algo.
-// the requester will not build ext algo in request.
-// the requester will ignore the ext algo in response.
-//
+
+/* current version libspdm does not support any ext algo.*/
+/* the requester will not build ext algo in request.*/
+/* the requester will ignore the ext algo in response.*/
+
 
 #pragma pack(1)
 typedef struct {
@@ -78,7 +78,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
         spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_request.length = sizeof(spdm_request);
         spdm_request.header.param1 =
-            4; // Number of Algorithms Structure Tables
+            4; /* Number of Algorithms Structure Tables*/
     } else {
         spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_request.length = sizeof(spdm_request) -
@@ -206,9 +206,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_a(spdm_context, &spdm_request,
                        spdm_request.length);
     if (RETURN_ERROR(status)) {

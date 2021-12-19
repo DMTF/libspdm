@@ -2541,13 +2541,13 @@ static boolean internal_spdm_x509_date_time_check(IN uint8_t *from,
         return FALSE;
     }
 
-    // from >= f0
+    /* from >= f0*/
     ret = x509_compare_date_time(from, f0);
     if (ret < 0) {
         return FALSE;
     }
 
-    // to <= t0
+    /* to <= t0*/
     ret = x509_compare_date_time(t0, to);
     if (ret < 0) {
         return FALSE;
@@ -2589,7 +2589,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
     end_cert_from_len = 64;
     end_cert_to_len = 64;
 
-    // 1. version
+    /* 1. version*/
     cert_version = 0;
     ret = x509_get_version(cert, cert_size, &cert_version);
     if (RETURN_ERROR(ret)) {
@@ -2601,7 +2601,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 2. serial_number
+    /* 2. serial_number*/
     asn1_buffer_len = 0;
     ret = x509_get_serial_number(cert, cert_size, NULL, &asn1_buffer_len);
     if (ret != RETURN_BUFFER_TOO_SMALL) {
@@ -2609,7 +2609,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 3. sinature_algorithem
+    /* 3. sinature_algorithem*/
     value = 0;
     ret = x509_get_signature_algorithm(cert, cert_size, NULL, &value);
     if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
@@ -2617,7 +2617,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 4. issuer_name
+    /* 4. issuer_name*/
     asn1_buffer_len = 0;
     status = x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
     if (asn1_buffer_len <= 0) {
@@ -2625,7 +2625,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 5. subject_name
+    /* 5. subject_name*/
     asn1_buffer_len = 0;
     status = x509_get_subject_name(cert, cert_size, NULL, &asn1_buffer_len);
     if (asn1_buffer_len <= 0) {
@@ -2633,7 +2633,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 6. validaity
+    /* 6. validaity*/
     status = x509_get_validity(cert, cert_size, end_cert_from,
                    &end_cert_from_len, end_cert_to,
                    &end_cert_to_len);
@@ -2647,7 +2647,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 7. subject_public_key
+    /* 7. subject_public_key*/
     status = rsa_get_public_key_from_x509(cert, cert_size, &rsa_context);
     if (!status) {
         status = ec_get_public_key_from_x509(cert, cert_size,
@@ -2657,7 +2657,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 8. extended_key_usage
+    /* 8. extended_key_usage*/
     value = 0;
     ret = x509_get_extended_key_usage(cert, cert_size, NULL, &value);
     if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
@@ -2665,7 +2665,7 @@ boolean spdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size)
         goto cleanup;
     }
 
-    // 9. key_usage
+    /* 9. key_usage*/
     status = x509_get_key_usage(cert, cert_size, &value);
     if (!status) {
         goto cleanup;
@@ -2708,14 +2708,14 @@ boolean spdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size)
         return FALSE;
     }
 
-    // 1. issuer_name
+    /* 1. issuer_name*/
     issuer_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
     result = x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
     if (!result) {
         return FALSE;
     }
 
-    // 2. subject_name
+    /* 2. subject_name*/
     subject_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
     result = x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
     if (!result) {
@@ -2775,7 +2775,7 @@ return_status spdm_get_dmtf_subject_alt_name_from_bytes(
     ptr = (uint8_t *)buffer;
     obj_len = 0;
 
-    // Sequence
+    /* Sequence*/
     ret = asn1_get_tag(&ptr, ptr + length, &obj_len,
                CRYPTO_ASN1_SEQUENCE | CRYPTO_ASN1_CONSTRUCTED);
     if (!ret) {
@@ -2790,7 +2790,7 @@ return_status spdm_get_dmtf_subject_alt_name_from_bytes(
     if (!ret) {
         return RETURN_NOT_FOUND;
     }
-    // CopyData to OID
+    /* CopyData to OID*/
     if (*oid_size < (uintn)obj_len) {
         *oid_size = (uintn)obj_len;
         return RETURN_BUFFER_TOO_SMALL;
@@ -2800,7 +2800,7 @@ return_status spdm_get_dmtf_subject_alt_name_from_bytes(
         *oid_size = obj_len;
     }
 
-    // Move to next element
+    /* Move to next element*/
     ptr += obj_len;
 
     ret = asn1_get_tag(&ptr, (uint8_t *)(buffer + length), &obj_len,
@@ -3012,8 +3012,8 @@ boolean spdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
                 "!!! VerifyCertificateChainBuffer - PASS (cert root hash match) !!!\n"));
     }
 
-    //If the number of certificates in the certificate chain is more than 1,
-    //other certificates need to be verified.
+    /*If the number of certificates in the certificate chain is more than 1,*/
+    /*other certificates need to be verified.*/
     if (cert_chain_data_size > first_cert_buffer_size) {
         if (!x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
                         cert_chain_data + first_cert_buffer_size,

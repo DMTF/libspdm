@@ -72,9 +72,9 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                                         SPDM_KEY_UPDATE);
 
     if(!(*key_updated)) {
-        //
-        // Update key
-        //
+        
+        /* Update key*/
+        
         spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
@@ -90,7 +90,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             return RETURN_DEVICE_ERROR;
         }
 
-        // If updating both, create new responder key
+        /* If updating both, create new responder key*/
         if (!single_direction) {
             DEBUG((DEBUG_INFO,
                    "spdm_create_update_session_data_key[%x] Responder\n",
@@ -144,7 +144,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                     temp_status = spdm_activate_update_session_data_key(
                         session_info->secured_message_context,
                         SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
-                    // Try and return most relevant error
+                    /* Try and return most relevant error*/
                     if (RETURN_ERROR(temp_status)) {
                         return temp_status;
                     }
@@ -205,9 +205,9 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
 
     *key_updated = TRUE;
 
-    //
-    // Verify key
-    //
+    
+    /* Verify key*/
+    
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
     spdm_request.header.param1 =

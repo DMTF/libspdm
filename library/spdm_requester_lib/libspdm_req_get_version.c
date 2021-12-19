@@ -214,9 +214,9 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
                  spdm_response.version_number_entry_count *
                      sizeof(spdm_version_number_t);
 
-    //
-    // Cache data
-    //
+    
+    /* Cache data*/
+    
     status = libspdm_append_message_a(spdm_context, &spdm_request,
                        sizeof(spdm_request));
     if (RETURN_ERROR(status)) {
@@ -229,10 +229,10 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
         return RETURN_SECURITY_VIOLATION;
     }
 
-    //
-    // spdm_negotiate_connection_version will change the spdm_response.
-    // It must be done after append_message_a.
-    //
+    
+    /* spdm_negotiate_connection_version will change the spdm_response.*/
+    /* It must be done after append_message_a.*/
+    
     result = spdm_negotiate_connection_version(spdm_context, spdm_context->local_context.version.spdm_version,
                                     spdm_context->local_context.version.spdm_version_count,
                                     spdm_response.version_number_entry,

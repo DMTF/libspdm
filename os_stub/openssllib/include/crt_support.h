@@ -21,23 +21,23 @@
 
 #define MAX_STRING_SIZE 0x1000
 
-//
-// We already have "no-ui" in out Configure invocation.
-// but the code still fails to compile.
-// Ref:  https://github.com/openssl/openssl/issues/8904
-//
-// This is defined in CRT library(stdio.h).
-//
+
+/* We already have "no-ui" in out Configure invocation.*/
+/* but the code still fails to compile.*/
+/* Ref:  https://github.com/openssl/openssl/issues/8904*/
+
+/* This is defined in CRT library(stdio.h).*/
+
 #ifndef BUFSIZ
 #define BUFSIZ 8192
 #endif
 
-//
-// OpenSSL relies on explicit configuration for word size in crypto/bn,
-// but we want it to be automatically inferred from the target. So we
-// bypass what's in <openssl/opensslconf.h> for OPENSSL_SYS_UEFI, and
-// define our own here.
-//
+
+/* OpenSSL relies on explicit configuration for word size in crypto/bn,*/
+/* but we want it to be automatically inferred from the target. So we*/
+/* bypass what's in <openssl/opensslconf.h> for OPENSSL_SYS_UEFI, and*/
+/* define our own here.*/
+
 #ifdef CONFIG_HEADER_BN_H
 #error CONFIG_HEADER_BN_H already defined
 #endif
@@ -46,11 +46,11 @@
 
 #if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) ||                        \
     defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
-//
-// With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
-// SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
-// 64-bit. Since using 'long long' works fine on GCC too, just do that.
-//
+
+/* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs*/
+/* SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is*/
+/* 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
+
 #define SIXTY_FOUR_BIT
 #elif defined(MDE_CPU_IA32) || defined(MDE_CPU_ARM) || defined(MDE_CPU_EBC) || \
     defined(MDE_CPU_RISCV32) || defined(MDE_CPU_ARC)
@@ -59,23 +59,23 @@
 #error Unknown target architecture
 #endif
 
-//
-// Map all va_xxxx elements to VA_xxx defined in MdePkg/include/base.h
-//
-#if !defined(__CC_arm) // if va_list is not already defined
+
+/* Map all va_xxxx elements to VA_xxx defined in MdePkg/include/base.h*/
+
+#if !defined(__CC_arm) /* if va_list is not already defined*/
 #define va_list VA_LIST
 #define va_arg VA_ARG
 #define va_start VA_START
 #define va_end VA_END
-#else // __CC_arm
+#else /* __CC_arm*/
 #define va_start(marker, parameter) __va_start(marker, parameter)
 #define va_arg(marker, TYPE) __va_arg(marker, TYPE)
 #define va_end(marker) ((void)0)
 #endif
 
-//
-// Definitions for global constants used by CRT library routines
-//
+
+/* Definitions for global constants used by CRT library routines*/
+
 #define EINVAL 22 /* Invalid argument */
 #define EAFNOSUPPORT 47 /* Address family not supported by protocol family */
 #define INT_MAX 0x7FFFFFFF /* Maximum (signed) int value */
@@ -84,22 +84,22 @@
 #define ULONG_MAX 0xFFFFFFFF /* Maximum unsigned long value */
 #define CHAR_BIT 8 /* Number of bits in a char */
 
-//
-// Address families.
-//
+
+/* Address families.*/
+
 #define AF_INET 2 /* internetwork: UDP, TCP, etc. */
 #define AF_INET6 24 /* IP version 6 */
 
-//
-// Define constants based on RFC0883, RFC1034, RFC 1035
-//
+
+/* Define constants based on RFC0883, RFC1034, RFC 1035*/
+
 #define NS_INT16SZ 2 /*%< #/bytes of data in a u_int16_t */
 #define NS_INADDRSZ 4 /*%< IPv4 T_A */
 #define NS_IN6ADDRSZ 16 /*%< IPv6 T_AAAA */
 
-//
-// Basic types mapping
-//
+
+/* Basic types mapping*/
+
 typedef uintn size_t;
 typedef uintn u_int;
 typedef intn ssize_t;
@@ -110,15 +110,15 @@ typedef uint8_t u_char;
 typedef uint32_t uid_t;
 typedef uint32_t gid_t;
 
-//
-// file operations are not required for EFI building,
-// so FILE is mapped to void * to pass build
-//
+
+/* file operations are not required for EFI building,*/
+/* so FILE is mapped to void * to pass build*/
+
 typedef void *FILE;
 
-//
-// Structures Definitions
-//
+
+/* Structures Definitions*/
+
 struct tm {
     int tm_sec; /* seconds after the minute [0-60] */
     int tm_min; /* minutes after the hour [0-59] */
@@ -144,15 +144,15 @@ struct sockaddr {
     char sa_data[14]; /* actually longer; address value */
 };
 
-//
-// Global variables
-//
+
+/* Global variables*/
+
 extern int errno;
 extern FILE *stderr;
 
-//
-// Function prototypes of CRT Library routines
-//
+
+/* Function prototypes of CRT Library routines*/
+
 void *malloc(size_t);
 void *realloc(void *, size_t);
 void free(void *);

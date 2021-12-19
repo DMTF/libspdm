@@ -33,9 +33,9 @@ return_status validate_crypt_ecd(void)
         goto Exit;
     }
 
-    //
-    // Verify Ed-DSA
-    //
+    
+    /* Verify Ed-DSA*/
+    
     sig1_size = sizeof(signature1);
     my_print("\n- Ed-DSA Signing ... ");
     status = eddsa_sign(ecd1, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),

@@ -57,9 +57,9 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     BIGNUM *bn_key;
     uintn size;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || bn_size == NULL) {
         return FALSE;
     }
@@ -70,60 +70,60 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     bn_key = NULL;
 
     switch (key_tag) {
-    //
-    // RSA public Modulus (N)
-    //
+    
+    /* RSA public Modulus (N)*/
+    
     case RSA_KEY_N:
         RSA_get0_key(rsa_key, (const BIGNUM **)&bn_key, NULL, NULL);
         break;
 
-    //
-    // RSA public Exponent (e)
-    //
+    
+    /* RSA public Exponent (e)*/
+    
     case RSA_KEY_E:
         RSA_get0_key(rsa_key, NULL, (const BIGNUM **)&bn_key, NULL);
         break;
 
-    //
-    // RSA Private Exponent (d)
-    //
+    
+    /* RSA Private Exponent (d)*/
+    
     case RSA_KEY_D:
         RSA_get0_key(rsa_key, NULL, NULL, (const BIGNUM **)&bn_key);
         break;
 
-    //
-    // RSA Secret prime Factor of Modulus (p)
-    //
+    
+    /* RSA Secret prime Factor of Modulus (p)*/
+    
     case RSA_KEY_P:
         RSA_get0_factors(rsa_key, (const BIGNUM **)&bn_key, NULL);
         break;
 
-    //
-    // RSA Secret prime Factor of Modules (q)
-    //
+    
+    /* RSA Secret prime Factor of Modules (q)*/
+    
     case RSA_KEY_Q:
         RSA_get0_factors(rsa_key, NULL, (const BIGNUM **)&bn_key);
         break;
 
-    //
-    // p's CRT Exponent (== d mod (p - 1))
-    //
+    
+    /* p's CRT Exponent (== d mod (p - 1))*/
+    
     case RSA_KEY_DP:
         RSA_get0_crt_params(rsa_key, (const BIGNUM **)&bn_key, NULL,
                     NULL);
         break;
 
-    //
-    // q's CRT Exponent (== d mod (q - 1))
-    //
+    
+    /* q's CRT Exponent (== d mod (q - 1))*/
+    
     case RSA_KEY_DQ:
         RSA_get0_crt_params(rsa_key, NULL, (const BIGNUM **)&bn_key,
                     NULL);
         break;
 
-    //
-    // The CRT Coefficient (== 1/q mod p)
-    //
+    
+    /* The CRT Coefficient (== 1/q mod p)*/
+    
     case RSA_KEY_Q_INV:
         RSA_get0_crt_params(rsa_key, NULL, NULL,
                     (const BIGNUM **)&bn_key);
@@ -182,9 +182,9 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
     BIGNUM *bn_e;
     boolean ret_val;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || modulus_length > INT_MAX ||
         public_exponent_size > INT_MAX) {
         return FALSE;
@@ -241,9 +241,9 @@ boolean rsa_check_key(IN void *rsa_context)
 {
     uintn reason;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL) {
         return FALSE;
     }
@@ -298,9 +298,9 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
     uintn size;
     int32_t digest_type;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (rsa_context == NULL || message_hash == NULL) {
         return FALSE;
     }

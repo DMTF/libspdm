@@ -146,8 +146,8 @@ boolean hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_c
     if (ret != 0) {
         return FALSE;
     }
-    //Temporary solution to the problem of context clone.
-    //There are not any standard function in mbedtls to clone a complete hmac context.
+    /*Temporary solution to the problem of context clone.*/
+    /*There are not any standard function in mbedtls to clone a complete hmac context.*/
     copy_mem(
         ((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
         ((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,

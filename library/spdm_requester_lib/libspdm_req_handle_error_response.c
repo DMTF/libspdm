@@ -60,7 +60,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
     if (spdm_response->request_response_code != expected_response_code) {
         return RETURN_DEVICE_ERROR;
     }
-    // For response like SPDM_ALGORITHMS, we just can expect the max response size
+    /* For response like SPDM_ALGORITHMS, we just can expect the max response size*/
     if (*response_size > expected_response_size) {
         return RETURN_DEVICE_ERROR;
     }
@@ -83,10 +83,10 @@ return_status spdm_handle_simple_error_response(IN void *context,
 
     spdm_context = context;
 
-    //
-    // NOT_READY is treated as error here.
-    // Use spdm_handle_error_response_main to handle NOT_READY message in long latency command.
-    //
+    
+    /* NOT_READY is treated as error here.*/
+    /* Use spdm_handle_error_response_main to handle NOT_READY message in long latency command.*/
+    
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return RETURN_DEVICE_ERROR;
     }

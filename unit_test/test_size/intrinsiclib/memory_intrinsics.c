@@ -26,18 +26,18 @@ int GLOBAL_USED _fltused = 1;
 /* Sets buffers to a specified character */
 void *memset(void *dest, int ch, size_t count)
 {
-    //
-    // NOTE: Here we use one base implementation for memset, instead of the direct
-    //       optimized set_mem() wrapper. Because the intrinsiclib has to be built
-    //       without whole program optimization option, and there will be some
-    //       potential register usage errors when calling other optimized codes.
-    //
+    
+    /* NOTE: Here we use one base implementation for memset, instead of the direct*/
+    /*       optimized set_mem() wrapper. Because the intrinsiclib has to be built*/
+    /*       without whole program optimization option, and there will be some*/
+    /*       potential register usage errors when calling other optimized codes.*/
+    
 
-    //
-    // Declare the local variables that actually move the data elements as
-    // volatile to prevent the optimizer from replacing this function with
-    // the intrinsic memset()
-    //
+    
+    /* Declare the local variables that actually move the data elements as*/
+    /* volatile to prevent the optimizer from replacing this function with*/
+    /* the intrinsic memset()*/
+    
     volatile uint8_t *pointer;
 
     pointer = (uint8_t *)dest;

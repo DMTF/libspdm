@@ -7,14 +7,14 @@
 #ifndef PROCESSOR_BIND_H__
 #define PROCESSOR_BIND_H__
 
-///
-/// Define the processor type so other code can make processor based choices
-///
+
+/* Define the processor type so other code can make processor based choices*/
+
 #define MDE_CPU_RISCV32
 
-//
-// Make sure we are using the correct packing rules per EFI specification
-//
+
+/* Make sure we are using the correct packing rules per EFI specification*/
+
 #if !defined(__GNUC__)
 #pragma pack()
 #endif
@@ -28,34 +28,34 @@
 typedef char char8;
 typedef unsigned char boolean;
 
-///
-/// Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
-/// 8 bytes on supported 64-bit processor instructions)
-///
+
+/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,*/
+/* 8 bytes on supported 64-bit processor instructions)*/
+
 typedef uint32_t uintn __attribute__((aligned(4)));
-///
-/// Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
-/// 8 bytes on supported 64-bit processor instructions)
-///
+
+/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,*/
+/* 8 bytes on supported 64-bit processor instructions)*/
+
 typedef int32_t intn __attribute__((aligned(4)));
 
-//
-// Processor specific defines
-//
 
-///
-/// A value of native width with the highest bit set.
-///
+/* Processor specific defines*/
+
+
+
+/* A value of native width with the highest bit set.*/
+
 #define MAX_BIT 0x80000000
 
-///
-/// Maximum legal RV32 address
-///
+
+/* Maximum legal RV32 address*/
+
 #define MAX_ADDRESS 0xFFFFFFFF
 
-///
-/// Maximum legal RISC-V intn values.
-///
+
+/* Maximum legal RISC-V intn values.*/
+
 #define MAX_INTN ((intn)0x7FFFFFFF)
 
 #endif

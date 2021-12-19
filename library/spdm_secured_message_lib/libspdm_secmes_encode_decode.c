@@ -512,10 +512,10 @@ return_status spdm_decode_secured_message(
             record_header_size, enc_msg, cipher_text_size, tag,
             aead_tag_size, dec_msg, &cipher_text_size);
         if (!result) {
-            //
-            // Try to use backup key to decrypt, because peer may use old key to encrypt error message.
-            // Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().
-            //
+            
+            /* Try to use backup key to decrypt, because peer may use old key to encrypt error message.*/
+            /* Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().*/
+            
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
                 status = spdm_activate_update_session_data_key(
@@ -533,12 +533,12 @@ return_status spdm_decode_secured_message(
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
-                //
-                // Handle special case:
-                // If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
-                // Then later the responder will return SUCCESS, the requester need activate new key.
-                // So we need restore the environment by spdm_create_update_session_data_key() again.
-                //
+                
+                /* Handle special case:*/
+                /* If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.*/
+                /* Then later the responder will return SUCCESS, the requester need activate new key.*/
+                /* So we need restore the environment by spdm_create_update_session_data_key() again.*/
+                
                 return spdm_create_update_session_data_key (secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
             }
@@ -607,10 +607,10 @@ return_status spdm_decode_secured_message(
                 aead_tag_size,
             NULL, 0, tag, aead_tag_size, NULL, NULL);
         if (!result) {
-            //
-            // try to use backup key to decrypt, because peer may use old key to encrypt error message.
-            // recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().
-            //
+            
+            /* try to use backup key to decrypt, because peer may use old key to encrypt error message.*/
+            /* recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().*/
+            
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
                 status = spdm_activate_update_session_data_key(
@@ -628,12 +628,12 @@ return_status spdm_decode_secured_message(
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
-                //
-                // Handle special case:
-                // If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
-                // Then later the responder will return SUCCESS, the requester need activate new key.
-                // So we need restore the environment by spdm_create_update_session_data_key() again.
-                //
+                
+                /* Handle special case:*/
+                /* If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.*/
+                /* Then later the responder will return SUCCESS, the requester need activate new key.*/
+                /* So we need restore the environment by spdm_create_update_session_data_key() again.*/
+                
                 return spdm_create_update_session_data_key (secured_message_context,
                     is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
             }

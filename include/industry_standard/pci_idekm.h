@@ -11,29 +11,29 @@
 #ifndef __PCI_IDE_KM_H__
 #define __PCI_IDE_KM_H__
 
-//
-// Standard ID and Vendor ID for PCISIG
-//
+
+/* Standard ID and Vendor ID for PCISIG*/
+
 #define SPDM_STANDARD_ID_PCISIG SPDM_REGISTRY_ID_PCISIG
 #define SPDM_VENDOR_ID_PCISIG 0x0001
 
 #pragma pack(1)
 
-//
-// PCI Protocol definition
-//
+
+/* PCI Protocol definition*/
+
 typedef struct {
     uint8_t protocol_id;
 } pci_protocol_header_t;
 
-//
-// IDE_KM Definition
-//
+
+/* IDE_KM Definition*/
+
 #define PCI_PROTOCAL_ID_IDE_KM 0x00
 
-//
-// IDE_KM header
-//
+
+/* IDE_KM header*/
+
 typedef struct {
     uint8_t object_id;
 } pci_ide_km_header_t;
@@ -46,18 +46,18 @@ typedef struct {
 #define PCI_IDE_KM_OBJECT_ID_K_SET_STOP 0x05
 #define PCI_IDE_KM_OBJECT_ID_K_SET_GOSTOP_ACK 0x06
 
-//
-// IDE_KM QUERY
-//
+
+/* IDE_KM QUERY*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved;
     uint8_t port_index;
 } pci_ide_km_query_t;
 
-//
-// IDE_KM QUERY_RESP
-//
+
+/* IDE_KM QUERY_RESP*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved;
@@ -66,12 +66,12 @@ typedef struct {
     uint8_t bus_num;
     uint8_t segment;
     uint8_t max_port_index;
-    //IDE Extended capability
+    /*IDE Extended capability*/
 } pci_ide_km_query_resp_t;
 
-//
-// IDE_KM KEY_PROG
-//
+
+/* IDE_KM KEY_PROG*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];
@@ -79,13 +79,13 @@ typedef struct {
     uint8_t reserved2;
     uint8_t key_sub_stream;
     uint8_t port_index;
-    //KEY 8 DW
-    //IFV(invocation field of the IV) 2 DW
+    /*KEY 8 DW*/
+    /*IFV(invocation field of the IV) 2 DW*/
 } pci_ide_km_key_prog_t;
 
-//
-// IDE_KM KP_ACK
-//
+
+/* IDE_KM KP_ACK*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];
@@ -95,9 +95,9 @@ typedef struct {
     uint8_t port_index;
 } pci_ide_km_kp_ack_t;
 
-//
-// IDE_KM K_SET_GO
-//
+
+/* IDE_KM K_SET_GO*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];
@@ -107,9 +107,9 @@ typedef struct {
     uint8_t port_index;
 } pci_ide_km_k_set_go_t;
 
-//
-// IDE_KM K_SET_STOP
-//
+
+/* IDE_KM K_SET_STOP*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];
@@ -119,9 +119,9 @@ typedef struct {
     uint8_t port_index;
 } pci_ide_km_k_set_stop_t;
 
-//
-// IDE_KM K_GOSTOP_ACK
-//
+
+/* IDE_KM K_GOSTOP_ACK*/
+
 typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];

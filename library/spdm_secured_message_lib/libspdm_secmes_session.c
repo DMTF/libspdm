@@ -214,7 +214,7 @@ spdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
     internal_dump_hex(bin_str0, bin_str0_size);
 
     if (secured_message_context->use_psk) {
-        // No handshake_secret generation for PSK.
+        /* No handshake_secret generation for PSK.*/
     } else {
         DEBUG((DEBUG_INFO, "[DHE Secret]: "));
         internal_dump_hex_str(
@@ -389,7 +389,7 @@ spdm_generate_session_data_key(IN void *spdm_secured_message_context,
     hash_size = secured_message_context->hash_size;
 
     if (secured_message_context->use_psk) {
-        // No master_secret generation for PSK.
+        /* No master_secret generation for PSK.*/
     } else {
         bin_str0_size = sizeof(bin_str0);
         status = spdm_bin_concat(BIN_STR_0_LABEL,

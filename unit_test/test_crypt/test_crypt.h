@@ -30,13 +30,13 @@ uintn ascii_str_len(IN const char8 *string);
 
 void my_print(IN char8 *message);
 
-// /**
-//   Validate Crypto digest Interfaces.
+/** 
+  Validate Crypto digest Interfaces.
 
-//   @retval  RETURN_SUCCESS  Validation succeeded.
-//   @retval  RETURN_ABORTED  Validation failed.
+   @retval  RETURN_SUCCESS  Validation succeeded.
+   @retval  RETURN_ABORTED  Validation failed.
 
-// **/
+ **/
 return_status validate_crypt_digest(void);
 
 /**

@@ -462,7 +462,7 @@ done:
 **/
 void *sm2_key_exchange_new_by_nid(IN uintn nid)
 {
-    // current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
+    /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return NULL;
 }
 
@@ -474,7 +474,7 @@ void *sm2_key_exchange_new_by_nid(IN uintn nid)
 **/
 void sm2_key_exchange_free(IN void *sm2_context)
 {
-    // current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
+    /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
 }
 
 /**
@@ -498,7 +498,7 @@ boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
             IN const uint8_t *id_b, IN uintn id_b_size,
             IN const boolean is_initiator)
 {
-    // current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
+    /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return FALSE;
 }
 
@@ -532,7 +532,7 @@ boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
 boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
              IN OUT uintn *public_size)
 {
-    // current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
+    /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return FALSE;
 }
 
@@ -568,7 +568,7 @@ boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
             IN uintn peer_public_size, OUT uint8_t *key,
             IN uintn *key_size)
 {
-    // current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.
+    /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return FALSE;
 }
 

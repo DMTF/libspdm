@@ -137,9 +137,9 @@ return_status spdm_get_response_certificate(IN void *context,
                  .local_cert_chain_provision[slot_id] +
              offset,
          length);
-    //
-    // Cache
-    //
+    
+    /* Cache*/
+    
     status = libspdm_append_message_b(spdm_context, spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
@@ -163,4 +163,4 @@ return_status spdm_get_response_certificate(IN void *context,
 }
 
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

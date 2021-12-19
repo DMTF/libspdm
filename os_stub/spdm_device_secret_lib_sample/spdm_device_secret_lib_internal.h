@@ -25,9 +25,9 @@
 #define TEST_CERT_MAXUINT16_LARGER 3
 #define TEST_CERT_SMALL 4
 
-//
-// public cert
-//
+
+/* public cert*/
+
 boolean read_responder_public_certificate_chain(
     IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, OUT void **data,
     OUT uintn *size, OUT void **hash, OUT uintn *hash_size);
@@ -58,9 +58,9 @@ boolean read_responder_root_public_certificate_by_size(
     OUT void **data, OUT uintn *size, OUT void **hash,
     OUT uintn *hash_size);
 
-//
-// External
-//
+
+/* External*/
+
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
             OUT uintn *file_size);
 

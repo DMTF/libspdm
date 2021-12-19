@@ -21,7 +21,7 @@ typedef struct {
     uint8_t instance_id;
     uint8_t pldm_type;
     uint8_t pldm_command_code;
-    //uint8_t    payload[];
+    /*uint8_t    payload[];*/
 } pldm_message_header_t;
 
 typedef struct {
@@ -40,9 +40,9 @@ typedef struct {
 #define MCTP_MESSAGE_TYPE_REDFISH_DEVICE_ENABLEMENT 0x06
 #define MCTP_MESSAGE_TYPE_OEM 0x3F
 
-//
-// PLDM_MESSAGE_TYPE_CONTROL_DISCOVERY
-//
+
+/* PLDM_MESSAGE_TYPE_CONTROL_DISCOVERY*/
+
 #define PLDM_CONTROL_DISCOVERY_COMMAND_SET_TID 0x01
 #define PLDM_CONTROL_DISCOVERY_COMMAND_GET_TID 0x02
 #define PLDM_CONTROL_DISCOVERY_COMMAND_GET_PLDM_VERSION 0x03

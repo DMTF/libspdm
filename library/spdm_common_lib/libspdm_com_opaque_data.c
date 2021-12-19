@@ -26,7 +26,7 @@ uintn spdm_get_opaque_data_version_selection_data_size(
     size = sizeof(secured_message_general_opaque_data_table_header_t) +
            sizeof(secured_message_opaque_element_table_header_t) +
            sizeof(secured_message_opaque_element_version_selection_t);
-    // Add Padding
+    /* Add Padding*/
     return (size + 3) & ~3;
 }
 
@@ -51,7 +51,7 @@ uintn spdm_get_opaque_data_supported_version_data_size(
            sizeof(secured_message_opaque_element_table_header_t) +
            sizeof(secured_message_opaque_element_supported_version_t) +
            sizeof(spdm_version_number_t);
-    // Add Padding
+    /* Add Padding*/
     return (size + 3) & ~3;
 }
 
@@ -127,7 +127,7 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     versions_list->minor_version = 1;
     versions_list->major_version = 1;
 
-    // Zero Padding
+    /* Zero Padding*/
     end = versions_list + 1;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
 
@@ -269,7 +269,7 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     OpaqueElementVersionSection->selected_version.minor_version = 1;
     OpaqueElementVersionSection->selected_version.major_version = 1;
 
-    // Zero Padding
+    /* Zero Padding*/
     end = OpaqueElementVersionSection + 1;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
 

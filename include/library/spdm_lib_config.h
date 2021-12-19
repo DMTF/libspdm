@@ -17,20 +17,20 @@
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 
 #define LIBSPDM_MAX_MESSAGE_BUFFER_SIZE 0x1200
-#define LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE 0x100  // to hold message_a before negotiate
-#define LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 // to hold message_k before finished_key is ready
+#define LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE 0x100  /* to hold message_a before negotiate*/
+#define LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 /* to hold message_k before finished_key is ready*/
 
 #define LIBSPDM_MAX_REQUEST_RETRY_TIMES 3
 #define LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM 4
 #define LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM 4
 
-// If cache transcript data or transcript hash
+/* If cache transcript data or transcript hash*/
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
 
-//
-// Crypto Configuation
-// In each category, at least one should be selected.
-//
+
+/* Crypto Configuation*/
+/* In each category, at least one should be selected.*/
+
 #define LIBSPDM_RSA_SSA_SUPPORT 1
 #define LIBSPDM_RSA_PSS_SUPPORT 1
 #define LIBSPDM_ECDSA_SUPPORT 1
@@ -46,24 +46,24 @@
 #define LIBSPDM_SHA512_SUPPORT 1
 
 
-// Code space optimization for Optional request/response messages.
-//
-// Consumers of libspdm may wish to not fully implement all of the optional
-// SPDM request/response messages. Therefore we have provided these
-// SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
-// disable the code (#if 0) related to said optional capability, thereby
-// reducing the code space used in the image.
-//
-// A single switch may enable/disable a single capability or group of related
-// capabilities.
-//
-// LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
-// LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
-// SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
-//                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
-//
-// LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
-// LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
+/* Code space optimization for Optional request/response messages.*/
+
+/* Consumers of libspdm may wish to not fully implement all of the optional*/
+/* SPDM request/response messages. Therefore we have provided these*/
+/* SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization*/
+/* disable the code (#if 0) related to said optional capability, thereby*/
+/* reducing the code space used in the image.*/
+
+/* A single switch may enable/disable a single capability or group of related*/
+/* capabilities.*/
+
+/* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.*/
+/* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.*/
+/* SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:*/
+/*                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
+
+/* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.*/
+/* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.*/
 
 #define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1

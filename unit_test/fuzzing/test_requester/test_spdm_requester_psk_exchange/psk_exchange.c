@@ -40,7 +40,7 @@ uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
         return buffer_size;
     }
 
-    // Good message, return actual size
+    /* Good message, return actual size*/
     return message_size;
 }
 

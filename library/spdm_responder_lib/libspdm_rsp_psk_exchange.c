@@ -60,8 +60,8 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    // Check capabilities even if GET_CAPABILITIES is not sent.
-    // Assuming capabilities are provisioned.
+    /* Check capabilities even if GET_CAPABILITIES is not sent.*/
+    /* Assuming capabilities are provisioned.*/
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, FALSE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
@@ -78,7 +78,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     }
 
     {
-        // Double check if algorithm has been provisioned, because ALGORITHM might be skipped.
+        /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, TRUE, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
@@ -330,7 +330,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, FALSE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
-        // No need to receive PSK_FINISH, enter application phase directly.
+        /* No need to receive PSK_FINISH, enter application phase directly.*/
 
         DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
                session_id));
@@ -356,4 +356,4 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

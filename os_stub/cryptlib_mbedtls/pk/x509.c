@@ -16,9 +16,9 @@
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
 
-///
-/// OID
-///
+
+/* OID*/
+
 static const uint8_t m_oid_common_name[] = { 0x55, 0x04, 0x03 };
 static const uint8_t m_oid_organization_name[] = { 0x55, 0x04, 0x0A };
 static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
@@ -84,9 +84,9 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     }
 
     for (index = 0;; index++) {
-        //
-        // If cert is NULL, then it is the end of the list.
-        //
+        
+        /* If cert is NULL, then it is the end of the list.*/
+        
         cert = VA_ARG(args, uint8_t *);
         if (cert == NULL) {
             break;
@@ -637,9 +637,9 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
 
     current_cert = cert_chain;
 
-    //
-    // Get Current certificate from certificates buffer and Verify with preciding cert
-    //
+    
+    /* Get Current certificate from certificates buffer and Verify with preciding cert*/
+    
     do {
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
@@ -660,15 +660,15 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
             verify_flag = TRUE;
         }
 
-        //
-        // Save preceding certificate
-        //
+        
+        /* Save preceding certificate*/
+        
         preceding_cert = current_cert;
         preceding_cert_len = current_cert_len;
 
-        //
-        // Move current certificate to next;
-        //
+        
+        /* Move current certificate to next;*/
+        
         current_cert = current_cert + current_cert_len;
     } while (TRUE);
 
@@ -705,9 +705,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     uint8_t *tmp_ptr;
     int32_t ret;
 
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
         (cert_length == NULL)) {
         return FALSE;
@@ -716,13 +716,13 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     current_cert = cert_chain;
     current_index = -1;
 
-    //
-    // Traverse the certificate chain
-    //
+    
+    /* Traverse the certificate chain*/
+    
     while (TRUE) {
-        //
-        // Get asn1 tag len
-        //
+        
+        /* Get asn1 tag len*/
+        
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
             &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
@@ -740,15 +740,15 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
             return TRUE;
         }
 
-        //
-        // Move to next
-        //
+        
+        /* Move to next*/
+        
         current_cert = current_cert + current_cert_len;
     }
 
-    //
-    // If cert_index is -1, Return the last certificate
-    //
+    
+    /* If cert_index is -1, Return the last certificate*/
+    
     if (cert_index == -1 && current_index >= 0) {
         *cert = current_cert - current_cert_len;
         *cert_length = current_cert_len;
@@ -1110,7 +1110,7 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
         if (ret == 0) {
             header_len = (size_t)(ptr - extension_ptr);
             find_extension_len = obj_len;
-            // Get Object Identifier
+            /* Get Object Identifier*/
             ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
                            MBEDTLS_ASN1_OID);
         } else {
@@ -1139,7 +1139,7 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
             break;
         }
 
-        // move to next
+        /* move to next*/
         ptr = extension_ptr + header_len + find_extension_len;
         ret = 0;
     }
@@ -1403,9 +1403,9 @@ static int32_t internal_atoi(char8 *p_start, char8 *p_end)
     char8 *p = p_start;
     int32_t k = 0;
     while (p < p_end) {
-        ///
-        /// k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10
-        ///
+        
+        /* k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10*/
+        
         k = (k << 3) + (k << 1) + (*p) - '0';
         p++;
     }

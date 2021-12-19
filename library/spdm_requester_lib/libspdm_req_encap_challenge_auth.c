@@ -129,9 +129,9 @@ return_status spdm_get_encap_response_challenge_auth(
          spdm_context->local_context.opaque_challenge_auth_rsp_size);
     ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
 
-    //
-    // Calc Sign
-    //
+    
+    /* Calc Sign*/
+    
     status = libspdm_append_message_mut_c(spdm_context, spdm_request,
                        request_size);
     if (RETURN_ERROR(status)) {
@@ -160,4 +160,4 @@ return_status spdm_get_encap_response_challenge_auth(
     return RETURN_SUCCESS;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

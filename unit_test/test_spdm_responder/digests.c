@@ -489,23 +489,23 @@ spdm_test_context_t m_spdm_responder_digests_test_context = {
 int spdm_responder_digests_test_main(void)
 {
     const struct CMUnitTest spdm_responder_digests_tests[] = {
-        // Success Case
+        /* Success Case*/
         cmocka_unit_test(test_spdm_responder_digests_case1),
-        // Bad request size
+        /* Bad request size*/
         cmocka_unit_test(test_spdm_responder_digests_case2),
-        // response_state: SPDM_RESPONSE_STATE_BUSY
+        /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(test_spdm_responder_digests_case3),
-        // response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC
+        /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(test_spdm_responder_digests_case4),
-        // response_state: LIBSPDM_RESPONSE_STATE_NOT_READY
+        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(test_spdm_responder_digests_case5),
-        // connection_state Check
+        /* connection_state Check*/
         cmocka_unit_test(test_spdm_responder_digests_case6),
-        // Internal cache full (request message)
+        /* Internal cache full (request message)*/
         cmocka_unit_test(test_spdm_responder_digests_case7),
-        // Internal cache full (response message)
+        /* Internal cache full (response message)*/
         cmocka_unit_test(test_spdm_responder_digests_case8),
-        // No digest to send
+        /* No digest to send*/
         cmocka_unit_test(test_spdm_responder_digests_case9),
     };
 
@@ -516,4 +516,4 @@ int spdm_responder_digests_test_main(void)
                       spdm_unit_test_group_teardown);
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

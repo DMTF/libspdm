@@ -16,11 +16,11 @@ spdm_get_encap_response_struct_t m_spdm_get_encap_response_struct[] = {
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, spdm_get_encap_response_digest },
     { SPDM_GET_CERTIFICATE, spdm_get_encap_response_certificate },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     { SPDM_CHALLENGE, spdm_get_encap_response_challenge_auth },
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     { SPDM_KEY_UPDATE, spdm_get_encap_response_key_update },
 };
@@ -168,7 +168,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     spdm_get_digest_request_t get_digests;
-    #endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
@@ -193,9 +193,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         ASSERT(mut_auth_requested == 0);
     }
 
-    //
-    // Cache
-    //
+    
+    /* Cache*/
+    
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
@@ -219,9 +219,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         encapsulated_request = (void *)&get_digests;
         encapsulated_request_size = sizeof(get_digests);
         request_id = 0;
-#else // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#else /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
         return RETURN_UNSUPPORTED;
-#endif // LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     } else {
         spdm_get_encapsulated_request_request = (void *)request;
@@ -263,9 +263,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         }
         if (spdm_response_size ==
             sizeof(spdm_encapsulated_request_response_t)) {
-            //
-            // Done
-            //
+            
+            /* Done*/
+            
             return RETURN_SUCCESS;
         }
         request_id = spdm_encapsulated_request_response->header.param1;
@@ -278,9 +278,9 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     }
 
     while (TRUE) {
-        //
-        // Process request
-        //
+        
+        /* Process request*/
+        
         spdm_deliver_encapsulated_response_request = (void *)request;
         spdm_deliver_encapsulated_response_request->header.spdm_version =
             SPDM_MESSAGE_VERSION_11;

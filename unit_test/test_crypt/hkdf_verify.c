@@ -52,9 +52,9 @@ return_status validate_crypt_hkdf(void)
     my_print(" \nCrypto HKDF Engine Testing:\n");
 
     my_print("- HKDF-SHA256: ");
-    //
-    // HKDF-SHA-256 digest Validation
-    //
+    
+    /* HKDF-SHA-256 digest Validation*/
+    
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sha256_extract (
@@ -116,9 +116,9 @@ return_status validate_crypt_hkdf(void)
     my_print("[Pass]\n");
 
     my_print("- HKDF-SHA3_256: ");
-    //
-    // HKDF-SHA3-256 digest Validation
-    //
+    
+    /* HKDF-SHA3-256 digest Validation*/
+    
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sha3_256_extract (
@@ -159,9 +159,9 @@ return_status validate_crypt_hkdf(void)
     my_print("[Pass]\n");
 
     my_print("- HKDF-SM3_256: ");
-    //
-    // HKDF-SM3-256 digest Validation
-    //
+    
+    /* HKDF-SM3-256 digest Validation*/
+    
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sm3_256_extract (

@@ -18,7 +18,7 @@ uint64_t internal_math_div_rem_u64x32(IN uint64_t dividend, IN uint32_t divisor,
     mov     eax, dword ptr [dividend + 0]
     div     ecx
     mov     ecx, remainder
-    jecxz   RemainderNull // abandon remainder if remainder == NULL
+    jecxz   RemainderNull /* abandon remainder if remainder == NULL*/
     mov     [ecx], edx
 RemainderNull:
     pop     edx
@@ -101,14 +101,14 @@ uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
  */
 __declspec(naked) void __cdecl _aulldvrm(void)
 {
-    //
-    //    uint64_t
-    //      //    div_u64x64_remainder (
-    //      IN      uint64_t     dividend,
-    //      IN      uint64_t     divisor,
-    //      OUT     uint64_t     *remainder  OPTIONAL
-    //      )
-    //
+    
+    /*    uint64_t*/
+    /*            div_u64x64_remainder (*/
+    /*      IN      uint64_t     dividend,*/
+    /*      IN      uint64_t     divisor,*/
+    /*      OUT     uint64_t     *remainder  OPTIONAL*/
+    /*      )*/
+    
   _asm {
 
     ; Original local stack when calling _aulldvrm

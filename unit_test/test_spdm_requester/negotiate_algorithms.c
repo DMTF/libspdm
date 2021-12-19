@@ -488,26 +488,26 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
     }
         return RETURN_SUCCESS;
 
-    // case 0x11:
-    // {
-    //   spdm_algorithms_response_t    spdm_response;
-    //
-    //   zero_mem (&spdm_response, sizeof(spdm_response));
-    //   spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    //   spdm_response.header.request_response_code = SPDM_ALGORITHMS;
-    //   spdm_response.header.param1 = 0;
-    //   spdm_response.header.param2 = 0;
-    //   spdm_response.length = sizeof(spdm_algorithms_response_t);
-    //   spdm_response.measurement_specification_sel = SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-    //   spdm_response.measurement_hash_algo = SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512;
-    //   spdm_response.base_asym_sel = m_use_asym_algo;
-    //   spdm_response.base_hash_sel = m_use_hash_algo;
-    //   spdm_response.ext_asym_sel_count = 0;
-    //   spdm_response.ext_hash_sel_count = 0;
-    //
-    //   spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
-    // }
-    //   return RETURN_SUCCESS;
+    /* case 0x11:*/
+    /* {*/
+    /*   spdm_algorithms_response_t    spdm_response;*/
+    
+    /*   zero_mem (&spdm_response, sizeof(spdm_response));*/
+    /*   spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;*/
+    /*   spdm_response.header.request_response_code = SPDM_ALGORITHMS;*/
+    /*   spdm_response.header.param1 = 0;*/
+    /*   spdm_response.header.param2 = 0;*/
+    /*   spdm_response.length = sizeof(spdm_algorithms_response_t);*/
+    /*   spdm_response.measurement_specification_sel = SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;*/
+    /*   spdm_response.measurement_hash_algo = SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512;*/
+    /*   spdm_response.base_asym_sel = m_use_asym_algo;*/
+    /*   spdm_response.base_hash_sel = m_use_hash_algo;*/
+    /*   spdm_response.ext_asym_sel_count = 0;*/
+    /*   spdm_response.ext_hash_sel_count = 0;*/
+    
+    /*   spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);*/
+    /* }*/
+    /*   return RETURN_SUCCESS;*/
 
     case 0x11:
     {
@@ -1163,9 +1163,9 @@ void test_spdm_requester_negotiate_algorithms_case9(void **state)
 
     status = spdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-// #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    //  assert_int_equal (spdm_context->transcript.message_a.buffer_size, sizeof(spdm_negotiate_algorithms_request_t) + sizeof(spdm_algorithms_response_t));
-// #endif
+/* #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
+    /*  assert_int_equal (spdm_context->transcript.message_a.buffer_size, sizeof(spdm_negotiate_algorithms_request_t) + sizeof(spdm_algorithms_response_t));*/
+/* #endif*/
 }
 
 void test_spdm_requester_negotiate_algorithms_case10(void **state)
@@ -1325,23 +1325,23 @@ void test_spdm_requester_negotiate_algorithms_case16(void **state) {
   assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-// void test_spdm_requester_negotiate_algorithms_case17(void **state) {
-//   return_status        status;
-//   spdm_test_context_t    *spdm_test_context;
-//   spdm_context_t  *spdm_context;
-//
-//   spdm_test_context = *state;
-//   spdm_context = spdm_test_context->spdm_context;
-//   spdm_test_context->case_id = 0x11;
-//   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-//   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-//   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;
-//   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
-//   spdm_reset_message_a(spdm_context);
-//
-//   status = spdm_negotiate_algorithms (spdm_context);
-//   assert_int_equal (status, RETURN_DEVICE_ERROR);
-// }
+/* void test_spdm_requester_negotiate_algorithms_case17(void **state) {*/
+/*   return_status        status;*/
+/*   spdm_test_context_t    *spdm_test_context;*/
+/*   spdm_context_t  *spdm_context;*/
+
+/*   spdm_test_context = *state;*/
+/*   spdm_context = spdm_test_context->spdm_context;*/
+/*   spdm_test_context->case_id = 0x11;*/
+/*   spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;*/
+/*   spdm_context->local_context.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;*/
+/*   spdm_context->local_context.algorithm.base_asym_algo = m_use_asym_algo;*/
+/*   spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;*/
+/*   spdm_reset_message_a(spdm_context);*/
+
+/*   status = spdm_negotiate_algorithms (spdm_context);*/
+/*   assert_int_equal (status, RETURN_DEVICE_ERROR);*/
+/* }*/
 
 void test_spdm_requester_negotiate_algorithms_case17(void **state) {
   return_status        status;
@@ -1824,81 +1824,81 @@ spdm_test_context_t m_spdm_requester_negotiate_algorithms_test_context = {
 int spdm_requester_negotiate_algorithms_test_main(void)
 {
     const struct CMUnitTest spdm_requester_negotiate_algorithms_tests[] = {
-        // SendRequest failed
+        /* SendRequest failed*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case1),
-        // Successful response
+        /* Successful response*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case2),
-        // connection_state check failed
+        /* connection_state check failed*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case3),
-        // Error response: SPDM_ERROR_CODE_INVALID_REQUEST
+        /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case4),
-        // Always SPDM_ERROR_CODE_BUSY
+        /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case5),
-        // SPDM_ERROR_CODE_BUSY + Successful response
+        /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case6),
-        // Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH
+        /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case7),
-        // Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
+        /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case8),
-        // SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response
+        /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case9),
-        // When spdm_response.measurement_hash_algo is 0
+        /* When spdm_response.measurement_hash_algo is 0*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case10),
-        // When spdm_response.base_asym_sel is 0
+        /* When spdm_response.base_asym_sel is 0*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case11),
-        // When spdm_response.base_hash_sel is 0
+        /* When spdm_response.base_hash_sel is 0*/
         cmocka_unit_test(
             test_spdm_requester_negotiate_algorithms_case12),
-        // When spdm_response has a size of header and SPDM_ALGORITHMS code
+        /* When spdm_response has a size of header and SPDM_ALGORITHMS code*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case13),
-        // When spdm_response has a size greater than header and smaller than algorithm and SPDM_ALGORITHMS code
+        /* When spdm_response has a size greater than header and smaller than algorithm and SPDM_ALGORITHMS code*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case14),
-        // When spdm_response has ext_asym_sel_count > 1
+        /* When spdm_response has ext_asym_sel_count > 1*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case15),
-        // When spdm_response has ExtAsymHashCount > 1
+        /* When spdm_response has ExtAsymHashCount > 1*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case16),
-        // // When spdm_response returns an unlisted measurement_hash_algo
-        // cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case17),
-        // When spdm_response returns an unlisted base_asym_sel
+        /* When spdm_response returns an unlisted measurement_hash_algo*/
+        /* cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case17),*/
+        /* When spdm_response returns an unlisted base_asym_sel*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case17),
-        // When spdm_response returns an unlisted base_hash_sel
+        /* When spdm_response returns an unlisted base_hash_sel*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case18),
-        // When spdm_response returns multiple measurement_hash_algo
+        /* When spdm_response returns multiple measurement_hash_algo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case19),
-        // When spdm_response returns multiple base_asym_sel
+        /* When spdm_response returns multiple base_asym_sel*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case20),
-        // When spdm_response returns multiple base_hash_sel
+        /* When spdm_response returns multiple base_hash_sel*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case21),
-        // Request and response mismatch version
+        /* Request and response mismatch version*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case22),
-        // Successful V1.1 response
+        /* Successful V1.1 response*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case23),
-        // When spdm_response returns an unlisted DheAlgo
+        /* When spdm_response returns an unlisted DheAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case24),
-        // When spdm_response returns an unlisted AEADAlgo
+        /* When spdm_response returns an unlisted AEADAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case25),
-        // When spdm_response returns an unlisted ReqAsymAlgo
+        /* When spdm_response returns an unlisted ReqAsymAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case26),
-        // When spdm_response returns an unlisted key_schedule
+        /* When spdm_response returns an unlisted key_schedule*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case27),
-        // When spdm_response returns multiple DheAlgo
+        /* When spdm_response returns multiple DheAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case28),
-        // When spdm_response returns multiple AEADAlgo
+        /* When spdm_response returns multiple AEADAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case29),
-        // When spdm_response returns multiple ReqAsymAlgo
+        /* When spdm_response returns multiple ReqAsymAlgo*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case30),
-        // When spdm_response returns multiple key_schedule
+        /* When spdm_response returns multiple key_schedule*/
         cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case31),
     };
 

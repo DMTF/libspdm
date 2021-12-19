@@ -76,16 +76,16 @@ int strcasecmp(const char *s1, const char *s2)
 /* Read formatted data from a string */
 int sscanf(const char *buffer, const char *format, ...)
 {
-    //
-    // Null sscanf() function implementation to satisfy the linker, since
-    // no direct functionality logic dependency in present cases.
-    //
+    
+    /* Null sscanf() function implementation to satisfy the linker, since*/
+    /* no direct functionality logic dependency in present cases.*/
+    
     return 0;
 }
 
-//
-//  -- Dummy OpenSSL Support Routines --
-//
+
+/*  -- Dummy OpenSSL Support Routines --*/
+
 
 uid_t getuid(void)
 {

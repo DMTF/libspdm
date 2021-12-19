@@ -88,8 +88,8 @@ return_status try_spdm_send_receive_psk_exchange(
     uint8_t th2_hash_data[64];
     uint32_t algo_size;
 
-    // Check capabilities even if GET_CAPABILITIES is not sent.
-    // Assuming capabilities are provisioned.
+    /* Check capabilities even if GET_CAPABILITIES is not sent.*/
+    /* Assuming capabilities are provisioned.*/
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
@@ -104,7 +104,7 @@ return_status try_spdm_send_receive_psk_exchange(
     }
 
     {
-        // Double check if algorithm has been provisioned, because ALGORITHM might be skipped.
+        /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, TRUE, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
@@ -291,9 +291,9 @@ return_status try_spdm_send_receive_psk_exchange(
 
     ptr += spdm_response.opaque_length;
 
-    //
-    // Cache session data
-    //
+    
+    /* Cache session data*/
+    
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
@@ -353,7 +353,7 @@ return_status try_spdm_send_receive_psk_exchange(
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
-        // No need to send PSK_FINISH, enter application phase directly.
+        /* No need to send PSK_FINISH, enter application phase directly.*/
 
         DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
                session_id));
@@ -465,4 +465,4 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

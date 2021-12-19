@@ -353,9 +353,9 @@ return_status try_spdm_send_receive_key_exchange(
                  sizeof(uint16_t) + opaque_length + signature_size +
                  hmac_size;
 
-    //
-    // Cache session data
-    //
+    
+    /* Cache session data*/
+    
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
@@ -402,9 +402,9 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    //
-    // Fill data to calc Secret for HMAC verification
-    //
+    
+    /* Fill data to calc Secret for HMAC verification*/
+    
     result = spdm_secured_message_dhe_compute_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, spdm_response.exchange_data, dhe_key_size,
@@ -550,4 +550,4 @@ return_status spdm_send_receive_key_exchange_ex(
     return status;
 }
 
-#endif // LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

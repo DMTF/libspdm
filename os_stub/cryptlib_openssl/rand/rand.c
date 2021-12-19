@@ -12,9 +12,9 @@
 #include <openssl/rand.h>
 #include <openssl/evp.h>
 
-//
-// Default seed for Crypto Library
-//
+
+/* Default seed for Crypto Library*/
+
 const uint8_t default_seed[] = "Crypto Library default seed";
 
 /**
@@ -39,18 +39,18 @@ boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
         return FALSE;
     }
 
-    //
-    // The software PRNG implementation built in OpenSSL depends on message digest algorithm.
-    // Make sure SHA-1 digest algorithm is available here.
-    //
+    
+    /* The software PRNG implementation built in OpenSSL depends on message digest algorithm.*/
+    /* Make sure SHA-1 digest algorithm is available here.*/
+    
     if (EVP_add_digest(EVP_sha256()) == 0) {
         return FALSE;
     }
 
-    //
-    // seed the pseudorandom number generator with user-supplied value.
-    // NOTE: A cryptographic PRNG must be seeded with unpredictable data.
-    //
+    
+    /* seed the pseudorandom number generator with user-supplied value.*/
+    /* NOTE: A cryptographic PRNG must be seeded with unpredictable data.*/
+    
     if (seed != NULL) {
         RAND_seed(seed, (uint32_t)seed_size);
     } else {
@@ -78,16 +78,16 @@ boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 **/
 boolean random_bytes(OUT uint8_t *output, IN uintn size)
 {
-    //
-    // Check input parameters.
-    //
+    
+    /* Check input parameters.*/
+    
     if (output == NULL || size > INT_MAX) {
         return FALSE;
     }
 
-    //
-    // Generate random data.
-    //
+    
+    /* Generate random data.*/
+    
     if (RAND_bytes(output, (uint32_t)size) != 1) {
         return FALSE;
     }
