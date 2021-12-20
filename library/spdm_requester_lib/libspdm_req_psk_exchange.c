@@ -40,8 +40,9 @@ typedef struct {
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
   @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
   @param  requester_context_in_size     The size of requester_context_in.
@@ -60,6 +61,7 @@ typedef struct {
 **/
 return_status try_spdm_send_receive_psk_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
+    IN uint8_t session_policy,
     OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT void *measurement_hash,
     IN void *requester_context_in OPTIONAL,
@@ -381,8 +383,9 @@ return_status try_spdm_send_receive_psk_exchange(
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
 
   @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
@@ -390,6 +393,7 @@ return_status try_spdm_send_receive_psk_exchange(
 **/
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
                          IN uint8_t measurement_hash_type,
+                         IN uint8_t session_policy,
                          OUT uint32_t *session_id,
                          OUT uint8_t *heartbeat_period,
                          OUT void *measurement_hash)
@@ -400,7 +404,7 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_psk_exchange(
-            spdm_context, measurement_hash_type, session_id,
+            spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             NULL, 0, NULL, NULL, NULL, NULL);
         if (RETURN_NO_RESPONSE != status) {
@@ -416,8 +420,9 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
   @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
   @param  requester_context_in_size     The size of requester_context_in.
@@ -436,6 +441,7 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 **/
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
                          IN uint8_t measurement_hash_type,
+                         IN uint8_t session_policy,
                          OUT uint32_t *session_id,
                          OUT uint8_t *heartbeat_period,
                          OUT void *measurement_hash,
@@ -452,7 +458,7 @@ return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_psk_exchange(
-            spdm_context, measurement_hash_type, session_id,
+            spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             requester_context_in, requester_context_in_size,
             requester_context, requester_context_size,

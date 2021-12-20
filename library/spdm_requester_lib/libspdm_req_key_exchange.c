@@ -42,8 +42,9 @@ typedef struct {
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
   @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
   @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
   @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
@@ -55,7 +56,7 @@ typedef struct {
 **/
 return_status try_spdm_send_receive_key_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
     IN void *requester_random_in OPTIONAL,
     OUT void *requester_random OPTIONAL,
@@ -477,8 +478,9 @@ return_status try_spdm_send_receive_key_exchange(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
   @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
   @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
 
@@ -487,7 +489,7 @@ return_status try_spdm_send_receive_key_exchange(
 **/
 return_status spdm_send_receive_key_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash)
 {
     uintn retry;
@@ -496,7 +498,7 @@ return_status spdm_send_receive_key_exchange(
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_key_exchange(
-            spdm_context, measurement_hash_type, slot_id,
+            spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, NULL, NULL, NULL);
         if (RETURN_NO_RESPONSE != status) {
@@ -513,8 +515,9 @@ return_status spdm_send_receive_key_exchange(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
   @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
   @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
   @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
@@ -526,7 +529,7 @@ return_status spdm_send_receive_key_exchange(
 **/
 return_status spdm_send_receive_key_exchange_ex(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
     IN void *requester_random_in OPTIONAL,
     OUT void *requester_random OPTIONAL,
@@ -538,7 +541,7 @@ return_status spdm_send_receive_key_exchange_ex(
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_key_exchange(
-            spdm_context, measurement_hash_type, slot_id,
+            spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);

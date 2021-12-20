@@ -119,7 +119,7 @@ void test_spdm_requester_psk_exchange(void **State)
     zero_mem(measurement_hash, sizeof(measurement_hash));
     spdm_send_receive_psk_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, &session_id,
+        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
 }
 
