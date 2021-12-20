@@ -76,7 +76,7 @@ void test_spdm_requester_get_measurement(void **State)
 
     measurement_record_length = sizeof(measurement_record);
     libspdm_get_measurement(spdm_context, NULL, request_attribute, 1, 0,
-                 &number_of_block, &measurement_record_length,
+                 NULL, &number_of_block, &measurement_record_length,
                  measurement_record);
 
 
