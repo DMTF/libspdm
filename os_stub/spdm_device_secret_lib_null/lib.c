@@ -26,7 +26,7 @@
   @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
   @retval RETURN_***                 Any other RETURN_error code indicating the type of measurement collection failure.
 **/
-return_status spdm_measurement_collection(
+return_status libspdm_measurement_collection(
                     IN spdm_version_number_t spdm_version,
                     IN uint8_t measurement_specification,
                     IN uint32_t measurement_hash_algo,
@@ -58,7 +58,7 @@ return_status spdm_measurement_collection(
   @retval FALSE measurement summary hash is not generated.
 **/
 boolean
-spdm_generate_measurement_summary_hash(
+libspdm_generate_measurement_summary_hash(
     IN spdm_version_number_t spdm_version,
     IN uint32_t   base_hash_algo,
     IN uint8_t    measurement_specification,
@@ -85,7 +85,7 @@ spdm_generate_measurement_summary_hash(
   @retval TRUE  signing success.
   @retval FALSE signing fail.
 **/
-boolean spdm_requester_data_sign(
+boolean libspdm_requester_data_sign(
                  IN spdm_version_number_t spdm_version, IN uint8_t op_code,
                  IN uint16_t req_base_asym_alg,
                  IN uint32_t base_hash_algo, IN boolean is_data_hash,
@@ -110,7 +110,7 @@ boolean spdm_requester_data_sign(
   @retval TRUE  signing success.
   @retval FALSE signing fail.
 **/
-boolean spdm_responder_data_sign(
+boolean libspdm_responder_data_sign(
                  IN spdm_version_number_t spdm_version, IN uint8_t op_code,
                  IN uint32_t base_asym_algo,
                  IN uint32_t base_hash_algo, IN boolean is_data_hash,
@@ -134,7 +134,7 @@ boolean spdm_responder_data_sign(
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_handshake_secret_hkdf_expand(
+boolean libspdm_psk_handshake_secret_hkdf_expand(
                           IN spdm_version_number_t spdm_version,
                           IN uint32_t base_hash_algo,
                           IN const uint8_t *psk_hint,
@@ -160,7 +160,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_master_secret_hkdf_expand(
+boolean libspdm_psk_master_secret_hkdf_expand(
                        IN spdm_version_number_t spdm_version,
                        IN uint32_t base_hash_algo,
                        IN const uint8_t *psk_hint,

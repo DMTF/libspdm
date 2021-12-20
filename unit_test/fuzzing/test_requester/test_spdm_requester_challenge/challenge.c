@@ -40,7 +40,7 @@ void test_spdm_requester_challenge(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
-    uint8_t measurement_hash[MAX_HASH_SIZE];
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
     uintn data_size;
     void *hash;

@@ -12,12 +12,12 @@ typedef struct {
     uint8_t number_of_blocks;
     uint8_t measurement_record_length[3];
     uint8_t measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
-                  MAX_HASH_SIZE) *
+                  LIBSPDM_MAX_HASH_SIZE) *
                  LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT];
     uint8_t nonce[SPDM_NONCE_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t signature[MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
 } spdm_measurements_response_max_t;
 #pragma pack()
 
@@ -80,7 +80,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     uintn signature_size;
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
@@ -107,9 +107,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             ASSERT(FALSE);
             return RETURN_UNSUPPORTED;
         }
-        session_state = spdm_secured_message_get_session_state(
+        session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
-        if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
             return RETURN_UNSUPPORTED;
         }
     }
@@ -133,7 +133,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 
     if (request_attribute ==
         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) {
-        signature_size = spdm_get_asym_signature_size(
+        signature_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);
     } else {
         signature_size = 0;
@@ -158,7 +158,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
 
         if (requester_nonce_in == NULL) {
-            if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
+            if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
                 return RETURN_DEVICE_ERROR;
             }
         } else {

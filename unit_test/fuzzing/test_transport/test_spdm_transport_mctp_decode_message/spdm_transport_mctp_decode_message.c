@@ -31,7 +31,7 @@ void test_spdm_transport_mctp_decode_message(void **State)
 
     transport_message_size = sizeof(transport_message);
 
-    spdm_transport_mctp_decode_message(spdm_context, NULL, &is_app_message, is_requester,
+    libspdm_transport_mctp_decode_message(spdm_context, NULL, &is_app_message, is_requester,
                                        spdm_test_context->test_buffer_size,
                                        spdm_test_context->test_buffer, &transport_message_size,
                                        transport_message);

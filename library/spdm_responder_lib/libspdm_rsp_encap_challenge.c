@@ -50,7 +50,7 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 =
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
-    if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
+    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return RETURN_DEVICE_ERROR;
     }
     DEBUG((DEBUG_INFO, "Encap ClientNonce - "));
@@ -151,9 +151,9 @@ return_status spdm_process_encap_response_challenge_auth(
             return RETURN_DEVICE_ERROR;
         }
     }
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
-    signature_size = spdm_get_req_asym_signature_size(
+    signature_size = libspdm_get_req_asym_signature_size(
         spdm_context->connection_info.algorithm.req_base_asym_alg);
     measurement_summary_hash_size = 0;
 

@@ -33,7 +33,7 @@ return_status spdm_get_response_heartbeat(IN void *context,
     spdm_heartbeat_request_t *spdm_request;
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     spdm_request = request;
@@ -71,9 +71,9 @@ return_status spdm_get_response_heartbeat(IN void *context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);

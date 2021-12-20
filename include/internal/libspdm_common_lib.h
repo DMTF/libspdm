@@ -295,7 +295,7 @@ typedef struct {
     
     /* Cache the error in libspdm_process_request. It is handled in libspdm_build_response.*/
     
-    spdm_error_struct_t last_spdm_error;
+    libspdm_error_struct_t last_spdm_error;
 
     
     /* Register GetResponse function (responder only)*/

@@ -27,10 +27,10 @@ typedef struct {
     uint16_t reserved;
     uint16_t context_length;
     uint16_t opaque_length;
-    uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+    uint8_t measurement_summary_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t context[LIBSPDM_PSK_CONTEXT_LENGTH];
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_psk_exchange_response_max_t;
 
 #pragma pack()
@@ -115,14 +115,14 @@ return_status try_spdm_send_receive_psk_exchange(
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
                 return RETURN_DEVICE_ERROR;
             }
-            algo_size = spdm_get_measurement_hash_size(
+            algo_size = libspdm_get_measurement_hash_size(
                 spdm_context->connection_info.algorithm
                     .measurement_hash_algo);
             if (algo_size == 0) {
                 return RETURN_DEVICE_ERROR;
             }
         }
-        algo_size = spdm_get_hash_size(
+        algo_size = libspdm_get_hash_size(
             spdm_context->connection_info.algorithm.base_hash_algo);
         if (algo_size == 0) {
             return RETURN_DEVICE_ERROR;
@@ -163,7 +163,7 @@ return_status try_spdm_send_receive_psk_exchange(
     ptr += spdm_request.psk_hint_length;
 
     if (requester_context_in == NULL) {
-        if(!spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr)) {
+        if(!libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr)) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -243,7 +243,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, TRUE, measurement_hash_type);
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (spdm_response_size <
@@ -309,7 +309,7 @@ return_status try_spdm_send_receive_psk_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, TRUE,
                      th1_hash_data);
@@ -317,7 +317,7 @@ return_status try_spdm_send_receive_psk_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
-    status = spdm_generate_session_handshake_key(
+    status = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
@@ -347,9 +347,9 @@ return_status try_spdm_send_receive_psk_exchange(
              measurement_summary_hash_size);
     }
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (!spdm_is_capabilities_flag_supported(
@@ -357,22 +357,22 @@ return_status try_spdm_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to send PSK_FINISH, enter application phase directly.*/
 
-        DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
+        DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
                          TRUE, th2_hash_data);
         if (RETURN_ERROR(status)) {
             return RETURN_SECURITY_VIOLATION;
         }
-        status = spdm_generate_session_data_key(
+        status = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
         if (RETURN_ERROR(status)) {
             return RETURN_SECURITY_VIOLATION;
         }
 
-        spdm_secured_message_set_session_state(
+        libspdm_secured_message_set_session_state(
             session_info->secured_message_context,
-            SPDM_SESSION_STATE_ESTABLISHED);
+            LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
     return RETURN_SUCCESS;

@@ -10,13 +10,13 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t signature[MAX_ASYM_KEY_SIZE];
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_finish_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_finish_response_mine_t;
 
 #pragma pack()
@@ -48,7 +48,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     uint8_t *ptr;
     boolean result;
     uint8_t th2_hash_data[64];
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
@@ -68,9 +68,9 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_HANDSHAKING) {
+    if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -94,7 +94,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         spdm_request.header.param1 =
             SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
         spdm_request.header.param2 = req_slot_id_param;
-        signature_size = spdm_get_req_asym_signature_size(
+        signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm
                 .req_base_asym_alg);
     } else {
@@ -118,7 +118,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
                     [req_slot_id_param];
     }
 
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_request_size =
         sizeof(spdm_finish_request_t) + signature_size + hmac_size;
@@ -229,21 +229,21 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         }
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n", session_id));
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
                      th2_hash_data);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
-    status = spdm_generate_session_data_key(
+    status = libspdm_generate_session_data_key(
         session_info->secured_message_context, th2_hash_data);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;

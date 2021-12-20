@@ -11,8 +11,8 @@
 
 
 static uint8_t m_local_psk_hint[32];
-static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
-static uint8_t m_dummy_salt_buffer[MAX_AEAD_IV_SIZE];
+static uint8_t m_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
+static uint8_t m_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 static void spdm_secured_message_set_response_data_encryption_key(
     IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
@@ -115,9 +115,9 @@ void test_spdm_requester_end_session(void **State)
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
     set_mem(m_dummy_key_buffer,
         ((spdm_secured_message_context_t
               *)(session_info->secured_message_context))

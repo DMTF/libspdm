@@ -98,7 +98,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
 #endif
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request1.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
@@ -106,9 +106,9 @@ void test_spdm_responder_challenge_auth_case1(void **state)
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
              sizeof(spdm_challenge_auth_response_t) +
-                 spdm_get_hash_size(m_use_hash_algo) +
+                 libspdm_get_hash_size(m_use_hash_algo) +
                  SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
-                 spdm_get_asym_signature_size(m_use_asym_algo));
+                 libspdm_get_asym_signature_size(m_use_asym_algo));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_CHALLENGE_AUTH);
@@ -167,7 +167,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request2.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request2_size,
@@ -231,7 +231,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request1.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
@@ -296,7 +296,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request1.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
@@ -363,7 +363,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request1.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
@@ -435,7 +435,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_random_number(SPDM_NONCE_SIZE,
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
                    m_spdm_challenge_request1.nonce);
     status = spdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
@@ -488,7 +488,7 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size, &m_spdm_challenge_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
   assert_int_equal (response_size, sizeof(spdm_error_response_t));
@@ -536,7 +536,7 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size, &m_spdm_challenge_request3, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
   assert_int_equal (response_size, sizeof(spdm_error_response_t));
@@ -584,10 +584,10 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request4_size, &m_spdm_challenge_request4, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo));
+  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_use_asym_algo));
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
   assert_int_equal (spdm_response->header.param1, 1);
@@ -632,7 +632,7 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size, &m_spdm_challenge_request3, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
   assert_int_equal (response_size, sizeof(spdm_error_response_t));
@@ -681,10 +681,10 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size, &m_spdm_challenge_request1, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 8 + spdm_get_asym_signature_size (m_use_asym_algo));
+  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 8 + libspdm_get_asym_signature_size (m_use_asym_algo));
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
   assert_int_equal (spdm_response->header.param1, 0);
@@ -730,10 +730,10 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request5_size, &m_spdm_challenge_request5, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + spdm_get_hash_size (m_use_hash_algo) + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo));
+  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + libspdm_get_hash_size (m_use_hash_algo) + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_use_asym_algo));
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
   assert_int_equal (spdm_response->header.param1, 0);
@@ -779,10 +779,10 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size, &m_spdm_challenge_request6, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
-  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + spdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + spdm_get_hash_size (m_use_hash_algo) + sizeof(uint16_t) + 0 + spdm_get_asym_signature_size (m_use_asym_algo));
+  assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (m_use_hash_algo) + SPDM_NONCE_SIZE + libspdm_get_hash_size (m_use_hash_algo) + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_use_asym_algo));
   spdm_response = (void *)response;
   assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
   assert_int_equal (spdm_response->header.param1, 0);
@@ -829,7 +829,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
   libspdm_reset_message_c(spdm_context);
 
   response_size = sizeof(response);
-  spdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
+  libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
   status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size, &m_spdm_challenge_request6, &response_size, response);
   assert_int_equal (status, RETURN_SUCCESS);
   assert_int_equal (response_size, sizeof(spdm_error_response_t));

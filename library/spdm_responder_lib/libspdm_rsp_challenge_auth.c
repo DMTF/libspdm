@@ -90,9 +90,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
                          response_size, response);
     }
 
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, FALSE, spdm_request->header.param2);
@@ -173,7 +173,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     }
     ptr += hash_size;
 
-    result = spdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+    result = libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -184,7 +184,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     if (spdm_is_capabilities_flag_supported(
         spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
-        result = spdm_generate_measurement_summary_hash(
+        result = libspdm_generate_measurement_summary_hash(
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,

@@ -81,7 +81,7 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -92,7 +92,7 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = spdm_hash_all(base_hash_algo, file_data, file_size,
+    res = libspdm_hash_all(base_hash_algo, file_data, file_size,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
@@ -169,7 +169,7 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
         return FALSE;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -184,7 +184,7 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
-    res = spdm_hash_all(base_hash_algo, file_data, file_size,
+    res = libspdm_hash_all(base_hash_algo, file_data, file_size,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
@@ -265,7 +265,7 @@ boolean read_responder_public_certificate_chain(
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -276,7 +276,7 @@ boolean read_responder_public_certificate_chain(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = spdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -294,7 +294,7 @@ boolean read_responder_public_certificate_chain(
         return res;
     }
 
-    res = spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+    res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
@@ -375,7 +375,7 @@ boolean read_requester_public_certificate_chain(
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -386,7 +386,7 @@ boolean read_requester_public_certificate_chain(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = spdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -404,7 +404,7 @@ boolean read_requester_public_certificate_chain(
         return res;
     }
 
-    res = spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+    res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
@@ -470,7 +470,7 @@ boolean read_responder_root_public_certificate_by_size(
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -481,7 +481,7 @@ boolean read_responder_root_public_certificate_by_size(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = spdm_hash_all(base_hash_algo, file_data, file_size,
+    res = libspdm_hash_all(base_hash_algo, file_data, file_size,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
@@ -549,7 +549,7 @@ boolean read_responder_public_certificate_chain_by_size(
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -560,7 +560,7 @@ boolean read_responder_public_certificate_chain_by_size(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = spdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -578,7 +578,7 @@ boolean read_responder_public_certificate_chain_by_size(
         return res;
     }
 
-    res = spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+    res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
               (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);

@@ -42,7 +42,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     uintn spdm_response_size;
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
@@ -62,9 +62,9 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -85,7 +85,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
         }
         spdm_request.header.param2 = 0;
-        if(!spdm_get_random_number(sizeof(spdm_request.header.param2),
+        if(!libspdm_get_random_number(sizeof(spdm_request.header.param2),
                        &spdm_request.header.param2)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -93,11 +93,11 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         /* If updating both, create new responder key*/
         if (!single_direction) {
             DEBUG((DEBUG_INFO,
-                   "spdm_create_update_session_data_key[%x] Responder\n",
+                   "libspdm_create_update_session_data_key[%x] Responder\n",
                    session_id));
-            status = spdm_create_update_session_data_key(
+            status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_RESPONDER);
+                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             if (RETURN_ERROR(status)) {
                 return status;
             }
@@ -118,11 +118,11 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             spdm_response_size < sizeof(spdm_message_header_t)) {
             if (!single_direction) {
                 DEBUG((DEBUG_INFO,
-                       "spdm_activate_update_session_data_key[%x] Responder old\n",
+                       "libspdm_activate_update_session_data_key[%x] Responder old\n",
                        session_id));
-                status = spdm_activate_update_session_data_key(
+                status = libspdm_activate_update_session_data_key(
                     session_info->secured_message_context,
-                    SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                    LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -139,11 +139,11 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             if (RETURN_ERROR(status)) {
                 if (!single_direction) {
                     DEBUG((DEBUG_INFO,
-                           "spdm_activate_update_session_data_key[%x] Responder old\n",
+                           "libspdm_activate_update_session_data_key[%x] Responder old\n",
                            session_id));
-                    temp_status = spdm_activate_update_session_data_key(
+                    temp_status = libspdm_activate_update_session_data_key(
                         session_info->secured_message_context,
-                        SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                        LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
                     /* Try and return most relevant error*/
                     if (RETURN_ERROR(temp_status)) {
                         return temp_status;
@@ -159,11 +159,11 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
             (spdm_response.header.param2 != spdm_request.header.param2)) {
             if (!single_direction) {
                 DEBUG((DEBUG_INFO,
-                       "spdm_activate_update_session_data_key[%x] Responder old\n",
+                       "libspdm_activate_update_session_data_key[%x] Responder old\n",
                        session_id));
-                status = spdm_activate_update_session_data_key(
+                status = libspdm_activate_update_session_data_key(
                     session_info->secured_message_context,
-                    SPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
+                    LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, FALSE);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -173,31 +173,31 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
 
         if (!single_direction) {
             DEBUG((DEBUG_INFO,
-                   "spdm_activate_update_session_data_key[%x] Responder new\n",
-                   session_id, SPDM_KEY_UPDATE_ACTION_RESPONDER));
-            status = spdm_activate_update_session_data_key(
+                   "libspdm_activate_update_session_data_key[%x] Responder new\n",
+                   session_id, LIBSPDM_KEY_UPDATE_ACTION_RESPONDER));
+            status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
             if (RETURN_ERROR(status)) {
                 return status;
             }
         }
 
         DEBUG((DEBUG_INFO,
-               "spdm_create_update_session_data_key[%x] Requester\n",
+               "libspdm_create_update_session_data_key[%x] Requester\n",
                session_id));
-        status = spdm_create_update_session_data_key(
+        status = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
-            SPDM_KEY_UPDATE_ACTION_REQUESTER);
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
         if (RETURN_ERROR(status)) {
             return status;
         }
         DEBUG((DEBUG_INFO,
-               "spdm_activate_update_session_data_key[%x] Requester new\n",
+               "libspdm_activate_update_session_data_key[%x] Requester new\n",
                session_id));
-        status = spdm_activate_update_session_data_key(
+        status = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
-            SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -213,7 +213,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     spdm_request.header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
     spdm_request.header.param2 = 1;
-    if(!spdm_get_random_number(sizeof(spdm_request.header.param2),
+    if(!libspdm_get_random_number(sizeof(spdm_request.header.param2),
                    &spdm_request.header.param2)) {
         return RETURN_DEVICE_ERROR;
     }

@@ -237,14 +237,14 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
             return RETURN_SECURITY_VIOLATION;
         }
-        algo_size = spdm_get_measurement_hash_size(
+        algo_size = libspdm_get_measurement_hash_size(
             spdm_context->connection_info.algorithm
                 .measurement_hash_algo);
         if (algo_size == 0) {
             return RETURN_SECURITY_VIOLATION;
         }
     }
-    algo_size = spdm_get_hash_size(
+    algo_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     if (algo_size == 0) {
         return RETURN_SECURITY_VIOLATION;
@@ -255,7 +255,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
     if (spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
-        algo_size = spdm_get_asym_signature_size(
+        algo_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);
         if (algo_size == 0) {
             return RETURN_SECURITY_VIOLATION;
@@ -307,7 +307,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
                 spdm_context, TRUE,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
-            algo_size = spdm_get_dhe_pub_key_size(
+            algo_size = libspdm_get_dhe_pub_key_size(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group);
             if (algo_size == 0) {
@@ -325,7 +325,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
                 spdm_context, TRUE,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
-            algo_size = spdm_get_aead_key_size(
+            algo_size = libspdm_get_aead_key_size(
                 spdm_context->connection_info.algorithm
                     .aead_cipher_suite);
             if (algo_size == 0) {
@@ -339,7 +339,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
                 spdm_context, TRUE,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-            algo_size = spdm_get_req_asym_signature_size(
+            algo_size = libspdm_get_req_asym_signature_size(
                 spdm_context->connection_info.algorithm
                     .req_base_asym_alg);
             if (algo_size == 0) {

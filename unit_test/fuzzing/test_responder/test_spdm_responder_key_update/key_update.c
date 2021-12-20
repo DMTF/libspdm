@@ -48,9 +48,9 @@ spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, *session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     set_mem(spdm_context->last_update_request, 4, 0x00);
 }
@@ -101,15 +101,15 @@ static void spdm_compute_secret_update(uintn hash_size,
 
     length = (uint16_t)hash_size;
     copy_mem(m_bin_str9, &length, sizeof(uint16_t));
-    copy_mem(m_bin_str9 + sizeof(uint16_t), BIN_CONCAT_LABEL,
-         sizeof(BIN_CONCAT_LABEL) - 1);
-    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1,
-         BIN_STR_9_LABEL, sizeof(BIN_STR_9_LABEL));
-    m_bin_str9_size = sizeof(uint16_t) + sizeof(BIN_CONCAT_LABEL) - 1 +
-              sizeof(BIN_STR_9_LABEL) - 1;
+    copy_mem(m_bin_str9 + sizeof(uint16_t), SPDM_BIN_CONCAT_LABEL,
+         sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+         SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    m_bin_str9_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 +
+              sizeof(SPDM_BIN_STR_9_LABEL) - 1;
     /*context is NULL for key update*/
 
-    spdm_hkdf_expand(m_use_hash_algo, in_secret, hash_size, m_bin_str9,
+    libspdm_hkdf_expand(m_use_hash_algo, in_secret, hash_size, m_bin_str9,
              m_bin_str9_size, out_secret, out_secret_size);
 }
 
@@ -132,8 +132,8 @@ void test_spdm_responder_key_update(void **State)
     spdm_secured_message_context_t *secured_message_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t m_req_secret_buffer[MAX_HASH_SIZE];
-    uint8_t m_rsp_secret_buffer[MAX_HASH_SIZE];
+    uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;

@@ -42,8 +42,8 @@ void *spdm_server_init(void)
     libspdm_register_device_io_func(spdm_context, SpdmResponderSendMessage,
                      SpdmResponderReceiveMessage);
     libspdm_register_transport_layer_func(spdm_context,
-                       spdm_transport_mctp_encode_message,
-                       spdm_transport_mctp_decode_message);
+                       libspdm_transport_mctp_encode_message,
+                       libspdm_transport_mctp_decode_message);
 
     has_rsp_pub_cert = FALSE;
     has_rsp_priv_key = FALSE;

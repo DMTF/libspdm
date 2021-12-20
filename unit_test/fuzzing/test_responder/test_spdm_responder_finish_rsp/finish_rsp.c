@@ -42,7 +42,7 @@ void test_spdm_responder_finish_case1(void **State)
     spdm_session_info_t *session_info;
     uint32_t session_id;
     uint32_t hash_size;
-    uint8_t m_dummy_buffer[MAX_HASH_SIZE];
+    uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -83,14 +83,14 @@ void test_spdm_responder_finish_case1(void **State)
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
-    hash_size = spdm_get_hash_size(m_use_hash_algo);
+    hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_request_finished_key(
         session_info->secured_message_context, m_dummy_buffer,
         hash_size);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;

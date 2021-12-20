@@ -126,7 +126,7 @@ boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
   bitstream and returned as such.
 **/
 
-return_status spdm_measurement_collection(
+return_status libspdm_measurement_collection(
                     IN spdm_version_number_t spdm_version,
                     IN uint8_t measurement_specification,
                     IN uint32_t measurement_hash_algo,
@@ -150,7 +150,7 @@ return_status spdm_measurement_collection(
         return RETURN_INVALID_PARAMETER;
     }
 
-    hash_size = spdm_get_measurement_hash_size(measurement_hash_algo);
+    hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
     ASSERT(hash_size != 0);
 
     if (measurements_index ==
@@ -211,7 +211,7 @@ return_status spdm_measurement_collection(
                     (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                          (uint16_t)hash_size);
 
-                result = spdm_measurement_hash_all(
+                result = libspdm_measurement_hash_all(
                     measurement_hash_algo, data,
                     sizeof(data),
                     (void *)(measurement_block + 1));
@@ -300,7 +300,7 @@ return_status spdm_measurement_collection(
                      (uint16_t)hash_size);
 
             /* Hash directly to buffer after measurement block.*/
-            result = spdm_measurement_hash_all(
+            result = libspdm_measurement_hash_all(
                 measurement_hash_algo, data, sizeof(data),
                 (void *)(measurement_block + 1));
             if (!result) {
@@ -346,7 +346,7 @@ return_status spdm_measurement_collection(
   @retval TRUE  measurement summary hash is generated or skipped.
   @retval FALSE measurement summary hash is not generated.
 **/
-boolean spdm_generate_measurement_summary_hash(
+boolean libspdm_generate_measurement_summary_hash(
     IN spdm_version_number_t spdm_version, IN uint32_t base_hash_algo,
     IN uint8_t measurement_specification, IN uint32_t measurement_hash_algo,
     IN uint8_t measurement_summary_hash_type,
@@ -370,13 +370,13 @@ boolean spdm_generate_measurement_summary_hash(
 
     case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
     case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
-        if (*measurement_summary_hash_size != spdm_get_hash_size(base_hash_algo)) {
+        if (*measurement_summary_hash_size != libspdm_get_hash_size(base_hash_algo)) {
             return FALSE;
         }
 
         /* get all measurement data*/
         device_measurement_size = sizeof(device_measurement);
-        status = spdm_measurement_collection(
+        status = libspdm_measurement_collection(
             spdm_version, measurement_specification,
             measurement_hash_algo,
             0xFF, /* Get all measurements*/
@@ -457,7 +457,7 @@ boolean spdm_generate_measurement_summary_hash(
                      measurment_block_size);
         }
 
-        result = spdm_hash_all(base_hash_algo, measurement_data,
+        result = libspdm_hash_all(base_hash_algo, measurement_data,
                   measurment_data_size, measurement_summary_hash);
         if (!result) {
             return FALSE;
@@ -484,7 +484,7 @@ boolean spdm_generate_measurement_summary_hash(
   @retval TRUE  signing success.
   @retval FALSE signing fail.
 **/
-boolean spdm_requester_data_sign(
+boolean libspdm_requester_data_sign(
                  IN spdm_version_number_t spdm_version, IN uint8_t op_code,
                  IN uint16_t req_base_asym_alg,
                  IN uint32_t base_hash_algo, IN boolean is_data_hash,
@@ -502,7 +502,7 @@ boolean spdm_requester_data_sign(
         return FALSE;
     }
 
-    result = spdm_req_asym_get_private_key_from_pem(req_base_asym_alg,
+    result = libspdm_req_asym_get_private_key_from_pem(req_base_asym_alg,
                             private_pem,
                             private_pem_size, NULL,
                             &context);
@@ -510,13 +510,13 @@ boolean spdm_requester_data_sign(
         return FALSE;
     }
     if (is_data_hash) {
-        result = spdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
+        result = libspdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
                         message, message_size, signature, sig_size);
     } else {
-        result = spdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
+        result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
                         message, message_size, signature, sig_size);
     }
-    spdm_req_asym_free(req_base_asym_alg, context);
+    libspdm_req_asym_free(req_base_asym_alg, context);
     free(private_pem);
 
     return result;
@@ -536,7 +536,7 @@ boolean spdm_requester_data_sign(
   @retval TRUE  signing success.
   @retval FALSE signing fail.
 **/
-boolean spdm_responder_data_sign(
+boolean libspdm_responder_data_sign(
                  IN spdm_version_number_t spdm_version, IN uint8_t op_code,
                  IN uint32_t base_asym_algo,
                  IN uint32_t base_hash_algo, IN boolean is_data_hash,
@@ -554,19 +554,19 @@ boolean spdm_responder_data_sign(
         return FALSE;
     }
 
-    result = spdm_asym_get_private_key_from_pem(
+    result = libspdm_asym_get_private_key_from_pem(
         base_asym_algo, private_pem, private_pem_size, NULL, &context);
     if (!result) {
         return FALSE;
     }
     if (is_data_hash) {
-        result = spdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo, context,
+        result = libspdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo, context,
                     message, message_size, signature, sig_size);
     } else {
-        result = spdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo, context,
+        result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo, context,
                     message, message_size, signature, sig_size);
     }
-    spdm_asym_free(base_asym_algo, context);
+    libspdm_asym_free(base_asym_algo, context);
     free(private_pem);
 
     return result;
@@ -593,7 +593,7 @@ uint8_t m_bin_str0[0x11] = {
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_handshake_secret_hkdf_expand(
+boolean libspdm_psk_handshake_secret_hkdf_expand(
                           IN spdm_version_number_t spdm_version,
                           IN uint32_t base_hash_algo,
                           IN const uint8_t *psk_hint,
@@ -624,15 +624,15 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
     dump_hex_str(psk, psk_size);
     printf("\n");
 
-    hash_size = spdm_get_hash_size(base_hash_algo);
+    hash_size = libspdm_get_hash_size(base_hash_algo);
 
-    result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
+    result = libspdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
                    hash_size, psk, psk_size, handshake_secret);
     if (!result) {
         return result;
     }
 
-    result = spdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
+    result = libspdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
                   info, info_size, out, out_size);
     zero_mem(handshake_secret, hash_size);
 
@@ -653,7 +653,7 @@ boolean spdm_psk_handshake_secret_hkdf_expand(
   @retval TRUE   Hkdf generated successfully.
   @retval FALSE  Hkdf generation failed.
 **/
-boolean spdm_psk_master_secret_hkdf_expand(
+boolean libspdm_psk_master_secret_hkdf_expand(
                        IN spdm_version_number_t spdm_version,
                        IN uint32_t base_hash_algo,
                        IN const uint8_t *psk_hint,
@@ -683,16 +683,16 @@ boolean spdm_psk_master_secret_hkdf_expand(
         return FALSE;
     }
 
-    hash_size = spdm_get_hash_size(base_hash_algo);
+    hash_size = libspdm_get_hash_size(base_hash_algo);
 
-    result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
+    result = libspdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
                    hash_size, psk, psk_size, handshake_secret);
     if (!result) {
         return result;
     }
 
     *(uint16_t *)m_bin_str0 = (uint16_t)hash_size;
-    result = spdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
+    result = libspdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
                   m_bin_str0, sizeof(m_bin_str0), salt1,
                   hash_size);
     zero_mem(handshake_secret, hash_size);
@@ -700,14 +700,14 @@ boolean spdm_psk_master_secret_hkdf_expand(
         return result;
     }
 
-    result = spdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
+    result = libspdm_hmac_all(base_hash_algo, m_my_zero_filled_buffer,
                    hash_size, salt1, hash_size, master_secret);
     zero_mem(salt1, hash_size);
     if (!result) {
         return result;
     }
 
-    result = spdm_hkdf_expand(base_hash_algo, master_secret, hash_size,
+    result = libspdm_hkdf_expand(base_hash_algo, master_secret, hash_size,
                   info, info_size, out, out_size);
     zero_mem(master_secret, hash_size);
 

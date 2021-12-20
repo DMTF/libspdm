@@ -15,7 +15,7 @@ typedef struct {
     uint16_t req_session_id;
     uint16_t reserved;
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
-    uint8_t exchange_data[MAX_DHE_KEY_SIZE];
+    uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
@@ -26,12 +26,12 @@ typedef struct {
     uint8_t mut_auth_requested;
     uint8_t req_slot_id_param;
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
-    uint8_t exchange_data[MAX_DHE_KEY_SIZE];
-    uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+    uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
+    uint8_t measurement_summary_hash[LIBSPDM_MAX_HASH_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t signature[MAX_ASYM_KEY_SIZE];
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_key_exchange_response_max_t;
 
 #pragma pack()
@@ -112,7 +112,7 @@ return_status try_spdm_send_receive_key_exchange(
     spdm_request.header.param1 = measurement_hash_type;
     spdm_request.header.param2 = slot_id;
     if (requester_random_in == NULL) {
-        if(!spdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request.random_data)) {
+        if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request.random_data)) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -131,19 +131,19 @@ return_status try_spdm_send_receive_key_exchange(
     spdm_request.reserved = 0;
 
     ptr = spdm_request.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(
+    dhe_key_size = libspdm_get_dhe_pub_key_size(
         spdm_context->connection_info.algorithm.dhe_named_group);
-    dhe_context = spdm_secured_message_dhe_new(
+    dhe_context = libspdm_secured_message_dhe_new(
         spdm_context->connection_info.algorithm.dhe_named_group);
     if (dhe_context == NULL) {
         return RETURN_DEVICE_ERROR;
     }
 
-    result = spdm_secured_message_dhe_generate_key(
+    result = libspdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
     if (!result) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -165,7 +165,7 @@ return_status try_spdm_send_receive_key_exchange(
     status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                     &spdm_request);
     if (RETURN_ERROR(status)) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -176,13 +176,13 @@ return_status try_spdm_send_receive_key_exchange(
     status = spdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -194,7 +194,7 @@ return_status try_spdm_send_receive_key_exchange(
             SPDM_KEY_EXCHANGE_RSP,
             sizeof(spdm_key_exchange_response_max_t));
         if (RETURN_ERROR(status)) {
-            spdm_secured_message_dhe_free(
+            libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group,
                 dhe_context);
@@ -202,19 +202,19 @@ return_status try_spdm_send_receive_key_exchange(
         }
     } else if (spdm_response.header.request_response_code !=
            SPDM_KEY_EXCHANGE_RSP) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_key_exchange_response_t)) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size > sizeof(spdm_response)) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -225,7 +225,7 @@ return_status try_spdm_send_receive_key_exchange(
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         if (spdm_response.header.param1 != 0) {
-            spdm_secured_message_dhe_free(
+            libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group,
                 dhe_context);
@@ -240,7 +240,7 @@ return_status try_spdm_send_receive_key_exchange(
         if ((spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
             (spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
             (spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) {
-            spdm_secured_message_dhe_free(
+            libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group,
                 dhe_context);
@@ -249,7 +249,7 @@ return_status try_spdm_send_receive_key_exchange(
         if ((*req_slot_id_param != 0xF) &&
             (*req_slot_id_param >=
              spdm_context->local_context.slot_count)) {
-            spdm_secured_message_dhe_free(
+            libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group,
                 dhe_context);
@@ -257,7 +257,7 @@ return_status try_spdm_send_receive_key_exchange(
         }
     } else {
         if (*req_slot_id_param != 0) {
-            spdm_secured_message_dhe_free(
+            libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                     .dhe_named_group,
                 dhe_context);
@@ -268,17 +268,17 @@ return_status try_spdm_send_receive_key_exchange(
     *session_id = (req_session_id << 16) | rsp_session_id;
     session_info = libspdm_assign_session_id(spdm_context, *session_id, FALSE);
     if (session_info == NULL) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
 
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, TRUE, measurement_hash_type);
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (spdm_is_capabilities_flag_supported(
@@ -293,7 +293,7 @@ return_status try_spdm_send_receive_key_exchange(
             measurement_summary_hash_size + sizeof(uint16_t) +
             signature_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -332,7 +332,7 @@ return_status try_spdm_send_receive_key_exchange(
             measurement_summary_hash_size + sizeof(uint16_t) +
             opaque_length + signature_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_DEVICE_ERROR;
@@ -341,7 +341,7 @@ return_status try_spdm_send_receive_key_exchange(
         spdm_context, opaque_length, ptr);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_UNSUPPORTED;
@@ -361,7 +361,7 @@ return_status try_spdm_send_receive_key_exchange(
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_SECURITY_VIOLATION;
@@ -372,7 +372,7 @@ return_status try_spdm_send_receive_key_exchange(
                            hmac_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_SECURITY_VIOLATION;
@@ -386,7 +386,7 @@ return_status try_spdm_send_receive_key_exchange(
         spdm_context, session_info, signature, signature_size);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         spdm_context->error_state =
@@ -397,7 +397,7 @@ return_status try_spdm_send_receive_key_exchange(
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, signature, signature_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         return RETURN_SECURITY_VIOLATION;
@@ -406,11 +406,11 @@ return_status try_spdm_send_receive_key_exchange(
     
     /* Fill data to calc Secret for HMAC verification*/
     
-    result = spdm_secured_message_dhe_compute_key(
+    result = libspdm_secured_message_dhe_compute_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, spdm_response.exchange_data, dhe_key_size,
         session_info->secured_message_context);
-    spdm_secured_message_dhe_free(
+    libspdm_secured_message_dhe_free(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context);
     if (!result) {
@@ -418,7 +418,7 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, TRUE,
                      th1_hash_data);
@@ -426,7 +426,7 @@ return_status try_spdm_send_receive_key_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
-    status = spdm_generate_session_handshake_key(
+    status = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
@@ -464,9 +464,9 @@ return_status try_spdm_send_receive_key_exchange(
     }
     session_info->mut_auth_requested = spdm_response.mut_auth_requested;
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;

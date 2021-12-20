@@ -91,7 +91,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                     SPDM_PSK_EXCHANGE, response_size,
                     response);
             }
-            algo_size = spdm_get_measurement_hash_size(
+            algo_size = libspdm_get_measurement_hash_size(
                 spdm_context->connection_info.algorithm
                     .measurement_hash_algo);
             if (algo_size == 0) {
@@ -102,7 +102,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                     response);
             }
         }
-        algo_size = spdm_get_hash_size(
+        algo_size = libspdm_get_hash_size(
             spdm_context->connection_info.algorithm.base_hash_algo);
         if (algo_size == 0) {
             return libspdm_generate_error_response(
@@ -149,7 +149,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, FALSE, spdm_request->header.param1);
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (request_size < sizeof(spdm_psk_exchange_request_t)) {
@@ -231,7 +231,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     if (spdm_is_capabilities_flag_supported(
         spdm_context, FALSE, 0,  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
-        result = spdm_generate_measurement_summary_hash(
+        result = libspdm_generate_measurement_summary_hash(
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,
@@ -259,7 +259,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     ptr += measurement_summary_hash_size;
 
     if (context_length != 0) {
-        if(!spdm_get_random_number(context_length, ptr)) {
+        if(!libspdm_get_random_number(context_length, ptr)) {
             return RETURN_DEVICE_ERROR;
         }
         ptr += context_length;
@@ -288,7 +288,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                          response_size, response);
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, FALSE,
                      th1_hash_data);
@@ -298,7 +298,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
                          response_size, response);
     }
-    status = spdm_generate_session_handshake_key(
+    status = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
@@ -325,14 +325,14 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     ptr += hmac_size;
 
     spdm_set_session_state(spdm_context, session_id,
-                   SPDM_SESSION_STATE_HANDSHAKING);
+                   LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, FALSE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to receive PSK_FINISH, enter application phase directly.*/
 
-        DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n",
+        DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
                          FALSE, th2_hash_data);
@@ -341,7 +341,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);
         }
-        status = spdm_generate_session_data_key(
+        status = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
         if (RETURN_ERROR(status)) {
             return libspdm_generate_error_response(
@@ -350,7 +350,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
         }
 
         spdm_set_session_state(spdm_context, session_id,
-                       SPDM_SESSION_STATE_ESTABLISHED);
+                       LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
     return RETURN_SUCCESS;

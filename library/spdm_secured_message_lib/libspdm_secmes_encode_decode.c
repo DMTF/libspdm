@@ -16,17 +16,17 @@
   @param  app_message                   A pointer to a source buffer to store the application message.
   @param  secured_message_size           size in bytes of the secured message data buffer.
   @param  secured_message               A pointer to a destination buffer to store the secured message.
-  @param  spdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status spdm_encode_secured_message(
+return_status libspdm_encode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
     IN boolean is_requester, IN uintn app_message_size,
     IN void *app_message, IN OUT uintn *secured_message_size,
     OUT void *secured_message,
-    IN spdm_secured_message_callbacks_t *spdm_secured_message_callbacks_t)
+    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn total_secured_message_size;
@@ -45,31 +45,31 @@ return_status spdm_encode_secured_message(
     uintn record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
     boolean result;
-    uint8_t key[MAX_AEAD_KEY_SIZE];
-    uint8_t salt[MAX_AEAD_IV_SIZE];
+    uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];
+    uint8_t salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
     uint8_t sequence_num_in_header_size;
-    spdm_session_type_t session_type;
+    libspdm_session_type_t session_type;
     uint32_t rand_count;
     uint32_t max_rand_count;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     secured_message_context = spdm_secured_message_context;
 
     session_type = secured_message_context->session_type;
-    ASSERT((session_type == SPDM_SESSION_TYPE_MAC_ONLY) ||
-           (session_type == SPDM_SESSION_TYPE_ENC_MAC));
+    ASSERT((session_type == LIBSPDM_SESSION_TYPE_MAC_ONLY) ||
+           (session_type == LIBSPDM_SESSION_TYPE_ENC_MAC));
     session_state = secured_message_context->session_state;
-    ASSERT((session_state == SPDM_SESSION_STATE_HANDSHAKING) ||
-           (session_state == SPDM_SESSION_STATE_ESTABLISHED));
+    ASSERT((session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) ||
+           (session_state == LIBSPDM_SESSION_STATE_ESTABLISHED));
 
     aead_tag_size = secured_message_context->aead_tag_size;
     aead_key_size = secured_message_context->aead_key_size;
     aead_iv_size = secured_message_context->aead_iv_size;
 
     switch (session_state) {
-    case SPDM_SESSION_STATE_HANDSHAKING:
+    case LIBSPDM_SESSION_STATE_HANDSHAKING:
         if (is_requester) {
             copy_mem(key,
                  secured_message_context->handshake_secret
@@ -96,7 +96,7 @@ return_status spdm_encode_secured_message(
                     .response_handshake_sequence_number;
         }
         break;
-    case SPDM_SESSION_STATE_ESTABLISHED:
+    case LIBSPDM_SESSION_STATE_ESTABLISHED:
         if (is_requester) {
             copy_mem(key,
                  secured_message_context->application_secret
@@ -137,13 +137,13 @@ return_status spdm_encode_secured_message(
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
-        spdm_secured_message_callbacks_t->get_sequence_number(
+        libspdm_secured_message_callbacks_t->get_sequence_number(
             sequence_number, (uint8_t *)&sequence_num_in_header);
     ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
     sequence_number++;
     switch (session_state) {
-    case SPDM_SESSION_STATE_HANDSHAKING:
+    case LIBSPDM_SESSION_STATE_HANDSHAKING:
         if (is_requester) {
             secured_message_context->handshake_secret
                 .request_handshake_sequence_number =
@@ -154,7 +154,7 @@ return_status spdm_encode_secured_message(
                 sequence_number;
         }
         break;
-    case SPDM_SESSION_STATE_ESTABLISHED:
+    case LIBSPDM_SESSION_STATE_ESTABLISHED:
         if (is_requester) {
             secured_message_context->application_secret
                 .request_data_sequence_number = sequence_number;
@@ -174,12 +174,12 @@ return_status spdm_encode_secured_message(
                  sizeof(spdm_secured_message_a_data_header2_t);
 
     switch (session_type) {
-    case SPDM_SESSION_TYPE_ENC_MAC:
-        max_rand_count = spdm_secured_message_callbacks_t
+    case LIBSPDM_SESSION_TYPE_ENC_MAC:
+        max_rand_count = libspdm_secured_message_callbacks_t
                      ->get_max_random_number_count();
         if (max_rand_count != 0) {
             rand_count = 0;
-            result = spdm_get_random_number(sizeof(rand_count),
+            result = libspdm_get_random_number(sizeof(rand_count),
                 (uint8_t *)&rand_count);
             if (!result) {
                 return RETURN_DEVICE_ERROR;
@@ -216,7 +216,7 @@ return_status spdm_encode_secured_message(
         enc_msg_header->application_data_length =
             (uint16_t)app_message_size;
         copy_mem(enc_msg_header + 1, app_message, app_message_size);
-        result = spdm_get_random_number(rand_count,
+        result = libspdm_get_random_number(rand_count,
             (uint8_t *)enc_msg_header +
                 sizeof(spdm_secured_message_cipher_header_t) +
                 app_message_size);
@@ -232,7 +232,7 @@ return_status spdm_encode_secured_message(
         tag = (uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
 
-        result = spdm_aead_encryption(
+        result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
@@ -240,7 +240,7 @@ return_status spdm_encode_secured_message(
             aead_tag_size, enc_msg, &cipher_text_size);
         break;
 
-    case SPDM_SESSION_TYPE_MAC_ONLY:
+    case LIBSPDM_SESSION_TYPE_MAC_ONLY:
         total_secured_message_size =
             record_header_size + app_message_size + aead_tag_size;
 
@@ -265,7 +265,7 @@ return_status spdm_encode_secured_message(
         tag = (uint8_t *)record_header1 + record_header_size +
               app_message_size;
 
-        result = spdm_aead_encryption(
+        result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
@@ -293,18 +293,18 @@ return_status spdm_encode_secured_message(
   @param  secured_message               A pointer to a source buffer to store the secured message.
   @param  app_message_size               size in bytes of the application message data buffer.
   @param  app_message                   A pointer to a destination buffer to store the application message.
-  @param  spdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is decoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
   @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
 **/
-return_status spdm_decode_secured_message(
+return_status libspdm_decode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
     IN boolean is_requester, IN uintn secured_message_size,
     IN void *secured_message, IN OUT uintn *app_message_size,
     OUT void *app_message,
-    IN spdm_secured_message_callbacks_t *spdm_secured_message_callbacks_t)
+    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn plain_text_size;
@@ -321,20 +321,20 @@ return_status spdm_decode_secured_message(
     uintn record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
     boolean result;
-    uint8_t key[MAX_AEAD_KEY_SIZE];
-    uint8_t salt[MAX_AEAD_IV_SIZE];
+    uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];
+    uint8_t salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
     uint8_t sequence_num_in_header_size;
-    spdm_session_type_t session_type;
-    spdm_session_state_t session_state;
-    spdm_error_struct_t spdm_error;
+    libspdm_session_type_t session_type;
+    libspdm_session_state_t session_state;
+    libspdm_error_struct_t spdm_error;
     uint8_t dec_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     return_status status;
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
-    spdm_secured_message_set_last_spdm_error_struct(
+    libspdm_secured_message_set_last_spdm_error_struct(
         spdm_secured_message_context, &spdm_error);
 
     spdm_error.error_code = SPDM_ERROR_CODE_DECRYPT_ERROR;
@@ -343,18 +343,18 @@ return_status spdm_decode_secured_message(
     secured_message_context = spdm_secured_message_context;
 
     session_type = secured_message_context->session_type;
-    ASSERT((session_type == SPDM_SESSION_TYPE_MAC_ONLY) ||
-           (session_type == SPDM_SESSION_TYPE_ENC_MAC));
+    ASSERT((session_type == LIBSPDM_SESSION_TYPE_MAC_ONLY) ||
+           (session_type == LIBSPDM_SESSION_TYPE_ENC_MAC));
     session_state = secured_message_context->session_state;
-    ASSERT((session_state == SPDM_SESSION_STATE_HANDSHAKING) ||
-           (session_state == SPDM_SESSION_STATE_ESTABLISHED));
+    ASSERT((session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) ||
+           (session_state == LIBSPDM_SESSION_STATE_ESTABLISHED));
 
     aead_tag_size = secured_message_context->aead_tag_size;
     aead_key_size = secured_message_context->aead_key_size;
     aead_iv_size = secured_message_context->aead_iv_size;
 
     switch (session_state) {
-    case SPDM_SESSION_STATE_HANDSHAKING:
+    case LIBSPDM_SESSION_STATE_HANDSHAKING:
         if (is_requester) {
             copy_mem(key,
                  secured_message_context->handshake_secret
@@ -381,7 +381,7 @@ return_status spdm_decode_secured_message(
                     .response_handshake_sequence_number;
         }
         break;
-    case SPDM_SESSION_STATE_ESTABLISHED:
+    case LIBSPDM_SESSION_STATE_ESTABLISHED:
         if (is_requester) {
             copy_mem(key,
                  secured_message_context->application_secret
@@ -414,7 +414,7 @@ return_status spdm_decode_secured_message(
     }
 
     if (sequence_number == (uint64_t)-1) {
-        spdm_secured_message_set_last_spdm_error_struct(
+        libspdm_secured_message_set_last_spdm_error_struct(
             spdm_secured_message_context, &spdm_error);
         return RETURN_SECURITY_VIOLATION;
     }
@@ -423,13 +423,13 @@ return_status spdm_decode_secured_message(
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
-        spdm_secured_message_callbacks_t->get_sequence_number(
+        libspdm_secured_message_callbacks_t->get_sequence_number(
             sequence_number, (uint8_t *)&sequence_num_in_header);
     ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
     sequence_number++;
     switch (session_state) {
-    case SPDM_SESSION_STATE_HANDSHAKING:
+    case LIBSPDM_SESSION_STATE_HANDSHAKING:
         if (is_requester) {
             secured_message_context->handshake_secret
                 .request_handshake_sequence_number =
@@ -440,7 +440,7 @@ return_status spdm_decode_secured_message(
                 sequence_number;
         }
         break;
-    case SPDM_SESSION_STATE_ESTABLISHED:
+    case LIBSPDM_SESSION_STATE_ESTABLISHED:
         if (is_requester) {
             secured_message_context->application_secret
                 .request_data_sequence_number = sequence_number;
@@ -460,9 +460,9 @@ return_status spdm_decode_secured_message(
                  sizeof(spdm_secured_message_a_data_header2_t);
 
     switch (session_type) {
-    case SPDM_SESSION_TYPE_ENC_MAC:
+    case LIBSPDM_SESSION_TYPE_ENC_MAC:
         if (secured_message_size < record_header_size + aead_tag_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -472,24 +472,24 @@ return_status spdm_decode_secured_message(
                  sizeof(spdm_secured_message_a_data_header1_t) +
                  sequence_num_in_header_size);
         if (record_header1->session_id != session_id) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (const_compare_mem(record_header1 + 1, &sequence_num_in_header,
                 sequence_num_in_header_size) != 0) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (record_header2->length >
             secured_message_size - record_header_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (record_header2->length < aead_tag_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -505,7 +505,7 @@ return_status spdm_decode_secured_message(
         enc_msg_header = (void *)dec_msg;
         tag = (uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
-        result = spdm_aead_decryption(
+        result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
@@ -514,22 +514,22 @@ return_status spdm_decode_secured_message(
         if (!result) {
             
             /* Try to use backup key to decrypt, because peer may use old key to encrypt error message.*/
-            /* Recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().*/
+            /* Recursive call only once, because the xxx_backup_valid will be cleard in libspdm_activate_update_session_data_key().*/
             
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                status = spdm_activate_update_session_data_key(
+                status = libspdm_activate_update_session_data_key(
                     secured_message_context,
-                    is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
                     FALSE);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
-                status = spdm_decode_secured_message(
+                status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
-                    app_message, spdm_secured_message_callbacks_t);
+                    app_message, libspdm_secured_message_callbacks_t);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -537,19 +537,19 @@ return_status spdm_decode_secured_message(
                 /* Handle special case:*/
                 /* If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.*/
                 /* Then later the responder will return SUCCESS, the requester need activate new key.*/
-                /* So we need restore the environment by spdm_create_update_session_data_key() again.*/
+                /* So we need restore the environment by libspdm_create_update_session_data_key() again.*/
                 
-                return spdm_create_update_session_data_key (secured_message_context,
-                    is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
+                return libspdm_create_update_session_data_key (secured_message_context,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             }
 
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         plain_text_size = enc_msg_header->application_data_length;
         if (plain_text_size > cipher_text_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -563,9 +563,9 @@ return_status spdm_decode_secured_message(
         copy_mem(app_message, enc_msg_header + 1, plain_text_size);
         break;
 
-    case SPDM_SESSION_TYPE_MAC_ONLY:
+    case LIBSPDM_SESSION_TYPE_MAC_ONLY:
         if (secured_message_size < record_header_size + aead_tag_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -575,31 +575,31 @@ return_status spdm_decode_secured_message(
                  sizeof(spdm_secured_message_a_data_header1_t) +
                  sequence_num_in_header_size);
         if (record_header1->session_id != session_id) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (const_compare_mem(record_header1 + 1, &sequence_num_in_header,
                 sequence_num_in_header_size) != 0) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (record_header2->length >
             secured_message_size - record_header_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         if (record_header2->length < aead_tag_size) {
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
               record_header2->length - aead_tag_size;
-        result = spdm_aead_decryption(
+        result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
@@ -609,22 +609,22 @@ return_status spdm_decode_secured_message(
         if (!result) {
             
             /* try to use backup key to decrypt, because peer may use old key to encrypt error message.*/
-            /* recursive call only once, because the xxx_backup_valid will be cleard in spdm_activate_update_session_data_key().*/
+            /* recursive call only once, because the xxx_backup_valid will be cleard in libspdm_activate_update_session_data_key().*/
             
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                status = spdm_activate_update_session_data_key(
+                status = libspdm_activate_update_session_data_key(
                     secured_message_context,
-                    is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
                     FALSE);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
-                status = spdm_decode_secured_message(
+                status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
-                    app_message, spdm_secured_message_callbacks_t);
+                    app_message, libspdm_secured_message_callbacks_t);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -632,13 +632,13 @@ return_status spdm_decode_secured_message(
                 /* Handle special case:*/
                 /* If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.*/
                 /* Then later the responder will return SUCCESS, the requester need activate new key.*/
-                /* So we need restore the environment by spdm_create_update_session_data_key() again.*/
+                /* So we need restore the environment by libspdm_create_update_session_data_key() again.*/
                 
-                return spdm_create_update_session_data_key (secured_message_context,
-                    is_requester ? SPDM_KEY_UPDATE_ACTION_REQUESTER : SPDM_KEY_UPDATE_ACTION_RESPONDER);
+                return libspdm_create_update_session_data_key (secured_message_context,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             }
 
-            spdm_secured_message_set_last_spdm_error_struct(
+            libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return RETURN_SECURITY_VIOLATION;
         }

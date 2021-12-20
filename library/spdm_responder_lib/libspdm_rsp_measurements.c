@@ -32,7 +32,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
     boolean result;
     return_status status;
 
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     measurment_sig_size =
         SPDM_NONCE_SIZE + sizeof(uint16_t) +
@@ -42,7 +42,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                measurment_sig_size);
 
-    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
         return FALSE;
     }
     ptr += SPDM_NONCE_SIZE;
@@ -85,7 +85,7 @@ boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                measurment_no_sig_size);
 
-    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
         return FALSE;
     }
     ptr += SPDM_NONCE_SIZE;
@@ -140,7 +140,7 @@ return_status spdm_get_response_measurements(IN void *context,
     uintn  measurements_size;
     boolean ret;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
 
     spdm_context = context;
@@ -186,9 +186,9 @@ return_status spdm_get_response_measurements(IN void *context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
         }
-        session_state = spdm_secured_message_get_session_state(
+        session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
-        if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -242,7 +242,7 @@ return_status spdm_get_response_measurements(IN void *context,
 
     spdm_response_size = sizeof(spdm_measurements_response_t);
 
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
 
     measurements_sig_size =
@@ -284,7 +284,7 @@ return_status spdm_get_response_measurements(IN void *context,
 
     measurements = (uint8_t*)response + sizeof(spdm_measurements_response_t);
 
-    status = spdm_measurement_collection(
+    status = libspdm_measurement_collection(
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
