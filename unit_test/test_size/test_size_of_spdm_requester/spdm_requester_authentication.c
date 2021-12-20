@@ -30,7 +30,8 @@ return_status
 spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
             OUT void *total_digest_buffer, IN uint8_t slot_id,
             IN OUT uintn *cert_chain_size, OUT void *cert_chain,
-            IN uint8_t measurement_hash_type, OUT void *measurement_hash)
+            IN uint8_t measurement_hash_type, OUT void *measurement_hash,
+            OUT uint8_t *auth_slot_mask)
 {
     return_status status;
 
@@ -53,7 +54,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, slot_id, measurement_hash_type,
-                measurement_hash);
+                measurement_hash, auth_slot_mask);
     if (RETURN_ERROR(status)) {
         return status;
     }
@@ -74,6 +75,7 @@ return_status do_authentication_via_spdm(IN void *spdm_context)
     uint8_t measurement_hash[MAX_HASH_SIZE];
     uintn cert_chain_size;
     uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    uint8_t auth_slot_mask;
 
     zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     cert_chain_size = sizeof(cert_chain);
@@ -83,7 +85,7 @@ return_status do_authentication_via_spdm(IN void *spdm_context)
         spdm_context, &slot_mask, &total_digest_buffer, 0,
         &cert_chain_size, cert_chain,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-        measurement_hash);
+        measurement_hash, &auth_slot_mask);
     if (RETURN_ERROR(status)) {
         return status;
     }

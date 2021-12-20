@@ -45,6 +45,7 @@ void test_spdm_requester_challenge(void **State)
     uintn data_size;
     void *hash;
     uintn hash_size;
+    uint8_t slot_mask;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -75,7 +76,7 @@ void test_spdm_requester_challenge(void **State)
     zero_mem(measurement_hash, sizeof(measurement_hash));
     libspdm_challenge(spdm_context, 0,
                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-               measurement_hash);
+               measurement_hash, &slot_mask);
 }
 
 spdm_test_context_t m_spdm_requester_challenge_test_context = {

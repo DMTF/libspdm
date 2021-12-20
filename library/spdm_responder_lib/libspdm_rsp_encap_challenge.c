@@ -146,8 +146,8 @@ return_status spdm_process_encap_response_challenge_auth(
             spdm_context->encap_context.req_slot_id) {
             return RETURN_DEVICE_ERROR;
         }
-        if (spdm_response->header.param2 !=
-            (1 << spdm_context->encap_context.req_slot_id)) {
+        if ((spdm_response->header.param2 &
+            (1 << spdm_context->encap_context.req_slot_id)) == 0) {
             return RETURN_DEVICE_ERROR;
         }
     }
