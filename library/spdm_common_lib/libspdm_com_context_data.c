@@ -73,15 +73,10 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
 
     switch (data_type) {
     case LIBSPDM_DATA_SPDM_VERSION:
-        if (data_size >
-            sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT) {
-            return RETURN_INVALID_PARAMETER;
-        }
+        ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            if (data_size != sizeof(spdm_version_number_t)) {
-                /* Only have one connected version */
-                return RETURN_INVALID_PARAMETER;
-            }
+            /* Only have one connected version */
+            ASSERT (data_size == sizeof(spdm_version_number_t));
             copy_mem(
                  &(spdm_context->connection_info.version),
                  data,
@@ -99,15 +94,10 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
-        if (data_size >
-            sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT) {
-            return RETURN_INVALID_PARAMETER;
-        }
+        ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            if (data_size != sizeof(spdm_version_number_t)) {
-                /* Only have one connected version */
-                return RETURN_INVALID_PARAMETER;
-            }
+            /* Only have one connected version */
+            ASSERT (data_size == sizeof(spdm_version_number_t));
             copy_mem(
                  &(spdm_context->connection_info.secured_message_version),
                  data,

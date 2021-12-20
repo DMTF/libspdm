@@ -14,7 +14,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[LIBSPDM_MAX_VERSION_COUNT];
 } spdm_version_response_mine_t;
 #pragma pack()
 

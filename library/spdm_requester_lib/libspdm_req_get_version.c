@@ -11,7 +11,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[LIBSPDM_MAX_VERSION_COUNT];
 } spdm_version_response_max_t;
 #pragma pack()
 
@@ -198,7 +198,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     if (spdm_response_size > sizeof(spdm_response)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response.version_number_entry_count > SPDM_MAX_VERSION_COUNT) {
+    if (spdm_response.version_number_entry_count > LIBSPDM_MAX_VERSION_COUNT) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.version_number_entry_count == 0) {
