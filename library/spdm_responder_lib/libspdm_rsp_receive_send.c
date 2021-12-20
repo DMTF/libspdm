@@ -201,7 +201,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
 **/
 void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
                      IN uint32_t session_id,
-                     IN spdm_session_state_t session_state)
+                     IN libspdm_session_state_t session_state)
 {
     uintn index;
 
@@ -223,10 +223,10 @@ void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
 */
 void spdm_set_session_state(IN spdm_context_t *spdm_context,
                 IN uint32_t session_id,
-                IN spdm_session_state_t session_state)
+                IN libspdm_session_state_t session_state)
 {
     spdm_session_info_t *session_info;
-    spdm_session_state_t old_session_state;
+    libspdm_session_state_t old_session_state;
 
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -235,10 +235,10 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
         return;
     }
 
-    old_session_state = spdm_secured_message_get_session_state(
+    old_session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (old_session_state != session_state) {
-        spdm_secured_message_set_session_state(
+        libspdm_secured_message_set_session_state(
             session_info->secured_message_context, session_state);
         spdm_trigger_session_state_callback(
             spdm_context, session_info->session_id, session_state);
@@ -452,16 +452,16 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
                 spdm_set_session_state(
                     spdm_context, *session_id,
-                    SPDM_SESSION_STATE_ESTABLISHED);
+                    LIBSPDM_SESSION_STATE_ESTABLISHED);
             }
             break;
         case SPDM_PSK_FINISH_RSP:
             spdm_set_session_state(spdm_context, *session_id,
-                           SPDM_SESSION_STATE_ESTABLISHED);
+                           LIBSPDM_SESSION_STATE_ESTABLISHED);
             break;
         case SPDM_END_SESSION_ACK:
             spdm_set_session_state(spdm_context, *session_id,
-                           SPDM_SESSION_STATE_NOT_STARTED);
+                           LIBSPDM_SESSION_STATE_NOT_STARTED);
             libspdm_free_session_id(spdm_context, *session_id);
             break;
         }
@@ -475,7 +475,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                 spdm_set_session_state(
                     spdm_context,
                     spdm_context->latest_session_id,
-                    SPDM_SESSION_STATE_ESTABLISHED);
+                    LIBSPDM_SESSION_STATE_ESTABLISHED);
             }
             break;
         }

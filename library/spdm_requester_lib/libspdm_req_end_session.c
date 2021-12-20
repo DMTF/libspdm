@@ -35,7 +35,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     spdm_end_session_response_mine_t spdm_response;
     uintn spdm_response_size;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
@@ -47,9 +47,9 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -104,9 +104,9 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 
     session_info->end_session_attributes = end_session_attributes;
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_NOT_STARTED);
+        LIBSPDM_SESSION_STATE_NOT_STARTED);
     libspdm_free_session_id(spdm_context, session_id);
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;

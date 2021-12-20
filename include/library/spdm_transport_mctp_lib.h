@@ -34,7 +34,7 @@
   @retval RETURN_SUCCESS               The message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
 **/
-return_status spdm_transport_mctp_encode_message(
+return_status libspdm_transport_mctp_encode_message(
     IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
     IN boolean is_requester, IN uintn message_size, IN void *message,
     IN OUT uintn *transport_message_size, OUT void *transport_message);
@@ -65,7 +65,7 @@ return_status spdm_transport_mctp_encode_message(
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
   @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
 **/
-return_status spdm_transport_mctp_decode_message(
+return_status libspdm_transport_mctp_decode_message(
     IN void *spdm_context, OUT uint32_t **session_id,
     OUT boolean *is_app_message, IN boolean is_requester,
     IN uintn transport_message_size, IN void *transport_message,
@@ -84,7 +84,7 @@ return_status spdm_transport_mctp_decode_message(
           It shall be no greater than 8.
           0 means no sequence number is required.
 **/
-uint8_t spdm_mctp_get_sequence_number(IN uint64_t sequence_number,
+uint8_t libspdm_mctp_get_sequence_number(IN uint64_t sequence_number,
                     IN OUT uint8_t *sequence_number_buffer);
 
 /**
@@ -95,6 +95,6 @@ uint8_t spdm_mctp_get_sequence_number(IN uint64_t sequence_number,
   @return Max random number count in an SPDM secured message.
           0 means no randum number is required.
 **/
-uint32_t spdm_mctp_get_max_random_number_count(void);
+uint32_t libspdm_mctp_get_max_random_number_count(void);
 
 #endif

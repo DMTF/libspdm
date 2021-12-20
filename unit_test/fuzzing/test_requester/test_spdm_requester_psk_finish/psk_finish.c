@@ -75,8 +75,8 @@ void test_spdm_requester_psk_finish(void **State)
     spdm_session_info_t *session_info;
 
     static uint8_t m_local_psk_hint[32];
-    static uint8_t m_dummy_key_buffer[MAX_AEAD_KEY_SIZE];
-    static uint8_t m_dummy_salt_buffer[MAX_AEAD_IV_SIZE];
+    static uint8_t m_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
+    static uint8_t m_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -121,9 +121,9 @@ void test_spdm_requester_psk_finish(void **State)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     set_mem(m_dummy_key_buffer,
         ((spdm_secured_message_context_t
               *)(session_info->secured_message_context))

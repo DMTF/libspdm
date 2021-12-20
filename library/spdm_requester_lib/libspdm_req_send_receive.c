@@ -176,7 +176,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
                      IN uintn request_size, IN void *request)
 {
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     if ((session_id != NULL) &&
         spdm_is_capabilities_flag_supported(
@@ -189,9 +189,9 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
         if (session_info == NULL) {
             return RETURN_DEVICE_ERROR;
         }
-        session_state = spdm_secured_message_get_session_state(
+        session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
-        if ((session_state == SPDM_SESSION_STATE_HANDSHAKING) &&
+        if ((session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) &&
             !session_info->use_psk) {
             session_id = NULL;
         }
@@ -222,7 +222,7 @@ return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
                      OUT void *response)
 {
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     if ((session_id != NULL) &&
         spdm_is_capabilities_flag_supported(
@@ -235,9 +235,9 @@ return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
         if (session_info == NULL) {
             return RETURN_DEVICE_ERROR;
         }
-        session_state = spdm_secured_message_get_session_state(
+        session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
-        if ((session_state == SPDM_SESSION_STATE_HANDSHAKING) &&
+        if ((session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) &&
             !session_info->use_psk) {
             session_id = NULL;
         }

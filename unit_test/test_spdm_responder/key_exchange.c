@@ -16,7 +16,7 @@ typedef struct {
     uint16_t req_session_id;
     uint16_t reserved;
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
-    uint8_t exchange_data[MAX_DHE_KEY_SIZE];
+    uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
@@ -81,16 +81,16 @@ void test_spdm_responder_key_exchange_case1(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -104,9 +104,9 @@ void test_spdm_responder_key_exchange_case1(void **state)
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
-        spdm_secured_message_get_session_state(
+        libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_KEY_EXCHANGE_RSP);
@@ -160,16 +160,16 @@ void test_spdm_responder_key_exchange_case2(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request2.random_data);
     m_spdm_key_exchange_request2.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request2.reserved = 0;
     ptr = m_spdm_key_exchange_request2.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -239,16 +239,16 @@ void test_spdm_responder_key_exchange_case3(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -319,16 +319,16 @@ void test_spdm_responder_key_exchange_case4(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -401,16 +401,16 @@ void test_spdm_responder_key_exchange_case5(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -487,16 +487,16 @@ void test_spdm_responder_key_exchange_case6(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -577,16 +577,16 @@ void test_spdm_responder_key_exchange_case7(void **state)
                             spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
 
-    spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
-    dhe_key_size = spdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = spdm_dhe_new(m_use_dhe_algo);
-    spdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
-    spdm_dhe_free(m_use_dhe_algo, dhe_context);
+    libspdm_dhe_free(m_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         spdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
@@ -600,9 +600,9 @@ void test_spdm_responder_key_exchange_case7(void **state)
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
-        spdm_secured_message_get_session_state(
+        libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_KEY_EXCHANGE_RSP);

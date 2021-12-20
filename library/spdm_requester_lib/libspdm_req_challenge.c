@@ -10,12 +10,12 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t cert_chain_hash[MAX_HASH_SIZE];
+    uint8_t cert_chain_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t nonce[SPDM_NONCE_SIZE];
-    uint8_t measurement_summary_hash[MAX_HASH_SIZE];
+    uint8_t measurement_summary_hash[LIBSPDM_MAX_HASH_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t signature[MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
 } spdm_challenge_auth_response_max_t;
 
 #pragma pack()
@@ -102,7 +102,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     spdm_request.header.param1 = slot_id;
     spdm_request.header.param2 = measurement_hash_type;
     if (requester_nonce_in == NULL) {
-        if(!spdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
+        if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -178,9 +178,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
             return RETURN_DEVICE_ERROR;
         }
     }
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, TRUE, measurement_hash_type);

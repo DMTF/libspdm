@@ -35,7 +35,7 @@ return_status spdm_get_response_key_update(IN void *context,
     spdm_key_update_request_t *prev_spdm_request;
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
     return_status status;
 
     spdm_context = context;
@@ -75,9 +75,9 @@ return_status spdm_get_response_key_update(IN void *context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
@@ -106,11 +106,11 @@ return_status spdm_get_response_key_update(IN void *context,
             }
 
             DEBUG((DEBUG_INFO,
-                   "spdm_create_update_session_data_key[%x] Requester\n",
+                   "libspdm_create_update_session_data_key[%x] Requester\n",
                    session_id));
-            status = spdm_create_update_session_data_key(
+            status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_REQUESTER);
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
@@ -126,29 +126,29 @@ return_status spdm_get_response_key_update(IN void *context,
             }
 
             DEBUG((DEBUG_INFO,
-                   "spdm_create_update_session_data_key[%x] Requester\n",
+                   "libspdm_create_update_session_data_key[%x] Requester\n",
                    session_id));
-            status = spdm_create_update_session_data_key(
+            status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_REQUESTER);
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             DEBUG((DEBUG_INFO,
-                   "spdm_create_update_session_data_key[%x] Responder\n",
+                   "libspdm_create_update_session_data_key[%x] Responder\n",
                    session_id));
-            status = spdm_create_update_session_data_key(
+            status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_RESPONDER);
+                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
             DEBUG((DEBUG_INFO,
-                   "spdm_activate_update_session_data_key[%x] Responder new\n",
+                   "libspdm_activate_update_session_data_key[%x] Responder new\n",
                    session_id));
-            status = spdm_activate_update_session_data_key(
+            status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
@@ -163,11 +163,11 @@ return_status spdm_get_response_key_update(IN void *context,
                                  response_size, response);
             }
             DEBUG((DEBUG_INFO,
-                   "spdm_activate_update_session_data_key[%x] Requester new\n",
+                   "libspdm_activate_update_session_data_key[%x] Requester new\n",
                    session_id));
-            status = spdm_activate_update_session_data_key(
+            status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
-                SPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }

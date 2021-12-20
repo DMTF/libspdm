@@ -45,7 +45,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     dmtf_oid_size = 64;
     zero_mem(common_name, common_name_size);
     zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = spdm_get_dmtf_subject_alt_name_from_bytes(
+    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_subject_alt_name_buffer1, sizeof(m_subject_alt_name_buffer1),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -56,7 +56,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     dmtf_oid_size = 64;
     zero_mem(common_name, common_name_size);
     zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = spdm_get_dmtf_subject_alt_name_from_bytes(
+    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_subject_alt_name_buffer2, sizeof(m_subject_alt_name_buffer2),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -67,7 +67,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     dmtf_oid_size = 64;
     zero_mem(common_name, common_name_size);
     zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = spdm_get_dmtf_subject_alt_name_from_bytes(
+    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_subject_alt_name_buffer3, sizeof(m_subject_alt_name_buffer3),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -91,7 +91,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -104,7 +104,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -117,7 +117,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -130,7 +130,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -143,7 +143,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -156,7 +156,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = spdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
                          common_name, &common_name_size,
                          dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
@@ -174,42 +174,42 @@ void test_spdm_crypt_spdm_x509_certificate_check(void **state)
     status = read_input_file("rsa2048/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("rsa3072/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("rsa4096/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp256/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp384/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp512/end_requester.cert.der",
                  (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = spdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 }

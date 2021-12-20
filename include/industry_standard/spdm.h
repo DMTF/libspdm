@@ -859,4 +859,16 @@ typedef struct {
 
 #pragma pack()
 
+#define SPDM_BIN_CONCAT_LABEL "spdm1.1 "
+#define SPDM_BIN_STR_0_LABEL "derived"
+#define SPDM_BIN_STR_1_LABEL "req hs data"
+#define SPDM_BIN_STR_2_LABEL "rsp hs data"
+#define SPDM_BIN_STR_3_LABEL "req app data"
+#define SPDM_BIN_STR_4_LABEL "rsp app data"
+#define SPDM_BIN_STR_5_LABEL "key"
+#define SPDM_BIN_STR_6_LABEL "iv"
+#define SPDM_BIN_STR_7_LABEL "finished"
+#define SPDM_BIN_STR_8_LABEL "exp master"
+#define SPDM_BIN_STR_9_LABEL "traffic upd"
+
 #endif

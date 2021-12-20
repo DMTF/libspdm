@@ -89,7 +89,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                libspdm_get_hash_size(m_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -102,8 +102,8 @@ return_status spdm_requester_get_digests_test_receive_message(
         digest = (void *)(spdm_response + 1);
         /*send all eight certchains digest*/
         /*but only No.7 is right*/
-        digest += spdm_get_hash_size(m_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        digest += libspdm_get_hash_size(m_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (0xFF << 0);
 
@@ -124,7 +124,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo);
+                libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -135,7 +135,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (1 << 0);
 
@@ -201,7 +201,7 @@ return_status spdm_requester_get_digests_test_receive_message(
                 ->connection_info.algorithm.base_hash_algo =
                 m_use_hash_algo;
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                    spdm_get_hash_size(m_use_hash_algo);
+                    libspdm_get_hash_size(m_use_hash_algo);
             spdm_response = (void *)temp_buf;
 
             spdm_response->header.spdm_version =
@@ -214,7 +214,7 @@ return_status spdm_requester_get_digests_test_receive_message(
                 LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            spdm_hash_all(m_use_hash_algo,
+            libspdm_hash_all(m_use_hash_algo,
                       m_local_certificate_chain,
                       LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
             spdm_response->header.param2 |= (1 << 0);
@@ -294,7 +294,7 @@ return_status spdm_requester_get_digests_test_receive_message(
                 ->connection_info.algorithm.base_hash_algo =
                 m_use_hash_algo;
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                    spdm_get_hash_size(m_use_hash_algo);
+                    libspdm_get_hash_size(m_use_hash_algo);
             spdm_response = (void *)temp_buf;
 
             spdm_response->header.spdm_version =
@@ -307,7 +307,7 @@ return_status spdm_requester_get_digests_test_receive_message(
                 LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            spdm_hash_all(m_use_hash_algo,
+            libspdm_hash_all(m_use_hash_algo,
                       m_local_certificate_chain,
                       LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
             spdm_response->header.param2 |= (1 << 0);
@@ -359,7 +359,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo);
+                libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -370,7 +370,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (1 << 0);
 
@@ -409,7 +409,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo);
+                libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -420,7 +420,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (1 << 0);
 
@@ -441,7 +441,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo);
+                libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -452,9 +452,9 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        digest[spdm_get_hash_size(m_use_hash_algo) - 1] = 0;
+        digest[libspdm_get_hash_size(m_use_hash_algo) - 1] = 0;
         spdm_response->header.param2 |= (1 << 0);
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
@@ -477,7 +477,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             m_use_hash_algo;
         digest_count = 4;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                spdm_get_hash_size(m_use_hash_algo);
+                libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -489,7 +489,7 @@ return_status spdm_requester_get_digests_test_receive_message(
 
         digest = (void *)(spdm_response + 1);
 
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         for (index = 0; index < digest_count; index++) {
             spdm_response->header.param2 |= (1 << index);
@@ -516,7 +516,7 @@ return_status spdm_requester_get_digests_test_receive_message(
         digest_count = 4;
         temp_buf_size =
             sizeof(spdm_digest_response_t) +
-            digest_count * spdm_get_hash_size(m_use_hash_algo);
+            digest_count * libspdm_get_hash_size(m_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -529,15 +529,15 @@ return_status spdm_requester_get_digests_test_receive_message(
         digest = (void *)(spdm_response + 1);
 
         for (index = 0; index < digest_count; index++) {
-            spdm_hash_all(
+            libspdm_hash_all(
                 m_use_hash_algo, m_local_certificate_chain,
                 LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                 &digest[index *
-                    spdm_get_hash_size(m_use_hash_algo)]);
+                    libspdm_get_hash_size(m_use_hash_algo)]);
             spdm_response->header.param2 |= (1 << index);
             if (index == 0)
                 continue;
-            digest[(index + 1) * spdm_get_hash_size(m_use_hash_algo) -
+            digest[(index + 1) * libspdm_get_hash_size(m_use_hash_algo) -
                    1] = 0;
         }
 
@@ -581,7 +581,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
             m_use_hash_algo;
         temp_buf_size = sizeof(spdm_message_header_t) +
-                MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + 1;
+                LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + 1;
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -592,7 +592,7 @@ return_status spdm_requester_get_digests_test_receive_message(
             (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        spdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
+        libspdm_hash_all(m_use_hash_algo, m_local_certificate_chain,
                   LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
         spdm_response->header.param2 |= (1 << 0);
 
@@ -647,7 +647,7 @@ void test_spdm_requester_get_digests_case1(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -685,7 +685,7 @@ void test_spdm_requester_get_digests_case2(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -717,7 +717,7 @@ void test_spdm_requester_get_digests_case2(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
             sizeof(spdm_digest_response_t) +
-            spdm_get_hash_size(spdm_context->connection_info
+            libspdm_get_hash_size(spdm_context->connection_info
                            .algorithm.base_hash_algo) * MAX_SPDM_SLOT_COUNT);
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
@@ -734,7 +734,7 @@ void test_spdm_requester_get_digests_case3(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -772,7 +772,7 @@ void test_spdm_requester_get_digests_case4(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -810,7 +810,7 @@ void test_spdm_requester_get_digests_case5(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -849,7 +849,7 @@ void test_spdm_requester_get_digests_case6(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -877,7 +877,7 @@ void test_spdm_requester_get_digests_case6(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
             sizeof(spdm_digest_response_t) +
-            spdm_get_hash_size(spdm_context->connection_info
+            libspdm_get_hash_size(spdm_context->connection_info
                            .algorithm.base_hash_algo));
 #endif
 }
@@ -893,7 +893,7 @@ void test_spdm_requester_get_digests_case7(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -934,7 +934,7 @@ void test_spdm_requester_get_digests_case8(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -970,7 +970,7 @@ void test_spdm_requester_get_digests_case9(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -998,7 +998,7 @@ void test_spdm_requester_get_digests_case9(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
             sizeof(spdm_digest_response_t) +
-            spdm_get_hash_size(spdm_context->connection_info
+            libspdm_get_hash_size(spdm_context->connection_info
                            .algorithm.base_hash_algo));
 #endif
 }
@@ -1014,7 +1014,7 @@ void test_spdm_requester_get_digests_case10(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1051,7 +1051,7 @@ void test_spdm_requester_get_digests_case11(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1091,7 +1091,7 @@ void test_spdm_requester_get_digests_case12(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1130,7 +1130,7 @@ void test_spdm_requester_get_digests_case13(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1169,7 +1169,7 @@ void test_spdm_requester_get_digests_case14(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1208,7 +1208,7 @@ void test_spdm_requester_get_digests_case15(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
 
     spdm_test_context = *state;
@@ -1249,7 +1249,7 @@ void test_spdm_requester_get_digests_case16(void **state)
 #endif
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1290,7 +1290,7 @@ void test_spdm_requester_get_digests_case17(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1328,7 +1328,7 @@ void test_spdm_requester_get_digests_case18(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1367,7 +1367,7 @@ void test_spdm_requester_get_digests_case19(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1405,7 +1405,7 @@ void test_spdm_requester_get_digests_case20(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1445,7 +1445,7 @@ void test_spdm_requester_get_digests_case21(void **state)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint8_t slot_mask;
-    uint8_t total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1487,7 +1487,7 @@ void test_spdm_requester_get_digests_case22(void **state) {
   spdm_test_context_t    *spdm_test_context;
   spdm_context_t  *spdm_context;
   uint8_t                 slot_mask;
-  uint8_t                 total_digest_buffer[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+  uint8_t                 total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
   uint16_t                error_code;
 
   spdm_test_context = *state;

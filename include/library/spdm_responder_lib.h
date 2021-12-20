@@ -196,7 +196,7 @@ return_status libspdm_generate_extended_error_response(
 **/
 typedef void (*libspdm_session_state_callback_func)(
     IN void *spdm_context, IN uint32_t session_id,
-    IN spdm_session_state_t session_state);
+    IN libspdm_session_state_t session_state);
 
 /**
   Register an SPDM state callback function.

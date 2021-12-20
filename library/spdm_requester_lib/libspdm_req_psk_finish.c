@@ -12,7 +12,7 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_psk_finish_request_mine_t;
 
 typedef struct {
@@ -42,7 +42,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     uintn spdm_response_size;
     spdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
     boolean result;
 
     if (!spdm_is_capabilities_flag_supported(
@@ -63,9 +63,9 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
         ASSERT(FALSE);
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_HANDSHAKING) {
+    if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -76,7 +76,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
 
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
 
@@ -142,21 +142,21 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n", session_id));
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
                      th2_hash_data);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
-    status = spdm_generate_session_data_key(
+    status = libspdm_generate_session_data_key(
         session_info->secured_message_context, th2_hash_data);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
 
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;

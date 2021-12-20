@@ -71,9 +71,9 @@ return_status spdm_get_encap_response_challenge_auth(
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    signature_size = spdm_get_req_asym_signature_size(
+    signature_size = libspdm_get_req_asym_signature_size(
         spdm_context->connection_info.algorithm.req_base_asym_alg);
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     measurement_summary_hash_size = 0;
 
@@ -115,7 +115,7 @@ return_status spdm_get_encap_response_challenge_auth(
     }
     ptr += hash_size;
 
-    if(!spdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
         return RETURN_DEVICE_ERROR;
     }
     ptr += SPDM_NONCE_SIZE;

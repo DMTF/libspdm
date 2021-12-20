@@ -110,11 +110,11 @@ return_status spdm_get_response_key_exchange(IN void *context,
         slot_id = spdm_context->local_context.provisioned_slot_id;
     }
 
-    signature_size = spdm_get_asym_signature_size(
+    signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
-    dhe_key_size = spdm_get_dhe_pub_key_size(
+    dhe_key_size = libspdm_get_dhe_pub_key_size(
         spdm_context->connection_info.algorithm.dhe_named_group);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
         spdm_context, FALSE, spdm_request->header.param1);
@@ -219,19 +219,19 @@ return_status spdm_get_response_key_exchange(IN void *context,
         spdm_response->req_slot_id_param = 0;
     }
 
-    if(!spdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+    if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                    spdm_response->random_data)) {
         return RETURN_DEVICE_ERROR;
     }
 
     ptr = (void *)(spdm_response + 1);
-    dhe_context = spdm_secured_message_dhe_new(
+    dhe_context = libspdm_secured_message_dhe_new(
         spdm_context->connection_info.algorithm.dhe_named_group);
-    result = spdm_secured_message_dhe_generate_key(
+    result = libspdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
     if (!result) {
-        spdm_secured_message_dhe_free(
+        libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         libspdm_free_session_id(spdm_context, session_id);
@@ -247,12 +247,12 @@ return_status spdm_get_response_key_exchange(IN void *context,
                   sizeof(spdm_key_exchange_request_t),
               dhe_key_size);
 
-    result = spdm_secured_message_dhe_compute_key(
+    result = libspdm_secured_message_dhe_compute_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context,
         (uint8_t *)request + sizeof(spdm_key_exchange_request_t),
         dhe_key_size, session_info->secured_message_context);
-    spdm_secured_message_dhe_free(
+    libspdm_secured_message_dhe_free(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context);
     if (!result) {
@@ -267,7 +267,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
     if (spdm_is_capabilities_flag_supported(
         spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
-        result = spdm_generate_measurement_summary_hash(
+        result = libspdm_generate_measurement_summary_hash(
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,
@@ -334,7 +334,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
                          response_size, response);
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_handshake_key[%x]\n",
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, FALSE,
                      th1_hash_data);
@@ -344,7 +344,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
                          response_size, response);
     }
-    status = spdm_generate_session_handshake_key(
+    status = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
@@ -381,7 +381,7 @@ return_status spdm_get_response_key_exchange(IN void *context,
 
     session_info->mut_auth_requested = spdm_response->mut_auth_requested;
     spdm_set_session_state(spdm_context, session_id,
-                   SPDM_SESSION_STATE_HANDSHAKING);
+                   LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     return RETURN_SUCCESS;
 }

@@ -24,7 +24,7 @@
           It shall be no greater than 8.
           0 means no sequence number is required.
 **/
-uint8_t spdm_pci_doe_get_sequence_number(IN uint64_t sequence_number,
+uint8_t libspdm_pci_doe_get_sequence_number(IN uint64_t sequence_number,
                        IN OUT uint8_t *sequence_number_buffer)
 {
     copy_mem(sequence_number_buffer, &sequence_number,
@@ -40,7 +40,7 @@ uint8_t spdm_pci_doe_get_sequence_number(IN uint64_t sequence_number,
   @return Max random number count in an SPDM secured message.
           0 means no randum number is required.
 **/
-uint32_t spdm_pci_doe_get_max_random_number_count(void)
+uint32_t libspdm_pci_doe_get_max_random_number_count(void)
 {
     return PCI_DOE_MAX_RANDOM_NUMBER_COUNT;
 }

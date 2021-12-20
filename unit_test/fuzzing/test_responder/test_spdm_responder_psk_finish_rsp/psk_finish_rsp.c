@@ -21,7 +21,7 @@ spdm_test_context_t m_spdm_responder_psk_finish_rsp_test_context = {
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_psk_finish_request_mine_t;
 
 static void spdm_secured_message_set_request_finished_key(
@@ -44,7 +44,7 @@ void test_spdm_responder_psk_finish_rsp(void **State)
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
     uintn data_size1;
-    static uint8_t m_dummy_buffer[MAX_HASH_SIZE];
+    static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     uint8_t m_local_psk_hint[32];
     spdm_session_info_t *session_info;
@@ -96,14 +96,14 @@ void test_spdm_responder_psk_finish_rsp(void **State)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    hash_size = spdm_get_hash_size(m_use_hash_algo);
+    hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_request_finished_key(
         session_info->secured_message_context, m_dummy_buffer,
         hash_size);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     response_size = sizeof(response);
     spdm_get_response_psk_finish(spdm_context,

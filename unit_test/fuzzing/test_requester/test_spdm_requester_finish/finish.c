@@ -38,8 +38,8 @@ return_status spdm_device_receive_message(IN void *spdm_context,
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t signature[MAX_ASYM_KEY_SIZE];
-    uint8_t verify_data[MAX_HASH_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_finish_request_mine_t;
 
 spdm_finish_request_mine_t m_spdm_finish_request1 = {
@@ -58,7 +58,7 @@ void test_spdm_requester_get_version(void **State)
     void *hash;
     uintn hash_size;
     spdm_session_info_t *session_info;
-    uint8_t m_dummy_buffer[MAX_HASH_SIZE];
+    uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -105,7 +105,7 @@ void test_spdm_requester_get_version(void **State)
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
 

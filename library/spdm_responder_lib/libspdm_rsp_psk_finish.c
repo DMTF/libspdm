@@ -38,7 +38,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
     uint8_t th2_hash_data[64];
     spdm_psk_finish_request_t *spdm_request;
     return_status status;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     spdm_request = request;
@@ -77,16 +77,16 @@ return_status spdm_get_response_psk_finish(IN void *context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_HANDSHAKING) {
+    if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                          response_size, response);
     }
 
     /* remove HMAC*/
-    hmac_size = spdm_get_hash_size(
+    hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (request_size != sizeof(spdm_psk_finish_request_t) + hmac_size) {
@@ -143,7 +143,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
                          response_size, response);
     }
 
-    DEBUG((DEBUG_INFO, "spdm_generate_session_data_key[%x]\n", session_id));
+    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, FALSE,
                      th2_hash_data);
     if (RETURN_ERROR(status)) {
@@ -151,7 +151,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
                          SPDM_ERROR_CODE_UNSPECIFIED, 0,
                          response_size, response);
     }
-    status = spdm_generate_session_data_key(
+    status = libspdm_generate_session_data_key(
         session_info->secured_message_context, th2_hash_data);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,

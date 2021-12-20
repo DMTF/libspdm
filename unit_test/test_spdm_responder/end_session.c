@@ -79,9 +79,9 @@ void test_spdm_responder_end_session_case1(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -155,9 +155,9 @@ void test_spdm_responder_end_session_case2(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -235,9 +235,9 @@ void test_spdm_responder_end_session_case3(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -316,9 +316,9 @@ void test_spdm_responder_end_session_case4(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -399,9 +399,9 @@ void test_spdm_responder_end_session_case5(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -486,9 +486,9 @@ void test_spdm_responder_end_session_case6(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
     status = spdm_get_response_end_session(spdm_context,
@@ -565,9 +565,9 @@ void test_spdm_responder_end_session_case7(void **state)
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
-    spdm_secured_message_set_session_state(
+    libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
-        SPDM_SESSION_STATE_ESTABLISHED);
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_m.buffer_size =
                             session_info->session_transcript.message_m.max_buffer_size;

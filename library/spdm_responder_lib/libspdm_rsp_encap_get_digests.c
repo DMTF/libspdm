@@ -117,7 +117,7 @@ return_status spdm_process_encap_response_digest(
         return RETURN_DEVICE_ERROR;
     }
 
-    digest_size = spdm_get_hash_size(
+    digest_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     digest_count = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {

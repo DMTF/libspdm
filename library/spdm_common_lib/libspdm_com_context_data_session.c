@@ -16,7 +16,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
                 IN spdm_session_info_t *session_info,
                 IN uint32_t session_id, IN boolean use_psk)
 {
-    spdm_session_type_t session_type;
+    libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
 
     capabilities_flag = spdm_context->connection_info.capability.flags &
@@ -25,32 +25,32 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
         (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP)) {
     case 0:
-        session_type = SPDM_SESSION_TYPE_NONE;
+        session_type = LIBSPDM_SESSION_TYPE_NONE;
         break;
     case (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
           SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP):
-        session_type = SPDM_SESSION_TYPE_ENC_MAC;
+        session_type = LIBSPDM_SESSION_TYPE_ENC_MAC;
         break;
     case SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP:
-        session_type = SPDM_SESSION_TYPE_MAC_ONLY;
+        session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
         break;
     default:
         ASSERT(FALSE);
-        session_type = SPDM_SESSION_TYPE_MAX;
+        session_type = LIBSPDM_SESSION_TYPE_MAX;
         break;
     }
 
     zero_mem(session_info,
          OFFSET_OF(spdm_session_info_t, secured_message_context));
-    spdm_secured_message_init_context(
+    libspdm_secured_message_init_context(
         session_info->secured_message_context);
     session_info->session_id = session_id;
     session_info->use_psk = use_psk;
-    spdm_secured_message_set_use_psk(session_info->secured_message_context,
+    libspdm_secured_message_set_use_psk(session_info->secured_message_context,
                      use_psk);
-    spdm_secured_message_set_session_type(
+    libspdm_secured_message_set_session_type(
         session_info->secured_message_context, session_type);
-    spdm_secured_message_set_algorithms(
+    libspdm_secured_message_set_algorithms(
         session_info->secured_message_context,
         spdm_context->connection_info.version,
         spdm_context->connection_info.secured_message_version,
@@ -58,7 +58,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.dhe_named_group,
         spdm_context->connection_info.algorithm.aead_cipher_suite,
         spdm_context->connection_info.algorithm.key_schedule);
-    spdm_secured_message_set_psk_hint(
+    libspdm_secured_message_set_psk_hint(
         session_info->secured_message_context,
         spdm_context->local_context.psk_hint,
         spdm_context->local_context.psk_hint_size);

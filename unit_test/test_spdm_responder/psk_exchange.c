@@ -102,7 +102,7 @@ void test_spdm_responder_psk_exchange_case1(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -117,9 +117,9 @@ void test_spdm_responder_psk_exchange_case1(void **state)
         &m_spdm_psk_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
-        spdm_secured_message_get_session_state(
+        libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_PSK_EXCHANGE_RSP);
@@ -195,7 +195,7 @@ void test_spdm_responder_psk_exchange_case2(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request2.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request2.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -280,7 +280,7 @@ void test_spdm_responder_psk_exchange_case3(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -366,7 +366,7 @@ void test_spdm_responder_psk_exchange_case4(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -454,7 +454,7 @@ void test_spdm_responder_psk_exchange_case5(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -546,7 +546,7 @@ void test_spdm_responder_psk_exchange_case6(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -630,7 +630,7 @@ void test_spdm_responder_psk_exchange_case7(void **state)
     copy_mem(ptr, spdm_context->local_context.psk_hint,
          spdm_context->local_context.psk_hint_size);
     ptr += m_spdm_psk_exchange_request1.psk_hint_length;
-    spdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_spdm_psk_exchange_request1.context_length;
     spdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
@@ -655,9 +655,9 @@ void test_spdm_responder_psk_exchange_case7(void **state)
         &m_spdm_psk_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
-        spdm_secured_message_get_session_state(
+        libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
-        SPDM_SESSION_STATE_HANDSHAKING);
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_PSK_EXCHANGE_RSP);

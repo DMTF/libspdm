@@ -27,7 +27,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
     spdm_key_update_request_t *spdm_request;
     uint32_t session_id;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
     return_status status;
 
     spdm_context->encap_context.last_encap_request_size = 0;
@@ -48,9 +48,9 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
     if (session_info == NULL) {
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -70,7 +70,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
         spdm_request->header.param1 =
             SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
         spdm_request->header.param2 = 0;
-        if(!spdm_get_random_number(sizeof(spdm_request->header.param2),
+        if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                        &spdm_request->header.param2)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -78,27 +78,27 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
         spdm_request->header.param1 =
             SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
         spdm_request->header.param2 = 1;
-        if(!spdm_get_random_number(sizeof(spdm_request->header.param2),
+        if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                        &spdm_request->header.param2)) {
             return RETURN_DEVICE_ERROR;
         }
 
         /* Create new key*/
         DEBUG((DEBUG_INFO,
-               "spdm_create_update_session_data_key[%x] Responder\n",
+               "libspdm_create_update_session_data_key[%x] Responder\n",
                session_id));
-        status = spdm_create_update_session_data_key(
+        status = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
-            SPDM_KEY_UPDATE_ACTION_RESPONDER);
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
         if (RETURN_ERROR(status)) {
             return status;
         }
         DEBUG((DEBUG_INFO,
-               "spdm_activate_update_session_data_key[%x] Responder new\n",
+               "libspdm_activate_update_session_data_key[%x] Responder new\n",
                session_id));
-        status = spdm_activate_update_session_data_key(
+        status = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
-            SPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -133,7 +133,7 @@ return_status spdm_process_encap_response_key_update(
     uintn spdm_response_size;
     uint32_t session_id;
     spdm_session_info_t *session_info;
-    spdm_session_state_t session_state;
+    libspdm_session_state_t session_state;
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
         return RETURN_UNSUPPORTED;
@@ -144,9 +144,9 @@ return_status spdm_process_encap_response_key_update(
     if (session_info == NULL) {
         return RETURN_UNSUPPORTED;
     }
-    session_state = spdm_secured_message_get_session_state(
+    session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
-    if (session_state != SPDM_SESSION_STATE_ESTABLISHED) {
+    if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return RETURN_UNSUPPORTED;
     }
 

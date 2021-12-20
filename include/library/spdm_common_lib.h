@@ -253,7 +253,7 @@ uint32_t libspdm_get_last_error(IN void *spdm_context);
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
 void libspdm_get_last_spdm_error_struct(IN void *spdm_context,
-                     OUT spdm_error_struct_t *last_spdm_error);
+                     OUT libspdm_error_struct_t *last_spdm_error);
 
 /**
   Set the last SPDM error struct of an SPDM context.
@@ -262,7 +262,7 @@ void libspdm_get_last_spdm_error_struct(IN void *spdm_context,
   @param  last_spdm_error                Last SPDM error struct of an SPDM context.
 */
 void libspdm_set_last_spdm_error_struct(IN void *spdm_context,
-                     IN spdm_error_struct_t *last_spdm_error);
+                     IN libspdm_error_struct_t *last_spdm_error);
 
 /**
   Initialize an SPDM context.

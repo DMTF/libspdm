@@ -11,7 +11,7 @@ return_status do_session_via_spdm(IN void *spdm_context)
     return_status status;
     uint32_t session_id;
     uint8_t heartbeat_period;
-    uint8_t measurement_hash[MAX_HASH_SIZE];
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));

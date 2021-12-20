@@ -43,7 +43,7 @@ void test_spdm_requester_key_exchange(void **State)
     spdm_context_t *spdm_context;
     uint32_t session_id;
     uint8_t heartbeat_period;
-    uint8_t measurement_hash[MAX_HASH_SIZE];
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t slot_id_param;
     void *data;
     uintn data_size;

@@ -88,7 +88,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
             SPDM_GET_DIGESTS, response_size, response);
     }
 
-    hash_size = spdm_get_hash_size(
+    hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     ASSERT(*response_size >=

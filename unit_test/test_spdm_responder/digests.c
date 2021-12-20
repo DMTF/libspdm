@@ -70,7 +70,7 @@ void test_spdm_responder_digests_case1(void **state)
     assert_int_equal(
         response_size,
         sizeof(spdm_digest_response_t) +
-            spdm_get_hash_size(spdm_context->connection_info
+            libspdm_get_hash_size(spdm_context->connection_info
                            .algorithm.base_hash_algo));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,

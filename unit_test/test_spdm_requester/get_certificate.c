@@ -43,7 +43,7 @@ boolean read_responder_public_certificate_chain_expiration(
         return res;
     }
 
-    digest_size = spdm_get_hash_size(base_hash_algo);
+    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -65,7 +65,7 @@ boolean read_responder_public_certificate_chain_expiration(
         return res;
     }
 
-    spdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+    libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
               (uint8_t *)(cert_chain + 1));
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
          file_data, file_size);
@@ -605,7 +605,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
             }
 
             /* load certificate*/
-            hash_size = spdm_get_hash_size(m_use_hash_algo);
+            hash_size = libspdm_get_hash_size(m_use_hash_algo);
             cert_buffer = (uint8_t *)m_local_certificate_chain +
                       sizeof(spdm_cert_chain_t) + hash_size;
             cert_buffer_size = m_local_certificate_chain_size -
@@ -989,7 +989,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
                 &root_cert_data,
                 &root_cert_size, NULL, NULL);
             /* load certificate*/
-            hash_size = spdm_get_hash_size(m_use_hash_algo);
+            hash_size = libspdm_get_hash_size(m_use_hash_algo);
             root_cert_size = root_cert_size -
                       sizeof(spdm_cert_chain_t) - hash_size;
             cert_buffer = (uint8_t *)m_local_certificate_chain +
@@ -1096,7 +1096,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
                 &root_cert_data,
                 &root_cert_size, NULL, NULL);
             /* load certificate*/
-            hash_size = spdm_get_hash_size(m_use_hash_algo);
+            hash_size = libspdm_get_hash_size(m_use_hash_algo);
             root_cert_size = root_cert_size -
                       sizeof(spdm_cert_chain_t) - hash_size;
             cert_buffer = (uint8_t *)m_local_certificate_chain +

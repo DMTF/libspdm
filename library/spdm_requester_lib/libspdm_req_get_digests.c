@@ -10,7 +10,7 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t digest[MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t digest[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 } spdm_digests_response_max_t;
 
 #pragma pack()
@@ -104,7 +104,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
         return RETURN_DEVICE_ERROR;
     }
 
-    digest_size = spdm_get_hash_size(
+    digest_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     if (slot_mask != NULL) {
         *slot_mask = spdm_response.header.param2;

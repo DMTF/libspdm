@@ -118,14 +118,14 @@ return_status spdm_transport_test_encode_message(
     uintn app_message_size;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
-    spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
     void *secured_message_context;
 
-    spdm_secured_message_callbacks_t.version =
+    libspdm_secured_message_callbacks_t.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    spdm_secured_message_callbacks_t.get_sequence_number =
+    libspdm_secured_message_callbacks_t.get_sequence_number =
         test_get_sequence_number;
-    spdm_secured_message_callbacks_t.get_max_random_number_count =
+    libspdm_secured_message_callbacks_t.get_max_random_number_count =
         test_get_max_random_number_count;
 
     if (is_app_message && (session_id == NULL)) {
@@ -161,13 +161,13 @@ return_status spdm_transport_test_encode_message(
         }
         /* APP message to secured message*/
         secured_message_size = sizeof(secured_message);
-        status = spdm_encode_secured_message(
+        status = libspdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
             app_message_size, app_message, &secured_message_size,
-            secured_message, &spdm_secured_message_callbacks_t);
+            secured_message, &libspdm_secured_message_callbacks_t);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
-                   "spdm_encode_secured_message - %p\n", status));
+                   "libspdm_encode_secured_message - %p\n", status));
             return status;
         }
 
@@ -234,19 +234,19 @@ return_status spdm_transport_test_decode_message(
     uintn secured_message_size;
     uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn app_message_size;
-    spdm_secured_message_callbacks_t spdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
     void *secured_message_context;
-    spdm_error_struct_t spdm_error;
+    libspdm_error_struct_t spdm_error;
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
     libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
 
-    spdm_secured_message_callbacks_t.version =
+    libspdm_secured_message_callbacks_t.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    spdm_secured_message_callbacks_t.get_sequence_number =
+    libspdm_secured_message_callbacks_t.get_sequence_number =
         test_get_sequence_number;
-    spdm_secured_message_callbacks_t.get_max_random_number_count =
+    libspdm_secured_message_callbacks_t.get_max_random_number_count =
         test_get_max_random_number_count;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
@@ -282,15 +282,15 @@ return_status spdm_transport_test_decode_message(
 
         /* Secured message to APP message*/
         app_message_size = sizeof(app_message);
-        status = spdm_decode_secured_message(
+        status = libspdm_decode_secured_message(
             secured_message_context, *SecuredMessageSessionId,
             is_requester, secured_message_size, secured_message,
             &app_message_size, app_message,
-            &spdm_secured_message_callbacks_t);
+            &libspdm_secured_message_callbacks_t);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
-                   "spdm_decode_secured_message - %p\n", status));
-            spdm_secured_message_get_last_spdm_error_struct(
+                   "libspdm_decode_secured_message - %p\n", status));
+            libspdm_secured_message_get_last_spdm_error_struct(
                 secured_message_context, &spdm_error);
             libspdm_set_last_spdm_error_struct(spdm_context,
                             &spdm_error);
