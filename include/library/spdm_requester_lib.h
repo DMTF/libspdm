@@ -260,6 +260,7 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
   @param  request_attribute             The request attribute of the request message.
   @param  measurement_operation         The measurement operation of the request message.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  content_changed               The measurement content changed output param.
   @param  number_of_blocks               The number of blocks of the measurement record.
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
@@ -273,6 +274,7 @@ return_status libspdm_get_measurement(IN void *spdm_context, IN uint32_t *sessio
                    IN uint8_t request_attribute,
                    IN uint8_t measurement_operation,
                    IN uint8_t slot_id,
+                   OUT uint8_t *content_changed,
                    OUT uint8_t *number_of_blocks,
                    IN OUT uint32_t *measurement_record_length,
                    OUT void *measurement_record);
@@ -290,6 +292,7 @@ return_status libspdm_get_measurement(IN void *spdm_context, IN uint32_t *sessio
   @param  request_attribute             The request attribute of the request message.
   @param  measurement_operation         The measurement operation of the request message.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  content_changed               The measurement content changed output param.
   @param  number_of_blocks               The number of blocks of the measurement record.
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
@@ -305,11 +308,12 @@ return_status libspdm_get_measurement(IN void *spdm_context, IN uint32_t *sessio
 return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_id,
                    IN uint8_t request_attribute,
                    IN uint8_t measurement_operation,
-                   IN uint8_t slot_id_param,
+                   IN uint8_t slot_id,
+                   OUT uint8_t *content_changed,
                    OUT uint8_t *number_of_blocks,
                    IN OUT uint32_t *measurement_record_length,
                    OUT void *measurement_record,
-                 IN void *requester_nonce_in OPTIONAL,
+                   IN void *requester_nonce_in OPTIONAL,
                    OUT void *requester_nonce OPTIONAL,
                    OUT void *responder_nonce OPTIONAL);
 

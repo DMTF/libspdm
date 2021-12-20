@@ -36,6 +36,7 @@ typedef struct {
   @param  request_attribute             The request attribute of the request message.
   @param  measurement_operation         The measurement operation of the request message.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  content_changed               The measurement content changed output param.
   @param  number_of_blocks               The number of blocks of the measurement record.
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
@@ -52,6 +53,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                        IN uint8_t request_attribute,
                        IN uint8_t measurement_operation,
                        IN uint8_t slot_id_param,
+                       OUT uint8_t *content_changed,
                        OUT uint8_t *number_of_blocks,
                        IN OUT uint32_t *measurement_record_length,
                        OUT void *measurement_record,
@@ -382,6 +384,9 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
     }
 
+    if (content_changed != NULL) {
+        *content_changed = 0;
+    }
     if (measurement_operation ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         *number_of_blocks = spdm_response.header.param1;
@@ -474,6 +479,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
   @param  request_attribute             The request attribute of the request message.
   @param  measurement_operation         The measurement operation of the request message.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  content_changed               The measurement content changed output param.
   @param  number_of_blocks               The number of blocks of the measurement record.
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
@@ -487,6 +493,7 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
                    IN uint8_t request_attribute,
                    IN uint8_t measurement_operation,
                    IN uint8_t slot_id_param,
+                   OUT uint8_t *content_changed,
                    OUT uint8_t *number_of_blocks,
                    IN OUT uint32_t *measurement_record_length,
                    OUT void *measurement_record)
@@ -500,7 +507,7 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
     do {
         status = try_spdm_get_measurement(
             spdm_context, session_id, request_attribute,
-            measurement_operation, slot_id_param, number_of_blocks,
+            measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record, NULL, NULL, NULL);
         if (RETURN_NO_RESPONSE != status) {
             return status;
@@ -523,6 +530,7 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
   @param  request_attribute             The request attribute of the request message.
   @param  measurement_operation         The measurement operation of the request message.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  content_changed               The measurement content changed output param.
   @param  number_of_blocks               The number of blocks of the measurement record.
   @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
                                        On output, indicate the size in bytes of the measurement record.
@@ -539,6 +547,7 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
                    IN uint8_t request_attribute,
                    IN uint8_t measurement_operation,
                    IN uint8_t slot_id_param,
+                   OUT uint8_t *content_changed,
                    OUT uint8_t *number_of_blocks,
                    IN OUT uint32_t *measurement_record_length,
                    OUT void *measurement_record,
@@ -554,7 +563,7 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
     do {
         status = try_spdm_get_measurement(
             spdm_context, session_id, request_attribute,
-            measurement_operation, slot_id_param, number_of_blocks,
+            measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             requester_nonce_in,
             requester_nonce, responder_nonce);
