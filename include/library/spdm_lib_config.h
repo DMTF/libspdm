@@ -7,6 +7,9 @@
 #ifndef __SPDM_LIB_CONFIG_H__
 #define __SPDM_LIB_CONFIG_H__
 
+/* How many version entries in a VERSION response that a Requester will tolerate */
+#define LIBSPDM_MAX_VERSION_COUNT 5
+
 #define LIBSPDM_PSK_CONTEXT_LENGTH LIBSPDM_MAX_HASH_SIZE
 #define LIBSPDM_PSK_MAX_HINT_LENGTH 16
 
