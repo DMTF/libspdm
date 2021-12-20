@@ -210,6 +210,7 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  slot_mask                     A pointer to a destination to store the slot mask.
 
   @retval RETURN_SUCCESS               The challenge auth is got successfully.
   @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -217,7 +218,8 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
 **/
 return_status libspdm_challenge(IN void *spdm_context, IN uint8_t slot_id,
                  IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash);
+                 OUT void *measurement_hash,
+                 OUT uint8_t *slot_mask);
 
 /**
   This function sends CHALLENGE
@@ -232,6 +234,7 @@ return_status libspdm_challenge(IN void *spdm_context, IN uint8_t slot_id,
   @param  slot_id                      The number of slot for the challenge.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+  @param  slot_mask                     A pointer to a destination to store the slot mask.
   @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
   @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
   @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
@@ -243,6 +246,7 @@ return_status libspdm_challenge(IN void *spdm_context, IN uint8_t slot_id,
 return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
                  IN uint8_t measurement_hash_type,
                  OUT void *measurement_hash,
+                 OUT uint8_t *slot_mask,
                  IN void *requester_nonce_in OPTIONAL,
                  OUT void *requester_nonce OPTIONAL,
                  OUT void *responder_nonce OPTIONAL);
