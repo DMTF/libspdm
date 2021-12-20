@@ -56,6 +56,7 @@ return_status libspdm_init_connection(IN void *context,
                                        TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  session_policy               The policy for the session.
   @param  session_id                    The session ID of the session.
   @param  heartbeat_period              The heartbeat period for the session.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
@@ -66,7 +67,9 @@ return_status libspdm_init_connection(IN void *context,
 **/
 return_status libspdm_start_session(IN void *context, IN boolean use_psk,
                  IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id, OUT uint32_t *session_id,
+                 IN uint8_t slot_id,
+                 IN uint8_t session_policy,
+                 OUT uint32_t *session_id,
                  OUT uint8_t *heartbeat_period,
                  OUT void *measurement_hash)
 {
@@ -84,7 +87,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
     if (!use_psk) {
         #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         status = spdm_send_receive_key_exchange(
-            spdm_context, measurement_hash_type, slot_id,
+            spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash);
         if (RETURN_ERROR(status)) {
@@ -141,7 +144,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
     } else {
         #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange(
-            spdm_context, measurement_hash_type, session_id,
+            spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_INFO,
@@ -178,6 +181,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
   @param  measurement_hash_type          The type of the measurement hash.
   @param  slot_id                      The number of slot for the certificate chain.
   @param  session_id                    The session ID of the session.
+  @param  session_policy               The policy for the session.
   @param  heartbeat_period              The heartbeat period for the session.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
   @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
@@ -202,7 +206,9 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
 **/
 return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
                  IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id, OUT uint32_t *session_id,
+                 IN uint8_t slot_id,
+                 IN uint8_t session_policy,
+                 OUT uint32_t *session_id,
                  OUT uint8_t *heartbeat_period,
                  OUT void *measurement_hash,
                  IN void *requester_random_in OPTIONAL,
@@ -229,7 +235,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
         ASSERT (requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
         ASSERT (responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
         status = spdm_send_receive_key_exchange_ex(
-            spdm_context, measurement_hash_type, slot_id,
+            spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);
@@ -287,7 +293,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
     } else {
         #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = spdm_send_receive_psk_exchange_ex(
-            spdm_context, measurement_hash_type, session_id,
+            spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             requester_random_in, requester_random_in_size,
             requester_random, requester_random_size,

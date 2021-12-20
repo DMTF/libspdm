@@ -329,6 +329,7 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
                                        TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  session_policy               The policy for the session.
   @param  session_id                    The session ID of the session.
   @param  heartbeat_period              The heartbeat period for the session.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
@@ -339,7 +340,9 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
 **/
 return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
                  IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id, OUT uint32_t *session_id,
+                 IN uint8_t slot_id,
+                 IN uint8_t session_policy,
+                 OUT uint32_t *session_id,
                  OUT uint8_t *heartbeat_period,
                  OUT void *measurement_hash);
 
@@ -355,6 +358,7 @@ return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
                                        TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
   @param  measurement_hash_type          The type of the measurement hash.
   @param  slot_id                      The number of slot for the certificate chain.
+  @param  session_policy               The policy for the session.
   @param  session_id                    The session ID of the session.
   @param  heartbeat_period              The heartbeat period for the session.
   @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
@@ -380,7 +384,9 @@ return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
 **/
 return_status libspdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
                  IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id, OUT uint32_t *session_id,
+                 IN uint8_t slot_id,
+                 IN uint8_t session_policy,
+                 OUT uint32_t *session_id,
                  OUT uint8_t *heartbeat_period,
                  OUT void *measurement_hash,
                  IN void *requester_random_in OPTIONAL,

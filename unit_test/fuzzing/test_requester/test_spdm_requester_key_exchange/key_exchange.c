@@ -79,7 +79,7 @@ void test_spdm_requester_key_exchange(void **State)
     zero_mem(measurement_hash, sizeof(measurement_hash));
     spdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
+        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
 }

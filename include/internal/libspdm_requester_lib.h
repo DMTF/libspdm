@@ -92,8 +92,9 @@ return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context);
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
   @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
   @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
 
@@ -104,7 +105,7 @@ return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context);
 
 return_status spdm_send_receive_key_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
@@ -115,8 +116,9 @@ return_status spdm_send_receive_key_exchange(
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
   @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
   @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
   @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
@@ -130,7 +132,7 @@ return_status spdm_send_receive_key_exchange(
 
 return_status spdm_send_receive_key_exchange_ex(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
     IN void *requester_random_in OPTIONAL,
     OUT void *requester_random OPTIONAL,
@@ -157,8 +159,9 @@ return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
 
   @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
@@ -167,7 +170,7 @@ return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
-                         IN uint8_t measurement_hash_type,
+                         IN uint8_t measurement_hash_type, IN uint8_t session_policy,
                          OUT uint32_t *session_id,
                          OUT uint8_t *heartbeat_period,
                          OUT void *measurement_hash);
@@ -179,8 +182,9 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 
   @param  spdm_context                  A pointer to the SPDM context.
   @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+  @param  session_policy               The policy for the session.
   @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
   @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
   @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
   @param  requester_context_in_size     The size of requester_context_in.
@@ -200,7 +204,7 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
-                         IN uint8_t measurement_hash_type,
+                         IN uint8_t measurement_hash_type, IN uint8_t session_policy,
                          OUT uint32_t *session_id,
                          OUT uint8_t *heartbeat_period,
                          OUT void *measurement_hash,
