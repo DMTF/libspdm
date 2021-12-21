@@ -371,16 +371,25 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Success Case*/
     test_spdm_responder_algorithms_case1(&State);
+    /* connection_state Check */
     test_spdm_responder_algorithms_case2(&State);
+    /* Support capablities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP*/
     test_spdm_responder_algorithms_case3(&State);
+    /* Support capablities flag */
     test_spdm_responder_algorithms_case4(&State);
+    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP*/
     test_spdm_responder_algorithms_case5(&State);
+    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP */
     test_spdm_responder_algorithms_case6(&State);
+    /* Support capablities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP*/
     test_spdm_responder_algorithms_case7(&State);
+    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP*/
     test_spdm_responder_algorithms_case8(&State);
     test_spdm_responder_algorithms_case9(&State);
     test_spdm_responder_algorithms_case10(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_BUSY */
     test_spdm_responder_algorithms_case11(&State);
 
     spdm_unit_test_group_teardown(&State);
