@@ -583,6 +583,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
     uint8_t *received_root_cert;
     uintn received_root_cert_size;
     boolean result;
+    uint8_t root_cert_index;
 
     result = libspdm_verify_certificate_chain_buffer(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -591,30 +592,41 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
         return FALSE;
     }
 
-    root_cert = spdm_context->local_context.peer_root_cert_provision;
+    root_cert_index = 0;
+    root_cert = spdm_context->local_context.peer_root_cert_provision[root_cert_index];
     root_cert_size =
-        spdm_context->local_context.peer_root_cert_provision_size;
+        spdm_context->local_context.peer_root_cert_provision_size[root_cert_index];
     cert_chain_data = spdm_context->local_context.peer_cert_chain_provision;
     cert_chain_data_size =
         spdm_context->local_context.peer_cert_chain_provision_size;
 
+    root_cert_hash_size = libspdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+
     if ((root_cert != NULL) && (root_cert_size != 0)) {
-        root_cert_hash_size = libspdm_get_hash_size(
-            spdm_context->connection_info.algorithm.base_hash_algo);
-        result = libspdm_hash_all(
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            root_cert, root_cert_size, root_cert_hash);
-        if (!result) {
-            DEBUG((DEBUG_INFO,
-                "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
-            return FALSE;
-        }
-        if (const_compare_mem((uint8_t *)cert_chain_buffer +
-                    sizeof(spdm_cert_chain_t),
-                root_cert_hash, root_cert_hash_size) != 0) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_peer_cert_chain_buffer - FAIL (root hash mismatch) !!!\n"));
-            return FALSE;
+        while ((root_cert != NULL) && (root_cert_size != 0)) {
+            result = libspdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                root_cert, root_cert_size, root_cert_hash);
+            if (!result) {
+                DEBUG((DEBUG_INFO,
+                    "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
+                return FALSE;
+            }
+
+            if (const_compare_mem((uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
+                root_cert_hash, root_cert_hash_size) == 0) {
+                break;
+            } else if ((root_cert_index < (LIBSPDM_MAX_ROOT_CERT_SUPPORT - 1)) &&
+                        (spdm_context->local_context.peer_root_cert_provision[root_cert_index + 1] != NULL)) {
+                root_cert_index ++;
+                root_cert = spdm_context->local_context.peer_root_cert_provision[root_cert_index];
+                root_cert_size = spdm_context->local_context.peer_root_cert_provision_size[root_cert_index];
+            } else {
+                DEBUG((DEBUG_INFO,
+                "!!! verify_peer_cert_chain_buffer - FAIL (all root cert hash mismatch) !!!\n"));
+                return FALSE;
+            }
         }
 
         result = x509_get_cert_from_cert_chain(
