@@ -196,7 +196,6 @@ return_status libspdm_encode_secured_message(
         total_secured_message_size =
             record_header_size + cipher_text_size + aead_tag_size;
 
-        ASSERT(*secured_message_size >= total_secured_message_size);
         if (*secured_message_size < total_secured_message_size) {
             *secured_message_size = total_secured_message_size;
             return RETURN_BUFFER_TOO_SMALL;
@@ -244,7 +243,6 @@ return_status libspdm_encode_secured_message(
         total_secured_message_size =
             record_header_size + app_message_size + aead_tag_size;
 
-        ASSERT(*secured_message_size >= total_secured_message_size);
         if (*secured_message_size < total_secured_message_size) {
             *secured_message_size = total_secured_message_size;
             return RETURN_BUFFER_TOO_SMALL;
@@ -554,7 +552,6 @@ return_status libspdm_decode_secured_message(
             return RETURN_SECURITY_VIOLATION;
         }
 
-        ASSERT(*app_message_size >= plain_text_size);
         if (*app_message_size < plain_text_size) {
             *app_message_size = plain_text_size;
             return RETURN_BUFFER_TOO_SMALL;
@@ -644,7 +641,6 @@ return_status libspdm_decode_secured_message(
         }
 
         plain_text_size = record_header2->length - aead_tag_size;
-        ASSERT(*app_message_size >= plain_text_size);
         if (*app_message_size < plain_text_size) {
             *app_message_size = plain_text_size;
             return RETURN_BUFFER_TOO_SMALL;
