@@ -52,8 +52,8 @@ typedef struct {
     
     /* Peer Root Certificate*/
     
-    void *peer_root_cert_provision;
-    uintn peer_root_cert_provision_size;
+    void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
+    uintn peer_root_cert_provision_size[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
     
     /* Peer CertificateChain*/
     /* Whether it contains the root certificate or not,*/

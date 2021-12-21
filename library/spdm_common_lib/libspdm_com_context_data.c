@@ -50,6 +50,7 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
     spdm_session_info_t *session_info;
     uint8_t slot_id;
     uint8_t mut_auth_requested;
+    uint8_t root_cert_index;
 
     if (!context || !data || data_type >= LIBSPDM_DATA_MAX) {
         return RETURN_INVALID_PARAMETER;
@@ -265,9 +266,16 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         spdm_context->response_state = *(uint32_t *)data;
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT:
-        spdm_context->local_context.peer_root_cert_provision_size =
+        root_cert_index = 0;
+        while (spdm_context->local_context.peer_root_cert_provision[root_cert_index] != NULL) {
+            root_cert_index ++;
+            if (root_cert_index >= LIBSPDM_MAX_ROOT_CERT_SUPPORT) {
+                return RETURN_OUT_OF_RESOURCES;
+            }
+        }
+        spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] =
             data_size;
-        spdm_context->local_context.peer_root_cert_provision =
+        spdm_context->local_context.peer_root_cert_provision[root_cert_index] =
             data;
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN:

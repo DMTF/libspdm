@@ -68,9 +68,9 @@ void test_spdm_requester_get_certificate(void **State)
       (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
       data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
       &root_cert, &root_cert_size);
-   spdm_context->local_context.peer_root_cert_provision_size =
+   spdm_context->local_context.peer_root_cert_provision_size[0] =
       root_cert_size;
-   spdm_context->local_context.peer_root_cert_provision = root_cert;
+   spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
    spdm_context->local_context.peer_cert_chain_provision = NULL;
    spdm_context->local_context.peer_cert_chain_provision_size = 0;
    spdm_context->connection_info.algorithm.base_hash_algo =
