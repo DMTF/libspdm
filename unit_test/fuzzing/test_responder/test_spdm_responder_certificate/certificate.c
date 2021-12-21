@@ -182,10 +182,15 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Success Case */
     test_spdm_responder_certificate_case1(&State);
+    /* connection_state Check */
     test_spdm_responder_certificate_case2(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_BUSY */
     test_spdm_responder_certificate_case3(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_NORMAL */
     test_spdm_responder_certificate_case4(&State);
+    /* capability.flags: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP */
     test_spdm_responder_certificate_case5(&State);
 
     spdm_unit_test_group_teardown(&State);

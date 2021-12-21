@@ -160,9 +160,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Success Case*/
     test_spdm_responder_digests_case1(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
     test_spdm_responder_digests_case2(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_NORMAL*/
     test_spdm_responder_digests_case3(&State);
+    /* capabilities.flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP */
     test_spdm_responder_digests_case4(&State);
     test_spdm_responder_digests_case5(&State);
 

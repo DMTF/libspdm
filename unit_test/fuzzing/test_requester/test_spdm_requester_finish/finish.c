@@ -136,6 +136,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Successful response*/
     test_spdm_requester_get_version(&State);
 
     spdm_unit_test_group_teardown(&State);

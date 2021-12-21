@@ -297,11 +297,16 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Success Case*/
     test_spdm_responder_challenge_case1(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
     test_spdm_responder_challenge_case2(&State);
+    /* connection_state Check*/
     test_spdm_responder_challenge_case3(&State);
     test_spdm_responder_challenge_case4(&State);
+    /* Support Capabilities flag */
     test_spdm_responder_challenge_case5(&State);
+    /* basic_mut_auth_requested : 1 */
     test_spdm_responder_challenge_case6(&State);
 
     spdm_unit_test_group_teardown(&State);

@@ -90,8 +90,11 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Success Case */
     test_spdm_responder_capabilities_case1(&State);
+    /* connection_state Check*/
     test_spdm_responder_capabilities_case2(&State);
+    /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
     test_spdm_responder_capabilities_case3(&State);
 
     spdm_unit_test_group_teardown(&State);

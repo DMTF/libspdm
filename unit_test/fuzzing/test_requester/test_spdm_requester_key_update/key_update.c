@@ -193,6 +193,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     spdm_unit_test_group_setup(&State);
 
+    /* Successful response. update single key*/
     test_spdm_requester_key_update(&State);
 
     spdm_unit_test_group_teardown(&State);
