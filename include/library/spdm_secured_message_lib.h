@@ -596,7 +596,7 @@ typedef struct {
   @param  app_message                   A pointer to a source buffer to store the application message.
   @param  secured_message_size           size in bytes of the secured message data buffer.
   @param  secured_message               A pointer to a destination buffer to store the secured message.
-  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
@@ -606,7 +606,7 @@ return_status libspdm_encode_secured_message(
     IN boolean is_requester, IN uintn app_message_size,
     IN void *app_message, IN OUT uintn *secured_message_size,
     OUT void *secured_message,
-    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t);
+    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 
 /**
   Decode an application message from a secured message.
@@ -618,7 +618,7 @@ return_status libspdm_encode_secured_message(
   @param  secured_message               A pointer to a source buffer to store the secured message.
   @param  app_message_size               size in bytes of the application message data buffer.
   @param  app_message                   A pointer to a destination buffer to store the application message.
-  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is decoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
@@ -629,7 +629,7 @@ return_status libspdm_decode_secured_message(
     IN boolean is_requester, IN uintn secured_message_size,
     IN void *secured_message, IN OUT uintn *app_message_size,
     OUT void *app_message,
-    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t);
+    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 
 /**
   Get the last SPDM error struct of an SPDM secured message context.

@@ -16,7 +16,7 @@
   @param  app_message                   A pointer to a source buffer to store the application message.
   @param  secured_message_size           size in bytes of the secured message data buffer.
   @param  secured_message               A pointer to a destination buffer to store the secured message.
-  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is encoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
@@ -26,7 +26,7 @@ return_status libspdm_encode_secured_message(
     IN boolean is_requester, IN uintn app_message_size,
     IN void *app_message, IN OUT uintn *secured_message_size,
     OUT void *secured_message,
-    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t)
+    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn total_secured_message_size;
@@ -137,7 +137,7 @@ return_status libspdm_encode_secured_message(
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
-        libspdm_secured_message_callbacks_t->get_sequence_number(
+        spdm_secured_message_callbacks->get_sequence_number(
             sequence_number, (uint8_t *)&sequence_num_in_header);
     ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
@@ -175,7 +175,7 @@ return_status libspdm_encode_secured_message(
 
     switch (session_type) {
     case LIBSPDM_SESSION_TYPE_ENC_MAC:
-        max_rand_count = libspdm_secured_message_callbacks_t
+        max_rand_count = spdm_secured_message_callbacks
                      ->get_max_random_number_count();
         if (max_rand_count != 0) {
             rand_count = 0;
@@ -293,7 +293,7 @@ return_status libspdm_encode_secured_message(
   @param  secured_message               A pointer to a source buffer to store the secured message.
   @param  app_message_size               size in bytes of the application message data buffer.
   @param  app_message                   A pointer to a destination buffer to store the application message.
-  @param  libspdm_secured_message_callbacks_t  A pointer to a secured message callback functions structure.
+  @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
 
   @retval RETURN_SUCCESS               The application message is decoded successfully.
   @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
@@ -304,7 +304,7 @@ return_status libspdm_decode_secured_message(
     IN boolean is_requester, IN uintn secured_message_size,
     IN void *secured_message, IN OUT uintn *app_message_size,
     OUT void *app_message,
-    IN libspdm_secured_message_callbacks_t *libspdm_secured_message_callbacks_t)
+    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn plain_text_size;
@@ -423,7 +423,7 @@ return_status libspdm_decode_secured_message(
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
-        libspdm_secured_message_callbacks_t->get_sequence_number(
+        spdm_secured_message_callbacks->get_sequence_number(
             sequence_number, (uint8_t *)&sequence_num_in_header);
     ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
@@ -529,7 +529,7 @@ return_status libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
-                    app_message, libspdm_secured_message_callbacks_t);
+                    app_message, spdm_secured_message_callbacks);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -624,7 +624,7 @@ return_status libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
-                    app_message, libspdm_secured_message_callbacks_t);
+                    app_message, spdm_secured_message_callbacks);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }

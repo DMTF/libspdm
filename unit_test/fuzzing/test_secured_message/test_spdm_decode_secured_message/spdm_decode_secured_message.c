@@ -21,7 +21,7 @@ void test_libspdm_decode_secured_message(void **State)
     spdm_context_t *spdm_context;
     uintn app_message_size;
     uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     spdm_session_info_t *session_info;
     boolean is_requester;
     uint32_t session_id;
@@ -34,9 +34,9 @@ void test_libspdm_decode_secured_message(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-    libspdm_secured_message_callbacks_t.version = SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    libspdm_secured_message_callbacks_t.get_sequence_number = libspdm_mctp_get_sequence_number;
-    libspdm_secured_message_callbacks_t.get_max_random_number_count =
+    spdm_secured_message_callbacks.version = SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
+    spdm_secured_message_callbacks.get_sequence_number = libspdm_mctp_get_sequence_number;
+    spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_mctp_get_max_random_number_count;
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -50,7 +50,7 @@ void test_libspdm_decode_secured_message(void **State)
 
     libspdm_decode_secured_message(secured_message_context, session_id, is_requester,
                                 spdm_test_context->test_buffer_size, spdm_test_context->test_buffer,
-                                &app_message_size, app_message, &libspdm_secured_message_callbacks_t);
+                                &app_message_size, app_message, &spdm_secured_message_callbacks);
 }
 
 spdm_test_context_t m_spdm_transport_mctp_test_context = {
