@@ -118,14 +118,14 @@ return_status spdm_transport_test_encode_message(
     uintn app_message_size;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
-    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
 
-    libspdm_secured_message_callbacks_t.version =
+    spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    libspdm_secured_message_callbacks_t.get_sequence_number =
+    spdm_secured_message_callbacks.get_sequence_number =
         test_get_sequence_number;
-    libspdm_secured_message_callbacks_t.get_max_random_number_count =
+    spdm_secured_message_callbacks.get_max_random_number_count =
         test_get_max_random_number_count;
 
     if (is_app_message && (session_id == NULL)) {
@@ -164,7 +164,7 @@ return_status spdm_transport_test_encode_message(
         status = libspdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
             app_message_size, app_message, &secured_message_size,
-            secured_message, &libspdm_secured_message_callbacks_t);
+            secured_message, &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_encode_secured_message - %p\n", status));
@@ -229,12 +229,12 @@ return_status spdm_transport_test_decode_message(
 {
     return_status status;
     transport_decode_message_func transport_decode_message;
-    uint32_t *SecuredMessageSessionId;
+    uint32_t *secured_message_session_id;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
     uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn app_message_size;
-    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
     libspdm_error_struct_t spdm_error;
 
@@ -242,11 +242,11 @@ return_status spdm_transport_test_decode_message(
     spdm_error.session_id = 0;
     libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
 
-    libspdm_secured_message_callbacks_t.version =
+    spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    libspdm_secured_message_callbacks_t.get_sequence_number =
+    spdm_secured_message_callbacks.get_sequence_number =
         test_get_sequence_number;
-    libspdm_secured_message_callbacks_t.get_max_random_number_count =
+    spdm_secured_message_callbacks.get_max_random_number_count =
         test_get_max_random_number_count;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
@@ -255,26 +255,26 @@ return_status spdm_transport_test_decode_message(
 
     transport_decode_message = test_decode_message;
 
-    SecuredMessageSessionId = NULL;
+    secured_message_session_id = NULL;
     /* Detect received message*/
     secured_message_size = sizeof(secured_message);
     status = transport_decode_message(
-        &SecuredMessageSessionId, transport_message_size,
+        &secured_message_session_id, transport_message_size,
         transport_message, &secured_message_size, secured_message);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_ERROR, "transport_decode_message - %p\n", status));
         return RETURN_UNSUPPORTED;
     }
 
-    if (SecuredMessageSessionId != NULL) {
-        *session_id = SecuredMessageSessionId;
+    if (secured_message_session_id != NULL) {
+        *session_id = secured_message_session_id;
 
         secured_message_context =
             libspdm_get_secured_message_context_via_session_id(
-                spdm_context, *SecuredMessageSessionId);
+                spdm_context, *secured_message_session_id);
         if (secured_message_context == NULL) {
             spdm_error.error_code = SPDM_ERROR_CODE_INVALID_SESSION;
-            spdm_error.session_id = *SecuredMessageSessionId;
+            spdm_error.session_id = *secured_message_session_id;
             libspdm_set_last_spdm_error_struct(spdm_context,
                             &spdm_error);
             return RETURN_UNSUPPORTED;
@@ -283,10 +283,10 @@ return_status spdm_transport_test_decode_message(
         /* Secured message to APP message*/
         app_message_size = sizeof(app_message);
         status = libspdm_decode_secured_message(
-            secured_message_context, *SecuredMessageSessionId,
+            secured_message_context, *secured_message_session_id,
             is_requester, secured_message_size, secured_message,
             &app_message_size, app_message,
-            &libspdm_secured_message_callbacks_t);
+            &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_decode_secured_message - %p\n", status));
@@ -298,7 +298,7 @@ return_status spdm_transport_test_decode_message(
         }
 
         /* APP message to SPDM message.*/
-        status = transport_decode_message(&SecuredMessageSessionId,
+        status = transport_decode_message(&secured_message_session_id,
                           app_message_size, app_message,
                           message_size, message);
         if (RETURN_ERROR(status)) {
@@ -313,19 +313,19 @@ return_status spdm_transport_test_decode_message(
             return RETURN_SUCCESS;
         } else {
             *is_app_message = FALSE;
-            if (SecuredMessageSessionId == NULL) {
+            if (secured_message_session_id == NULL) {
                 return RETURN_SUCCESS;
             } else {
                 /* get encapsulated secured message - cannot handle it.*/
                 DEBUG((DEBUG_ERROR,
                        "transport_decode_message - expect encapsulated normal but got session (%08x)\n",
-                       *SecuredMessageSessionId));
+                       *secured_message_session_id));
                 return RETURN_UNSUPPORTED;
             }
         }
     } else {
         /* get non-secured message*/
-        status = transport_decode_message(&SecuredMessageSessionId,
+        status = transport_decode_message(&secured_message_session_id,
                           transport_message_size,
                           transport_message,
                           message_size, message);
@@ -334,7 +334,7 @@ return_status spdm_transport_test_decode_message(
                    status));
             return RETURN_UNSUPPORTED;
         }
-        ASSERT(SecuredMessageSessionId == NULL);
+        ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
         *is_app_message = FALSE;
         return RETURN_SUCCESS;
