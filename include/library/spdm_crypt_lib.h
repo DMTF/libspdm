@@ -24,6 +24,7 @@
 #define LIBSPDM_MAX_HASH_SIZE 64
 #define LIBSPDM_MAX_AEAD_KEY_SIZE 32
 #define LIBSPDM_MAX_AEAD_IV_SIZE 12
+#define LIBSPDM_MAX_AEAD_TAG_SIZE 16
 
 /**
   Allocates and initializes one HASH_CTX context for subsequent hash use.
