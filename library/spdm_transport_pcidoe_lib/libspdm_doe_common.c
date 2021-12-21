@@ -115,14 +115,14 @@ return_status libspdm_transport_pci_doe_encode_message(
     transport_encode_message_func transport_encode_message;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
-    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
 
-    libspdm_secured_message_callbacks_t.version =
+    spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    libspdm_secured_message_callbacks_t.get_sequence_number =
+    spdm_secured_message_callbacks.get_sequence_number =
         libspdm_pci_doe_get_sequence_number;
-    libspdm_secured_message_callbacks_t.get_max_random_number_count =
+    spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_pci_doe_get_max_random_number_count;
 
     if (is_app_message) {
@@ -143,7 +143,7 @@ return_status libspdm_transport_pci_doe_encode_message(
         status = libspdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
             message_size, message, &secured_message_size,
-            secured_message, &libspdm_secured_message_callbacks_t);
+            secured_message, &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_encode_secured_message - %p\n", status));
@@ -208,10 +208,10 @@ return_status libspdm_transport_pci_doe_decode_message(
 {
     return_status status;
     transport_decode_message_func transport_decode_message;
-    uint32_t *SecuredMessageSessionId;
+    uint32_t *secured_message_session_id;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
-    libspdm_secured_message_callbacks_t libspdm_secured_message_callbacks_t;
+    libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
     libspdm_error_struct_t spdm_error;
 
@@ -219,11 +219,11 @@ return_status libspdm_transport_pci_doe_decode_message(
     spdm_error.session_id = 0;
     libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
 
-    libspdm_secured_message_callbacks_t.version =
+    spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
-    libspdm_secured_message_callbacks_t.get_sequence_number =
+    spdm_secured_message_callbacks.get_sequence_number =
         libspdm_pci_doe_get_sequence_number;
-    libspdm_secured_message_callbacks_t.get_max_random_number_count =
+    spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_pci_doe_get_max_random_number_count;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
@@ -233,26 +233,26 @@ return_status libspdm_transport_pci_doe_decode_message(
 
     transport_decode_message = pci_doe_decode_message;
 
-    SecuredMessageSessionId = NULL;
+    secured_message_session_id = NULL;
     /* Detect received message*/
     secured_message_size = sizeof(secured_message);
     status = transport_decode_message(
-        &SecuredMessageSessionId, transport_message_size,
+        &secured_message_session_id, transport_message_size,
         transport_message, &secured_message_size, secured_message);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_ERROR, "transport_decode_message - %p\n", status));
         return RETURN_UNSUPPORTED;
     }
 
-    if (SecuredMessageSessionId != NULL) {
-        *session_id = SecuredMessageSessionId;
+    if (secured_message_session_id != NULL) {
+        *session_id = secured_message_session_id;
 
         secured_message_context =
             libspdm_get_secured_message_context_via_session_id(
-                spdm_context, *SecuredMessageSessionId);
+                spdm_context, *secured_message_session_id);
         if (secured_message_context == NULL) {
             spdm_error.error_code = SPDM_ERROR_CODE_INVALID_SESSION;
-            spdm_error.session_id = *SecuredMessageSessionId;
+            spdm_error.session_id = *secured_message_session_id;
             libspdm_set_last_spdm_error_struct(spdm_context,
                             &spdm_error);
             return RETURN_UNSUPPORTED;
@@ -260,10 +260,10 @@ return_status libspdm_transport_pci_doe_decode_message(
 
         /* Secured message to message*/
         status = libspdm_decode_secured_message(
-            secured_message_context, *SecuredMessageSessionId,
+            secured_message_context, *secured_message_session_id,
             is_requester, secured_message_size, secured_message,
             message_size, message,
-            &libspdm_secured_message_callbacks_t);
+            &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_decode_secured_message - %p\n", status));
@@ -276,7 +276,7 @@ return_status libspdm_transport_pci_doe_decode_message(
         return RETURN_SUCCESS;
     } else {
         /* get non-secured message*/
-        status = transport_decode_message(&SecuredMessageSessionId,
+        status = transport_decode_message(&secured_message_session_id,
                           transport_message_size,
                           transport_message,
                           message_size, message);
@@ -285,7 +285,7 @@ return_status libspdm_transport_pci_doe_decode_message(
                    status));
             return RETURN_UNSUPPORTED;
         }
-        ASSERT(SecuredMessageSessionId == NULL);
+        ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
         return RETURN_SUCCESS;
     }
