@@ -37,8 +37,8 @@ uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
 
     if (spdm_request->header.param1 ==
         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) {
-        if (spdm_is_version_supported(spdm_context,
-                          SPDM_MESSAGE_VERSION_11)) {
+        if (spdm_request->header.spdm_version >=
+                          SPDM_MESSAGE_VERSION_11) {
             if (buffer_size <
                 sizeof(spdm_get_measurements_request_t)) {
                 return buffer_size;

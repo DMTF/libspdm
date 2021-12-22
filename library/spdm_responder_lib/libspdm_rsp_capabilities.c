@@ -70,7 +70,9 @@ boolean spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
     case SPDM_MESSAGE_VERSION_10:
         return TRUE;
 
-    case SPDM_MESSAGE_VERSION_11: {
+    case SPDM_MESSAGE_VERSION_11:
+    case SPDM_MESSAGE_VERSION_12:
+    {
         /*meas_cap shall be set to 00b*/
         if (meas_cap != 0) {
             return FALSE;
@@ -176,7 +178,7 @@ return_status spdm_get_response_capabilities(IN void *context,
                          response_size, response);
     }
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (request_size != sizeof(spdm_get_capabilities_request)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
@@ -206,11 +208,7 @@ return_status spdm_get_response_capabilities(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CAPABILITIES;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;

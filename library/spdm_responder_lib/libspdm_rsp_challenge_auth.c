@@ -114,26 +114,15 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11 &&
-        spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
-        spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_10)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    } else {
-        return libspdm_generate_error_response(spdm_context,
-                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                         response_size, response);
-    }
-
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     auth_attribute.slot_id = (uint8_t)(slot_id & 0xF);
     auth_attribute.reserved = 0;
     auth_attribute.basic_mut_auth_req = 0;
-    if (spdm_request->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, FALSE,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,

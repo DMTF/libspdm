@@ -89,11 +89,7 @@ return_status spdm_get_encap_response_challenge_auth(
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     auth_attribute.slot_id = (uint8_t)(slot_id & 0xF);
     auth_attribute.reserved = 0;

@@ -35,7 +35,7 @@ return_status libspdm_generate_encap_error_response(IN void *context,
     *response_size = sizeof(spdm_error_response_t);
     spdm_response = response;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_get_connection_version (context);
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
@@ -75,7 +75,7 @@ return_status libspdm_generate_encap_extended_error_response(
         sizeof(spdm_error_response_t) + extended_error_data_size;
     spdm_response = response;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_get_connection_version (context);
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;

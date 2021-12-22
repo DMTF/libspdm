@@ -60,7 +60,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
         return RETURN_UNSUPPORTED;
     }
 
-    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_HEARTBEAT;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;

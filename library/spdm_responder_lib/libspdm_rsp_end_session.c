@@ -87,7 +87,7 @@ return_status spdm_get_response_end_session(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_END_SESSION_ACK;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;

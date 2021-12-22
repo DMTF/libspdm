@@ -190,7 +190,7 @@ return_status spdm_get_response_key_update(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
     spdm_response->header.param1 = spdm_request->header.param1;
     spdm_response->header.param2 = spdm_request->header.param2;

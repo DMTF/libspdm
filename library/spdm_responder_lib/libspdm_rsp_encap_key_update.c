@@ -59,7 +59,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,

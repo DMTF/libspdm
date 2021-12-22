@@ -99,11 +99,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_DIGESTS;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;

@@ -198,8 +198,8 @@ return_status spdm_get_response_measurements(IN void *context,
 
     if (spdm_request->header.param1 ==
         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) {
-        if (spdm_is_version_supported(spdm_context,
-                          SPDM_MESSAGE_VERSION_11)) {
+        if (spdm_request->header.spdm_version >=
+                          SPDM_MESSAGE_VERSION_11) {
             if (request_size <
                 sizeof(spdm_get_measurements_request_t)) {
                 return libspdm_generate_error_response(
@@ -318,11 +318,7 @@ return_status spdm_get_response_measurements(IN void *context,
         *response_size = spdm_response_size;
         spdm_response = response;
 
-        if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        } else {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        }
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = measurements_count;
         spdm_response->header.param2 = 0;
@@ -358,11 +354,7 @@ return_status spdm_get_response_measurements(IN void *context,
         *response_size = spdm_response_size;
         spdm_response = response;
 
-        if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        } else {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        }
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -381,11 +373,7 @@ return_status spdm_get_response_measurements(IN void *context,
         *response_size = spdm_response_size;
         spdm_response = response;
 
-        if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        } else {
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        }
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;

@@ -1556,6 +1556,19 @@ boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
 }
 
 /**
+  This function returns connection version negotiated by GET_VERSION/VERSION.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+
+  @return the connection version.
+**/
+uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context)
+{
+    return (uint8_t)((spdm_context->connection_info.version.major_version << 4) |
+        spdm_context->connection_info.version.minor_version);
+}
+
+/**
   This function returns if a capablities flag is supported in current SPDM connection.
 
   @param  spdm_context                  A pointer to the SPDM context.
@@ -1726,7 +1739,7 @@ return_status libspdm_init_context(IN void *context)
     spdm_context->retry_times = LIBSPDM_MAX_REQUEST_RETRY_TIMES;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->current_token = 0;
-    spdm_context->local_context.version.spdm_version_count = 2;
+    spdm_context->local_context.version.spdm_version_count = 3;
     spdm_context->local_context.version.spdm_version[0].major_version = 1;
     spdm_context->local_context.version.spdm_version[0].minor_version = 0;
     spdm_context->local_context.version.spdm_version[0].alpha = 0;
@@ -1736,6 +1749,11 @@ return_status libspdm_init_context(IN void *context)
     spdm_context->local_context.version.spdm_version[1].minor_version = 1;
     spdm_context->local_context.version.spdm_version[1].alpha = 0;
     spdm_context->local_context.version.spdm_version[1]
+        .update_version_number = 0;
+    spdm_context->local_context.version.spdm_version[2].major_version = 1;
+    spdm_context->local_context.version.spdm_version[2].minor_version = 2;
+    spdm_context->local_context.version.spdm_version[2].alpha = 0;
+    spdm_context->local_context.version.spdm_version[2]
         .update_version_number = 0;
     spdm_context->local_context.secured_message_version.spdm_version_count =
         1;
