@@ -6,7 +6,7 @@
 
 /** @file
   Definitions of DSP0274 Security Protocol & data Model Specification (SPDM)
-  version 1.1.0 in Distributed Management Task Force (DMTF).
+  version 1.2.0 in Distributed Management Task Force (DMTF).
 **/
 
 #ifndef __SPDM_H__
@@ -14,8 +14,8 @@
 
 #pragma pack(1)
 
-/* 2 means SPDM spec 1.0 and 1.1 */
-#define SPDM_MAX_VERSION_COUNT 2
+/* 3 means SPDM spec 1.0, 1.1, 1.2 */
+#define SPDM_MAX_VERSION_COUNT 3
 #define SPDM_MAX_SLOT_COUNT 8
 #define SPDM_MAX_OPAQUE_DATA_SIZE 1024
 
@@ -83,6 +83,7 @@ typedef struct {
 
 #define SPDM_MESSAGE_VERSION_10 0x10
 #define SPDM_MESSAGE_VERSION_11 0x11
+#define SPDM_MESSAGE_VERSION_12 0x12
 #define SPDM_MESSAGE_VERSION SPDM_MESSAGE_VERSION_10
 
 
@@ -116,6 +117,9 @@ typedef struct {
     uint16_t major_version : 4;
 } spdm_version_number_t;
 
+#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.2.*"
+#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) - 1)
+#define SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE 100
 
 /* SPDM GET_CAPABILITIES request*/
 
@@ -441,6 +445,11 @@ typedef struct {
 
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
 
+#define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT "responder-challenge_auth signing"
+#define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
+#define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT "requester-challenge_auth signing"
+#define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
+
 
 /* SPDM GET_MEASUREMENTS request*/
 
@@ -530,6 +539,9 @@ typedef struct {
     /*uint8_t                opaque_data[opaque_length];*/
     /*uint8_t                signature[key_size];*/
 } spdm_measurements_response_t;
+
+#define SPDM_MEASUREMENTS_SIGN_CONTEXT "responder-measurements signing"
+#define SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE (sizeof(SPDM_MEASUREMENTS_SIGN_CONTEXT) - 1)
 
 
 /* SPDM ERROR response*/
@@ -668,6 +680,15 @@ typedef struct {
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST BIT1
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS BIT2
 
+#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT "responder-key_exchange_rsp signing"
+#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE (sizeof(SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT) - 1)
+
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT "Requester-KEP-dmtf-spdm-v1.2"
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT) - 1)
+
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT "Responder-KEP-dmtf-spdm-v1.2"
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT) - 1)
+
 
 /* SPDM FINISH request*/
 
@@ -693,6 +714,9 @@ typedef struct {
     /* param2 == RSVD*/
     /*uint8_t                verify_data[H];*/
 } spdm_finish_response_t;
+
+#define SPDM_FINISH_SIGN_CONTEXT "requester-finish signing"
+#define SPDM_FINISH_SIGN_CONTEXT_SIZE (sizeof(SPDM_FINISH_SIGN_CONTEXT) - 1)
 
 
 /* SPDM PSK_EXCHANGE request*/

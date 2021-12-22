@@ -1167,7 +1167,22 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
                     return RETURN_DEVICE_ERROR;
                 }
             }
-
+            if ((spdm_context->connection_info.version.major_version >= 2) ||
+                (spdm_context->connection_info.version.minor_version >= 2)) {
+                
+                /* Need append VCA since 1.2 script*/
+                
+                result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                    spdm_context->transcript.digest_context_l1l2,
+                    get_managed_buffer(&spdm_context->transcript.message_a),
+                    get_managed_buffer_size(&spdm_context->transcript.message_a));
+                if (!result) {
+                    libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                        spdm_context->transcript.digest_context_l1l2);
+                    spdm_context->transcript.digest_context_l1l2 = NULL;
+                    return RETURN_DEVICE_ERROR;
+                }
+            }
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
                 spdm_context->transcript.digest_context_l1l2, message, message_size);
         } else {
@@ -1186,7 +1201,22 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
                     return RETURN_DEVICE_ERROR;
                 }
             }
-
+            if ((spdm_context->connection_info.version.major_version >= 2) ||
+                (spdm_context->connection_info.version.minor_version >= 2)) {
+                
+                /* Need append VCA since 1.2 script*/
+                
+                result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                    spdm_session_info->session_transcript.digest_context_l1l2,
+                    get_managed_buffer(&spdm_context->transcript.message_a),
+                    get_managed_buffer_size(&spdm_context->transcript.message_a));
+                if (!result) {
+                    libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                        spdm_session_info->session_transcript.digest_context_l1l2);
+                    spdm_session_info->session_transcript.digest_context_l1l2 = NULL;
+                    return RETURN_DEVICE_ERROR;
+                }
+            }
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
                 spdm_session_info->session_transcript.digest_context_l1l2, message, message_size);
         }
