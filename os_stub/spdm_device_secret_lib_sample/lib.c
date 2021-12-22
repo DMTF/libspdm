@@ -51,6 +51,15 @@ boolean read_responder_private_certificate(IN uint32_t base_asym_algo,
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
         file = "ecp521/end_responder.key";
         break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        file = "sm2/end_responder.key";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        file = "ed25519/end_responder.key";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        file = "ed448/end_responder.key";
+        break;
     default:
         ASSERT(FALSE);
         return FALSE;
@@ -86,6 +95,15 @@ boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
         file = "ecp521/end_requester.key";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        file = "sm2/end_requester.key";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        file = "ed25519/end_requester.key";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        file = "ed448/end_requester.key";
         break;
     default:
         ASSERT(FALSE);
