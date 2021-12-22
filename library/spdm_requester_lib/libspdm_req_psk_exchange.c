@@ -135,7 +135,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_PSK_EXCHANGE;
     spdm_request.header.param1 = measurement_hash_type;
     spdm_request.header.param2 = 0;

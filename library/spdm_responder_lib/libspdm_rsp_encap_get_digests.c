@@ -45,11 +45,7 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;

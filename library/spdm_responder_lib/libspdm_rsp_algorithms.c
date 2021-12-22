@@ -346,12 +346,11 @@ return_status spdm_get_response_algorithms(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_response->header.param1 =
             4; /* Number of Algorithms Structure Tables*/
     } else {
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.param1 = 0;
         *response_size =
             sizeof(spdm_algorithms_response_mine_t) -

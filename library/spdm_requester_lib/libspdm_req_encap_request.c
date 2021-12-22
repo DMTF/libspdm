@@ -212,7 +212,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-        get_digests.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        get_digests.header.spdm_version = spdm_get_connection_version (spdm_context);
         get_digests.header.request_response_code = SPDM_GET_DIGESTS;
         get_digests.header.param1 = 0;
         get_digests.header.param2 = 0;
@@ -226,7 +226,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     } else {
         spdm_get_encapsulated_request_request = (void *)request;
         spdm_get_encapsulated_request_request->header.spdm_version =
-            SPDM_MESSAGE_VERSION_11;
+            spdm_get_connection_version (spdm_context);
         spdm_get_encapsulated_request_request->header
             .request_response_code = SPDM_GET_ENCAPSULATED_REQUEST;
         spdm_get_encapsulated_request_request->header.param1 = 0;
@@ -283,7 +283,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         
         spdm_deliver_encapsulated_response_request = (void *)request;
         spdm_deliver_encapsulated_response_request->header.spdm_version =
-            SPDM_MESSAGE_VERSION_11;
+            spdm_get_connection_version (spdm_context);
         spdm_deliver_encapsulated_response_request->header
             .request_response_code =
             SPDM_DELIVER_ENCAPSULATED_RESPONSE;

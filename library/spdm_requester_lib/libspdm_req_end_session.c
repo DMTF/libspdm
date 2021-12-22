@@ -61,7 +61,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
         end_session_attributes = 0;
     }
 
-    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_END_SESSION;
     spdm_request.header.param1 = end_session_attributes;
     spdm_request.header.param2 = 0;

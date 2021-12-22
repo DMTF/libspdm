@@ -93,7 +93,7 @@ return_status spdm_get_response_heartbeat(IN void *context,
     zero_mem(response, *response_size);
     spdm_response = response;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_HEARTBEAT_ACK;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;

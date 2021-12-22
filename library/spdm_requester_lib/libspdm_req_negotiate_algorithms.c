@@ -74,13 +74,12 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
     }
 
     zero_mem(&spdm_request, sizeof(spdm_request));
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request.length = sizeof(spdm_request);
         spdm_request.header.param1 =
             4; /* Number of Algorithms Structure Tables*/
     } else {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_request.length = sizeof(spdm_request) -
                       sizeof(spdm_request.struct_table);
         spdm_request.header.param1 = 0;

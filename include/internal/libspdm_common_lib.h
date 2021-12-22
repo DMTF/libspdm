@@ -480,6 +480,15 @@ boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
                   IN uint8_t version);
 
 /**
+  This function returns connection version negotiated by GET_VERSION/VERSION.
+
+  @param  spdm_context                  A pointer to the SPDM context.
+
+  @return the connection version.
+**/
+uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context);
+
+/**
   This function returns if a capablities flag is supported in current SPDM connection.
 
   @param  spdm_context                  A pointer to the SPDM context.

@@ -85,14 +85,8 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     do {
-        if (spdm_is_version_supported(spdm_context,
-                          SPDM_MESSAGE_VERSION_11)) {
-            spdm_request.header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
-        } else {
-            spdm_request.header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-        }
+        spdm_request.header.spdm_version =
+            spdm_get_connection_version (spdm_context);
         spdm_request.header.request_response_code =
             SPDM_GET_CERTIFICATE;
         spdm_request.header.param1 = slot_id;

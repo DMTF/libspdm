@@ -41,11 +41,7 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 =

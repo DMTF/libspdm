@@ -33,11 +33,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
 
     spdm_response = response;
 
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    } else {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-    }
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_RESPOND_IF_READY;
     spdm_request.header.param1 = spdm_context->error_data.request_code;
     spdm_request.header.param2 = spdm_context->error_data.token;

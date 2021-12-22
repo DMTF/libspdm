@@ -41,7 +41,9 @@ boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
     case SPDM_MESSAGE_VERSION_10:
         return TRUE;
 
-    case SPDM_MESSAGE_VERSION_11: {
+    case SPDM_MESSAGE_VERSION_11:
+    case SPDM_MESSAGE_VERSION_12:
+    {
         /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
         if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
             return FALSE;
@@ -111,11 +113,10 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     }
 
     zero_mem(&spdm_request, sizeof(spdm_request));
-    if (spdm_is_version_supported(spdm_context, SPDM_MESSAGE_VERSION_11)) {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request_size = sizeof(spdm_request);
     } else {
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_request_size = sizeof(spdm_request.header);
     }
     spdm_request.header.request_response_code = SPDM_GET_CAPABILITIES;

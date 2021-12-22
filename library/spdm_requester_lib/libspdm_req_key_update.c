@@ -75,7 +75,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         
         /* Update key*/
         
-        spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
         spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
             spdm_request.header.param1 =
@@ -208,7 +208,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     
     /* Verify key*/
     
-    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
     spdm_request.header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
