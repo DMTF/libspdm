@@ -71,6 +71,8 @@ void test_spdm_responder_key_exchange_case1(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -87,7 +89,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -150,6 +152,8 @@ void test_spdm_responder_key_exchange_case2(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -166,7 +170,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
     m_spdm_key_exchange_request2.reserved = 0;
     ptr = m_spdm_key_exchange_request2.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -229,6 +233,8 @@ void test_spdm_responder_key_exchange_case3(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -245,7 +251,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -309,6 +315,8 @@ void test_spdm_responder_key_exchange_case4(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -325,7 +333,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -391,6 +399,8 @@ void test_spdm_responder_key_exchange_case5(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -407,7 +417,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -477,6 +487,8 @@ void test_spdm_responder_key_exchange_case6(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -493,7 +505,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -555,6 +567,8 @@ void test_spdm_responder_key_exchange_case7(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -583,7 +597,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);

@@ -134,7 +134,8 @@ return_status try_spdm_send_receive_key_exchange(
     dhe_key_size = libspdm_get_dhe_pub_key_size(
         spdm_context->connection_info.algorithm.dhe_named_group);
     dhe_context = libspdm_secured_message_dhe_new(
-        spdm_context->connection_info.algorithm.dhe_named_group);
+        spdm_context->connection_info.version,
+        spdm_context->connection_info.algorithm.dhe_named_group, TRUE);
     if (dhe_context == NULL) {
         return RETURN_DEVICE_ERROR;
     }

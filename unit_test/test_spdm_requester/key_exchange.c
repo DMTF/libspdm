@@ -252,7 +252,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -403,7 +403,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -604,7 +604,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                            spdm_response->random_data);
             ptr = (void *)(spdm_response + 1);
-            dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+            dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                           &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -832,7 +832,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                            spdm_response->random_data);
             ptr = (void *)(spdm_response + 1);
-            dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+            dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                           &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -1025,7 +1025,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(m_use_dhe_algo);
+        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);

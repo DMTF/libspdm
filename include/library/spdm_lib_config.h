@@ -33,20 +33,30 @@
 
 /* Crypto Configuation*/
 /* In each category, at least one should be selected.*/
+/* NOTE: Not all combination can be supported. E.g. Don't mix NIST algo with SMx.*/
 
 #define LIBSPDM_RSA_SSA_SUPPORT 1
 #define LIBSPDM_RSA_PSS_SUPPORT 1
 #define LIBSPDM_ECDSA_SUPPORT 1
+#define LIBSPDM_SM2_DSA_SUPPORT 1
+#define LIBSPDM_EDDSA_ED25519_SUPPORT 1
+#define LIBSPDM_EDDSA_ED448_SUPPORT 1
 
 #define LIBSPDM_FFDHE_SUPPORT 1
 #define LIBSPDM_ECDHE_SUPPORT 1
+#define LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT 1
 
 #define LIBSPDM_AEAD_GCM_SUPPORT 1
 #define LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT 1
+#define LIBSPDM_AEAD_SM4_SUPPORT 1
 
 #define LIBSPDM_SHA256_SUPPORT 1
 #define LIBSPDM_SHA384_SUPPORT 1
 #define LIBSPDM_SHA512_SUPPORT 1
+#define LIBSPDM_SHA3_256_SUPPORT 1
+#define LIBSPDM_SHA3_384_SUPPORT 1
+#define LIBSPDM_SHA3_512_SUPPORT 1
+#define LIBSPDM_SM3_256_SUPPORT 1
 
 
 /* Code space optimization for Optional request/response messages.*/
