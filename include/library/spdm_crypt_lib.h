@@ -273,8 +273,16 @@ typedef void (*libspdm_asym_free_func)(IN void *context);
 /**
   Verifies the asymmetric signature.
 
+  For RSA/ECDSA, param is NULL.
+  For EdDSA, param is EdDSA context.
+    For EdDSA25519, param is NULL.
+    For EdDSA448, param is EdDSA448 context.
+  For SM2_DSA, param is SM2 IDa.
+
   @param  context                      Pointer to asymmetric context for signature verification.
   @param  hash_nid                      hash NID
+  @param  param                        algorithm specific parameter
+  @param  param_size                   algorithm specific parameter size
   @param  message                      Pointer to octet message to be checked (before hash).
   @param  message_size                  size of the message in bytes.
   @param  signature                    Pointer to asymmetric signature to be verified.
@@ -284,6 +292,7 @@ typedef void (*libspdm_asym_free_func)(IN void *context);
   @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
 **/
 typedef boolean (*libspdm_asym_verify_func)(IN void *context, IN uintn hash_nid,
+                    IN const uint8_t *param, IN uintn param_size,
                     IN const uint8_t *message,
                     IN uintn message_size,
                     IN const uint8_t *signature,
@@ -312,8 +321,14 @@ typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *
   If the signature buffer is too small to hold the contents of signature, FALSE
   is returned and sig_size is set to the required buffer size to obtain the signature.
 
+  For RSA/ECDSA/EdDSA25519, param is NULL.
+  For EdDSA448, param is EdDSA448 context.
+  For SM2_DSA, param is SM2 IDa.
+
   @param  context                      Pointer to asymmetric context for signature generation.
   @param  hash_nid                      hash NID
+  @param  param                        algorithm specific parameter
+  @param  param_size                   algorithm specific parameter size
   @param  message                      Pointer to octet message to be signed (before hash).
   @param  message_size                  size of the message in bytes.
   @param  signature                    Pointer to buffer to receive signature.
@@ -325,6 +340,7 @@ typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *
   @retval  FALSE  sig_size is too small.
 **/
 typedef boolean (*libspdm_asym_sign_func)(IN void *context, IN uintn hash_nid,
+                  IN const uint8_t *param, IN uintn param_size,
                   IN const uint8_t *message,
                   IN uintn message_size, OUT uint8_t *signature,
                   IN OUT uintn *sig_size);
@@ -1022,10 +1038,14 @@ uint32_t libspdm_get_dhe_pub_key_size(IN uint16_t dhe_named_group);
   based upon negotiated DHE algorithm.
 
   @param  dhe_named_group                SPDM dhe_named_group
+  @param  is_initiator                   if the caller is initiator.
+                                         TRUE: initiator
+                                         FALSE: not an initiator
 
   @return  Pointer to the Diffie-Hellman context that has been initialized.
 **/
-void *libspdm_dhe_new(IN uint16_t dhe_named_group);
+void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
+                  IN uint16_t dhe_named_group, IN const boolean is_initiator);
 
 /**
   Release the specified DHE context,

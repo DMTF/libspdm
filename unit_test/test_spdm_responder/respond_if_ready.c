@@ -569,7 +569,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
   libspdm_get_random_number (SPDM_RANDOM_DATA_SIZE, ptr);
   ptr += SPDM_RANDOM_DATA_SIZE;
   dhe_key_size = libspdm_get_dhe_pub_key_size (m_use_dhe_algo);
-  dhe_context = libspdm_dhe_new (m_use_dhe_algo);
+  dhe_context = libspdm_dhe_new (spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
   libspdm_dhe_generate_key (m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
   ptr += dhe_key_size;
   libspdm_dhe_free (m_use_dhe_algo, dhe_context);
