@@ -58,7 +58,7 @@ static void test_spdm_common_context_data_case2(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x1;
+    spdm_test_context->case_id = 0x2;
 
     /**
      * Get current opaque data in context. May have been set in previous
@@ -109,7 +109,7 @@ static void test_spdm_common_context_data_case3(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x1;
+    spdm_test_context->case_id = 0x3;
 
     /**
      * Get current opaque data in context. May have been set in previous
@@ -161,7 +161,7 @@ static void test_spdm_common_context_data_case4(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x1;
+    spdm_test_context->case_id = 0x4;
 
     /*
      * Set data successfully.
