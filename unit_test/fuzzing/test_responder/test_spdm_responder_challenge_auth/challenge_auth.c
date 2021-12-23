@@ -164,36 +164,6 @@ void test_spdm_responder_challenge_case4(void **State)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
-    spdm_test_context = *State;
-    spdm_context = spdm_test_context->spdm_context;
-
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_use_measurement_spec;
-    spdm_context->connection_info.algorithm.measurement_hash_algo =
-        m_use_measurement_hash_algo;
-
-    response_size = sizeof(response);
-
-    spdm_get_response_challenge_auth(spdm_context,
-                     spdm_test_context->test_buffer_size,
-                     spdm_test_context->test_buffer,
-                     &response_size, response);
-}
-
-void test_spdm_responder_challenge_case5(void **State)
-{
-    spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
-    uintn response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
     uintn data_size;
     spdm_test_context = *State;
@@ -235,7 +205,7 @@ void test_spdm_responder_challenge_case5(void **State)
                      &response_size, response);
 }
 
-void test_spdm_responder_challenge_case6(void **State)
+void test_spdm_responder_challenge_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
@@ -303,11 +273,10 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_responder_challenge_case2(&State);
     /* connection_state Check*/
     test_spdm_responder_challenge_case3(&State);
-    test_spdm_responder_challenge_case4(&State);
     /* Support Capabilities flag */
-    test_spdm_responder_challenge_case5(&State);
+    test_spdm_responder_challenge_case4(&State);
     /* basic_mut_auth_requested : 1 */
-    test_spdm_responder_challenge_case6(&State);
+    test_spdm_responder_challenge_case5(&State);
 
     spdm_unit_test_group_teardown(&State);
 }
