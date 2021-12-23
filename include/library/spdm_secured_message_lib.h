@@ -26,27 +26,27 @@ typedef enum {
     LIBSPDM_SESSION_TYPE_NONE,
     LIBSPDM_SESSION_TYPE_MAC_ONLY,
     LIBSPDM_SESSION_TYPE_ENC_MAC,
-    LIBSPDM_SESSION_TYPE_MAX,
+    LIBSPDM_SESSION_TYPE_MAX
 } libspdm_session_type_t;
 
 typedef enum {
-    
+
     /* Before send KEY_EXCHANGE/PSK_EXCHANGE*/
     /* or after END_SESSION*/
-    
+
     LIBSPDM_SESSION_STATE_NOT_STARTED,
-    
+
     /* After send KEY_EXHCNAGE, before send FINISH*/
-    
+
     LIBSPDM_SESSION_STATE_HANDSHAKING,
-    
+
     /* After send FINISH, before END_SESSION*/
-    
+
     LIBSPDM_SESSION_STATE_ESTABLISHED,
-    
+
     /* MAX*/
-    
-    LIBSPDM_SESSION_STATE_MAX,
+
+    LIBSPDM_SESSION_STATE_MAX
 } libspdm_session_state_t;
 
 /**
@@ -517,7 +517,7 @@ libspdm_generate_session_data_key(IN void *spdm_secured_message_context,
 typedef enum {
     LIBSPDM_KEY_UPDATE_ACTION_REQUESTER,
     LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
-    LIBSPDM_KEY_UPDATE_ACTION_MAX,
+    LIBSPDM_KEY_UPDATE_ACTION_MAX
 } libspdm_key_update_action_t;
 
 /**

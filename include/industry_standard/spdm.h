@@ -110,10 +110,10 @@ typedef struct {
 /* SPDM VERSION structure*/
 
 typedef struct {
-    uint16_t alpha : 4;
-    uint16_t update_version_number : 4;
-    uint16_t minor_version : 4;
-    uint16_t major_version : 4;
+    unsigned int alpha : 4;
+    unsigned int update_version_number : 4;
+    unsigned int minor_version : 4;
+    unsigned int major_version : 4;
 } spdm_version_number_t;
 
 
@@ -222,8 +222,8 @@ typedef struct {
 } spdm_negotiate_algorithms_struct_table_t;
 
 typedef struct {
-    uint8_t ext_alg_count : 4;
-    uint8_t fixed_alg_byte_count : 4;
+    unsigned int ext_alg_count : 4;
+    unsigned int fixed_alg_byte_count : 4;
 } spdm_negotiate_algorithms_struct_table_alg_count_t;
 
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE 2
@@ -381,23 +381,23 @@ typedef struct {
 } spdm_certificate_response_t;
 
 typedef struct {
-    
+
     /* Total length of the certificate chain, in bytes,*/
     /* including all fields in this table.*/
-    
+
     uint16_t length;
     uint16_t reserved;
-    
+
     /* digest of the Root Certificate.*/
     /* Note that Root Certificate is ASN.1 DER-encoded for this digest.*/
     /* The hash size is determined by the SPDM device.*/
-    
+
     /*uint8_t    root_hash[hash_size];*/
-    
+
     /* One or more ASN.1 DER-encoded X509v3 certificates where the first certificate is signed by the Root*/
     /* Certificate or is the Root Certificate itself and each subsequent certificate is signed by the preceding*/
     /* certificate. The last certificate is the Leaf Certificate.*/
-    
+
     /*uint8_t    certificates[length - 4 - hash_size];*/
 } spdm_cert_chain_t;
 
@@ -434,9 +434,9 @@ typedef struct {
 #define SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
 
 typedef struct {
-    uint8_t slot_id : 4;
-    uint8_t reserved : 3;
-    uint8_t basic_mut_auth_req : 1;
+    unsigned int slot_id : 4;
+    unsigned int reserved : 3;
+    unsigned int basic_mut_auth_req : 1;
 } spdm_challenge_auth_response_attribute_t;
 
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
@@ -454,8 +454,8 @@ typedef struct {
 } spdm_get_measurements_request_t;
 
 typedef struct {
-    uint8_t slot_id : 4;
-    uint8_t reserved : 4;
+    unsigned int slot_id : 4;
+    unsigned int reserved : 4;
 } spdm_get_measurements_request_slot_id_parameter_t;
 
 
@@ -500,8 +500,8 @@ typedef struct {
 } spdm_measurement_block_dmtf_t;
 
 typedef struct {
-    uint8_t Content : 7;
-    uint8_t presentation : 1;
+    unsigned int Content : 7;
+    unsigned int presentation : 1;
 } SPDM_MEASUREMENTS_BLOCK_MEASUREMENT_TYPE;
 
 
