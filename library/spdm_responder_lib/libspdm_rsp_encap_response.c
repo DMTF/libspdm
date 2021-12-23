@@ -202,19 +202,19 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    
+
     /* Clear Cache*/
-    
+
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
-    
+
     /* Possible Sequence:*/
     /* 2. Session Mutual Auth: (spdm_context->last_spdm_request_session_id_valid)*/
     /*    2.1 GET_DIGEST/GET_CERTIFICATE (spdm_context->encap_context.req_slot_id != 0xFF)*/
     /*    2.2 GET_DIGEST (spdm_context->encap_context.req_slot_id == 0xFF)*/
     /*    2.3 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
-    
+
     zero_mem(spdm_context->encap_context.request_op_code_sequence,
          sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Session Mutual Auth*/
@@ -242,10 +242,8 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   This function initializes the basic_mut_auth encapsulated state.
 
   @param  spdm_context                  A pointer to the SPDM context.
-  @param  basic_mut_auth_requested        Indicate of the mut_auth_requested through CHALLENG response.
 **/
-void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-                      IN uint8_t basic_mut_auth_requested)
+void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context)
 {
     spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
@@ -256,19 +254,19 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    
+
     /* Clear Cache*/
-    
+
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
-    
+
     /* Possible Sequence:*/
     /* 1. Basic Mutual Auth:*/
     /*    1.1 GET_DIGEST/GET_CERTIFICATE/CHALLENGE (spdm_context->encap_context.req_slot_id != 0xFF)*/
     /*    1.2 GET_DIGEST/CHALLENGE (spdm_context->encap_context.req_slot_id == 0xFF)*/
     /*    1.3 CHALLENGE (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
-    
+
     zero_mem(spdm_context->encap_context.request_op_code_sequence,
          sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Basic Mutual Auth*/
@@ -565,9 +563,9 @@ return_status spdm_get_response_encapsulated_response_ack(
 return_status spdm_handle_encap_error_response_main(
     IN spdm_context_t *spdm_context, IN uint8_t error_code)
 {
-    
+
     /* According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.*/
     /* RESPONSE_NOT_READY should not be sent by requester. No need to check it.*/
-    
+
     return RETURN_DEVICE_ERROR;
 }

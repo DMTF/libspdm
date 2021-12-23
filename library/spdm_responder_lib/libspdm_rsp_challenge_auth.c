@@ -151,8 +151,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
                 spdm_context->local_context.basic_mut_auth_requested;
         }
         if (auth_attribute.basic_mut_auth_req != 0) {
-            spdm_init_basic_mut_auth_encap_state(
-                context, auth_attribute.basic_mut_auth_req);
+            spdm_init_basic_mut_auth_encap_state(context);
         }
     }
 
@@ -211,9 +210,9 @@ return_status spdm_get_response_challenge_auth(IN void *context,
          spdm_context->local_context.opaque_challenge_auth_rsp_size);
     ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
 
-    
+
     /* Calc Sign*/
-    
+
     status = libspdm_append_message_c(spdm_context, spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {

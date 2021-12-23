@@ -619,10 +619,8 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
   This function initializes the basic_mut_auth encapsulated state.
 
   @param  spdm_context                  A pointer to the SPDM context.
-  @param  basic_mut_auth_requested        Indicate of the mut_auth_requested through CHALLENG response.
 **/
-void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context,
-                      IN uint8_t basic_mut_auth_requested);
+void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context);
 
 /**
   This function handles the encap error response.
