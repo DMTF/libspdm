@@ -174,7 +174,7 @@ static void test_spdm_common_context_data_case4(void **state)
      * Fail get data due to insufficient buffer for return value. returned
      * data size must return required buffer size.
      */
-    data_return_size = 4;
+    data_return_size = sizeof(void*) - 1;
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                    NULL, &return_data, &data_return_size);
     assert_int_equal(status, RETURN_BUFFER_TOO_SMALL);
