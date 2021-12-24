@@ -104,10 +104,12 @@ void test_spdm_requester_psk_exchange(void **State)
         m_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_use_key_schedule_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
          data, data_size);
+#endif
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
          sizeof(TEST_PSK_HINT_STRING));

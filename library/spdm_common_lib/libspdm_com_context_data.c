@@ -52,6 +52,9 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
     uint8_t slot_id;
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    boolean status;
+#endif
 
     if (!context || !data || data_type >= LIBSPDM_DATA_MAX) {
         return RETURN_INVALID_PARAMETER;
@@ -347,11 +350,53 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {
             return RETURN_OUT_OF_RESOURCES;
         }
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         spdm_context->connection_info.peer_used_cert_chain_buffer_size =
             data_size;
         copy_mem(spdm_context->connection_info
                  .peer_used_cert_chain_buffer,
              data, data_size);
+#else
+        status = libspdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            data, data_size,
+            spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+        if (!status) {
+            return RETURN_UNSUPPORTED;
+        }
+
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+            libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+        status = FALSE;
+#if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
+        if (!status) {
+            status = rsa_get_public_key_from_x509(data, data_size,
+                &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        }
+#endif
+#if LIBSPDM_ECDSA_SUPPORT == 1
+        if (!status) {
+            status = ec_get_public_key_from_x509(data, data_size,
+                &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        }
+#endif
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
+        if (!status) {
+            status = ecd_get_public_key_from_x509(data, data_size,
+                &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        }
+#endif
+#if LIBSPDM_SM2_DSA_SUPPORT == 1
+        if (!status) {
+            status = sm2_get_public_key_from_x509(data, data_size,
+                &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        }
+#endif
+        if (!status) {
+            return RETURN_UNSUPPORTED;
+        }
+#endif
         break;
     case LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED:
         if (data_size != sizeof(boolean)) {
@@ -1345,23 +1390,46 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
             if (!spdm_session_info->use_psk) {
                 if (is_requester) {
-                    result = libspdm_get_peer_cert_chain_buffer(
-                        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+                    if(spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
+                        hash_size =
+                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
+                        copy_mem(cert_chain_buffer_hash,
+                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                            hash_size);
+                        result = TRUE;
+                    } else {
+                        result = libspdm_get_peer_cert_chain_buffer(
+                            spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+                        if (!result) {
+                            return FALSE;
+                        }
+                        hash_size = libspdm_get_hash_size(
+                            spdm_context->connection_info.algorithm.base_hash_algo);
+                        result = libspdm_hash_all(
+                            spdm_context->connection_info.algorithm.base_hash_algo,
+                            cert_chain_buffer, cert_chain_buffer_size,
+                            cert_chain_buffer_hash);
+                        if (!result) {
+                            return FALSE;
+                        }
+
+                    }
                 } else {
                     result = libspdm_get_local_cert_chain_buffer(
                         spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
-                }
-                if (!result) {
-                    return FALSE;
-                }
-                hash_size = libspdm_get_hash_size(
-                    spdm_context->connection_info.algorithm.base_hash_algo);
-                result = libspdm_hash_all(
-                    spdm_context->connection_info.algorithm.base_hash_algo,
-                    cert_chain_buffer, cert_chain_buffer_size,
-                    cert_chain_buffer_hash);
-                if (!result) {
-                    return FALSE;
+                
+                    if (!result) {
+                        return FALSE;
+                    }
+                    hash_size = libspdm_get_hash_size(
+                        spdm_context->connection_info.algorithm.base_hash_algo);
+                    result = libspdm_hash_all(
+                        spdm_context->connection_info.algorithm.base_hash_algo,
+                        cert_chain_buffer, cert_chain_buffer_size,
+                        cert_chain_buffer_hash);
+                    if (!result) {
+                        return FALSE;
+                    }
                 }
             }
         }
@@ -1510,28 +1578,47 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
                         spdm_context,
                         (void **)&mut_cert_chain_buffer,
                         &mut_cert_chain_buffer_size);
+                    if (!result) {
+                        return RETURN_UNSUPPORTED;
+                    }
+                    hash_size = libspdm_get_hash_size(
+                        spdm_context->connection_info.algorithm.base_hash_algo);
+                    result = libspdm_hash_all(
+                        spdm_context->connection_info.algorithm.base_hash_algo,
+                        mut_cert_chain_buffer, mut_cert_chain_buffer_size,
+                        mut_cert_chain_buffer_hash);
+                    if (!result) {
+                        return RETURN_DEVICE_ERROR;
+                    }
                 } else {
-                    result = libspdm_get_peer_cert_chain_buffer(
-                        spdm_context,
-                        (void **)&mut_cert_chain_buffer,
-                        &mut_cert_chain_buffer_size);
-                }
-                if (!result) {
-                    return RETURN_UNSUPPORTED;
-                }
-
-                hash_size = libspdm_get_hash_size(
-                    spdm_context->connection_info.algorithm.base_hash_algo);
-                result = libspdm_hash_all(
-                    spdm_context->connection_info.algorithm.base_hash_algo,
-                    mut_cert_chain_buffer, mut_cert_chain_buffer_size,
-                    mut_cert_chain_buffer_hash);
-                if (!result) {
-                    return RETURN_DEVICE_ERROR;
+                    if (spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
+                        hash_size =
+                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
+                        copy_mem(mut_cert_chain_buffer_hash,
+                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                            hash_size);
+                        result = TRUE;
+                    } else {
+                        result = libspdm_get_peer_cert_chain_buffer(
+                            spdm_context,
+                            (void **)&mut_cert_chain_buffer,
+                            &mut_cert_chain_buffer_size);
+                        if (!result) {
+                            return RETURN_UNSUPPORTED;
+                        }
+                        hash_size = libspdm_get_hash_size(
+                            spdm_context->connection_info.algorithm.base_hash_algo);
+                        result = libspdm_hash_all(
+                            spdm_context->connection_info.algorithm.base_hash_algo,
+                            mut_cert_chain_buffer, mut_cert_chain_buffer_size,
+                            mut_cert_chain_buffer_hash);
+                        if (!result) {
+                            return RETURN_DEVICE_ERROR;
+                        }
+                    }
                 }
             }
 
-            
             /* It is first time call, backup current message_k context*/
             /* this backup will be used in reset_message_f.*/
             
@@ -1819,6 +1906,11 @@ return_status libspdm_init_context(IN void *context)
     /* From the config.h, need different value for CHUNK - TBD*/
     spdm_context->local_context.capability.data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     spdm_context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size = 0;
+    spdm_context->connection_info.peer_used_leaf_cert_public_key = NULL;
+#endif
 
     secured_message_context = (void *)((uintn)(spdm_context + 1));
     SecuredMessageContextSize = libspdm_secured_message_get_context_size();

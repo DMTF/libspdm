@@ -329,9 +329,10 @@ void test_spdm_responder_finish_case8(void **State)
                                             &data_size2, NULL, NULL);
     spdm_context.local_context.peer_cert_chain_provision = data2;
     spdm_context.local_context.peer_cert_chain_provision_size = data_size2;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     copy_mem(spdm_context.connection_info.peer_used_cert_chain_buffer, data2, data_size2);
     spdm_context.connection_info.peer_used_cert_chain_buffer_size = data_size2;
-
+#endif
     session_id = 0xFFFFFEE;
     spdm_context.latest_session_id = session_id;
     session_info = &spdm_context.session_info[0];
