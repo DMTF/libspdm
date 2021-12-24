@@ -228,11 +228,41 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
         }
     }
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         get_managed_buffer_size(&certificate_chain_buffer);
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
          get_managed_buffer(&certificate_chain_buffer),
          get_managed_buffer_size(&certificate_chain_buffer));
+#else
+    result = libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        get_managed_buffer(&certificate_chain_buffer),
+        get_managed_buffer_size(&certificate_chain_buffer),
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+    if (!result) {
+        spdm_context->error_state =
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+        status = RETURN_SECURITY_VIOLATION;
+        goto done;
+    }
+
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+    result = libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        get_managed_buffer(&certificate_chain_buffer),
+        get_managed_buffer_size(&certificate_chain_buffer),
+        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+    if (!result) {
+        spdm_context->error_state =
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+        status = RETURN_SECURITY_VIOLATION;
+        goto done;
+    }
+#endif
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 

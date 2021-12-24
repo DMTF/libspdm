@@ -45,10 +45,12 @@ spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
          data, data_size);
+#endif
 
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];

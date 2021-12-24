@@ -98,12 +98,18 @@ typedef struct {
     spdm_device_capability_t capability;
     spdm_device_algorithm_t algorithm;
     spdm_version_number_t secured_message_version;
-    
-    /* Peer CertificateChain*/
-    
+
+    /* Peer CertificateChain */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t peer_used_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     uintn peer_used_cert_chain_buffer_size;
-    
+#else
+    uint8_t peer_used_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint32_t   peer_used_cert_chain_buffer_hash_size;
+    /* leaf cert public key of the peer */
+    void *peer_used_leaf_cert_public_key;
+#endif
+
     /* Local Used CertificateChain (for responder, or requester in mut auth)*/
     
     uint8_t *local_used_cert_chain_buffer;

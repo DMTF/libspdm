@@ -190,6 +190,7 @@ return_status spdm_process_encap_response_certificate(
         }
     }
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer);
@@ -199,6 +200,36 @@ return_status spdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer));
+#else
+    result = libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        get_managed_buffer(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        get_managed_buffer_size(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+    if (!result) {
+        spdm_context->encap_context.error_state =
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+        return RETURN_SECURITY_VIOLATION;
+    }
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+    result = libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        get_managed_buffer(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        get_managed_buffer_size(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+    if (!result) {
+        spdm_context->encap_context.error_state =
+            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
+        return RETURN_SECURITY_VIOLATION;
+    }
+#endif
 
     spdm_context->encap_context.error_state = LIBSPDM_STATUS_SUCCESS;
 

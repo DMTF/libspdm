@@ -4251,3 +4251,53 @@ boolean libspdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
 
     return TRUE;
 }
+
+/**
+  Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+  based upon negotiated asymmetric or requester asymmetric algorithm.
+
+
+  @param  base_hash_algo                SPDM base_hash_algo.
+  @param  base_asym_alg                 SPDM base_asym_algo or req_base_asym_alg.
+  @param  cert_chain_data               Certitiface chain data without spdm_cert_chain_t header.
+  @param  cert_chain_data_size          size in bytes of the certitiface chain data.
+  @param  public_key                    Pointer to new-generated asymmetric context which contain the retrieved public key component.
+
+  @retval  TRUE   public key was retrieved successfully.
+  @retval  FALSE  Fail to retrieve public key from X509 certificate.
+**/
+boolean libspdm_get_leaf_cert_public_key_from_cert_chain(IN uint32_t base_hash_algo,
+                    IN uint32_t base_asym_alg,
+                    IN uint8_t *cert_chain_data,
+                    IN uintn cert_chain_data_size,
+                    OUT void **public_key)
+{
+    uintn hash_size;
+    uint8_t *cert_buffer;
+    uintn cert_buffer_size;
+    boolean result;
+
+    hash_size = libspdm_get_hash_size(base_hash_algo);
+
+    cert_chain_data = cert_chain_data +
+        sizeof(spdm_cert_chain_t) + hash_size;
+    cert_chain_data_size =
+        cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+
+    /* Get leaf cert from cert chain */
+    result = x509_get_cert_from_cert_chain(cert_chain_data,
+        cert_chain_data_size, -1,
+        &cert_buffer, &cert_buffer_size);
+    if (!result) {
+        return FALSE;
+    }
+
+    result = libspdm_asym_get_public_key_from_x509(
+        base_asym_alg,
+        cert_buffer, cert_buffer_size, public_key);
+    if (!result) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
