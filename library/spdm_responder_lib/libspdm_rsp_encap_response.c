@@ -129,7 +129,6 @@ return_status spdm_process_encapsulated_response(
 
     if (spdm_context->encap_context.current_request_op_code != 0) {
         encap_response_struct = spdm_get_encap_struct_via_op_code(
-            spdm_context,
             spdm_context->encap_context.current_request_op_code);
         ASSERT(encap_response_struct != NULL);
         if (encap_response_struct == NULL) {
@@ -163,7 +162,6 @@ return_status spdm_process_encapsulated_response(
 
     /* Process the next request*/
     encap_response_struct = spdm_get_encap_struct_via_op_code(
-        spdm_context,
         spdm_context->encap_context.current_request_op_code);
     ASSERT(encap_response_struct != NULL);
     if (encap_response_struct == NULL) {
