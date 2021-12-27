@@ -181,22 +181,22 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
-   You can launch the script `fuzzing.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   You can launch the script `fuzzing_AFL.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
 
    Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
-   The usage of the script `fuzzing.sh` is as following:
+   The usage of the script `fuzzing_AFL.sh` is as following:
    ```
-   libspdm/unit_test/fuzzing/fuzzing.sh <CRYPTO> <GCOV> <duration>
+   libspdm/unit_test/fuzzing/fuzzing_AFL.sh <CRYPTO> <GCOV> <duration>
    <CRYPTO> means selected Crypto library: mbedtls or openssl
    <GCOV> means enable Code Coverage or not: ON or OFF
    <duration> means the duration of every program keep fuzzing: NUMBER seconds
    ```
    For example: build with `mbedtls`, enable Code Coverage and every test case run 60 seconds.
    ```
-   libspdm/unit_test/fuzzing/fuzzing.sh mbedtls ON 60
+   libspdm/unit_test/fuzzing/fuzzing_AFL.sh mbedtls ON 60
    ```
-   Fuzzing output path and code coverage output path of the script `fuzzing.sh`:
+   Fuzzing output path and code coverage output path of the script `fuzzing_AFL.sh`:
    ```
    #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>/SummaryList.csv
    libspdm/unit_test/fuzzing/out_mbedtls_ac992fd/SummaryList.csv
@@ -237,16 +237,61 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 3) fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
-   Ensure LLVM binary in PATH environment variable.
+   Firstly please install LLVM with: `sudo apt install llvm`, and install CLANG with: `sudo apt install clang`.
 
+   Ensure LLVM and CLANG binary in PATH environment variable.
+   Use `llvm-ar --version` and `clang --version` to confirm the LLVM version(Take 'Ubuntu 20.04.2 LTS' as an example).
+   ```
+   ~$ llvm-ar --version
+   LLVM (http://llvm.org/):
+     LLVM version 10.0.0
+
+     Optimized build.
+     Default target: x86_64-pc-linux-gnu
+     Host CPU: haswell
+
+   ~$ clang --version
+   clang version 10.0.0-4ubuntu1
+   Target: x86_64-pc-linux-gnu
+   Thread model: posix
+   InstalledDir: /usr/bin  
+   ```
+   Currently when building with LIBFUZZER toolchain, it will enable [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html) by using the `-fsanitize=fuzzer,address` flag during the compilation and linking. 
+   You can check it in [CMakeLists.txt](https://github.com/DMTF/libspdm/blob/main/CMakeLists.txt).
+   
    Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unit test doesn't build when DTOOLCHAIN=LIBFUZZER).
-
+   ```
+   cd libspdm
+   mkdir build_libfuzz
+   cd build_libfuzz
+   cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=mbedtls ..
+   make copy_sample_key
+   make
+   ```
    Run cases:
    ```
    mkdir NEW_CORPUS_DIR // Copy test seeds to the folder before run test
    <test_app> NEW_CORPUS_DIR -rss_limit_mb=0 -artifact_prefix=<OUTPUT_PATH>
    ```
+   You can launch the script `fuzzing_LibFuzzer.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
 
+   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+
+   The usage of the script `fuzzing_LibFuzzer.sh` is as following:
+   ```
+   Usage: ./libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh <CRYPTO> <duration>
+   <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <duration> means the duration of every program keep fuzzing: NUMBER seconds
+   ```
+   For example: build with `mbedtls` and every test case run 30 seconds.
+   ```
+   libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh mbedtls 30
+   ```
+   Fuzzing output path of the script `fuzzing_LibFuzzer.sh`:
+   ```
+   #libspdm/unit_test/fuzzing/out_libfuzz_<CRYPTO>_<GitLogHash>/
+   libspdm/unit_test/fuzzing/out_libfuzz_mbedtls_05e7bb4/
+   ```
 4) fuzzing in Windows with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
    Note: IA32 build is not supported with LLVM in Windows.

@@ -16,7 +16,7 @@ fi
 if [[ $1 = "mbedtls" || $1 = "openssl" ]]; then
     echo "<CRYPTO> parameter is $1"
 else
-    echo "Usage: $0 <CRYPTO> <GCOV>"
+    echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
     echo "<CRYPTO> means selected Crypto library: mbedtls or openssl"
     echo "<GCOV> means enable Code Coverage or not: ON or OFF"
     echo "<duration> means the duration of every program keep fuzzing: NUMBER seconds"
@@ -26,7 +26,7 @@ fi
 if [[ $2 = "ON" || $2 = "OFF" ]]; then    
     echo "<GCOV> parameter is $2"
 else
-    echo "Usage: $0 <CRYPTO> <GCOV>"
+    echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
     echo "<CRYPTO> means selected Crypto library: mbedtls or openssl"
     echo "<GCOV> means enable Code Coverage or not: ON or OFF"
     echo "<duration> means the duration of every program keep fuzzing: NUMBER seconds"
@@ -107,7 +107,6 @@ test_spdm_transport_pci_doe_encode_message
 test_spdm_transport_pci_doe_decode_message
 test_spdm_decode_secured_message
 test_spdm_encode_secured_message
-test_spdm_requester_end_session
 test_spdm_requester_encap_digests
 test_spdm_requester_encap_certificate
 test_spdm_requester_encap_challenge_auth
