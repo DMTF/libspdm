@@ -3897,7 +3897,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
                  libspdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo) +
                  SPDM_NONCE_SIZE +
-                 sizeof(uint16_t) + MAX_SPDM_OPAQUE_DATA_SIZE);
+                 sizeof(uint16_t) + SPDM_MAX_OPAQUE_DATA_SIZE);
 #endif
     free(data);
 }
@@ -4264,7 +4264,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
                      m_use_measurement_hash_algo) +
                  SPDM_NONCE_SIZE +
                  sizeof(uint16_t) +
-                 MAX_SPDM_OPAQUE_DATA_SIZE / 2 - 1);
+                 SPDM_MAX_OPAQUE_DATA_SIZE / 2 - 1);
 #endif
     free(data);
 }
@@ -4326,7 +4326,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
                  libspdm_get_measurement_hash_size(
                      m_use_measurement_hash_algo) +
                  sizeof(uint16_t) +
-                 MAX_SPDM_OPAQUE_DATA_SIZE / 2);
+                 SPDM_MAX_OPAQUE_DATA_SIZE / 2);
 #endif
     free(data);
 }

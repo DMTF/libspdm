@@ -387,7 +387,7 @@ void test_spdm_responder_digests_case8(void **state)
     spdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uintn response_size;
-    uint8_t response[MAX_SPDM_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     return_status status;
     spdm_digest_response_t *spdm_response;
 #endif

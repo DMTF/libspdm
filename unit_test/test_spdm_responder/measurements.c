@@ -86,7 +86,7 @@ spdm_get_measurements_request_t m_spdm_get_measurements_request12 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
     /* nonce*/
-    /* SlotId >= MAX_SPDM_SLOT_COUNT*/
+    /* SlotId >= SPDM_MAX_SLOT_COUNT*/
 };
 uintn m_spdm_get_measurements_request12_size =
     sizeof(m_spdm_get_measurements_request12);
@@ -154,7 +154,7 @@ void test_spdm_responder_measurements_case1(void **state)
 }
 
 /**
-  Test 2: Error case, Bad request size (MAX_SPDM_MESSAGE_BUFFER_SIZE) to get measurement number without signature
+  Test 2: Error case, Bad request size (LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) to get measurement number without signature
   Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
 **/
 void test_spdm_responder_measurements_case2(void **state)
@@ -1150,7 +1150,7 @@ void test_spdm_responder_measurements_case18(void **state)
 }
 
 /**
-  Test 19: Error case, invalid SlotId parameter (SlotId >= MAX_SPDM_SLOT_COUNT)
+  Test 19: Error case, invalid SlotId parameter (SlotId >= SPDM_MAX_SLOT_COUNT)
   Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
 **/
 void test_spdm_responder_measurements_case19(void **state)
@@ -1204,7 +1204,7 @@ void test_spdm_responder_measurements_case19(void **state)
 }
 
 /**
-  Test 19: Error case, invalid SlotId parameter (slot_count < SlotId < MAX_SPDM_SLOT_COUNT)
+  Test 19: Error case, invalid SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)
   Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
 **/
 void test_spdm_responder_measurements_case20(void **state)
@@ -1514,9 +1514,9 @@ int spdm_responder_measurements_test_main(void)
         cmocka_unit_test(test_spdm_responder_measurements_case17),
         /* Success Case: SlotId different from default*/
         cmocka_unit_test(test_spdm_responder_measurements_case18),
-        /* Bad SlotId parameter (>= MAX_SPDM_SLOT_COUNT)*/
+        /* Bad SlotId parameter (>= SPDM_MAX_SLOT_COUNT)*/
         cmocka_unit_test(test_spdm_responder_measurements_case19),
-        /* Bad SlotId parameter (slot_count < SlotId < MAX_SPDM_SLOT_COUNT)*/
+        /* Bad SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)*/
         cmocka_unit_test(test_spdm_responder_measurements_case20),
         /* Error Case: request a measurement out of bounds*/
         cmocka_unit_test(test_spdm_responder_measurements_case21),

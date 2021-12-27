@@ -357,7 +357,7 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
     spdm_context = context;
     spdm_session_info = session_info;
 
-    init_managed_buffer(&l1l2, MAX_SPDM_MESSAGE_BUFFER_SIZE);
+    init_managed_buffer(&l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
