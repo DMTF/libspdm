@@ -99,6 +99,7 @@ test_spdm_responder_key_update
 test_spdm_responder_end_session
 test_spdm_responder_if_ready
 )
+cp -r $fuzzing_seeds ./
 for ((i=0;i<${#cmds[*]};i++))
 do
     echo ${cmds[$i]}
@@ -108,7 +109,7 @@ do
     then
     screen -dmS ${cmds[$i]}
     fi
-    screen -S ${cmds[$i]} -p 0 -X stuff "./${cmds[$i]} $fuzzing_seeds/${cmds[$i]} -rss_limit_mb=0 -timeout=10 -artifact_prefix=$fuzzing_out/${cmds[$i]}/"
+    screen -S ${cmds[$i]} -p 0 -X stuff "./${cmds[$i]} ./seeds/${cmds[$i]} -rss_limit_mb=0 -timeout=10 -artifact_prefix=$fuzzing_out/${cmds[$i]}/"
     screen -S ${cmds[$i]} -p 0 -X stuff $'\n'
     sleep $duration
     screen -S ${cmds[$i]} -X quit
