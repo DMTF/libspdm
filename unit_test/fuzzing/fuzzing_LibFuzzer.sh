@@ -46,14 +46,6 @@ fi
 
 rm -rf $fuzzing_out/*
 
-if [[ "core" != `cat /proc/sys/kernel/core_pattern` ]];then
-    # Here '123' is the sudo password, replace it with yours.
-    echo '123' | sudo -S bash -c 'echo core >/proc/sys/kernel/core_pattern'
-    pushd /sys/devices/system/cpu/
-    echo '123' | sudo -S bash -c 'echo performance | tee cpu*/cpufreq/scaling_governor'
-    popd
-fi
-
 if [ -d "$build_fuzzing" ];then
     rm -rf $build_fuzzing
 fi
@@ -67,8 +59,45 @@ make
 pushd bin
 
 cmds=(
+test_spdm_transport_mctp_encode_message
+test_spdm_transport_mctp_decode_message
+test_spdm_transport_pci_doe_encode_message
+test_spdm_transport_pci_doe_decode_message
+test_spdm_decode_secured_message
+test_spdm_encode_secured_message
+test_spdm_requester_encap_digests
+test_spdm_requester_encap_certificate
+test_spdm_requester_encap_challenge_auth
+test_spdm_requester_encap_key_update
 test_spdm_requester_get_version
+test_spdm_requester_get_capabilities
+test_spdm_requester_negotiate_algorithms
+test_spdm_requester_get_digests
+test_spdm_requester_get_certificate
+test_spdm_requester_challenge
+test_spdm_requester_get_measurements
+test_spdm_requester_key_exchange
+test_spdm_requester_finish
+test_spdm_requester_psk_exchange
+test_spdm_requester_psk_finish
+test_spdm_requester_heartbeat
+test_spdm_requester_key_update
+test_spdm_requester_end_session
 test_spdm_responder_version
+test_spdm_responder_capabilities
+test_spdm_responder_algorithms
+test_spdm_responder_digests
+test_spdm_responder_certificate
+test_spdm_responder_challenge_auth
+test_spdm_responder_measurements
+test_spdm_responder_key_exchange
+test_spdm_responder_finish_rsp
+test_spdm_responder_psk_exchange_rsp
+test_spdm_responder_psk_finish_rsp
+test_spdm_responder_heartbeat_ack
+test_spdm_responder_key_update
+test_spdm_responder_end_session
+test_spdm_responder_if_ready
 )
 for ((i=0;i<${#cmds[*]};i++))
 do
