@@ -718,7 +718,7 @@ void test_spdm_requester_get_digests_case2(void **state)
         sizeof(spdm_get_digest_request_t) +
             sizeof(spdm_digest_response_t) +
             libspdm_get_hash_size(spdm_context->connection_info
-                           .algorithm.base_hash_algo) * MAX_SPDM_SLOT_COUNT);
+                           .algorithm.base_hash_algo) * SPDM_MAX_SLOT_COUNT);
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
