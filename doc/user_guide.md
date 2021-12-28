@@ -70,6 +70,17 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
    }
    ```
+   If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
+   ```
+   parameter.location = SPDM_DATA_LOCATION_LOCAL;
+   if (!DeployCertChain) {
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
+   } else {
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
+   }
+   ```
 
    1.5, if mutual authentication is supported, deploy slot number, public certificate chain.
    ```
@@ -272,8 +283,19 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
    }
    ```
+   If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
+   ```
+   parameter.location = SPDM_DATA_LOCATION_LOCAL;
+   if (!DeployCertChain) {
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
+   } else {
+     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
+   }
+   ```
 
-   1.7, if PSK is required, optionally deploy PSK Hint.
+   1.6, if PSK is required, optionally deploy PSK Hint.
    ```
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
    ```
