@@ -669,7 +669,7 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
         }
     }
     /*
-    When there is no root_cert and cert_chain_data in local_context, the return is TURE too.
+    When there is no root_cert and cert_chain_data in local_context, the return is TRUE too.
     No provision means the caller wants to verify the trust anchor of the cert chain.
     */
     DEBUG((DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
