@@ -1261,6 +1261,8 @@ void test_spdm_requester_get_certificate_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1315,6 +1317,8 @@ void test_spdm_requester_get_certificate_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1380,6 +1384,8 @@ void test_spdm_requester_get_certificate_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
@@ -1431,6 +1437,8 @@ void test_spdm_requester_get_certificate_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1482,6 +1490,8 @@ void test_spdm_requester_get_certificate_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1535,6 +1545,8 @@ void test_spdm_requester_get_certificate_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1591,6 +1603,8 @@ void test_spdm_requester_get_certificate_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1644,6 +1658,8 @@ void test_spdm_requester_get_certificate_case8(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1695,6 +1711,8 @@ void test_spdm_requester_get_certificate_case9(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1754,6 +1772,8 @@ void test_spdm_requester_get_certificate_case10(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -1812,6 +1832,8 @@ void test_spdm_requester_get_certificate_case11(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -1875,6 +1897,8 @@ void test_spdm_requester_get_certificate_case12(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -1942,6 +1966,8 @@ void test_spdm_requester_get_certificate_case13(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -2008,6 +2034,8 @@ void test_spdm_requester_get_certificate_case14(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -2074,6 +2102,8 @@ void test_spdm_requester_get_certificate_case15(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -2142,6 +2172,8 @@ void test_spdm_requester_get_certificate_case16(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0x10;
+  spdm_context->connection_info.version.major_version = 1;
+  spdm_context->connection_info.version.minor_version = 1;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
   x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -2204,6 +2236,8 @@ void test_spdm_requester_get_certificate_case17(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -2252,6 +2286,8 @@ void test_spdm_requester_get_certificate_case18(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
@@ -2303,6 +2339,8 @@ void test_spdm_requester_get_certificate_case19(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 0;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;

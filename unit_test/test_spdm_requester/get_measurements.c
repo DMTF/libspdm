@@ -443,7 +443,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 measurment_sig_size;
         spdm_response = (void *)temp_buf;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -527,7 +527,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 measurment_sig_size;
         spdm_response = (void *)temp_buf;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -585,7 +585,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x4: {
         spdm_error_response_t spdm_response;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response.header.param2 = 0;
@@ -600,7 +600,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x5: {
         spdm_error_response_t spdm_response;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response.header.param2 = 0;
@@ -618,7 +618,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             spdm_error_response_t spdm_response;
 
             spdm_response.header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+                SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response.header.param2 = 0;
@@ -659,7 +659,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             spdm_response = (void *)temp_buf;
 
             spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+                SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code =
                 SPDM_MEASUREMENTS;
             spdm_response->header.param1 = 0;
@@ -723,7 +723,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x7: {
         spdm_error_response_t spdm_response;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response.header.param2 = 0;
@@ -738,7 +738,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
     case 0x8: {
         spdm_error_response_data_response_not_ready_t spdm_response;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
@@ -763,7 +763,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 spdm_response;
 
             spdm_response.header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+                SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
@@ -810,7 +810,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             spdm_response = (void *)temp_buf;
 
             spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+                SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code =
                 SPDM_MEASUREMENTS;
             spdm_response->header.param1 = 0;
@@ -880,7 +880,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             sizeof(spdm_measurements_response_t)
             + SPDM_NONCE_SIZE + sizeof(uint16_t);
         spdm_response = (void *)temp_buf;
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
@@ -916,7 +916,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 SPDM_NONCE_SIZE + sizeof(uint16_t);
         spdm_response = (void *)temp_buf;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -2352,7 +2352,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                          SPDM_NONCE_SIZE;
         spdm_response = (void *)temp_buf;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -2459,7 +2459,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
                 measurment_sig_size;
         spdm_response = (void *)temp_buf;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -2548,6 +2548,8 @@ void test_spdm_requester_get_measurements_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2604,6 +2606,8 @@ void test_spdm_requester_get_measurements_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2660,6 +2664,8 @@ void test_spdm_requester_get_measurements_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
@@ -2716,6 +2722,8 @@ void test_spdm_requester_get_measurements_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2772,6 +2780,8 @@ void test_spdm_requester_get_measurements_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2828,6 +2838,8 @@ void test_spdm_requester_get_measurements_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2884,6 +2896,8 @@ void test_spdm_requester_get_measurements_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2942,6 +2956,8 @@ void test_spdm_requester_get_measurements_case8(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -2995,6 +3011,8 @@ void test_spdm_requester_get_measurements_case9(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -3049,6 +3067,8 @@ void test_spdm_requester_get_measurements_case10(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -3107,6 +3127,8 @@ void test_spdm_requester_get_measurements_case11(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -4290,6 +4312,8 @@ void test_spdm_requester_get_measurements_case30(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
@@ -4416,6 +4440,8 @@ void test_spdm_requester_get_measurements_case32(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.version.major_version = 1;
+    spdm_context->connection_info.version.minor_version = 1;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=

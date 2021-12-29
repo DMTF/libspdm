@@ -118,6 +118,9 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
+    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
         if (spdm_response.header.request_response_code == SPDM_ERROR) {
             status = spdm_handle_error_response_main(
                 spdm_context, NULL,
