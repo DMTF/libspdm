@@ -188,6 +188,9 @@ return_status try_spdm_send_receive_key_exchange(
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = spdm_handle_error_response_main(
             spdm_context, NULL, &spdm_response_size,

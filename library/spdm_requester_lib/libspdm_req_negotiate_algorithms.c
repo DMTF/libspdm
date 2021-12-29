@@ -131,6 +131,9 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = spdm_handle_simple_error_response(
             spdm_context, spdm_response.header.param1);

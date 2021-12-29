@@ -172,6 +172,9 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         if (spdm_response.header.param1 != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
             libspdm_reset_message_f (spdm_context, session_info);

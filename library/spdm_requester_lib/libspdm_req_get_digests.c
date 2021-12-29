@@ -81,6 +81,9 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = spdm_handle_error_response_main(
             spdm_context, NULL,
