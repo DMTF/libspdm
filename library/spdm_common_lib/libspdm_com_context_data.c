@@ -1175,8 +1175,7 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
                     return RETURN_DEVICE_ERROR;
                 }
             }
-            if ((spdm_context->connection_info.version.major_version >= 2) ||
-                (spdm_context->connection_info.version.minor_version >= 2)) {
+            if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
                 
                 /* Need append VCA since 1.2 script*/
                 
@@ -1209,8 +1208,7 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
                     return RETURN_DEVICE_ERROR;
                 }
             }
-            if ((spdm_context->connection_info.version.major_version >= 2) ||
-                (spdm_context->connection_info.version.minor_version >= 2)) {
+            if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
                 
                 /* Need append VCA since 1.2 script*/
                 
@@ -1547,16 +1545,8 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
 boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
                   IN uint8_t version)
 {
-    uint8_t major_version;
-    uint8_t minor_version;
-
-    major_version = ((version >> 4) & 0xF);
-    minor_version = (version & 0xF);
-
-    if ((major_version ==
-            spdm_context->connection_info.version.major_version) &&
-        (minor_version ==
-            spdm_context->connection_info.version.minor_version)) {
+    if (version ==
+            (spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT)) {
         return TRUE;
     }
 
@@ -1572,8 +1562,7 @@ boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
 **/
 uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context)
 {
-    return (uint8_t)((spdm_context->connection_info.version.major_version << 4) |
-        spdm_context->connection_info.version.minor_version);
+    return (uint8_t)(spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
 
 /**
@@ -1748,31 +1737,13 @@ return_status libspdm_init_context(IN void *context)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->current_token = 0;
     spdm_context->local_context.version.spdm_version_count = 3;
-    spdm_context->local_context.version.spdm_version[0].major_version = 1;
-    spdm_context->local_context.version.spdm_version[0].minor_version = 0;
-    spdm_context->local_context.version.spdm_version[0].alpha = 0;
-    spdm_context->local_context.version.spdm_version[0]
-        .update_version_number = 0;
-    spdm_context->local_context.version.spdm_version[1].major_version = 1;
-    spdm_context->local_context.version.spdm_version[1].minor_version = 1;
-    spdm_context->local_context.version.spdm_version[1].alpha = 0;
-    spdm_context->local_context.version.spdm_version[1]
-        .update_version_number = 0;
-    spdm_context->local_context.version.spdm_version[2].major_version = 1;
-    spdm_context->local_context.version.spdm_version[2].minor_version = 2;
-    spdm_context->local_context.version.spdm_version[2].alpha = 0;
-    spdm_context->local_context.version.spdm_version[2]
-        .update_version_number = 0;
+    spdm_context->local_context.version.spdm_version[0] = SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[1] = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[2] = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version_count =
         1;
-    spdm_context->local_context.secured_message_version.spdm_version[0]
-        .major_version = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0]
-        .minor_version = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0]
-        .alpha = 0;
-    spdm_context->local_context.secured_message_version.spdm_version[0]
-        .update_version_number = 0;
+    spdm_context->local_context.secured_message_version.spdm_version[0] = 
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
@@ -1855,6 +1826,5 @@ uintn libspdm_get_context_size(void)
 **/
 uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
 {
-    return (uint8_t)(ver.major_version << 4 |
-                   ver.minor_version);
+    return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }

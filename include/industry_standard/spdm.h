@@ -109,13 +109,12 @@ typedef struct {
 
 
 /* SPDM VERSION structure*/
-
-typedef struct {
-    uint16_t alpha : 4;
-    uint16_t update_version_number : 4;
-    uint16_t minor_version : 4;
-    uint16_t major_version : 4;
-} spdm_version_number_t;
+/* bit[15:12] major_version */
+/* bit[11:8]  minor_version */
+/* bit[7:4]   update_version_number */
+/* bit[3:0]   alpha */
+typedef uint16_t spdm_version_number_t;
+#define SPDM_VERSION_NUMBER_SHIFT_BIT 8
 
 #define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.2.*"
 #define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) - 1)

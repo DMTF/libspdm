@@ -122,10 +122,7 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     opaque_element_support_version->version_count = 1;
 
     versions_list = (void *)(opaque_element_support_version + 1);
-    versions_list->alpha = 0;
-    versions_list->update_version_number = 0;
-    versions_list->minor_version = 1;
-    versions_list->major_version = 1;
+    versions_list[0] = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /* Zero Padding*/
     end = versions_list + 1;
@@ -195,8 +192,7 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         return RETURN_UNSUPPORTED;
     }
     versions_list = (void *)(opaque_element_support_version + 1);
-    if ((versions_list->minor_version != 1) ||
-        (versions_list->major_version != 1)) {
+    if ((versions_list[0] >> SPDM_VERSION_NUMBER_SHIFT_BIT) != SPDM_MESSAGE_VERSION_11) {
         return RETURN_UNSUPPORTED;
     }
 
@@ -264,10 +260,7 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
     OpaqueElementVersionSection->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
-    OpaqueElementVersionSection->selected_version.alpha = 0;
-    OpaqueElementVersionSection->selected_version.update_version_number = 0;
-    OpaqueElementVersionSection->selected_version.minor_version = 1;
-    OpaqueElementVersionSection->selected_version.major_version = 1;
+    OpaqueElementVersionSection->selected_version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /* Zero Padding*/
     end = OpaqueElementVersionSection + 1;
@@ -330,10 +323,8 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) ||
         (OpaqueElementVersionSection->sm_data_id !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION) ||
-        (OpaqueElementVersionSection->selected_version.minor_version !=
-         1) ||
-        (OpaqueElementVersionSection->selected_version.major_version !=
-         1)) {
+        ((OpaqueElementVersionSection->selected_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) !=
+         SPDM_MESSAGE_VERSION_11)) {
         return RETURN_UNSUPPORTED;
     }
 

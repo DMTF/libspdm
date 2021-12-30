@@ -1524,8 +1524,7 @@ get_spdm_signing_context_string (
     uintn index;
 
     /* It is introduced in SPDM 1.2*/
-    ASSERT((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2));
+    ASSERT((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11);
 
     for (index = 0; index < ARRAY_SIZE(m_spdm_signing_context_str_table); index++) {
         if (m_spdm_signing_context_str_table[index].is_requester == is_requester &&
@@ -1557,12 +1556,11 @@ create_spdm_signing_context (
     char *context_str;
 
     /* It is introduced in SPDM 1.2*/
-    ASSERT((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2));
+    ASSERT((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11);
 
     /* So far, it only leaves 1 bytes for version*/
-    ASSERT((spdm_version.major_version < 10) &&
-        (spdm_version.minor_version < 10));
+    ASSERT((((spdm_version >> 12) & 0xF) < 10) &&
+        (((spdm_version >> 8) & 0xF) < 10));
 
     context_str = spdm_signing_context;
     for (index = 0; index < 4; index++) {
@@ -1571,8 +1569,8 @@ create_spdm_signing_context (
             SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT,
             SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE);
         /* patch the version*/
-        context_str[11] = (char8)('0' + spdm_version.major_version);
-        context_str[13] = (char8)('0' + spdm_version.minor_version);
+        context_str[11] = (char8)('0' + ((spdm_version >> 12) & 0xF));
+        context_str[13] = (char8)('0' + ((spdm_version >> 8) & 0xF));
         context_str[15] = (char8)('*');
         context_str += SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE;
     }
@@ -1965,8 +1963,7 @@ boolean libspdm_asym_verify(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2062,8 +2059,7 @@ boolean libspdm_asym_verify_hash(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2355,8 +2351,7 @@ boolean libspdm_asym_sign(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2456,8 +2451,7 @@ boolean libspdm_asym_sign_hash(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2658,8 +2652,7 @@ boolean libspdm_req_asym_verify(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2755,8 +2748,7 @@ boolean libspdm_req_asym_verify_hash(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -2909,8 +2901,7 @@ boolean libspdm_req_asym_sign(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -3010,8 +3001,7 @@ boolean libspdm_req_asym_sign_hash(
     param = NULL;
     param_size = 0;
 
-    if ((spdm_version.major_version >= 2) ||
-        (spdm_version.minor_version >= 2)) {
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         
         /* Need use SPDM 1.2 signing*/
         
@@ -3199,10 +3189,10 @@ void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
         copy_mem (spdm12_key_change_requester_context, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
         copy_mem (spdm12_key_change_responder_context, SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
         /* patch the version*/
-        spdm12_key_change_requester_context[25] = (char8)('0' + spdm_version.major_version);
-        spdm12_key_change_requester_context[27] = (char8)('0' + spdm_version.minor_version);
-        spdm12_key_change_responder_context[25] = (char8)('0' + spdm_version.major_version);
-        spdm12_key_change_responder_context[27] = (char8)('0' + spdm_version.minor_version);
+        spdm12_key_change_requester_context[25] = (char8)('0' + ((spdm_version >> 12) & 0xF));
+        spdm12_key_change_requester_context[27] = (char8)('0' + ((spdm_version >> 8) & 0xF));
+        spdm12_key_change_responder_context[25] = (char8)('0' + ((spdm_version >> 12) & 0xF));
+        spdm12_key_change_responder_context[27] = (char8)('0' + ((spdm_version >> 8) & 0xF));
 
         result = sm2_key_exchange_init (context, CRYPTO_NID_SM3_256,
             spdm12_key_change_requester_context, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE,
