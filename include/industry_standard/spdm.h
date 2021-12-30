@@ -845,6 +845,11 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == request_id*/
     /* param2 == payload_type*/
+
+    /* below 4 bytes are added in 1.2.*/
+    uint8_t                ack_request_id;
+    uint8_t                reserved[3];
+
     /*uint8_t                encapsulated_request[];*/
 } spdm_encapsulated_response_ack_response_t;
 
