@@ -478,11 +478,6 @@ typedef struct {
     uint8_t SlotIDParam; /* BIT[0:3]=slot_id, BIT[4:7]=reserved*/
 } spdm_get_measurements_request_t;
 
-typedef struct {
-    uint8_t slot_id : 4;
-    uint8_t reserved : 4;
-} spdm_get_measurements_request_slot_id_parameter_t;
-
 
 /* SPDM GET_MEASUREMENTS request Attributes*/
 
