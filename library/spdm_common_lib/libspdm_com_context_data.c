@@ -1718,7 +1718,7 @@ return_status libspdm_init_context(IN void *context)
 
     spdm_context = context;
     zero_mem(spdm_context, sizeof(spdm_context_t));
-    spdm_context->version = spdm_context_struct_VERSION;
+    spdm_context->version = spdm_context_struct_version;
     spdm_context->transcript.message_a.max_buffer_size =
         sizeof(spdm_context->transcript.message_a.buffer);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

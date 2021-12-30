@@ -262,7 +262,7 @@ typedef struct {
     large_managed_buffer_t certificate_chain_buffer;
 } spdm_encap_context_t;
 
-#define spdm_context_struct_VERSION 0x1
+#define spdm_context_struct_version 0x2
 
 typedef struct {
     uint32_t version;
