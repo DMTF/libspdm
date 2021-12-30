@@ -165,6 +165,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     uintn encapsulated_request_size;
     void *encapsulated_response;
     uintn encapsulated_response_size;
+    uintn ack_header_size;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     spdm_get_digest_request_t get_digests;
@@ -329,14 +330,27 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
             SPDM_ENCAPSULATED_RESPONSE_ACK) {
             return RETURN_DEVICE_ERROR;
         }
-        if (spdm_response_size <
-            sizeof(spdm_encapsulated_response_ack_response_t)) {
+        if (spdm_encapsulated_response_ack_response->header.spdm_version != spdm_deliver_encapsulated_response_request->header.spdm_version) {
             return RETURN_DEVICE_ERROR;
         }
+        if (spdm_encapsulated_response_ack_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            ack_header_size = sizeof(spdm_encapsulated_response_ack_response_t);
+        } else {
+            ack_header_size = sizeof(spdm_message_header_t);
+        }
+        if (spdm_response_size < ack_header_size) {
+            return RETURN_DEVICE_ERROR;
+        }
+
+        if (spdm_encapsulated_response_ack_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            if (spdm_encapsulated_response_ack_response->ack_request_id != spdm_deliver_encapsulated_response_request->header.param1) {
+                return RETURN_DEVICE_ERROR;
+            }
+        }
+
         switch (spdm_encapsulated_response_ack_response->header.param2) {
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT:
-            if (spdm_response_size ==
-                sizeof(spdm_encapsulated_response_ack_response_t)) {
+            if (spdm_response_size == ack_header_size) {
                 return RETURN_SUCCESS;
             } else {
                 return RETURN_DEVICE_ERROR;
@@ -345,14 +359,10 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT:
             break;
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER:
-            if (spdm_response_size >=
-                sizeof(spdm_encapsulated_response_ack_response_t) +
-                    sizeof(uint8_t)) {
+            if (spdm_response_size >= ack_header_size + sizeof(uint8_t)) {
                 if ((req_slot_id_param != NULL) &&
                     (*req_slot_id_param == 0)) {
-                    *req_slot_id_param = *(
-                        uint8_t *)(spdm_encapsulated_response_ack_response +
-                             1);
+                    *req_slot_id_param = *((uint8_t *)spdm_encapsulated_response_ack_response + ack_header_size);
                     if (*req_slot_id_param >=
                         spdm_context->local_context
                             .slot_count) {
@@ -370,11 +380,8 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         request_id =
             spdm_encapsulated_response_ack_response->header.param1;
 
-        encapsulated_request =
-            (void *)(spdm_encapsulated_response_ack_response + 1);
-        encapsulated_request_size =
-            spdm_response_size -
-            sizeof(spdm_encapsulated_response_ack_response_t);
+        encapsulated_request = ((uint8_t *)spdm_encapsulated_response_ack_response + ack_header_size);
+        encapsulated_request_size = spdm_response_size - ack_header_size;
     }
 
     return RETURN_SUCCESS;

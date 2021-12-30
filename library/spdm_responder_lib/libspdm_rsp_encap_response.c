@@ -445,6 +445,7 @@ return_status spdm_get_response_encapsulated_response_ack(
     void *encap_request;
     uintn encap_request_size;
     return_status status;
+    uintn ack_header_size;
 
     spdm_context = context;
     spdm_request = request;
@@ -494,8 +495,13 @@ return_status spdm_get_response_encapsulated_response_ack(
         spdm_request_size -
         sizeof(spdm_deliver_encapsulated_response_request_t);
 
-    ASSERT(*response_size >
-           sizeof(spdm_encapsulated_response_ack_response_t));
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        ack_header_size = sizeof(spdm_encapsulated_response_ack_response_t);
+    } else {
+        ack_header_size = sizeof(spdm_message_header_t);
+    }
+
+    ASSERT(*response_size > ack_header_size);
     zero_mem(response, *response_size);
 
     spdm_response = response;
@@ -506,9 +512,8 @@ return_status spdm_get_response_encapsulated_response_ack(
     spdm_response->header.param2 =
         SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT;
 
-    encap_request_size = *response_size -
-                 sizeof(spdm_encapsulated_response_ack_response_t);
-    encap_request = spdm_response + 1;
+    encap_request_size = *response_size - ack_header_size;
+    encap_request = (uint8_t *)spdm_response + ack_header_size;
     if (encap_response_size < sizeof(spdm_message_header_t)) {
         return libspdm_generate_error_response(spdm_context,
                          SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -528,18 +533,20 @@ return_status spdm_get_response_encapsulated_response_ack(
             response_size, response);
     }
 
-    *response_size = sizeof(spdm_encapsulated_response_ack_response_t) +
-             encap_request_size;
+    *response_size = ack_header_size + encap_request_size;
     spdm_response->header.param1 = spdm_context->encap_context.request_id;
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response->ack_request_id = spdm_request->header.param1;
+    }
+
     if (encap_request_size == 0) {
         spdm_response->header.param2 =
             SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
         if (spdm_context->encap_context.req_slot_id != 0) {
             spdm_response->header.param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER;
-            *response_size =
-                sizeof(spdm_encapsulated_response_ack_response_t) +
-                1;
+            *response_size = ack_header_size + 1;
             *(uint8_t *)(spdm_response + 1) =
                 spdm_context->encap_context.req_slot_id;
         }
