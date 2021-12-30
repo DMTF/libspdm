@@ -475,7 +475,7 @@ typedef struct {
     /* param2 == measurement_operation*/
     uint8_t nonce[32];
     /* Below field is added in 1.1.*/
-    uint8_t SlotIDParam; /* BIT[0:3]=slot_id, BIT[4:7]=reserved*/
+    uint8_t slot_id_param; /* BIT[0:3]=slot_id, BIT[4:7]=reserved*/
 } spdm_get_measurements_request_t;
 
 

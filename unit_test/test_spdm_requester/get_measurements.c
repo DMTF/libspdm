@@ -47,11 +47,11 @@ uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
         } else {
             if (buffer_size <
                 sizeof(spdm_get_measurements_request_t) -
-                    sizeof(spdm_request->SlotIDParam)) {
+                    sizeof(spdm_request->slot_id_param)) {
                 return buffer_size;
             }
             message_size = sizeof(spdm_get_measurements_request_t) -
-                       sizeof(spdm_request->SlotIDParam);
+                       sizeof(spdm_request->slot_id_param);
         }
     } else {
         /* already checked before if buffer_size < sizeof(spdm_message_header_t)*/

@@ -149,7 +149,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             spdm_request_size = sizeof(spdm_request);
         } else {
             spdm_request_size = sizeof(spdm_request) -
-                        sizeof(spdm_request.SlotIDParam);
+                        sizeof(spdm_request.slot_id_param);
         }
 
         if (requester_nonce_in == NULL) {
@@ -162,7 +162,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         DEBUG((DEBUG_INFO, "ClientNonce - "));
         internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
         DEBUG((DEBUG_INFO, "\n"));
-        spdm_request.SlotIDParam = slot_id_param;
+        spdm_request.slot_id_param = slot_id_param;
 
         if (requester_nonce != NULL) {
             copy_mem (requester_nonce, spdm_request.nonce, SPDM_NONCE_SIZE);
