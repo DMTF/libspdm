@@ -224,11 +224,6 @@ typedef struct {
     /*uint32_t               alg_external[ext_alg_count];*/
 } spdm_negotiate_algorithms_struct_table_t;
 
-typedef struct {
-    uint8_t ext_alg_count : 4;
-    uint8_t fixed_alg_byte_count : 4;
-} spdm_negotiate_algorithms_struct_table_alg_count_t;
-
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE 2
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD 3
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG 4
