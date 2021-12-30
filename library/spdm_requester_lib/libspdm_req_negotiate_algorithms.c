@@ -17,7 +17,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification;
-    uint8_t reserved;
+    uint8_t other_params_support;
     uint32_t base_asym_algo;
     uint32_t base_hash_algo;
     uint8_t reserved2[12];
@@ -31,7 +31,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t reserved;
+    uint8_t other_params_support;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -88,6 +88,10 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
     spdm_request.header.param2 = 0;
     spdm_request.measurement_specification =
         spdm_context->local_context.algorithm.measurement_spec;
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_request.other_params_support =
+            spdm_context->local_context.algorithm.other_params_support;
+    }
     spdm_request.base_asym_algo =
         spdm_context->local_context.algorithm.base_asym_algo;
     spdm_request.base_hash_algo =
@@ -148,9 +152,6 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size > sizeof(spdm_response)) {
-        return RETURN_DEVICE_ERROR;
-    }
-    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version){
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.ext_asym_sel_count > 1) {
@@ -225,6 +226,10 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
 
     spdm_context->connection_info.algorithm.measurement_spec =
         spdm_response.measurement_specification_sel;
+    if (spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_context->connection_info.algorithm.other_params_support =
+            spdm_response.other_params_support;
+    }
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         spdm_response.measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
@@ -366,6 +371,13 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
             }
             if ((spdm_context->connection_info.algorithm.key_schedule & spdm_context->local_context.algorithm.key_schedule) == 0) {
                 return RETURN_SECURITY_VIOLATION;
+            }
+            if (spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+                if ((spdm_context->connection_info.algorithm.other_params_support &
+                       SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) !=
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+                    return RETURN_SECURITY_VIOLATION;
+                }
             }
         }
     } else {

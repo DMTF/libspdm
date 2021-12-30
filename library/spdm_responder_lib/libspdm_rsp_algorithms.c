@@ -17,7 +17,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t reserved;
+    uint8_t other_params_support;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -167,6 +167,10 @@ uint32_t m_measurement_hash_priority_table[] = {
 
 uint32_t m_measurement_spec_priority_table[] = {
     SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+};
+
+uint32_t m_other_params_support_priority_table[] = {
+    SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
 };
 
 /**
@@ -405,6 +409,10 @@ return_status spdm_get_response_algorithms(IN void *context,
                      sizeof(uint32_t) * ext_alg_count);
         }
     }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_context->connection_info.algorithm.other_params_support =
+            spdm_request->other_params_support;
+    }
 
     spdm_response->measurement_specification_sel =
         (uint8_t)spdm_prioritize_algorithm(
@@ -460,6 +468,14 @@ return_status spdm_get_response_algorithms(IN void *context,
             ARRAY_SIZE(m_key_schedule_priority_table),
             spdm_context->local_context.algorithm.key_schedule,
             spdm_context->connection_info.algorithm.key_schedule);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response->other_params_support =
+            (uint8_t)spdm_prioritize_algorithm(
+                m_other_params_support_priority_table,
+                ARRAY_SIZE(m_other_params_support_priority_table),
+                spdm_context->local_context.algorithm.other_params_support,
+                spdm_context->connection_info.algorithm.other_params_support);
+    }
 
     spdm_context->connection_info.algorithm.measurement_spec =
         spdm_response->measurement_specification_sel;
@@ -516,6 +532,12 @@ return_status spdm_get_response_algorithms(IN void *context,
             spdm_response->struct_table[2].alg_supported;
         spdm_context->connection_info.algorithm.key_schedule =
             spdm_response->struct_table[3].alg_supported;
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            spdm_context->connection_info.algorithm.other_params_support =
+                spdm_response->other_params_support;
+        } else {
+            spdm_context->connection_info.algorithm.other_params_support = 0;
+        }
 
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, FALSE,
@@ -576,12 +598,20 @@ return_status spdm_get_response_algorithms(IN void *context,
                 SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
                 return RETURN_SECURITY_VIOLATION;
             }
+            if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+                if ((spdm_context->connection_info.algorithm.other_params_support &
+                       SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) !=
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+                    return RETURN_SECURITY_VIOLATION;
+                }
+            }
         }
     } else {
         spdm_context->connection_info.algorithm.dhe_named_group = 0;
         spdm_context->connection_info.algorithm.aead_cipher_suite = 0;
         spdm_context->connection_info.algorithm.req_base_asym_alg = 0;
         spdm_context->connection_info.algorithm.key_schedule = 0;
+        spdm_context->connection_info.algorithm.other_params_support = 0;
     }
     status = libspdm_append_message_a(spdm_context, spdm_request,
                        spdm_request_size);

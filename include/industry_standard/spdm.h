@@ -199,7 +199,9 @@ typedef struct {
     /* param2 == RSVD*/
     uint16_t length;
     uint8_t measurement_specification;
-    uint8_t reserved;
+    /* other_params_support is added in 1.2.*/
+    /* BIT[0:3]=opaque_data_format support, BIT[4:7]=reserved*/
+    uint8_t other_params_support;
     uint32_t base_asym_algo;
     uint32_t base_hash_algo;
     uint8_t reserved2[12];
@@ -214,8 +216,10 @@ typedef struct {
 
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_10 0x40
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_11 0x80
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_12 0x80
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_10 0x08
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11 0x14
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_12 0x14
 
 typedef struct {
     uint8_t alg_type;
@@ -303,7 +307,9 @@ typedef struct {
     /* param2 == RSVD*/
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t reserved;
+    /* other_params_support is added in 1.2.*/
+    /* BIT[0:3]=opaque_data_format select, BIT[4:7]=reserved*/
+    uint8_t other_params_support;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -331,6 +337,20 @@ typedef struct {
 /* SPDM NEGOTIATE_ALGORITHMS response measurement_hash_algo (1.2)*/
 
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256 BIT7
+
+/* SPDM Opaque Data Format (1.2)*/
+
+#define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 BIT0
+#define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1 BIT1
+#define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK 0xF
+
+/* SPDM Opaque Data Format 1 (1.2) */
+
+typedef struct {
+    uint8_t total_elements;
+    uint16_t reserved;
+    /*opaque_element_table_t  opaque_list[];*/
+} spdm_general_opaque_data_table_header_t;
 
 /* SPDM extended algorithm*/
 

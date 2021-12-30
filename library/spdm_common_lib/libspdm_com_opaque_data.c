@@ -23,9 +23,15 @@ uintn spdm_get_opaque_data_version_selection_data_size(
         return 0;
     }
 
-    size = sizeof(secured_message_general_opaque_data_table_header_t) +
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        size = sizeof(spdm_general_opaque_data_table_header_t) +
            sizeof(secured_message_opaque_element_table_header_t) +
            sizeof(secured_message_opaque_element_version_selection_t);
+    } else {
+        size = sizeof(secured_message_general_opaque_data_table_header_t) +
+           sizeof(secured_message_opaque_element_table_header_t) +
+           sizeof(secured_message_opaque_element_version_selection_t);
+    }
     /* Add Padding*/
     return (size + 3) & ~3;
 }
@@ -47,10 +53,17 @@ uintn spdm_get_opaque_data_supported_version_data_size(
         return 0;
     }
 
-    size = sizeof(secured_message_general_opaque_data_table_header_t) +
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        size = sizeof(spdm_general_opaque_data_table_header_t) +
            sizeof(secured_message_opaque_element_table_header_t) +
            sizeof(secured_message_opaque_element_supported_version_t) +
            sizeof(spdm_version_number_t);
+    } else {
+        size = sizeof(secured_message_general_opaque_data_table_header_t) +
+           sizeof(secured_message_opaque_element_table_header_t) +
+           sizeof(secured_message_opaque_element_supported_version_t) +
+           sizeof(spdm_version_number_t);
+    }
     /* Add Padding*/
     return (size + 3) & ~3;
 }
@@ -77,6 +90,8 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
         *general_opaque_data_table_header;
+    spdm_general_opaque_data_table_header_t
+        *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
         *opaque_element_table_header;
     secured_message_opaque_element_supported_version_t
@@ -96,17 +111,24 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         *data_out_size = final_data_size;
         return RETURN_BUFFER_TOO_SMALL;
     }
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        spdm_general_opaque_data_table_header = data_out;
+        spdm_general_opaque_data_table_header->total_elements = 1;
+        spdm_general_opaque_data_table_header->reserved = 0;
+        opaque_element_table_header =
+            (void *)(spdm_general_opaque_data_table_header + 1);
+    } else {
+        general_opaque_data_table_header = data_out;
+        general_opaque_data_table_header->spec_id =
+            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
+        general_opaque_data_table_header->opaque_version =
+            SECURED_MESSAGE_OPAQUE_VERSION;
+        general_opaque_data_table_header->total_elements = 1;
+        general_opaque_data_table_header->reserved = 0;
+        opaque_element_table_header =
+            (void *)(general_opaque_data_table_header + 1);
+    }
 
-    general_opaque_data_table_header = data_out;
-    general_opaque_data_table_header->spec_id =
-        SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
-    general_opaque_data_table_header->opaque_version =
-        SECURED_MESSAGE_OPAQUE_VERSION;
-    general_opaque_data_table_header->total_elements = 1;
-    general_opaque_data_table_header->reserved = 0;
-
-    opaque_element_table_header =
-        (void *)(general_opaque_data_table_header + 1);
     opaque_element_table_header->id = SPDM_REGISTRY_ID_DMTF;
     opaque_element_table_header->vendor_len = 0;
     opaque_element_table_header->opaque_element_data_len =
@@ -149,6 +171,8 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
 {
     secured_message_general_opaque_data_table_header_t
         *general_opaque_data_table_header;
+    spdm_general_opaque_data_table_header_t
+        *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
         *opaque_element_table_header;
     secured_message_opaque_element_supported_version_t
@@ -164,17 +188,25 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         spdm_get_opaque_data_supported_version_data_size(spdm_context)) {
         return RETURN_UNSUPPORTED;
     }
-    general_opaque_data_table_header = data_in;
-    if ((general_opaque_data_table_header->spec_id !=
-         SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
-        (general_opaque_data_table_header->opaque_version !=
-         SECURED_MESSAGE_OPAQUE_VERSION) ||
-        (general_opaque_data_table_header->total_elements != 1) ||
-        (general_opaque_data_table_header->reserved != 0)) {
-        return RETURN_UNSUPPORTED;
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        spdm_general_opaque_data_table_header = data_in;
+        if (spdm_general_opaque_data_table_header->total_elements != 1) {
+            return RETURN_UNSUPPORTED;
+        }
+        opaque_element_table_header =
+            (void *)(spdm_general_opaque_data_table_header + 1);
+    } else {
+        general_opaque_data_table_header = data_in;
+        if ((general_opaque_data_table_header->spec_id !=
+            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+            (general_opaque_data_table_header->opaque_version !=
+            SECURED_MESSAGE_OPAQUE_VERSION) ||
+            (general_opaque_data_table_header->total_elements != 1)) {
+            return RETURN_UNSUPPORTED;
+        }
+        opaque_element_table_header =
+            (void *)(general_opaque_data_table_header + 1);
     }
-    opaque_element_table_header =
-        (void *)(general_opaque_data_table_header + 1);
     if ((opaque_element_table_header->id != SPDM_REGISTRY_ID_DMTF) ||
         (opaque_element_table_header->vendor_len != 0) ||
         (opaque_element_table_header->opaque_element_data_len !=
@@ -221,10 +253,12 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
         *general_opaque_data_table_header;
+    spdm_general_opaque_data_table_header_t
+        *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
         *opaque_element_table_header;
     secured_message_opaque_element_version_selection_t
-        *OpaqueElementVersionSection;
+        *opaque_element_version_section;
     void *end;
 
     if (spdm_context->local_context.secured_message_version
@@ -240,30 +274,39 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
         return RETURN_BUFFER_TOO_SMALL;
     }
 
-    general_opaque_data_table_header = data_out;
-    general_opaque_data_table_header->spec_id =
-        SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
-    general_opaque_data_table_header->opaque_version =
-        SECURED_MESSAGE_OPAQUE_VERSION;
-    general_opaque_data_table_header->total_elements = 1;
-    general_opaque_data_table_header->reserved = 0;
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        spdm_general_opaque_data_table_header = data_out;
+        spdm_general_opaque_data_table_header->total_elements = 1;
+        spdm_general_opaque_data_table_header->reserved = 0;
 
-    opaque_element_table_header =
-        (void *)(general_opaque_data_table_header + 1);
+        opaque_element_table_header =
+            (void *)(spdm_general_opaque_data_table_header + 1);
+    } else {
+        general_opaque_data_table_header = data_out;
+        general_opaque_data_table_header->spec_id =
+            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
+        general_opaque_data_table_header->opaque_version =
+            SECURED_MESSAGE_OPAQUE_VERSION;
+        general_opaque_data_table_header->total_elements = 1;
+        general_opaque_data_table_header->reserved = 0;
+
+        opaque_element_table_header =
+            (void *)(general_opaque_data_table_header + 1);
+    }
     opaque_element_table_header->id = SPDM_REGISTRY_ID_DMTF;
     opaque_element_table_header->vendor_len = 0;
     opaque_element_table_header->opaque_element_data_len =
         sizeof(secured_message_opaque_element_version_selection_t);
 
-    OpaqueElementVersionSection = (void *)(opaque_element_table_header + 1);
-    OpaqueElementVersionSection->sm_data_version =
+    opaque_element_version_section = (void *)(opaque_element_table_header + 1);
+    opaque_element_version_section->sm_data_version =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
-    OpaqueElementVersionSection->sm_data_id =
+    opaque_element_version_section->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
-    OpaqueElementVersionSection->selected_version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-
+    opaque_element_version_section->selected_version =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Zero Padding*/
-    end = OpaqueElementVersionSection + 1;
+    end = opaque_element_version_section + 1;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
 
     return RETURN_SUCCESS;
@@ -287,10 +330,12 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
 {
     secured_message_general_opaque_data_table_header_t
         *general_opaque_data_table_header;
+    spdm_general_opaque_data_table_header_t
+        *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
         *opaque_element_table_header;
     secured_message_opaque_element_version_selection_t
-        *OpaqueElementVersionSection;
+        *opaque_element_version_section;
 
     if (spdm_context->local_context.secured_message_version
             .spdm_version_count == 0) {
@@ -301,29 +346,37 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
         spdm_get_opaque_data_version_selection_data_size(spdm_context)) {
         return RETURN_UNSUPPORTED;
     }
-    general_opaque_data_table_header = data_in;
-    if ((general_opaque_data_table_header->spec_id !=
-         SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
-        (general_opaque_data_table_header->opaque_version !=
-         SECURED_MESSAGE_OPAQUE_VERSION) ||
-        (general_opaque_data_table_header->total_elements != 1) ||
-        (general_opaque_data_table_header->reserved != 0)) {
-        return RETURN_UNSUPPORTED;
+    if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        spdm_general_opaque_data_table_header = data_in;
+        if (spdm_general_opaque_data_table_header->total_elements != 1) {
+            return RETURN_UNSUPPORTED;
+        }
+        opaque_element_table_header =
+            (void *)(spdm_general_opaque_data_table_header + 1);
+    } else {
+        general_opaque_data_table_header = data_in;
+        if ((general_opaque_data_table_header->spec_id !=
+            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+            (general_opaque_data_table_header->opaque_version !=
+            SECURED_MESSAGE_OPAQUE_VERSION) ||
+            (general_opaque_data_table_header->total_elements != 1)) {
+            return RETURN_UNSUPPORTED;
+        }
+        opaque_element_table_header =
+            (void *)(general_opaque_data_table_header + 1);
     }
-    opaque_element_table_header =
-        (void *)(general_opaque_data_table_header + 1);
     if ((opaque_element_table_header->id != SPDM_REGISTRY_ID_DMTF) ||
         (opaque_element_table_header->vendor_len != 0) ||
         (opaque_element_table_header->opaque_element_data_len !=
          sizeof(secured_message_opaque_element_version_selection_t))) {
         return RETURN_UNSUPPORTED;
     }
-    OpaqueElementVersionSection = (void *)(opaque_element_table_header + 1);
-    if ((OpaqueElementVersionSection->sm_data_version !=
+    opaque_element_version_section = (void *)(opaque_element_table_header + 1);
+    if ((opaque_element_version_section->sm_data_version !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) ||
-        (OpaqueElementVersionSection->sm_data_id !=
+        (opaque_element_version_section->sm_data_id !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION) ||
-        ((OpaqueElementVersionSection->selected_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) !=
+        ((opaque_element_version_section->selected_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) !=
          SPDM_MESSAGE_VERSION_11)) {
         return RETURN_UNSUPPORTED;
     }
