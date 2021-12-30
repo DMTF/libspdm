@@ -204,9 +204,9 @@ return_status libspdm_measurement_collection(
         measurement_block = measurements;
 
         for (index = 1; index <= MEASUREMENT_BLOCK_NUMBER; index++) {
-            measurement_block->Measurement_block_common_header
+            measurement_block->measurement_block_common_header
                 .index = index;
-            measurement_block->Measurement_block_common_header
+            measurement_block->measurement_block_common_header
                 .measurement_specification =
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
@@ -224,7 +224,7 @@ return_status libspdm_measurement_collection(
                     .dmtf_spec_measurement_value_size =
                     (uint16_t)hash_size;
 
-                measurement_block->Measurement_block_common_header
+                measurement_block->measurement_block_common_header
                     .measurement_size =
                     (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                          (uint16_t)hash_size);
@@ -251,7 +251,7 @@ return_status libspdm_measurement_collection(
                     .dmtf_spec_measurement_value_size =
                     (uint16_t)sizeof(data);
 
-                measurement_block->Measurement_block_common_header
+                measurement_block->measurement_block_common_header
                     .measurement_size =
                     (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                          (uint16_t)sizeof(data));
@@ -296,10 +296,10 @@ return_status libspdm_measurement_collection(
 
         measurement_block = measurements;
 
-        measurement_block->Measurement_block_common_header.index =
+        measurement_block->measurement_block_common_header.index =
             measurements_index;
 
-        measurement_block->Measurement_block_common_header
+        measurement_block->measurement_block_common_header
             .measurement_specification =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
@@ -312,7 +312,7 @@ return_status libspdm_measurement_collection(
             measurement_block->Measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_size =
                 (uint16_t)hash_size;
-            measurement_block->Measurement_block_common_header
+            measurement_block->measurement_block_common_header
                 .measurement_size =
                 (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                      (uint16_t)hash_size);
@@ -333,7 +333,7 @@ return_status libspdm_measurement_collection(
                 .dmtf_spec_measurement_value_size =
                 (uint16_t)sizeof(data);
 
-            measurement_block->Measurement_block_common_header
+            measurement_block->measurement_block_common_header
                 .measurement_size =
                 (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                      (uint16_t)sizeof(data));
@@ -414,10 +414,10 @@ boolean libspdm_generate_measurement_summary_hash(
             measurment_block_size =
                 sizeof(spdm_measurement_block_common_header_t) +
                 cached_measurment_block
-                    ->Measurement_block_common_header
+                    ->measurement_block_common_header
                     .measurement_size;
             ASSERT(cached_measurment_block
-                       ->Measurement_block_common_header
+                       ->measurement_block_common_header
                        .measurement_size ==
                    sizeof(spdm_measurement_block_dmtf_header_t) +
                        cached_measurment_block
@@ -425,7 +425,7 @@ boolean libspdm_generate_measurement_summary_hash(
                            .dmtf_spec_measurement_value_size);
             measurment_data_size +=
                 cached_measurment_block
-                    ->Measurement_block_common_header
+                    ->measurement_block_common_header
                     .measurement_size;
             cached_measurment_block =
                 (void *)((uintn)cached_measurment_block +
@@ -442,7 +442,7 @@ boolean libspdm_generate_measurement_summary_hash(
             measurment_block_size =
                 sizeof(spdm_measurement_block_common_header_t) +
                 cached_measurment_block
-                    ->Measurement_block_common_header
+                    ->measurement_block_common_header
                     .measurement_size;
             /* filter unneeded data*/
             if (((measurement_summary_hash_type ==
@@ -462,12 +462,12 @@ boolean libspdm_generate_measurement_summary_hash(
                     &cached_measurment_block
                          ->Measurement_block_dmtf_header,
                     cached_measurment_block
-                        ->Measurement_block_common_header
+                        ->measurement_block_common_header
                         .measurement_size);
 
                 measurment_data_size +=
                     cached_measurment_block
-                        ->Measurement_block_common_header
+                        ->measurement_block_common_header
                         .measurement_size;
             }
             cached_measurment_block =
