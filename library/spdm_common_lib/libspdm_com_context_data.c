@@ -252,6 +252,18 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
                 *(uint16_t *)data;
         }
         break;
+    case LIBSPDM_DATA_OTHER_PARAMS_SUPPORT:
+        if (data_size != sizeof(uint8_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            spdm_context->connection_info.algorithm
+                .other_params_support = *(uint8_t *)data;
+        } else {
+            spdm_context->local_context.algorithm.other_params_support =
+                *(uint8_t *)data;
+        }
+        break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (data_size != sizeof(uint32_t)) {
             return RETURN_INVALID_PARAMETER;
@@ -552,6 +564,14 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
         target_data_size = sizeof(uint16_t);
         target_data =
             &spdm_context->connection_info.algorithm.key_schedule;
+        break;
+    case LIBSPDM_DATA_OTHER_PARAMS_SUPPORT:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint8_t);
+        target_data = &spdm_context->connection_info.algorithm
+                       .other_params_support;
         break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
