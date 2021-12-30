@@ -79,10 +79,8 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0].major_version = 1;
-        spdm_response.version_number_entry[0].minor_version = 0;
-        spdm_response.version_number_entry[1].major_version = 1;
-        spdm_response.version_number_entry[1].minor_version = 1;
+        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -167,10 +165,8 @@ return_status spdm_requester_get_version_test_receive_message(
             spdm_response.header.param1 = 0;
             spdm_response.header.param2 = 0;
             spdm_response.version_number_entry_count = 2;
-            spdm_response.version_number_entry[0].major_version = 1;
-            spdm_response.version_number_entry[0].minor_version = 0;
-            spdm_response.version_number_entry[1].major_version = 1;
-            spdm_response.version_number_entry[1].minor_version = 1;
+            spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
             spdm_transport_test_encode_message(
                 spdm_context, NULL, FALSE, FALSE,
@@ -252,10 +248,8 @@ return_status spdm_requester_get_version_test_receive_message(
             spdm_response.header.param1 = 0;
             spdm_response.header.param2 = 0;
             spdm_response.version_number_entry_count = 2;
-            spdm_response.version_number_entry[0].major_version = 1;
-            spdm_response.version_number_entry[0].minor_version = 0;
-            spdm_response.version_number_entry[1].major_version = 1;
-            spdm_response.version_number_entry[1].minor_version = 1;
+            spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
             spdm_transport_test_encode_message(
                 spdm_context, NULL, FALSE, FALSE,
@@ -275,12 +269,9 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0].major_version = 1;
-        spdm_response.version_number_entry[0].minor_version = 0;
-        spdm_response.version_number_entry[1].major_version = 1;
-        spdm_response.version_number_entry[1].minor_version = 1;
-        spdm_response.version_number_entry[2].major_version = 1;
-        spdm_response.version_number_entry[2].minor_version = 2;
+        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -298,10 +289,8 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0].major_version = 10;
-        spdm_response.version_number_entry[0].minor_version = 0;
-        spdm_response.version_number_entry[1].major_version = 10;
-        spdm_response.version_number_entry[1].minor_version = 1;
+        spdm_response.version_number_entry[0] = 0xA0 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0xA1 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -319,10 +308,8 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0].major_version = 1;
-        spdm_response.version_number_entry[0].minor_version = 0;
-        spdm_response.version_number_entry[1].major_version = 1;
-        spdm_response.version_number_entry[1].minor_version = 1;
+        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -340,10 +327,8 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0].major_version = 1;
-        spdm_response.version_number_entry[0].minor_version = 0;
-        spdm_response.version_number_entry[1].major_version = 1;
-        spdm_response.version_number_entry[1].minor_version = 1;
+        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -389,17 +374,11 @@ return_status spdm_requester_get_version_test_receive_message(
         spdm_response.header.param1 = 0;
         spdm_response.header.param2 = 0;
         spdm_response.version_number_entry_count = 5;
-        spdm_response.version_number_entry[0].major_version = 4;
-        spdm_response.version_number_entry[0].minor_version = 2;
-        spdm_response.version_number_entry[1].major_version = 5;
-        spdm_response.version_number_entry[1].minor_version = 2;
-        spdm_response.version_number_entry[2].major_version = 1;
-        spdm_response.version_number_entry[2].minor_version = 2;
-        spdm_response.version_number_entry[3].major_version = 1;
-        spdm_response.version_number_entry[3].minor_version = 1;
-        spdm_response.version_number_entry[4].major_version = 1;
-        spdm_response.version_number_entry[4].minor_version = 0;
-
+        spdm_response.version_number_entry[0] = 0x42 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[1] = 0x52 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[3] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response.version_number_entry[4] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
                            FALSE, sizeof(spdm_response),
@@ -717,22 +696,15 @@ void test_spdm_requester_get_version_case15(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
     spdm_context->local_context.version.spdm_version_count = 5;
-    spdm_context->local_context.version.spdm_version[0].major_version = 5;
-    spdm_context->local_context.version.spdm_version[0].minor_version = 5;
-    spdm_context->local_context.version.spdm_version[1].major_version = 4;
-    spdm_context->local_context.version.spdm_version[1].minor_version = 5;
-    spdm_context->local_context.version.spdm_version[2].major_version = 0;
-    spdm_context->local_context.version.spdm_version[2].minor_version = 9;
-    spdm_context->local_context.version.spdm_version[3].major_version = 1;
-    spdm_context->local_context.version.spdm_version[3].minor_version = 0;
-    spdm_context->local_context.version.spdm_version[4].major_version = 1;
-    spdm_context->local_context.version.spdm_version[4].minor_version = 1;
+    spdm_context->local_context.version.spdm_version[0] = 0x55 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[1] = 0x45 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[2] = 0x09 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[3] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[4] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     status = spdm_get_version(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
-        spdm_context->connection_info.version.major_version, 1);
-    assert_int_equal(
-        spdm_context->connection_info.version.minor_version, 1);
+        spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
 }
 
 spdm_test_context_t mSpdmRequesterGetVersionTestContext = {

@@ -71,8 +71,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -152,8 +151,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -233,8 +231,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -315,8 +312,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -399,8 +395,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -487,8 +482,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);
@@ -567,8 +561,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data1,
                         &data_size1, NULL, NULL);

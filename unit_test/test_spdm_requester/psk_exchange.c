@@ -167,7 +167,6 @@ return_status spdm_requester_psk_exchange_test_receive_message(
     IN OUT void *response, IN uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
     spdm_test_context = get_spdm_test_context();
     switch (spdm_test_context->case_id) {
@@ -266,7 +265,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         zero_mem(m_local_psk_hint, 32);
         copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
              sizeof(TEST_PSK_HINT_STRING));
-        libspdm_psk_handshake_secret_hkdf_expand(spdm_version,
+        libspdm_psk_handshake_secret_hkdf_expand(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             m_use_hash_algo, m_local_psk_hint,
             sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
             response_handshake_secret, hash_size);
@@ -381,7 +380,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         zero_mem(m_local_psk_hint, 32);
         copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
              sizeof(TEST_PSK_HINT_STRING));
-        libspdm_psk_handshake_secret_hkdf_expand(spdm_version,
+        libspdm_psk_handshake_secret_hkdf_expand(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             m_use_hash_algo, m_local_psk_hint,
             sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
             response_handshake_secret, hash_size);
@@ -553,7 +552,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             zero_mem(m_local_psk_hint, 32);
             copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
                  sizeof(TEST_PSK_HINT_STRING));
-            libspdm_psk_handshake_secret_hkdf_expand(spdm_version,
+            libspdm_psk_handshake_secret_hkdf_expand(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 m_use_hash_algo, m_local_psk_hint,
                 sizeof(TEST_PSK_HINT_STRING), bin_str2,
                 bin_str2_size, response_handshake_secret,
@@ -742,7 +741,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
             zero_mem(m_local_psk_hint, 32);
             copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
                  sizeof(TEST_PSK_HINT_STRING));
-            libspdm_psk_handshake_secret_hkdf_expand(spdm_version,
+            libspdm_psk_handshake_secret_hkdf_expand(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 m_use_hash_algo, m_local_psk_hint,
                 sizeof(TEST_PSK_HINT_STRING), bin_str2,
                 bin_str2_size, response_handshake_secret,
@@ -890,7 +889,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
         zero_mem(m_local_psk_hint, 32);
         copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
              sizeof(TEST_PSK_HINT_STRING));
-        libspdm_psk_handshake_secret_hkdf_expand(spdm_version,
+        libspdm_psk_handshake_secret_hkdf_expand(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             m_use_hash_algo, m_local_psk_hint,
             sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
             response_handshake_secret, hash_size);
@@ -934,8 +933,7 @@ void test_spdm_requester_psk_exchange_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -991,8 +989,7 @@ void test_spdm_requester_psk_exchange_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1053,8 +1050,7 @@ void test_spdm_requester_psk_exchange_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
@@ -1110,8 +1106,7 @@ void test_spdm_requester_psk_exchange_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1167,8 +1162,7 @@ void test_spdm_requester_psk_exchange_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1224,8 +1218,7 @@ void test_spdm_requester_psk_exchange_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1286,8 +1279,7 @@ void test_spdm_requester_psk_exchange_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1345,8 +1337,7 @@ void test_spdm_requester_psk_exchange_case8(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1402,8 +1393,7 @@ void test_spdm_requester_psk_exchange_case9(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1464,8 +1454,7 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xA;
-  spdm_context->connection_info.version.major_version = 1;
-  spdm_context->connection_info.version.minor_version = 1;
+  spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
@@ -1523,8 +1512,7 @@ void test_spdm_requester_psk_exchange_case11(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=

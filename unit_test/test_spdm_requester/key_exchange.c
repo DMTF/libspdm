@@ -178,7 +178,6 @@ return_status spdm_requester_key_exchange_test_receive_message(
     IN OUT void *response, IN uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
     spdm_test_context = get_spdm_test_context();
     switch (spdm_test_context->case_id) {
@@ -252,7 +251,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
+        dhe_context = libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -291,7 +290,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                   get_managed_buffer_size(&th_curr), hash_data);
         free(data);
-        libspdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+        libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                     SPDM_KEY_EXCHANGE_RSP,
                      m_use_asym_algo, m_use_hash_algo,
                      FALSE, get_managed_buffer(&th_curr),
                      get_managed_buffer_size(&th_curr), ptr,
@@ -403,7 +403,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
+        dhe_context = libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -442,7 +442,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                   get_managed_buffer_size(&th_curr), hash_data);
         free(data);
-        libspdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+        libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                     SPDM_KEY_EXCHANGE_RSP,
                      m_use_asym_algo, m_use_hash_algo,
                      FALSE, get_managed_buffer(&th_curr),
                      get_managed_buffer_size(&th_curr), ptr,
@@ -604,7 +605,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                            spdm_response->random_data);
             ptr = (void *)(spdm_response + 1);
-            dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
+            dhe_context = libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo, TRUE);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                           &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -650,7 +651,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
                       get_managed_buffer_size(&th_curr),
                       hash_data);
             free(data);
-            libspdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+            libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                SPDM_KEY_EXCHANGE_RSP,
                 m_use_asym_algo, m_use_hash_algo,
                 FALSE, get_managed_buffer(&th_curr),
                 get_managed_buffer_size(&th_curr), ptr,
@@ -832,7 +834,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                            spdm_response->random_data);
             ptr = (void *)(spdm_response + 1);
-            dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
+            dhe_context = libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo, TRUE);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                           &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -878,7 +880,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
                       get_managed_buffer_size(&th_curr),
                       hash_data);
             free(data);
-            libspdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+            libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                SPDM_KEY_EXCHANGE_RSP,
                 m_use_asym_algo, m_use_hash_algo,
                 FALSE, get_managed_buffer(&th_curr),
                 get_managed_buffer_size(&th_curr), ptr,
@@ -1025,7 +1028,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                        spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(spdm_version, m_use_dhe_algo, TRUE);
+        dhe_context = libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo, TRUE);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                       &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -1064,7 +1067,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         libspdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                   get_managed_buffer_size(&th_curr), hash_data);
         free(data);
-        libspdm_responder_data_sign(spdm_version, SPDM_KEY_EXCHANGE_RSP,
+        libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                     SPDM_KEY_EXCHANGE_RSP,
                      m_use_asym_algo, m_use_hash_algo,
                      FALSE, get_managed_buffer(&th_curr),
                      get_managed_buffer_size(&th_curr), ptr,
@@ -1130,8 +1134,7 @@ void test_spdm_requester_key_exchange_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1181,8 +1184,7 @@ void test_spdm_requester_key_exchange_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1239,8 +1241,7 @@ void test_spdm_requester_key_exchange_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
@@ -1292,8 +1293,7 @@ void test_spdm_requester_key_exchange_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1345,8 +1345,7 @@ void test_spdm_requester_key_exchange_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1398,8 +1397,7 @@ void test_spdm_requester_key_exchange_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1456,8 +1454,7 @@ void test_spdm_requester_key_exchange_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1511,8 +1508,7 @@ void test_spdm_requester_key_exchange_case8(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1564,8 +1560,7 @@ void test_spdm_requester_key_exchange_case9(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1622,8 +1617,7 @@ void test_spdm_requester_key_exchange_case10(void **state) {
   spdm_test_context = *state;
   spdm_context = spdm_test_context->spdm_context;
   spdm_test_context->case_id = 0xA;
-  spdm_context->connection_info.version.major_version = 1;
-  spdm_context->connection_info.version.minor_version = 1;
+  spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
   spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
   spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
   read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
@@ -1678,8 +1672,7 @@ void test_spdm_requester_key_exchange_case11(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
