@@ -7,6 +7,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_re
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
+                    ${LIBSPDM_DIR}/os_stub/include
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
