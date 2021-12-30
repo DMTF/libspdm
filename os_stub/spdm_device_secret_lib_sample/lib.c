@@ -217,10 +217,10 @@ return_status libspdm_measurement_collection(
             if ((index < MEASUREMENT_BLOCK_NUMBER) &&
                 measurement_hash_algo !=
                     SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
-                measurement_block->Measurement_block_dmtf_header
+                measurement_block->measurement_block_dmtf_header
                     .dmtf_spec_measurement_value_type =
                     (index - 1);
-                measurement_block->Measurement_block_dmtf_header
+                measurement_block->measurement_block_dmtf_header
                     .dmtf_spec_measurement_value_size =
                     (uint16_t)hash_size;
 
@@ -243,11 +243,11 @@ return_status libspdm_measurement_collection(
                          hash_size);
 
             } else {
-                measurement_block->Measurement_block_dmtf_header
+                measurement_block->measurement_block_dmtf_header
                     .dmtf_spec_measurement_value_type =
                     (index - 1) |
                     SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
-                measurement_block->Measurement_block_dmtf_header
+                measurement_block->measurement_block_dmtf_header
                     .dmtf_spec_measurement_value_size =
                     (uint16_t)sizeof(data);
 
@@ -306,10 +306,10 @@ return_status libspdm_measurement_collection(
         if (measurements_index < MEASUREMENT_BLOCK_NUMBER &&
             measurement_hash_algo !=
                 SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
-            measurement_block->Measurement_block_dmtf_header
+            measurement_block->measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_type =
                 measurements_index - 1;
-            measurement_block->Measurement_block_dmtf_header
+            measurement_block->measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_size =
                 (uint16_t)hash_size;
             measurement_block->measurement_block_common_header
@@ -325,11 +325,11 @@ return_status libspdm_measurement_collection(
                 return RETURN_DEVICE_ERROR;
             }
         } else {
-            measurement_block->Measurement_block_dmtf_header
+            measurement_block->measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_type =
                 (measurements_index - 1) |
                 SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
-            measurement_block->Measurement_block_dmtf_header
+            measurement_block->measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_size =
                 (uint16_t)sizeof(data);
 
@@ -421,7 +421,7 @@ boolean libspdm_generate_measurement_summary_hash(
                        .measurement_size ==
                    sizeof(spdm_measurement_block_dmtf_header_t) +
                        cached_measurment_block
-                           ->Measurement_block_dmtf_header
+                           ->measurement_block_dmtf_header
                            .dmtf_spec_measurement_value_size);
             measurment_data_size +=
                 cached_measurment_block
@@ -448,19 +448,19 @@ boolean libspdm_generate_measurement_summary_hash(
             if (((measurement_summary_hash_type ==
                   SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) &&
                  ((cached_measurment_block
-                       ->Measurement_block_dmtf_header
+                       ->measurement_block_dmtf_header
                        .dmtf_spec_measurement_value_type &
                    SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) <
                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MEASUREMENT_MANIFEST)) ||
                 ((cached_measurment_block
-                      ->Measurement_block_dmtf_header
+                      ->measurement_block_dmtf_header
                       .dmtf_spec_measurement_value_type &
                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) ==
                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM)) {
                 copy_mem(
                     &measurement_data[measurment_data_size],
                     &cached_measurment_block
-                         ->Measurement_block_dmtf_header,
+                         ->measurement_block_dmtf_header,
                     cached_measurment_block
                         ->measurement_block_common_header
                         .measurement_size);

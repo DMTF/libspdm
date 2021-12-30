@@ -339,7 +339,7 @@ return_status spdm_get_response_measurements(IN void *context,
             debug_measurements_block_size =
                 sizeof(spdm_measurement_block_dmtf_t) +
                 debug_measurement_block
-                    ->Measurement_block_dmtf_header
+                    ->measurement_block_dmtf_header
                     .dmtf_spec_measurement_value_size;
             debug_measurements_record_size += debug_measurements_block_size;
             debug_measurement_block =
