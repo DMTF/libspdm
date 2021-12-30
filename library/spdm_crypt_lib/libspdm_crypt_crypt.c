@@ -1242,7 +1242,7 @@ void *libspdm_hmac_new(IN uint32_t base_hash_algo)
     libspdm_hmac_new_func hmac_function;
     hmac_function = get_spdm_hmac_new_func(base_hash_algo);
     if (hmac_function == NULL) {
-        return FALSE;
+        return NULL;
     }
     return hmac_function();
 }
