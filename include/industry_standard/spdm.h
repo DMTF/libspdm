@@ -520,7 +520,7 @@ typedef struct {
 
 typedef struct {
     spdm_measurement_block_common_header_t measurement_block_common_header;
-    spdm_measurement_block_dmtf_header_t Measurement_block_dmtf_header;
+    spdm_measurement_block_dmtf_header_t measurement_block_dmtf_header;
     /*uint8_t                                 hash_value[hash_size];*/
 } spdm_measurement_block_dmtf_t;
 
