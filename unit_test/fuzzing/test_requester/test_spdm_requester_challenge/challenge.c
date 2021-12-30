@@ -66,8 +66,7 @@ void test_spdm_requester_challenge(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_use_asym_algo;
 
-    spdm_context->connection_info.version.major_version = 1;
-    spdm_context->connection_info.version.minor_version = 1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,

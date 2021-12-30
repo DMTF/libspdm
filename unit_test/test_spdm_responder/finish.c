@@ -889,7 +889,6 @@ void test_spdm_responder_finish_case8(void **state)
     uint32_t hash_size;
     uint32_t hmac_size;
     uintn req_asym_signature_size;
-    spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -975,7 +974,7 @@ void test_spdm_responder_finish_case8(void **state)
     append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     append_managed_buffer(&th_curr, (uint8_t *)&m_spdm_finish_request3,
                   sizeof(spdm_finish_request_t));
-    libspdm_requester_data_sign(spdm_version, SPDM_FINISH,
+    libspdm_requester_data_sign(m_spdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
         m_use_req_asym_algo, m_use_hash_algo,
         FALSE, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
         ptr, &req_asym_signature_size);
@@ -1678,7 +1677,6 @@ void test_spdm_responder_finish_case15(void **state)
     uint32_t hash_size;
     uint32_t hmac_size;
     uintn req_asym_signature_size;
-    spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1764,7 +1762,7 @@ void test_spdm_responder_finish_case15(void **state)
     append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     append_managed_buffer(&th_curr, (uint8_t *)&m_spdm_finish_request3,
                   sizeof(spdm_finish_request_t));
-    libspdm_requester_data_sign(spdm_version, SPDM_FINISH,
+    libspdm_requester_data_sign(m_spdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
         m_use_req_asym_algo, m_use_hash_algo,
         FALSE, get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr),
         ptr, &req_asym_signature_size);
@@ -1826,7 +1824,6 @@ void test_spdm_responder_finish_case16(void **state)
     uint32_t hash_size;
     uint32_t hmac_size;
     uintn req_asym_signature_size;
-    spdm_version_number_t spdm_version = {0, 0, 1, 1};
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1915,7 +1912,7 @@ void test_spdm_responder_finish_case16(void **state)
     /*randomize signature*/
     libspdm_hash_all(m_use_hash_algo, get_managed_buffer(&th_curr),
               get_managed_buffer_size(&th_curr), random_buffer);
-    libspdm_requester_data_sign(spdm_version, SPDM_FINISH,
+    libspdm_requester_data_sign(m_spdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
         m_use_req_asym_algo, m_use_hash_algo,
         FALSE, random_buffer, hash_size, ptr, &req_asym_signature_size);
     append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
