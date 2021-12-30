@@ -524,11 +524,6 @@ typedef struct {
     /*uint8_t                                 hash_value[hash_size];*/
 } spdm_measurement_block_dmtf_t;
 
-typedef struct {
-    uint8_t Content : 7;
-    uint8_t presentation : 1;
-} SPDM_MEASUREMENTS_BLOCK_MEASUREMENT_TYPE;
-
 
 /* SPDM MEASUREMENTS block MeasurementValueType*/
 
