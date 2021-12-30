@@ -211,14 +211,14 @@ return_status spdm_get_response_measurements(IN void *context,
         } else {
             if (request_size <
                 sizeof(spdm_get_measurements_request_t) -
-                    sizeof(spdm_request->SlotIDParam)) {
+                    sizeof(spdm_request->slot_id_param)) {
                 return libspdm_generate_error_response(
                     spdm_context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
             request_size = sizeof(spdm_get_measurements_request_t) -
-                       sizeof(spdm_request->SlotIDParam);
+                       sizeof(spdm_request->slot_id_param);
         }
     } else {
         if (request_size != sizeof(spdm_message_header_t)) {
@@ -389,7 +389,7 @@ return_status spdm_get_response_measurements(IN void *context,
         0) {
         if (spdm_response->header.spdm_version >=
             SPDM_MESSAGE_VERSION_11) {
-            slot_id_param = spdm_request->SlotIDParam;
+            slot_id_param = spdm_request->slot_id_param;
             if ((slot_id_param != 0xF) &&
                 (slot_id_param >=
                  spdm_context->local_context.slot_count)) {

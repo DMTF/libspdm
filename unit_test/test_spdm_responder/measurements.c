@@ -787,11 +787,11 @@ void test_spdm_responder_measurements_case13(void **state)
 
     TestMsgSizes[0] =
         (uint16_t)(m_spdm_get_measurements_request9_size +
-             sizeof(m_spdm_get_measurements_request9.SlotIDParam) +
+             sizeof(m_spdm_get_measurements_request9.slot_id_param) +
              sizeof(m_spdm_get_measurements_request9.nonce));
     TestMsgSizes[1] =
         (uint16_t)(m_spdm_get_measurements_request9_size +
-             sizeof(m_spdm_get_measurements_request9.SlotIDParam));
+             sizeof(m_spdm_get_measurements_request9.slot_id_param));
     TestMsgSizes[2] =
         (uint16_t)(m_spdm_get_measurements_request9_size +
              sizeof(m_spdm_get_measurements_request9.nonce));
@@ -856,11 +856,11 @@ void test_spdm_responder_measurements_case14(void **state)
 
     TestMsgSizes[0] =
         (uint16_t)(m_spdm_get_measurements_request10_size -
-             sizeof(m_spdm_get_measurements_request10.SlotIDParam) -
+             sizeof(m_spdm_get_measurements_request10.slot_id_param) -
              sizeof(m_spdm_get_measurements_request10.nonce));
     TestMsgSizes[1] =
         (uint16_t)(m_spdm_get_measurements_request10_size -
-             sizeof(m_spdm_get_measurements_request10.SlotIDParam));
+             sizeof(m_spdm_get_measurements_request10.slot_id_param));
     TestMsgSizes[2] =
         (uint16_t)(m_spdm_get_measurements_request10_size -
              sizeof(m_spdm_get_measurements_request10.nonce));
@@ -1136,7 +1136,7 @@ void test_spdm_responder_measurements_case18(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
-    assert_int_equal(m_spdm_get_measurements_request11.SlotIDParam,
+    assert_int_equal(m_spdm_get_measurements_request11.slot_id_param,
              spdm_response->header.param2);
 
     spdm_context->local_context.slot_count = 1;
@@ -1463,8 +1463,8 @@ spdm_test_context_t m_spdm_responder_measurements_test_context = {
 
 int spdm_responder_measurements_test_main(void)
 {
-    m_spdm_get_measurements_request11.SlotIDParam = SPDM_MAX_SLOT_COUNT - 1;
-    m_spdm_get_measurements_request12.SlotIDParam = SPDM_MAX_SLOT_COUNT + 1;
+    m_spdm_get_measurements_request11.slot_id_param = SPDM_MAX_SLOT_COUNT - 1;
+    m_spdm_get_measurements_request12.slot_id_param = SPDM_MAX_SLOT_COUNT + 1;
 
     const struct CMUnitTest spdm_responder_measurements_tests[] = {
         /* Success Case to get measurement number without signature*/
