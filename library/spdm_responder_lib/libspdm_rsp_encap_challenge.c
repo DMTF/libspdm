@@ -102,7 +102,7 @@ return_status spdm_process_encap_response_challenge_auth(
     void *opaque;
     void *signature;
     uintn signature_size;
-    spdm_challenge_auth_response_attribute_t auth_attribute;
+    uint8_t auth_attribute;
     return_status status;
 
     spdm_context->encap_context.error_state =
@@ -129,16 +129,16 @@ return_status spdm_process_encap_response_challenge_auth(
         return RETURN_DEVICE_ERROR;
     }
 
-    *(uint8_t *)&auth_attribute = spdm_response->header.param1;
+    auth_attribute = spdm_response->header.param1;
     if (spdm_context->encap_context.req_slot_id == 0xFF) {
-        if (auth_attribute.slot_id != 0xF) {
+        if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != 0xF) {
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_response->header.param2 != 0) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        if (auth_attribute.slot_id !=
+        if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) !=
             spdm_context->encap_context.req_slot_id) {
             return RETURN_DEVICE_ERROR;
         }

@@ -453,12 +453,7 @@ typedef struct {
 #define SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH 1
 #define SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
 
-typedef struct {
-    uint8_t slot_id : 4;
-    uint8_t reserved : 3;
-    uint8_t basic_mut_auth_req : 1;
-} spdm_challenge_auth_response_attribute_t;
-
+#define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK 0xF
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
 
 #define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT "responder-challenge_auth signing"

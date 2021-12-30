@@ -39,7 +39,7 @@ return_status spdm_get_encap_response_challenge_auth(
     uint8_t *ptr;
     uintn total_size;
     spdm_context_t *spdm_context;
-    spdm_challenge_auth_response_attribute_t auth_attribute;
+    uint8_t auth_attribute;
     return_status status;
 
     spdm_context = context;
@@ -91,10 +91,8 @@ return_status spdm_get_encap_response_challenge_auth(
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-    auth_attribute.slot_id = (uint8_t)(slot_id & 0xF);
-    auth_attribute.reserved = 0;
-    auth_attribute.basic_mut_auth_req = 0;
-    spdm_response->header.param1 = *(uint8_t *)&auth_attribute;
+    auth_attribute = (uint8_t)(slot_id & 0xF);
+    spdm_response->header.param1 = auth_attribute;
     spdm_response->header.param2 = (1 << slot_id);
     if (slot_id == 0xFF) {
         spdm_response->header.param2 = 0;
