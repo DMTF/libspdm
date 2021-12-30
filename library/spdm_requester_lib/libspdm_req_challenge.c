@@ -68,7 +68,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     void *signature;
     uintn signature_size;
     spdm_context_t *spdm_context;
-    spdm_challenge_auth_response_attribute_t auth_attribute;
+    uint8_t auth_attribute;
 
     spdm_context = context;
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -149,24 +149,24 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     if (spdm_response_size > sizeof(spdm_response)) {
         return RETURN_DEVICE_ERROR;
     }
-    *(uint8_t *)&auth_attribute = spdm_response.header.param1;
+    auth_attribute = spdm_response.header.param1;
     if (spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
-        if (auth_attribute.slot_id != 0xF) {
+        if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != 0xF) {
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_response.header.param2 != 0) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 && auth_attribute.slot_id != slot_id) ||
-            (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && *(uint8_t *)&auth_attribute != slot_id)) {
+        if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 && (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
+            (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && auth_attribute != slot_id)) {
             return RETURN_DEVICE_ERROR;
         }
         if ((spdm_response.header.param2 & (1 << slot_id)) == 0) {
             return RETURN_DEVICE_ERROR;
         }
     }
-    if (auth_attribute.basic_mut_auth_req == 1) {
+    if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         if (!spdm_is_capabilities_flag_supported(
                 spdm_context, TRUE,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
@@ -277,7 +277,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
         *slot_mask = spdm_response.header.param2;
     }
 
-    if (auth_attribute.basic_mut_auth_req == 1) {
+    if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         DEBUG((DEBUG_INFO, "BasicMutAuth :\n"));
         status = spdm_encapsulated_request(spdm_context, NULL, 0, NULL);
         DEBUG((DEBUG_INFO,

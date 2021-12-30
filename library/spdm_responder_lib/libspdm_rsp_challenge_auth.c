@@ -43,7 +43,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     uint8_t *ptr;
     uintn total_size;
     spdm_context_t *spdm_context;
-    spdm_challenge_auth_response_attribute_t auth_attribute;
+    uint8_t auth_attribute;
     return_status status;
 
     spdm_context = context;
@@ -119,9 +119,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-    auth_attribute.slot_id = (uint8_t)(slot_id & 0xF);
-    auth_attribute.reserved = 0;
-    auth_attribute.basic_mut_auth_req = 0;
+    auth_attribute = (uint8_t)(slot_id & 0xF);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (spdm_is_capabilities_flag_supported(
                 spdm_context, FALSE,
@@ -136,15 +134,16 @@ return_status spdm_get_response_challenge_auth(IN void *context,
              spdm_is_capabilities_flag_supported(
                  spdm_context, FALSE,
                  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
-            auth_attribute.basic_mut_auth_req =
-                spdm_context->local_context.basic_mut_auth_requested;
+            if (spdm_context->local_context.basic_mut_auth_requested) {
+                auth_attribute = (uint8_t)(auth_attribute | SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ);
+            }
         }
-        if (auth_attribute.basic_mut_auth_req != 0) {
+        if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
             spdm_init_basic_mut_auth_encap_state(context);
         }
     }
 
-    spdm_response->header.param1 = *(uint8_t *)&auth_attribute;
+    spdm_response->header.param1 = auth_attribute;
     spdm_response->header.param2 = (1 << slot_id);
     if (slot_id == 0xFF) {
         spdm_response->header.param2 = 0;
@@ -228,7 +227,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     }
     ptr += signature_size;
 
-    if (auth_attribute.basic_mut_auth_req == 0) {
+    if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) == 0) {
         spdm_set_connection_state(spdm_context,
                       LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
     }
