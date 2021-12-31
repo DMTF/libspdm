@@ -62,7 +62,7 @@ void test_spdm_responder_version_case1(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -75,7 +75,7 @@ void test_spdm_responder_version_case1(void **state)
                        &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
-             sizeof(spdm_version_response) +
+             sizeof(spdm_version_response_t) +
                  DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
@@ -96,7 +96,7 @@ void test_spdm_responder_version_case2(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -130,7 +130,7 @@ void test_spdm_responder_version_case3(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -166,7 +166,7 @@ void test_spdm_responder_version_case4(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -180,7 +180,7 @@ void test_spdm_responder_version_case4(void **state)
                        &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
-             sizeof(spdm_version_response) +
+             sizeof(spdm_version_response_t) +
                  DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
@@ -203,7 +203,7 @@ void test_spdm_responder_version_case5(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *error_data;
 
     spdm_test_context = *state;
@@ -247,7 +247,7 @@ void test_spdm_responder_version_case6(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -282,7 +282,7 @@ void test_spdm_responder_version_case7(void **state)
     spdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response *spdm_response;
+    spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;

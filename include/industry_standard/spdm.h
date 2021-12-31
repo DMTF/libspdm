@@ -105,7 +105,7 @@ typedef struct {
     uint8_t reserved;
     uint8_t version_number_entry_count;
     /*spdm_version_number_t  version_number_entry[version_number_entry_count];*/
-} spdm_version_response;
+} spdm_version_response_t;
 
 
 /* SPDM VERSION structure*/
@@ -134,7 +134,7 @@ typedef struct {
     /* Below field is added in 1.2.*/
     uint32_t data_transfer_size;
     uint32_t max_spdm_msg_size;
-} spdm_get_capabilities_request;
+} spdm_get_capabilities_request_t;
 
 
 /* SPDM GET_CAPABILITIES response*/
@@ -150,7 +150,7 @@ typedef struct {
     /* Below field is added in 1.2.*/
     uint32_t data_transfer_size;
     uint32_t max_spdm_msg_size;
-} spdm_capabilities_response;
+} spdm_capabilities_response_t;
 
 
 /* SPDM GET_CAPABILITIES request flags (1.1)*/

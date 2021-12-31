@@ -192,7 +192,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     } else if (spdm_response.header.request_response_code != SPDM_VERSION) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response_size < sizeof(spdm_version_response)) {
+    if (spdm_response_size < sizeof(spdm_version_response_t)) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size > sizeof(spdm_response)) {
@@ -205,12 +205,12 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size <
-        sizeof(spdm_version_response) +
+        sizeof(spdm_version_response_t) +
             spdm_response.version_number_entry_count *
                 sizeof(spdm_version_number_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    spdm_response_size = sizeof(spdm_version_response) +
+    spdm_response_size = sizeof(spdm_version_response_t) +
                  spdm_response.version_number_entry_count *
                      sizeof(spdm_version_number_t);
 

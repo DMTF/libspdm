@@ -121,7 +121,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_DEVICE_ERROR;
 
     case 0x2: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -139,7 +139,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x3: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -205,7 +205,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
-            spdm_capabilities_response spdm_response;
+            spdm_capabilities_response_t spdm_response;
 
             zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
@@ -288,7 +288,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index2 == 1) {
-            spdm_capabilities_response spdm_response;
+            spdm_capabilities_response_t spdm_response;
 
             zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
@@ -310,7 +310,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xa: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -333,7 +333,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xb: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -356,7 +356,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xc: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -375,7 +375,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xd: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -391,7 +391,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xe: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -409,7 +409,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_DEVICE_ERROR;
 
     case 0xf: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -427,7 +427,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_DEVICE_ERROR;
 
     case 0x10: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -446,7 +446,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x11: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -469,7 +469,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x12: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -493,7 +493,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x13: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_CAPABILITIES;
@@ -515,7 +515,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x14: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -538,7 +538,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x15: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -562,7 +562,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x16: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -586,7 +586,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x17: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -607,7 +607,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x18: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -628,7 +628,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x19: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -651,7 +651,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1a: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -671,7 +671,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1b: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -691,7 +691,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1c: {
-        spdm_capabilities_response spdm_response;
+        spdm_capabilities_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = 0xFF;
