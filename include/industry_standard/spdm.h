@@ -131,6 +131,9 @@ typedef struct {
     uint8_t ct_exponent;
     uint16_t reserved2;
     uint32_t flags;
+    /* Below field is added in 1.2.*/
+    uint32_t data_transfer_size;
+    uint32_t max_spdm_msg_size;
 } spdm_get_capabilities_request;
 
 
@@ -144,6 +147,9 @@ typedef struct {
     uint8_t ct_exponent;
     uint16_t reserved2;
     uint32_t flags;
+    /* Below field is added in 1.2.*/
+    uint32_t data_transfer_size;
+    uint32_t max_spdm_msg_size;
 } spdm_capabilities_response;
 
 
@@ -162,6 +168,8 @@ typedef struct {
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP BIT14
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP BIT15
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP BIT16
+/* SPDM GET_CAPABILITIES request flags (1.2)*/
+#define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP BIT17
 
 
 /* SPDM GET_CAPABILITIES response flags (1.0)*/
@@ -189,6 +197,9 @@ typedef struct {
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP BIT14
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP BIT15
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP BIT16
+/* SPDM GET_CAPABILITIES request flags (1.2)*/
+#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP BIT17
+#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP BIT18
 
 
 /* SPDM NEGOTIATE_ALGORITHMS request*/

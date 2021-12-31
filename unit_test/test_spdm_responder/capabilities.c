@@ -38,7 +38,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request3 = {
     0x12345678 /*flags*/
 };
 uintn m_spdm_get_capabilities_request3_size =
-    sizeof(m_spdm_get_capabilities_request3);
+    sizeof(m_spdm_get_capabilities_request3) -
+    sizeof(m_spdm_get_capabilities_request3.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request3.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request4 = {
     {
@@ -61,7 +63,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request4 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request4_size =
-    sizeof(m_spdm_get_capabilities_request4);
+    sizeof(m_spdm_get_capabilities_request4) -
+    sizeof(m_spdm_get_capabilities_request4.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request4.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request5 = {
     {
@@ -84,7 +88,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request5 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request5_size =
-    sizeof(m_spdm_get_capabilities_request5);
+    sizeof(m_spdm_get_capabilities_request5) -
+    sizeof(m_spdm_get_capabilities_request5.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request5.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request6 = {
     {
@@ -108,7 +114,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request6 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request6_size =
-    sizeof(m_spdm_get_capabilities_request6);
+    sizeof(m_spdm_get_capabilities_request6) -
+    sizeof(m_spdm_get_capabilities_request6.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request6.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request7 = {
     {
@@ -132,7 +140,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request7 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request7_size =
-    sizeof(m_spdm_get_capabilities_request7);
+    sizeof(m_spdm_get_capabilities_request7) -
+    sizeof(m_spdm_get_capabilities_request7.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request7.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request8 = {
     {
@@ -155,7 +165,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request8 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request8_size =
-    sizeof(m_spdm_get_capabilities_request8);
+    sizeof(m_spdm_get_capabilities_request8) -
+    sizeof(m_spdm_get_capabilities_request8.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request8.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request9 = {
     {
@@ -179,7 +191,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request9 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request9_size =
-    sizeof(m_spdm_get_capabilities_request9);
+    sizeof(m_spdm_get_capabilities_request9) -
+    sizeof(m_spdm_get_capabilities_request9.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request9.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request10 = {
     {
@@ -202,7 +216,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request10 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request10_size =
-    sizeof(m_spdm_get_capabilities_request10);
+    sizeof(m_spdm_get_capabilities_request10) -
+    sizeof(m_spdm_get_capabilities_request10.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request10.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request11 = {
     {
@@ -225,7 +241,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request11 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request11_size =
-    sizeof(m_spdm_get_capabilities_request11);
+    sizeof(m_spdm_get_capabilities_request11) -
+    sizeof(m_spdm_get_capabilities_request11.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request11.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request12 = {
     {
@@ -249,7 +267,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request12 = {
      )
 };
 uintn m_spdm_get_capabilities_request12_size =
-    sizeof(m_spdm_get_capabilities_request12);
+    sizeof(m_spdm_get_capabilities_request12) -
+    sizeof(m_spdm_get_capabilities_request12.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request12.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request13 = {
     {
@@ -273,7 +293,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request13 = {
      )
 };
 uintn m_spdm_get_capabilities_request13_size =
-    sizeof(m_spdm_get_capabilities_request13);
+    sizeof(m_spdm_get_capabilities_request13) -
+    sizeof(m_spdm_get_capabilities_request13.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request13.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request14 = {
     {
@@ -296,7 +318,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request14 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request14_size =
-    sizeof(m_spdm_get_capabilities_request14);
+    sizeof(m_spdm_get_capabilities_request14) -
+    sizeof(m_spdm_get_capabilities_request14.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request14.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request15 = {
     {
@@ -320,7 +344,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request15 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)
 };
 uintn m_spdm_get_capabilities_request15_size =
-    sizeof(m_spdm_get_capabilities_request15);
+    sizeof(m_spdm_get_capabilities_request15) -
+    sizeof(m_spdm_get_capabilities_request15.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request15.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request16 = {
     {
@@ -343,7 +369,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request16 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request16_size =
-    sizeof(m_spdm_get_capabilities_request16);
+    sizeof(m_spdm_get_capabilities_request16) -
+    sizeof(m_spdm_get_capabilities_request16.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request16.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request17 = {
     {
@@ -366,7 +394,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request17 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 };
 uintn m_spdm_get_capabilities_request17_size =
-    sizeof(m_spdm_get_capabilities_request17);
+    sizeof(m_spdm_get_capabilities_request17) -
+    sizeof(m_spdm_get_capabilities_request17.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request17.max_spdm_msg_size);
 
 spdm_get_capabilities_request m_spdm_get_capabilities_request18 = {
     {
@@ -390,7 +420,9 @@ spdm_get_capabilities_request m_spdm_get_capabilities_request18 = {
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)
 };
 uintn m_spdm_get_capabilities_request18_size =
-    sizeof(m_spdm_get_capabilities_request18);
+    sizeof(m_spdm_get_capabilities_request18) -
+    sizeof(m_spdm_get_capabilities_request18.data_transfer_size) -
+    sizeof(m_spdm_get_capabilities_request18.max_spdm_msg_size);
 
 void test_spdm_responder_capabilities_case1(void **state)
 {
@@ -416,7 +448,9 @@ void test_spdm_responder_capabilities_case1(void **state)
         spdm_context, m_spdm_get_capabilities_request1_size,
         &m_spdm_get_capabilities_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response));
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response) -
+                                        sizeof(spdm_response->data_transfer_size) -
+                                        sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
              spdm_response->header.spdm_version);
@@ -655,7 +689,9 @@ void test_spdm_responder_capabilities_case8(void **state)
         spdm_context, m_spdm_get_capabilities_request4_size,
         &m_spdm_get_capabilities_request4, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response));
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response) -
+                                        sizeof(spdm_response->data_transfer_size) -
+                                        sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
              spdm_response->header.spdm_version);
@@ -683,7 +719,9 @@ void test_spdm_responder_capabilities_case9(void **state)
         spdm_context, m_spdm_get_capabilities_request5_size,
         &m_spdm_get_capabilities_request5, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response));
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response) -
+                                        sizeof(spdm_response->data_transfer_size) -
+                                        sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
              spdm_response->header.spdm_version);
@@ -773,7 +811,9 @@ void test_spdm_responder_capabilities_case12(void **state)
         spdm_context, m_spdm_get_capabilities_request8_size,
         &m_spdm_get_capabilities_request8, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response));
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response) -
+                                        sizeof(spdm_response->data_transfer_size) -
+                                        sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
              spdm_response->header.spdm_version);
@@ -1082,7 +1122,9 @@ void test_spdm_responder_capabilities_case22(void **state)
         spdm_context, m_spdm_get_capabilities_request18_size,
         &m_spdm_get_capabilities_request18, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response));
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response) -
+                                        sizeof(spdm_response->data_transfer_size) -
+                                        sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request18.header.spdm_version,
              spdm_response->header.spdm_version);
