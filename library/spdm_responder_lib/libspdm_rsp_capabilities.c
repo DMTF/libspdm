@@ -148,9 +148,9 @@ return_status spdm_get_response_capabilities(IN void *context,
                          IN OUT uintn *response_size,
                          OUT void *response)
 {
-    spdm_get_capabilities_request *spdm_request;
+    spdm_get_capabilities_request_t *spdm_request;
     uintn spdm_request_size;
-    spdm_capabilities_response *spdm_response;
+    spdm_capabilities_response_t *spdm_response;
     spdm_context_t *spdm_context;
     return_status status;
 
@@ -178,13 +178,13 @@ return_status spdm_get_response_capabilities(IN void *context,
     }
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        if (request_size != sizeof(spdm_get_capabilities_request)) {
+        if (request_size != sizeof(spdm_get_capabilities_request_t)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
         }
     } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        if (request_size != sizeof(spdm_get_capabilities_request) -
+        if (request_size != sizeof(spdm_get_capabilities_request_t) -
                                 sizeof(spdm_request->data_transfer_size) -
                                 sizeof(spdm_request->max_spdm_msg_size)) {
             return libspdm_generate_error_response(
@@ -210,8 +210,8 @@ return_status spdm_get_response_capabilities(IN void *context,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                         spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(spdm_capabilities_response));
-    *response_size = sizeof(spdm_capabilities_response);
+    ASSERT(*response_size >= sizeof(spdm_capabilities_response_t));
+    *response_size = sizeof(spdm_capabilities_response_t);
     zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -226,9 +226,9 @@ return_status spdm_get_response_capabilities(IN void *context,
     spdm_response->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        *response_size = sizeof(spdm_capabilities_response);
+        *response_size = sizeof(spdm_capabilities_response_t);
     } else {
-        *response_size = sizeof(spdm_capabilities_response) -
+        *response_size = sizeof(spdm_capabilities_response_t) -
                             sizeof(spdm_response->data_transfer_size) -
                             sizeof(spdm_response->max_spdm_msg_size);
     }

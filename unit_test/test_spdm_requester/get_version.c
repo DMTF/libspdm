@@ -90,7 +90,7 @@ return_status spdm_requester_get_version_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x3: {
-        spdm_version_response spdm_response;
+        spdm_version_response_t spdm_response;
 
         zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;

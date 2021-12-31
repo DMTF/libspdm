@@ -100,9 +100,9 @@ boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
 return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
 {
     return_status status;
-    spdm_get_capabilities_request spdm_request;
+    spdm_get_capabilities_request_t spdm_request;
     uintn spdm_request_size;
-    spdm_capabilities_response spdm_response;
+    spdm_capabilities_response_t spdm_response;
     uintn spdm_response_size;
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -161,11 +161,11 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        if (spdm_response_size < sizeof(spdm_capabilities_response)) {
+        if (spdm_response_size < sizeof(spdm_capabilities_response_t)) {
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        if (spdm_response_size < sizeof(spdm_capabilities_response) -
+        if (spdm_response_size < sizeof(spdm_capabilities_response_t) -
                                     sizeof(spdm_response.data_transfer_size) -
                                     sizeof(spdm_response.max_spdm_msg_size)) {
             return RETURN_DEVICE_ERROR;
@@ -175,9 +175,9 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        spdm_response_size = sizeof(spdm_capabilities_response);
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
     } else {
-        spdm_response_size = sizeof(spdm_capabilities_response) -
+        spdm_response_size = sizeof(spdm_capabilities_response_t) -
                                 sizeof(spdm_response.data_transfer_size) -
                                 sizeof(spdm_response.max_spdm_msg_size);
     }

@@ -96,7 +96,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
 
     ASSERT(*response_size >= sizeof(spdm_version_response_mine_t));
     *response_size =
-        sizeof(spdm_version_response) +
+        sizeof(spdm_version_response_t) +
         spdm_context->local_context.version.spdm_version_count *
             sizeof(spdm_version_number_t);
     zero_mem(response, *response_size);
