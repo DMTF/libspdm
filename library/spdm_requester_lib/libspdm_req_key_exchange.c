@@ -13,7 +13,8 @@
 typedef struct {
     spdm_message_header_t header;
     uint16_t req_session_id;
-    uint16_t reserved;
+    uint8_t session_policy;
+    uint8_t reserved;
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
     uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
@@ -128,6 +129,11 @@ return_status try_spdm_send_receive_key_exchange(
 
     req_session_id = spdm_allocate_req_session_id(spdm_context);
     spdm_request.req_session_id = req_session_id;
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_request.session_policy = session_policy;
+    } else {
+        spdm_request.session_policy = 0;
+    }
     spdm_request.reserved = 0;
 
     ptr = spdm_request.exchange_data;
@@ -467,6 +473,7 @@ return_status try_spdm_send_receive_key_exchange(
              measurement_summary_hash_size);
     }
     session_info->mut_auth_requested = spdm_response.mut_auth_requested;
+    session_info->session_policy = session_policy;
 
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,

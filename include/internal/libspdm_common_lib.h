@@ -243,6 +243,7 @@ typedef struct {
     boolean use_psk;
     uint8_t mut_auth_requested;
     uint8_t end_session_attributes;
+    uint8_t session_policy;
     spdm_session_transcript_t session_transcript;
     void *secured_message_context;
 } spdm_session_info_t;

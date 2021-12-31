@@ -138,7 +138,11 @@ return_status try_spdm_send_receive_psk_exchange(
     spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_PSK_EXCHANGE;
     spdm_request.header.param1 = measurement_hash_type;
-    spdm_request.header.param2 = 0;
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_request.header.param2 = session_policy;
+    } else {
+        spdm_request.header.param2 = 0;
+    }
     spdm_request.psk_hint_length =
         (uint16_t)spdm_context->local_context.psk_hint_size;
     if (requester_context_in == NULL) {
@@ -349,6 +353,8 @@ return_status try_spdm_send_receive_psk_exchange(
         copy_mem(measurement_hash, measurement_summary_hash,
              measurement_summary_hash_size);
     }
+
+    session_info->session_policy = session_policy;
 
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,

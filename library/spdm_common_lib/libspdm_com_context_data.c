@@ -20,6 +20,7 @@ boolean need_session_info_for_data(IN libspdm_data_type_t data_type)
     case LIBSPDM_DATA_SESSION_USE_PSK:
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
+    case LIBSPDM_DATA_SESSION_POLICY:
         return TRUE;
     default:
         return FALSE;
@@ -401,6 +402,12 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         }
         session_info->end_session_attributes = *(uint8_t *)data;
         break;
+    case LIBSPDM_DATA_SESSION_POLICY:
+        if (data_size != sizeof(uint8_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        session_info->session_policy = *(uint8_t *)data;
+        break;
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         if (data_size != sizeof(void *) || *(void **)data == NULL) {
             return RETURN_INVALID_PARAMETER;
@@ -595,6 +602,10 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
         target_data_size = sizeof(uint8_t);
         target_data = &session_info->end_session_attributes;
+        break;
+    case LIBSPDM_DATA_SESSION_POLICY:
+        target_data_size = sizeof(uint8_t);
+        target_data = &session_info->session_policy;
         break;
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         target_data_size = sizeof(void *);

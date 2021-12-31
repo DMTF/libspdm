@@ -14,7 +14,8 @@
 typedef struct {
     spdm_message_header_t header;
     uint16_t req_session_id;
-    uint16_t reserved;
+    uint8_t session_policy;
+    uint8_t reserved;
     uint8_t random_data[SPDM_RANDOM_DATA_SIZE];
     uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
