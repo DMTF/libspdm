@@ -408,23 +408,26 @@ typedef struct {
 
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == slot_id*/
+    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD*/
     /* param2 == RSVD*/
     uint16_t offset;
     uint16_t length;
 } spdm_get_certificate_request_t;
 
+#define SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF
 
 /* SPDM GET_CERTIFICATE response*/
 
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == slot_id*/
+    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD*/
     /* param2 == RSVD*/
     uint16_t portion_length;
     uint16_t remainder_length;
     /*uint8_t                cert_chain[portion_length];*/
 } spdm_certificate_response_t;
+
+#define SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK 0xF
 
 typedef struct {
     
@@ -462,7 +465,7 @@ typedef struct {
 
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == ResponseAttribute*/
+    /* param1 == ResponseAttribute, BIT[0:3]=slot_id, BIT[4:6]=RSVD, BIT[7]=basic_mut_auth(deprecated in 1.2)*/
     /* param2 == slot_mask*/
     /*uint8_t                cert_chain_hash[digest_size];*/
     /*uint8_t                nonce[32];*/
@@ -480,7 +483,7 @@ typedef struct {
 #define SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
 
 #define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK 0xF
-#define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7
+#define SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ BIT7 /* Deprecated in SPDM 1.2*/
 
 #define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT "responder-challenge_auth signing"
 #define SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
