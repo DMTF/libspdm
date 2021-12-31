@@ -35,8 +35,8 @@ uintn spdm_test_get_measurement_request_size(IN void *spdm_context,
         return buffer_size;
     }
 
-    if (spdm_request->header.param1 ==
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) {
+    if ((spdm_request->header.param1 &
+        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_request->header.spdm_version >=
                           SPDM_MESSAGE_VERSION_11) {
             if (buffer_size <
