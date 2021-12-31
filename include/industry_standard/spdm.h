@@ -656,13 +656,18 @@ typedef struct {
     /* param1 == HashType*/
     /* param2 == slot_id*/
     uint16_t req_session_id;
-    uint16_t reserved;
+    /* session_policy is added in 1.2.*/
+    uint8_t session_policy;
+    uint8_t reserved;
     uint8_t random_data[32];
     /*uint8_t                exchange_data[D];*/
     /*uint16_t               opaque_length;*/
     /*uint8_t                opaque_data[opaque_length];*/
 } spdm_key_exchange_request_t;
 
+/* SPDM KEY_EXCHANGE request session_policy*/
+
+#define SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE BIT0
 
 /* SPDM KEY_EXCHANGE request HashType*/
 
@@ -740,7 +745,7 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 == HashType*/
-    /* param2 == RSVD*/
+    /* param2 == RSVD/session_policy (1.2)*/
     uint16_t req_session_id;
     uint16_t psk_hint_length;
     uint16_t context_length;

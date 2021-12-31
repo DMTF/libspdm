@@ -324,6 +324,9 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     }
     ptr += hmac_size;
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        session_info->session_policy = spdm_request->header.param2;
+    }
     spdm_set_session_state(spdm_context, session_id,
                    LIBSPDM_SESSION_STATE_HANDSHAKING);
 

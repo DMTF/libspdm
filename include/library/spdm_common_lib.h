@@ -105,6 +105,7 @@ typedef enum {
     LIBSPDM_DATA_SESSION_USE_PSK,
     LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES,
+    LIBSPDM_DATA_SESSION_POLICY,
 
     /* App context data that can be used by the application*/
     /* during callback functions such libspdm_device_send_message_func.*/

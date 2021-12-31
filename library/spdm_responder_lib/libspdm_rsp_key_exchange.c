@@ -381,6 +381,9 @@ return_status spdm_get_response_key_exchange(IN void *context,
     }
 
     session_info->mut_auth_requested = spdm_response->mut_auth_requested;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        session_info->session_policy = spdm_request->session_policy;
+    }
     spdm_set_session_state(spdm_context, session_id,
                    LIBSPDM_SESSION_STATE_HANDSHAKING);
 
