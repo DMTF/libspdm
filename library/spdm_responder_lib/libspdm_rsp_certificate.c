@@ -74,7 +74,7 @@ return_status spdm_get_response_certificate(IN void *context,
     }
     spdm_request_size = request_size;
 
-    slot_id = spdm_request->header.param1;
+    slot_id = spdm_request->header.param1 & SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
 
     if (slot_id >= spdm_context->local_context.slot_count) {
         return libspdm_generate_error_response(spdm_context,
