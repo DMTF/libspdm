@@ -496,13 +496,15 @@ typedef struct {
     /* param2 == measurement_operation*/
     uint8_t nonce[32];
     /* Below field is added in 1.1.*/
-    uint8_t slot_id_param; /* BIT[0:3]=slot_id, BIT[4:7]=reserved*/
+    uint8_t slot_id_param; /* BIT[0:3]=slot_id, BIT[4:7]=RSVD*/
 } spdm_get_measurements_request_t;
 
+#define SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK 0xF
 
 /* SPDM GET_MEASUREMENTS request Attributes*/
 
 #define SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE BIT0
+#define SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED BIT1
 
 
 /* SPDM GET_MEASUREMENTS request measurement_operation*/
@@ -557,7 +559,7 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 == TotalNumberOfMeasurement/RSVD*/
-    /* param2 == slot_id*/
+    /* param2 == BIT[0:3]=slot_id, BIT[4:5]=content changed, BIT[6:7]=RSVD*/
     uint8_t number_of_blocks;
     uint8_t measurement_record_length[3];
     /*uint8_t                measurement_record[measurement_record_length];*/
@@ -566,6 +568,15 @@ typedef struct {
     /*uint8_t                opaque_data[opaque_length];*/
     /*uint8_t                signature[key_size];*/
 } spdm_measurements_response_t;
+
+#define SPDM_MEASUREMENTS_RESPONSE_SLOT_ID_MASK 0xF
+
+/* SPDM MEASUREMENTS content changed*/
+
+#define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK          0x30
+#define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_NO_DETECTION  0x00
+#define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_DETECTED      0x10
+#define SPDM_MEASUREMENTS_RESPONSE_CONTENT_NO_CHANGE_DETECTED   0x20
 
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT "responder-measurements signing"
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE (sizeof(SPDM_MEASUREMENTS_SIGN_CONTEXT) - 1)

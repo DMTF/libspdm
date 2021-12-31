@@ -85,6 +85,8 @@ return_status libspdm_measurement_collection(
                     IN uint8_t  measurement_specification,
                     IN uint32_t measurement_hash_algo,
                     IN uint8_t measurement_index,
+                    IN uint8_t request_attribute,
+                    OUT uint8_t *content_changed,
                     OUT uint8_t *measurements_count,
                     OUT void *measurements,
                     IN OUT uintn *measurements_size);

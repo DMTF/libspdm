@@ -141,7 +141,7 @@ return_status spdm_get_response_measurements(IN void *context,
     boolean ret;
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-
+    uint8_t content_changed;
 
     spdm_context = context;
     spdm_request = request;
@@ -196,8 +196,8 @@ return_status spdm_get_response_measurements(IN void *context,
         }
     }
 
-    if (spdm_request->header.param1 ==
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) {
+    if ((spdm_request->header.param1 &
+        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_request->header.spdm_version >=
                           SPDM_MESSAGE_VERSION_11) {
             if (request_size <
@@ -289,6 +289,8 @@ return_status spdm_get_response_measurements(IN void *context,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         measurements_index,
+        spdm_request->header.param1,
+        &content_changed,
         &measurements_count,
         measurements,
         &measurements_size);
@@ -389,7 +391,7 @@ return_status spdm_get_response_measurements(IN void *context,
         0) {
         if (spdm_response->header.spdm_version >=
             SPDM_MESSAGE_VERSION_11) {
-            slot_id_param = spdm_request->slot_id_param;
+            slot_id_param = spdm_request->slot_id_param & SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK;
             if ((slot_id_param != 0xF) &&
                 (slot_id_param >=
                  spdm_context->local_context.slot_count)) {
@@ -399,6 +401,11 @@ return_status spdm_get_response_measurements(IN void *context,
                     response_size, response);
             }
             spdm_response->header.param2 = slot_id_param;
+            if (spdm_response->header.spdm_version >=
+                SPDM_MESSAGE_VERSION_12) {
+                spdm_response->header.param2 = slot_id_param |
+                    (content_changed & SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK);
+            }
         }
     } else {
         if(!spdm_create_measurement_opaque(spdm_context, spdm_response,
