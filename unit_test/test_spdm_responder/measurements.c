@@ -92,7 +92,7 @@ uintn m_spdm_get_measurements_request12_size =
     sizeof(m_spdm_get_measurements_request12);
 
 spdm_get_measurements_request_t m_spdm_get_measurements_request13 = {
-    { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS, 0, 0xFE },
+    { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS, 0, 0xF0 },
 };
 uintn m_spdm_get_measurements_request13_size = sizeof(spdm_message_header_t);
 
@@ -687,12 +687,16 @@ void test_spdm_responder_measurements_case11(void **state)
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
              sizeof(spdm_measurements_response_t) +
-                 (MEASUREMENT_BLOCK_NUMBER -
-                  1) * (sizeof(spdm_measurement_block_dmtf_t) +
+                 MEASUREMENT_BLOCK_HASH_NUMBER *
+                    (sizeof(spdm_measurement_block_dmtf_t) +
                     libspdm_get_measurement_hash_size(
                         m_use_measurement_hash_algo)) +
                  (sizeof(spdm_measurement_block_dmtf_t) +
+                  sizeof(spdm_measurements_secure_version_number_t)) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
                   MEASUREMENT_MANIFEST_SIZE) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
+                  sizeof(spdm_measurements_device_mode_t)) +
                  measurment_sig_size);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -745,13 +749,17 @@ void test_spdm_responder_measurements_case12(void **state)
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
              sizeof(spdm_measurements_response_t) +
-                 (MEASUREMENT_BLOCK_NUMBER -
-                  1) * (sizeof(spdm_measurement_block_dmtf_t) +
+                 MEASUREMENT_BLOCK_HASH_NUMBER *
+                    (sizeof(spdm_measurement_block_dmtf_t) +
                     libspdm_get_measurement_hash_size(
                         m_use_measurement_hash_algo)) +
                  (sizeof(spdm_measurement_block_dmtf_t) +
-                  MEASUREMENT_MANIFEST_SIZE) + SPDM_NONCE_SIZE +
-                 sizeof(uint16_t));
+                  sizeof(spdm_measurements_secure_version_number_t)) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
+                  MEASUREMENT_MANIFEST_SIZE) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
+                  sizeof(spdm_measurements_device_mode_t)) +
+                 SPDM_NONCE_SIZE + sizeof(uint16_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_MEASUREMENTS);
@@ -761,13 +769,17 @@ void test_spdm_responder_measurements_case12(void **state)
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
              m_spdm_get_measurements_request7_size +
                  sizeof(spdm_measurements_response_t) +
-                 (MEASUREMENT_BLOCK_NUMBER -
-                  1) * (sizeof(spdm_measurement_block_dmtf_t) +
+                 MEASUREMENT_BLOCK_HASH_NUMBER *
+                    (sizeof(spdm_measurement_block_dmtf_t) +
                     libspdm_get_measurement_hash_size(
                         m_use_measurement_hash_algo)) +
                  (sizeof(spdm_measurement_block_dmtf_t) +
-                  MEASUREMENT_MANIFEST_SIZE) + SPDM_NONCE_SIZE +
-                 sizeof(uint16_t));
+                  sizeof(spdm_measurements_secure_version_number_t)) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
+                  MEASUREMENT_MANIFEST_SIZE) +
+                 (sizeof(spdm_measurement_block_dmtf_t) +
+                  sizeof(spdm_measurements_device_mode_t)) +
+                 SPDM_NONCE_SIZE + sizeof(uint16_t));
 #endif
 }
 
@@ -1250,7 +1262,7 @@ void test_spdm_responder_measurements_case20(void **state)
 }
 
 /**
-  Test 21: Error case, request a measurement index larger than the total number of measurements
+  Test 21: Error case, request a measurement index not found
   Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
 **/
 void test_spdm_responder_measurements_case21(void **state)
