@@ -14,8 +14,11 @@
 
 #include "library/spdm_device_secret_lib.h"
 
-#define MEASUREMENT_BLOCK_NUMBER 5
+#define MEASUREMENT_BLOCK_HASH_NUMBER 4
+#define MEASUREMENT_BLOCK_NUMBER (MEASUREMENT_BLOCK_HASH_NUMBER /*Index - 1~4*/ + 1 /*SVN - 0x10*/ + 1 /*Manifest - 0xFD*/ + 1 /*DEVICE_MODE - 0xFE*/)
+#define MEASUREMENT_RAW_DATA_SIZE 72
 #define MEASUREMENT_MANIFEST_SIZE 128
+#define MEASUREMENT_INDEX_SVN 0x10
 
 #define TEST_PSK_DATA_STRING "TestPskData"
 #define TEST_PSK_HINT_STRING "TestPskHint"
