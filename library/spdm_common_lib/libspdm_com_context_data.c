@@ -157,6 +157,24 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         spdm_context->local_context.capability.ct_exponent =
             *(uint8_t *)data;
         break;
+    case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
+        if (data_size != sizeof(uint32_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        /* Only allow set smaller value*/
+        ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        spdm_context->local_context.capability.data_transfer_size =
+            *(uint32_t *)data;
+        break;
+    case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
+        if (data_size != sizeof(uint32_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        /* Only allow set smaller value. Need different value for CHUNK - TBD*/
+        ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        spdm_context->local_context.capability.max_spdm_msg_size =
+            *(uint32_t *)data;
+        break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
         if (data_size != sizeof(uint8_t)) {
             return RETURN_INVALID_PARAMETER;
@@ -506,6 +524,26 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
         } else {
             target_data = &spdm_context->local_context.capability
                            .ct_exponent;
+        }
+        break;
+    case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
+        target_data_size = sizeof(uint32_t);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            target_data =
+                &spdm_context->connection_info.capability.data_transfer_size;
+        } else {
+            target_data =
+                &spdm_context->local_context.capability.data_transfer_size;
+        }
+        break;
+    case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
+        target_data_size = sizeof(uint32_t);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            target_data =
+                &spdm_context->connection_info.capability.max_spdm_msg_size;
+        } else {
+            target_data =
+                &spdm_context->local_context.capability.max_spdm_msg_size;
         }
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
@@ -1777,6 +1815,10 @@ return_status libspdm_init_context(IN void *context)
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
+
+    /* From the config.h, need different value for CHUNK - TBD*/
+    spdm_context->local_context.capability.data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    spdm_context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
     secured_message_context = (void *)((uintn)(spdm_context + 1));
     SecuredMessageContextSize = libspdm_secured_message_get_context_size();

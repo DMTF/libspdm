@@ -177,8 +177,16 @@ return_status spdm_get_response_capabilities(IN void *context,
                          response_size, response);
     }
 
-    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         if (request_size != sizeof(spdm_get_capabilities_request)) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+    } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        if (request_size != sizeof(spdm_get_capabilities_request) -
+                                sizeof(spdm_request->data_transfer_size) -
+                                sizeof(spdm_request->max_spdm_msg_size)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -214,7 +222,18 @@ return_status spdm_get_response_capabilities(IN void *context,
     spdm_response->ct_exponent =
         spdm_context->local_context.capability.ct_exponent;
     spdm_response->flags = spdm_context->local_context.capability.flags;
-    
+    spdm_response->data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
+    spdm_response->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        *response_size = sizeof(spdm_capabilities_response);
+    } else {
+        *response_size = sizeof(spdm_capabilities_response) -
+                            sizeof(spdm_response->data_transfer_size) -
+                            sizeof(spdm_response->max_spdm_msg_size);
+    }
+
+
     /* Cache*/
     
     status = libspdm_append_message_a(spdm_context, spdm_request,
@@ -240,6 +259,13 @@ return_status spdm_get_response_capabilities(IN void *context,
     } else {
         spdm_context->connection_info.capability.ct_exponent = 0;
         spdm_context->connection_info.capability.flags = 0;
+    }
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_context->connection_info.capability.data_transfer_size = spdm_request->data_transfer_size;
+        spdm_context->connection_info.capability.max_spdm_msg_size = spdm_request->max_spdm_msg_size;
+    } else {
+        spdm_context->connection_info.capability.data_transfer_size = 0;
+        spdm_context->connection_info.capability.max_spdm_msg_size = 0;
     }
     spdm_set_connection_state(spdm_context,
                   LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES);

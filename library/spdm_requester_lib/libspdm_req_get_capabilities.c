@@ -114,8 +114,12 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
 
     zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
-    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request_size = sizeof(spdm_request);
+    } else if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        spdm_request_size = sizeof(spdm_request) -
+                sizeof(spdm_request.data_transfer_size) -
+                sizeof(spdm_request.max_spdm_msg_size);
     } else {
         spdm_request_size = sizeof(spdm_request.header);
     }
@@ -125,6 +129,8 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     spdm_request.ct_exponent =
         spdm_context->local_context.capability.ct_exponent;
     spdm_request.flags = spdm_context->local_context.capability.flags;
+    spdm_request.data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
+    spdm_request.max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
     status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                     &spdm_request);
     if (RETURN_ERROR(status)) {
@@ -154,18 +160,27 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
            SPDM_CAPABILITIES) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response_size < sizeof(spdm_capabilities_response)) {
-        return RETURN_DEVICE_ERROR;
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (spdm_response_size < sizeof(spdm_capabilities_response)) {
+            return RETURN_DEVICE_ERROR;
+        }
+    } else {
+        if (spdm_response_size < sizeof(spdm_capabilities_response) -
+                                    sizeof(spdm_response.data_transfer_size) -
+                                    sizeof(spdm_response.max_spdm_msg_size)) {
+            return RETURN_DEVICE_ERROR;
+        }
     }
     if (spdm_response_size > sizeof(spdm_response)) {
         return RETURN_DEVICE_ERROR;
     }
-    /*Check if received message version matches sent message version*/
-    if (spdm_request.header.spdm_version !=
-        spdm_response.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response_size = sizeof(spdm_capabilities_response);
+    } else {
+        spdm_response_size = sizeof(spdm_capabilities_response) -
+                                sizeof(spdm_response.data_transfer_size) -
+                                sizeof(spdm_response.max_spdm_msg_size);
     }
-    spdm_response_size = sizeof(spdm_capabilities_response);
 
     if (!spdm_check_response_flag_compability(
             spdm_response.flags, spdm_response.header.spdm_version)) {
@@ -190,6 +205,14 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
     spdm_context->connection_info.capability.ct_exponent =
         spdm_response.ct_exponent;
     spdm_context->connection_info.capability.flags = spdm_response.flags;
+
+    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_context->connection_info.capability.data_transfer_size = spdm_response.data_transfer_size;
+        spdm_context->connection_info.capability.max_spdm_msg_size = spdm_response.max_spdm_msg_size;
+    } else {
+        spdm_context->connection_info.capability.data_transfer_size = 0;
+        spdm_context->connection_info.capability.max_spdm_msg_size = 0;
+    }
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;

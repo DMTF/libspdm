@@ -20,6 +20,8 @@ typedef struct {
 typedef struct {
     uint8_t ct_exponent;
     uint32_t flags;
+    uint32_t data_transfer_size;
+    uint32_t max_spdm_msg_size;
 } spdm_device_capability_t;
 
 typedef struct {
