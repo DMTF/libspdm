@@ -623,9 +623,10 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == Error Code*/
     /* param2 == Error data*/
-    /*uint8_t                extended_error_data[];*/
+    /*uint8_t                extended_error_data[32];*/
 } spdm_error_response_t;
 
+#define SPDM_EXTENDED_ERROR_DATA_MAX_SIZE 32
 
 /* SPDM error code*/
 
@@ -634,18 +635,27 @@ typedef struct {
 #define SPDM_ERROR_CODE_UNEXPECTED_REQUEST 0x04
 #define SPDM_ERROR_CODE_UNSPECIFIED 0x05
 #define SPDM_ERROR_CODE_UNSUPPORTED_REQUEST 0x07
-#define SPDM_ERROR_CODE_MAJOR_VERSION_MISMATCH 0x41
+#define SPDM_ERROR_CODE_VERSION_MISMATCH 0x41
 #define SPDM_ERROR_CODE_RESPONSE_NOT_READY 0x42
 #define SPDM_ERROR_CODE_REQUEST_RESYNCH 0x43
 #define SPDM_ERROR_CODE_VENDOR_DEFINED 0xFF
 
 /* SPDM error code (1.1)*/
 
-#define SPDM_ERROR_CODE_INVALID_SESSION 0x02
+#define SPDM_ERROR_CODE_INVALID_SESSION 0x02 /* Deprecated in SPDM 1.2*/
 #define SPDM_ERROR_CODE_DECRYPT_ERROR 0x06
 #define SPDM_ERROR_CODE_REQUEST_IN_FLIGHT 0x08
 #define SPDM_ERROR_CODE_INVALID_RESPONSE_CODE 0x09
 #define SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED 0x0A
+
+/* SPDM error code (1.2)*/
+
+#define SPDM_ERROR_CODE_SESSION_REQUIRED 0x0B
+#define SPDM_ERROR_CODE_RESET_REQUIRED 0x0C
+#define SPDM_ERROR_CODE_RESPONSE_TOO_LARGE 0x0D
+#define SPDM_ERROR_CODE_REQUEST_TOO_LARGE 0x0E
+#define SPDM_ERROR_CODE_LARGE_RESPONSE 0x0F
+#define SPDM_ERROR_CODE_MESSAGE_LOST 0x10
 
 
 /* SPDM ResponseNotReady extended data*/

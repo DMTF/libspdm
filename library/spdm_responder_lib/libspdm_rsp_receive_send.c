@@ -333,11 +333,9 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
             /* don't use session ID, because we dont know which right session ID should be used.*/
-            status = libspdm_generate_extended_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_SESSION,
-                0, sizeof(uint32_t), (void *)session_id,
-                &my_response_size, my_response);
-            session_id = NULL;
+            /* just ignore this message */
+            /* return UNSUPPORTED to continue the dispatch without send response.*/
+            status = RETURN_UNSUPPORTED;
             break;
         default:
             ASSERT(FALSE);
