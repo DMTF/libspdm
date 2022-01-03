@@ -53,6 +53,9 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
     if (*response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response->spdm_version != spdm_request.header.spdm_version) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response->request_response_code != expected_response_code) {
         return RETURN_DEVICE_ERROR;
     }
