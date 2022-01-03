@@ -156,6 +156,9 @@ return_status spdm_process_encap_response_key_update(
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
+    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+        return RETURN_DEVICE_ERROR;
+    }
     if ((spdm_response_size != sizeof(spdm_key_update_response_t)) ||
         (spdm_response->header.request_response_code !=
          SPDM_KEY_UPDATE_ACK) ||

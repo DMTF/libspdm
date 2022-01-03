@@ -102,6 +102,9 @@ return_status spdm_process_encap_response_certificate(
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
+    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+        return RETURN_DEVICE_ERROR;
+    }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = spdm_handle_encap_error_response_main(
             spdm_context,
