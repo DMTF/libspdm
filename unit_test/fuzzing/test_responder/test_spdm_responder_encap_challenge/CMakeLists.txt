@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_spdm_responder__encap_challenge
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_spdm_responder_encap_challenge
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/include
@@ -33,7 +33,6 @@ SET(test_spdm_responder_encap_challenge_LIBRARY
     spdm_crypt_lib
     spdm_secured_message_lib
     spdm_transport_test_lib
-    spdm_device_secret_lib_null
     spdm_device_secret_lib_sample
     cmockalib
 )
@@ -52,7 +51,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
-                   $<TARGET_OBJECTS:spdm_device_secret_lib_null>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
     )
