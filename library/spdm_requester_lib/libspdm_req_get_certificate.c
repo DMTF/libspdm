@@ -56,6 +56,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     uintn spdm_response_size;
     large_managed_buffer_t certificate_chain_buffer;
     spdm_context_t *spdm_context;
+    uint16_t total_responder_cert_chain_buffer_length;
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
@@ -93,7 +94,11 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
         spdm_request.header.param2 = 0;
         spdm_request.offset = (uint16_t)get_managed_buffer_size(
             &certificate_chain_buffer);
-        spdm_request.length = length;
+        if (spdm_request.offset == 0) {
+            spdm_request.length = length;
+        } else {
+            spdm_request.length = MIN(length, spdm_response.remainder_length);
+        }
         DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                spdm_request.offset, spdm_request.length));
 
@@ -144,8 +149,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
-        if (spdm_response.portion_length >
-            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
+        if ((spdm_response.portion_length > spdm_request.length) || (spdm_response.portion_length == 0)) {
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
@@ -158,11 +162,18 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
+        if (spdm_request.offset == 0) {
+            total_responder_cert_chain_buffer_length = spdm_response.portion_length + spdm_response.remainder_length;
+        } else if (spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length != total_responder_cert_chain_buffer_length) {
+            status = RETURN_DEVICE_ERROR;
+            goto done;
+        }
+
         spdm_response_size = sizeof(spdm_certificate_response_t) +
                      spdm_response.portion_length;
-        
+
         /* Cache data*/
-        
+
         status = libspdm_append_message_b(spdm_context, &spdm_request,
                            sizeof(spdm_request));
         if (RETURN_ERROR(status)) {
