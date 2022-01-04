@@ -246,6 +246,11 @@ return_status spdm_get_response_algorithms(IN void *context,
     ASSERT(!(((spdm_context->local_context.capability.flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
         (spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
 
+    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+        return libspdm_generate_error_response(spdm_context,
+                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         response_size, response);
+    }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return spdm_responder_handle_response_state(
             spdm_context,
