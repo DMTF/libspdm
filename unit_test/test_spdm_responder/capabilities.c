@@ -650,9 +650,6 @@ void test_spdm_responder_capabilities_case7(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
-
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-
     response_size = sizeof(response);
     status = spdm_get_response_capabilities(
         spdm_context, m_spdm_get_capabilities_request3_size,

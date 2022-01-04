@@ -40,6 +40,12 @@ return_status spdm_get_encap_response_key_update(IN void *context,
     spdm_context = context;
     spdm_request = request;
 
+    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+        return libspdm_generate_encap_error_response(
+            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+            SPDM_KEY_UPDATE, response_size, response);
+    }
+
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
