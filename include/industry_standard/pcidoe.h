@@ -54,6 +54,45 @@ typedef struct {
     uint8_t next_index;
 } pci_doe_discovery_response_t;
 
+
+/* SPDM Vendor Defined Message for PCI DOE*/
+
+
+/* PCI Protocol definition*/
+
+typedef struct {
+    uint8_t protocol_id;
+} pci_protocol_header_t;
+
+#define PCI_PROTOCOL_ID_IDE_KM 0x00
+
+typedef struct {
+    spdm_message_header_t spdm_header;
+    /* param1 == RSVD*/
+    /* param2 == RSVD*/
+    uint16_t standard_id; /* SPDM_STANDARD_ID_PCISIG*/
+    uint8_t len;
+    uint16_t vendor_id;  /* SPDM_VENDOR_ID_PCISIG*/
+    uint16_t payload_length;
+    pci_protocol_header_t pci_protocol;
+} pci_doe_spdm_vendor_defined_request_t;
+
+/* Standard ID and Vendor ID for PCISIG*/
+
+#define SPDM_STANDARD_ID_PCISIG SPDM_REGISTRY_ID_PCISIG
+#define SPDM_VENDOR_ID_PCISIG 0x0001
+
+typedef struct {
+    spdm_message_header_t spdm_header;
+    /* param1 == RSVD*/
+    /* param2 == RSVD*/
+    uint16_t standard_id; /* SPDM_STANDARD_ID_PCISIG*/
+    uint8_t len;
+    uint16_t vendor_id;  /* SPDM_VENDOR_ID_PCISIG*/
+    uint16_t payload_length;
+    pci_protocol_header_t pci_protocol;
+} pci_doe_spdm_vendor_defined_response_t;
+
 #pragma pack()
 
 #endif

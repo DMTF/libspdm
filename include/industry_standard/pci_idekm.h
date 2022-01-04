@@ -12,25 +12,7 @@
 #define __PCI_IDE_KM_H__
 
 
-/* Standard ID and Vendor ID for PCISIG*/
-
-#define SPDM_STANDARD_ID_PCISIG SPDM_REGISTRY_ID_PCISIG
-#define SPDM_VENDOR_ID_PCISIG 0x0001
-
 #pragma pack(1)
-
-
-/* PCI Protocol definition*/
-
-typedef struct {
-    uint8_t protocol_id;
-} pci_protocol_header_t;
-
-
-/* IDE_KM Definition*/
-
-#define PCI_PROTOCAL_ID_IDE_KM 0x00
-
 
 /* IDE_KM header*/
 
