@@ -57,8 +57,8 @@ openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha256 -ba
 openssl req -nodes -newkey rsa:2048 -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "/CN=intel test RSA requseter cert"
 openssl req -nodes -newkey rsa:2048 -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "/CN=intel test RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -70,14 +70,14 @@ openssl rsa -inform PEM -outform DER -in end_requester.key -out end_requester.ke
 popd
 
 pushd rsa3072
-openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha384 -subj "/CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha384 -subj "//CN=intel test RSA CA"
 openssl rsa -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha384 -batch -subj "/CN=intel test RSA intermediate cert"
-openssl req -nodes -newkey rsa:3072 -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "/CN=intel test RSA requseter cert"
-openssl req -nodes -newkey rsa:3072 -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "/CN=intel test RSA responder cert"
+openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=intel test RSA intermediate cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=intel test RSA requseter cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=intel test RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -95,8 +95,8 @@ openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha512 -ba
 openssl req -nodes -newkey rsa:4096 -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=intel test RSA requseter cert"
 openssl req -nodes -newkey rsa:4096 -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=intel test RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -117,8 +117,8 @@ openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha256
 openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "/CN=intel test ECP256 requseter cert"
 openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "/CN=intel test ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -139,8 +139,8 @@ openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha384
 openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "/CN=intel test ECP256 requseter cert"
 openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "/CN=intel test ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -161,8 +161,8 @@ openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha512
 openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=intel test ECP256 requseter cert"
 openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=intel test ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 365 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 365 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
@@ -229,13 +229,13 @@ popd
 
 pushd sm2
 openssl ecparam -genkey -name SM2 -out ca.key
-openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sha256 -subj "/CN=intel test SM2 CA"
+openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sha256 -subj "//CN=intel test SM2 CA"
 openssl ecparam -genkey -name SM2 -out inter.key
 openssl ecparam -genkey -name SM2 -out end_requester.key
 openssl ecparam -genkey -name SM2 -out end_responder.key
-openssl req -new -key inter.key -out inter.req -sha256 -batch -subj '/CN=intel test SM2 intermediate cert'
-openssl req -new -key end_requester.key -out end_requester.req -sha256 -batch -subj '/CN=intel test SM2 requseter cert'
-openssl req -new -key end_responder.key -out end_responder.req -sha256 -batch -subj '/CN=intel test SM2 responder cert'
+openssl req -new -key inter.key -out inter.req -sha256 -batch -subj '//CN=intel test SM2 intermediate cert'
+openssl req -new -key end_requester.key -out end_requester.req -sha256 -batch -subj '//CN=intel test SM2 requseter cert'
+openssl req -new -key end_responder.key -out end_responder.req -sha256 -batch -subj '//CN=intel test SM2 responder cert'
 openssl x509 -req -days 3650 -in inter.req -CA ca.cert -CAkey ca.key -out inter.cert -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
@@ -253,13 +253,18 @@ popd
 
 === long_chains Certificate Chains ===
 
-pushd long_chains
-
 For CA cert:
 openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_ca.key
 openssl req -nodes -x509 -days 3650 -key ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_ca.cert -sha256 -subj "/CN=intel test RSA CA"
 
 For inter cert:
+openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_inter1.key
+openssl req -new -key ShorterMAXUINT16_inter1.key -out ShorterMAXUINT16_inter1.req -sha256 -batch -subj '/CN=intel test RSA intermediate cert'
+openssl x509 -req -days 3650 -in ShorterMAXUINT16_inter1.req -CA ShorterMAXUINT16_ca.cert -CAkey ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_inter1.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
+openssl asn1parse -in ShorterMAXUINT16_inter1.cert -out ShorterMAXUINT16_inter1.cert.der 
+
+// Generate the remain cert in order
+
 openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_inter47.key
 openssl req -new -key ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_inter47.req -sha256 -batch -subj '/CN=intel test RSA intermediate cert'
 openssl x509 -req -days 3650 -in ShorterMAXUINT16_inter47.req -CA ShorterMAXUINT16_inter46.cert -CAkey ShorterMAXUINT16_inter46.key -out ShorterMAXUINT16_inter47.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
@@ -274,4 +279,18 @@ openssl asn1parse -in ShorterMAXUINT16_end_responder.cert -out ShorterMAXUINT16_
 Generate cert chain:
 cat ShorterMAXUINT16_ca.cert.der ShorterMAXUINT16_inter*.cert.der ShorterMAXUINT16_end_responder.cert.der >ShorterMAXUINT16_bundle_responder.certchain.der
 
+pushd long_chains
+openssl genpkey -algorithm long_chains -out Shorter1024B_ca.key
+openssl req -nodes -x509 -days 3650 -key Shorter1024B_ca.key -out Shorter1024B_ca.cert -subj "//CN=intel test RSA CA"
+openssl genpkey -algorithm long_chains -out Shorter1024B_end_requester.key
+openssl genpkey -algorithm long_chains -out Shorter1024B_end_responder.key
+openssl req -new -key Shorter1024B_end_requester.key -out Shorter1024B_end_requester.req -batch -subj "//CN=intel test RSA requseter cert"
+openssl req -new -key Shorter1024B_end_responder.key -out Shorter1024B_end_responder.req -batch -subj "//CN=intel test RSA responder cert"
+openssl x509 -req -days 3650 -in Shorter1024B_end_requester.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in Shorter1024B_end_responder.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in Shorter1024B_ca.cert -out Shorter1024B_ca.cert.der
+openssl asn1parse -in Shorter1024B_end_requester.cert -out Shorter1024B_end_requester.cert.der
+openssl asn1parse -in Shorter1024B_end_responder.cert -out Shorter1024B_end_responder.cert.der
+cat Shorter1024B_ca.cert.der Shorter1024B_end_requester.cert.der > Shorter1024B_bundle_requester.certchain.der
+cat Shorter1024B_ca.cert.der Shorter1024B_end_responder.cert.der > Shorter1024B_bundle_responder.certchain.der
 popd
