@@ -35,7 +35,6 @@ SET(test_spdm_responder_challenge_auth_LIBRARY
     spdm_crypt_lib
     spdm_secured_message_lib
     spdm_transport_test_lib
-    spdm_device_secret_lib_null
     spdm_device_secret_lib_sample
     cmockalib
 )
@@ -54,7 +53,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
-                   $<TARGET_OBJECTS:spdm_device_secret_lib_null>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
     )
