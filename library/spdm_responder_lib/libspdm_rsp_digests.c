@@ -84,7 +84,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     }
     if (no_local_cert_chain) {
         return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
             SPDM_GET_DIGESTS, response_size, response);
     }
 
@@ -122,9 +122,9 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
                 0, response_size, response);
         }
     }
-    
+
     /* Cache*/
-    
+
     status = libspdm_append_message_b(spdm_context, spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
