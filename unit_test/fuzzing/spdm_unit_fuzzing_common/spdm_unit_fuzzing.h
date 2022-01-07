@@ -62,4 +62,10 @@ spdm_test_context_t *get_spdm_test_context(void);
 boolean read_input_file(IN char8 *file_name, OUT void **file_data,
             OUT uintn *file_size);
 
+void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
+
+void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
+
+void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
+            
 #endif
