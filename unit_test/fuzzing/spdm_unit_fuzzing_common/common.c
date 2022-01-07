@@ -88,3 +88,44 @@ boolean read_input_file(IN char8 *file_name, OUT void **file_data,
 
     return TRUE;
 }
+
+void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size)
+{
+    uintn index;
+
+    for (index = 0; index < buffer_size; index++) {
+        printf("%02x", buffer[index]);
+    }
+}
+
+void dump_data(IN uint8_t *buffer, IN uintn buffer_size)
+{
+    uintn index;
+
+    for (index = 0; index < buffer_size; index++) {
+        printf("%02x ", buffer[index]);
+    }
+}
+
+void dump_hex(IN uint8_t *data, IN uintn size)
+{
+    uintn index;
+    uintn count;
+    uintn left;
+
+#define COLUME_SIZE (16 * 2)
+
+    count = size / COLUME_SIZE;
+    left = size % COLUME_SIZE;
+    for (index = 0; index < count; index++) {
+        printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
+        dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
+        printf("\n");
+    }
+
+    if (left != 0) {
+        printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
+        dump_data(data + index * COLUME_SIZE, left);
+        printf("\n");
+    }
+}
