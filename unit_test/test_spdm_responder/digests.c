@@ -435,7 +435,7 @@ void test_spdm_responder_digests_case8(void **state)
 
 /**
   Test 9: receives a valid GET_DIGESTS request message from Requester, but there is no local certificate chain, i.e. there is no digest to send
-  Expected Behavior: produces an ERROR response message with error code = UnsupportedRequest
+  Expected Behavior: produces an ERROR response message with error code = Unspecified
 **/
 void test_spdm_responder_digests_case9(void **state)
 {
@@ -477,7 +477,7 @@ void test_spdm_responder_digests_case9(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
              SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+             SPDM_ERROR_CODE_UNSPECIFIED);
     assert_int_equal(spdm_response->header.param2, SPDM_GET_DIGESTS);
 }
 
