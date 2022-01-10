@@ -13,25 +13,20 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(IN void *spdm_context,
-                       IN uintn request_size, IN void *request,
-                       IN uint64_t timeout)
+return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_size,
+                                       IN void *request, IN uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status spdm_device_receive_message(IN void *spdm_context,
-                      IN OUT uintn *response_size,
-                      IN OUT void *response,
-                      IN uint64_t timeout)
+return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
+                                          IN OUT void *response, IN uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
     spdm_test_context = get_spdm_test_context();
     *response_size = spdm_test_context->test_buffer_size;
-    copy_mem(response, spdm_test_context->test_buffer,
-         spdm_test_context->test_buffer_size);
-
+    copy_mem(response, spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
     return RETURN_SUCCESS;
 }
 
@@ -42,6 +37,11 @@ void test_spdm_requester_get_capabilities(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
 
     spdm_get_capabilities(spdm_context);
 }
@@ -62,10 +62,9 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_requester_context.test_buffer = test_buffer;
     test_spdm_requester_context.test_buffer_size = test_buffer_size;
 
-    spdm_unit_test_group_setup(&State);
-
     /* Successful response*/
+    spdm_unit_test_group_setup(&State);
     test_spdm_requester_get_capabilities(&State);
-
     spdm_unit_test_group_teardown(&State);
+    
 }
