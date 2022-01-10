@@ -7,6 +7,38 @@
 #include "internal/libspdm_common_lib.h"
 
 /**
+  Sort SPDMversion in descending order.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  ver_set                    A pointer to the version set.
+  @param  ver_num                    Version number.
+*/
+void spdm_secured_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
+{
+    uintn index;
+    uintn index_sort;
+    uintn index_max;
+    spdm_version_number_t version;
+
+    /* Select sort */
+    if (ver_num > 1) {
+        for (index_sort = 0; index_sort < ver_num; index_sort++) {
+            index_max = index_sort;
+            for (index = index_sort + 1; index < ver_num; index++) {
+                /* if ver_ser[index] higher than ver_set[index_max] */
+                if (ver_set[index] > ver_set[index_max]) {
+                    index_max = index;
+                }
+            }
+            /* swap ver_ser[index_min] and ver_set[index_sort] */
+            version = ver_set[index_sort];
+            ver_set[index_sort] = ver_set[index_max];
+            ver_set[index_max] = version;
+        }
+    }
+}
+
+/**
   Return the size in bytes of opaque data version selection.
 
   This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
@@ -141,13 +173,15 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
     opaque_element_support_version->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
-    opaque_element_support_version->version_count = 1;
+    opaque_element_support_version->version_count = spdm_context->local_context.secured_message_version.spdm_version_count;
 
     versions_list = (void *)(opaque_element_support_version + 1);
-    versions_list[0] = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    copy_mem(versions_list,
+        spdm_context->local_context.secured_message_version.spdm_version,
+        spdm_context->local_context.secured_message_version.spdm_version_count * sizeof(spdm_version_number_t));
 
     /* Zero Padding*/
-    end = versions_list + 1;
+    end = versions_list + spdm_context->local_context.secured_message_version.spdm_version_count;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
 
     return RETURN_SUCCESS;
@@ -178,6 +212,8 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     secured_message_opaque_element_supported_version_t
         *opaque_element_support_version;
     spdm_version_number_t *versions_list;
+    uint8_t secured_message_version_index;
+    uint8_t versions_list_index;
 
     if (spdm_context->local_context.secured_message_version
             .spdm_version_count == 0) {
@@ -220,15 +256,29 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) ||
         (opaque_element_support_version->sm_data_id !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION) ||
-        (opaque_element_support_version->version_count != 1)) {
+        (opaque_element_support_version->version_count == 0)) {
         return RETURN_UNSUPPORTED;
     }
     versions_list = (void *)(opaque_element_support_version + 1);
-    if ((versions_list[0] >> SPDM_VERSION_NUMBER_SHIFT_BIT) != SPDM_MESSAGE_VERSION_11) {
-        return RETURN_UNSUPPORTED;
+
+    spdm_secured_version_number_sort(versions_list, spdm_context->local_context.secured_message_version.spdm_version_count);
+    spdm_secured_version_number_sort(spdm_context->local_context.secured_message_version.spdm_version, spdm_context->local_context.secured_message_version.spdm_version_count);
+
+    for (secured_message_version_index = 0;
+        secured_message_version_index < spdm_context->local_context.secured_message_version.spdm_version_count;
+        secured_message_version_index ++) {
+        for (versions_list_index = 0;
+            versions_list_index < spdm_context->local_context.secured_message_version.spdm_version_count;
+            versions_list_index ++) {
+            if (spdm_get_version_from_version_number(versions_list[versions_list_index]) ==
+                spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version.spdm_version[secured_message_version_index])) {
+                spdm_context->connection_info.secured_message_version = versions_list[versions_list_index];
+                return RETURN_SUCCESS;
+            }
+        }
     }
 
-    return RETURN_SUCCESS;
+    return RETURN_UNSUPPORTED;
 }
 
 /**
@@ -304,7 +354,7 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     opaque_element_version_section->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
     opaque_element_version_section->selected_version =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_context->connection_info.secured_message_version;
     /* Zero Padding*/
     end = opaque_element_version_section + 1;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
@@ -336,6 +386,7 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
         *opaque_element_table_header;
     secured_message_opaque_element_version_selection_t
         *opaque_element_version_section;
+    uint8_t secured_message_version_index;
 
     if (spdm_context->local_context.secured_message_version
             .spdm_version_count == 0) {
@@ -375,9 +426,18 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     if ((opaque_element_version_section->sm_data_version !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) ||
         (opaque_element_version_section->sm_data_id !=
-         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION) ||
-        ((opaque_element_version_section->selected_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) !=
-         SPDM_MESSAGE_VERSION_11)) {
+         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION)) {
+        return RETURN_UNSUPPORTED;
+    }
+
+    for (secured_message_version_index = 0;
+        secured_message_version_index < spdm_context->local_context.secured_message_version.spdm_version_count;
+        secured_message_version_index ++) {
+
+        if (spdm_get_version_from_version_number(opaque_element_version_section->selected_version) ==
+            spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version.spdm_version[secured_message_version_index])) {
+            break;
+        }
         return RETURN_UNSUPPORTED;
     }
 
