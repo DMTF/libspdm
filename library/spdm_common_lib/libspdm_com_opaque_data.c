@@ -6,37 +6,6 @@
 
 #include "internal/libspdm_common_lib.h"
 
-/**
-  Sort SPDMversion in descending order.
-
-  @param  spdm_context                A pointer to the SPDM context.
-  @param  ver_set                    A pointer to the version set.
-  @param  ver_num                    Version number.
-*/
-void spdm_secured_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
-{
-    uintn index;
-    uintn index_sort;
-    uintn index_max;
-    spdm_version_number_t version;
-
-    /* Select sort */
-    if (ver_num > 1) {
-        for (index_sort = 0; index_sort < ver_num; index_sort++) {
-            index_max = index_sort;
-            for (index = index_sort + 1; index < ver_num; index++) {
-                /* if ver_ser[index] higher than ver_set[index_max] */
-                if (ver_set[index] > ver_set[index_max]) {
-                    index_max = index;
-                }
-            }
-            /* swap ver_ser[index_min] and ver_set[index_sort] */
-            version = ver_set[index_sort];
-            ver_set[index_sort] = ver_set[index_max];
-            ver_set[index_max] = version;
-        }
-    }
-}
 
 /**
   Return the size in bytes of opaque data version selection.
@@ -261,8 +230,8 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     }
     versions_list = (void *)(opaque_element_support_version + 1);
 
-    spdm_secured_version_number_sort(versions_list, spdm_context->local_context.secured_message_version.spdm_version_count);
-    spdm_secured_version_number_sort(spdm_context->local_context.secured_message_version.spdm_version, spdm_context->local_context.secured_message_version.spdm_version_count);
+    spdm_version_number_sort(versions_list, spdm_context->local_context.secured_message_version.spdm_version_count);
+    spdm_version_number_sort(spdm_context->local_context.secured_message_version.spdm_version, spdm_context->local_context.secured_message_version.spdm_version_count);
 
     for (secured_message_version_index = 0;
         secured_message_version_index < spdm_context->local_context.secured_message_version.spdm_version_count;
