@@ -215,6 +215,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
 
+        ((spdm_context_t *)spdm_context)->connection_info.secured_message_version =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((spdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_asym_algo =
             m_use_asym_algo;
@@ -1206,6 +1208,9 @@ void test_spdm_requester_key_exchange_case2(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.spdm_version[0] =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
                         m_use_asym_algo, &data,
                         &data_size, &hash, &hash_size);
