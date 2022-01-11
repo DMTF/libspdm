@@ -1901,3 +1901,35 @@ uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
 {
     return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
+
+/**
+  Sort SPDMversion in descending order.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  ver_set                    A pointer to the version set.
+  @param  ver_num                    Version number.
+*/
+void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
+{
+    uintn index;
+    uintn index_sort;
+    uintn index_max;
+    spdm_version_number_t version;
+
+    /* Select sort */
+    if (ver_num > 1) {
+        for (index_sort = 0; index_sort < ver_num; index_sort++) {
+            index_max = index_sort;
+            for (index = index_sort + 1; index < ver_num; index++) {
+                /* if ver_ser[index] higher than ver_set[index_max] */
+                if (ver_set[index] > ver_set[index_max]) {
+                    index_max = index;
+                }
+            }
+            /* swap ver_ser[index_min] and ver_set[index_sort] */
+            version = ver_set[index_sort];
+            ver_set[index_sort] = ver_set[index_max];
+            ver_set[index_max] = version;
+        }
+    }
+}

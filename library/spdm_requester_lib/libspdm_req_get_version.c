@@ -17,57 +17,6 @@ typedef struct {
 
 
 /**
-  Compare SPDMversion feild of spdm_version_number_t.
-
-  @param  spdm_context                A pointer to the SPDM context.
-  @param  first_ver                    First version number.
-  @param  seccond_ver                Second version number.
-
-  @retval TRUE                        First version is higher than seccond version.
-  @retval FALSE                        First version is not higher than seccond version.
-*/
-boolean spdm_version_number_compare(IN spdm_version_number_t first_ver, IN spdm_version_number_t seccond_ver)
-{
-    uint8_t first_version;
-    uint8_t seccond_version;
-
-    first_version = spdm_get_version_from_version_number(first_ver);
-    seccond_version = spdm_get_version_from_version_number(seccond_ver);
-    return (first_version > seccond_version);
-}
-
-/**
-  Sort SPDMversion in descending order.
-
-  @param  spdm_context                A pointer to the SPDM context.
-  @param  ver_set                    A pointer to the version set.
-  @param  ver_num                    Version number.
-*/
-void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
-{
-    uintn index;
-    uintn index_sort;
-    uintn index_max;
-    spdm_version_number_t version;
-
-    /* Select sort */
-    if (ver_num > 1) {
-        for (index_sort = 0; index_sort < ver_num; index_sort++) {
-            index_max = index_sort;
-            for (index = index_sort + 1; index < ver_num; index++) {
-                /* if ver_ser[index] higher than ver_set[index_max] */
-                if (spdm_version_number_compare(ver_set[index], ver_set[index_max])) {
-                    index_max = index;
-                }
-            }
-            /* swap ver_ser[index_min] and ver_set[index_sort] */
-            version = ver_set[index_sort];
-            ver_set[index_sort] = ver_set[index_max];
-            ver_set[index_max] = version;
-        }
-    }
-}
-/**
   Negotiate SPDMversion for connection.
   ver_set is the local version set of requester, res_ver_set is the version set of responder.
 

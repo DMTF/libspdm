@@ -1027,4 +1027,14 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
   @return the SPDMversion of the version number struct.
 **/
 uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver);
+
+/**
+  Sort SPDMversion in descending order.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  ver_set                    A pointer to the version set.
+  @param  ver_num                    Version number.
+*/
+void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num);
+
 #endif
