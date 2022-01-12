@@ -39,7 +39,7 @@ return_status spdm_get_response_respond_if_ready(IN void *context,
 
     if (spdm_request->spdm_version != spdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
-                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                         SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                          response_size, response);
     }
     if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC ||
