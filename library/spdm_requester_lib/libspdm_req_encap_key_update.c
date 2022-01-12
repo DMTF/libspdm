@@ -42,7 +42,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
 
     if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+            spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH,
             SPDM_KEY_UPDATE, response_size, response);
     }
 
