@@ -17,70 +17,6 @@ typedef struct {
 
 
 /**
-  Negotiate SPDMversion for connection.
-  ver_set is the local version set of requester, res_ver_set is the version set of responder.
-
-  @param  spdm_context                A pointer to the SPDM context.
-  @param  req_ver_set                A pointer to the requester version set.
-  @param  req_ver_num                Version number of requester.
-  @param  res_ver_set                A pointer to the responder version set.
-  @param  res_ver_num                Version number of responder.
-
-  @retval TRUE                       Negotiation successfully, connect version be saved to context.
-  @retval FALSE                        Negotiation failed.
-*/
-boolean spdm_negotiate_connection_version(IN OUT void *context, IN spdm_version_number_t *req_ver_set, IN uintn req_ver_num,
-                                           IN spdm_version_number_t *res_ver_set, IN uintn res_ver_num)
-{
-    uint8_t req_version;
-    uint8_t res_version;
-    boolean ver_available;
-    uintn req_index;
-    uintn res_index;
-    spdm_context_t *spdm_context;
-
-    if (req_ver_set == NULL || req_ver_num == 0) {
-        return FALSE;
-    }
-    if (res_ver_set == NULL || res_ver_num == 0) {
-        return FALSE;
-    }
-
-    spdm_context = context;
-    ver_available = FALSE;
-    /* Sort SPDMversion in descending order. */
-    spdm_version_number_sort(req_ver_set, req_ver_num);
-    spdm_version_number_sort(res_ver_set, res_ver_num);
-    /**
-        Find highest same version and make req_index point to it.
-      If not found, ver_available will be FALSE.
-    **/
-    for (req_index = 0; req_index < req_ver_num; req_index++) {
-        req_version = spdm_get_version_from_version_number(req_ver_set[req_index]);
-        res_index = 0;
-        res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
-        while (res_index < res_ver_num - 1 && res_version > req_version) {
-            res_index++;
-            res_version = spdm_get_version_from_version_number(res_ver_set[res_index]);
-        }
-        if (req_version == res_version) {
-            ver_available = TRUE;
-            DEBUG((DEBUG_INFO,"connection ver: %x \n", req_version));
-            break;
-        }
-    }
-
-    if (ver_available == TRUE) {
-        copy_mem(&(spdm_context->connection_info.version),
-            req_ver_set + req_index,
-            sizeof(spdm_version_number_t));
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
   This function sends GET_VERSION and receives VERSION.
 
   @param  spdm_context                  A pointer to the SPDM context.
@@ -95,6 +31,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     spdm_get_version_request_t spdm_request;
     spdm_version_response_max_t spdm_response;
     uintn spdm_response_size;
+    spdm_version_number_t common_version;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
@@ -178,17 +115,19 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
         return RETURN_SECURITY_VIOLATION;
     }
 
-    
     /* spdm_negotiate_connection_version will change the spdm_response.*/
     /* It must be done after append_message_a.*/
-    
-    result = spdm_negotiate_connection_version(spdm_context, spdm_context->local_context.version.spdm_version,
+    result = spdm_negotiate_connection_version(&common_version, spdm_context->local_context.version.spdm_version,
                                     spdm_context->local_context.version.spdm_version_count,
                                     spdm_response.version_number_entry,
                                     spdm_response.version_number_entry_count);
-    if (result != TRUE) {
+    if (result == FALSE) {
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
+    } else {
+        copy_mem(&(spdm_context->connection_info.version),
+        &(common_version),
+        sizeof(spdm_version_number_t));
     }
 
     spdm_context->connection_info.connection_state =
