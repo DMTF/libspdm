@@ -181,8 +181,8 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     secured_message_opaque_element_supported_version_t
         *opaque_element_support_version;
     spdm_version_number_t *versions_list;
-    uint8_t secured_message_version_index;
-    uint8_t versions_list_index;
+    spdm_version_number_t common_version;
+    boolean result;
 
     if (spdm_context->local_context.secured_message_version
             .spdm_version_count == 0) {
@@ -230,24 +230,18 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     }
     versions_list = (void *)(opaque_element_support_version + 1);
 
-    spdm_version_number_sort(versions_list, spdm_context->local_context.secured_message_version.spdm_version_count);
-    spdm_version_number_sort(spdm_context->local_context.secured_message_version.spdm_version, spdm_context->local_context.secured_message_version.spdm_version_count);
-
-    for (secured_message_version_index = 0;
-        secured_message_version_index < spdm_context->local_context.secured_message_version.spdm_version_count;
-        secured_message_version_index ++) {
-        for (versions_list_index = 0;
-            versions_list_index < spdm_context->local_context.secured_message_version.spdm_version_count;
-            versions_list_index ++) {
-            if (spdm_get_version_from_version_number(versions_list[versions_list_index]) ==
-                spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version.spdm_version[secured_message_version_index])) {
-                spdm_context->connection_info.secured_message_version = versions_list[versions_list_index];
-                return RETURN_SUCCESS;
-            }
-        }
+    result = spdm_negotiate_connection_version(&common_version, spdm_context->local_context.secured_message_version.spdm_version,
+                                    spdm_context->local_context.secured_message_version.spdm_version_count,
+                                    versions_list,
+                                    opaque_element_support_version->version_count);
+    if (result == FALSE) {
+        return RETURN_UNSUPPORTED;
     }
+    copy_mem(&(spdm_context->connection_info.secured_message_version),
+    &(common_version),
+    sizeof(spdm_version_number_t));
 
-    return RETURN_UNSUPPORTED;
+    return RETURN_SUCCESS;
 }
 
 /**
