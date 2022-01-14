@@ -8,6 +8,7 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "toolchain_harness.h"
+#include "library/malloclib.h"
 
 #ifdef TEST_WITH_LIBFUZZER
 #include <stdint.h>
