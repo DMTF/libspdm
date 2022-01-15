@@ -92,6 +92,7 @@ return_status spdm_process_encap_response_certificate(
     uintn spdm_response_size;
     boolean result;
     return_status status;
+    uint16_t request_offset;
 
     spdm_context->encap_context.error_state =
         LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
@@ -119,7 +120,13 @@ return_status spdm_process_encap_response_certificate(
     if (encap_response_size < sizeof(spdm_certificate_response_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response->portion_length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
+    if ((spdm_response->portion_length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) || (spdm_response->portion_length == 0)) {
+        return RETURN_DEVICE_ERROR;
+    }
+    request_offset = (uint16_t)get_managed_buffer_size(&spdm_context->encap_context.certificate_chain_buffer);
+    if (request_offset == 0) {
+        spdm_context->encap_context.cert_chain_total_len = spdm_response->portion_length + spdm_response->remainder_length;
+    } else if (spdm_context->encap_context.cert_chain_total_len != request_offset + spdm_response->portion_length + spdm_response->remainder_length) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->header.param1 !=
