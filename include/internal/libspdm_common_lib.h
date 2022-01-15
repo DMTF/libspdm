@@ -269,6 +269,7 @@ typedef struct {
     uint8_t req_slot_id;
     spdm_message_header_t last_encap_request_header;
     uintn last_encap_request_size;
+    uint16_t cert_chain_total_len;
     large_managed_buffer_t certificate_chain_buffer;
 } spdm_encap_context_t;
 
