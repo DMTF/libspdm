@@ -129,6 +129,12 @@ return_status spdm_requester_get_certificate_test_send_message(
         return RETURN_SUCCESS;
     case 0x13:
         return RETURN_SUCCESS;
+    case 0x14:
+        return RETURN_SUCCESS;
+    case 0x15:
+        return RETURN_SUCCESS;
+    case 0x16:
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -1235,6 +1241,202 @@ return_status spdm_requester_get_certificate_test_receive_message(
         }
     }
         return RETURN_SUCCESS;
+
+    case 0x14: {
+        spdm_certificate_response_t *spdm_response;
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uintn temp_buf_size;
+        uint16_t portion_length;
+        uint16_t remainder_length;
+        uintn count;
+        static uintn calling_index = 0;
+
+        if (m_local_certificate_chain == NULL) {
+            read_responder_public_certificate_chain(
+                m_use_hash_algo, m_use_asym_algo,
+                &m_local_certificate_chain,
+                &m_local_certificate_chain_size, NULL, NULL);
+        }
+        if (m_local_certificate_chain == NULL) {
+            return RETURN_OUT_OF_RESOURCES;
+        }
+        count = (m_local_certificate_chain_size +
+             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
+            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        if (calling_index != count - 1) {
+            portion_length = 0; /* Fail response: responder return portion_length is 0.*/
+            remainder_length =
+                (uint16_t)(m_local_certificate_chain_size -
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
+                         (calling_index + 1));
+        } else {
+            portion_length = (uint16_t)(
+                m_local_certificate_chain_size -
+                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (count - 1));
+            remainder_length = 0;
+        }
+
+        temp_buf_size =
+            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response = (void *)temp_buf;
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->portion_length = portion_length;
+        spdm_response->remainder_length = remainder_length;
+        copy_mem(spdm_response + 1,
+             (uint8_t *)m_local_certificate_chain +
+                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+             portion_length);
+
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, temp_buf_size,
+                           temp_buf, response_size,
+                           response);
+
+        calling_index++;
+        if (calling_index == count) {
+            calling_index = 0;
+            free(m_local_certificate_chain);
+            m_local_certificate_chain = NULL;
+            m_local_certificate_chain_size = 0;
+        }
+    }
+        return RETURN_SUCCESS;
+
+    case 0x15: {
+        spdm_certificate_response_t *spdm_response;
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uintn temp_buf_size;
+        uint16_t portion_length;
+        uint16_t remainder_length;
+        uintn count;
+        static uintn calling_index = 0;
+
+        if (m_local_certificate_chain == NULL) {
+            read_responder_public_certificate_chain(
+                m_use_hash_algo, m_use_asym_algo,
+                &m_local_certificate_chain,
+                &m_local_certificate_chain_size, NULL, NULL);
+        }
+        if (m_local_certificate_chain == NULL) {
+            return RETURN_OUT_OF_RESOURCES;
+        }
+        count = (m_local_certificate_chain_size +
+             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
+            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        if (calling_index != count - 1) {
+            portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1; /* Fail response: responder return portion_length > spdm_request.length*/
+            remainder_length =
+                (uint16_t)(m_local_certificate_chain_size -
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
+                         (calling_index + 1));
+        } else {
+            portion_length = (uint16_t)(
+                m_local_certificate_chain_size -
+                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (count - 1));
+            remainder_length = 0;
+        }
+
+        temp_buf_size =
+            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response = (void *)temp_buf;
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->portion_length = portion_length;
+        spdm_response->remainder_length = remainder_length;
+        copy_mem(spdm_response + 1,
+             (uint8_t *)m_local_certificate_chain +
+                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+             portion_length);
+
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, temp_buf_size,
+                           temp_buf, response_size,
+                           response);
+
+        calling_index++;
+        if (calling_index == count) {
+            calling_index = 0;
+            free(m_local_certificate_chain);
+            m_local_certificate_chain = NULL;
+            m_local_certificate_chain_size = 0;
+        }
+    }
+        return RETURN_SUCCESS;
+
+    case 0x16: {
+        spdm_certificate_response_t *spdm_response;
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uintn temp_buf_size;
+        uint16_t portion_length;
+        uint16_t remainder_length;
+        uintn count;
+        static uintn calling_index = 0;
+
+        if (m_local_certificate_chain == NULL) {
+            read_responder_public_certificate_chain(
+                m_use_hash_algo, m_use_asym_algo,
+                &m_local_certificate_chain,
+                &m_local_certificate_chain_size, NULL, NULL);
+        }
+        if (m_local_certificate_chain == NULL) {
+            return RETURN_OUT_OF_RESOURCES;
+        }
+        count = (m_local_certificate_chain_size +
+             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
+            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        if (calling_index != count - 1) {
+            portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+            /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+            total_responder_cert_chain_buffer_length.*/
+            remainder_length =
+                (uint16_t)(m_local_certificate_chain_size - 1 -
+                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *(calling_index + 1));
+
+        } else {
+            portion_length = (uint16_t)(
+                m_local_certificate_chain_size -
+                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (count - 1));
+            remainder_length = 0;
+        }
+
+        temp_buf_size =
+            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response = (void *)temp_buf;
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->portion_length = portion_length;
+        spdm_response->remainder_length = remainder_length;
+        copy_mem(spdm_response + 1,
+             (uint8_t *)m_local_certificate_chain +
+                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+             portion_length);
+
+        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
+                           FALSE, temp_buf_size,
+                           temp_buf, response_size,
+                           response);
+
+        calling_index++;
+        if (calling_index == count) {
+            calling_index = 0;
+            free(m_local_certificate_chain);
+            m_local_certificate_chain = NULL;
+            m_local_certificate_chain_size = 0;
+        }
+    }
+        return RETURN_SUCCESS;
+
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -2437,6 +2639,179 @@ void test_spdm_requester_get_certificate_case19(void **state)
     free(data);
 }
 
+/**
+  Test 20: Fail case, request a certificate chain, responder return portion_length is 0.
+  Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_certificate_case20(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    void *data;
+    uintn data_size;
+    void *hash;
+    uintn hash_size;
+    uint8_t *root_cert;
+    uintn root_cert_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x14;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    read_responder_public_certificate_chain(m_use_hash_algo,
+                        m_use_asym_algo, &data,
+                        &data_size, &hash, &hash_size);
+    x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+                        data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+                        &root_cert, &root_cert_size);
+        DEBUG((DEBUG_INFO, "root cert data :\n"));
+        internal_dump_hex(
+            root_cert,
+            root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] =
+        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
+    spdm_context->local_context.peer_cert_chain_provision = NULL;
+    spdm_context->local_context.peer_cert_chain_provision_size = 0;
+    libspdm_reset_message_b(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_use_req_asym_algo;
+
+    cert_chain_size = sizeof(cert_chain);
+    zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+                      cert_chain);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    free(data);
+}
+
+/**
+  Test 21: Fail case, request a certificate chain, responder return portion_length > spdm_request.length.
+  Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_certificate_case21(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    void *data;
+    uintn data_size;
+    void *hash;
+    uintn hash_size;
+    uint8_t *root_cert;
+    uintn root_cert_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    read_responder_public_certificate_chain(m_use_hash_algo,
+                        m_use_asym_algo, &data,
+                        &data_size, &hash, &hash_size);
+    x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+                        data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+                        &root_cert, &root_cert_size);
+        DEBUG((DEBUG_INFO, "root cert data :\n"));
+        internal_dump_hex(
+            root_cert,
+            root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] =
+        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
+    spdm_context->local_context.peer_cert_chain_provision = NULL;
+    spdm_context->local_context.peer_cert_chain_provision_size = 0;
+    libspdm_reset_message_b(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_use_req_asym_algo;
+
+    cert_chain_size = sizeof(cert_chain);
+    zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+                      cert_chain);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    free(data);
+}
+
+/**
+  Test 22: Fail case, request a certificate chain,
+  spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+  total_responder_cert_chain_buffer_length.
+  Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
+**/
+void test_spdm_requester_get_certificate_case22(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uintn cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    void *data;
+    uintn data_size;
+    void *hash;
+    uintn hash_size;
+    uint8_t *root_cert;
+    uintn root_cert_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    read_responder_public_certificate_chain(m_use_hash_algo,
+                        m_use_asym_algo, &data,
+                        &data_size, &hash, &hash_size);
+    x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+                        data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+                        &root_cert, &root_cert_size);
+        DEBUG((DEBUG_INFO, "root cert data :\n"));
+        internal_dump_hex(
+            root_cert,
+            root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] =
+        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
+    spdm_context->local_context.peer_cert_chain_provision = NULL;
+    spdm_context->local_context.peer_cert_chain_provision_size = 0;
+    libspdm_reset_message_b(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_use_req_asym_algo;
+
+    cert_chain_size = sizeof(cert_chain);
+    zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+                      cert_chain);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    free(data);
+}
+
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     TRUE,
@@ -2485,6 +2860,13 @@ int spdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(test_spdm_requester_get_certificate_case18),
         /* Fail response: one certificate in the retrieved certificate chain past its expiration date.*/
         cmocka_unit_test(test_spdm_requester_get_certificate_case19),
+        /* Fail response: responder return portion_length is 0.*/
+        cmocka_unit_test(test_spdm_requester_get_certificate_case20),
+        /* Fail response: responder return portion_length > spdm_request.length*/
+        cmocka_unit_test(test_spdm_requester_get_certificate_case21),
+        /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+         total_responder_cert_chain_buffer_length.*/
+        cmocka_unit_test(test_spdm_requester_get_certificate_case22),
     };
 
     setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);
