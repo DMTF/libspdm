@@ -782,6 +782,8 @@ return_status spdm_requester_key_update_test_send_message(
         return RETURN_SUCCESS;
     case 0x22:
         return RETURN_SUCCESS;
+    case 0x23:
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -1170,6 +1172,10 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_error_response_t spdm_response;
 
         if(error_code <= 0xff) {
+            /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+            if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+                error_code++;
+            }
             zero_mem (&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
@@ -1854,6 +1860,10 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         if(error_code <= 0xff) {
+            /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+            if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+                error_code++;
+            }
             if (sub_index%2 == 0) {
                 spdm_key_update_response_t spdm_response;
 
@@ -2558,6 +2568,10 @@ return_status spdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         if(error_code <= 0xff) {
+            /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+            if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+                error_code++;
+            }
             /*use previous key to send*/
             copy_mem(curr_rsp_enc_key, secured_message_context
                      ->application_secret.response_data_encryption_key,
@@ -2611,6 +2625,34 @@ return_status spdm_requester_key_update_test_receive_message(
         if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
             error_code = SPDM_ERROR_CODE_RESERVED_FD;
         }
+    }
+        return RETURN_SUCCESS;
+
+    case 0x23: {
+        spdm_error_response_t spdm_response;
+        uint32_t session_id;
+        spdm_session_info_t    *session_info;
+
+        session_id = 0xFFFFFFFF;
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context, session_id);
+        if (session_info == NULL) {
+            return RETURN_DEVICE_ERROR;
+        }
+
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+        spdm_response.header.param2 = 0;
+
+        spdm_transport_test_encode_message(spdm_context, &session_id,
+                                           false, false, sizeof(spdm_response),
+                                           &spdm_response, response_size, response);
+        /* WALKAROUND: If just use single context to encode
+         * message and then decode message */
+        ((spdm_secured_message_context_t
+          *)(session_info->secured_message_context))
+        ->application_secret.response_data_sequence_number--;
     }
         return RETURN_SUCCESS;
 
@@ -3103,6 +3145,10 @@ void test_spdm_requester_key_update_case10(void **state)
 
     error_code = SPDM_ERROR_CODE_RESERVED_00;
     while(error_code <= 0xff) {
+        /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+        if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            error_code++;
+        }
         spdm_set_standard_key_update_test_secrets(
             session_info->secured_message_context,
             m_rsp_secret_buffer, (uint8_t)(0xFF),
@@ -3843,6 +3889,10 @@ void test_spdm_requester_key_update_case23(void **state)
 
     error_code = SPDM_ERROR_CODE_RESERVED_00;
     while(error_code <= 0xff) {
+        /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+        if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            error_code++;
+        }
         spdm_set_standard_key_update_test_secrets(
             session_info->secured_message_context,
             m_rsp_secret_buffer, (uint8_t)(0xFF),
@@ -4554,6 +4604,10 @@ void test_spdm_requester_key_update_case34(void **state)
 
     error_code = SPDM_ERROR_CODE_RESERVED_00;
     while(error_code <= 0xff) {
+        /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
+        if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            error_code++;
+        }
         spdm_set_standard_key_update_test_secrets(
             session_info->secured_message_context,
             m_rsp_secret_buffer, (uint8_t)(0xFF),
@@ -4601,6 +4655,44 @@ void test_spdm_requester_key_update_case34(void **state)
             error_code = SPDM_ERROR_CODE_RESERVED_FD;
         }
     }
+}
+
+/**
+ * Test 35: the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
+ * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
+ **/
+void test_spdm_requester_key_update_case35(void **state)
+{
+    return_status status;
+    spdm_test_context_t    *spdm_test_context;
+    spdm_context_t         *spdm_context;
+    uint32_t session_id;
+    spdm_session_info_t    *session_info;
+
+    uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_set_standard_key_update_test_state(spdm_context, &session_id);
+
+    session_info = &spdm_context->session_info[0];
+
+    spdm_set_standard_key_update_test_secrets(
+        session_info->secured_message_context,
+        m_rsp_secret_buffer, (uint8_t)(0xFF),
+        m_req_secret_buffer, (uint8_t)(0xEE));
+
+    /*no keys are updated*/
+
+    status = libspdm_key_update(spdm_context, session_id, true);
+
+    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
 }
 
 spdm_test_context_t m_spdm_requester_key_update_test_context = {
@@ -4680,6 +4772,8 @@ int spdm_requester_key_update_test_main(void)
         cmocka_unit_test(test_spdm_requester_key_update_case33),
         /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_key_update_case34),
+        /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
+        cmocka_unit_test(test_spdm_requester_key_update_case35),
     };
 
     setup_spdm_test_context(&m_spdm_requester_key_update_test_context);

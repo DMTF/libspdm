@@ -387,8 +387,10 @@ return_status libspdm_send_receive_data(IN void *context, IN uint32_t *session_i
 {
     return_status status;
     spdm_context_t *spdm_context;
+    spdm_error_response_t *spdm_response;
 
     spdm_context = context;
+    spdm_response = response;
 
     status = libspdm_send_request(spdm_context, session_id, is_app_message,
                                   request_size, request);
@@ -400,6 +402,14 @@ return_status libspdm_send_receive_data(IN void *context, IN uint32_t *session_i
                                       response_size, response);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
+    }
+
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        if ((spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
+            (session_id != NULL)) {
+            libspdm_free_session_id(spdm_context, *session_id);
+            return RETURN_SECURITY_VIOLATION;
+        }
     }
 
     return RETURN_SUCCESS;

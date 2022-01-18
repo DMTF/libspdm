@@ -132,6 +132,10 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
         goto error;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
+        if (spdm_response.header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            status = RETURN_SECURITY_VIOLATION;
+            goto error;
+        }
         status = spdm_handle_error_response_main(
             spdm_context, &session_id,
             &spdm_response_size, &spdm_response,
