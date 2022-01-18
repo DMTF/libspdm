@@ -141,6 +141,11 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
         copy_mem(m_local_buffer, &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
+    case 0x15:
+        m_local_buffer_size = 0;
+        copy_mem(m_local_buffer, &ptr[1], request_size - 1);
+        m_local_buffer_size += (request_size - 1);
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -1245,6 +1250,21 @@ return_status spdm_requester_finish_test_receive_message(
     }
         return RETURN_SUCCESS;
 
+    case 0x15: {
+        spdm_error_response_t spdm_response;
+
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+        spdm_response.header.param2 = 0;
+
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
+                                           &spdm_response,
+                                           response_size, response);
+    }
+        return RETURN_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -1620,6 +1640,7 @@ void test_spdm_requester_finish_case4(void **state)
     status = spdm_send_receive_finish(spdm_context, session_id,
                                       req_slot_id_param);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
     free(data);
 }
 
@@ -2177,7 +2198,11 @@ void test_spdm_requester_finish_case10(void **state) {
 
         status = spdm_send_receive_finish (spdm_context, session_id, req_slot_id_param);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        } else {
+            ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+        }
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
@@ -3206,6 +3231,98 @@ void test_spdm_requester_finish_case20(void **state)
     free(data);
 }
 
+/**
+ * Test 21: the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
+ * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
+ **/
+void test_spdm_requester_finish_case21(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t req_slot_id_param;
+    void *data;
+    uintn data_size;
+    void *hash;
+    uintn hash_size;
+    spdm_session_info_t *session_info;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    read_responder_public_certificate_chain(m_use_hash_algo,
+                                            m_use_asym_algo, &data,
+                                            &data_size, &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_use_aead_algo;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
+
+    session_id = 0xFFFFFFFF;
+    session_info = &spdm_context->session_info[0];
+    spdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_use_hash_algo);
+    set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    spdm_secured_message_set_response_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    req_slot_id_param = 0;
+    status = spdm_send_receive_finish(spdm_context, session_id,
+                                      req_slot_id_param);
+    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
+    free(data);
+}
+
 spdm_test_context_t m_spdm_requester_finish_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -3251,6 +3368,8 @@ int spdm_requester_finish_test_main(void)
         /* Response with invalid MAC size*/
         cmocka_unit_test(test_spdm_requester_finish_case19),
         cmocka_unit_test(test_spdm_requester_finish_case20),
+        /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
+        cmocka_unit_test(test_spdm_requester_finish_case21),
     };
 
     setup_spdm_test_context(&m_spdm_requester_finish_test_context);

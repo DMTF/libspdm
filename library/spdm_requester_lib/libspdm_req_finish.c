@@ -189,6 +189,10 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         goto error;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
+        if (spdm_response.header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            status = RETURN_SECURITY_VIOLATION;
+            goto error;
+        }
         if (spdm_response.header.param1 != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
             libspdm_reset_message_f (spdm_context, session_info);
         }

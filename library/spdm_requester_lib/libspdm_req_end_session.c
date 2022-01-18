@@ -90,6 +90,10 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
+        if (spdm_response.header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return RETURN_SECURITY_VIOLATION;
+        }
         status = spdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,

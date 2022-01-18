@@ -159,6 +159,14 @@ return_status spdm_process_encap_response_key_update(
     if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
         return RETURN_DEVICE_ERROR;
     }
+
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        if (spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return RETURN_SECURITY_VIOLATION;
+        }
+    }
+
     if ((spdm_response_size != sizeof(spdm_key_update_response_t)) ||
         (spdm_response->header.request_response_code !=
          SPDM_KEY_UPDATE_ACK) ||

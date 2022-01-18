@@ -85,6 +85,8 @@ return_status spdm_requester_psk_finish_test_send_message(IN void *spdm_context,
         return RETURN_SUCCESS;
     case 0xE:
         return RETURN_SUCCESS;
+    case 0xF:
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -580,6 +582,35 @@ return_status spdm_requester_psk_finish_test_receive_message(
         ->handshake_secret.response_handshake_sequence_number--;
     }
         return RETURN_SUCCESS;
+
+    case 0xF: {
+        spdm_error_response_t spdm_response;
+        uint32_t session_id;
+        spdm_session_info_t *session_info;
+
+        session_id = 0xFFFFFFFF;
+
+        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response.header.request_response_code = SPDM_ERROR;
+        spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+        spdm_response.header.param2 = 0;
+
+        spdm_transport_test_encode_message(spdm_context, &session_id,
+                                           false, false,
+                                           sizeof(spdm_response),
+                                           &spdm_response,
+                                           response_size, response);
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context, session_id);
+        if (session_info == NULL) {
+            return RETURN_DEVICE_ERROR;
+        }
+        ((spdm_secured_message_context_t
+          *)(session_info->secured_message_context))
+        ->handshake_secret.response_handshake_sequence_number--;
+    }
+        return RETURN_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -951,6 +982,7 @@ void test_spdm_requester_psk_finish_case4(void **state)
 
     status = spdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
     free(data);
 }
 
@@ -1529,8 +1561,11 @@ void test_spdm_requester_psk_finish_case10(void **state) {
         spdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
 
         status = spdm_send_receive_psk_finish (spdm_context, session_id);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
+            ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        } else {
+            ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+        }
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
@@ -1960,6 +1995,103 @@ void test_spdm_requester_psk_finish_case14(void **state)
     free(data);
 }
 
+/**
+ * Test 15 the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
+ * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
+ **/
+void test_spdm_requester_psk_finish_case15(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+    uint32_t session_id;
+    void *data;
+    uintn data_size;
+    void *hash;
+    uintn hash_size;
+    spdm_session_info_t *session_info;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    read_responder_public_certificate_chain(m_use_hash_algo,
+                                            m_use_asym_algo, &data,
+                                            &data_size, &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             data, data_size);
+#endif
+    zero_mem(m_local_psk_hint, 32);
+    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
+             sizeof(TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size =
+        sizeof(TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint = m_local_psk_hint;
+
+    session_id = 0xFFFFFFFF;
+    session_info = &spdm_context->session_info[0];
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    set_mem(m_dummy_key_buffer,
+            ((spdm_secured_message_context_t
+              *)(session_info->secured_message_context))
+            ->aead_key_size,
+            (uint8_t)(0xFF));
+    spdm_secured_message_set_response_handshake_encryption_key(
+        session_info->secured_message_context, m_dummy_key_buffer,
+        ((spdm_secured_message_context_t
+          *)(session_info->secured_message_context))
+        ->aead_key_size);
+    set_mem(m_dummy_salt_buffer,
+            ((spdm_secured_message_context_t
+              *)(session_info->secured_message_context))
+            ->aead_iv_size,
+            (uint8_t)(0xFF));
+    spdm_secured_message_set_response_handshake_salt(
+        session_info->secured_message_context, m_dummy_salt_buffer,
+        ((spdm_secured_message_context_t
+          *)(session_info->secured_message_context))
+        ->aead_iv_size);
+    ((spdm_secured_message_context_t *)(session_info
+                                        ->secured_message_context))
+    ->handshake_secret.response_handshake_sequence_number = 0;
+    spdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+
+    status = spdm_send_receive_psk_finish(spdm_context, session_id);
+    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
+    free(data);
+}
+
 spdm_test_context_t m_spdm_requester_psk_finish_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -1998,6 +2130,8 @@ int spdm_requester_psk_finish_test_main(void)
         cmocka_unit_test(test_spdm_requester_psk_finish_case13),
         /* Uninitialized session*/
         cmocka_unit_test(test_spdm_requester_psk_finish_case14),
+        /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
+        cmocka_unit_test(test_spdm_requester_psk_finish_case15),
     };
 
     setup_spdm_test_context(&m_spdm_requester_psk_finish_test_context);
