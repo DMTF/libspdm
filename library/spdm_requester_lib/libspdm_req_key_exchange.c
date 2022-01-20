@@ -85,6 +85,8 @@ return_status try_spdm_send_receive_key_exchange(
     uintn opaque_key_exchange_req_size;
     uint8_t th1_hash_data[64];
 
+    ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
+
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
@@ -98,9 +100,6 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_UNSUPPORTED;
     }
 
-    if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
-        return RETURN_INVALID_PARAMETER;
-    }
     if ((slot_id == 0xFF) &&
         (spdm_context->local_context.peer_cert_chain_provision_size == 0)) {
         return RETURN_INVALID_PARAMETER;
@@ -364,9 +363,9 @@ return_status try_spdm_send_receive_key_exchange(
                  sizeof(uint16_t) + opaque_length + signature_size +
                  hmac_size;
 
-    
+
     /* Cache session data*/
-    
+
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
@@ -413,9 +412,9 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    
+
     /* Fill data to calc Secret for HMAC verification*/
-    
+
     result = libspdm_secured_message_dhe_compute_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, spdm_response.exchange_data, dhe_key_size,
