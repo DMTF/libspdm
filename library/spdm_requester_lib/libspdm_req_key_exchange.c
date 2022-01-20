@@ -195,6 +195,9 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
+        libspdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context);
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
@@ -334,6 +337,10 @@ return_status try_spdm_send_receive_key_exchange(
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
+        libspdm_free_session_id(spdm_context, *session_id);
+        libspdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context);
         return RETURN_SECURITY_VIOLATION;
     }
     ptr += sizeof(uint16_t);
