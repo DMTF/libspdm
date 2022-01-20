@@ -32,6 +32,7 @@ SET(test_size_of_spdm_responder_LIBRARY
     spdm_transport_mctp_lib
     spdm_device_secret_lib_null
     intrinsiclib
+    watchdoglib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -51,6 +52,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_transport_mctp_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
                    $<TARGET_OBJECTS:intrinsiclib>
+                   $<TARGET_OBJECTS:watchdoglib>
     )
 else()
     ADD_EXECUTABLE(test_size_of_spdm_responder ${src_test_size_of_spdm_responder})

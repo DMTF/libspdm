@@ -31,6 +31,7 @@ SET(test_spdm_responder_version_LIBRARY
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null
+    watchdoglib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -48,6 +49,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
+                   $<TARGET_OBJECTS:watchdoglib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_responder_version ${src_test_spdm_responder_version})

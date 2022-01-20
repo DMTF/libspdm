@@ -5,6 +5,7 @@
 **/
 
 #include "internal/libspdm_responder_lib.h"
+#include "hal/library/watchdoglib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
@@ -359,6 +360,10 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 
         spdm_set_session_state(spdm_context, session_id,
                        LIBSPDM_SESSION_STATE_ESTABLISHED);
+        result = init_watchdog(spdm_context->local_context.heartbeat_period);
+        if (!result) {
+            return RETURN_DEVICE_ERROR;
+        }
     }
 
     return RETURN_SUCCESS;

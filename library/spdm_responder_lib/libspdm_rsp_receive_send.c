@@ -5,6 +5,7 @@
 **/
 
 #include "internal/libspdm_responder_lib.h"
+#include "hal/library/watchdoglib.h"
 
 typedef struct {
     uint8_t request_response_code;
@@ -314,9 +315,12 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     spdm_session_info_t *session_info;
     spdm_message_header_t *spdm_request;
     spdm_message_header_t *spdm_response;
+    boolean session_state_established;
+    boolean result;
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
+    session_state_established = FALSE;
 
     if (spdm_context->last_spdm_error.error_code != 0) {
         
@@ -451,11 +455,13 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                 spdm_set_session_state(
                     spdm_context, *session_id,
                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+                session_state_established = TRUE;
             }
             break;
         case SPDM_PSK_FINISH_RSP:
             spdm_set_session_state(spdm_context, *session_id,
                            LIBSPDM_SESSION_STATE_ESTABLISHED);
+            session_state_established = TRUE;
             break;
         case SPDM_END_SESSION_ACK:
             spdm_set_session_state(spdm_context, *session_id,
@@ -474,11 +480,18 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                     spdm_context,
                     spdm_context->latest_session_id,
                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+                session_state_established = TRUE;
             }
             break;
         }
     }
 
+    if (session_state_established == TRUE) {
+        result = init_watchdog(spdm_context->local_context.heartbeat_period);
+        if (!result) {
+            return RETURN_DEVICE_ERROR;
+        }
+    }
     return RETURN_SUCCESS;
 }
 

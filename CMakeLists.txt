@@ -555,6 +555,7 @@ endif()
     ADD_SUBDIRECTORY(os_stub/spdm_device_secret_lib_null)
     ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
     ADD_SUBDIRECTORY(unit_test/cmockalib)
+    ADD_SUBDIRECTORY(os_stub/watchdoglib)
 
     if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
     ADD_SUBDIRECTORY(unit_test/test_spdm_requester)

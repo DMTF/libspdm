@@ -36,6 +36,7 @@ SET(test_spdm_responder_heartbeat_ack_LIBRARY
     spdm_transport_test_lib
     spdm_device_secret_lib_sample
     cmockalib
+    watchdoglib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -54,6 +55,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
+                   $<TARGET_OBJECTS:watchdoglib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_responder_heartbeat_ack ${src_test_spdm_responder_heartbeat_ack})
