@@ -1933,58 +1933,9 @@ void test_spdm_requester_challenge_case14(void **state) {
 }
 
 /**
-  Test 15: the requester is not setup correctly to send a CHALLENGE message.
-  Specifically, it attemps to request a certificate at a slot number larger than
-  the one supported by the specification.
-  The remaining setup and message exchange were executed correctly (see Test 2).
-  Expected behavior: client returns a status of RETURN_INVALID_PARAMETER.
+  Test 15: free to be populated by test.
 **/
 void test_spdm_requester_challenge_case15(void **state) {
-  return_status        status;
-  spdm_test_context_t    *spdm_test_context;
-  spdm_context_t  *spdm_context;
-  uint8_t                measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-  void                 *data;
-  uintn                data_size;
-  void                 *hash;
-  uintn                hash_size;
-
-  spdm_test_context = *state;
-  spdm_context = spdm_test_context->spdm_context;
-  spdm_test_context->case_id = 0xF;
-  spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-  spdm_context->connection_info.capability.flags = 0;
-  spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-  read_responder_public_certificate_chain (m_use_hash_algo, m_use_asym_algo, &data, &data_size, &hash, &hash_size);
-  libspdm_reset_message_a(spdm_context);
-  libspdm_reset_message_b(spdm_context);
-  libspdm_reset_message_c(spdm_context);
-  spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
-  spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-
-  spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-  spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-  copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
-#else
-  libspdm_hash_all(
-      spdm_context->connection_info.algorithm.base_hash_algo,
-      data, data_size,
-      spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-  spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
-      libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
-  libspdm_get_leaf_cert_public_key_from_cert_chain(
-      spdm_context->connection_info.algorithm.base_hash_algo,
-      spdm_context->connection_info.algorithm.base_asym_algo,
-      data, data_size,
-      &spdm_context->connection_info.peer_used_leaf_cert_public_key);
-#endif
-
-  zero_mem (measurement_hash, sizeof(measurement_hash));
-  status = libspdm_challenge (spdm_context, SPDM_MAX_SLOT_COUNT, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, measurement_hash, NULL);
-  assert_int_equal (status, RETURN_INVALID_PARAMETER);
-  free(data);
 }
 
 /**
