@@ -399,10 +399,9 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
 
         if (spdm_get_version_from_version_number(opaque_element_version_section->selected_version) ==
             spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version.spdm_version[secured_message_version_index])) {
-            break;
+            return RETURN_SUCCESS;
         }
-        return RETURN_UNSUPPORTED;
     }
 
-    return RETURN_SUCCESS;
+    return RETURN_UNSUPPORTED;
 }
