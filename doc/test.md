@@ -268,6 +268,10 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
+   If you want to collect the code coverage of fuzzing test, please build cases with `-DGCOV=ON`.
+   ```
+   cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
+   ```
    Run cases:
    ```
    mkdir NEW_CORPUS_DIR // Copy test seeds to the folder before run test
@@ -279,13 +283,14 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    The usage of the script `fuzzing_LibFuzzer.sh` is as following:
    ```
-   Usage: ./libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh <CRYPTO> <duration>
+   Usage: ./libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh <CRYPTO> <GCOV> <duration>
    <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <GCOV> means enable Code Coverage or not: ON or OFF
    <duration> means the duration of every program keep fuzzing: NUMBER seconds
    ```
-   For example: build with `mbedtls` and every test case run 30 seconds.
+   For example: build with `mbedtls`, enable Code Coverage and every test case run 30 seconds.
    ```
-   libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh mbedtls 30
+   libspdm/unit_test/fuzzing/fuzzing_LibFuzzer.sh mbedtls ON 30
    ```
    Fuzzing output path of the script `fuzzing_LibFuzzer.sh`:
    ```
