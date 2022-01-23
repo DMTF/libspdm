@@ -41,6 +41,10 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
 
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+
     libspdm_reset_context(spdm_context);
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -51,10 +55,6 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
-
-    libspdm_reset_message_a(spdm_context);
-    libspdm_reset_message_b(spdm_context);
-    libspdm_reset_message_c(spdm_context);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
