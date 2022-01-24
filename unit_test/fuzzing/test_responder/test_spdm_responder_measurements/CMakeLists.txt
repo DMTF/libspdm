@@ -34,6 +34,7 @@ SET(test_spdm_responder_measurements_LIBRARY
     spdm_transport_test_lib
     spdm_device_secret_lib_sample
     cmockalib
+    platform_lib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -52,6 +53,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
+                   $<TARGET_OBJECTS:platform_lib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_responder_measurements ${src_test_spdm_responder_measurements})

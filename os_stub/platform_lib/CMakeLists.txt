@@ -8,10 +8,12 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 SET(src_platform_lib
     time_linux.c
+    watchdog.c
 )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 SET(src_platform_lib
     time_win.c
+    watchdog.c
 )
 endif()
 
