@@ -3,16 +3,9 @@
  *  Copyright 2022 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
-#ifndef __PLATFORM_LIB_H__
-#define __PLATFORM_LIB_H__
 
-/**
- * Suspends the execution of the current thread until the time-out interval elapses.
- *
- * @param milliseconds     The time interval for which execution is to be suspended, in milliseconds.
- *
- **/
-void libspdm_sleep(IN uint64_t milliseconds);
+#include <base.h>
+#include <stdlib.h>
 
 /**
  * If no heartbeat arrives in seconds, the watchdog timeout event
@@ -22,7 +15,10 @@ void libspdm_sleep(IN uint64_t milliseconds);
  * @param  seconds        heartbeat period, in seconds.
  *
  **/
-bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds);
+bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds)
+{
+    return true;
+}
 
 /**
  * stop watchdog.
@@ -30,7 +26,10 @@ bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds);
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_stop_watchdog(IN uint32_t session_id);
+bool libspdm_stop_watchdog(IN uint32_t session_id)
+{
+    return true;
+}
 
 /**
  * Reset the watchdog in heartbeat response.
@@ -38,6 +37,7 @@ bool libspdm_stop_watchdog(IN uint32_t session_id);
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_reset_watchdog(IN uint32_t session_id);
-
-#endif /* __PLATFORM_LIB_H__ */
+bool libspdm_reset_watchdog(IN uint32_t session_id)
+{
+    return true;
+}
