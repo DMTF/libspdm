@@ -4,11 +4,10 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
+#include "internal/libspdm_requester_lib.h"
+#include "spdm_device_secret_lib_internal.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include "spdm_device_secret_lib_internal.h"
-#include "internal/libspdm_requester_lib.h"
-
 
 uintn get_max_buffer_size(void)
 {
@@ -26,35 +25,33 @@ void test_spdm_requester_encap_challenge(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
     spdm_context->connection_info.capability.flags = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_use_measurement_spec;
-    spdm_context->connection_info.algorithm.measurement_hash_algo =
-        m_use_measurement_hash_algo;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data,
-                        &data_size, NULL, NULL);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
+
+    spdm_context->connection_info.algorithm.req_base_asym_alg = 0x00000001;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
+                                            NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.slot_count = 1;
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    spdm_get_encap_response_challenge_auth(
-        spdm_context, spdm_test_context->test_buffer_size,
-        spdm_test_context->test_buffer, &response_size, response);
+    spdm_get_encap_response_challenge_auth(spdm_context, sizeof(spdm_challenge_request_t),
+                                           (uint8_t *)spdm_test_context->test_buffer + 1,
+                                           &response_size, response);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
@@ -69,12 +66,9 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     setup_spdm_test_context(&m_spdm_requester_encap_challenge_test_context);
 
     m_spdm_requester_encap_challenge_test_context.test_buffer = test_buffer;
-    m_spdm_requester_encap_challenge_test_context.test_buffer_size =
-        test_buffer_size;
-
+    m_spdm_requester_encap_challenge_test_context.test_buffer_size = test_buffer_size;
+    
     spdm_unit_test_group_setup(&State);
-
     test_spdm_requester_encap_challenge(&State);
-
     spdm_unit_test_group_teardown(&State);
 }
