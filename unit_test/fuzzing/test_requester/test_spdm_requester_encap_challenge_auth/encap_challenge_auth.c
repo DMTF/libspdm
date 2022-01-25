@@ -16,14 +16,17 @@ uintn get_max_buffer_size(void)
 
 void test_spdm_requester_encap_challenge(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
+    uintn request_size;
     uintn response_size;
+    uint8_t test_message_header_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
     uintn data_size;
 
     spdm_test_context = *State;
+    test_message_header_size = 1;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
@@ -48,10 +51,16 @@ void test_spdm_requester_encap_challenge(void **State)
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
+    request_size = spdm_test_context->test_buffer_size;
+    if (request_size > sizeof(spdm_challenge_request_t)) {
+        request_size = sizeof(spdm_challenge_request_t);
+    }
+
     response_size = sizeof(response);
-    spdm_get_encap_response_challenge_auth(spdm_context, sizeof(spdm_challenge_request_t),
-                                           (uint8_t *)spdm_test_context->test_buffer + 1,
-                                           &response_size, response);
+    spdm_get_encap_response_challenge_auth(spdm_context, request_size,
+                                       (uint8_t *)spdm_test_context->test_buffer +
+                                           test_message_header_size,
+                                       &response_size, response);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
@@ -68,6 +77,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     m_spdm_requester_encap_challenge_test_context.test_buffer = test_buffer;
     m_spdm_requester_encap_challenge_test_context.test_buffer_size = test_buffer_size;
     
+    /* Successful response */
     spdm_unit_test_group_setup(&State);
     test_spdm_requester_encap_challenge(&State);
     spdm_unit_test_group_teardown(&State);
