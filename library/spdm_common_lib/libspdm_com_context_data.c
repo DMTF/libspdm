@@ -160,6 +160,12 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         spdm_context->local_context.capability.ct_exponent =
             *(uint8_t *)data;
         break;
+    case LIBSPDM_DATA_CAPABILITY_RTT_US:
+        if (data_size != sizeof(uint8_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        spdm_context->local_context.capability.rtt = *(uint8_t *)data;
+        break;
     case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
         if (data_size != sizeof(uint32_t)) {
             return RETURN_INVALID_PARAMETER;
@@ -1949,6 +1955,8 @@ return_status libspdm_init_context(IN void *context)
         1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
+
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 

@@ -106,7 +106,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         status = spdm_send_spdm_request(spdm_context, &session_id,
                                         sizeof(spdm_request), &spdm_request);
         if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
 
         spdm_response_size = sizeof(spdm_response);
@@ -127,7 +127,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
                     return status;
                 }
             }
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
 
         if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
@@ -224,16 +224,16 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     status = spdm_send_spdm_request(spdm_context, &session_id,
                                     sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
     status = spdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
-
-    if (RETURN_ERROR(status) ||
-        spdm_response_size < sizeof(spdm_message_header_t)) {
+    if (RETURN_ERROR(status)) {
+        return status;
+    } else if (spdm_response_size < sizeof(spdm_message_header_t)) {
         DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
         return RETURN_DEVICE_ERROR;
     }
@@ -275,6 +275,7 @@ return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
 
     spdm_context = context;
     key_updated = false;
+    spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_key_update(context, session_id,

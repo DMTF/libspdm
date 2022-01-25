@@ -4428,7 +4428,7 @@ void test_spdm_requester_key_update_case32(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, RETURN_UNSUPPORTED);
     assert_memory_equal(((spdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,

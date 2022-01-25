@@ -995,4 +995,10 @@ typedef struct {
 #define SPDM_BIN_STR_8_LABEL "exp master"
 #define SPDM_BIN_STR_9_LABEL "traffic upd"
 
+/**
+ * the maximum amount of time in microseconds the Responder has to provide a response
+ * to requests that do not require cryptographic processing.
+ **/
+#define SPDM_ST1_VALUE_US 100000
+
 #endif
