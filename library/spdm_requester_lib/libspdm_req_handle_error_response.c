@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
+#include "hal/library/platform_lib.h"
 
 /**
  * This function sends RESPOND_IF_READY and receives an expected SPDM response.
@@ -149,6 +150,7 @@ return_status spdm_handle_response_not_ready(IN spdm_context_t *spdm_context,
     spdm_context->error_data.token = extend_error_data->token;
     spdm_context->error_data.rd_tm = extend_error_data->rd_tm;
 
+    libspdm_sleep((2 << extend_error_data->rd_exponent)/1000);
     return spdm_requester_respond_if_ready(spdm_context, session_id,
                                            response_size, response,
                                            expected_response_code,
