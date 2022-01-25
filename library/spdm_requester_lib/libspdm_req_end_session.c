@@ -70,7 +70,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     status = spdm_send_spdm_request(spdm_context, &session_id,
                                     spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
@@ -81,7 +81,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     status = spdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
@@ -124,6 +124,7 @@ return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     uintn retry;
     return_status status;
 
+    spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_end_session(

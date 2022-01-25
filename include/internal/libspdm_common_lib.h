@@ -19,6 +19,8 @@ typedef struct {
 
 typedef struct {
     uint8_t ct_exponent;
+    uint8_t rtt;
+    uint32_t st1;
     uint32_t flags;
     uint32_t data_transfer_size;
     uint32_t max_spdm_msg_size;
@@ -354,6 +356,7 @@ typedef struct {
     /* Register for the retry times when receive "BUSY" Error response (requester only)*/
 
     uint8_t retry_times;
+    bool crypto_request;
 
 
     /* App context data for use by application*/

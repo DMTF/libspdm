@@ -225,6 +225,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     } else {
+        spdm_context->crypto_request = true;
         spdm_get_encapsulated_request_request = (void *)request;
         spdm_get_encapsulated_request_request->header.spdm_version =
             spdm_get_connection_version (spdm_context);
@@ -239,9 +240,8 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         status = spdm_send_spdm_request(
             spdm_context, session_id, spdm_request_size,
             spdm_get_encapsulated_request_request);
-
         if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
 
         spdm_encapsulated_request_response = (void *)response;
@@ -251,7 +251,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
             spdm_context, session_id, &spdm_response_size,
             spdm_encapsulated_request_response);
         if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
         if (spdm_encapsulated_request_response->header
             .request_response_code !=
@@ -281,7 +281,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     while (true) {
 
         /* Process request*/
-
+        spdm_context->crypto_request = true;
         spdm_deliver_encapsulated_response_request = (void *)request;
         spdm_deliver_encapsulated_response_request->header.spdm_version =
             spdm_get_connection_version (spdm_context);
@@ -313,7 +313,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
             spdm_context, session_id, spdm_request_size,
             spdm_deliver_encapsulated_response_request);
         if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
 
         spdm_encapsulated_response_ack_response = (void *)response;
@@ -323,7 +323,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
             spdm_context, session_id, &spdm_response_size,
             spdm_encapsulated_response_ack_response);
         if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
         if (spdm_encapsulated_response_ack_response->header
             .request_response_code !=

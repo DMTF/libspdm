@@ -104,6 +104,10 @@ return_status spdm_requester_get_capabilities_test_send_message(
         return RETURN_SUCCESS;
     case 0x1d:
         return RETURN_SUCCESS;
+    case 0x1E:
+        return RETURN_TIMEOUT;
+    case 0x1F:
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -739,6 +743,9 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         }
     }
         return RETURN_SUCCESS;
+
+    case 0x1F:
+        return RETURN_TIMEOUT;
 
     default:
         return RETURN_DEVICE_ERROR;
@@ -1428,6 +1435,46 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
     }
 }
 
+void test_spdm_requester_get_capabilities_case30(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
+    status = spdm_get_capabilities(spdm_context);
+    assert_int_equal(status, RETURN_TIMEOUT);
+}
+
+void test_spdm_requester_get_capabilities_case31(void **state)
+{
+    return_status status;
+    spdm_test_context_t *spdm_test_context;
+    spdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
+    status = spdm_get_capabilities(spdm_context);
+    assert_int_equal(status, RETURN_TIMEOUT);
+}
+
 spdm_test_context_t m_spdm_requester_get_capabilities_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -1499,6 +1546,11 @@ int spdm_requester_get_capabilities_test_main(void)
         cmocka_unit_test(test_spdm_requester_get_capabilities_case28),
         /* Unexpected errors*/
         cmocka_unit_test(test_spdm_requester_get_capabilities_case29),
+        /* SendRequest timeout */
+        cmocka_unit_test(test_spdm_requester_get_capabilities_case30),
+        /* ReceiveResponse timeout */
+        cmocka_unit_test(test_spdm_requester_get_capabilities_case31),
+
     };
 
     setup_spdm_test_context(

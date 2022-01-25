@@ -104,7 +104,6 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
                                         sizeof(spdm_request),
                                         &spdm_request);
         if (RETURN_ERROR(status)) {
-            status = RETURN_DEVICE_ERROR;
             goto done;
         }
 
@@ -114,7 +113,6 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
                                             &spdm_response_size,
                                             &spdm_response);
         if (RETURN_ERROR(status)) {
-            status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if (spdm_response_size < sizeof(spdm_message_header_t)) {
@@ -384,6 +382,7 @@ return_status libspdm_get_certificate_choose_length(IN void *context,
     return_status status;
 
     spdm_context = context;
+    spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_get_certificate(spdm_context, slot_id, length,
@@ -432,6 +431,7 @@ return_status libspdm_get_certificate_choose_length_ex(IN void *context,
     return_status status;
 
     spdm_context = context;
+    spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_get_certificate(spdm_context, slot_id, length,

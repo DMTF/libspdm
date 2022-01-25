@@ -33,6 +33,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
 
     spdm_response = response;
 
+    spdm_context->crypto_request = true;
     spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_RESPOND_IF_READY;
     spdm_request.header.param1 = spdm_context->error_data.request_code;
@@ -40,7 +41,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
     status = spdm_send_spdm_request(spdm_context, session_id,
                                     sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
 
     *response_size = expected_response_size;
@@ -48,7 +49,7 @@ return_status spdm_requester_respond_if_ready(IN spdm_context_t *spdm_context,
     status = spdm_receive_spdm_response(spdm_context, session_id,
                                         response_size, response);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
     if (*response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;

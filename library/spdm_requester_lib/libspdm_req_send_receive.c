@@ -30,6 +30,7 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
     return_status status;
     uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
+    uint64_t timeout;
 
     spdm_context = context;
 
@@ -47,8 +48,10 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
         return status;
     }
 
+    timeout = spdm_context->local_context.capability.rtt;
+
     status = spdm_context->send_message(spdm_context, message_size, message,
-                                        0);
+                                        timeout);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO, "spdm_send_spdm_request[%x] status - %p\n",
                (session_id != NULL) ? *session_id : 0x0, status));
@@ -84,14 +87,23 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
     uintn message_size;
     uint32_t *message_session_id;
     bool is_message_app_message;
+    uint64_t timeout;
 
     spdm_context = context;
 
     ASSERT(*response_size <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
+    if (spdm_context->crypto_request) {
+        timeout = spdm_context->local_context.capability.rtt +
+                  (2 << spdm_context->local_context.capability.ct_exponent);
+    } else {
+        timeout = spdm_context->local_context.capability.rtt +
+                  spdm_context->local_context.capability.st1;
+    }
+
     message_size = sizeof(message);
     status = spdm_context->receive_message(spdm_context, &message_size,
-                                           message, 0);
+                                           message, timeout);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO,
                "spdm_receive_spdm_response[%x] status - %p\n",
