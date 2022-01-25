@@ -125,10 +125,10 @@ void test_spdm_requester_encap_challenge(void **State)
     uint32_t session_id;
     spdm_session_info_t *session_info;
     spdm_secured_message_context_t *secured_message_context;
-
+    uintn request_size;
     uintn response_size;
+    uint8_t test_message_header_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
@@ -148,11 +148,16 @@ void test_spdm_requester_encap_challenge(void **State)
                    m_req_secret_buffer, m_req_secret_buffer,
                    secured_message_context->hash_size);
 
+    request_size = spdm_test_context->test_buffer_size;
+    if (request_size > sizeof(spdm_key_update_request_t)) {
+        request_size = sizeof(spdm_key_update_request_t);
+    }
+
     response_size = sizeof(response);
-    spdm_get_encap_response_key_update(spdm_context,
-                     spdm_test_context->test_buffer_size,
-                     spdm_test_context->test_buffer,
-                     &response_size, response);
+    spdm_get_encap_response_key_update(spdm_context, request_size,
+                                   (uint8_t *)spdm_test_context->test_buffer +
+                                       test_message_header_size,
+                                   &response_size, response);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
@@ -170,9 +175,8 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     m_spdm_requester_encap_challenge_test_context.test_buffer_size =
         test_buffer_size;
 
+    /* Successful response*/
     spdm_unit_test_group_setup(&State);
-
     test_spdm_requester_encap_challenge(&State);
-
     spdm_unit_test_group_teardown(&State);
 }
