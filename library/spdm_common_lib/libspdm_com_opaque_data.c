@@ -115,7 +115,7 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         spdm_general_opaque_data_table_header = data_out;
         spdm_general_opaque_data_table_header->total_elements = 1;
-        spdm_general_opaque_data_table_header->reserved = 0;
+        libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
         opaque_element_table_header =
             (void *)(spdm_general_opaque_data_table_header + 1);
     } else {
@@ -290,7 +290,7 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         spdm_general_opaque_data_table_header = data_out;
         spdm_general_opaque_data_table_header->total_elements = 1;
-        spdm_general_opaque_data_table_header->reserved = 0;
+        libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
 
         opaque_element_table_header =
             (void *)(spdm_general_opaque_data_table_header + 1);
