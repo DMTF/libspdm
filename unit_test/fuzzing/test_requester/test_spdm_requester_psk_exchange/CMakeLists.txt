@@ -28,6 +28,7 @@ SET(test_spdm_requester_psk_exchange_LIBRARY
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
     rnglib
+    platform_lib
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
@@ -46,6 +47,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_common_lib>
                    $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
                    $<TARGET_OBJECTS:rnglib>
+                   $<TARGET_OBJECTS:platform_lib>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
