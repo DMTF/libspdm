@@ -310,6 +310,96 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    mkdir NEW_CORPUS_DIR // Copy test seeds to the folder before run test
    <test_app> NEW_CORPUS_DIR -rss_limit_mb=0 -artifact_prefix=<OUTPUT_PATH>
    ```
+5) fuzzing in Linux with [OSS-Fuzz](https://github.com/google/oss-fuzz) locally
+
+   Take 'Ubuntu 20.04.2 LTS' as an example:  
+   a. Install [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)  
+   You can verify that Docker Engine is installed correctly by running the hello-world image.
+   ```
+   sudo docker run hello-world
+   ```
+   The above command downloads a test image and runs it in a container. When the container runs, it prints the following message and exits.
+   ```
+   Hello from Docker!
+   This message shows that your installation appears to be working correctly.
+   ```
+   If you get the following `Timeout` error, please add and check your proxy configuration.
+   ```
+   Unable to find image 'hello-world:latest' locally
+   docker: Error response from daemon: Get https://registry-1.docker.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers).
+   See 'docker run --help'.
+   ```
+   Just add your Proxy details to the `/etc/systemd/system/docker.service.d/proxy.conf` (folder docker.service.d may not exists , so create the directory before), for example:
+   ``` 
+   [Service]
+   Environment="HTTP_PROXY=http://proxy.example.com:80/"
+   Environment="HTTPS_PROXY=https://proxy.example.com:80/"
+   ```
+   If you get the following `toomanyrequests` error, please configure the registry-mirrors option for the Docker daemon.
+   ```
+   Unable to find image 'hello-world:latest' locally
+   docker: Error response from daemon: toomanyrequests: You have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit.
+   ```
+   Just add your mirror details to the `/etc/docker/daemon.json`, for example:
+   ```
+   { 
+      "registry-mirrors": ["https.your-mirror.example.com"] 
+   }
+   ```
+   b. Setting up new project  
+   Clone [OSS-Fuzz](https://github.com/google/oss-fuzz)
+   ```
+   git clone https://github.com/google/oss-fuzz.git
+   ```
+   Generate templated versions of the configuration files(`project.yaml` `Dockerfile` `build.sh`) by running the following commands:
+   ```
+   $ cd oss-fuzz
+   $ export PROJECT_NAME=libspdm
+   $ export LANGUAGE=c
+   $ python3 infra/helper.py generate $PROJECT_NAME --language=$LANGUAGE
+   ```
+   Once the template configuration files are created, replace them with our modified files to fit our project:
+   ```
+   cd ~/oss-fuzz
+   cp ~/libspdm/unit_test/fuzzing/oss-fuzz_conf/* ~/oss-fuzz/projects/libspdm/
+   ```
+   c. Testing locally  
+   Build your docker image
+   ```
+   cd oss-fuzz
+   sudo python3 infra/helper.py build_image $PROJECT_NAME
+   ```
+   If build docker image successfully, it will print the following messages at last.
+   ```
+   Successfully built 19b86a662c16
+   Successfully tagged gcr.io/oss-fuzz/libspdm:latest
+   ```
+   If you get the following `connection timed out` error when building docker image, unable to apt-get update through dockerfile, please enable proxy configuration in `Dockerfile`.
+   ```
+   Err:1 http://archive.ubuntu.com/ubuntu xenial InRelease
+   Could not connect to archive.ubuntu.com:80 (91.189.88.162), connection timed out [IP: 91.189.88.162 80]
+   ```
+   Just set your Proxy Environment before `RUN apt-get` in `oss-fuzz/projects/libspdm/Dockerfile`, for example:
+   ```
+   FROM gcr.io/oss-fuzz-base/base-builder
+   ENV http_proxy 'http://proxy.example.com:80/'
+   ENV https_proxy 'https://proxy.example.com:80/'
+   RUN apt-get update && apt-get install -y make autoconf automake libtool
+   ```
+   Build your fuzz targets, the built binaries appear in the `~/oss-fuzz/build/out/$PROJECT_NAME` directory on your machine (and `$OUT` in the container).
+   ```
+   sudo python3 infra/helper.py build_fuzzers --sanitizer coverage $PROJECT_NAME
+   ```
+   Run your fuzz target, for example:
+   ```
+   cd oss-fuzz
+   sudo mkdir -p ./build/corpus/$PROJECT_NAME/test_spdm_responder_version
+   sudo python3 infra/helper.py run_fuzzer --corpus-dir=./build/corpus/libspdm/test_spdm_responder_version $PROJECT_NAME test_spdm_responder_version
+   ```
+   Generate a code coverage report using the corpus you have locally, the code coverage report appear in the `~/oss-fuzz/build/out/$PROJECT_NAME/report/linux/index.html` directory on your machine.
+   ```
+   sudo python3 infra/helper.py coverage --no-corpus-download $PROJECT_NAME --fuzz-target=test_spdm_responder_version
+   ```
 
 ### Run Symbolic Execution
 
