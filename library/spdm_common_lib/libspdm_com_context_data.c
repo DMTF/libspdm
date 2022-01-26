@@ -483,6 +483,12 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         }
         spdm_context->app_context_data_ptr = *(void **)data;
         break;
+    case LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY:
+        if (data_size != sizeof(uint8_t)) {
+            return RETURN_INVALID_PARAMETER;
+        }
+        spdm_context->handle_error_return_policy = *(uint8_t *)data;
+        break;
     default:
         return RETURN_UNSUPPORTED;
         break;
@@ -699,6 +705,10 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         target_data_size = sizeof(void *);
         target_data = &spdm_context->app_context_data_ptr;
+        break;
+    case LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY:
+        target_data_size = sizeof(uint8_t);
+        target_data = &spdm_context->handle_error_return_policy;
         break;
     default:
         return RETURN_UNSUPPORTED;
