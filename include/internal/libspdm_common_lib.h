@@ -376,6 +376,13 @@ typedef struct {
      * or secured SPDM transport message.
      **/
     uint8_t request_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+
+    /**
+     * The BIT0 control to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
+     * If the BIT0 is not set, generate SPDM_ERROR_CODE_DECRYPT_ERROR response.
+     * If the BIT0 set, drop the request silently.
+     **/
+    uint8_t handle_error_return_policy;
 } spdm_context_t;
 
 /**

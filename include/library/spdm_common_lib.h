@@ -115,6 +115,13 @@ typedef enum {
 
     LIBSPDM_DATA_APP_CONTEXT_DATA,
 
+    /**
+     * The LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY BIT0 control to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
+     * If the BIT0 is not set, generate SPDM_ERROR_CODE_DECRYPT_ERROR response.
+     * If the BIT0 set, drop the request silently.
+     **/
+    LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY,
+
     /* MAX*/
 
     LIBSPDM_DATA_MAX

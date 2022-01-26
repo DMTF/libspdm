@@ -331,14 +331,26 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
-            status = libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
-                &my_response_size, my_response);
+            if((spdm_context->handle_error_return_policy & BIT0) == 0) {
+                status = libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
+                    response_size, response);
+            } else {
+                /**
+                 * just ignore this message
+                 * return UNSUPPORTED and clear response_size to continue the dispatch without send response
+                 **/
+                *response_size = 0;
+                status = RETURN_UNSUPPORTED;
+            }
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
-            /* don't use session ID, because we dont know which right session ID should be used.
+            /**
+             * don't use session ID, because we dont know which right session ID should be used.
              * just ignore this message
-             * return UNSUPPORTED to continue the dispatch without send response.*/
+             * return UNSUPPORTED and clear response_size to continue the dispatch without send response
+             **/
+            *response_size = 0;
             status = RETURN_UNSUPPORTED;
             break;
         default:

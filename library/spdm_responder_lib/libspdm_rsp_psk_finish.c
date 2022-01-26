@@ -126,9 +126,18 @@ return_status spdm_get_response_psk_finish(IN void *context,
         (uint8_t *)request + sizeof(spdm_psk_finish_request_t),
         hmac_size);
     if (!result) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
-                                               response_size, response);
+        if((spdm_context->handle_error_return_policy & BIT0) == 0) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
+                response_size, response);
+        } else {
+            /**
+             * just ignore this message
+             * return UNSUPPORTED and clear response_size to continue the dispatch without send response
+             **/
+            *response_size = 0;
+            return RETURN_UNSUPPORTED;
+        }
     }
     status = libspdm_append_message_f(
         spdm_context, session_info, false,
