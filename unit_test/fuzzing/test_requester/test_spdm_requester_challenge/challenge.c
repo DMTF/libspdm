@@ -47,10 +47,6 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
                     sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size(m_use_asym_algo);
     spdm_response = (void *)temp_buf;
 
-    // spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    // spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-    // spdm_response->header.param1 = 0;
-    // spdm_response->header.param2 = (1 << 0);
     ptr = (void *)(spdm_response + 1);
     libspdm_hash_all(
         m_use_hash_algo,
@@ -67,10 +63,8 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
              (uintn)ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-    DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n", m_local_buffer_size));
     internal_dump_hex(m_local_buffer, m_local_buffer_size);
     libspdm_hash_all(m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n", libspdm_get_hash_size(m_use_hash_algo)));
     internal_dump_hex(m_local_buffer, m_local_buffer_size);
     sig_size = libspdm_get_asym_signature_size(m_use_asym_algo);
     libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
