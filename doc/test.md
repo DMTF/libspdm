@@ -346,6 +346,13 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
       "registry-mirrors": ["https.your-mirror.example.com"] 
    }
    ```
+   If you want to run `docker` without `sudo`, you can create a docker group.  
+   To create the docker group, add your user and activate the changes to groups:
+   ```
+   sudo groupadd docker
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
    b. Setting up new project  
    Clone [OSS-Fuzz](https://github.com/google/oss-fuzz)
    ```
@@ -390,15 +397,32 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    sudo python3 infra/helper.py build_fuzzers --sanitizer coverage $PROJECT_NAME
    ```
-   Run your fuzz target, for example:
+   Run your fuzz target, to provide a corpus for `my_fuzzer`, put `my_fuzzer_seed_corpus.zip` file next to the fuzz target’s binary in `$OUT` during the build. Individual files in this archive will be used as starting inputs for mutations. for example:
    ```
    cd oss-fuzz
    sudo mkdir -p ./build/corpus/$PROJECT_NAME/test_spdm_responder_version
+   zip -j ./build/out/libspdm/test_spdm_responder_version_seed_corpus.zip ~/libspdm/unit_test/fuzzing/seeds/test_spdm_responder_version/*
    sudo python3 infra/helper.py run_fuzzer --corpus-dir=./build/corpus/libspdm/test_spdm_responder_version $PROJECT_NAME test_spdm_responder_version
    ```
    Generate a code coverage report using the corpus you have locally, the code coverage report appear in the `~/oss-fuzz/build/out/$PROJECT_NAME/report/linux/index.html` directory on your machine.
    ```
    sudo python3 infra/helper.py coverage --no-corpus-download $PROJECT_NAME --fuzz-target=test_spdm_responder_version
+   ```
+   d. Automation script  
+   You can launch the script `oss_fuzz.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+
+   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+
+   The usage of the script `oss_fuzz.sh` is as following:
+   ```
+   Usage: ./libspdm/unit_test/fuzzing/oss_fuzz.sh <CRYPTO> <GCOV> <duration>
+   <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <GCOV> means enable Code Coverage or not: ON or OFF
+   <duration> means the duration of every program keep fuzzing: NUMBER seconds
+   ```
+   For example: build with `mbedtls`, enable Code Coverage and every test case run 30 seconds.
+   ```
+   libspdm/unit_test/fuzzing/oss_fuzz.sh mbedtls ON 30
    ```
 
 ### Run Symbolic Execution
