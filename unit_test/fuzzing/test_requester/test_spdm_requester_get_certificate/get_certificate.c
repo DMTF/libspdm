@@ -37,11 +37,12 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     spdm_test_context_t *spdm_test_context;
 
     uintn portion_length;
+    uint8_t spdm_transport_header = TEST_MESSAGE_TYPE_SPDM;
     portion_length = FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     spdm_test_context = get_spdm_test_context();
 
     *response_size = portion_length + 1;
-    copy_mem(response, (uint8_t *)spdm_test_context->test_buffer, 1);
+    copy_mem(response, &spdm_transport_header, 1);
     copy_mem((uint8_t *)response + 1,
              (uint8_t *)spdm_test_context->test_buffer + TEST_MESSAGE_TYPE_SPDM +
                  FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
@@ -49,8 +50,6 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     calling_index++;
 
     return RETURN_SUCCESS;
-
-  
 }
 
 void test_spdm_requester_get_certificate_case1(void **State)
@@ -128,7 +127,6 @@ void test_spdm_requester_get_certificate_case2(void **State)
 
     cert_chain_size = sizeof(cert_chain);
     zero_mem(cert_chain, sizeof(cert_chain));
-
 
     libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
 }
