@@ -68,7 +68,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     spdm_test_context = get_spdm_test_context();
     test_message_header_size = 1;
     session_id = 0xFFFFFFFF;
-    temp_buf_size = sizeof(spdm_psk_finish_response_t);
+    temp_buf_size = spdm_test_context->test_buffer_size;
     copy_mem((uint8_t *)temp_buf,
              (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
              spdm_test_context->test_buffer_size);
