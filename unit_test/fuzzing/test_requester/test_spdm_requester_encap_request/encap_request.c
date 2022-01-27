@@ -25,7 +25,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 {
     spdm_test_context_t *spdm_test_context;
     spdm_session_info_t *session_info;
-    static uint8_t sub_index;
+    static uint8_t sub_index = 0;
     uint32_t session_id;
     uint8_t test_message_header_size;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -125,8 +125,12 @@ void test_spdm_requester_encap_request(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+         data, data_size);
+#endif
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];

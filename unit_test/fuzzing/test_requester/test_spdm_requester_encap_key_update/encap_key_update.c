@@ -111,6 +111,7 @@ void test_spdm_requester_encap_key_update(void **State)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
+    test_message_header_size = 1;
     spdm_context = spdm_test_context->spdm_context;
 
     spdm_set_standard_key_update_test_state(spdm_context, &session_id);
