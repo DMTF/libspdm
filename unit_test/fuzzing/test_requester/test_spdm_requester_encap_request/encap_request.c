@@ -25,7 +25,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 {
     spdm_test_context_t *spdm_test_context;
     spdm_session_info_t *session_info;
-    static uint8_t sub_index;
+    static uint8_t sub_index = 0;
     uint32_t session_id;
     uint8_t test_message_header_size;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];

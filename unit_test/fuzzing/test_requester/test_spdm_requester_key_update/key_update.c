@@ -114,12 +114,12 @@ return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_s
 return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
                                           IN OUT void *response, IN uint64_t timeout)
 {
-    static uint8_t sub_index;
+    static uint8_t sub_index = 0;
     spdm_key_update_response_t spdm_response;
     spdm_session_info_t *session_info;
     uint32_t session_id;
     uint8_t test_message_header_size;
-
+    uint8_t spdm_response_size;
     session_id = 0xFFFFFFFF;
 
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -130,17 +130,12 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     test_message_header_size = 1;
     spdm_test_context_t *spdm_test_context;
     spdm_test_context = get_spdm_test_context();
-
-    if (sub_index == 0) {
-        copy_mem(&spdm_response,
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                     (sizeof(spdm_key_update_response_t) * sub_index),
-                 sizeof(spdm_key_update_response_t));
-    } else {
-        copy_mem(&spdm_response,
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                     (sizeof(spdm_key_update_response_t) * sub_index),
-                 sizeof(spdm_key_update_response_t));
+    spdm_response_size = sizeof(spdm_key_update_response_t);
+    copy_mem(&spdm_response,
+             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
+                 spdm_response_size * sub_index,
+             sizeof(spdm_key_update_response_t));
+    if (sub_index != 0) {
         sub_index = 0;
     }
     spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE,
