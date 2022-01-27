@@ -50,25 +50,26 @@ return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_s
 return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
                                           IN OUT void *response, IN uint64_t timeout)
 {
+    spdm_test_context_t *spdm_test_context;
+    spdm_heartbeat_response_t *spdm_response;
     uint32_t session_id;
     spdm_session_info_t *session_info;
+    uint8_t test_message_header_size;
 
-    session_id = 0xFFFFFFFF;
-
-    spdm_test_context_t *spdm_test_context;
     spdm_test_context = get_spdm_test_context();
-    *response_size = spdm_test_context->test_buffer_size;
-    if (test_message_header == TEST_MESSAGE_TYPE_SECURED_TEST) {
-        copy_mem((uint8_t *)response, &test_message_header, 1);
-        copy_mem((uint8_t *)response + 1, (uint8_t *)spdm_test_context->test_buffer,
-                 spdm_test_context->test_buffer_size);
-        test_message_header = 0;
-    } else {
-        copy_mem(response, spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
-    }
+    session_id = 0xFFFFFFFF;
+    test_message_header_size = 1;
 
+    copy_mem(&spdm_response, (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+             spdm_test_context->test_buffer_size);
+
+    spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE,
+                                       spdm_test_context->test_buffer_size, &spdm_response,
+                                       response_size, response);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
-
+    if (session_info == NULL) {
+        return RETURN_DEVICE_ERROR;
+    }
     /* WALKAROUND: If just use single context to encode message and then decode message */
     ((spdm_secured_message_context_t *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
