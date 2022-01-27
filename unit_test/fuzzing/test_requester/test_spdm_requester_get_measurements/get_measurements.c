@@ -265,7 +265,7 @@ void test_spdm_requester_get_measurement_case3(void **State)
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
-#endi
+#endif
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
 
     measurement_record_length = sizeof(measurement_record);
@@ -319,7 +319,7 @@ void test_spdm_requester_get_measurement_case4(void **State)
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
-#endi
+#endif
     request_attribute = 0;
 
     measurement_record_length = sizeof(measurement_record);
