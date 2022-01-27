@@ -4,9 +4,9 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
+#include "internal/libspdm_requester_lib.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
-#include "internal/libspdm_requester_lib.h"
 
 uintn get_max_buffer_size(void)
 {
