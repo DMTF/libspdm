@@ -83,8 +83,12 @@ void test_spdm_send_receive_finish_case1(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+         data, data_size);
+#endif
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
