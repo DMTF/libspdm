@@ -3166,7 +3166,6 @@ void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
     libspdm_dhe_new_by_nid_func new_function;
     uintn nid;
     void *context;
-    boolean result;
 
     new_function = get_spdm_dhe_new(dhe_named_group);
     if (new_function == NULL) {
@@ -3183,6 +3182,7 @@ void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
 
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT == 1
     if (dhe_named_group == SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256) {
+        boolean result;
         uint8_t spdm12_key_change_requester_context[SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE];
         uint8_t spdm12_key_change_responder_context[SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE];
 
