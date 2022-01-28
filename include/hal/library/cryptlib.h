@@ -2274,7 +2274,7 @@ boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
 **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **rsa_context);
 
 /**
@@ -2316,7 +2316,7 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                    IN const char8 *password,
+                    IN const char *password,
                     OUT void **ec_context);
 
 /**
@@ -2357,7 +2357,7 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **ecd_context);
 
 /**
@@ -2398,7 +2398,7 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **sm2_context);
 
 /**
@@ -2484,7 +2484,7 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                   OUT char8 *common_name,
+                   OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size);
 
 /**
@@ -2515,7 +2515,7 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-               OUT char8 *name_buffer,
+               OUT char *name_buffer,
                OPTIONAL IN OUT uintn *name_buffer_size);
 
 /**
@@ -2615,7 +2615,7 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                OUT char8 *common_name,
+                OUT char *common_name,
                 OPTIONAL IN OUT uintn *common_name_size);
 
 /**
@@ -2646,7 +2646,7 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-                 OUT char8 *name_buffer,
+                 OUT char *name_buffer,
                  OPTIONAL IN OUT uintn *name_buffer_size);
 
 /**
@@ -2744,7 +2744,7 @@ boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
                                    date_time_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
+return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
                  IN OUT uintn *date_time_size);
 
 /**

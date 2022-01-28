@@ -23,14 +23,14 @@
 #include "library/malloclib.h"
 #include "hal/library/cryptlib.h"
 
-boolean read_input_file(IN char8 *file_name, OUT void **file_data,
+boolean read_input_file(IN char *file_name, OUT void **file_data,
             OUT uintn *file_size);
 
-uintn ascii_str_len(IN const char8 *string);
+uintn ascii_str_len(IN const char *string);
 
-void my_print(IN char8 *message);
+void my_print(IN char *message);
 
-/** 
+/**
   Validate Crypto digest Interfaces.
 
    @retval  RETURN_SUCCESS  Validation succeeded.
@@ -91,7 +91,7 @@ return_status validate_crypt_rsa_2(void);
   @retval  RETURN_ABORTED  Validation failed.
 
 **/
-return_status validate_crypt_x509(char8 *Path, uintn len);
+return_status validate_crypt_x509(char *Path, uintn len);
 
 /**
   Validate Crypto DH Interfaces.

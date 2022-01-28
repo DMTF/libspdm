@@ -29,7 +29,7 @@
 **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **rsa_context)
 {
     ASSERT(FALSE);
@@ -54,7 +54,7 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 
 **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                    IN const char8 *password,
+                    IN const char *password,
                     OUT void **ec_context)
 {
     ASSERT(FALSE);
@@ -80,7 +80,7 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
 **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **ecd_context)
 {
     ASSERT(FALSE);
@@ -106,7 +106,7 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
 **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **sm2_context)
 {
     ASSERT(FALSE);

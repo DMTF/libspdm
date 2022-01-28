@@ -36,7 +36,7 @@
 #pragma warning(disable : 4100)
 
 
-/* Disable slightly different base types warning as char8 * can not be set*/
+/* Disable slightly different base types warning as char * can not be set*/
 /* to a constant string.*/
 
 #pragma warning(disable : 4057)
@@ -81,7 +81,7 @@
 #include LIBSPDM_STDINT_ALT
 #endif
 
-typedef char char8;
+
 typedef unsigned char boolean;
 
 

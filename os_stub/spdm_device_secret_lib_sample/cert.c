@@ -34,7 +34,7 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uintn digest_size;
 
     *data = NULL;
@@ -135,7 +135,7 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uintn digest_size;
 
     *data = NULL;
@@ -234,7 +234,7 @@ boolean read_responder_public_certificate_chain(
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uint8_t *root_cert;
     uintn root_cert_len;
     uintn digest_size;
@@ -310,9 +310,9 @@ boolean read_responder_public_certificate_chain(
         return res;
     }
 
-    
+
     /* Get Root Certificate and calculate hash value*/
-    
+
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {
@@ -353,7 +353,7 @@ boolean read_requester_public_certificate_chain(
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uint8_t *root_cert;
     uintn root_cert_len;
     uintn digest_size;
@@ -429,9 +429,9 @@ boolean read_requester_public_certificate_chain(
         return res;
     }
 
-    
+
     /* Get Root Certificate and calculate hash value*/
-    
+
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {
@@ -472,7 +472,7 @@ boolean read_responder_root_public_certificate_by_size(
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uintn digest_size;
 
     *data = NULL;
@@ -549,7 +549,7 @@ boolean read_responder_public_certificate_chain_by_size(
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uint8_t *root_cert;
     uintn root_cert_len;
     uintn digest_size;
@@ -603,9 +603,9 @@ boolean read_responder_public_certificate_chain_by_size(
         return res;
     }
 
-    
+
     /* Get Root Certificate and calculate hash value*/
-    
+
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {

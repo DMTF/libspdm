@@ -14,7 +14,7 @@
 
 /* data string for HMAC validation*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_hmac_data = "Hi There";
+GLOBAL_REMOVE_IF_UNREFERENCED const char *m_hmac_data = "Hi There";
 
 
 /* key value for HMAC-SHA-256 validation. (from "4. Test Vectors" of IETF RFC4231)*/
@@ -49,9 +49,9 @@ return_status validate_crypt_hmac(void)
     my_print(" \nCrypto HMAC Engine Testing:\n");
 
     my_print("- HMAC-SHA256: ");
-    
+
     /* HMAC-SHA-256 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sha256_new();
     if (hmac_ctx == NULL) {
@@ -94,9 +94,9 @@ return_status validate_crypt_hmac(void)
     my_print("[Pass]\n");
 
     my_print("- HMAC-SHA3_256: ");
-    
+
     /* HMAC-SHA3-256 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sha3_256_new();
     if (hmac_ctx == NULL) {
@@ -131,9 +131,9 @@ return_status validate_crypt_hmac(void)
     my_print("[Pass]\n");
 
     my_print("- HMAC-SM3_256: ");
-    
+
     /* HMAC-SM3-256 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = hmac_sm3_256_new();
     if (hmac_ctx == NULL) {

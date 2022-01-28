@@ -28,7 +28,7 @@
 #include LIBSPDM_STDINT_ALT
 #endif
 
-typedef char char8;
+
 typedef unsigned char boolean;
 
 
