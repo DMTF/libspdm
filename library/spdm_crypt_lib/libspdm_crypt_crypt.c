@@ -4124,7 +4124,7 @@ static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    IN const uint8_t *buffer, IN intn len, OUT char *name_buffer,
+    IN uint8_t *buffer, IN intn len, OUT char *name_buffer,
     OPTIONAL IN OUT uintn *name_buffer_size, OUT uint8_t *oid,
     OPTIONAL IN OUT uintn *oid_size)
 {
@@ -4134,7 +4134,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
     int32_t ret;
 
     length = (int32_t)len;
-    ptr = (uint8_t *)buffer;
+    ptr = buffer;
     obj_len = 0;
 
     /* Sequence*/
@@ -4245,7 +4245,7 @@ libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
     }
 
     return libspdm_get_dmtf_subject_alt_name_from_bytes(
-        (const uint8_t *)name_buffer, *name_buffer_size, name_buffer,
+        (uint8_t *)name_buffer, *name_buffer_size, name_buffer,
         name_buffer_size, oid, oid_size);
 }
 
