@@ -217,17 +217,23 @@
 
 /* Boolean true value.*/
 
+#ifndef TRUE
 #define TRUE ((boolean)(1 == 1))
+#endif
 
 
 /* Boolean false value.*/
 
+#ifndef FALSE
 #define FALSE ((boolean)(0 == 1))
+#endif
 
 
 /* NULL pointer (void *)*/
 
+#ifndef NULL
 #define NULL ((void *)0)
+#endif
 
 
 /* Maximum values for common data Types*/
@@ -773,6 +779,7 @@ STATIC_ASSERT(
 **/
 #define ALIGN_VARIABLE(value) ALIGN_VALUE((value), sizeof(uintn))
 
+#ifndef MAX
 /**
   Return the maximum of two operands.
 
@@ -787,7 +794,9 @@ STATIC_ASSERT(
 
 **/
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
 
+#ifndef MIN
 /**
   Return the minimum of two operands.
 
@@ -801,6 +810,7 @@ STATIC_ASSERT(
 
 **/
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
 
 
 /* status codes common to all execution phases*/
