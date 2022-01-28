@@ -1079,7 +1079,7 @@ cleanup:
  *
  **/
 static return_status
-internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
+internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *oid,
                                   uintn oid_size, uint8_t **find_extension_data,
                                   uintn *find_extension_data_len)
 {
@@ -1168,7 +1168,7 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, uint8_t *oid,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
-                                      IN uint8_t *oid, IN uintn oid_size,
+                                      IN const uint8_t *oid, IN uintn oid_size,
                                       OUT uint8_t *extension_data,
                                       IN OUT uintn *extension_data_size)
 {
