@@ -2043,6 +2043,9 @@ boolean libspdm_asym_verify(
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, FALSE, &param_size);
             break;
+        default:
+            ASSERT(FALSE);
+            break;
         }
 
         create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
@@ -2138,6 +2141,9 @@ boolean libspdm_asym_verify_hash(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, FALSE, &param_size);
+            break;
+        default:
+            ASSERT(FALSE);
             break;
         }
 
@@ -2437,6 +2443,9 @@ boolean libspdm_asym_sign(
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, FALSE, &param_size);
             break;
+        default:
+            ASSERT(FALSE);
+            break;
         }
 
         create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
@@ -2536,6 +2545,9 @@ boolean libspdm_asym_sign_hash(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, FALSE, &param_size);
+            break;
+        default:
+            ASSERT(FALSE);
             break;
         }
 
@@ -2738,6 +2750,9 @@ boolean libspdm_req_asym_verify(
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, TRUE, &param_size);
             break;
+        default:
+            ASSERT(FALSE);
+            break;
         }
 
         create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
@@ -2833,6 +2848,9 @@ boolean libspdm_req_asym_verify_hash(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, TRUE, &param_size);
+            break;
+        default:
+            ASSERT(FALSE);
             break;
         }
 
@@ -2987,6 +3005,9 @@ boolean libspdm_req_asym_sign(
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, TRUE, &param_size);
             break;
+        default:
+            ASSERT(FALSE);
+            break;
         }
 
         create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
@@ -3086,6 +3107,9 @@ boolean libspdm_req_asym_sign_hash(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = CRYPTO_NID_NULL;
             param = get_spdm_signing_context_string (spdm_version, op_code, TRUE, &param_size);
+            break;
+        default:
+            ASSERT(FALSE);
             break;
         }
 
