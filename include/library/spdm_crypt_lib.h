@@ -1251,7 +1251,7 @@ boolean libspdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size);
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    IN const uint8_t *buffer, IN intn len, OUT char *name_buffer,
+    IN uint8_t *buffer, IN intn len, OUT char *name_buffer,
     OPTIONAL IN OUT uintn *name_buffer_size, OUT uint8_t *oid,
     OPTIONAL IN OUT uintn *oid_size);
 
