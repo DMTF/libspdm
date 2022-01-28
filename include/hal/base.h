@@ -645,6 +645,10 @@ typedef uintn *BASE_LIST;
 #define STATIC_ASSERT(expression, message)
 #elif _MSC_EXTENSIONS
 #define STATIC_ASSERT static_assert
+#elif !defined(_Static_assert)
+#define STATIC_ASSERT(expression, message) \
+    extern int (*__Static_assert_function (void)) \
+        [!!sizeof (struct { int __error_if_negative: (expression) ? 2 : -1; })]
 #else
 #define STATIC_ASSERT _Static_assert
 #endif
