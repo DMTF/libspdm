@@ -1104,9 +1104,10 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
         return libspdm_get_hash_size(
             spdm_context->connection_info.algorithm.base_hash_algo);
         break;
+    default:
+        return 0;
+        break;
     }
-
-    return 0;
 }
 
 /**

@@ -27,8 +27,9 @@ uint32_t libspdm_get_hash_size(IN uint32_t base_hash_algo)
         return 64;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
         return 32;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -55,8 +56,9 @@ uintn get_spdm_hash_nid(IN uint32_t base_hash_algo)
         return CRYPTO_NID_SHA3_512;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
         return CRYPTO_NID_SM3_256;
+    default:
+        return CRYPTO_NID_NULL;
     }
-    return CRYPTO_NID_NULL;
 }
 
 /**
@@ -118,8 +120,11 @@ libspdm_hash_new_func get_spdm_hash_new_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -182,8 +187,11 @@ libspdm_hash_free_func get_spdm_hash_free_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -246,8 +254,11 @@ libspdm_hash_init_func get_spdm_hash_init_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -311,8 +322,11 @@ libspdm_hash_duplicate_func get_spdm_hash_duplicate_func(IN uint32_t base_hash_a
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -375,8 +389,11 @@ libspdm_hash_update_func get_spdm_hash_update_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 /**
@@ -438,8 +455,11 @@ libspdm_hash_final_func get_spdm_hash_final_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -502,8 +522,11 @@ libspdm_hash_all_func get_spdm_hash_all_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -689,8 +712,9 @@ uint32_t libspdm_get_measurement_hash_size(IN uint32_t measurement_hash_algo)
         return 32;
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY:
         return 0xFFFFFFFF;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -752,8 +776,11 @@ libspdm_hash_all_func get_spdm_measurement_hash_func(IN uint32_t measurement_has
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -841,8 +868,11 @@ libspdm_hmac_new_func get_spdm_hmac_new_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -905,8 +935,11 @@ libspdm_hmac_free_func get_spdm_hmac_free_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -969,8 +1002,11 @@ libspdm_hmac_set_key_func get_spdm_hmac_init_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1033,8 +1069,11 @@ libspdm_hmac_duplicate_func get_spdm_hmac_duplicate_func(IN uint32_t base_hash_a
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1097,8 +1136,11 @@ libspdm_hmac_update_func get_spdm_hmac_update_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 /**
@@ -1160,8 +1202,11 @@ libspdm_hmac_final_func get_spdm_hmac_final_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1224,8 +1269,11 @@ libspdm_hmac_all_func get_spdm_hmac_all_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1458,8 +1506,11 @@ libspdm_hkdf_expand_func get_spdm_hkdf_expand_func(IN uint32_t base_hash_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1621,8 +1672,9 @@ uint32_t libspdm_get_asym_signature_size(IN uint32_t base_asym_algo)
         return 32 * 2;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
         return 57 * 2;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -1672,8 +1724,11 @@ get_spdm_asym_get_public_key_from_x509(IN uint32_t base_asym_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1750,8 +1805,11 @@ libspdm_asym_free_func get_spdm_asym_free(IN uint32_t base_asym_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -1798,8 +1856,11 @@ boolean spdm_asym_func_need_hash(IN uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
         return FALSE;
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return FALSE;
 }
 
@@ -1915,8 +1976,11 @@ libspdm_asym_verify_func get_spdm_asym_verify(IN uint32_t base_asym_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -2158,8 +2222,11 @@ get_spdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -2299,8 +2366,11 @@ libspdm_asym_sign_func get_spdm_asym_sign(IN uint32_t base_asym_algo)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3077,8 +3147,9 @@ uint32_t libspdm_get_dhe_pub_key_size(IN uint16_t dhe_named_group)
         return 66 * 2;
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
         return 32 * 2;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -3105,8 +3176,9 @@ uintn get_spdm_dhe_nid(IN uint16_t dhe_named_group)
         return CRYPTO_NID_SECP521R1;
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
         return CRYPTO_NID_SM2_KEY_EXCHANGE_P256;
+    default:
+        return CRYPTO_NID_NULL;
     }
-    return CRYPTO_NID_NULL;
 }
 
 /**
@@ -3144,8 +3216,11 @@ libspdm_dhe_new_by_nid_func get_spdm_dhe_new(IN uint16_t dhe_named_group)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3243,8 +3318,11 @@ libspdm_dhe_free_func get_spdm_dhe_free(IN uint16_t dhe_named_group)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3300,8 +3378,11 @@ libspdm_dhe_generate_key_func get_spdm_dhe_generate_key(IN uint16_t dhe_named_gr
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3371,8 +3452,11 @@ libspdm_dhe_compute_key_func get_spdm_dhe_compute_key(IN uint16_t dhe_named_grou
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3434,8 +3518,9 @@ uint32_t libspdm_get_aead_key_size(IN uint16_t aead_cipher_suite)
         return 32;
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
         return 16;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -3456,8 +3541,9 @@ uint32_t libspdm_get_aead_iv_size(IN uint16_t aead_cipher_suite)
         return 12;
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
         return 12;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -3478,8 +3564,9 @@ uint32_t libspdm_get_aead_tag_size(IN uint16_t aead_cipher_suite)
         return 16;
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
         return 16;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 /**
@@ -3520,8 +3607,11 @@ libspdm_aead_encrypt_func get_spdm_aead_enc_func(IN uint16_t aead_cipher_suite)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
@@ -3603,8 +3693,11 @@ libspdm_aead_decrypt_func get_spdm_aead_dec_func(IN uint16_t aead_cipher_suite)
         ASSERT(FALSE);
         break;
 #endif
+    default:
+        ASSERT(FALSE);
+        break;
     }
-    ASSERT(FALSE);
+
     return NULL;
 }
 
