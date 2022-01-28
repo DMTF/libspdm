@@ -406,6 +406,9 @@ return_status spdm_get_response_algorithms(IN void *context,
                     .key_schedule =
                     struct_table->alg_supported;
                 break;
+            default:
+                /* Unknown algorithm types do not need to be processed */
+                break;
             }
             ext_alg_count = struct_table->alg_count & 0xF;
             struct_table =
