@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-uintn ascii_str_len(IN const char8 *string)
+uintn ascii_str_len(IN const char *string)
 {
     uintn length;
 
@@ -21,7 +21,7 @@ uintn ascii_str_len(IN const char8 *string)
     return length;
 }
 
-void my_print(IN char8 *message)
+void my_print(IN char *message)
 {
     debug_print(DEBUG_INFO, "%s", message);
 }

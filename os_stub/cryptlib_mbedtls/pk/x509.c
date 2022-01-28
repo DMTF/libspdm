@@ -84,9 +84,9 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     }
 
     for (index = 0;; index++) {
-        
+
         /* If cert is NULL, then it is the end of the list.*/
-        
+
         cert = VA_ARG(args, uint8_t *);
         if (cert == NULL) {
             break;
@@ -243,7 +243,7 @@ cleanup:
 
 return_status
 internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8_t *oid,
-               IN uintn oid_size, IN OUT char8 *common_name,
+               IN uintn oid_size, IN OUT char *common_name,
                OPTIONAL IN OUT uintn *common_name_size)
 {
     mbedtls_asn1_named_data *data;
@@ -268,7 +268,7 @@ internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8_t *oid,
 return_status
 internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
                    IN uint8_t *oid, IN uintn oid_size,
-                   OUT char8 *common_name,
+                   OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size)
 {
     mbedtls_x509_crt crt;
@@ -300,7 +300,7 @@ internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
 return_status
 internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
                   IN uint8_t *oid, IN uintn oid_size,
-                  OUT char8 *common_name,
+                  OUT char *common_name,
                   OPTIONAL IN OUT uintn *common_name_size)
 {
     mbedtls_x509_crt crt;
@@ -356,7 +356,7 @@ internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                   OUT char8 *common_name,
+                   OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size)
 {
     return internal_x509_get_subject_nid_name(
@@ -392,7 +392,7 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-               OUT char8 *name_buffer,
+               OUT char *name_buffer,
                OPTIONAL IN OUT uintn *name_buffer_size)
 {
     return internal_x509_get_subject_nid_name(
@@ -637,9 +637,9 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
 
     current_cert = cert_chain;
 
-    
+
     /* Get Current certificate from certificates buffer and Verify with preciding cert*/
-    
+
     do {
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
@@ -660,15 +660,15 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
             verify_flag = TRUE;
         }
 
-        
+
         /* Save preceding certificate*/
-        
+
         preceding_cert = current_cert;
         preceding_cert_len = current_cert_len;
 
-        
+
         /* Move current certificate to next;*/
-        
+
         current_cert = current_cert + current_cert_len;
     } while (TRUE);
 
@@ -705,9 +705,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     uint8_t *tmp_ptr;
     int32_t ret;
 
-    
+
     /* Check input parameters.*/
-    
+
     if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
         (cert_length == NULL)) {
         return FALSE;
@@ -716,13 +716,13 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     current_cert = cert_chain;
     current_index = -1;
 
-    
+
     /* Traverse the certificate chain*/
-    
+
     while (TRUE) {
-        
+
         /* Get asn1 tag len*/
-        
+
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
             &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
@@ -740,15 +740,15 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
             return TRUE;
         }
 
-        
+
         /* Move to next*/
-        
+
         current_cert = current_cert + current_cert_len;
     }
 
-    
+
     /* If cert_index is -1, Return the last certificate*/
-    
+
     if (cert_index == -1 && current_index >= 0) {
         *cert = current_cert - current_cert_len;
         *cert_length = current_cert_len;
@@ -967,7 +967,7 @@ cleanup:
 **/
 return_status
 x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                OUT char8 *common_name,
+                OUT char *common_name,
                 OPTIONAL IN OUT uintn *common_name_size)
 {
     return internal_x509_get_issuer_nid_name(cert, cert_size,
@@ -1004,7 +1004,7 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-                 OUT char8 *name_buffer,
+                 OUT char *name_buffer,
                  OPTIONAL IN OUT uintn *name_buffer_size)
 {
     return internal_x509_get_issuer_nid_name(
@@ -1398,14 +1398,14 @@ static intn internal_x509_check_time(const mbedtls_x509_time *before,
     return (0);
 }
 
-static int32_t internal_atoi(char8 *p_start, char8 *p_end)
+static int32_t internal_atoi(char *p_start, char *p_end)
 {
-    char8 *p = p_start;
+    char *p = p_start;
     int32_t k = 0;
     while (p < p_end) {
-        
+
         /* k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10*/
-        
+
         k = (k << 3) + (k << 1) + (*p) - '0';
         p++;
     }
@@ -1435,7 +1435,7 @@ static int32_t internal_atoi(char8 *p_start, char8 *p_end)
                                    date_time_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
+return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
                  IN OUT uintn *date_time_size)
 {
     mbedtls_x509_time dt;
@@ -1447,7 +1447,7 @@ return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
     int32_t minute;
     int32_t second;
     return_status status;
-    char8 *p;
+    char *p;
 
     p = date_time_str;
 

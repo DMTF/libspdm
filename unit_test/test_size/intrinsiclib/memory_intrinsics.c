@@ -26,18 +26,18 @@ int GLOBAL_USED _fltused = 1;
 /* Sets buffers to a specified character */
 void *memset(void *dest, int ch, size_t count)
 {
-    
+
     /* NOTE: Here we use one base implementation for memset, instead of the direct*/
     /*       optimized set_mem() wrapper. Because the intrinsiclib has to be built*/
     /*       without whole program optimization option, and there will be some*/
     /*       potential register usage errors when calling other optimized codes.*/
-    
 
-    
+
+
     /* Declare the local variables that actually move the data elements as*/
     /* volatile to prevent the optimizer from replacing this function with*/
     /* the intrinsic memset()*/
-    
+
     volatile uint8_t *pointer;
 
     pointer = (uint8_t *)dest;
@@ -60,7 +60,7 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
     return (int)const_compare_mem(buf1, buf2, count);
 }
 
-intn ascii_strcmp(IN const char8 *first_string, IN const char8 *second_string)
+intn ascii_strcmp(IN const char *first_string, IN const char *second_string)
 {
     while ((*first_string != '\0') && (*first_string == *second_string)) {
         first_string++;
@@ -75,7 +75,7 @@ int strcmp(const char *s1, const char *s2)
     return (int)ascii_strcmp(s1, s2);
 }
 
-uintn ascii_strlen(IN const char8 *string)
+uintn ascii_strlen(IN const char *string)
 {
     uintn length;
 
@@ -92,13 +92,13 @@ unsigned int strlen(char *s)
     return (unsigned int)ascii_strlen(s);
 }
 
-char8 *ascii_strstr(IN const char8 *string, IN const char8 *search_string)
+char *ascii_strstr(IN const char *string, IN const char *search_string)
 {
-    const char8 *first_match;
-    const char8 *search_string_tmp;
+    const char *first_match;
+    const char *search_string_tmp;
 
     if (*search_string == '\0') {
-        return (char8 *)string;
+        return (char *)string;
     }
 
     while (*string != '\0') {
@@ -111,7 +111,7 @@ char8 *ascii_strstr(IN const char8 *string, IN const char8 *search_string)
         }
 
         if (*search_string_tmp == '\0') {
-            return (char8 *)first_match;
+            return (char *)first_match;
         }
 
         if (*string == '\0') {

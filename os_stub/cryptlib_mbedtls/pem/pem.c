@@ -16,7 +16,7 @@
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
 
-static uintn ascii_str_len(IN const char8 *string)
+static uintn ascii_str_len(IN const char *string)
 {
     uintn length;
 
@@ -50,7 +50,7 @@ static uintn ascii_str_len(IN const char8 *string)
 **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **rsa_context)
 {
     int32_t ret;
@@ -135,7 +135,7 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 
 **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                    IN const char8 *password,
+                    IN const char *password,
                     OUT void **ec_context)
 {
     int32_t ret;
@@ -226,7 +226,7 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
 **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **ecd_context)
 {
     return FALSE;
@@ -251,7 +251,7 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
 **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **sm2_context)
 {
     return FALSE;

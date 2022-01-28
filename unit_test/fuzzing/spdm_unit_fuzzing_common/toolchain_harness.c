@@ -19,7 +19,7 @@
 #include <klee/klee.h>
 #endif
 
-boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
+boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
              IN void **test_buffer, OUT uintn *buffer_size)
 {
     void *buffer;
@@ -91,7 +91,7 @@ boolean init_test_buffer(IN char8 *file_name, IN uintn max_buffer_size,
     return TRUE;
 }
 
-uint8_t judge_requster_name(IN char8 *file_name)
+uint8_t judge_requster_name(IN char *file_name)
 {
     char *file_p = file_name, *requester_name_p = NULL, *pSave = NULL, flag;
     char requester_name[] = "test_spdm_requester";
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
     boolean res;
     void *test_buffer;
     uintn test_buffer_size;
-    char8 *file_name;
+    char *file_name;
 
     if (argc <= 1) {
         printf("error - missing input file\n");

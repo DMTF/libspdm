@@ -39,16 +39,16 @@ boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
     X509 *x509_cert;
     const uint8_t *temp;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || single_x509_cert == NULL || cert_size > INT_MAX) {
         return FALSE;
     }
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     temp = cert;
     x509_cert = d2i_X509(NULL, &temp, (long)cert_size);
     if (x509_cert == NULL) {
@@ -89,18 +89,18 @@ boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     boolean res;
     uintn index;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (x509_stack == NULL) {
         return FALSE;
     }
 
     res = FALSE;
 
-    
+
     /* Initialize X509 stack object.*/
-    
+
     cert_stack = (STACK_OF(X509) *)(*x509_stack);
     if (cert_stack == NULL) {
         cert_stack = sk_X509_new_null();
@@ -110,9 +110,9 @@ boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     }
 
     for (index = 0;; index++) {
-        
+
         /* If cert is NULL, then it is the end of the list.*/
-        
+
         cert = VA_ARG(args, uint8_t *);
         if (cert == NULL) {
             break;
@@ -123,9 +123,9 @@ boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
             break;
         }
 
-        
+
         /* Construct X509 Object from the given DER-encoded certificate data.*/
-        
+
         x509_cert = NULL;
         res = x509_construct_certificate((const uint8_t *)cert, cert_size,
                          (uint8_t **)&x509_cert);
@@ -136,9 +136,9 @@ boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
             break;
         }
 
-        
+
         /* Insert the new X509 object into X509 stack object.*/
-        
+
         sk_X509_push(cert_stack, x509_cert);
     }
 
@@ -188,16 +188,16 @@ boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 **/
 void x509_free(IN void *x509_cert)
 {
-    
+
     /* Check input parameters.*/
-    
+
     if (x509_cert == NULL) {
         return;
     }
 
-    
+
     /* Free OpenSSL X509 object.*/
-    
+
     X509_free((X509 *)x509_cert);
 }
 
@@ -211,16 +211,16 @@ void x509_free(IN void *x509_cert)
 **/
 void x509_stack_free(IN void *x509_stack)
 {
-    
+
     /* Check input parameters.*/
-    
+
     if (x509_stack == NULL) {
         return;
     }
 
-    
+
     /* Free OpenSSL X509 stack object.*/
-    
+
     sk_X509_pop_free((STACK_OF(X509) *)x509_stack, X509_free);
 }
 
@@ -243,9 +243,9 @@ boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
     int32_t obj_class;
     long obj_length;
 
-    
+
     /* Save ptr position*/
-    
+
     ptr_old = *ptr;
 
     ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
@@ -255,9 +255,9 @@ boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
         *length = (uintn)obj_length;
         return TRUE;
     } else {
-        
+
         /* if doesn't match tag, restore ptr to origin ptr*/
-        
+
         *ptr = ptr_old;
         return FALSE;
     }
@@ -289,18 +289,18 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
     X509_NAME *x509_name;
     uintn x509_name_size;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || subject_size == NULL) {
         return FALSE;
     }
 
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -309,9 +309,9 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     x509_name = X509_get_subject_name(x509_cert);
     if (x509_name == NULL) {
         goto done;
@@ -329,9 +329,9 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -367,7 +367,7 @@ done:
 **/
 static return_status
 internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
-               OUT char8 *common_name,
+               OUT char *common_name,
                OPTIONAL IN OUT uintn *common_name_size)
 {
     return_status status;
@@ -380,9 +380,9 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
     status = RETURN_INVALID_PARAMETER;
     utf8_name = NULL;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (x509_name == NULL || (common_name_size == NULL)) {
         return status;
     }
@@ -390,14 +390,14 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
         return status;
     }
 
-    
+
     /* Retrive the string from X.509 Subject base on the request_nid*/
-    
+
     index = X509_NAME_get_index_by_NID(x509_name, request_nid, -1);
     if (index < 0) {
-        
+
         /* No request_nid name entry exists in X509_NAME object*/
-        
+
         *common_name_size = 0;
         status = RETURN_NOT_FOUND;
         goto done;
@@ -405,9 +405,9 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
 
     entry = X509_NAME_get_entry(x509_name, index);
     if (entry == NULL) {
-        
+
         /* Fail to retrieve name entry data*/
-        
+
         *common_name_size = 0;
         status = RETURN_NOT_FOUND;
         goto done;
@@ -417,9 +417,9 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
 
     length = ASN1_STRING_to_UTF8(&utf8_name, entry_data);
     if (length < 0) {
-        
+
         /* Fail to convert the name string*/
-        
+
         *common_name_size = 0;
         status = RETURN_INVALID_PARAMETER;
         goto done;
@@ -437,9 +437,9 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (utf8_name != NULL) {
         OPENSSL_free(utf8_name);
     }
@@ -475,7 +475,7 @@ done:
 **/
 static return_status
 internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
-                   IN int32_t request_nid, OUT char8 *common_name,
+                   IN int32_t request_nid, OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size)
 {
     return_status status;
@@ -490,27 +490,27 @@ internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
         goto done;
     }
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
-        
+
         /* Invalid X.509 Certificate*/
-        
+
         goto done;
     }
 
     res = FALSE;
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     x509_name = X509_get_subject_name(x509_cert);
     if (x509_name == NULL) {
-        
+
         /* Fail to retrieve subject name content*/
-        
+
         goto done;
     }
 
@@ -518,9 +518,9 @@ internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
                         common_name_size);
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -555,7 +555,7 @@ done:
 **/
 static return_status
 internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
-                  IN int32_t request_nid, OUT char8 *common_name,
+                  IN int32_t request_nid, OUT char *common_name,
                   OPTIONAL IN OUT uintn *common_name_size)
 {
     return_status status;
@@ -570,27 +570,27 @@ internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
         goto done;
     }
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
-        
+
         /* Invalid X.509 Certificate*/
-        
+
         goto done;
     }
 
     res = FALSE;
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     x509_name = X509_get_issuer_name(x509_cert);
     if (x509_name == NULL) {
-        
+
         /* Fail to retrieve subject name content*/
-        
+
         goto done;
     }
 
@@ -598,9 +598,9 @@ internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
                         common_name_size);
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -634,7 +634,7 @@ done:
 
 **/
 return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                   OUT char8 *common_name,
+                   OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size)
 {
     return internal_x509_get_subject_nid_name(
@@ -669,7 +669,7 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-               OUT char8 *name_buffer,
+               OUT char *name_buffer,
                OPTIONAL IN OUT uintn *name_buffer_size)
 {
     return internal_x509_get_subject_nid_name(cert, cert_size,
@@ -705,9 +705,9 @@ return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
     status = RETURN_SUCCESS;
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
-        
+
         /* Invalid X.509 Certificate*/
-        
+
         status = RETURN_INVALID_PARAMETER;
     }
 
@@ -755,26 +755,26 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
 
     status = RETURN_INVALID_PARAMETER;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || serial_number_size == NULL) {
         return status;
     }
 
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         goto done;
     }
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     asn1_integer = X509_get_serialNumber(x509_cert);
     if (asn1_integer == NULL) {
         status = RETURN_NOT_FOUND;
@@ -794,9 +794,9 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -832,18 +832,18 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
     X509_NAME *x509_name;
     uintn x509_name_size;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || issuer_size == NULL) {
         return FALSE;
     }
 
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -852,9 +852,9 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve issuer name from certificate object.*/
-    
+
     x509_name = X509_get_issuer_name(x509_cert);
     if (x509_name == NULL) {
         goto done;
@@ -872,9 +872,9 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -910,7 +910,7 @@ done:
 **/
 return_status
 x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                OUT char8 *common_name,
+                OUT char *common_name,
                 OPTIONAL IN OUT uintn *common_name_size)
 {
     return internal_x509_get_issuer_nid_name(
@@ -945,7 +945,7 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-                 OUT char8 *name_buffer,
+                 OUT char *name_buffer,
                  OPTIONAL IN OUT uintn *name_buffer_size)
 {
     return internal_x509_get_issuer_nid_name(cert, cert_size,
@@ -982,9 +982,9 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
     ASN1_OBJECT *asn1_obj;
     uintn obj_length;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || oid_size == NULL || cert_size == 0) {
         return RETURN_INVALID_PARAMETER;
     }
@@ -992,18 +992,18 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
     x509_cert = NULL;
     status = RETURN_INVALID_PARAMETER;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         status = RETURN_INVALID_PARAMETER;
         goto done;
     }
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     nid = X509_get_signature_nid(x509_cert);
     if (nid == NID_undef) {
         status = RETURN_NOT_FOUND;
@@ -1028,9 +1028,9 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
     status = RETURN_SUCCESS;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1070,9 +1070,9 @@ boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
     uintn t_size;
     uintn f_size;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || from_size == NULL || to_size == NULL ||
         cert_size == 0) {
         return FALSE;
@@ -1081,17 +1081,17 @@ boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
     x509_cert = NULL;
     res = FALSE;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         goto done;
     }
 
-    
+
     /* Retrieve Validity from/to from certificate object.*/
-    
+
     f_time = X509_get0_notBefore(x509_cert);
     t_time = X509_get0_notAfter(x509_cert);
 
@@ -1127,9 +1127,9 @@ boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
     res = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1160,7 +1160,7 @@ done:
                                    date_time_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_set_date_time(IN char8 *date_time_str, OUT void *date_time,
+return_status x509_set_date_time(IN char *date_time_str, OUT void *date_time,
                  IN OUT uintn *date_time_size)
 {
     return_status status;
@@ -1244,9 +1244,9 @@ boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
     boolean res;
     X509 *x509_cert;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || usage == NULL) {
         return FALSE;
     }
@@ -1254,17 +1254,17 @@ boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
     x509_cert = NULL;
     res = FALSE;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         goto done;
     }
 
-    
+
     /* Retrieve subject name from certificate object.*/
-    
+
     *usage = X509_get_key_usage(x509_cert);
     if (*usage == NID_undef) {
         goto done;
@@ -1272,9 +1272,9 @@ boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
     res = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1320,9 +1320,9 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
 
     status = RETURN_INVALID_PARAMETER;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
         return status;
@@ -1331,26 +1331,26 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
     x509_cert = NULL;
     res = FALSE;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         goto cleanup;
     }
 
-    
+
     /* Retrieve extensions from certificate object.*/
-    
+
     status = RETURN_NOT_FOUND;
     extensions = X509_get0_extensions(x509_cert);
     if (sk_X509_EXTENSION_num(extensions) <= 0) {
         goto cleanup;
     }
 
-    
+
     /* Traverse extensions*/
-    
+
     for (i = 0; i < sk_X509_EXTENSION_num(extensions); i++) {
         ext = sk_X509_EXTENSION_value(extensions, (int)i);
         if (ext == NULL) {
@@ -1370,9 +1370,9 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
 
         if (oid_size == obj_length &&
             const_compare_mem(OBJ_get0_data(asn1_obj), oid, oid_size) == 0) {
-            
+
             /* Extension Found*/
-            
+
             status = RETURN_SUCCESS;
             break;
         }
@@ -1392,9 +1392,9 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
     }
 
 cleanup:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1454,9 +1454,9 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     EVP_PKEY *pkey;
     X509 *x509_cert;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || rsa_context == NULL) {
         return FALSE;
     }
@@ -1464,9 +1464,9 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     pkey = NULL;
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -1475,26 +1475,26 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve and check EVP_PKEY data from X509 Certificate.*/
-    
+
     pkey = X509_get_pubkey(x509_cert);
     if ((pkey == NULL) || (EVP_PKEY_id(pkey) != EVP_PKEY_RSA)) {
         goto done;
     }
 
-    
+
     /* Duplicate RSA context from the retrieved EVP_PKEY.*/
-    
+
     if ((*rsa_context = RSAPublicKey_dup(EVP_PKEY_get0_RSA(pkey))) !=
         NULL) {
         res = TRUE;
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1529,9 +1529,9 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     EVP_PKEY *pkey;
     X509 *x509_cert;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || ec_context == NULL) {
         return FALSE;
     }
@@ -1539,9 +1539,9 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     pkey = NULL;
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -1550,25 +1550,25 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve and check EVP_PKEY data from X509 Certificate.*/
-    
+
     pkey = X509_get_pubkey(x509_cert);
     if ((pkey == NULL) || (EVP_PKEY_id(pkey) != EVP_PKEY_EC)) {
         goto done;
     }
 
-    
+
     /* Duplicate EC context from the retrieved EVP_PKEY.*/
-    
+
     if ((*ec_context = EC_KEY_dup(EVP_PKEY_get0_EC_KEY(pkey))) != NULL) {
         res = TRUE;
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1604,9 +1604,9 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     X509 *x509_cert;
     int32_t type;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || ecd_context == NULL) {
         return FALSE;
     }
@@ -1614,9 +1614,9 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     pkey = NULL;
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -1625,9 +1625,9 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve and check EVP_PKEY data from X509 Certificate.*/
-    
+
     pkey = X509_get_pubkey(x509_cert);
     if (pkey == NULL) {
         goto done;
@@ -1641,9 +1641,9 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     res = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1677,9 +1677,9 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     EC_KEY *ec_key;
     int32_t openssl_nid;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || sm2_context == NULL) {
         return FALSE;
     }
@@ -1687,9 +1687,9 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     pkey = NULL;
     x509_cert = NULL;
 
-    
+
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
@@ -1698,9 +1698,9 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Retrieve and check EVP_PKEY data from X509 Certificate.*/
-    
+
     pkey = X509_get_pubkey(x509_cert);
     if (pkey == NULL) {
         goto done;
@@ -1719,9 +1719,9 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     res = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1754,9 +1754,9 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
     X509_STORE *cert_store;
     X509_STORE_CTX *cert_ctx;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (cert == NULL || ca_cert == NULL) {
         return FALSE;
     }
@@ -1767,9 +1767,9 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
     cert_store = NULL;
     cert_ctx = NULL;
 
-    
+
     /* Register & Initialize necessary digest algorithms for certificate verification.*/
-    
+
     if (EVP_add_digest(EVP_sha256()) == 0) {
         goto done;
     }
@@ -1780,18 +1780,18 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
         goto done;
     }
 
-    
+
     /* Read DER-encoded certificate to be verified and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = FALSE;
         goto done;
     }
 
-    
+
     /* Read DER-encoded root certificate and Construct X509 object.*/
-    
+
     res = x509_construct_certificate(ca_cert, ca_cert_size,
                      (uint8_t **)&x509_ca_cert);
     if ((x509_ca_cert == NULL) || (!res)) {
@@ -1801,9 +1801,9 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
 
     res = FALSE;
 
-    
+
     /* Set up X509 Store for trusted certificate.*/
-    
+
     cert_store = X509_STORE_new();
     if (cert_store == NULL) {
         goto done;
@@ -1812,15 +1812,15 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
         goto done;
     }
 
-    
+
     /* Allow partial certificate chains, terminated by a non-self-signed but*/
     /* still trusted intermediate certificate. Also disable time checks.*/
-    
+
     X509_STORE_set_flags(cert_store, X509_V_FLAG_PARTIAL_CHAIN);
 
-    
+
     /* Set up X509_STORE_CTX for the subsequent verification operation.*/
-    
+
     cert_ctx = X509_STORE_CTX_new();
     if (cert_ctx == NULL) {
         goto done;
@@ -1829,16 +1829,16 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
         goto done;
     }
 
-    
+
     /* X509 Certificate Verification.*/
-    
+
     res = (boolean)X509_verify_cert(cert_ctx);
     X509_STORE_CTX_cleanup(cert_ctx);
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1880,31 +1880,31 @@ boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
     uint32_t obj_class;
     uintn length;
 
-    
+
     /* Check input parameters.*/
-    
+
     if ((cert == NULL) || (tbs_cert == NULL) || (tbs_cert_size == NULL) ||
         (cert_size > INT_MAX)) {
         return FALSE;
     }
 
-    
+
     /* An X.509 Certificate is: (defined in RFC3280)*/
     /*   Certificate  ::=  SEQUENCE  {*/
     /*     tbsCertificate       TBSCertificate,*/
     /*     signatureAlgorithm   AlgorithmIdentifier,*/
     /*     signature            BIT STRING }*/
-    
+
     /* and*/
-    
+
     /*  TBSCertificate  ::=  SEQUENCE  {*/
     /*    version         [0]  version DEFAULT v1,*/
     /*    ...*/
     /*    }*/
-    
+
     /* So we can just ASN1-parse the x.509 DER-encoded data. If we strip*/
     /* the first SEQUENCE, the second SEQUENCE is the TBSCertificate.*/
-    
+
     temp = cert;
     length = 0;
     ASN1_get_object(&temp, (long *)&length, (int *)&asn1_tag,
@@ -1918,9 +1918,9 @@ boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
 
     ASN1_get_object(&temp, (long *)&length, (int *)&asn1_tag,
             (int *)&obj_class, (long)length);
-    
+
     /* Verify the parsed TBSCertificate is one correct SEQUENCE data.*/
-    
+
     if (asn1_tag != V_ASN1_SEQUENCE) {
         return FALSE;
     }
@@ -1980,14 +1980,14 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
             break;
         }
 
-        
+
         /* Calculate current_cert length;*/
-        
+
         current_cert_len = tmp_ptr - current_cert + length;
 
-        
+
         /* Verify current_cert with preceding cert;*/
-        
+
         verify_flag =
             x509_verify_cert(current_cert, current_cert_len,
                      preceding_cert, preceding_cert_len);
@@ -1995,15 +1995,15 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
             break;
         }
 
-        
+
         /* move Current cert to Preceding cert*/
-        
+
         preceding_cert_len = current_cert_len;
         preceding_cert = current_cert;
 
-        
+
         /* Move to next*/
-        
+
         current_cert = current_cert + current_cert_len;
     }
 
@@ -2042,9 +2042,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     uint32_t asn1_tag;
     uint32_t obj_class;
 
-    
+
     /* Check input parameters.*/
-    
+
     if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
         (cert_length == NULL)) {
         return FALSE;
@@ -2055,9 +2055,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     current_cert = cert_chain;
     current_index = -1;
 
-    
+
     /* Traverse the certificate chain*/
-    
+
     while (TRUE) {
         tmp_ptr = current_cert;
 
@@ -2069,9 +2069,9 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
         if (asn1_tag != V_ASN1_SEQUENCE || ret == 0x80) {
             break;
         }
-        
+
         /* Calculate current_cert length;*/
-        
+
         current_cert_len = tmp_ptr - current_cert + asn1_len;
         current_index++;
 
@@ -2081,15 +2081,15 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
             return TRUE;
         }
 
-        
+
         /* Move to next*/
-        
+
         current_cert = current_cert + current_cert_len;
     }
 
-    
+
     /* If cert_index is -1, Return the last certificate*/
-    
+
     if (cert_index == -1 && current_index >= 0) {
         *cert = current_cert - current_cert_len;
         *cert_length = current_cert_len;

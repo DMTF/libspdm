@@ -14,7 +14,7 @@
 
 /* message string for digest validation*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_hash_data = "abc";
+GLOBAL_REMOVE_IF_UNREFERENCED const char *m_hash_data = "abc";
 
 
 /* result for SHA-256("abc"). (from "B.1 SHA-256 Example" of NIST FIPS 180-2)*/
@@ -102,9 +102,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA256: ");
 
-    
+
     /* SHA256 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha256_new();
     if (hash_ctx == NULL) {
@@ -160,9 +160,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA384: ");
 
-    
+
     /* SHA384 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha384_new();
     if (hash_ctx == NULL) {
@@ -218,9 +218,9 @@ return_status validate_crypt_digest(void)
 
     my_print("- SHA512: ");
 
-    
+
     /* SHA512 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha512_new();
     if (hash_ctx == NULL) {
@@ -275,9 +275,9 @@ return_status validate_crypt_digest(void)
     my_print("[Pass]\n");
 
     my_print("- SHA3_256: ");
-    
+
     /* SHA3_256 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_256_new();
     if (hash_ctx != NULL) {
@@ -321,9 +321,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SHA3_384: ");
-    
+
     /* SHA3_384 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_384_new();
     if (hash_ctx != NULL) {
@@ -367,9 +367,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SHA3_512: ");
-    
+
     /* SHA3_512 digest Validation*/
-    
+
     zero_mem(digest, MAX_DIGEST_SIZE);
     hash_ctx = sha3_512_new();
     if (hash_ctx != NULL) {
@@ -413,9 +413,9 @@ return_status validate_crypt_digest(void)
     }
 
     my_print("- SM3_256: ");
-    
+
     /* SM3_256 digest Validation*/
-    
+
     my_print("HashAll... ");
     zero_mem(digest, SM3_256_DIGEST_SIZE);
     status = sm3_256_hash_all(m_hash_data, data_size, digest);

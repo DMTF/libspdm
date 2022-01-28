@@ -47,7 +47,7 @@ void dump_hex(IN uint8_t *data, IN uintn size)
     }
 }
 
-boolean read_input_file(IN char8 *file_name, OUT void **file_data,
+boolean read_input_file(IN char *file_name, OUT void **file_data,
             OUT uintn *file_size)
 {
     FILE *fp_in;
@@ -83,7 +83,7 @@ boolean read_input_file(IN char8 *file_name, OUT void **file_data,
     return TRUE;
 }
 
-boolean write_output_file(IN char8 *file_name, IN void *file_data,
+boolean write_output_file(IN char *file_name, IN void *file_data,
               IN uintn file_size)
 {
     FILE *fp_out;

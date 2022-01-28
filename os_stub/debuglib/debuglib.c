@@ -31,8 +31,8 @@
 #define DEBUG_LEVEL_CONFIG (DEBUG_INFO | DEBUG_ERROR)
 #endif
 
-void debug_assert(IN const char8 *file_name, IN uintn line_number,
-          IN const char8 *description)
+void debug_assert(IN const char *file_name, IN uintn line_number,
+          IN const char *description)
 {
     printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
            description);
@@ -55,9 +55,9 @@ void debug_assert(IN const char8 *file_name, IN uintn line_number,
     assert(FALSE);
 }
 
-void debug_print(IN uintn error_level, IN const char8 *format, ...)
+void debug_print(IN uintn error_level, IN const char *format, ...)
 {
-    char8 buffer[MAX_DEBUG_MESSAGE_LENGTH];
+    char buffer[MAX_DEBUG_MESSAGE_LENGTH];
     va_list marker;
 
     if ((error_level & DEBUG_LEVEL_CONFIG) == 0) {

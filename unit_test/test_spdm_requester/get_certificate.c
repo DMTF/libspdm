@@ -23,7 +23,7 @@ boolean read_responder_public_certificate_chain_expiration(
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
     uintn cert_chain_size;
-    char8 *file;
+    char *file;
     uint8_t *root_cert;
     uintn root_cert_len;
     uintn digest_size;
@@ -54,9 +54,9 @@ boolean read_responder_public_certificate_chain_expiration(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    
+
     /* Get Root Certificate and calculate hash value*/
-    
+
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
                         &root_cert_len);
     if (!res) {

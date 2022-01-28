@@ -20,6 +20,6 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size);
 
 uintn get_max_buffer_size(void);
 
-uint8_t judge_requster_name(IN char8 *file_name);
+uint8_t judge_requster_name(IN char *file_name);
 
 #endif
