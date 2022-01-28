@@ -58,6 +58,8 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     spdm_context_t *spdm_context;
     uint16_t total_responder_cert_chain_buffer_length;
 
+    ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,
@@ -78,10 +80,6 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     init_managed_buffer(&certificate_chain_buffer,
                 LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
     length = MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-
-    if (slot_id >= SPDM_MAX_SLOT_COUNT) {
-        return RETURN_INVALID_PARAMETER;
-    }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 

@@ -285,6 +285,10 @@ return_status try_spdm_send_receive_psk_exchange(
 
     ptr += measurement_summary_hash_size;
 
+    if ( spdm_response.opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
+        libspdm_free_session_id(spdm_context, *session_id);
+        return RETURN_SECURITY_VIOLATION;
+    }
     DEBUG((DEBUG_INFO, "ServerContextData (0x%x) - ",
            spdm_response.context_length));
     internal_dump_data(ptr, spdm_response.context_length);
@@ -306,6 +310,7 @@ return_status try_spdm_send_receive_psk_exchange(
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
                        spdm_request_size);
     if (RETURN_ERROR(status)) {
+        libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
 
@@ -371,11 +376,13 @@ return_status try_spdm_send_receive_psk_exchange(
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
                          TRUE, th2_hash_data);
         if (RETURN_ERROR(status)) {
+            libspdm_free_session_id(spdm_context, *session_id);
             return RETURN_SECURITY_VIOLATION;
         }
         status = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
         if (RETURN_ERROR(status)) {
+            libspdm_free_session_id(spdm_context, *session_id);
             return RETURN_SECURITY_VIOLATION;
         }
 

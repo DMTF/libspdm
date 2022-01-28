@@ -1993,3 +1993,77 @@ uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
 {
     return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
+
+/**
+  Sort SPDMversion in descending order.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  ver_set                    A pointer to the version set.
+  @param  ver_num                    Version number.
+*/
+void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
+{
+    uintn index;
+    uintn index_sort;
+    uintn index_max;
+    spdm_version_number_t version;
+
+    /* Select sort */
+    if (ver_num > 1) {
+        for (index_sort = 0; index_sort < ver_num; index_sort++) {
+            index_max = index_sort;
+            for (index = index_sort + 1; index < ver_num; index++) {
+                /* if ver_ser[index] higher than ver_set[index_max] */
+                if (ver_set[index] > ver_set[index_max]) {
+                    index_max = index;
+                }
+            }
+            /* swap ver_ser[index_min] and ver_set[index_sort] */
+            version = ver_set[index_sort];
+            ver_set[index_sort] = ver_set[index_max];
+            ver_set[index_max] = version;
+        }
+    }
+}
+
+/**
+  Negotiate SPDMversion for connection.
+  ver_set is the local version set of requester, res_ver_set is the version set of responder.
+
+  @param  common_version             A pointer to store the common version.
+  @param  req_ver_set                A pointer to the requester version set.
+  @param  req_ver_num                Version number of requester.
+  @param  res_ver_set                A pointer to the responder version set.
+  @param  res_ver_num                Version number of responder.
+
+  @retval TRUE                       Negotiation successfully, connect version be saved to common_version.
+  @retval FALSE                      Negotiation failed.
+*/
+boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version, IN spdm_version_number_t *req_ver_set, IN uintn req_ver_num,
+                                           IN spdm_version_number_t *res_ver_set, IN uintn res_ver_num)
+{
+    uintn req_index;
+    uintn res_index;
+
+    if (req_ver_set == NULL || req_ver_num == 0 || res_ver_set == NULL || res_ver_num == 0) {
+        return FALSE;
+    }
+
+    /* Sort SPDMversion in descending order. */
+    spdm_version_number_sort(req_ver_set, req_ver_num);
+    spdm_version_number_sort(res_ver_set, res_ver_num);
+
+    /**
+      Find highest same version and make req_index point to it.
+      If not found, return FALSE.
+    **/
+    for (res_index = 0; res_index < res_ver_num; res_index ++) {
+        for (req_index = 0; req_index < req_ver_num; req_index ++) {
+            if (spdm_get_version_from_version_number(req_ver_set[req_index]) == spdm_get_version_from_version_number(res_ver_set[res_index])) {
+                *common_version = req_ver_set[req_index];
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}

@@ -70,6 +70,8 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     spdm_context_t *spdm_context;
     uint8_t auth_attribute;
 
+    ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
+
     spdm_context = context;
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                     SPDM_CHALLENGE);
@@ -83,9 +85,6 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
         return RETURN_UNSUPPORTED;
     }
 
-    if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
-        return RETURN_INVALID_PARAMETER;
-    }
     if ((slot_id == 0xFF) &&
         (spdm_context->local_context.peer_cert_chain_provision_size == 0)) {
         return RETURN_INVALID_PARAMETER;
@@ -225,9 +224,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
         return RETURN_SECURITY_VIOLATION;
     }
     ptr += sizeof(uint16_t);
-    
+
     /* Cache data*/
-    
+
     status = libspdm_append_message_c(spdm_context, &spdm_request,
                        sizeof(spdm_request));
     if (RETURN_ERROR(status)) {

@@ -49,24 +49,28 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
             spdm_context, TRUE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
-        return RETURN_UNSUPPORTED;
+        status = RETURN_UNSUPPORTED;
+        goto error;
     }
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        status = RETURN_UNSUPPORTED;
+        goto error;
     }
 
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         ASSERT(FALSE);
-        return RETURN_UNSUPPORTED;
+        status = RETURN_UNSUPPORTED;
+        goto error;
     }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
-        return RETURN_UNSUPPORTED;
+        status = RETURN_UNSUPPORTED;
+        goto error;
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
@@ -83,13 +87,15 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
                        spdm_request_size - hmac_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
 
     result = spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
                         spdm_request.verify_data);
     if (!result) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE,
@@ -97,13 +103,15 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
                            spdm_request_size - hmac_size,
                        hmac_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
 
     status = spdm_send_spdm_request(spdm_context, &session_id,
                     spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
@@ -114,13 +122,16 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     status = spdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
     if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = spdm_handle_error_response_main(
@@ -129,32 +140,37 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
             SPDM_PSK_FINISH, SPDM_PSK_FINISH_RSP,
             sizeof(spdm_psk_finish_response_max_t));
         if (RETURN_ERROR(status)) {
-            return status;
+            goto error;
         }
     } else if (spdm_response.header.request_response_code !=
            SPDM_PSK_FINISH_RSP) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
     if (spdm_response_size != sizeof(spdm_psk_finish_response_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto error;
     }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
                        spdm_response_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
 
     DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
                      th2_hash_data);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
     status = libspdm_generate_session_data_key(
         session_info->secured_message_context, th2_hash_data);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto error;
     }
 
     libspdm_secured_message_set_session_state(
@@ -163,6 +179,15 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     return RETURN_SUCCESS;
+
+error:
+    if (RETURN_NO_RESPONSE != status) {
+        libspdm_free_session_id(spdm_context, session_id);
+        if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
+            libspdm_clear_handshake_secret(session_info->secured_message_context);
+        }
+    }
+    return status;
 }
 
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,

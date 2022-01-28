@@ -359,7 +359,7 @@ typedef struct {
 
 typedef struct {
     uint8_t total_elements;
-    uint16_t reserved;
+    uint8_t reserved[3];
     /*opaque_element_table_t  opaque_list[];*/
 } spdm_general_opaque_data_table_header_t;
 

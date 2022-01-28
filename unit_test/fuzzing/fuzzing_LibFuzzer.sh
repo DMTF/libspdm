@@ -2,10 +2,12 @@
 
 # Before run this script, please install LLVM with: sudo apt install llvm, and install CLANG with: sudo apt install clang.
 # If command 'screen' not found, please install with: sudo apt install screen.
+# You can collect Code Coverage in Linux with LibFuzzer and llvm-cov.
 
-if [ "$#" -ne "2" ];then
-    echo "Usage: $0 <CRYPTO> <duration>"
+if [ "$#" -ne "3" ];then
+    echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
     echo "<CRYPTO> means selected Crypto library: mbedtls or openssl"
+    echo "<GCOV> means enable Code Coverage or not: ON or OFF"
     echo "<duration> means the duration of every program keep fuzzing: NUMBER seconds"
     #read -p "press enter to exit"
     exit
@@ -14,14 +16,25 @@ fi
 if [[ $1 = "mbedtls" || $1 = "openssl" ]]; then
     echo "<CRYPTO> parameter is $1"
 else
-    echo "Usage: $0 <CRYPTO> <duration>"
+    echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
     echo "<CRYPTO> means selected Crypto library: mbedtls or openssl"
+    echo "<GCOV> means enable Code Coverage or not: ON or OFF"
     echo "<duration> means the duration of every program keep fuzzing: NUMBER seconds"
     exit
 fi
 
-echo "<duration> parameter is $2"
-export duration=$2
+if [[ $2 = "ON" || $2 = "OFF" ]]; then
+    echo "<GCOV> parameter is $2"
+else
+    echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
+    echo "<CRYPTO> means selected Crypto library: mbedtls or openssl"
+    echo "<GCOV> means enable Code Coverage or not: ON or OFF"
+    echo "<duration> means the duration of every program keep fuzzing: NUMBER seconds"
+    exit
+fi
+
+echo "<duration> parameter is $3"
+export duration=$3
 
 echo "start fuzzing in Linux with LLVM LibFuzzer"
 
@@ -53,7 +66,7 @@ fi
 mkdir $build_fuzzing
 pushd $build_fuzzing
 
-cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=$1 ..
+cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=$1 -DGCOV=$2 ..
 make copy_sample_key
 make
 pushd bin
@@ -83,6 +96,11 @@ test_spdm_requester_psk_finish
 test_spdm_requester_heartbeat
 test_spdm_requester_key_update
 test_spdm_requester_end_session
+test_spdm_responder_encap_challenge
+test_spdm_responder_encap_get_certificate
+test_spdm_responder_encap_get_digests
+test_spdm_responder_encap_key_update
+test_spdm_responder_encap_response
 test_spdm_responder_version
 test_spdm_responder_capabilities
 test_spdm_responder_algorithms
@@ -99,11 +117,13 @@ test_spdm_responder_key_update
 test_spdm_responder_end_session
 test_spdm_responder_if_ready
 )
+object_parameters=()
 cp -r $fuzzing_seeds ./
 for ((i=0;i<${#cmds[*]};i++))
 do
+    object_parameters[${#object_parameters[*]}]="-object ${cmds[$i]}"
     echo ${cmds[$i]}
-	mkdir $fuzzing_out/${cmds[$i]}
+    mkdir $fuzzing_out/${cmds[$i]}
     screen -ls | grep ${cmds[$i]}
     if [[ $? -ne 0 ]]
     then
@@ -115,3 +135,13 @@ do
     screen -S ${cmds[$i]} -X quit
     sleep 5
 done
+
+if [[ $2 = "ON" ]]; then
+    for ((i=0;i<${#cmds[*]};i++))
+    do
+        LLVM_PROFILE_FILE="${cmds[$i]}.profraw" ./${cmds[$i]} ./seeds/${cmds[$i]}/*
+    done
+    llvm-profdata merge -o coverage.prof *.profraw
+    llvm-cov export -format lcov -instr-profile coverage.prof ${object_parameters[*]} > coverage.info
+    genhtml coverage.info --output-directory $fuzzing_out/coverage_log
+fi

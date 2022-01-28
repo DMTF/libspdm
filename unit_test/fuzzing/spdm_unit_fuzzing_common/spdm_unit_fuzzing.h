@@ -66,6 +66,6 @@ void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
 
 void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
 
-void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);   
 
 #endif

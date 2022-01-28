@@ -1034,4 +1034,30 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
   @return the SPDMversion of the version number struct.
 **/
 uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver);
+
+/**
+  Sort SPDMversion in descending order.
+
+  @param  spdm_context                A pointer to the SPDM context.
+  @param  ver_set                    A pointer to the version set.
+  @param  ver_num                    Version number.
+*/
+void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num);
+
+/**
+  Negotiate SPDMversion for connection.
+  ver_set is the local version set of requester, res_ver_set is the version set of responder.
+
+  @param  common_version             A pointer to store the common version.
+  @param  req_ver_set                A pointer to the requester version set.
+  @param  req_ver_num                Version number of requester.
+  @param  res_ver_set                A pointer to the responder version set.
+  @param  res_ver_num                Version number of responder.
+
+  @retval TRUE                       Negotiation successfully, connect version be saved to common_version.
+  @retval FALSE                      Negotiation failed.
+*/
+boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version, IN spdm_version_number_t *req_ver_set, IN uintn req_ver_num,
+                                           IN spdm_version_number_t *res_ver_set, IN uintn res_ver_num);
+
 #endif
