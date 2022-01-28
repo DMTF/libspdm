@@ -34,12 +34,12 @@
 intn const_compare_mem(IN const void *destination_buffer,
          IN const void *source_buffer, IN uintn length)
 {
-    volatile uint8_t *pointer_dst;
-    volatile uint8_t *pointer_src;
+    const volatile uint8_t *pointer_dst;
+    const volatile uint8_t *pointer_src;
     uint8_t delta;
 
-    pointer_dst = (uint8_t *)destination_buffer;
-    pointer_src = (uint8_t *)source_buffer;
+    pointer_dst = (const uint8_t *)destination_buffer;
+    pointer_src = (const uint8_t *)source_buffer;
     delta = 0;
     while ((length-- != 0)) {
         delta |= *(pointer_dst++) ^ *(pointer_src++);
