@@ -27,7 +27,7 @@ boolean read_responder_private_certificate(IN uint32_t base_asym_algo,
                        OUT void **data, OUT uintn *size)
 {
     boolean res;
-    char8 *file;
+    char *file;
 
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -72,7 +72,7 @@ boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
                        OUT void **data, OUT uintn *size)
 {
     boolean res;
-    char8 *file;
+    char *file;
 
     switch (req_base_asym_alg) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:

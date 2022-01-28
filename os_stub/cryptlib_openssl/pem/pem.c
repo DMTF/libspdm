@@ -12,7 +12,7 @@
 #include <openssl/pem.h>
 #include <openssl/evp.h>
 
-static uintn ascii_str_len(IN const char8 *string)
+static uintn ascii_str_len(IN const char *string)
 {
     uintn length;
 
@@ -38,16 +38,16 @@ static uintn ascii_str_len(IN const char8 *string)
   @retval  The number of characters in the passphrase or 0 if an error occurred.
 
 **/
-intn PasswordCallback(OUT char8 *buf, IN intn size, IN intn flag, IN void *key)
+intn PasswordCallback(OUT char *buf, IN intn size, IN intn flag, IN void *key)
 {
     intn key_length;
 
     zero_mem((void *)buf, (uintn)size);
     if (key != NULL) {
-        
+
         /* Duplicate key phrase directly.*/
-        
-        key_length = (intn)ascii_str_len((char8 *)key);
+
+        key_length = (intn)ascii_str_len((char *)key);
         key_length = (key_length > size) ? size : key_length;
         copy_mem(buf, key, (uintn)key_length);
         return key_length;
@@ -75,23 +75,23 @@ intn PasswordCallback(OUT char8 *buf, IN intn size, IN intn flag, IN void *key)
 **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **rsa_context)
 {
     boolean status;
     BIO *pem_bio;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
         return FALSE;
     }
 
-    
+
     /* Add possible block-cipher descriptor for PEM data decryption.*/
     /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
-    
+
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
     }
@@ -104,9 +104,9 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 
     status = FALSE;
 
-    
+
     /* Read encrypted PEM data.*/
-    
+
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
         goto done;
@@ -116,9 +116,9 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
         goto done;
     }
 
-    
+
     /* Retrieve RSA Private key from encrypted PEM data.*/
-    
+
     *rsa_context =
         PEM_read_bio_RSAPrivateKey(pem_bio, NULL,
                        (pem_password_cb *)&PasswordCallback,
@@ -128,9 +128,9 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     BIO_free(pem_bio);
 
     return status;
@@ -154,23 +154,23 @@ done:
 
 **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                    IN const char8 *password,
+                    IN const char *password,
                     OUT void **ec_context)
 {
     boolean status;
     BIO *pem_bio;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
         return FALSE;
     }
 
-    
+
     /* Add possible block-cipher descriptor for PEM data decryption.*/
     /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
-    
+
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
     }
@@ -183,9 +183,9 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
 
     status = FALSE;
 
-    
+
     /* Read encrypted PEM data.*/
-    
+
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
         goto done;
@@ -195,9 +195,9 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
         goto done;
     }
 
-    
+
     /* Retrieve EC Private key from encrypted PEM data.*/
-    
+
     *ec_context =
         PEM_read_bio_ECPrivateKey(pem_bio, NULL,
                       (pem_password_cb *)&PasswordCallback,
@@ -207,9 +207,9 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
     }
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     BIO_free(pem_bio);
 
     return status;
@@ -234,7 +234,7 @@ done:
 **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **ecd_context)
 {
     boolean status;
@@ -242,17 +242,17 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
     EVP_PKEY *pkey;
     int32_t type;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (pem_data == NULL || ecd_context == NULL || pem_size > INT_MAX) {
         return FALSE;
     }
 
-    
+
     /* Add possible block-cipher descriptor for PEM data decryption.*/
     /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
-    
+
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
     }
@@ -265,9 +265,9 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
 
     status = FALSE;
 
-    
+
     /* Read encrypted PEM data.*/
-    
+
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
         goto done;
@@ -277,9 +277,9 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
         goto done;
     }
 
-    
+
     /* Retrieve Ed Private key from encrypted PEM data.*/
-    
+
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
                        (pem_password_cb *)&PasswordCallback,
                        (void *)password);
@@ -294,9 +294,9 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
     status = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     BIO_free(pem_bio);
 
     return status;
@@ -321,7 +321,7 @@ done:
 **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                      IN uintn pem_size,
-                     IN const char8 *password,
+                     IN const char *password,
                      OUT void **sm2_context)
 {
     boolean status;
@@ -331,26 +331,26 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     EC_KEY *ec_key;
     int32_t openssl_nid;
 
-    
+
     /* Check input parameters.*/
-    
+
     if (pem_data == NULL || sm2_context == NULL || pem_size > INT_MAX) {
         return FALSE;
     }
 
-    
+
     /* Add possible block-cipher descriptor for PEM data decryption.*/
     /* NOTE: Only support SM4 for the encrypted PEM.*/
-    
+
     /*if (EVP_add_cipher (EVP_sm4_cbc ()) == 0) {*/
     /*  return FALSE;*/
     /*}*/
 
     status = FALSE;
 
-    
+
     /* Read encrypted PEM data.*/
-    
+
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
         goto done;
@@ -360,9 +360,9 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
         goto done;
     }
 
-    
+
     /* Retrieve sm2 Private key from encrypted PEM data.*/
-    
+
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
                        (pem_password_cb *)&PasswordCallback,
                        (void *)password);
@@ -383,9 +383,9 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     status = TRUE;
 
 done:
-    
+
     /* Release Resources.*/
-    
+
     BIO_free(pem_bio);
 
     return status;

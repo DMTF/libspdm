@@ -149,7 +149,7 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
 
 **/
 return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                   OUT char8 *common_name,
+                   OUT char *common_name,
                    OPTIONAL IN OUT uintn *common_name_size)
 {
     ASSERT(FALSE);
@@ -184,7 +184,7 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-               OUT char8 *name_buffer,
+               OUT char *name_buffer,
                OPTIONAL IN OUT uintn *name_buffer_size)
 {
     ASSERT(FALSE);
@@ -490,7 +490,7 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                OUT char8 *common_name,
+                OUT char *common_name,
                 OPTIONAL IN OUT uintn *common_name_size)
 {
     ASSERT(FALSE);
@@ -525,7 +525,7 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
 **/
 return_status
 x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-                 OUT char8 *name_buffer,
+                 OUT char *name_buffer,
                  OPTIONAL IN OUT uintn *name_buffer_size)
 {
     ASSERT(FALSE);
@@ -682,7 +682,7 @@ return_status x509_get_extended_key_usage(IN const uint8_t *cert,
                                    date_time_size parameter.
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
-return_status x509_set_date_time(char8 *date_time_str, IN OUT void *date_time,
+return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
                  IN OUT uintn *date_time_size)
 {
     ASSERT(FALSE);

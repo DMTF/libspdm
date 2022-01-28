@@ -54,7 +54,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_d[] = {
 
 /* Known Answer Test (KAT) data for RSA PKCS#1 Signing*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 m_rsa_sign_data[] =
+GLOBAL_REMOVE_IF_UNREFERENCED const char m_rsa_sign_data[] =
     "OpenSSL FIPS 140-2 public key RSA KAT";
 
 
@@ -101,9 +101,9 @@ return_status validate_crypt_rsa(void)
 
     my_print("\nCrypto RSA Engine Testing: ");
 
-    
+
     /* Generate & Initialize RSA context*/
-    
+
     rsa = rsa_new();
     my_print("\n- Generate RSA context ... ");
     if (rsa == NULL) {
@@ -111,14 +111,14 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Set/Get RSA key Components*/
-    
+
     my_print("Set/Get RSA key Components ... ");
 
-    
+
     /* Set/Get RSA key N*/
-    
+
     status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
     if (!status) {
         my_print("[Fail]");
@@ -157,9 +157,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    
+
     /* Set/Get RSA key E*/
-    
+
     status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
     if (!status) {
         my_print("[Fail]");
@@ -198,14 +198,14 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    
+
     /* Clear/Get RSA key Components*/
-    
+
     my_print("Clear/Get RSA key Components ... ");
 
-    
+
     /* Clear/Get RSA key N*/
-    
+
     status = rsa_set_key(rsa, RSA_KEY_N, NULL, 0);
     if (!status) {
         my_print("[Fail]");
@@ -221,9 +221,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Clear/Get RSA key E*/
-    
+
     status = rsa_set_key(rsa, RSA_KEY_E, NULL, 0);
     if (!status) {
         my_print("[Fail]");
@@ -239,9 +239,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Generate RSA key Components*/
-    
+
     my_print("Generate RSA key Components ... ");
 
     status = rsa_generate_key(rsa, RSA_MODULUS_LENGTH, NULL, 0);
@@ -297,9 +297,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Check invalid RSA key components*/
-    
+
     my_print("Check Invalid RSA key Components ... ");
 
     status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
@@ -349,9 +349,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    
+
     /* SHA-256 digest message for PKCS#1 signature*/
-    
+
     my_print("hash Original message ... ");
     hash_size = SHA256_DIGEST_SIZE;
     zero_mem(hash_value, hash_size);
@@ -389,9 +389,9 @@ return_status validate_crypt_rsa(void)
 
     sha256_free(sha256_ctx);
 
-    
+
     /* Sign RSA PKCS#1-encoded signature*/
-    
+
     my_print("PKCS#1 signature ... ");
 
     rsa_free(rsa);
@@ -454,9 +454,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Verify RSA PKCS#1-encoded signature*/
-    
+
 
     my_print("PKCS#1 signature Verification ... ");
 
@@ -471,9 +471,9 @@ return_status validate_crypt_rsa(void)
 
     free_pool(signature);
 
-    
+
     /* Sign RSA PSS-encoded signature*/
-    
+
     my_print("PSS signature ... ");
 
     rsa_free(rsa);
@@ -529,9 +529,9 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    
+
     /* Verify RSA PSS-encoded signature*/
-    
+
 
     my_print("PSS signature Verification ... ");
 
@@ -545,9 +545,9 @@ return_status validate_crypt_rsa(void)
     }
 
     free_pool(signature);
-    
+
     /* Release Resources*/
-    
+
     rsa_free(rsa);
     my_print("Release RSA context ... [Pass]");
 

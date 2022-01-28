@@ -447,7 +447,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_test_key_pem[] = {
 
 /* password for private key retrieving from encrypted PEM ("m_test_key_pem").*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_pem_pass = "client";
+GLOBAL_REMOVE_IF_UNREFERENCED const char *m_pem_pass = "client";
 
 
 /* message hash for Signing & Verification Validation.*/
@@ -461,7 +461,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_msg_hash[] = {
 
 /* payload for PKCS#7 Signing & Verification Validation.*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_payload =
+GLOBAL_REMOVE_IF_UNREFERENCED const char *m_payload =
     "payload data for PKCS#7 Signing";
 
 /**
@@ -481,14 +481,14 @@ return_status validate_crypt_rsa_2(void)
     /* uint8_t          *subject;*/
     /* uintn          subject_size;*/
     /* return_status  return_status;*/
-    /* char8          common_name[64];*/
+    /* char          common_name[64];*/
     /* uintn          common_name_size;*/
 
     my_print("\nCrypto RSA key Retrieving Testing: ");
 
-    
+
     /* Retrieve RSA private key from encrypted PEM data.*/
-    
+
     my_print("\n- Retrieve RSA Private key for PEM ...");
     status = rsa_get_private_key_from_pem(m_test_key_pem,
                           sizeof(m_test_key_pem),
@@ -500,9 +500,9 @@ return_status validate_crypt_rsa_2(void)
         my_print("[Pass]");
     }
 
-    
+
     /* Retrieve RSA public key from X509 Certificate.*/
-    
+
     my_print("\n- Retrieve RSA public key from X509 ... ");
     rsa_pub_key = NULL;
     status = rsa_get_public_key_from_x509(m_test_cert, sizeof(m_test_cert),
@@ -515,9 +515,9 @@ return_status validate_crypt_rsa_2(void)
         my_print("[Pass]");
     }
 
-    
+
     /* Generate RSA PKCS#1 signature.*/
-    
+
     my_print("\n- PKCS#1 signature ... ");
     sig_size = 0;
     status = rsa_pkcs1_sign_with_nid(rsa_priv_key, CRYPTO_NID_SHA256,
@@ -544,9 +544,9 @@ return_status validate_crypt_rsa_2(void)
         my_print("[Pass]");
     }
 
-    
+
     /* Verify RSA PKCS#1-encoded signature.*/
-    
+
     my_print("\n- PKCS#1 signature Verification ... ");
     status = rsa_pkcs1_verify_with_nid(rsa_pub_key, CRYPTO_NID_SHA256,
                        m_msg_hash, SHA256_DIGEST_SIZE,
@@ -563,9 +563,9 @@ return_status validate_crypt_rsa_2(void)
 
     free_pool(signature);
 
-    
+
     /* X509 Certificate subject Retrieving.*/
-    
+
     /* my_print ("\n- X509 Certificate subject Bytes Retrieving ... ");*/
     /* subject_size = 0;*/
     /* status  = x509_get_subject_name (m_test_cert, sizeof (m_test_cert), NULL, &subject_size);*/
@@ -580,9 +580,9 @@ return_status validate_crypt_rsa_2(void)
     /*   my_print ("[Pass]");*/
     /* }*/
 
-    
+
     /* Get common_name from X509 Certificate subject*/
-    
+
     /* common_name_size = 64;*/
     /* zero_mem (common_name, common_name_size);*/
     /* status = x509_get_common_name (m_test_cert, sizeof (m_test_cert), common_name, &common_name_size);*/
@@ -595,9 +595,9 @@ return_status validate_crypt_rsa_2(void)
     /*   my_print ("\n  - Retrieving Common name = \"%a\" (size = %d)", common_name, common_name_size);*/
     /* }*/
 
-    
+
     /* Release Resources.*/
-    
+
     rsa_free(rsa_pub_key);
     rsa_free(rsa_priv_key);
     /* free_pool (subject);*/

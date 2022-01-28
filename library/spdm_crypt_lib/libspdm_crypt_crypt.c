@@ -1569,9 +1569,9 @@ create_spdm_signing_context (
             SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT,
             SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE);
         /* patch the version*/
-        context_str[11] = (char8)('0' + ((spdm_version >> 12) & 0xF));
-        context_str[13] = (char8)('0' + ((spdm_version >> 8) & 0xF));
-        context_str[15] = (char8)('*');
+        context_str[11] = (char)('0' + ((spdm_version >> 12) & 0xF));
+        context_str[13] = (char)('0' + ((spdm_version >> 8) & 0xF));
+        context_str[15] = (char)('*');
         context_str += SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE;
     }
     for (index = 0; index < ARRAY_SIZE(m_spdm_signing_context_str_table); index++) {
@@ -1964,9 +1964,9 @@ boolean libspdm_asym_verify(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -1988,15 +1988,15 @@ boolean libspdm_asym_verify(
         if (!result) {
             return FALSE;
         }
-        
+
         /* re-assign message and message_size for signing*/
-        
+
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-        
+
         /* Passthru*/
-        
+
     }
 
     if (need_hash) {
@@ -2060,9 +2060,9 @@ boolean libspdm_asym_verify_hash(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2079,9 +2079,9 @@ boolean libspdm_asym_verify_hash(
 
         create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
         copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
-        
+
         /* assign message and message_size for signing*/
-        
+
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -2097,9 +2097,9 @@ boolean libspdm_asym_verify_hash(
             return verify_function(context, hash_nid, param, param_size, message, message_size,
                         signature, sig_size);
         }
-        
+
         /* SPDM 1.2 signing done.*/
-        
+
     }
 
     if (need_hash) {
@@ -2179,7 +2179,7 @@ get_spdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo)
 boolean libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
                        IN const uint8_t *pem_data,
                        IN uintn pem_size,
-                       IN const char8 *password,
+                       IN const char *password,
                        OUT void **context)
 {
     libspdm_asym_get_private_key_from_pem_func asym_get_private_key_from_pem;
@@ -2352,9 +2352,9 @@ boolean libspdm_asym_sign(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2376,15 +2376,15 @@ boolean libspdm_asym_sign(
         if (!result) {
             return FALSE;
         }
-        
+
         /* re-assign message and message_size for signing*/
-        
+
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-        
+
         /* Passthru*/
-        
+
     }
 
     if (need_hash) {
@@ -2452,9 +2452,9 @@ boolean libspdm_asym_sign_hash(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2471,9 +2471,9 @@ boolean libspdm_asym_sign_hash(
 
         create_spdm_signing_context (spdm_version, op_code, FALSE, spdm12_signing_context_with_hash);
         copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
-        
+
         /* assign message and message_size for signing*/
-        
+
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -2489,9 +2489,9 @@ boolean libspdm_asym_sign_hash(
             return asym_sign(context, hash_nid, param, param_size, message, message_size,
                         signature, sig_size);
         }
-        
+
         /* SPDM 1.2 signing done.*/
-        
+
     }
 
     if (need_hash) {
@@ -2653,9 +2653,9 @@ boolean libspdm_req_asym_verify(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2677,15 +2677,15 @@ boolean libspdm_req_asym_verify(
         if (!result) {
             return FALSE;
         }
-        
+
         /* re-assign message and message_size for signing*/
-        
+
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-        
+
         /* Passthru*/
-        
+
     }
 
     if (need_hash) {
@@ -2749,9 +2749,9 @@ boolean libspdm_req_asym_verify_hash(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2768,9 +2768,9 @@ boolean libspdm_req_asym_verify_hash(
 
         create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
         copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
-        
+
         /* assign message and message_size for signing*/
-        
+
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -2786,9 +2786,9 @@ boolean libspdm_req_asym_verify_hash(
             return verify_function(context, hash_nid, param, param_size, message, message_size,
                         signature, sig_size);
         }
-        
+
         /* SPDM 1.2 signing done.*/
-        
+
     }
 
     if (need_hash) {
@@ -2829,7 +2829,7 @@ get_spdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg)
 boolean libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
                            IN const uint8_t *pem_data,
                            IN uintn pem_size,
-                           IN const char8 *password,
+                           IN const char *password,
                            OUT void **context)
 {
     libspdm_asym_get_private_key_from_pem_func asym_get_private_key_from_pem;
@@ -2902,9 +2902,9 @@ boolean libspdm_req_asym_sign(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -2926,15 +2926,15 @@ boolean libspdm_req_asym_sign(
         if (!result) {
             return FALSE;
         }
-        
+
         /* re-assign message and message_size for signing*/
-        
+
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-        
+
         /* Passthru*/
-        
+
     }
 
     if (need_hash) {
@@ -3002,9 +3002,9 @@ boolean libspdm_req_asym_sign_hash(
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-        
+
         /* Need use SPDM 1.2 signing*/
-        
+
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -3021,9 +3021,9 @@ boolean libspdm_req_asym_sign_hash(
 
         create_spdm_signing_context (spdm_version, op_code, TRUE, spdm12_signing_context_with_hash);
         copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE], message_hash, hash_size);
-        
+
         /* assign message and message_size for signing*/
-        
+
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -3039,9 +3039,9 @@ boolean libspdm_req_asym_sign_hash(
             return asym_sign(context, hash_nid, param, param_size, message, message_size,
                         signature, sig_size);
         }
-        
+
         /* SPDM 1.2 signing done.*/
-        
+
     }
 
     if (need_hash) {
@@ -3189,10 +3189,10 @@ void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
         copy_mem (spdm12_key_change_requester_context, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
         copy_mem (spdm12_key_change_responder_context, SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT, SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
         /* patch the version*/
-        spdm12_key_change_requester_context[25] = (char8)('0' + ((spdm_version >> 12) & 0xF));
-        spdm12_key_change_requester_context[27] = (char8)('0' + ((spdm_version >> 8) & 0xF));
-        spdm12_key_change_responder_context[25] = (char8)('0' + ((spdm_version >> 12) & 0xF));
-        spdm12_key_change_responder_context[27] = (char8)('0' + ((spdm_version >> 8) & 0xF));
+        spdm12_key_change_requester_context[25] = (char)('0' + ((spdm_version >> 12) & 0xF));
+        spdm12_key_change_requester_context[27] = (char)('0' + ((spdm_version >> 8) & 0xF));
+        spdm12_key_change_responder_context[25] = (char)('0' + ((spdm_version >> 12) & 0xF));
+        spdm12_key_change_responder_context[27] = (char)('0' + ((spdm_version >> 8) & 0xF));
 
         result = sm2_key_exchange_init (context, CRYPTO_NID_SM3_256,
             spdm12_key_change_requester_context, SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE,
@@ -3972,7 +3972,7 @@ static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    IN const uint8_t *buffer, IN intn len, OUT char8 *name_buffer,
+    IN const uint8_t *buffer, IN intn len, OUT char *name_buffer,
     OPTIONAL IN OUT uintn *name_buffer_size, OUT uint8_t *oid,
     OPTIONAL IN OUT uintn *oid_size)
 {
@@ -4064,7 +4064,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
 **/
 return_status
 libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
-                   OUT char8 *name_buffer,
+                   OUT char *name_buffer,
                    OPTIONAL IN OUT uintn *name_buffer_size,
                    OUT uint8_t *oid, OPTIONAL IN OUT uintn *oid_size)
 {

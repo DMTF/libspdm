@@ -36,7 +36,7 @@ const uint8_t m_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
 void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 {
     uintn common_name_size;
-    char8 common_name[64];
+    char common_name[64];
     uintn dmtf_oid_size;
     uint8_t dmtf_oid[64];
     return_status ret;
@@ -78,7 +78,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 {
     uintn common_name_size;
-    char8 common_name[64];
+    char common_name[64];
     uintn dmtf_oid_size;
     uint8_t dmtf_oid[64];
     uint8_t *file_buffer;

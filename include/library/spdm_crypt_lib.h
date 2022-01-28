@@ -312,7 +312,7 @@ typedef boolean (*libspdm_asym_verify_func)(IN void *context, IN uintn hash_nid,
 **/
 typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *pem_data,
                               IN uintn pem_size,
-                              IN const char8 *password,
+                              IN const char *password,
                               OUT void **context);
 
 /**
@@ -818,7 +818,7 @@ boolean libspdm_asym_verify_hash(
 boolean libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
                        IN const uint8_t *pem_data,
                        IN uintn pem_size,
-                       IN const char8 *password,
+                       IN const char *password,
                        OUT void **context);
 
 /**
@@ -969,7 +969,7 @@ boolean libspdm_req_asym_verify_hash(
 boolean libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
                            IN const uint8_t *pem_data,
                            IN uintn pem_size,
-                           IN const char8 *password,
+                           IN const char *password,
                            OUT void **context);
 
 /**
@@ -1250,7 +1250,7 @@ boolean libspdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size);
   @retval RETURN_UNSUPPORTED       The operation is not supported.
 **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    IN const uint8_t *buffer, IN intn len, OUT char8 *name_buffer,
+    IN const uint8_t *buffer, IN intn len, OUT char *name_buffer,
     OPTIONAL IN OUT uintn *name_buffer_size, OUT uint8_t *oid,
     OPTIONAL IN OUT uintn *oid_size);
 
@@ -1283,7 +1283,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
 **/
 return_status
 libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
-                   OUT char8 *name_buffer,
+                   OUT char *name_buffer,
                    OPTIONAL IN OUT uintn *name_buffer_size,
                    OUT uint8_t *oid, OPTIONAL IN OUT uintn *oid_size);
 

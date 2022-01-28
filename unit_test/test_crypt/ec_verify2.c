@@ -88,7 +88,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_ecc_test_pem_key[] = {
 
 /* payload for PKCS#7 Signing & Verification Validation.*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char8 *m_ec_payload =
+GLOBAL_REMOVE_IF_UNREFERENCED const char *m_ec_payload =
     "payload data for PKCS#7 EC Signing";
 
 /**
@@ -110,9 +110,9 @@ return_status validate_crypt_ec_2(void)
 
     my_print("\nCrypto EC key Retrieving Testing: ");
 
-    
+
     /* Retrieve EC private key from PEM data.*/
-    
+
     my_print("\n- Retrieve EC Private key for PEM ...");
     status = ec_get_private_key_from_pem(m_ecc_test_pem_key,
                          sizeof(m_ecc_test_pem_key), NULL,
@@ -124,9 +124,9 @@ return_status validate_crypt_ec_2(void)
         my_print("[Pass]");
     }
 
-    
+
     /* Retrieve EC public key from X509 Certificate.*/
-    
+
     my_print("\n- Retrieve EC public key from X509 ... ");
     status = ec_get_public_key_from_x509(
         m_ecc_test_root_cer, sizeof(m_ecc_test_root_cer), &ec_pub_key);
@@ -138,9 +138,9 @@ return_status validate_crypt_ec_2(void)
         my_print("[Pass]");
     }
 
-    
+
     /* Verify EC-DSA*/
-    
+
     hash_size = sizeof(hash_value);
     sig_size = sizeof(signature);
     my_print("\n- EC-DSA Signing ... ");

@@ -516,7 +516,7 @@ typedef __builtin_va_list VA_LIST;
 /* Variable used to traverse the list of arguments. This type can vary by*/
 /* implementation and could be an array or structure.*/
 
-typedef char8 *VA_LIST;
+typedef char *VA_LIST;
 
 /**
   Retrieves a pointer to the beginning of a variable argument list, based on
@@ -687,8 +687,8 @@ STATIC_ASSERT(
     sizeof(uint64_t) == 8,
     "sizeof (uint64_t) does not meet data Type requirements");
 STATIC_ASSERT(
-    sizeof(char8) == 1,
-    "sizeof (char8) does not meet data Type requirements");
+    sizeof(char) == 1,
+    "sizeof (char) does not meet data Type requirements");
 
 
 /* The following three enum types are used to verify that the compiler*/
@@ -732,7 +732,7 @@ STATIC_ASSERT(
 
 **/
 #define BASE_CR(record, TYPE, field)                                           \
-    ((TYPE *)((char8 *)(record)-OFFSET_OF(TYPE, field)))
+    ((TYPE *)((char *)(record)-OFFSET_OF(TYPE, field)))
 
 /**
   Rounds a value up to the next boundary using a specified alignment.
