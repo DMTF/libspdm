@@ -1303,7 +1303,7 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
-                                      IN uint8_t *oid, IN uintn oid_size,
+                                      IN const uint8_t *oid, IN uintn oid_size,
                                       OUT uint8_t *extension_data,
                                       IN OUT uintn *extension_data_size)
 {
@@ -1425,7 +1425,7 @@ return_status x509_get_extended_key_usage(IN const uint8_t *cert,
 {
     return_status status;
     status = x509_get_extension_data(cert, cert_size,
-                                     (uint8_t *)m_oid_ext_key_usage,
+                                     m_oid_ext_key_usage,
                                      sizeof(m_oid_ext_key_usage), usage,
                                      usage_size);
     return status;

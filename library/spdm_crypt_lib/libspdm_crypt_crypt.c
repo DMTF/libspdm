@@ -4225,7 +4225,7 @@ libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
 
     extension_data_size = 0;
     status = x509_get_extension_data(cert, cert_size,
-                                     (uint8_t *)m_oid_subject_alt_name,
+                                     m_oid_subject_alt_name,
                                      sizeof(m_oid_subject_alt_name), NULL,
                                      &extension_data_size);
     if (status != RETURN_BUFFER_TOO_SMALL) {
@@ -4237,7 +4237,7 @@ libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
     }
     status =
         x509_get_extension_data(cert, cert_size,
-                                (uint8_t *)m_oid_subject_alt_name,
+                                m_oid_subject_alt_name,
                                 sizeof(m_oid_subject_alt_name),
                                 (uint8_t *)name_buffer, name_buffer_size);
     if (RETURN_ERROR(status)) {

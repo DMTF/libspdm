@@ -321,7 +321,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     asn1_buffer_len = 1024;
     zero_mem(asn1_buffer, asn1_buffer_len);
     ret = x509_get_extension_data(test_end_cert, test_end_cert_len,
-                                  (uint8_t *)m_oid_subject_alt_name,
+                                  m_oid_subject_alt_name,
                                   sizeof(m_oid_subject_alt_name),
                                   asn1_buffer, &asn1_buffer_len);
     if (RETURN_ERROR(ret)) {

@@ -2692,7 +2692,7 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
-                                      IN uint8_t *oid, IN uintn oid_size,
+                                      IN const uint8_t *oid, IN uintn oid_size,
                                       OUT uint8_t *extension_data,
                                       IN OUT uintn *extension_data_size);
 
