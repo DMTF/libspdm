@@ -462,6 +462,9 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                            LIBSPDM_SESSION_STATE_NOT_STARTED);
             libspdm_free_session_id(spdm_context, *session_id);
             break;
+        default:
+            /* No session state update needed */
+            break;
         }
     } else {
         switch (spdm_response->request_response_code) {
@@ -475,6 +478,9 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                     spdm_context->latest_session_id,
                     LIBSPDM_SESSION_STATE_ESTABLISHED);
             }
+            break;
+        default:
+            /* No session state update needed */
             break;
         }
     }
