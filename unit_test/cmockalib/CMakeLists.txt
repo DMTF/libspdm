@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.12)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMOCKA_FLAGS} -DHAVE_SIGNAL_H")
