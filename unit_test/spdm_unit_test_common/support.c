@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_test.h"
 
@@ -48,7 +48,7 @@ void dump_hex(IN uint8_t *data, IN uintn size)
 }
 
 boolean read_input_file(IN char *file_name, OUT void **file_data,
-            OUT uintn *file_size)
+                        OUT uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;
@@ -84,7 +84,7 @@ boolean read_input_file(IN char *file_name, OUT void **file_data,
 }
 
 boolean write_output_file(IN char *file_name, IN void *file_data,
-              IN uintn file_size)
+                          IN uintn file_size)
 {
     FILE *fp_out;
 

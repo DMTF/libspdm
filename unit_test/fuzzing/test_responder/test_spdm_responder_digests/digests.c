@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
@@ -34,14 +34,14 @@ void test_spdm_responder_digests_case1(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-        (uint8_t)(0xFF));
+            (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
     spdm_get_response_digests(spdm_context,
-                  spdm_test_context->test_buffer_size,
-                  spdm_test_context->test_buffer,
-                  &response_size, response);
+                              spdm_test_context->test_buffer_size,
+                              spdm_test_context->test_buffer,
+                              &response_size, response);
 }
 
 void test_spdm_responder_digests_case2(void **State)
@@ -62,9 +62,9 @@ void test_spdm_responder_digests_case2(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_digests(spdm_context,
-                  spdm_test_context->test_buffer_size,
-                  spdm_test_context->test_buffer,
-                  &response_size, response);
+                              spdm_test_context->test_buffer_size,
+                              spdm_test_context->test_buffer,
+                              &response_size, response);
 }
 
 void test_spdm_responder_digests_case3(void **State)
@@ -84,9 +84,9 @@ void test_spdm_responder_digests_case3(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_digests(spdm_context,
-                  spdm_test_context->test_buffer_size,
-                  spdm_test_context->test_buffer,
-                  &response_size, response);
+                              spdm_test_context->test_buffer_size,
+                              spdm_test_context->test_buffer,
+                              &response_size, response);
 }
 
 void test_spdm_responder_digests_case4(void **State)
@@ -107,9 +107,9 @@ void test_spdm_responder_digests_case4(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_digests(spdm_context,
-                  spdm_test_context->test_buffer_size,
-                  spdm_test_context->test_buffer,
-                  &response_size, response);
+                              spdm_test_context->test_buffer_size,
+                              spdm_test_context->test_buffer,
+                              &response_size, response);
 }
 
 spdm_test_context_t m_spdm_responder_digests_test_context = {

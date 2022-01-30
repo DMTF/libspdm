@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -23,16 +23,16 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    session_id to the PSK_FINISH request.
-
-  @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id to the PSK_FINISH request.
+ *
+ * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-                           IN uint32_t session_id)
+                                               IN uint32_t session_id)
 {
     return_status status;
     spdm_psk_finish_request_mine_t spdm_request;
@@ -85,37 +85,37 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
-                       spdm_request_size - hmac_size);
+                                      spdm_request_size - hmac_size);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
 
     result = spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
-                        spdm_request.verify_data);
+                                                 spdm_request.verify_data);
     if (!result) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE,
-                       (uint8_t *)&spdm_request +
-                           spdm_request_size - hmac_size,
-                       hmac_size);
+                                      (uint8_t *)&spdm_request +
+                                      spdm_request_size - hmac_size,
+                                      hmac_size);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
 
     status = spdm_send_spdm_request(spdm_context, &session_id,
-                    spdm_request_size, &spdm_request);
+                                    spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         status = RETURN_DEVICE_ERROR;
         goto error;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                        SPDM_PSK_FINISH);
+                                               SPDM_PSK_FINISH);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -143,7 +143,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
             goto error;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_PSK_FINISH_RSP) {
+               SPDM_PSK_FINISH_RSP) {
         status = RETURN_DEVICE_ERROR;
         goto error;
     }
@@ -153,7 +153,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
-                       spdm_response_size);
+                                      spdm_response_size);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -161,7 +161,7 @@ return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
 
     DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
-                     th2_hash_data);
+                                        th2_hash_data);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -191,7 +191,7 @@ error:
 }
 
 return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-                       IN uint32_t session_id)
+                                           IN uint32_t session_id)
 {
     uintn retry;
     return_status status;
@@ -199,7 +199,7 @@ return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_psk_finish(spdm_context,
-                              session_id);
+                                                  session_id);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

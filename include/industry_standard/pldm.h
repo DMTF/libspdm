@@ -1,16 +1,16 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Definitions of DSP0240 Platform Level data Model (PLDM) Base Specification
-  version 1.0.0 in Distributed Management Task Force (DMTF).
-
-  Definitions of DSP0245 Platform Level data Model (PLDM) IDs and Codes Specification
-  version 1.3.0 in Distributed Management Task Force (DMTF).
-**/
+ * Definitions of DSP0240 Platform Level data Model (PLDM) Base Specification
+ * version 1.0.0 in Distributed Management Task Force (DMTF).
+ *
+ * Definitions of DSP0245 Platform Level data Model (PLDM) IDs and Codes Specification
+ * version 1.3.0 in Distributed Management Task Force (DMTF).
+ **/
 
 #ifndef __PLDM_H__
 #define __PLDM_H__

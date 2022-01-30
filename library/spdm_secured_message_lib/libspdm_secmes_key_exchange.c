@@ -1,87 +1,87 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_secured_message_lib.h"
 
 /**
-  Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
-  based upon negotiated DHE algorithm.
-
-  @param  dhe_named_group                SPDM dhe_named_group
-  @param  is_initiator                   if the caller is initiator.
-                                         TRUE: initiator
-                                         FALSE: not an initiator
-
-  @return  Pointer to the Diffie-Hellman context that has been initialized.
-**/
+ * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
+ * based upon negotiated DHE algorithm.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ * @param  is_initiator                   if the caller is initiator.
+ *                                       TRUE: initiator
+ *                                       FALSE: not an initiator
+ *
+ * @return  Pointer to the Diffie-Hellman context that has been initialized.
+ **/
 void *libspdm_secured_message_dhe_new(IN spdm_version_number_t spdm_version,
-                   IN uint16_t dhe_named_group, IN const boolean is_initiator)
+                                      IN uint16_t dhe_named_group, IN const boolean is_initiator)
 {
     return libspdm_dhe_new(spdm_version, dhe_named_group, is_initiator);
 }
 
 /**
-  Release the specified DHE context,
-  based upon negotiated DHE algorithm.
-
-  @param  dhe_named_group                SPDM dhe_named_group
-  @param  dhe_context                   Pointer to the DHE context to be released.
-**/
+ * Release the specified DHE context,
+ * based upon negotiated DHE algorithm.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ * @param  dhe_context                   Pointer to the DHE context to be released.
+ **/
 void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
-                   IN void *dhe_context)
+                                      IN void *dhe_context)
 {
     libspdm_dhe_free(dhe_named_group, dhe_context);
 }
 
 /**
-  Generates DHE public key,
-  based upon negotiated DHE algorithm.
-
-  This function generates random secret exponent, and computes the public key, which is
-  returned via parameter public_key and public_key_size. DH context is updated accordingly.
-  If the public_key buffer is too small to hold the public key, FALSE is returned and
-  public_key_size is set to the required buffer size to obtain the public key.
-
-  @param  dhe_named_group                SPDM dhe_named_group
-  @param  dhe_context                   Pointer to the DHE context.
-  @param  public_key                    Pointer to the buffer to receive generated public key.
-  @param  public_key_size                On input, the size of public_key buffer in bytes.
-                                       On output, the size of data returned in public_key buffer in bytes.
-
-  @retval TRUE   DHE public key generation succeeded.
-  @retval FALSE  DHE public key generation failed.
-  @retval FALSE  public_key_size is not large enough.
-**/
+ * Generates DHE public key,
+ * based upon negotiated DHE algorithm.
+ *
+ * This function generates random secret exponent, and computes the public key, which is
+ * returned via parameter public_key and public_key_size. DH context is updated accordingly.
+ * If the public_key buffer is too small to hold the public key, FALSE is returned and
+ * public_key_size is set to the required buffer size to obtain the public key.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ * @param  dhe_context                   Pointer to the DHE context.
+ * @param  public_key                    Pointer to the buffer to receive generated public key.
+ * @param  public_key_size                On input, the size of public_key buffer in bytes.
+ *                                     On output, the size of data returned in public_key buffer in bytes.
+ *
+ * @retval TRUE   DHE public key generation succeeded.
+ * @retval FALSE  DHE public key generation failed.
+ * @retval FALSE  public_key_size is not large enough.
+ **/
 boolean libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
-                          IN OUT void *dhe_context,
-                          OUT uint8_t *public_key,
-                          IN OUT uintn *public_key_size)
+                                                 IN OUT void *dhe_context,
+                                                 OUT uint8_t *public_key,
+                                                 IN OUT uintn *public_key_size)
 {
     return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key,
-                     public_key_size);
+                                    public_key_size);
 }
 
 /**
-  Computes exchanged common key,
-  based upon negotiated DHE algorithm.
-
-  Given peer's public key, this function computes the exchanged common key, based on its own
-  context including value of prime modulus and random secret exponent.
-
-  @param  dhe_named_group                SPDM dhe_named_group
-  @param  dhe_context                   Pointer to the DHE context.
-  @param  peer_public_key                Pointer to the peer's public key.
-  @param  peer_public_key_size            size of peer's public key in bytes.
-  @param  key                          Pointer to the buffer to receive generated key.
-  @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
-
-  @retval TRUE   DHE exchanged key generation succeeded.
-  @retval FALSE  DHE exchanged key generation failed.
-  @retval FALSE  key_size is not large enough.
-**/
+ * Computes exchanged common key,
+ * based upon negotiated DHE algorithm.
+ *
+ * Given peer's public key, this function computes the exchanged common key, based on its own
+ * context including value of prime modulus and random secret exponent.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ * @param  dhe_context                   Pointer to the DHE context.
+ * @param  peer_public_key                Pointer to the peer's public key.
+ * @param  peer_public_key_size            size of peer's public key in bytes.
+ * @param  key                          Pointer to the buffer to receive generated key.
+ * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+ *
+ * @retval TRUE   DHE exchanged key generation succeeded.
+ * @retval FALSE  DHE exchanged key generation failed.
+ * @retval FALSE  key_size is not large enough.
+ **/
 boolean libspdm_secured_message_dhe_compute_key(
     IN uint16_t dhe_named_group, IN OUT void *dhe_context,
     IN const uint8_t *peer_public, IN uintn peer_public_size,
@@ -96,13 +96,13 @@ boolean libspdm_secured_message_dhe_compute_key(
 
     final_key_size = sizeof(final_key);
     ret = libspdm_dhe_compute_key(dhe_named_group, dhe_context, peer_public,
-                   peer_public_size, final_key,
-                   &final_key_size);
+                                  peer_public_size, final_key,
+                                  &final_key_size);
     if (!ret) {
         return ret;
     }
     copy_mem(secured_message_context->master_secret.dhe_secret, final_key,
-         final_key_size);
+             final_key_size);
     zero_mem(final_key, final_key_size);
     secured_message_context->dhe_key_size = final_key_size;
     return TRUE;

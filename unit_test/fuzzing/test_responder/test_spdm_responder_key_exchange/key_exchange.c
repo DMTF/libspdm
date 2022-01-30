@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -52,7 +52,8 @@ void test_spdm_responder_key_exchange_case1(void **State)
     m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
@@ -108,7 +109,8 @@ void test_spdm_responder_key_exchange_case2(void **State)
         *(spdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
@@ -161,7 +163,8 @@ void test_spdm_responder_key_exchange_case3(void **State)
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_MAX;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
@@ -330,7 +333,8 @@ void test_spdm_responder_key_exchange_case6(void **State)
         *(spdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "crypto/rand.h"
 #include <openssl/aes.h>
@@ -11,17 +11,17 @@
 #include "library/rnglib.h"
 
 /**
-  Calls RandomNumber64 to fill
-  a buffer of arbitrary size with random bytes.
-  This is a shim layer to rnglib.
-
-  @param[in]   length        size of the buffer, in bytes,  to fill with.
-  @param[out]  RandBuffer    Pointer to the buffer to store the random result.
-
-  @retval TRUE        Random bytes generation succeeded.
-  @retval FALSE       Failed to request random bytes.
-
-**/
+ * Calls RandomNumber64 to fill
+ * a buffer of arbitrary size with random bytes.
+ * This is a shim layer to rnglib.
+ *
+ * @param[in]   length        size of the buffer, in bytes,  to fill with.
+ * @param[out]  RandBuffer    Pointer to the buffer to store the random result.
+ *
+ * @retval TRUE        Random bytes generation succeeded.
+ * @retval FALSE       Failed to request random bytes.
+ *
+ **/
 static boolean rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
 {
     boolean ret;
@@ -81,7 +81,7 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
                 rand_pool_add_end(pool, 0, 0);
             } else {
                 rand_pool_add_end(pool, Bytes_needed,
-                          8 * Bytes_needed);
+                                  8 * Bytes_needed);
             }
         }
     }

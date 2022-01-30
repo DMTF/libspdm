@@ -1,18 +1,18 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
 /**
-  Validate Crypto DH Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto DH Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_dh(void)
 {
     void *dh1;
@@ -29,9 +29,9 @@ return_status validate_crypt_dh(void)
 
     my_print("\nCrypto DH Engine Testing:\n");
 
-    
-    
-    
+
+
+
     ff_public_key1_length = sizeof(ff_public_key1);
     ff_public_key2_length = sizeof(ff_public_key2);
     ff_key1_length = sizeof(ff_key1);
@@ -71,7 +71,7 @@ return_status validate_crypt_dh(void)
 
     my_print("Compute key1 ... ");
     status = dh_compute_key(dh1, ff_public_key2, ff_public_key2_length,
-                ff_key1, &ff_key1_length);
+                            ff_key1, &ff_key1_length);
     if (!status || ff_key1_length != 256) {
         my_print("[Fail]");
         dh_free(dh1);
@@ -81,7 +81,7 @@ return_status validate_crypt_dh(void)
 
     my_print("Compute key2 ... ");
     status = dh_compute_key(dh2, ff_public_key1, ff_public_key1_length,
-                ff_key2, &ff_key2_length);
+                            ff_key2, &ff_key2_length);
     if (!status || ff_key2_length != 256) {
         my_print("[Fail]");
         dh_free(dh1);

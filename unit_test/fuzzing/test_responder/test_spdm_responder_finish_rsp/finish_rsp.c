@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -367,8 +367,8 @@ void test_spdm_responder_finish_case8(void **State)
     append_managed_buffer(&th_curr, &m_spdm_finish_request, sizeof(spdm_finish_request_t));
     libspdm_requester_data_sign(
         m_spdm_finish_request.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-        m_use_req_asym_algo, m_use_hash_algo, FALSE, get_managed_buffer(&th_curr),
-        get_managed_buffer_size(&th_curr), ptr, &req_asym_signature_size);
+            m_use_req_asym_algo, m_use_hash_algo, FALSE, get_managed_buffer(&th_curr),
+            get_managed_buffer_size(&th_curr), ptr, &req_asym_signature_size);
     append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));

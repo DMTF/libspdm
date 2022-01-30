@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -105,12 +105,12 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     hmac_size = libspdm_get_hash_size(m_use_hash_algo);
     opaque_psk_exchange_rsp_size = spdm_get_opaque_data_version_selection_data_size(spdm_context);
     temp_buf_size = sizeof(spdm_psk_exchange_response_t) + 0 + LIBSPDM_PSK_CONTEXT_LENGTH +
-                     opaque_psk_exchange_rsp_size + hmac_size;
+                    opaque_psk_exchange_rsp_size + hmac_size;
     spdm_response = (void *)temp_buf;
 
     ptr = (void *)(spdm_response + 1);
-    /* zero_mem (ptr, hash_size);*/
-    /* ptr += hash_size;*/
+    /* zero_mem (ptr, hash_size);
+     * ptr += hash_size;*/
     libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
     spdm_build_opaque_data_version_selection_data(spdm_context, &opaque_psk_exchange_rsp_size, ptr);
@@ -138,8 +138,8 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     libspdm_psk_handshake_secret_hkdf_expand(
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_hash_algo,
-        m_local_psk_hint, sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
-        response_handshake_secret, hash_size);
+            m_local_psk_hint, sizeof(TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
+            response_handshake_secret, hash_size);
     bin_str7_size = sizeof(bin_str7);
     libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1, NULL,
                        (uint16_t)hash_size, hash_size, bin_str7, &bin_str7_size);
@@ -188,7 +188,7 @@ void test_spdm_requester_psk_exchange_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
@@ -231,7 +231,7 @@ void test_spdm_requester_psk_exchange_ex_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
@@ -243,7 +243,8 @@ void test_spdm_requester_psk_exchange_ex_case1(void **State)
 
     spdm_send_receive_psk_exchange_ex(spdm_context,
                                       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
-                                      &session_id, &heartbeat_period, measurement_hash, NULL, 0, NULL, NULL, NULL, NULL);
+                                      &session_id, &heartbeat_period, measurement_hash, NULL, 0,
+                                      NULL, NULL, NULL, NULL);
 }
 
 

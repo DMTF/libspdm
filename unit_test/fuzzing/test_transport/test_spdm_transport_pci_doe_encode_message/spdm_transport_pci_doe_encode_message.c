@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_transport_pcidoe_lib.h"
@@ -31,9 +31,10 @@ void test_spdm_transport_pci_doe_encode_message(void **State)
     transport_message_size = sizeof(transport_message);
 
     libspdm_transport_pci_doe_encode_message(spdm_context, NULL, is_app_message, is_requester,
-                                          spdm_test_context->test_buffer_size,
-                                          spdm_test_context->test_buffer, &transport_message_size,
-                                          transport_message);
+                                             spdm_test_context->test_buffer_size,
+                                             spdm_test_context->test_buffer,
+                                             &transport_message_size,
+                                             transport_message);
 }
 
 spdm_test_context_t m_spdm_transport_pci_doe_test_context = {
@@ -57,8 +58,10 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
                              sizeof(spdm_secured_message_cipher_header_t) +
                              0; /* PCI_DOE_MAX_RANDOM_NUMBER_COUNT */
     aead_tag_max_size = LIBSPDM_MAX_AEAD_TAG_SIZE;
-    if (test_buffer_size > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
-        test_buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size;
+    if (test_buffer_size >
+        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
+        test_buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size -
+                           aead_tag_max_size;
     }
 
     m_spdm_transport_pci_doe_test_context.test_buffer = test_buffer;

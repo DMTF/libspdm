@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -81,7 +81,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     }
     /* WALKAROUND: If just use single context to encode message and then decode message */
     ((spdm_secured_message_context_t *)(session_info->secured_message_context))
-        ->handshake_secret.response_handshake_sequence_number--;
+    ->handshake_secret.response_handshake_sequence_number--;
 
     return RETURN_SUCCESS;
 }
@@ -125,7 +125,7 @@ void test_spdm_requester_psk_finish_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
@@ -153,7 +153,7 @@ void test_spdm_requester_psk_finish_case1(void **State)
         session_info->secured_message_context, m_dummy_salt_buffer,
         ((spdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((spdm_secured_message_context_t *)(session_info->secured_message_context))
-        ->handshake_secret.response_handshake_sequence_number = 0;
+    ->handshake_secret.response_handshake_sequence_number = 0;
     spdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
     spdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);

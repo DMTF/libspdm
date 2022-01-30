@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #undef NULL
 #include "hal/base.h"
@@ -20,7 +20,7 @@
 #endif
 
 boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
-             IN void **test_buffer, OUT uintn *buffer_size)
+                         IN void **test_buffer, OUT uintn *buffer_size)
 {
     void *buffer;
     FILE *file;
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 
     /* 1. Initialize test_buffer*/
     res = init_test_buffer(file_name, get_max_buffer_size(), &test_buffer,
-                   &test_buffer_size);
+                           &test_buffer_size);
     if (!res) {
         printf("error - fail to init test buffer\n");
         return 0;

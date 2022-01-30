@@ -1,33 +1,33 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
 /**
-  Process the SPDM encapsulated KEY_UPDATE request and return the response.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  request_size                  size in bytes of the request data.
-  @param  request                      A pointer to the request data.
-  @param  response_size                 size in bytes of the response data.
-                                       On input, it means the size in bytes of response data buffer.
-                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  response                     A pointer to the response data.
-
-  @retval RETURN_SUCCESS               The request is processed and the response is returned.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Process the SPDM encapsulated KEY_UPDATE request and return the response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  request                      A pointer to the request data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                     A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The request is processed and the response is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status spdm_get_encap_response_key_update(IN void *context,
-                         IN uintn request_size,
-                         IN void *request,
-                         IN OUT uintn *response_size,
-                         OUT void *response)
+                                                 IN uintn request_size,
+                                                 IN void *request,
+                                                 IN OUT uintn *response_size,
+                                                 OUT void *response)
 {
     uint32_t session_id;
     spdm_key_update_response_t *spdm_response;
@@ -115,7 +115,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                        spdm_request->header.request_response_code);
+                                               spdm_request->header.request_response_code);
 
     ASSERT(*response_size >= sizeof(spdm_key_update_response_t));
     *response_size = sizeof(spdm_key_update_response_t);

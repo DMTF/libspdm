@@ -1,12 +1,12 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  PEM (Privacy Enhanced Mail) format Handler Wrapper Implementation.
-**/
+ * PEM (Privacy Enhanced Mail) format Handler Wrapper Implementation.
+ **/
 
 #include "internal_crypt_lib.h"
 #include <openssl/pem.h>
@@ -28,16 +28,16 @@ static uintn ascii_str_len(IN const char *string)
 }
 
 /**
-  Callback function for password phrase conversion used for retrieving the encrypted PEM.
-
-  @param[out]  buf      Pointer to the buffer to write the passphrase to.
-  @param[in]   size     Maximum length of the passphrase (i.e. the size of buf).
-  @param[in]   flag     A flag which is set to 0 when reading and 1 when writing.
-  @param[in]   key      key data to be passed to the callback routine.
-
-  @retval  The number of characters in the passphrase or 0 if an error occurred.
-
-**/
+ * Callback function for password phrase conversion used for retrieving the encrypted PEM.
+ *
+ * @param[out]  buf      Pointer to the buffer to write the passphrase to.
+ * @param[in]   size     Maximum length of the passphrase (i.e. the size of buf).
+ * @param[in]   flag     A flag which is set to 0 when reading and 1 when writing.
+ * @param[in]   key      key data to be passed to the callback routine.
+ *
+ * @retval  The number of characters in the passphrase or 0 if an error occurred.
+ *
+ **/
 intn PasswordCallback(OUT char *buf, IN intn size, IN intn flag, IN void *key)
 {
     intn key_length;
@@ -57,26 +57,26 @@ intn PasswordCallback(OUT char *buf, IN intn size, IN intn flag, IN void *key)
 }
 
 /**
-  Retrieve the RSA Private key from the password-protected PEM key data.
-
-  @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
-  @param[in]  pem_size      size of the PEM key data in bytes.
-  @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
-  @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
-                           RSA private key component. Use rsa_free() function to free the
-                           resource.
-
-  If pem_data is NULL, then return FALSE.
-  If rsa_context is NULL, then return FALSE.
-
-  @retval  TRUE   RSA Private key was retrieved successfully.
-  @retval  FALSE  Invalid PEM key data or incorrect password.
-
-**/
+ * Retrieve the RSA Private key from the password-protected PEM key data.
+ *
+ * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
+ *                         RSA private key component. Use rsa_free() function to free the
+ *                         resource.
+ *
+ * If pem_data is NULL, then return FALSE.
+ * If rsa_context is NULL, then return FALSE.
+ *
+ * @retval  TRUE   RSA Private key was retrieved successfully.
+ * @retval  FALSE  Invalid PEM key data or incorrect password.
+ *
+ **/
 boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-                     IN uintn pem_size,
-                     IN const char *password,
-                     OUT void **rsa_context)
+                                     IN uintn pem_size,
+                                     IN const char *password,
+                                     OUT void **rsa_context)
 {
     boolean status;
     BIO *pem_bio;
@@ -89,8 +89,8 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
     }
 
 
-    /* Add possible block-cipher descriptor for PEM data decryption.*/
-    /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
@@ -121,8 +121,8 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
 
     *rsa_context =
         PEM_read_bio_RSAPrivateKey(pem_bio, NULL,
-                       (pem_password_cb *)&PasswordCallback,
-                       (void *)password);
+                                   (pem_password_cb *)&PasswordCallback,
+                                   (void *)password);
     if (*rsa_context != NULL) {
         status = TRUE;
     }
@@ -137,25 +137,25 @@ done:
 }
 
 /**
-  Retrieve the EC Private key from the password-protected PEM key data.
-
-  @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
-  @param[in]  pem_size      size of the PEM key data in bytes.
-  @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
-  @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
-                           EC private key component. Use ec_free() function to free the
-                           resource.
-
-  If pem_data is NULL, then return FALSE.
-  If ec_context is NULL, then return FALSE.
-
-  @retval  TRUE   EC Private key was retrieved successfully.
-  @retval  FALSE  Invalid PEM key data or incorrect password.
-
-**/
+ * Retrieve the EC Private key from the password-protected PEM key data.
+ *
+ * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
+ *                         EC private key component. Use ec_free() function to free the
+ *                         resource.
+ *
+ * If pem_data is NULL, then return FALSE.
+ * If ec_context is NULL, then return FALSE.
+ *
+ * @retval  TRUE   EC Private key was retrieved successfully.
+ * @retval  FALSE  Invalid PEM key data or incorrect password.
+ *
+ **/
 boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                    IN const char *password,
-                    OUT void **ec_context)
+                                    IN const char *password,
+                                    OUT void **ec_context)
 {
     boolean status;
     BIO *pem_bio;
@@ -168,8 +168,8 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
     }
 
 
-    /* Add possible block-cipher descriptor for PEM data decryption.*/
-    /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
@@ -200,8 +200,8 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
 
     *ec_context =
         PEM_read_bio_ECPrivateKey(pem_bio, NULL,
-                      (pem_password_cb *)&PasswordCallback,
-                      (void *)password);
+                                  (pem_password_cb *)&PasswordCallback,
+                                  (void *)password);
     if (*ec_context != NULL) {
         status = TRUE;
     }
@@ -216,26 +216,26 @@ done:
 }
 
 /**
-  Retrieve the Ed Private key from the password-protected PEM key data.
-
-  @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
-  @param[in]  pem_size      size of the PEM key data in bytes.
-  @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
-  @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
-                           Ed private key component. Use ecd_free() function to free the
-                           resource.
-
-  If pem_data is NULL, then return FALSE.
-  If ecd_context is NULL, then return FALSE.
-
-  @retval  TRUE   Ed Private key was retrieved successfully.
-  @retval  FALSE  Invalid PEM key data or incorrect password.
-
-**/
+ * Retrieve the Ed Private key from the password-protected PEM key data.
+ *
+ * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
+ *                         Ed private key component. Use ecd_free() function to free the
+ *                         resource.
+ *
+ * If pem_data is NULL, then return FALSE.
+ * If ecd_context is NULL, then return FALSE.
+ *
+ * @retval  TRUE   Ed Private key was retrieved successfully.
+ * @retval  FALSE  Invalid PEM key data or incorrect password.
+ *
+ **/
 boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-                     IN uintn pem_size,
-                     IN const char *password,
-                     OUT void **ecd_context)
+                                     IN uintn pem_size,
+                                     IN const char *password,
+                                     OUT void **ecd_context)
 {
     boolean status;
     BIO *pem_bio;
@@ -250,8 +250,8 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
     }
 
 
-    /* Add possible block-cipher descriptor for PEM data decryption.*/
-    /* NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
         return FALSE;
@@ -281,8 +281,8 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
     /* Retrieve Ed Private key from encrypted PEM data.*/
 
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
-                       (pem_password_cb *)&PasswordCallback,
-                       (void *)password);
+                                   (pem_password_cb *)&PasswordCallback,
+                                   (void *)password);
     if (pkey == NULL) {
         goto done;
     }
@@ -303,26 +303,26 @@ done:
 }
 
 /**
-  Retrieve the sm2 Private key from the password-protected PEM key data.
-
-  @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
-  @param[in]  pem_size      size of the PEM key data in bytes.
-  @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
-  @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
-                           sm2 private key component. Use sm2_free() function to free the
-                           resource.
-
-  If pem_data is NULL, then return FALSE.
-  If sm2_context is NULL, then return FALSE.
-
-  @retval  TRUE   sm2 Private key was retrieved successfully.
-  @retval  FALSE  Invalid PEM key data or incorrect password.
-
-**/
+ * Retrieve the sm2 Private key from the password-protected PEM key data.
+ *
+ * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
+ *                         sm2 private key component. Use sm2_free() function to free the
+ *                         resource.
+ *
+ * If pem_data is NULL, then return FALSE.
+ * If sm2_context is NULL, then return FALSE.
+ *
+ * @retval  TRUE   sm2 Private key was retrieved successfully.
+ * @retval  FALSE  Invalid PEM key data or incorrect password.
+ *
+ **/
 boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-                     IN uintn pem_size,
-                     IN const char *password,
-                     OUT void **sm2_context)
+                                     IN uintn pem_size,
+                                     IN const char *password,
+                                     OUT void **sm2_context)
 {
     boolean status;
     BIO *pem_bio;
@@ -339,12 +339,12 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     }
 
 
-    /* Add possible block-cipher descriptor for PEM data decryption.*/
-    /* NOTE: Only support SM4 for the encrypted PEM.*/
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support SM4 for the encrypted PEM.*/
 
-    /*if (EVP_add_cipher (EVP_sm4_cbc ()) == 0) {*/
-    /*  return FALSE;*/
-    /*}*/
+    /*if (EVP_add_cipher (EVP_sm4_cbc ()) == 0) {
+     *  return FALSE;
+     *}*/
 
     status = FALSE;
 
@@ -364,8 +364,8 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     /* Retrieve sm2 Private key from encrypted PEM data.*/
 
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
-                       (pem_password_cb *)&PasswordCallback,
-                       (void *)password);
+                                   (pem_password_cb *)&PasswordCallback,
+                                   (void *)password);
     if (pkey == NULL) {
         goto done;
     }

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -151,8 +151,8 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
                                 dhe_key_size, final_key, &final_key_size);
         libspdm_dhe_free(m_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
-        /* zero_mem (ptr, hash_size);*/
-        /* ptr += hash_size;*/
+        /* zero_mem (ptr, hash_size);
+         * ptr += hash_size;*/
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         spdm_build_opaque_data_version_selection_data(spdm_context, &opaque_key_exchange_rsp_size,
@@ -177,8 +177,9 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         free(data);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_KEY_EXCHANGE_RSP, m_use_asym_algo, m_use_hash_algo, FALSE,
-            get_managed_buffer(&th_curr), get_managed_buffer_size(&th_curr), ptr, &signature_size);
+                SPDM_KEY_EXCHANGE_RSP, m_use_asym_algo, m_use_hash_algo, FALSE,
+                get_managed_buffer(&th_curr), get_managed_buffer_size(
+                &th_curr), ptr, &signature_size);
         copy_mem(&m_local_buffer[m_local_buffer_size], ptr, signature_size);
         m_local_buffer_size += signature_size;
         append_managed_buffer(&th_curr, ptr, signature_size);
@@ -263,7 +264,7 @@ void test_spdm_requester_key_exchange_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     heartbeat_period = 0;
@@ -308,7 +309,7 @@ void test_spdm_requester_key_exchange_case2(void **state)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     heartbeat_period = 0;
@@ -356,7 +357,7 @@ void test_spdm_requester_key_exchange_case3(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -403,7 +404,7 @@ void test_spdm_requester_key_exchange_ex_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     heartbeat_period = 0;

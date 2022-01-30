@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef PROCESSOR_BIND_H__
 #define PROCESSOR_BIND_H__
@@ -29,13 +29,13 @@
 typedef unsigned char boolean;
 
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef uint64_t uintn __attribute__((aligned(8)));
 
-/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef int64_t intn __attribute__((aligned(8)));
 

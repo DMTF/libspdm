@@ -1,107 +1,107 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_common_lib.h"
 
 
 /**
-  Return the size in bytes of opaque data version selection.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
-
-  @return the size in bytes of opaque data version selection.
-**/
+ * Return the size in bytes of opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
+ *
+ * @return the size in bytes of opaque data version selection.
+ **/
 uintn spdm_get_opaque_data_version_selection_data_size(
     IN spdm_context_t *spdm_context)
 {
     uintn size;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         return 0;
     }
 
     if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         size = sizeof(spdm_general_opaque_data_table_header_t) +
-           sizeof(secured_message_opaque_element_table_header_t) +
-           sizeof(secured_message_opaque_element_version_selection_t);
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_version_selection_t);
     } else {
         size = sizeof(secured_message_general_opaque_data_table_header_t) +
-           sizeof(secured_message_opaque_element_table_header_t) +
-           sizeof(secured_message_opaque_element_version_selection_t);
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_version_selection_t);
     }
     /* Add Padding*/
     return (size + 3) & ~3;
 }
 
 /**
-  Return the size in bytes of opaque data supproted version.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
-
-  @return the size in bytes of opaque data supproted version.
-**/
+ * Return the size in bytes of opaque data supproted version.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
+ *
+ * @return the size in bytes of opaque data supproted version.
+ **/
 uintn spdm_get_opaque_data_supported_version_data_size(
     IN spdm_context_t *spdm_context)
 {
     uintn size;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         return 0;
     }
 
     if (spdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         size = sizeof(spdm_general_opaque_data_table_header_t) +
-           sizeof(secured_message_opaque_element_table_header_t) +
-           sizeof(secured_message_opaque_element_supported_version_t) +
-           sizeof(spdm_version_number_t);
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_supported_version_t) +
+               sizeof(spdm_version_number_t);
     } else {
         size = sizeof(secured_message_general_opaque_data_table_header_t) +
-           sizeof(secured_message_opaque_element_table_header_t) +
-           sizeof(secured_message_opaque_element_supported_version_t) +
-           sizeof(spdm_version_number_t);
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_supported_version_t) +
+               sizeof(spdm_version_number_t);
     }
     /* Add Padding*/
     return (size + 3) & ~3;
 }
 
 /**
-  Build opaque data supported version.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
-
-  @param  data_out_size                  size in bytes of the data_out.
-                                       On input, it means the size in bytes of data_out buffer.
-                                       On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  data_out                      A pointer to the desination buffer to store the opaque data supported version.
-
-  @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Build opaque data supported version.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
+ *
+ * @param  data_out_size                  size in bytes of the data_out.
+ *                                     On input, it means the size in bytes of data_out buffer.
+ *                                     On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  data_out                      A pointer to the desination buffer to store the opaque data supported version.
+ *
+ * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status
 spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
-                          IN OUT uintn *data_out_size,
-                          OUT void *data_out)
+                                              IN OUT uintn *data_out_size,
+                                              OUT void *data_out)
 {
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
-        *general_opaque_data_table_header;
+    *general_opaque_data_table_header;
     spdm_general_opaque_data_table_header_t
-        *spdm_general_opaque_data_table_header;
+    *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
-        *opaque_element_table_header;
+    *opaque_element_table_header;
     secured_message_opaque_element_supported_version_t
-        *opaque_element_support_version;
+    *opaque_element_support_version;
     spdm_version_number_t *versions_list;
     void *end;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         *data_out_size = 0;
         return RETURN_SUCCESS;
     }
@@ -142,12 +142,14 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
     opaque_element_support_version->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
-    opaque_element_support_version->version_count = spdm_context->local_context.secured_message_version.spdm_version_count;
+    opaque_element_support_version->version_count =
+        spdm_context->local_context.secured_message_version.spdm_version_count;
 
     versions_list = (void *)(opaque_element_support_version + 1);
     copy_mem(versions_list,
-        spdm_context->local_context.secured_message_version.spdm_version,
-        spdm_context->local_context.secured_message_version.spdm_version_count * sizeof(spdm_version_number_t));
+             spdm_context->local_context.secured_message_version.spdm_version,
+             spdm_context->local_context.secured_message_version.spdm_version_count *
+             sizeof(spdm_version_number_t));
 
     /* Zero Padding*/
     end = versions_list + spdm_context->local_context.secured_message_version.spdm_version_count;
@@ -157,35 +159,35 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
 }
 
 /**
-  Process opaque data supported version.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request parsing in responder.
-
-  @param  data_in_size                   size in bytes of the data_in.
-  @param  data_in                       A pointer to the buffer to store the opaque data supported version.
-
-  @retval RETURN_SUCCESS               The opaque data supported version is processed successfully.
-  @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data supported version.
-**/
+ * Process opaque data supported version.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request parsing in responder.
+ *
+ * @param  data_in_size                   size in bytes of the data_in.
+ * @param  data_in                       A pointer to the buffer to store the opaque data supported version.
+ *
+ * @retval RETURN_SUCCESS               The opaque data supported version is processed successfully.
+ * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data supported version.
+ **/
 return_status
 spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
-                        IN uintn data_in_size,
-                        IN void *data_in)
+                                                IN uintn data_in_size,
+                                                IN void *data_in)
 {
     secured_message_general_opaque_data_table_header_t
-        *general_opaque_data_table_header;
+    *general_opaque_data_table_header;
     spdm_general_opaque_data_table_header_t
-        *spdm_general_opaque_data_table_header;
+    *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
-        *opaque_element_table_header;
+    *opaque_element_table_header;
     secured_message_opaque_element_supported_version_t
-        *opaque_element_support_version;
+    *opaque_element_support_version;
     spdm_version_number_t *versions_list;
     spdm_version_number_t common_version;
     boolean result;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         return RETURN_SUCCESS;
     }
 
@@ -203,9 +205,9 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     } else {
         general_opaque_data_table_header = data_in;
         if ((general_opaque_data_table_header->spec_id !=
-            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+             SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
             (general_opaque_data_table_header->opaque_version !=
-            SECURED_MESSAGE_OPAQUE_VERSION) ||
+             SECURED_MESSAGE_OPAQUE_VERSION) ||
             (general_opaque_data_table_header->total_elements != 1)) {
             return RETURN_UNSUPPORTED;
         }
@@ -216,7 +218,7 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
         (opaque_element_table_header->vendor_len != 0) ||
         (opaque_element_table_header->opaque_element_data_len !=
          sizeof(secured_message_opaque_element_supported_version_t) +
-             sizeof(spdm_version_number_t))) {
+         sizeof(spdm_version_number_t))) {
         return RETURN_UNSUPPORTED;
     }
     opaque_element_support_version =
@@ -230,52 +232,53 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
     }
     versions_list = (void *)(opaque_element_support_version + 1);
 
-    result = spdm_negotiate_connection_version(&common_version, spdm_context->local_context.secured_message_version.spdm_version,
-                                    spdm_context->local_context.secured_message_version.spdm_version_count,
-                                    versions_list,
-                                    opaque_element_support_version->version_count);
+    result = spdm_negotiate_connection_version(&common_version,
+                                               spdm_context->local_context.secured_message_version.spdm_version,
+                                               spdm_context->local_context.secured_message_version.spdm_version_count,
+                                               versions_list,
+                                               opaque_element_support_version->version_count);
     if (result == FALSE) {
         return RETURN_UNSUPPORTED;
     }
     copy_mem(&(spdm_context->connection_info.secured_message_version),
-    &(common_version),
-    sizeof(spdm_version_number_t));
+             &(common_version),
+             sizeof(spdm_version_number_t));
 
     return RETURN_SUCCESS;
 }
 
 /**
-  Build opaque data version selection.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
-
-  @param  data_out_size                  size in bytes of the data_out.
-                                       On input, it means the size in bytes of data_out buffer.
-                                       On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  data_out                      A pointer to the desination buffer to store the opaque data version selection.
-
-  @retval RETURN_SUCCESS               The opaque data version selection is built successfully.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Build opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
+ *
+ * @param  data_out_size                  size in bytes of the data_out.
+ *                                     On input, it means the size in bytes of data_out buffer.
+ *                                     On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  data_out                      A pointer to the desination buffer to store the opaque data version selection.
+ *
+ * @retval RETURN_SUCCESS               The opaque data version selection is built successfully.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status
 spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
-                          IN OUT uintn *data_out_size,
-                          OUT void *data_out)
+                                              IN OUT uintn *data_out_size,
+                                              OUT void *data_out)
 {
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
-        *general_opaque_data_table_header;
+    *general_opaque_data_table_header;
     spdm_general_opaque_data_table_header_t
-        *spdm_general_opaque_data_table_header;
+    *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
-        *opaque_element_table_header;
+    *opaque_element_table_header;
     secured_message_opaque_element_version_selection_t
-        *opaque_element_version_section;
+    *opaque_element_version_section;
     void *end;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         *data_out_size = 0;
         return RETURN_SUCCESS;
     }
@@ -326,33 +329,33 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
 }
 
 /**
-  Process opaque data version selection.
-
-  This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
-
-  @param  data_in_size                   size in bytes of the data_in.
-  @param  data_in                       A pointer to the buffer to store the opaque data version selection.
-
-  @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
-  @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
-**/
+ * Process opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
+ *
+ * @param  data_in_size                   size in bytes of the data_in.
+ * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
+ *
+ * @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
+ * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
+ **/
 return_status
 spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
-                        IN uintn data_in_size,
-                        IN void *data_in)
+                                                IN uintn data_in_size,
+                                                IN void *data_in)
 {
     secured_message_general_opaque_data_table_header_t
-        *general_opaque_data_table_header;
+    *general_opaque_data_table_header;
     spdm_general_opaque_data_table_header_t
-        *spdm_general_opaque_data_table_header;
+    *spdm_general_opaque_data_table_header;
     secured_message_opaque_element_table_header_t
-        *opaque_element_table_header;
+    *opaque_element_table_header;
     secured_message_opaque_element_version_selection_t
-        *opaque_element_version_section;
+    *opaque_element_version_section;
     uint8_t secured_message_version_index;
 
     if (spdm_context->local_context.secured_message_version
-            .spdm_version_count == 0) {
+        .spdm_version_count == 0) {
         return RETURN_SUCCESS;
     }
 
@@ -370,9 +373,9 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     } else {
         general_opaque_data_table_header = data_in;
         if ((general_opaque_data_table_header->spec_id !=
-            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+             SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
             (general_opaque_data_table_header->opaque_version !=
-            SECURED_MESSAGE_OPAQUE_VERSION) ||
+             SECURED_MESSAGE_OPAQUE_VERSION) ||
             (general_opaque_data_table_header->total_elements != 1)) {
             return RETURN_UNSUPPORTED;
         }
@@ -394,11 +397,14 @@ spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
     }
 
     for (secured_message_version_index = 0;
-        secured_message_version_index < spdm_context->local_context.secured_message_version.spdm_version_count;
-        secured_message_version_index ++) {
+         secured_message_version_index <
+         spdm_context->local_context.secured_message_version.spdm_version_count;
+         secured_message_version_index++) {
 
-        if (spdm_get_version_from_version_number(opaque_element_version_section->selected_version) ==
-            spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version.spdm_version[secured_message_version_index])) {
+        if (spdm_get_version_from_version_number(opaque_element_version_section->selected_version)
+            ==
+            spdm_get_version_from_version_number(spdm_context->local_context.secured_message_version
+                                                 .spdm_version[secured_message_version_index])) {
             return RETURN_SUCCESS;
         }
     }

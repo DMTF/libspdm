@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_secured_message_lib.h"
@@ -49,8 +49,9 @@ void test_libspdm_decode_secured_message(void **State)
     app_message_size = sizeof(app_message);
 
     libspdm_decode_secured_message(secured_message_context, session_id, is_requester,
-                                spdm_test_context->test_buffer_size, spdm_test_context->test_buffer,
-                                &app_message_size, app_message, &spdm_secured_message_callbacks);
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &app_message_size, app_message, &spdm_secured_message_callbacks);
 }
 
 spdm_test_context_t m_spdm_transport_mctp_test_context = {

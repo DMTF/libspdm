@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -61,7 +61,8 @@ void test_spdm_responder_measurements_case2(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
 
@@ -145,7 +146,8 @@ void test_spdm_responder_measurements_case4(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
@@ -207,8 +209,8 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_responder_measurements_case3(&State);
     spdm_unit_test_group_teardown(&State);
 
-    /*Select version based on GET_VERSION/VERSION support*/
-    /*last_spdm_request_session_id_valid: TRUE*/
+    /*Select version based on GET_VERSION/VERSION support
+     * last_spdm_request_session_id_valid: TRUE*/
     spdm_unit_test_group_setup(&State);
     test_spdm_responder_measurements_case4(&State);
     spdm_unit_test_group_teardown(&State);

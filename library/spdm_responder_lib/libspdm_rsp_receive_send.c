@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 
@@ -62,12 +62,12 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
 };
 
 /**
-  Return the GET_SPDM_RESPONSE function via request code.
-
-  @param  request_code                  The SPDM request code.
-
-  @return GET_SPDM_RESPONSE function according to the request code.
-**/
+ * Return the GET_SPDM_RESPONSE function via request code.
+ *
+ * @param  request_code                  The SPDM request code.
+ *
+ * @return GET_SPDM_RESPONSE function according to the request code.
+ **/
 spdm_get_spdm_response_func
 spdm_get_response_func_via_request_code(IN uint8_t request_code)
 {
@@ -75,7 +75,7 @@ spdm_get_response_func_via_request_code(IN uint8_t request_code)
 
     ASSERT(request_code != SPDM_RESPOND_IF_READY);
     for (index = 0; index < sizeof(mSpdmGetResponseStruct) /
-                    sizeof(mSpdmGetResponseStruct[0]);
+         sizeof(mSpdmGetResponseStruct[0]);
          index++) {
         if (request_code ==
             mSpdmGetResponseStruct[index].request_response_code) {
@@ -86,12 +86,12 @@ spdm_get_response_func_via_request_code(IN uint8_t request_code)
 }
 
 /**
-  Return the GET_SPDM_RESPONSE function via last request.
-
-  @param  spdm_context                  The SPDM context for the device.
-
-  @return GET_SPDM_RESPONSE function according to the last request.
-**/
+ * Return the GET_SPDM_RESPONSE function via last request.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ *
+ * @return GET_SPDM_RESPONSE function according to the last request.
+ **/
 spdm_get_spdm_response_func
 spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
 {
@@ -103,24 +103,24 @@ spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
 }
 
 /**
-  Process a SPDM request from a device.
-
-  @param  spdm_context                  The SPDM context for the device.
-  @param  session_id                    Indicate if the request is a secured message.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  is_app_message                 Indicates if it is an APP message or SPDM message.
-  @param  request_size                  size in bytes of the request data buffer.
-  @param  request                      A pointer to a destination buffer to store the request.
-                                       The caller is responsible for having
-                                       either implicit or explicit ownership of the buffer.
-
-  @retval RETURN_SUCCESS               The SPDM request is received successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
-**/
+ * Process a SPDM request from a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the request is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  request_size                  size in bytes of the request data buffer.
+ * @param  request                      A pointer to a destination buffer to store the request.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM request is received successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
+ **/
 return_status libspdm_process_request(IN void *context, OUT uint32_t **session_id,
-                   OUT boolean *is_app_message,
-                   IN uintn request_size, IN void *request)
+                                      OUT boolean *is_app_message,
+                                      IN uintn request_size, IN void *request)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -149,10 +149,10 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
-            
-            /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.*/
-            /* In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
-            
+
+            /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
+             * In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
+
             *session_id = &spdm_context->last_spdm_error.session_id;
             *is_app_message = FALSE;
             return RETURN_SUCCESS;
@@ -161,9 +161,9 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
     }
 
     if (!(*is_app_message)) {
-        
+
         /* check minimal SPDM message size*/
-        
+
         if (spdm_context->last_spdm_request_size <
             sizeof(spdm_message_header_t)) {
             return RETURN_UNSUPPORTED;
@@ -187,43 +187,43 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
            (message_session_id != NULL) ? *message_session_id : 0,
            spdm_context->last_spdm_request_size));
     internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
-              spdm_context->last_spdm_request_size);
+                      spdm_context->last_spdm_request_size);
 
     return RETURN_SUCCESS;
 }
 
 /**
-  Notify the session state to a session APP.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session_id of a session.
-  @param  session_state                 The state of a session.
-**/
+ * Notify the session state to a session APP.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session_id of a session.
+ * @param  session_state                 The state of a session.
+ **/
 void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
-                     IN uint32_t session_id,
-                     IN libspdm_session_state_t session_state)
+                                         IN uint32_t session_id,
+                                         IN libspdm_session_state_t session_state)
 {
     uintn index;
 
     for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
         if (spdm_context->spdm_session_state_callback[index] != 0) {
             ((libspdm_session_state_callback_func)spdm_context
-                 ->spdm_session_state_callback[index])(
+             ->spdm_session_state_callback[index])(
                 spdm_context, session_id, session_state);
         }
     }
 }
 
 /**
-  Set session_state to an SPDM secured message context and trigger callback.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicate the SPDM session ID.
-  @param  session_state                 Indicate the SPDM session state.
-*/
+ * Set session_state to an SPDM secured message context and trigger callback.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicate the SPDM session ID.
+ * @param  session_state                 Indicate the SPDM session state.
+ */
 void spdm_set_session_state(IN spdm_context_t *spdm_context,
-                IN uint32_t session_id,
-                IN libspdm_session_state_t session_state)
+                            IN uint32_t session_id,
+                            IN libspdm_session_state_t session_state)
 {
     spdm_session_info_t *session_info;
     libspdm_session_state_t old_session_state;
@@ -246,14 +246,14 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
 }
 
 /**
-  Notify the connection state to an SPDM context register.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  connection_state              Indicate the SPDM connection state.
-**/
+ * Notify the connection state to an SPDM context register.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  connection_state              Indicate the SPDM connection state.
+ **/
 void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
-                        IN libspdm_connection_state_t
-                            connection_state)
+                                            IN libspdm_connection_state_t
+                                            connection_state)
 {
     uintn index;
 
@@ -261,50 +261,50 @@ void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
          index++) {
         if (spdm_context->spdm_connection_state_callback[index] != 0) {
             ((libspdm_connection_state_callback_func)spdm_context
-                 ->spdm_connection_state_callback[index])(
+             ->spdm_connection_state_callback[index])(
                 spdm_context, connection_state);
         }
     }
 }
 
 /**
-  Set connection_state to an SPDM context and trigger callback.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  connection_state              Indicate the SPDM connection state.
-*/
+ * Set connection_state to an SPDM context and trigger callback.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  connection_state              Indicate the SPDM connection state.
+ */
 void spdm_set_connection_state(IN spdm_context_t *spdm_context,
-                   IN libspdm_connection_state_t connection_state)
+                               IN libspdm_connection_state_t connection_state)
 {
     if (spdm_context->connection_info.connection_state !=
         connection_state) {
         spdm_context->connection_info.connection_state =
             connection_state;
         spdm_trigger_connection_state_callback(spdm_context,
-                               connection_state);
+                                               connection_state);
     }
 }
 
 /**
-  Build a SPDM response to a device.
-
-  @param  spdm_context                  The SPDM context for the device.
-  @param  session_id                    Indicate if the response is a secured message.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  is_app_message                 Indicates if it is an APP message or SPDM message.
-  @param  response_size                 size in bytes of the response data buffer.
-  @param  response                     A pointer to a destination buffer to store the response.
-                                       The caller is responsible for having
-                                       either implicit or explicit ownership of the buffer.
-
-  @retval RETURN_SUCCESS               The SPDM response is sent successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
-**/
+ * Build a SPDM response to a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the response is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  response_size                 size in bytes of the response data buffer.
+ * @param  response                     A pointer to a destination buffer to store the response.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
+ **/
 return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
-                  IN boolean is_app_message,
-                  IN OUT uintn *response_size,
-                  OUT void *response)
+                                     IN boolean is_app_message,
+                                     IN OUT uintn *response_size,
+                                     OUT void *response)
 {
     spdm_context_t *spdm_context;
     uint8_t my_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -319,9 +319,9 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     status = RETURN_UNSUPPORTED;
 
     if (spdm_context->last_spdm_error.error_code != 0) {
-        
+
         /* Error in libspdm_process_request(), and we need send error message directly.*/
-        
+
         my_response_size = sizeof(my_response);
         zero_mem(my_response, sizeof(my_response));
         switch (spdm_context->last_spdm_error.error_code) {
@@ -332,9 +332,9 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                 &my_response_size, my_response);
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
-            /* don't use session ID, because we dont know which right session ID should be used.*/
-            /* just ignore this message */
-            /* return UNSUPPORTED to continue the dispatch without send response.*/
+            /* don't use session ID, because we dont know which right session ID should be used.
+             * just ignore this message
+             * return UNSUPPORTED to continue the dispatch without send response.*/
             status = RETURN_UNSUPPORTED;
             break;
         default:
@@ -361,7 +361,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         }
 
         zero_mem(&spdm_context->last_spdm_error,
-             sizeof(spdm_context->last_spdm_error));
+                 sizeof(spdm_context->last_spdm_error));
         return RETURN_SUCCESS;
     }
 
@@ -455,11 +455,11 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             break;
         case SPDM_PSK_FINISH_RSP:
             spdm_set_session_state(spdm_context, *session_id,
-                           LIBSPDM_SESSION_STATE_ESTABLISHED);
+                                   LIBSPDM_SESSION_STATE_ESTABLISHED);
             break;
         case SPDM_END_SESSION_ACK:
             spdm_set_session_state(spdm_context, *session_id,
-                           LIBSPDM_SESSION_STATE_NOT_STARTED);
+                                   LIBSPDM_SESSION_STATE_NOT_STARTED);
             libspdm_free_session_id(spdm_context, *session_id);
             break;
         default:
@@ -489,14 +489,14 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
 }
 
 /**
-  Register an SPDM or APP message process function.
-
-  If the default message process function cannot handle the message,
-  this function will be invoked.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  get_response_func              The function to process the encapsuled message.
-**/
+ * Register an SPDM or APP message process function.
+ *
+ * If the default message process function cannot handle the message,
+ * this function will be invoked.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  get_response_func              The function to process the encapsuled message.
+ **/
 void libspdm_register_get_response_func(
     IN void *context, IN libspdm_get_response_func get_response_func)
 {
@@ -509,16 +509,16 @@ void libspdm_register_get_response_func(
 }
 
 /**
-  Register an SPDM session state callback function.
-
-  This function can be called multiple times to let different session APPs register its own callback.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  spdm_session_state_callback     The function to be called in SPDM session state change.
-
-  @retval RETURN_SUCCESS          The callback is registered.
-  @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
-**/
+ * Register an SPDM session state callback function.
+ *
+ * This function can be called multiple times to let different session APPs register its own callback.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_session_state_callback     The function to be called in SPDM session state change.
+ *
+ * @retval RETURN_SUCCESS          The callback is registered.
+ * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
+ **/
 return_status libspdm_register_session_state_callback_func(
     IN void *context,
     IN libspdm_session_state_callback_func spdm_session_state_callback)
@@ -540,16 +540,16 @@ return_status libspdm_register_session_state_callback_func(
 }
 
 /**
-  Register an SPDM connection state callback function.
-
-  This function can be called multiple times to let different register its own callback.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  spdm_connection_state_callback  The function to be called in SPDM connection state change.
-
-  @retval RETURN_SUCCESS          The callback is registered.
-  @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
-**/
+ * Register an SPDM connection state callback function.
+ *
+ * This function can be called multiple times to let different register its own callback.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_connection_state_callback  The function to be called in SPDM connection state change.
+ *
+ * @retval RETURN_SUCCESS          The callback is registered.
+ * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
+ **/
 return_status libspdm_register_connection_state_callback_func(
     IN void *context,
     IN libspdm_connection_state_callback_func spdm_connection_state_callback)

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -126,7 +126,7 @@ void test_spdm_process_encap_response_key_update_case1(void **State)
 
     spdm_compute_secret_update(secured_message_context->hash_size, m_req_secret_buffer,
                                m_req_secret_buffer, secured_message_context->hash_size);
-                               
+
     libspdm_init_key_update_encap_state(spdm_context);
 
     spdm_process_encap_response_key_update(spdm_context, spdm_test_context->test_buffer_size,
@@ -158,7 +158,8 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -174,7 +175,7 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
     session_info = &spdm_context->session_info[0];
     spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
-                                              LIBSPDM_SESSION_STATE_ESTABLISHED);    
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
 }
@@ -204,7 +205,8 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;

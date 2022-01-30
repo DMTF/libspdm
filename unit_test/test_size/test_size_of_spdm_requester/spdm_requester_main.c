@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_requester.h"
 
@@ -30,13 +30,13 @@ void spdm_dispatch(void)
 }
 
 /**
-  Main entry point to DXE Core.
-
-  @param  HobStart               Pointer to the beginning of the HOB List from PEI.
-
-  @return This function should never return.
-
-**/
+ * Main entry point to DXE Core.
+ *
+ * @param  HobStart               Pointer to the beginning of the HOB List from PEI.
+ *
+ * @return This function should never return.
+ *
+ **/
 void ModuleEntryPoint(void)
 {
     spdm_dispatch();

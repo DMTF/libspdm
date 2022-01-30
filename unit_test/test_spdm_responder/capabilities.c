@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
@@ -13,10 +13,10 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request1 = {
         SPDM_GET_CAPABILITIES,
     },
 };
-/* version 1.0 message consists of only header (size 0x04).*/
-/* However, spdm_get_capabilities_request_t has a size of 0x0c.*/
-/* Therefore, sending a v1.0 request with this structure results in a wrong size request.*/
-/* size information was corrected to reflect the actual size of a get_capabilities 1.0 message.*/
+/* version 1.0 message consists of only header (size 0x04).
+ * However, spdm_get_capabilities_request_t has a size of 0x0c.
+ * Therefore, sending a v1.0 request with this structure results in a wrong size request.
+ * size information was corrected to reflect the actual size of a get_capabilities 1.0 message.*/
 uintn m_spdm_get_capabilities_request1_size = sizeof(spdm_message_header_t);
 
 spdm_get_capabilities_request_t m_spdm_get_capabilities_request2 = {
@@ -206,10 +206,10 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request10 = {
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     
-     
+
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
@@ -230,11 +230,11 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request11 = {
     0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     
-     
+
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
@@ -255,16 +255,16 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request12 = {
     0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     
-     
+
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP
-     
-     )
+
+    )
 };
 uintn m_spdm_get_capabilities_request12_size =
     sizeof(m_spdm_get_capabilities_request12) -
@@ -281,16 +281,16 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request13 = {
     0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     
-     
+
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP
-     
-     )
+
+    )
 };
 uintn m_spdm_get_capabilities_request13_size =
     sizeof(m_spdm_get_capabilities_request13) -
@@ -312,7 +312,7 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request14 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
@@ -361,7 +361,7 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request16 = {
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
-     
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP |
@@ -383,8 +383,8 @@ spdm_get_capabilities_request_t m_spdm_get_capabilities_request17 = {
     0x0000, /*reserved, 2 bytes*/
     (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
-     
-     
+
+
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
@@ -449,16 +449,16 @@ void test_spdm_responder_capabilities_case1(void **state)
         &m_spdm_get_capabilities_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                                        sizeof(spdm_response->data_transfer_size) -
-                                        sizeof(spdm_response->max_spdm_msg_size));
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_CAPABILITIES);
+                     SPDM_CAPABILITIES);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                    0);
+                     0);
 #endif
 }
 
@@ -485,11 +485,11 @@ void test_spdm_responder_capabilities_case2(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request2.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -517,13 +517,13 @@ void test_spdm_responder_capabilities_case3(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_BUSY);
+                     LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 void test_spdm_responder_capabilities_case4(void **state)
@@ -550,14 +550,14 @@ void test_spdm_responder_capabilities_case4(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_REQUEST_RESYNCH);
+                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
+                     LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
 /* According to spec, a responder shall not answer a get_capabilties with a ResponseNotReady*/
@@ -584,21 +584,21 @@ void test_spdm_responder_capabilities_case5(void **state)
         &m_spdm_get_capabilities_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
-             sizeof(spdm_error_response_t) +
-                 sizeof(spdm_error_data_response_not_ready_t));
+                     sizeof(spdm_error_response_t) +
+                     sizeof(spdm_error_data_response_not_ready_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     error_data =
         (spdm_error_data_response_not_ready_t *)(&spdm_response
-                                  ->reserved);
+                                                 ->reserved);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_NOT_READY);
+                     LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_GET_CAPABILITIES);
 }
 
@@ -626,11 +626,11 @@ void test_spdm_responder_capabilities_case6(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request1.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 /*New from here*/
@@ -658,11 +658,11 @@ void test_spdm_responder_capabilities_case7(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request3.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -687,13 +687,13 @@ void test_spdm_responder_capabilities_case8(void **state)
         &m_spdm_get_capabilities_request4, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                                        sizeof(spdm_response->data_transfer_size) -
-                                        sizeof(spdm_response->max_spdm_msg_size));
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_CAPABILITIES);
+                     SPDM_CAPABILITIES);
 }
 
 void test_spdm_responder_capabilities_case9(void **state)
@@ -717,13 +717,13 @@ void test_spdm_responder_capabilities_case9(void **state)
         &m_spdm_get_capabilities_request5, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                                        sizeof(spdm_response->data_transfer_size) -
-                                        sizeof(spdm_response->max_spdm_msg_size));
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_CAPABILITIES);
+                     SPDM_CAPABILITIES);
 }
 
 void test_spdm_responder_capabilities_case10(void **state)
@@ -749,11 +749,11 @@ void test_spdm_responder_capabilities_case10(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request6.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -780,11 +780,11 @@ void test_spdm_responder_capabilities_case11(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request7.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -809,13 +809,13 @@ void test_spdm_responder_capabilities_case12(void **state)
         &m_spdm_get_capabilities_request8, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                                        sizeof(spdm_response->data_transfer_size) -
-                                        sizeof(spdm_response->max_spdm_msg_size));
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request4.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_CAPABILITIES);
+                     SPDM_CAPABILITIES);
 }
 
 void test_spdm_responder_capabilities_case13(void **state)
@@ -841,11 +841,11 @@ void test_spdm_responder_capabilities_case13(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request9.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -872,11 +872,11 @@ void test_spdm_responder_capabilities_case14(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request10.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -903,11 +903,11 @@ void test_spdm_responder_capabilities_case15(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request11.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -934,11 +934,11 @@ void test_spdm_responder_capabilities_case16(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request12.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -965,11 +965,11 @@ void test_spdm_responder_capabilities_case17(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request13.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -998,11 +998,11 @@ void test_spdm_responder_capabilities_case18(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request14.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1029,11 +1029,11 @@ void test_spdm_responder_capabilities_case19(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request15.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1060,11 +1060,11 @@ void test_spdm_responder_capabilities_case20(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request16.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1091,11 +1091,11 @@ void test_spdm_responder_capabilities_case21(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request17.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1120,13 +1120,13 @@ void test_spdm_responder_capabilities_case22(void **state)
         &m_spdm_get_capabilities_request18, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                                        sizeof(spdm_response->data_transfer_size) -
-                                        sizeof(spdm_response->max_spdm_msg_size));
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
     spdm_response = (void *)response;
     assert_int_equal(m_spdm_get_capabilities_request18.header.spdm_version,
-             spdm_response->header.spdm_version);
+                     spdm_response->header.spdm_version);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_CAPABILITIES);
+                     SPDM_CAPABILITIES);
 }
 
 spdm_test_context_t m_spdm_responder_capabilities_test_context = {
@@ -1186,6 +1186,6 @@ int spdm_responder_capabilities_test_main(void)
     setup_spdm_test_context(&m_spdm_responder_capabilities_test_context);
 
     return cmocka_run_group_tests(spdm_responder_capabilities_tests,
-                      spdm_unit_test_group_setup,
-                      spdm_unit_test_group_teardown);
+                                  spdm_unit_test_group_setup,
+                                  spdm_unit_test_group_teardown);
 }

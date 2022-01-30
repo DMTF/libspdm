@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
@@ -28,9 +28,9 @@ void test_spdm_responder_capabilities_case1(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_capabilities(spdm_context,
-                       spdm_test_context->test_buffer_size,
-                       spdm_test_context->test_buffer,
-                       &response_size, response);
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &response_size, response);
 }
 
 void test_spdm_responder_capabilities_case2(void **State)
@@ -49,9 +49,9 @@ void test_spdm_responder_capabilities_case2(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_capabilities(spdm_context,
-                       spdm_test_context->test_buffer_size,
-                       spdm_test_context->test_buffer,
-                       &response_size, response);
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &response_size, response);
 }
 
 void test_spdm_responder_capabilities_case3(void **State)
@@ -70,9 +70,9 @@ void test_spdm_responder_capabilities_case3(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_capabilities(spdm_context,
-                       spdm_test_context->test_buffer_size,
-                       spdm_test_context->test_buffer,
-                       &response_size, response);
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &response_size, response);
 }
 
 spdm_test_context_t test_spdm_responder_context = {

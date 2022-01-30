@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -36,29 +36,29 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
-  @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
-  @param  requester_context_in_size     The size of requester_context_in.
-                                        It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
-  @param  requester_context             A buffer to hold the requester context, if not NULL.
-  @param  requester_context_size        On input, the size of requester_context buffer.
-                                        On output, the size of data returned in requester_context buffer.
-                                        It must be 32 bytes at least.
-  @param  responder_context             A buffer to hold the responder context, if not NULL.
-  @param  responder_context_size        On input, the size of requester_context buffer.
-                                        On output, the size of data returned in requester_context buffer.
-                                        It could be 0 if device does not support context.
-
-  @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
+ * @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
+ * @param  requester_context_in_size     The size of requester_context_in.
+ *                                      It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
+ * @param  requester_context             A buffer to hold the requester context, if not NULL.
+ * @param  requester_context_size        On input, the size of requester_context buffer.
+ *                                      On output, the size of data returned in requester_context buffer.
+ *                                      It must be 32 bytes at least.
+ * @param  responder_context             A buffer to hold the responder context, if not NULL.
+ * @param  responder_context_size        On input, the size of requester_context buffer.
+ *                                      On output, the size of data returned in requester_context buffer.
+ *                                      It could be 0 if device does not support context.
+ *
+ * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_send_receive_psk_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
     IN uint8_t session_policy,
@@ -90,8 +90,8 @@ return_status try_spdm_send_receive_psk_exchange(
     uint8_t th2_hash_data[64];
     uint32_t algo_size;
 
-    /* Check capabilities even if GET_CAPABILITIES is not sent.*/
-    /* Assuming capabilities are provisioned.*/
+    /* Check capabilities even if GET_CAPABILITIES is not sent.
+     * Assuming capabilities are provisioned.*/
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
@@ -99,7 +99,7 @@ return_status try_spdm_send_receive_psk_exchange(
         return RETURN_UNSUPPORTED;
     }
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                SPDM_PSK_EXCHANGE);
+                                               SPDM_PSK_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
@@ -111,13 +111,13 @@ return_status try_spdm_send_receive_psk_exchange(
                 spdm_context, TRUE, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
-                    .measurement_spec !=
+                .measurement_spec !=
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
                 return RETURN_DEVICE_ERROR;
             }
             algo_size = libspdm_get_measurement_hash_size(
                 spdm_context->connection_info.algorithm
-                    .measurement_hash_algo);
+                .measurement_hash_algo);
             if (algo_size == 0) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -160,7 +160,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     ptr = spdm_request.psk_hint;
     copy_mem(ptr, spdm_context->local_context.psk_hint,
-         spdm_context->local_context.psk_hint_size);
+             spdm_context->local_context.psk_hint_size);
     DEBUG((DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request.psk_hint_length));
     internal_dump_data(ptr, spdm_request.psk_hint_length);
     DEBUG((DEBUG_INFO, "\n"));
@@ -192,7 +192,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
     status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                    &spdm_request);
+                                    &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -220,7 +220,7 @@ return_status try_spdm_send_receive_psk_exchange(
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_PSK_EXCHANGE_RSP) {
+               SPDM_PSK_EXCHANGE_RSP) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_psk_exchange_response_t)) {
@@ -255,8 +255,8 @@ return_status try_spdm_send_receive_psk_exchange(
 
     if (spdm_response_size <
         sizeof(spdm_psk_exchange_response_t) +
-            spdm_response.context_length + spdm_response.opaque_length +
-            measurement_summary_hash_size + hmac_size) {
+        spdm_response.context_length + spdm_response.opaque_length +
+        measurement_summary_hash_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_DEVICE_ERROR;
     }
@@ -271,16 +271,16 @@ return_status try_spdm_send_receive_psk_exchange(
     }
 
     spdm_response_size = sizeof(spdm_psk_exchange_response_t) +
-                 spdm_response.context_length +
-                 spdm_response.opaque_length +
-                 measurement_summary_hash_size + hmac_size;
+                         spdm_response.context_length +
+                         spdm_response.opaque_length +
+                         measurement_summary_hash_size + hmac_size;
 
     ptr = (uint8_t *)(spdm_response.measurement_summary_hash);
     measurement_summary_hash = ptr;
     DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
     internal_dump_data(measurement_summary_hash,
-               measurement_summary_hash_size);
+                       measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
@@ -304,18 +304,18 @@ return_status try_spdm_send_receive_psk_exchange(
 
     ptr += spdm_response.opaque_length;
 
-    
+
     /* Cache session data*/
-    
+
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
-                       spdm_request_size);
+                                      spdm_request_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_response,
-                       spdm_response_size - hmac_size);
+                                      spdm_response_size - hmac_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
@@ -324,7 +324,7 @@ return_status try_spdm_send_receive_psk_exchange(
     DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, TRUE,
-                     th1_hash_data);
+                                        th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
@@ -340,7 +340,7 @@ return_status try_spdm_send_receive_psk_exchange(
     DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
     internal_dump_hex(verify_data, hmac_size);
     result = spdm_verify_psk_exchange_rsp_hmac(spdm_context, session_info,
-                           verify_data, hmac_size);
+                                               verify_data, hmac_size);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         spdm_context->error_state =
@@ -356,7 +356,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     if (measurement_hash != NULL) {
         copy_mem(measurement_hash, measurement_summary_hash,
-             measurement_summary_hash_size);
+                 measurement_summary_hash_size);
     }
 
     session_info->session_policy = session_policy;
@@ -374,7 +374,7 @@ return_status try_spdm_send_receive_psk_exchange(
         DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
-                         TRUE, th2_hash_data);
+                                            TRUE, th2_hash_data);
         if (RETURN_ERROR(status)) {
             libspdm_free_session_id(spdm_context, *session_id);
             return RETURN_SECURITY_VIOLATION;
@@ -395,24 +395,24 @@ return_status try_spdm_send_receive_psk_exchange(
 }
 
 /**
-  This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
-
-  @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
+ *
+ * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
-                         IN uint8_t measurement_hash_type,
-                         IN uint8_t session_policy,
-                         OUT uint32_t *session_id,
-                         OUT uint8_t *heartbeat_period,
-                         OUT void *measurement_hash)
+                                             IN uint8_t measurement_hash_type,
+                                             IN uint8_t session_policy,
+                                             OUT uint32_t *session_id,
+                                             OUT uint8_t *heartbeat_period,
+                                             OUT void *measurement_hash)
 {
     uintn retry;
     return_status status;
@@ -432,41 +432,41 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
 }
 
 /**
-  This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
-  @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
-  @param  requester_context_in_size     The size of requester_context_in.
-                                        It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
-  @param  requester_context             A buffer to hold the requester context, if not NULL.
-  @param  requester_context_size        On input, the size of requester_context buffer.
-                                        On output, the size of data returned in requester_context buffer.
-                                        It must be 32 bytes at least.
-  @param  responder_context             A buffer to hold the responder context, if not NULL.
-  @param  responder_context_size        On input, the size of requester_context buffer.
-                                        On output, the size of data returned in requester_context buffer.
-                                        It could be 0 if device does not support context.
-
-  @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
+ * @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
+ * @param  requester_context_in_size     The size of requester_context_in.
+ *                                      It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
+ * @param  requester_context             A buffer to hold the requester context, if not NULL.
+ * @param  requester_context_size        On input, the size of requester_context buffer.
+ *                                      On output, the size of data returned in requester_context buffer.
+ *                                      It must be 32 bytes at least.
+ * @param  responder_context             A buffer to hold the responder context, if not NULL.
+ * @param  responder_context_size        On input, the size of requester_context buffer.
+ *                                      On output, the size of data returned in requester_context buffer.
+ *                                      It could be 0 if device does not support context.
+ *
+ * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
-                         IN uint8_t measurement_hash_type,
-                         IN uint8_t session_policy,
-                         OUT uint32_t *session_id,
-                         OUT uint8_t *heartbeat_period,
-                         OUT void *measurement_hash,
-                         IN void *requester_context_in OPTIONAL,
-                         IN uintn requester_context_in_size OPTIONAL,
-                         OUT void *requester_context OPTIONAL,
-                         OUT uintn *requester_context_size OPTIONAL,
-                         OUT void *responder_context OPTIONAL,
-                         OUT uintn *responder_context_size OPTIONAL)
+                                                IN uint8_t measurement_hash_type,
+                                                IN uint8_t session_policy,
+                                                OUT uint32_t *session_id,
+                                                OUT uint8_t *heartbeat_period,
+                                                OUT void *measurement_hash,
+                                                IN void *requester_context_in OPTIONAL,
+                                                IN uintn requester_context_in_size OPTIONAL,
+                                                OUT void *requester_context OPTIONAL,
+                                                OUT uintn *requester_context_size OPTIONAL,
+                                                OUT void *responder_context OPTIONAL,
+                                                OUT uintn *responder_context_size OPTIONAL)
 {
     uintn retry;
     return_status status;

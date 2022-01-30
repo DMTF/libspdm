@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -16,24 +16,24 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends KEY_UPDATE
-  to update keys for an SPDM Session.
-
-  After keys are updated, this function also uses VERIFY_NEW_KEY to verify the key.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session ID of the session.
-  @param  single_direction              TRUE means the operation is UPDATE_KEY.
-                                       FALSE means the operation is UPDATE_ALL_KEYS.
-  @param  key_updated                   TRUE means the operation is to verify key(s).
-                                       FALSE means the operation is to update and verify key(s).
-
-  @retval RETURN_SUCCESS               The keys of the session are updated.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends KEY_UPDATE
+ * to update keys for an SPDM Session.
+ *
+ * After keys are updated, this function also uses VERIFY_NEW_KEY to verify the key.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session ID of the session.
+ * @param  single_direction              TRUE means the operation is UPDATE_KEY.
+ *                                     FALSE means the operation is UPDATE_ALL_KEYS.
+ * @param  key_updated                   TRUE means the operation is to verify key(s).
+ *                                     FALSE means the operation is to update and verify key(s).
+ *
+ * @retval RETURN_SUCCESS               The keys of the session are updated.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
-                  IN boolean single_direction, IN OUT boolean *key_updated)
+                                  IN boolean single_direction, IN OUT boolean *key_updated)
 {
     return_status status;
     return_status temp_status;
@@ -69,12 +69,12 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                        SPDM_KEY_UPDATE);
+                                               SPDM_KEY_UPDATE);
 
     if(!(*key_updated)) {
-        
+
         /* Update key*/
-        
+
         spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
         spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
@@ -86,7 +86,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         }
         spdm_request.header.param2 = 0;
         if(!libspdm_get_random_number(sizeof(spdm_request.header.param2),
-                       &spdm_request.header.param2)) {
+                                      &spdm_request.header.param2)) {
             return RETURN_DEVICE_ERROR;
         }
 
@@ -104,7 +104,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         }
 
         status = spdm_send_spdm_request(spdm_context, &session_id,
-                        sizeof(spdm_request), &spdm_request);
+                                        sizeof(spdm_request), &spdm_request);
         if (RETURN_ERROR(status)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -157,7 +157,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
         }
 
         if ((spdm_response.header.request_response_code !=
-            SPDM_KEY_UPDATE_ACK) ||
+             SPDM_KEY_UPDATE_ACK) ||
             (spdm_response.header.param1 != spdm_request.header.param1) ||
             (spdm_response.header.param2 != spdm_request.header.param2)) {
             if (!single_direction) {
@@ -208,21 +208,21 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
 
     *key_updated = TRUE;
 
-    
+
     /* Verify key*/
-    
+
     spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
     spdm_request.header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
     spdm_request.header.param2 = 1;
     if(!libspdm_get_random_number(sizeof(spdm_request.header.param2),
-                   &spdm_request.header.param2)) {
+                                  &spdm_request.header.param2)) {
         return RETURN_DEVICE_ERROR;
     }
 
     status = spdm_send_spdm_request(spdm_context, &session_id,
-                    sizeof(spdm_request), &spdm_request);
+                                    sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -254,7 +254,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     }
 
     if ((spdm_response.header.request_response_code !=
-        SPDM_KEY_UPDATE_ACK) ||
+         SPDM_KEY_UPDATE_ACK) ||
         (spdm_response.header.param1 != spdm_request.header.param1) ||
         (spdm_response.header.param2 != spdm_request.header.param2)) {
         DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
@@ -266,7 +266,7 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
 }
 
 return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
-                  IN boolean single_direction)
+                                 IN boolean single_direction)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -278,7 +278,7 @@ return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_key_update(context, session_id,
-                              single_direction, &key_updated);
+                                     single_direction, &key_updated);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

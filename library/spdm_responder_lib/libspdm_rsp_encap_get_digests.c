@@ -1,30 +1,30 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
-  Get the SPDM encapsulated GET_DIGESTS request.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  encap_request_size             size in bytes of the encapsulated request data.
-                                       On input, it means the size in bytes of encapsulated request data buffer.
-                                       On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  encap_request                 A pointer to the encapsulated request data.
-
-  @retval RETURN_SUCCESS               The encapsulated request is returned.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Get the SPDM encapsulated GET_DIGESTS request.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  encap_request_size             size in bytes of the encapsulated request data.
+ *                                     On input, it means the size in bytes of encapsulated request data buffer.
+ *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  encap_request                 A pointer to the encapsulated request data.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated request is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status
 spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
-                  IN OUT uintn *encap_request_size,
-                  OUT void *encap_request)
+                                  IN OUT uintn *encap_request_size,
+                                  OUT void *encap_request)
 {
     spdm_get_digest_request_t *spdm_request;
     return_status status;
@@ -43,24 +43,24 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
     spdm_request = encap_request;
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                        spdm_request->header.request_response_code);
+                                               spdm_request->header.request_response_code);
 
     spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
 
-    
+
     /* Cache data*/
-    
+
     status = libspdm_append_message_mut_b(spdm_context, spdm_request,
-                       *encap_request_size);
+                                          *encap_request_size);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
 
     copy_mem(&spdm_context->encap_context.last_encap_request_header,
-         &spdm_request->header, sizeof(spdm_message_header_t));
+             &spdm_request->header, sizeof(spdm_message_header_t));
     spdm_context->encap_context.last_encap_request_size =
         *encap_request_size;
 
@@ -68,17 +68,17 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
 }
 
 /**
-  Process the SPDM encapsulated DIGESTS response.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  encap_response_size            size in bytes of the encapsulated response data.
-  @param  encap_response                A pointer to the encapsulated response data.
-  @param  need_continue                     Indicate if encapsulated communication need continue.
-
-  @retval RETURN_SUCCESS               The encapsulated response is processed.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Process the SPDM encapsulated DIGESTS response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  encap_response_size            size in bytes of the encapsulated response data.
+ * @param  encap_response                A pointer to the encapsulated response data.
+ * @param  need_continue                     Indicate if encapsulated communication need continue.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated response is processed.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status spdm_process_encap_response_digest(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
     IN void *encap_response, OUT boolean *need_continue)
@@ -109,7 +109,7 @@ return_status spdm_process_encap_response_digest(
             return status;
         }
     } else if (spdm_response->header.request_response_code !=
-           SPDM_DIGESTS) {
+               SPDM_DIGESTS) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_digest_response_t)) {
@@ -133,11 +133,11 @@ return_status spdm_process_encap_response_digest(
     }
     spdm_response_size =
         sizeof(spdm_digest_response_t) + digest_count * digest_size;
-    
+
     /* Cache data*/
-    
+
     status = libspdm_append_message_mut_b(spdm_context, spdm_response,
-                       spdm_response_size);
+                                          spdm_response_size);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
@@ -150,7 +150,7 @@ return_status spdm_process_encap_response_digest(
     }
 
     result = spdm_verify_peer_digests(spdm_context, digest,
-                      digest_count);
+                                      digest_count);
     if (!result) {
         return RETURN_SECURITY_VIOLATION;
     }

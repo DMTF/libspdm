@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_transport_pcidoe_lib.h"
@@ -31,9 +31,10 @@ void test_spdm_transport_pci_doe_decode_message(void **State)
     transport_message_size = sizeof(transport_message);
 
     libspdm_transport_pci_doe_decode_message(spdm_context, NULL, &is_app_message, is_requester,
-                                          spdm_test_context->test_buffer_size,
-                                          spdm_test_context->test_buffer, &transport_message_size,
-                                          transport_message);
+                                             spdm_test_context->test_buffer_size,
+                                             spdm_test_context->test_buffer,
+                                             &transport_message_size,
+                                             transport_message);
 }
 
 spdm_test_context_t m_spdm_transport_pci_doe_test_context = {

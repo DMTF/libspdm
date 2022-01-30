@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
@@ -54,8 +54,8 @@ void test_spdm_responder_end_session(void **State)
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data,
-                        &data_size, NULL, NULL);
+                                            m_use_asym_algo, &data,
+                                            &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
@@ -67,7 +67,7 @@ void test_spdm_responder_end_session(void **State)
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-         sizeof(TEST_PSK_HINT_STRING));
+             sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -84,9 +84,9 @@ void test_spdm_responder_end_session(void **State)
 
     response_size = sizeof(response);
     spdm_get_response_end_session(spdm_context,
-                      spdm_test_context->test_buffer_size,
-                      spdm_test_context->test_buffer,
-                      &response_size, response);
+                                  spdm_test_context->test_buffer_size,
+                                  spdm_test_context->test_buffer,
+                                  &response_size, response);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

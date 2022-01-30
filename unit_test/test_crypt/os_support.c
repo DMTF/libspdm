@@ -1,15 +1,15 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
 #include <stdio.h>
 
 boolean read_input_file(IN char *file_name, OUT void **file_data,
-            OUT uintn *file_size)
+                        OUT uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;

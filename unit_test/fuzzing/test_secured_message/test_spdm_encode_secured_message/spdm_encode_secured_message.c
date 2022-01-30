@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_secured_message_lib.h"
@@ -51,9 +51,10 @@ void test_libspdm_encode_secured_message(void **State)
     secured_message_size = sizeof(secured_message);
 
     libspdm_encode_secured_message(secured_message_context, session_id, is_requester,
-                                spdm_test_context->test_buffer_size, spdm_test_context->test_buffer,
-                                &secured_message_size, secured_message,
-                                &spdm_secured_message_callbacks);
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &secured_message_size, secured_message,
+                                   &spdm_secured_message_callbacks);
 }
 
 spdm_test_context_t m_spdm_transport_mctp_test_context = {
@@ -76,8 +77,10 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
                              sizeof(spdm_secured_message_cipher_header_t) +
                              32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     aead_tag_max_size = LIBSPDM_MAX_AEAD_TAG_SIZE;
-    if (test_buffer_size > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
-        test_buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size;
+    if (test_buffer_size >
+        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
+        test_buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size -
+                           aead_tag_max_size;
     }
 
     m_spdm_transport_mctp_test_context.test_buffer = test_buffer;

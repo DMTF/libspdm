@@ -1,29 +1,29 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
-  Get the SPDM encapsulated CHALLENGE request.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  encap_request_size             size in bytes of the encapsulated request data.
-                                       On input, it means the size in bytes of encapsulated request data buffer.
-                                       On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  encap_request                 A pointer to the encapsulated request data.
-
-  @retval RETURN_SUCCESS               The encapsulated request is returned.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Get the SPDM encapsulated CHALLENGE request.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  encap_request_size             size in bytes of the encapsulated request data.
+ *                                     On input, it means the size in bytes of encapsulated request data buffer.
+ *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  encap_request                 A pointer to the encapsulated request data.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated request is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
-                           IN OUT uintn *encap_request_size,
-                           OUT void *encap_request)
+                                               IN OUT uintn *encap_request_size,
+                                               OUT void *encap_request)
 {
     spdm_challenge_request_t *spdm_request;
     return_status status;
@@ -54,19 +54,19 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
     DEBUG((DEBUG_INFO, "\n"));
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                        spdm_request->header.request_response_code);
+                                               spdm_request->header.request_response_code);
 
-    
+
     /* Cache data*/
-    
+
     status = libspdm_append_message_mut_c(spdm_context, spdm_request,
-                       *encap_request_size);
+                                          *encap_request_size);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
 
     copy_mem(&spdm_context->encap_context.last_encap_request_header,
-         &spdm_request->header, sizeof(spdm_message_header_t));
+             &spdm_request->header, sizeof(spdm_message_header_t));
     spdm_context->encap_context.last_encap_request_size =
         *encap_request_size;
 
@@ -74,17 +74,17 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
 }
 
 /**
-  Process the SPDM encapsulated CHALLENGE_AUTH response.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  encap_response_size            size in bytes of the encapsulated response data.
-  @param  encap_response                A pointer to the encapsulated response data.
-  @param  need_continue                     Indicate if encapsulated communication need continue.
-
-  @retval RETURN_SUCCESS               The encapsulated response is processed.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Process the SPDM encapsulated CHALLENGE_AUTH response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  encap_response_size            size in bytes of the encapsulated response data.
+ * @param  encap_response                A pointer to the encapsulated response data.
+ * @param  need_continue                     Indicate if encapsulated communication need continue.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated response is processed.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status spdm_process_encap_response_challenge_auth(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
     IN void *encap_response, OUT boolean *need_continue)
@@ -125,7 +125,7 @@ return_status spdm_process_encap_response_challenge_auth(
             return status;
         }
     } else if (spdm_response->header.request_response_code !=
-           SPDM_CHALLENGE_AUTH) {
+               SPDM_CHALLENGE_AUTH) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_challenge_auth_response_t)) {
@@ -146,7 +146,7 @@ return_status spdm_process_encap_response_challenge_auth(
             return RETURN_DEVICE_ERROR;
         }
         if ((spdm_response->header.param2 &
-            (1 << spdm_context->encap_context.req_slot_id)) == 0) {
+             (1 << spdm_context->encap_context.req_slot_id)) == 0) {
             return RETURN_DEVICE_ERROR;
         }
     }
@@ -157,9 +157,9 @@ return_status spdm_process_encap_response_challenge_auth(
     measurement_summary_hash_size = 0;
 
     if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
-                      hash_size + SPDM_NONCE_SIZE +
-                      measurement_summary_hash_size +
-                      sizeof(uint16_t)) {
+        hash_size + SPDM_NONCE_SIZE +
+        measurement_summary_hash_size +
+        sizeof(uint16_t)) {
         return RETURN_DEVICE_ERROR;
     }
 
@@ -171,7 +171,7 @@ return_status spdm_process_encap_response_challenge_auth(
     internal_dump_data(cert_chain_hash, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
     result = spdm_verify_certificate_chain_hash(spdm_context,
-                            cert_chain_hash, hash_size);
+                                                cert_chain_hash, hash_size);
     if (!result) {
         spdm_context->encap_context.error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
@@ -189,7 +189,7 @@ return_status spdm_process_encap_response_challenge_auth(
     DEBUG((DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
     internal_dump_data(measurement_summary_hash,
-               measurement_summary_hash_size);
+                       measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
@@ -200,16 +200,16 @@ return_status spdm_process_encap_response_challenge_auth(
 
     if (spdm_response_size <
         sizeof(spdm_challenge_auth_response_t) + hash_size +
-            SPDM_NONCE_SIZE + measurement_summary_hash_size +
-            sizeof(uint16_t) + opaque_length + signature_size) {
+        SPDM_NONCE_SIZE + measurement_summary_hash_size +
+        sizeof(uint16_t) + opaque_length + signature_size) {
         return RETURN_DEVICE_ERROR;
     }
     spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
-                 hash_size + SPDM_NONCE_SIZE +
-                 measurement_summary_hash_size + sizeof(uint16_t) +
-                 opaque_length + signature_size;
+                         hash_size + SPDM_NONCE_SIZE +
+                         measurement_summary_hash_size + sizeof(uint16_t) +
+                         opaque_length + signature_size;
     status = libspdm_append_message_mut_c(spdm_context, spdm_response,
-                       spdm_response_size - signature_size);
+                                          spdm_response_size - signature_size);
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
@@ -232,7 +232,7 @@ return_status spdm_process_encap_response_challenge_auth(
 
     spdm_context->encap_context.error_state = LIBSPDM_STATUS_SUCCESS;
     spdm_set_connection_state(spdm_context,
-                  LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
+                              LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 
     *need_continue = FALSE;
 

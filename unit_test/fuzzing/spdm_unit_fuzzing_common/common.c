@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_fuzzing.h"
 
@@ -33,11 +33,11 @@ uintn spdm_unit_test_group_setup(void **State)
 
     libspdm_init_context(spdm_context);
     libspdm_register_device_io_func(spdm_context,
-                     spdm_test_context->send_message,
-                     spdm_test_context->receive_message);
+                                    spdm_test_context->send_message,
+                                    spdm_test_context->receive_message);
     libspdm_register_transport_layer_func(spdm_context,
-                       spdm_transport_test_encode_message,
-                       spdm_transport_test_decode_message);
+                                          spdm_transport_test_encode_message,
+                                          spdm_transport_test_decode_message);
 
     *State = spdm_test_context;
     return 0;
@@ -54,7 +54,7 @@ uintn spdm_unit_test_group_teardown(void **State)
 }
 
 boolean read_input_file(IN char *file_name, OUT void **file_data,
-            OUT uintn *file_size)
+                        OUT uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;
