@@ -33,6 +33,8 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
+ *                                      Continue the dispatch without send response.
  **/
 typedef return_status (*libspdm_get_response_func)(
     IN void *spdm_context, IN uint32_t *session_id, IN bool is_app_message,
@@ -87,6 +89,8 @@ return_status libspdm_process_request(IN void *spdm_context,
  *
  * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
+ * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
+ *                                      Continue the dispatch without send response.
  **/
 return_status libspdm_build_response(IN void *spdm_context, IN uint32_t *session_id,
                                      IN bool is_app_message,
