@@ -301,6 +301,8 @@ void spdm_set_connection_state(IN spdm_context_t *spdm_context,
  *
  * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
+ * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
+ *                                      Continue the dispatch without send response.
  **/
 return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                                      IN bool is_app_message,
@@ -435,6 +437,14 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             status = RETURN_NOT_FOUND;
         }
     }
+    /* if return the status: Responder drop the response
+     * just ignore this message
+     * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
+    if((my_response_size == 0) && (status == RETURN_UNSUPPORTED)) {
+        *response_size = 0;
+        return RETURN_UNSUPPORTED;
+    }
+
     if (RETURN_ERROR(status)) {
         status = libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
