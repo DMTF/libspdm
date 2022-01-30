@@ -1,0 +1,38 @@
+name: Compliance Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  markdown-style-check:
+    name: Markdown Style Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check
+        # Reject any .md files with tabs in them
+        run: |
+          if grep -rn "	" * --include=*.md;
+          then exit 1
+          fi
+
+  uncrustify:
+    name: Style Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install uncrustify
+        run: |
+          sudo apt update
+          sudo apt install --no-install-recommends -y uncrustify
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check
+        # uncrustify is unable to parse the assembly directives in the ia32 intrinsiclib
+        run: |
+          find -not -path "./unit_test/test_size/intrinsiclib/ia32/*" \( -name "*.c" -o -name "*.h" \) -exec uncrustify -c ./.uncrustify.cfg --check {} +

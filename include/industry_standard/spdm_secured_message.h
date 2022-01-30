@@ -1,13 +1,13 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Definitions of DSP0277 Secured Messages using SPDM Specification
-  version 1.0.0 in Distributed Management Task Force (DMTF).
-**/
+ * Definitions of DSP0277 Secured Messages using SPDM Specification
+ * version 1.0.0 in Distributed Management Task Force (DMTF).
+ **/
 
 #ifndef __SPDM_SECURED_MESSAGE_H__
 #define __SPDM_SECURED_MESSAGE_H__
@@ -17,37 +17,37 @@
 
 /* ENC+AUTH session:*/
 
-/* +-----------------+*/
-/* | ApplicationData |-----------------------------------------------------*/
-/* +-----------------+                                                     |*/
-/*                                                                         V*/
-/* +---------------------------------+--------------------------=-------+-------+------+---+*/
-/* |SPDM_SECURED_MESSAGE_ADATA_HEADER|spdm_secured_message_cipher_header_t|AppData|Random|MAC|*/
-/* | session_id | SeqNum (O) | length |       application_data_length      |       |  (O) |   |*/
-/* +---------------------------------+----------------------------------+-------+------+---+*/
-/* |                                 |                                                 |   |*/
-/*  --------------------------------- ------------------------------------------------- ---*/
-/*                  |                                         |                          |*/
-/*                  V                                         V                          V*/
-/*            AssociatedData                            encrypted_data                 AeadTag*/
+/* +-----------------+
+ * | ApplicationData |-----------------------------------------------------
+ * +-----------------+                                                     |
+ *                                                                         V
+ * +---------------------------------+--------------------------=-------+-------+------+---+
+ * |SPDM_SECURED_MESSAGE_ADATA_HEADER|spdm_secured_message_cipher_header_t|AppData|Random|MAC|
+ * | session_id | SeqNum (O) | length |       application_data_length      |       |  (O) |   |
+ * +---------------------------------+----------------------------------+-------+------+---+
+ * |                                 |                                                 |   |
+ *  --------------------------------- ------------------------------------------------- ---
+ *                  |                                         |                          |
+ *                  V                                         V                          V
+ *            AssociatedData                            encrypted_data                 AeadTag*/
 
 /* (O) means Optional or Transport Layer Specific.*/
 
 /* AUTH session:*/
 
-/* +-----------------+*/
-/* | ApplicationData |------------------*/
-/* +-----------------+                  |*/
-/*                                      V*/
-/* +---------------------------------+-------+---+*/
-/* |SPDM_SECURED_MESSAGE_ADATA_HEADER|AppData|MAC|*/
-/* | session_id | SeqNum (T) | length |       |   |*/
-/* +---------------------------------+-------+---+*/
-/* |                                         |   |*/
-/*  ----------------------------------------- ---*/
-/*                      |                     |*/
-/*                      V                     V*/
-/*                AssociatedData           AeadTag*/
+/* +-----------------+
+ * | ApplicationData |------------------
+ * +-----------------+                  |
+ *                                      V
+ * +---------------------------------+-------+---+
+ * |SPDM_SECURED_MESSAGE_ADATA_HEADER|AppData|MAC|
+ * | session_id | SeqNum (T) | length |       |   |
+ * +---------------------------------+-------+---+
+ * |                                         |   |
+ *  ----------------------------------------- ---
+ *                      |                     |
+ *                      V                     V
+ *                AssociatedData           AeadTag*/
 
 
 typedef struct {
@@ -81,10 +81,10 @@ typedef struct {
 typedef struct {
     uint8_t id;
     uint8_t vendor_len;
-    /*uint8_t    vendor_id[vendor_len];*/
-    /*uint16_t   opaque_element_data_len;*/
-    /*uint8_t    opaque_element_data[opaque_element_data_len];*/
-    /*uint8_t    align_padding[];*/
+    /*uint8_t    vendor_id[vendor_len];
+     * uint16_t   opaque_element_data_len;
+     * uint8_t    opaque_element_data[opaque_element_data_len];
+     * uint8_t    align_padding[];*/
 } opaque_element_table_header_t;
 
 #define SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION 0x1
@@ -93,9 +93,9 @@ typedef struct {
     uint8_t id; /* SPDM_REGISTRY_ID_DMTF*/
     uint8_t vendor_len;
     uint16_t opaque_element_data_len;
-    /*uint8_t    sm_data_version;*/
-    /*uint8_t    sm_data_id;*/
-    /*uint8_t    sm_data[];*/
+    /*uint8_t    sm_data_version;
+     * uint8_t    sm_data_id;
+     * uint8_t    sm_data[];*/
 } secured_message_opaque_element_table_header_t;
 
 typedef struct {

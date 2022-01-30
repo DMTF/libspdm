@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __SPDM_UNIT_TEST_H__
 #define __SPDM_UNIT_TEST_H__
@@ -36,21 +36,21 @@ extern uint16_t m_use_aead_algo;
 extern uint16_t m_use_key_schedule_algo;
 
 
-/* SPDM reserved error code*/
-/* They are for unit test only. */
-/* Please double check if they are still reserved when a new SPDM spec is published.*/
+/* SPDM reserved error code
+ * They are for unit test only.
+ * Please double check if they are still reserved when a new SPDM spec is published.*/
 
 #define SPDM_ERROR_CODE_RESERVED_00             0x00
 #define SPDM_ERROR_CODE_RESERVED_0D             0x0D
 #define SPDM_ERROR_CODE_RESERVED_3F             0x3F
 #define SPDM_ERROR_CODE_RESERVED_FD             0xFD
 
-#define ASSERT_INT_EQUAL_CASE(value, expected, case) {\
-      if(value != expected) {\
-        fprintf(stderr, "[ERRCODE:%02x] ", case);\
-      } \
-      assert_int_equal(value, expected);\
-    };
+#define ASSERT_INT_EQUAL_CASE(value, expected, case) { \
+        if(value != expected) { \
+            fprintf(stderr, "[ERRCODE:%02x] ", case); \
+        } \
+        assert_int_equal(value, expected); \
+};
 
 #define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
@@ -83,6 +83,6 @@ void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
 void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
 
 boolean read_input_file(IN char *file_name, OUT void **file_data,
-            OUT uintn *file_size);
+                        OUT uintn *file_size);
 
 #endif

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -12,8 +12,8 @@ typedef struct {
     uint8_t number_of_blocks;
     uint8_t measurement_record_length[3];
     uint8_t measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
-                  LIBSPDM_MAX_HASH_SIZE) *
-                 LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT];
+                                LIBSPDM_MAX_HASH_SIZE) *
+                               LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT];
     uint8_t nonce[SPDM_NONCE_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
@@ -24,42 +24,42 @@ typedef struct {
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
-  This function sends GET_MEASUREMENT
-  to get measurement from the device.
-
-  If the signature is requested, this function verifies the signature of the measurement.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  request_attribute             The request attribute of the request message.
-  @param  measurement_operation         The measurement operation of the request message.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  content_changed               The measurement content changed output param.
-  @param  number_of_blocks               The number of blocks of the measurement record.
-  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
-                                       On output, indicate the size in bytes of the measurement record.
-  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The measurement is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_MEASUREMENT
+ * to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute             The request attribute of the request message.
+ * @param  measurement_operation         The measurement operation of the request message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  content_changed               The measurement content changed output param.
+ * @param  number_of_blocks               The number of blocks of the measurement record.
+ * @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                     On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id,
-                       IN uint8_t request_attribute,
-                       IN uint8_t measurement_operation,
-                       IN uint8_t slot_id_param,
-                       OUT uint8_t *content_changed,
-                       OUT uint8_t *number_of_blocks,
-                       IN OUT uint32_t *measurement_record_length,
-                       OUT void *measurement_record,
-                       IN void *requester_nonce_in OPTIONAL,
-                       OUT void *requester_nonce OPTIONAL,
-                       OUT void *responder_nonce OPTIONAL)
+                                       IN uint8_t request_attribute,
+                                       IN uint8_t measurement_operation,
+                                       IN uint8_t slot_id_param,
+                                       OUT uint8_t *content_changed,
+                                       OUT uint8_t *number_of_blocks,
+                                       IN OUT uint32_t *measurement_record_length,
+                                       OUT void *measurement_record,
+                                       IN void *requester_nonce_in OPTIONAL,
+                                       OUT void *requester_nonce OPTIONAL,
+                                       OUT void *responder_nonce OPTIONAL)
 {
     boolean result;
     return_status status;
@@ -89,7 +89,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         return RETURN_UNSUPPORTED;
     }
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                    SPDM_GET_MEASUREMENTS);
+                                               SPDM_GET_MEASUREMENTS);
     if (session_id == NULL) {
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
@@ -132,7 +132,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     }
 
     if ((request_attribute &
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         signature_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);
     } else {
@@ -144,12 +144,12 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     spdm_request.header.param1 = request_attribute;
     spdm_request.header.param2 = measurement_operation;
     if ((request_attribute &
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
             spdm_request_size = sizeof(spdm_request);
         } else {
             spdm_request_size = sizeof(spdm_request) -
-                        sizeof(spdm_request.slot_id_param);
+                                sizeof(spdm_request.slot_id_param);
         }
 
         if (requester_nonce_in == NULL) {
@@ -175,7 +175,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         }
     }
     status = spdm_send_spdm_request(spdm_context, session_id,
-                    spdm_request_size, &spdm_request);
+                                    spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -203,7 +203,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_MEASUREMENTS) {
+               SPDM_MEASUREMENTS) {
         libspdm_reset_message_m(spdm_context, session_info);
         return RETURN_DEVICE_ERROR;
     }
@@ -221,7 +221,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             return RETURN_DEVICE_ERROR;
         }
     } else if (measurement_operation ==
-           SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
+               SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
         if (spdm_response.number_of_blocks == 0) {
             return RETURN_DEVICE_ERROR;
         }
@@ -242,7 +242,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     } else {
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length) {
+            measurement_record_data_length) {
             return RETURN_DEVICE_ERROR;
         }
         if (measurement_record_data_length >=
@@ -256,18 +256,18 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     measurement_record_data = spdm_response.measurement_record;
 
     if ((request_attribute &
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length + SPDM_NONCE_SIZE +
-                sizeof(uint16_t)) {
+            measurement_record_data_length + SPDM_NONCE_SIZE +
+            sizeof(uint16_t)) {
             libspdm_reset_message_m(spdm_context, session_info);
             return RETURN_DEVICE_ERROR;
         }
         if ((spdm_response.header.spdm_version >=
-                          SPDM_MESSAGE_VERSION_11) &&
+             SPDM_MESSAGE_VERSION_11) &&
             ((spdm_response.header.param2 & SPDM_MEASUREMENTS_RESPONSE_SLOT_ID_MASK)
-                          != slot_id_param)) {
+             != slot_id_param)) {
             libspdm_reset_message_m(spdm_context, session_info);
             return RETURN_SECURITY_VIOLATION;
         }
@@ -289,26 +289,26 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length + SPDM_NONCE_SIZE +
-                sizeof(uint16_t) + opaque_length + signature_size) {
+            measurement_record_data_length + SPDM_NONCE_SIZE +
+            sizeof(uint16_t) + opaque_length + signature_size) {
             return RETURN_DEVICE_ERROR;
         }
         spdm_response_size = sizeof(spdm_measurements_response_t) +
-                     measurement_record_data_length +
-                     SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                     opaque_length + signature_size;
-        
+                             measurement_record_data_length +
+                             SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                             opaque_length + signature_size;
+
         /* Cache data*/
-        
+
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_request,
-                        spdm_request_size);
+                                          spdm_request_size);
         if (RETURN_ERROR(status)) {
             return RETURN_SECURITY_VIOLATION;
         }
 
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_response,
-                           spdm_response_size -
-                               signature_size);
+                                          spdm_response_size -
+                                          signature_size);
         if (RETURN_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
             return RETURN_SECURITY_VIOLATION;
@@ -336,7 +336,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     } else {
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length + sizeof(uint16_t)) {
+            measurement_record_data_length + sizeof(uint16_t)) {
             return RETURN_DEVICE_ERROR;
         }
         ptr = measurement_record_data + measurement_record_data_length;
@@ -358,25 +358,25 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-                measurement_record_data_length + SPDM_NONCE_SIZE +
-                sizeof(uint16_t) + opaque_length) {
+            measurement_record_data_length + SPDM_NONCE_SIZE +
+            sizeof(uint16_t) + opaque_length) {
             return RETURN_DEVICE_ERROR;
         }
         spdm_response_size = sizeof(spdm_measurements_response_t) +
-                     measurement_record_data_length +
-                     SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                     opaque_length;
-        
+                             measurement_record_data_length +
+                             SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                             opaque_length;
+
         /* Cache data*/
-        
+
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_request,
-                        spdm_request_size);
+                                          spdm_request_size);
         if (RETURN_ERROR(status)) {
             return RETURN_SECURITY_VIOLATION;
         }
 
         status = libspdm_append_message_m(spdm_context, session_info, &spdm_response,
-                           spdm_response_size);
+                                          spdm_response_size);
         if (RETURN_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
             return RETURN_SECURITY_VIOLATION;
@@ -388,7 +388,8 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_12) &&
             ((request_attribute &
               SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0)) {
-            *content_changed = (spdm_response.header.param2 & SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK);
+            *content_changed =
+                (spdm_response.header.param2 & SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK);
         }
     }
     if (measurement_operation ==
@@ -419,25 +420,25 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                measurement_record_data_length) {
             measurement_block_header =
                 (spdm_measurement_block_common_header_t
-                     *)&measurement_record_data
-                    [measurement_block_size];
+                 *)&measurement_record_data
+                [measurement_block_size];
             if (measurement_block_header->measurement_size >
                 measurement_record_data_length -
-                    ((uint8_t *)measurement_block_header -
-                     (uint8_t *)measurement_record_data)) {
+                ((uint8_t *)measurement_block_header -
+                 (uint8_t *)measurement_record_data)) {
                 return RETURN_DEVICE_ERROR;
             }
             if (measurement_block_header
-                        ->measurement_specification == 0 ||
+                ->measurement_specification == 0 ||
                 (measurement_block_header->measurement_specification &
                  (measurement_block_header
-                      ->measurement_specification -
+                  ->measurement_specification -
                   1))) {
                 return RETURN_DEVICE_ERROR;
             }
             if (measurement_block_header->measurement_specification !=
                 spdm_context->connection_info.algorithm
-                    .measurement_spec) {
+                .measurement_spec) {
                 return RETURN_DEVICE_ERROR;
             }
             if (measurement_block_header->index == 0 ||
@@ -447,7 +448,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
             if (measurement_operation !=
                 SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
                 if (measurement_block_header->index !=
-                        measurement_operation) {
+                    measurement_operation) {
                     return RETURN_DEVICE_ERROR;
                 }
             }
@@ -463,7 +464,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 
         *measurement_record_length = measurement_record_data_length;
         copy_mem(measurement_record, measurement_record_data,
-             measurement_record_data_length);
+                 measurement_record_data_length);
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
@@ -471,36 +472,36 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 }
 
 /**
-  This function sends GET_MEASUREMENT
-  to get measurement from the device.
-
-  If the signature is requested, this function verifies the signature of the measurement.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  request_attribute             The request attribute of the request message.
-  @param  measurement_operation         The measurement operation of the request message.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  content_changed               The measurement content changed output param.
-  @param  number_of_blocks               The number of blocks of the measurement record.
-  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
-                                       On output, indicate the size in bytes of the measurement record.
-  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-
-  @retval RETURN_SUCCESS               The measurement is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_MEASUREMENT
+ * to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute             The request attribute of the request message.
+ * @param  measurement_operation         The measurement operation of the request message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  content_changed               The measurement content changed output param.
+ * @param  number_of_blocks               The number of blocks of the measurement record.
+ * @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                     On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
-                   IN uint8_t request_attribute,
-                   IN uint8_t measurement_operation,
-                   IN uint8_t slot_id_param,
-                   OUT uint8_t *content_changed,
-                   OUT uint8_t *number_of_blocks,
-                   IN OUT uint32_t *measurement_record_length,
-                   OUT void *measurement_record)
+                                      IN uint8_t request_attribute,
+                                      IN uint8_t measurement_operation,
+                                      IN uint8_t slot_id_param,
+                                      OUT uint8_t *content_changed,
+                                      OUT uint8_t *number_of_blocks,
+                                      IN OUT uint32_t *measurement_record_length,
+                                      OUT void *measurement_record)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -522,42 +523,42 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
 }
 
 /**
-  This function sends GET_MEASUREMENT
-  to get measurement from the device.
-
-  If the signature is requested, this function verifies the signature of the measurement.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  request_attribute             The request attribute of the request message.
-  @param  measurement_operation         The measurement operation of the request message.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  content_changed               The measurement content changed output param.
-  @param  number_of_blocks               The number of blocks of the measurement record.
-  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
-                                       On output, indicate the size in bytes of the measurement record.
-  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The measurement is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_MEASUREMENT
+ * to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute             The request attribute of the request message.
+ * @param  measurement_operation         The measurement operation of the request message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  content_changed               The measurement content changed output param.
+ * @param  number_of_blocks               The number of blocks of the measurement record.
+ * @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                     On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_id,
-                   IN uint8_t request_attribute,
-                   IN uint8_t measurement_operation,
-                   IN uint8_t slot_id_param,
-                   OUT uint8_t *content_changed,
-                   OUT uint8_t *number_of_blocks,
-                   IN OUT uint32_t *measurement_record_length,
-                   OUT void *measurement_record,
-                   IN void *requester_nonce_in OPTIONAL,
-                   OUT void *requester_nonce OPTIONAL,
-                   OUT void *responder_nonce OPTIONAL) {
+                                         IN uint8_t request_attribute,
+                                         IN uint8_t measurement_operation,
+                                         IN uint8_t slot_id_param,
+                                         OUT uint8_t *content_changed,
+                                         OUT uint8_t *number_of_blocks,
+                                         IN OUT uint32_t *measurement_record_length,
+                                         OUT void *measurement_record,
+                                         IN void *requester_nonce_in OPTIONAL,
+                                         OUT void *requester_nonce OPTIONAL,
+                                         OUT void *responder_nonce OPTIONAL) {
     spdm_context_t *spdm_context;
     uintn retry;
     return_status status;

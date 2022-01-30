@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -38,7 +38,8 @@ void test_spdm_responder_challenge_case1(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -73,7 +74,8 @@ void test_spdm_responder_challenge_case2(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -107,7 +109,8 @@ void test_spdm_responder_challenge_case3(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -145,7 +148,8 @@ void test_spdm_responder_challenge_case4(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -180,7 +184,8 @@ void test_spdm_responder_challenge_case5(void **State)
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -219,7 +224,8 @@ void test_spdm_responder_challenge_case6(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;

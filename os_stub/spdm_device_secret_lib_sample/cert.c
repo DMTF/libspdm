@@ -1,13 +1,13 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  SPDM common library.
-  It follows the SPDM Specification.
-**/
+ * SPDM common library.
+ * It follows the SPDM Specification.
+ **/
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -24,10 +24,10 @@
 #include "spdm_device_secret_lib_internal.h"
 
 boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
-                           IN uint32_t base_asym_algo,
-                           OUT void **data, OUT uintn *size,
-                           OUT void **hash,
-                           OUT uintn *hash_size)
+                                               IN uint32_t base_asym_algo,
+                                               OUT void **data, OUT uintn *size,
+                                               OUT void **hash,
+                                               OUT uintn *hash_size)
 {
     boolean res;
     void *file_data;
@@ -102,14 +102,14 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     cert_chain->reserved = 0;
 
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -125,10 +125,10 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
 }
 
 boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
-                           IN uint16_t req_base_asym_alg,
-                           OUT void **data, OUT uintn *size,
-                           OUT void **hash,
-                           OUT uintn *hash_size)
+                                               IN uint16_t req_base_asym_alg,
+                                               OUT void **data, OUT uintn *size,
+                                               OUT void **hash,
+                                               OUT uintn *hash_size)
 {
     boolean res;
     void *file_data;
@@ -203,14 +203,14 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -314,7 +314,7 @@ boolean read_responder_public_certificate_chain(
     /* Get Root Certificate and calculate hash value*/
 
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                        &root_cert_len);
+                                        &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -322,14 +322,14 @@ boolean read_responder_public_certificate_chain(
     }
 
     res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -433,7 +433,7 @@ boolean read_requester_public_certificate_chain(
     /* Get Root Certificate and calculate hash value*/
 
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                        &root_cert_len);
+                                        &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -441,14 +441,14 @@ boolean read_requester_public_certificate_chain(
     }
 
     res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -518,14 +518,14 @@ boolean read_responder_root_public_certificate_by_size(
     cert_chain->reserved = 0;
 
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -607,7 +607,7 @@ boolean read_responder_public_certificate_chain_by_size(
     /* Get Root Certificate and calculate hash value*/
 
     res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                        &root_cert_len);
+                                        &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -615,14 +615,14 @@ boolean read_responder_public_certificate_chain_by_size(
     }
 
     res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
-              (uint8_t *)(cert_chain + 1));
+                           (uint8_t *)(cert_chain + 1));
     if (!res) {
         free(file_data);
         free(cert_chain);
         return res;
     }
     copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-         file_data, file_size);
+             file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;

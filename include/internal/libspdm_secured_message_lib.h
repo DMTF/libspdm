@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __SPDM_SECURED_MESSAGE_LIB_INTERNAL_H__
 #define __SPDM_SECURED_MESSAGE_LIB_INTERNAL_H__
@@ -64,9 +64,9 @@ typedef struct {
     boolean responder_backup_valid;
     uintn psk_hint_size;
     void *psk_hint;
-    
+
     /* Cache the error in libspdm_decode_secured_message. It is handled in libspdm_build_response.*/
-    
+
     libspdm_error_struct_t last_spdm_error;
 } spdm_secured_message_context_t;
 

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include <base.h>
 
@@ -32,7 +32,7 @@
 #endif
 
 void debug_assert(IN const char *file_name, IN uintn line_number,
-          IN const char *description)
+                  IN const char *description)
 {
     printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
            description);
@@ -48,7 +48,7 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
     __debugbreak();
 #endif
 #if defined(__GNUC__)
-    __asm__ __volatile__("int $3");
+    __asm__ __volatile__ ("int $3");
 #endif
 #endif
 

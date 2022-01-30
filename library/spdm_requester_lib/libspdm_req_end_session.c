@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -16,18 +16,18 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends END_SESSION and receives END_SESSION_ACK for SPDM session end.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    session_id to the END_SESSION request.
-  @param  end_session_attributes         end_session_attributes to the END_SESSION_ACK request.
-
-  @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends END_SESSION and receives END_SESSION_ACK for SPDM session end.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id to the END_SESSION request.
+ * @param  end_session_attributes         end_session_attributes to the END_SESSION_ACK request.
+ *
+ * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-                        IN uint32_t session_id,
-                        IN uint8_t end_session_attributes)
+                                                IN uint32_t session_id,
+                                                IN uint8_t end_session_attributes)
 {
     return_status status;
     spdm_end_session_request_t spdm_request;
@@ -68,13 +68,13 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 
     spdm_request_size = sizeof(spdm_end_session_request_t);
     status = spdm_send_spdm_request(spdm_context, &session_id,
-                    spdm_request_size, &spdm_request);
+                                    spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                        SPDM_END_SESSION);
+                                               SPDM_END_SESSION);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -98,7 +98,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_END_SESSION_ACK) {
+               SPDM_END_SESSION_ACK) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size != sizeof(spdm_end_session_response_t)) {
@@ -118,8 +118,8 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
 }
 
 return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-                        IN uint32_t session_id,
-                        IN uint8_t end_session_attributes)
+                                            IN uint32_t session_id,
+                                            IN uint8_t end_session_attributes)
 {
     uintn retry;
     return_status status;

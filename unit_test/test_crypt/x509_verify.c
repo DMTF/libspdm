@@ -1,19 +1,19 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 #include "test_crypt.h"
 
 static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
 /**
-  Validate Crypto X509 certificate Verify
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto X509 certificate Verify
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_x509(char *Path, uintn len)
 {
     boolean status;
@@ -53,9 +53,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
     zero_mem(file_name_buffer, 1024);
     copy_mem(file_name_buffer, Path, len);
     copy_mem(file_name_buffer + len - 1, "/inter.cert.der",
-         sizeof("/inter.cert.der"));
+             sizeof("/inter.cert.der"));
     status = read_input_file(file_name_buffer, (void **)&test_cert,
-                 &test_cert_len);
+                             &test_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -63,9 +63,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
     zero_mem(file_name_buffer, 1024);
     copy_mem(file_name_buffer, Path, len);
     copy_mem(file_name_buffer + len - 1, "/ca.cert.der",
-         sizeof("/ca.cert.der"));
+             sizeof("/ca.cert.der"));
     status = read_input_file(file_name_buffer, (void **)&test_ca_cert,
-                 &test_ca_cert_len);
+                             &test_ca_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -73,9 +73,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
     zero_mem(file_name_buffer, 1024);
     copy_mem(file_name_buffer, Path, len);
     copy_mem(file_name_buffer + len - 1, "/bundle_requester.certchain.der",
-         sizeof("/bundle_requester.certchain.der"));
+             sizeof("/bundle_requester.certchain.der"));
     status = read_input_file(file_name_buffer, (void **)&test_bundle_cert,
-                 &test_bundle_cert_len);
+                             &test_bundle_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -83,9 +83,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
     zero_mem(file_name_buffer, 1024);
     copy_mem(file_name_buffer, Path, len);
     copy_mem(file_name_buffer + len - 1, "/end_requester.cert.der",
-         sizeof("/end_requester.cert.der"));
+             sizeof("/end_requester.cert.der"));
     status = read_input_file(file_name_buffer, (void **)&test_end_cert,
-                 &test_end_cert_len);
+                             &test_end_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -95,7 +95,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     my_print("\n- X509 Certificate Verification with Trusted CA ...");
     status = x509_verify_cert(test_cert, test_cert_len, test_ca_cert,
-                  test_ca_cert_len);
+                              test_ca_cert_len);
     if (!status) {
         my_print("[Fail]\n");
         goto cleanup;
@@ -108,8 +108,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     DEBUG((DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
     status = x509_verify_cert_chain((uint8_t *)test_ca_cert, test_ca_cert_len,
-                    (uint8_t *)test_bundle_cert,
-                    test_bundle_cert_len);
+                                    (uint8_t *)test_bundle_cert,
+                                    test_bundle_cert_len);
     if (!status) {
         my_print("[Fail]\n");
         goto cleanup;
@@ -123,8 +123,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
-                           test_bundle_cert_len, -1,
-                           &leaf_cert, &leaf_cert_len);
+                                           test_bundle_cert_len, -1,
+                                           &leaf_cert, &leaf_cert_len);
     if (!status) {
         my_print("[Fail]\n");
         goto cleanup;
@@ -146,8 +146,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
-                           test_bundle_cert_len, 2,
-                           &leaf_cert, &leaf_cert_len);
+                                           test_bundle_cert_len, 2,
+                                           &leaf_cert, &leaf_cert_len);
     if (!status) {
         my_print("[Fail]\n");
         goto cleanup;
@@ -169,8 +169,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     DEBUG((DEBUG_INFO,
            "- X509 Certificate Chain get root certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
-                           test_bundle_cert_len, 0,
-                           &leaf_cert, &leaf_cert_len);
+                                           test_bundle_cert_len, 0,
+                                           &leaf_cert, &leaf_cert_len);
     if (!status) {
         my_print("[Fail]\n");
         goto cleanup;
@@ -192,10 +192,10 @@ return_status validate_crypt_x509(char *Path, uintn len)
     my_print("- X509 Certificate subject Bytes Retrieving ... ");
     subject_size = 0;
     status = x509_get_subject_name(test_cert, test_cert_len, NULL,
-                       &subject_size);
+                                   &subject_size);
     subject = (uint8_t *)allocate_pool(subject_size);
     status = x509_get_subject_name(test_cert, test_cert_len, subject,
-                       &subject_size);
+                                   &subject_size);
     free_pool(subject);
     if (!status) {
         my_print("[Fail]");
@@ -211,7 +211,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_common_name(test_cert, test_cert_len, common_name,
-                   &common_name_size);
+                               &common_name_size);
     if (RETURN_ERROR(ret)) {
         my_print("\n  - Retrieving Common name - [Fail]");
         goto cleanup;
@@ -228,7 +228,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_organization_name(test_cert, test_cert_len, common_name,
-                     &common_name_size);
+                                     &common_name_size);
     if (ret != RETURN_NOT_FOUND) {
         my_print("\n  - Retrieving Oraganization name - [Fail]");
         goto cleanup;
@@ -256,7 +256,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     asn1_buffer_len = 1024;
     zero_mem(asn1_buffer, asn1_buffer_len);
     ret = x509_get_serial_number(test_cert, test_cert_len, asn1_buffer,
-                     &asn1_buffer_len);
+                                 &asn1_buffer_len);
     if (RETURN_ERROR(ret)) {
         my_print("\n  - Retrieving serial_number - [Fail]");
         goto cleanup;
@@ -272,10 +272,10 @@ return_status validate_crypt_x509(char *Path, uintn len)
     my_print("\n  - Retrieving issuer Bytes ... ");
     subject_size = 0;
     status = x509_get_issuer_name(test_cert, test_cert_len, NULL,
-                      &subject_size);
+                                  &subject_size);
     subject = (uint8_t *)allocate_pool(subject_size);
     status = x509_get_issuer_name(test_cert, test_cert_len, subject,
-                      &subject_size);
+                                  &subject_size);
     free_pool(subject);
     if (!status) {
         my_print("[Fail]");
@@ -290,7 +290,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_issuer_common_name(test_cert, test_cert_len, common_name,
-                      &common_name_size);
+                                      &common_name_size);
     if (RETURN_ERROR(ret)) {
         my_print("\n  - Retrieving Issuer Common name - [Fail]");
         goto cleanup;
@@ -307,7 +307,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
     common_name_size = 64;
     zero_mem(common_name, common_name_size);
     ret = x509_get_issuer_orgnization_name(test_cert, test_cert_len,
-                           common_name, &common_name_size);
+                                           common_name, &common_name_size);
     if (ret != RETURN_NOT_FOUND) {
         my_print("\n  - Retrieving Issuer Oraganization name - [Fail]");
         goto cleanup;
@@ -321,9 +321,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
     asn1_buffer_len = 1024;
     zero_mem(asn1_buffer, asn1_buffer_len);
     ret = x509_get_extension_data(test_end_cert, test_end_cert_len,
-                      (uint8_t *)m_oid_subject_alt_name,
-                      sizeof(m_oid_subject_alt_name),
-                      asn1_buffer, &asn1_buffer_len);
+                                  (uint8_t *)m_oid_subject_alt_name,
+                                  sizeof(m_oid_subject_alt_name),
+                                  asn1_buffer, &asn1_buffer_len);
     if (RETURN_ERROR(ret)) {
         my_print("\n  - Retrieving  SubjectAltName otherName - [Fail]");
         goto cleanup;
@@ -340,8 +340,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     end_cert_from_len = 64;
     end_cert_to_len = 64;
     status = x509_get_validity(test_end_cert, test_end_cert_len,
-                   end_cert_from, &end_cert_from_len,
-                   end_cert_to, &end_cert_to_len);
+                               end_cert_from, &end_cert_from_len,
+                               end_cert_to, &end_cert_to_len);
     if (!status) {
         my_print("\n  - Retrieving Validity - [Fail]");
         goto cleanup;
@@ -351,7 +351,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     asn1_buffer_len = 64;
     ret = x509_set_date_time("19700101000000Z", date_time1,
-                 &asn1_buffer_len);
+                             &asn1_buffer_len);
     if ((ret == RETURN_SUCCESS) && (asn1_buffer_len != 0)) {
         my_print("\n  - Set date_time - [Pass]");
     } else {
@@ -361,7 +361,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     asn1_buffer_len = 64;
     ret = x509_set_date_time("19700201000000Z", date_time2,
-                 &asn1_buffer_len);
+                             &asn1_buffer_len);
     if ((ret == RETURN_SUCCESS) && (asn1_buffer_len != 0)) {
         my_print("\n  - Set date_time - [Pass]");
     } else {

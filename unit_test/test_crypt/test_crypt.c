@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -27,12 +27,12 @@ void my_print(IN char *message)
 }
 
 /**
-  entrypoint of Cryptographic Validation Utility.
-
-  @retval RETURN_SUCCESS       The entry point is executed successfully.
-  @retval other             Some error occurs when executing this entry point.
-
-**/
+ * entrypoint of Cryptographic Validation Utility.
+ *
+ * @retval RETURN_SUCCESS       The entry point is executed successfully.
+ * @retval other             Some error occurs when executing this entry point.
+ *
+ **/
 return_status cryptest_main(void)
 {
     return_status status;

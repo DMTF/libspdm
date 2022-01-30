@@ -1,19 +1,19 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  C Run-Time Libraries (CRT) Time Management Routines Wrapper Implementation.
-**/
+ * C Run-Time Libraries (CRT) Time Management Routines Wrapper Implementation.
+ **/
 
 #include <base.h>
 #include "library/memlib.h"
 #include <mbedtls/platform_time.h>
 
 struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
-                     struct tm *tm_buf)
+                                     struct tm *tm_buf)
 {
     struct tm *lt;
 

@@ -1,11 +1,11 @@
 /** @file
-  Processor or Compiler specific defines and types for NIOS2
-
-  Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
-
-  SPDX-License-Identifier: BSD-2-Clause-Patent
-
-**/
+ * Processor or Compiler specific defines and types for NIOS2
+ *
+ * Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
+ *
+ * SPDX-License-Identifier: BSD-2-Clause-Patent
+ *
+ **/
 
 #ifndef __PROCESSOR_BIND_H__
 #define __PROCESSOR_BIND_H__
@@ -32,13 +32,13 @@
 typedef unsigned char boolean;
 
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef uint32_t uintn __attribute__((aligned(4)));
 
-/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef int32_t intn __attribute__((aligned(4)));
 
@@ -83,15 +83,15 @@ typedef int32_t intn __attribute__((aligned(4)));
 #define RUNTIME_PAGE_ALLOCATION_GRANULARITY (0x1000)
 
 /**
-  Return the pointer to the first instruction of a function given a function pointer.
-  On x64 CPU architectures, these two pointer values are the same,
-  so the implementation of this macro is very simple.
-
-  @param  function_pointer   A pointer to a function.
-
-  @return The pointer to the first instruction of a function given a function pointer.
-
-**/
+ * Return the pointer to the first instruction of a function given a function pointer.
+ * On x64 CPU architectures, these two pointer values are the same,
+ * so the implementation of this macro is very simple.
+ *
+ * @param  function_pointer   A pointer to a function.
+ *
+ * @return The pointer to the first instruction of a function given a function pointer.
+ *
+ **/
 #define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
 
 #ifndef __USER_LABEL_PREFIX__

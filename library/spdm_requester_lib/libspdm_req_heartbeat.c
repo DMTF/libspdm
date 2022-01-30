@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -16,16 +16,16 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends HEARTBEAT
-  to an SPDM Session.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session ID of the session.
-
-  @retval RETURN_SUCCESS               The heartbeat is sent and received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends HEARTBEAT
+ * to an SPDM Session.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session ID of the session.
+ *
+ * @retval RETURN_SUCCESS               The heartbeat is sent and received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
 {
     return_status status;
@@ -65,13 +65,13 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
     status = spdm_send_spdm_request(spdm_context, &session_id,
-                    sizeof(spdm_request), &spdm_request);
+                                    sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                            SPDM_HEARTBEAT);
+                                               SPDM_HEARTBEAT);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -95,7 +95,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_HEARTBEAT_ACK) {
+               SPDM_HEARTBEAT_ACK) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size != sizeof(spdm_heartbeat_response_t)) {

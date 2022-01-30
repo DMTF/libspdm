@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_requester.h"
 
@@ -25,9 +25,9 @@ return_status do_session_via_spdm(IN void *spdm_context)
         return status;
     }
 
-    
+
     /* TBD - Set key*/
-    
+
 
     status = libspdm_stop_session(spdm_context, session_id, 0);
     if (RETURN_ERROR(status)) {

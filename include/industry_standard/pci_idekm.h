@@ -1,12 +1,12 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Definitions of Integrity and data Encryption (IDE) ECN in PCI-SIG.
-**/
+ * Definitions of Integrity and data Encryption (IDE) ECN in PCI-SIG.
+ **/
 
 #ifndef __PCI_IDE_KM_H__
 #define __PCI_IDE_KM_H__
@@ -61,8 +61,8 @@ typedef struct {
     uint8_t reserved2;
     uint8_t key_sub_stream;
     uint8_t port_index;
-    /*KEY 8 DW*/
-    /*IFV(invocation field of the IV) 2 DW*/
+    /*KEY 8 DW
+     * IFV(invocation field of the IV) 2 DW*/
 } pci_ide_km_key_prog_t;
 
 

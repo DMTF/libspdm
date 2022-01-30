@@ -16,18 +16,6 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  format_check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        # If any *.c *.h *.md file(except:mbedtls/openssl/cmocka) have Tab, the check will fail.
-      - name: Check code format
-        run: |
-          if grep -rn "	" * --include=*.c --include=*.h --include=*.md;
-          then exit 1
-          fi
-
   gcc_mbedtls_build:
     runs-on: ubuntu-latest
 

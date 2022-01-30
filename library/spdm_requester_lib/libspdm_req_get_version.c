@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -17,13 +17,13 @@ typedef struct {
 
 
 /**
-  This function sends GET_VERSION and receives VERSION.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-
-  @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends GET_VERSION and receives VERSION.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 {
     return_status status;
@@ -48,10 +48,10 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     libspdm_reset_context(spdm_context);
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                        spdm_request.header.request_response_code);
+                                               spdm_request.header.request_response_code);
 
     status = spdm_send_spdm_request(spdm_context, NULL,
-                    sizeof(spdm_request), &spdm_request);
+                                    sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -92,42 +92,43 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
     }
     if (spdm_response_size <
         sizeof(spdm_version_response_t) +
-            spdm_response.version_number_entry_count *
-                sizeof(spdm_version_number_t)) {
+        spdm_response.version_number_entry_count *
+        sizeof(spdm_version_number_t)) {
         return RETURN_DEVICE_ERROR;
     }
     spdm_response_size = sizeof(spdm_version_response_t) +
-                 spdm_response.version_number_entry_count *
-                     sizeof(spdm_version_number_t);
+                         spdm_response.version_number_entry_count *
+                         sizeof(spdm_version_number_t);
 
-    
+
     /* Cache data*/
-    
+
     status = libspdm_append_message_a(spdm_context, &spdm_request,
-                       sizeof(spdm_request));
+                                      sizeof(spdm_request));
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
     status = libspdm_append_message_a(spdm_context, &spdm_response,
-                       spdm_response_size);
+                                      spdm_response_size);
     if (RETURN_ERROR(status)) {
         libspdm_reset_message_a(spdm_context);
         return RETURN_SECURITY_VIOLATION;
     }
 
-    /* spdm_negotiate_connection_version will change the spdm_response.*/
-    /* It must be done after append_message_a.*/
-    result = spdm_negotiate_connection_version(&common_version, spdm_context->local_context.version.spdm_version,
-                                    spdm_context->local_context.version.spdm_version_count,
-                                    spdm_response.version_number_entry,
-                                    spdm_response.version_number_entry_count);
+    /* spdm_negotiate_connection_version will change the spdm_response.
+     * It must be done after append_message_a.*/
+    result = spdm_negotiate_connection_version(&common_version,
+                                               spdm_context->local_context.version.spdm_version,
+                                               spdm_context->local_context.version.spdm_version_count,
+                                               spdm_response.version_number_entry,
+                                               spdm_response.version_number_entry_count);
     if (result == FALSE) {
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
     } else {
         copy_mem(&(spdm_context->connection_info.version),
-        &(common_version),
-        sizeof(spdm_version_number_t));
+                 &(common_version),
+                 sizeof(spdm_version_number_t));
     }
 
     spdm_context->connection_info.connection_state =
@@ -136,15 +137,15 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 }
 
 /**
-  This function sends GET_VERSION and receives VERSION.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  version_count                 version_count from the VERSION response.
-  @param  VersionNumberEntries         VersionNumberEntries from the VERSION response.
-
-  @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends GET_VERSION and receives VERSION.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  version_count                 version_count from the VERSION response.
+ * @param  VersionNumberEntries         VersionNumberEntries from the VERSION response.
+ *
+ * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status spdm_get_version(IN spdm_context_t *spdm_context)
 {
     uintn retry;

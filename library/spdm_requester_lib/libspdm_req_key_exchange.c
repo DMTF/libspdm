@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -38,26 +38,27 @@ typedef struct {
 #pragma pack()
 
 /**
-  This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
-  @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
-  @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
-  @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
-  @param  requester_random              A buffer to hold the requester random (32 bytes), if not NULL.
-  @param  responder_random              A buffer to hold the responder random (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
+ * @param  slot_id                      slot_id to the KEY_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+ * @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
+ * @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
+ * @param  requester_random              A buffer to hold the requester random (32 bytes), if not NULL.
+ * @param  responder_random              A buffer to hold the responder random (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_send_receive_key_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
+    OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
     IN void *requester_random_in OPTIONAL,
     OUT void *requester_random OPTIONAL,
@@ -94,7 +95,7 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_UNSUPPORTED;
     }
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                    SPDM_KEY_EXCHANGE);
+                                               SPDM_KEY_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
@@ -169,7 +170,7 @@ return_status try_spdm_send_receive_key_exchange(
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
     status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                    &spdm_request);
+                                    &spdm_request);
     if (RETURN_ERROR(status)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
@@ -208,12 +209,12 @@ return_status try_spdm_send_receive_key_exchange(
         if (RETURN_ERROR(status)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
-                    .dhe_named_group,
+                .dhe_named_group,
                 dhe_context);
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_KEY_EXCHANGE_RSP) {
+               SPDM_KEY_EXCHANGE_RSP) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
@@ -239,7 +240,7 @@ return_status try_spdm_send_receive_key_exchange(
         if (spdm_response.header.param1 != 0) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
-                    .dhe_named_group,
+                .dhe_named_group,
                 dhe_context);
             return RETURN_DEVICE_ERROR;
         }
@@ -250,11 +251,13 @@ return_status try_spdm_send_receive_key_exchange(
     *req_slot_id_param = spdm_response.req_slot_id_param;
     if (spdm_response.mut_auth_requested != 0) {
         if ((spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
-            (spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
-            (spdm_response.mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) {
+            (spdm_response.mut_auth_requested !=
+             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
+            (spdm_response.mut_auth_requested !=
+             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
-                    .dhe_named_group,
+                .dhe_named_group,
                 dhe_context);
             return RETURN_DEVICE_ERROR;
         }
@@ -263,7 +266,7 @@ return_status try_spdm_send_receive_key_exchange(
              spdm_context->local_context.slot_count)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
-                    .dhe_named_group,
+                .dhe_named_group,
                 dhe_context);
             return RETURN_DEVICE_ERROR;
         }
@@ -271,7 +274,7 @@ return_status try_spdm_send_receive_key_exchange(
         if (*req_slot_id_param != 0) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
-                    .dhe_named_group,
+                .dhe_named_group,
                 dhe_context);
             return RETURN_DEVICE_ERROR;
         }
@@ -302,8 +305,8 @@ return_status try_spdm_send_receive_key_exchange(
 
     if (spdm_response_size <
         sizeof(spdm_key_exchange_response_t) + dhe_key_size +
-            measurement_summary_hash_size + sizeof(uint16_t) +
-            signature_size + hmac_size) {
+        measurement_summary_hash_size + sizeof(uint16_t) +
+        signature_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
@@ -329,7 +332,7 @@ return_status try_spdm_send_receive_key_exchange(
     DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
     internal_dump_data(measurement_summary_hash,
-               measurement_summary_hash_size);
+                       measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
@@ -345,8 +348,8 @@ return_status try_spdm_send_receive_key_exchange(
     ptr += sizeof(uint16_t);
     if (spdm_response_size <
         sizeof(spdm_key_exchange_response_t) + dhe_key_size +
-            measurement_summary_hash_size + sizeof(uint16_t) +
-            opaque_length + signature_size + hmac_size) {
+        measurement_summary_hash_size + sizeof(uint16_t) +
+        opaque_length + signature_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
@@ -366,15 +369,15 @@ return_status try_spdm_send_receive_key_exchange(
     ptr += opaque_length;
 
     spdm_response_size = sizeof(spdm_key_exchange_response_t) +
-                 dhe_key_size + measurement_summary_hash_size +
-                 sizeof(uint16_t) + opaque_length + signature_size +
-                 hmac_size;
+                         dhe_key_size + measurement_summary_hash_size +
+                         sizeof(uint16_t) + opaque_length + signature_size +
+                         hmac_size;
 
 
     /* Cache session data*/
 
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_request,
-                       spdm_request_size);
+                                      spdm_request_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
@@ -384,8 +387,8 @@ return_status try_spdm_send_receive_key_exchange(
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, TRUE, &spdm_response,
-                       spdm_response_size - signature_size -
-                           hmac_size);
+                                      spdm_response_size - signature_size -
+                                      hmac_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
@@ -437,7 +440,7 @@ return_status try_spdm_send_receive_key_exchange(
     DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, TRUE,
-                     th1_hash_data);
+                                        th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
@@ -467,7 +470,7 @@ return_status try_spdm_send_receive_key_exchange(
         ptr += hmac_size;
 
         status = libspdm_append_message_k(spdm_context, session_info, TRUE, verify_data,
-                           hmac_size);
+                                          hmac_size);
         if (RETURN_ERROR(status)) {
             libspdm_free_session_id(spdm_context, *session_id);
             return RETURN_SECURITY_VIOLATION;
@@ -476,7 +479,7 @@ return_status try_spdm_send_receive_key_exchange(
 
     if (measurement_hash != NULL) {
         copy_mem(measurement_hash, measurement_summary_hash,
-             measurement_summary_hash_size);
+                 measurement_summary_hash_size);
     }
     session_info->mut_auth_requested = spdm_response.mut_auth_requested;
     session_info->session_policy = session_policy;
@@ -490,23 +493,24 @@ return_status try_spdm_send_receive_key_exchange(
 }
 
 /**
-  This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
-  @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
-  @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
-
-  @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
+ * @param  slot_id                      slot_id to the KEY_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+ * @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
+ *
+ * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status spdm_send_receive_key_exchange(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
+    OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash)
 {
     uintn retry;
@@ -527,26 +531,27 @@ return_status spdm_send_receive_key_exchange(
 }
 
 /**
-  This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
-  @param  slot_id                      slot_id to the KEY_EXCHANGE request.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
-  @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
-  @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
-  @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
-  @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
-  @param  requester_random              A buffer to hold the requester random (32 bytes), if not NULL.
-  @param  responder_random              A buffer to hold the responder random (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  measurement_hash_type          measurement_hash_type to the KEY_EXCHANGE request.
+ * @param  slot_id                      slot_id to the KEY_EXCHANGE request.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    session_id from the KEY_EXCHANGE_RSP response.
+ * @param  heartbeat_period              heartbeat_period from the KEY_EXCHANGE_RSP response.
+ * @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
+ * @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
+ * @param  requester_random_in           A buffer to hold the requester random (32 bytes) as input, if not NULL.
+ * @param  requester_random              A buffer to hold the requester random (32 bytes), if not NULL.
+ * @param  responder_random              A buffer to hold the responder random (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status spdm_send_receive_key_exchange_ex(
     IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
+    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
+    OUT uint8_t *heartbeat_period,
     OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
     IN void *requester_random_in OPTIONAL,
     OUT void *requester_random OPTIONAL,

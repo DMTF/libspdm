@@ -1,12 +1,12 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Intrinsic Memory Routines Wrapper Implementation.
-**/
+ * Intrinsic Memory Routines Wrapper Implementation.
+ **/
 
 #include "hal/base.h"
 #include "hal/library/memlib.h"
@@ -20,23 +20,23 @@ typedef uintn size_t;
 #endif
 
 /* OpenSSL will use floating point support, and C compiler produces the _fltused
-   symbol by default. Simply define this symbol here to satisfy the linker. */
+ * symbol by default. Simply define this symbol here to satisfy the linker. */
 int GLOBAL_USED _fltused = 1;
 
 /* Sets buffers to a specified character */
 void *memset(void *dest, int ch, size_t count)
 {
 
-    /* NOTE: Here we use one base implementation for memset, instead of the direct*/
-    /*       optimized set_mem() wrapper. Because the intrinsiclib has to be built*/
-    /*       without whole program optimization option, and there will be some*/
-    /*       potential register usage errors when calling other optimized codes.*/
+    /* NOTE: Here we use one base implementation for memset, instead of the direct
+     *       optimized set_mem() wrapper. Because the intrinsiclib has to be built
+     *       without whole program optimization option, and there will be some
+     *       potential register usage errors when calling other optimized codes.*/
 
 
 
-    /* Declare the local variables that actually move the data elements as*/
-    /* volatile to prevent the optimizer from replacing this function with*/
-    /* the intrinsic memset()*/
+    /* Declare the local variables that actually move the data elements as
+     * volatile to prevent the optimizer from replacing this function with
+     * the intrinsic memset()*/
 
     volatile uint8_t *pointer;
 

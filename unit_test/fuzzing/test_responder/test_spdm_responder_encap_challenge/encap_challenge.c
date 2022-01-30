@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -52,7 +52,8 @@ void test_spdm_responder_encap_challenge_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_use_req_asym_algo;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);

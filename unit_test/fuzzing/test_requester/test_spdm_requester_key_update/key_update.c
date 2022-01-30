@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -42,7 +42,7 @@ static void spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -133,7 +133,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     spdm_response_size = sizeof(spdm_key_update_response_t);
     copy_mem(&spdm_response,
              (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                 spdm_response_size * sub_index,
+             spdm_response_size * sub_index,
              sizeof(spdm_key_update_response_t));
     if (sub_index != 0) {
         sub_index = 0;
@@ -142,9 +142,9 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
                                        sizeof(spdm_response), &spdm_response, response_size,
                                        response);
     /* WALKAROUND: If just use single context to encode
-           message and then decode message */
+     *     message and then decode message */
     ((spdm_secured_message_context_t *)(session_info->secured_message_context))
-        ->application_secret.response_data_sequence_number--;
+    ->application_secret.response_data_sequence_number--;
 
     sub_index++;
     return RETURN_SUCCESS;

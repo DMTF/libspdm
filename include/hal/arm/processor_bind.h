@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __PROCESSOR_BIND_H__
 #define __PROCESSOR_BIND_H__
@@ -36,8 +36,8 @@
 #pragma warning(disable : 4100)
 
 
-/* Disable slightly different base types warning as char * can not be set*/
-/* to a constant string.*/
+/* Disable slightly different base types warning as char * can not be set
+ * to a constant string.*/
 
 #pragma warning(disable : 4057)
 
@@ -85,14 +85,14 @@
 typedef unsigned char boolean;
 
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef uint32_t uintn;
 
 
-/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,*/
-/* 8 bytes on supported 64-bit processor instructions)*/
+/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
+ * 8 bytes on supported 64-bit processor instructions)*/
 
 typedef int32_t intn;
 

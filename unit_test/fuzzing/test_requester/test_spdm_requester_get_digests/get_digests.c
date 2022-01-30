@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
@@ -14,23 +14,23 @@ uintn get_max_buffer_size(void)
 }
 
 return_status spdm_device_send_message(IN void *spdm_context,
-                       IN uintn request_size, IN void *request,
-                       IN uint64_t timeout)
+                                       IN uintn request_size, IN void *request,
+                                       IN uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
 return_status spdm_device_receive_message(IN void *spdm_context,
-                      IN OUT uintn *response_size,
-                      IN OUT void *response,
-                      IN uint64_t timeout)
+                                          IN OUT uintn *response_size,
+                                          IN OUT void *response,
+                                          IN uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
     spdm_test_context = get_spdm_test_context();
     *response_size = spdm_test_context->test_buffer_size;
     copy_mem(response, spdm_test_context->test_buffer,
-         spdm_test_context->test_buffer_size);
+             spdm_test_context->test_buffer_size);
 
     return RETURN_SUCCESS;
 }
@@ -56,7 +56,7 @@ void test_spdm_requester_get_diges(void **State)
     spdm_context->local_context.peer_cert_chain_provision_size =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-        (uint8_t)(0xFF));
+            (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
     zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);

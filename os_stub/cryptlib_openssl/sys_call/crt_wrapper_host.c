@@ -1,12 +1,12 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  C Run-Time Libraries (CRT) Wrapper Implementation.
-**/
+ * C Run-Time Libraries (CRT) Wrapper Implementation.
+ **/
 
 #include <stdio.h>
 
@@ -76,10 +76,10 @@ int strcasecmp(const char *s1, const char *s2)
 /* Read formatted data from a string */
 int sscanf(const char *buffer, const char *format, ...)
 {
-    
-    /* Null sscanf() function implementation to satisfy the linker, since*/
-    /* no direct functionality logic dependency in present cases.*/
-    
+
+    /* Null sscanf() function implementation to satisfy the linker, since
+     * no direct functionality logic dependency in present cases.*/
+
     return 0;
 }
 

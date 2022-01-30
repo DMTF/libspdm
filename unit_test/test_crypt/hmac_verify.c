@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -34,12 +34,12 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_hmac_sha256_digest[] = {
 };
 
 /**
-  Validate Crypto message Authentication Codes Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto message Authentication Codes Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_hmac(void)
 {
     void *hmac_ctx;

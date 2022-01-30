@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_test.h"
 
@@ -31,7 +31,7 @@ const uint8_t m_subject_alt_name_buffer3[] = {
 };
 
 const uint8_t m_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
-                 0x83, 0x1C, 0x82, 0x12, 0x01 };
+                               0x83, 0x1C, 0x82, 0x12, 0x01 };
 
 void test_spdm_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 {
@@ -87,78 +87,78 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     boolean status;
 
     status = read_input_file("rsa2048/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
     status = read_input_file("rsa3072/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
     status = read_input_file("rsa4096/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
     status = read_input_file("ecp256/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
     status = read_input_file("ecp384/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
     status = read_input_file("ecp512/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
     ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                         common_name, &common_name_size,
-                         dmtf_oid, &dmtf_oid_size);
+                                            common_name, &common_name_size,
+                                            dmtf_oid, &dmtf_oid_size);
     assert_int_equal((int)ret, RETURN_SUCCESS);
     assert_memory_equal(m_dmtf_oid, dmtf_oid, sizeof(m_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
@@ -172,42 +172,42 @@ void test_spdm_crypt_spdm_x509_certificate_check(void **state)
     uintn file_buffer_size;
 
     status = read_input_file("rsa2048/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("rsa3072/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("rsa4096/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp256/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp384/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
     free(file_buffer);
 
     status = read_input_file("ecp512/end_requester.cert.der",
-                 (void **)&file_buffer, &file_buffer_size);
+                             (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
     assert_true(status);
@@ -235,8 +235,8 @@ int spdm_crypt_lib_test_main(void)
     };
 
     return cmocka_run_group_tests(spdm_crypt_lib_tests,
-                      spdm_crypt_lib_setup,
-                      spdm_crypt_lib_teardown);
+                                  spdm_crypt_lib_setup,
+                                  spdm_crypt_lib_teardown);
 }
 
 int main(void)

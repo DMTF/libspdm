@@ -1,13 +1,13 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Root include file of C runtime library to support building the third-party
-  cryptographic library.
-**/
+ * Root include file of C runtime library to support building the third-party
+ * cryptographic library.
+ **/
 
 #ifndef __CRT_LIB_SUPPORT_H__
 #define __CRT_LIB_SUPPORT_H__
@@ -22,9 +22,9 @@
 #define MAX_STRING_SIZE 0x1000
 
 
-/* We already have "no-ui" in out Configure invocation.*/
-/* but the code still fails to compile.*/
-/* Ref:  https://github.com/openssl/openssl/issues/8904*/
+/* We already have "no-ui" in out Configure invocation.
+ * but the code still fails to compile.
+ * Ref:  https://github.com/openssl/openssl/issues/8904*/
 
 /* This is defined in CRT library(stdio.h).*/
 
@@ -33,10 +33,10 @@
 #endif
 
 
-/* OpenSSL relies on explicit configuration for word size in crypto/bn,*/
-/* but we want it to be automatically inferred from the target. So we*/
-/* bypass what's in <openssl/opensslconf.h> for OPENSSL_SYS_UEFI, and*/
-/* define our own here.*/
+/* OpenSSL relies on explicit configuration for word size in crypto/bn,
+ * but we want it to be automatically inferred from the target. So we
+ * bypass what's in <openssl/opensslconf.h> for OPENSSL_SYS_UEFI, and
+ * define our own here.*/
 
 #ifdef CONFIG_HEADER_BN_H
 #error CONFIG_HEADER_BN_H already defined
@@ -47,9 +47,9 @@
 #if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) ||                        \
     defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
 
-/* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs*/
-/* SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is*/
-/* 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
+/* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
+ * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
+ * 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
 
 #define SIXTY_FOUR_BIT
 #elif defined(MDE_CPU_IA32) || defined(MDE_CPU_ARM) || defined(MDE_CPU_EBC) || \
@@ -103,7 +103,7 @@
 typedef uintn size_t;
 typedef uintn u_int;
 typedef intn ssize_t;
-typedef intn time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */ 
+typedef intn time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */
 typedef uint8_t __uint8_t;
 typedef uint8_t sa_family_t;
 typedef uint8_t u_char;
@@ -111,8 +111,8 @@ typedef uint32_t uid_t;
 typedef uint32_t gid_t;
 
 
-/* file operations are not required for EFI building,*/
-/* so FILE is mapped to void * to pass build*/
+/* file operations are not required for EFI building,
+ * so FILE is mapped to void * to pass build*/
 
 typedef void *FILE;
 

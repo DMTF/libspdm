@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
 
 void test_spdm_requester_encap_challenge(void **State)
 {
-spdm_test_context_t *spdm_test_context;
+    spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uintn request_size;
     uintn response_size;
@@ -58,9 +58,9 @@ spdm_test_context_t *spdm_test_context;
 
     response_size = sizeof(response);
     spdm_get_encap_response_challenge_auth(spdm_context, request_size,
-                                       (uint8_t *)spdm_test_context->test_buffer +
+                                           (uint8_t *)spdm_test_context->test_buffer +
                                            test_message_header_size,
-                                       &response_size, response);
+                                           &response_size, response);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
@@ -76,7 +76,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
 
     m_spdm_requester_encap_challenge_test_context.test_buffer = test_buffer;
     m_spdm_requester_encap_challenge_test_context.test_buffer_size = test_buffer_size;
-    
+
     /* Successful response */
     spdm_unit_test_group_setup(&State);
     test_spdm_requester_encap_challenge(&State);

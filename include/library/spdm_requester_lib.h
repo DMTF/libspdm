@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __SPDM_REQUESTER_LIB_H__
 #define __SPDM_REQUESTER_LIB_H__
@@ -10,568 +10,568 @@
 #include "library/spdm_common_lib.h"
 
 /**
-  Send an SPDM or an APP request to a device.
-
-  @param  spdm_context                  The SPDM context for the device.
-  @param  session_id                    Indicate if the request is a secured message.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  is_app_message                 Indicates if it is an APP message or SPDM message.
-  @param  request_size                  size in bytes of the request data buffer.
-  @param  request                      A pointer to a destination buffer to store the request.
-                                       The caller is responsible for having
-                                       either implicit or explicit ownership of the buffer.
-
-  @retval RETURN_SUCCESS               The SPDM request is sent successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
-**/
+ * Send an SPDM or an APP request to a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the request is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  request_size                  size in bytes of the request data buffer.
+ * @param  request                      A pointer to a destination buffer to store the request.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
+ **/
 return_status libspdm_send_request(IN void *spdm_context, IN uint32_t *session_id,
-                IN boolean is_app_message,
-                IN uintn request_size, IN void *request);
+                                   IN boolean is_app_message,
+                                   IN uintn request_size, IN void *request);
 
 /**
-  Receive an SPDM or an APP response from a device.
-
-  @param  spdm_context                  The SPDM context for the device.
-  @param  session_id                    Indicate if the response is a secured message.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  is_app_message                 Indicates if it is an APP message or SPDM message.
-  @param  response_size                 size in bytes of the response data buffer.
-  @param  response                     A pointer to a destination buffer to store the response.
-                                       The caller is responsible for having
-                                       either implicit or explicit ownership of the buffer.
-
-  @retval RETURN_SUCCESS               The SPDM response is received successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
-**/
+ * Receive an SPDM or an APP response from a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the response is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  response_size                 size in bytes of the response data buffer.
+ * @param  response                     A pointer to a destination buffer to store the response.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM response is received successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
+ **/
 return_status libspdm_receive_response(IN void *spdm_context,
-                    IN uint32_t *session_id,
-                    IN boolean is_app_message,
-                    IN OUT uintn *response_size,
-                    OUT void *response);
+                                       IN uint32_t *session_id,
+                                       IN boolean is_app_message,
+                                       IN OUT uintn *response_size,
+                                       OUT void *response);
 
 /**
-  This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHMS
-  to initialize the connection with SPDM responder.
-
-  Before this function, the requester configuration data can be set via libspdm_set_data.
-  After this function, the negotiated configuration data can be got via libspdm_get_data.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  get_version_only               If the requester sends GET_VERSION only or not.
-
-  @retval RETURN_SUCCESS               The connection is initialized successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHMS
+ * to initialize the connection with SPDM responder.
+ *
+ * Before this function, the requester configuration data can be set via libspdm_set_data.
+ * After this function, the negotiated configuration data can be got via libspdm_get_data.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  get_version_only               If the requester sends GET_VERSION only or not.
+ *
+ * @retval RETURN_SUCCESS               The connection is initialized successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status libspdm_init_connection(IN void *spdm_context,
-                   IN boolean get_version_only);
+                                      IN boolean get_version_only);
 
 /**
-  This function sends GET_DIGEST
-  to get all digest of the certificate chains from device.
-
-  If the peer certificate chain is deployed,
-  this function also verifies the digest with the certificate chain.
-
-  TotalDigestSize = sizeof(digest) * count in slot_mask
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_mask                     The slots which deploy the CertificateChain.
-  @param  total_digest_buffer            A pointer to a destination buffer to store the digest buffer.
-
-  @retval RETURN_SUCCESS               The digests are got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_DIGEST
+ * to get all digest of the certificate chains from device.
+ *
+ * If the peer certificate chain is deployed,
+ * this function also verifies the digest with the certificate chain.
+ *
+ * TotalDigestSize = sizeof(digest) * count in slot_mask
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_mask                     The slots which deploy the CertificateChain.
+ * @param  total_digest_buffer            A pointer to a destination buffer to store the digest buffer.
+ *
+ * @retval RETURN_SUCCESS               The digests are got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_digest(IN void *spdm_context, OUT uint8_t *slot_mask,
-                  OUT void *total_digest_buffer);
+                                 OUT void *total_digest_buffer);
 
 /**
-  This function sends GET_CERTIFICATE
-  to get certificate chain in one slot from device.
-
-  This function verify the integrity of the certificate chain.
-  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
-
-  If the peer root certificate hash is deployed,
-  this function also verifies the digest with the root hash in the certificate chain.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
-                                       On output, indicate the size in bytes of the certificate chain.
-  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
-
-  @retval RETURN_SUCCESS               The certificate chain is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_CERTIFICATE
+ * to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_certificate(IN void *spdm_context, IN uint8_t slot_id,
-                   IN OUT uintn *cert_chain_size,
-                   OUT void *cert_chain);
+                                      IN OUT uintn *cert_chain_size,
+                                      OUT void *cert_chain);
 
 /**
-  This function sends GET_CERTIFICATE
-  to get certificate chain in one slot from device.
-
-  This function verify the integrity of the certificate chain.
-  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
-
-  If the peer root certificate hash is deployed,
-  this function also verifies the digest with the root hash in the certificate chain.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
-                                       On output, indicate the size in bytes of the certificate chain.
-  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
-  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
-  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
-
-  @retval RETURN_SUCCESS               The certificate chain is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_CERTIFICATE
+ * to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
-                   IN OUT uintn *cert_chain_size,
-                   OUT void *cert_chain,
-                   OUT void **trust_anchor OPTIONAL,
-                   OUT uintn *trust_anchor_size OPTIONAL);
+                                         IN OUT uintn *cert_chain_size,
+                                         OUT void *cert_chain,
+                                         OUT void **trust_anchor OPTIONAL,
+                                         OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
-  This function sends GET_CERTIFICATE
-  to get certificate chain in one slot from device.
-
-  This function verify the integrity of the certificate chain.
-  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
-
-  If the peer root certificate hash is deployed,
-  this function also verifies the digest with the root hash in the certificate chain.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
-  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
-                                       On output, indicate the size in bytes of the certificate chain.
-  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
-
-  @retval RETURN_SUCCESS               The certificate chain is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_CERTIFICATE
+ * to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_certificate_choose_length(IN void *spdm_context,
-                         IN uint8_t slot_id,
-                         IN uint16_t length,
-                         IN OUT uintn *cert_chain_size,
-                         OUT void *cert_chain);
+                                                    IN uint8_t slot_id,
+                                                    IN uint16_t length,
+                                                    IN OUT uintn *cert_chain_size,
+                                                    OUT void *cert_chain);
 
 /**
-  This function sends GET_CERTIFICATE
-  to get certificate chain in one slot from device.
-
-  This function verify the integrity of the certificate chain.
-  root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
-
-  If the peer root certificate hash is deployed,
-  this function also verifies the digest with the root hash in the certificate chain.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
-  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
-                                       On output, indicate the size in bytes of the certificate chain.
-  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
-  @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
-  @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
-
-  @retval RETURN_SUCCESS               The certificate chain is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_CERTIFICATE
+ * to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_certificate_choose_length_ex(IN void *context,
-                         IN uint8_t slot_id,
-                         IN uint16_t length,
-                         IN OUT uintn *cert_chain_size,
-                         OUT void *cert_chain,
-                         OUT void **trust_anchor OPTIONAL,
-                         OUT uintn *trust_anchor_size OPTIONAL);
+                                                       IN uint8_t slot_id,
+                                                       IN uint16_t length,
+                                                       IN OUT uintn *cert_chain_size,
+                                                       OUT void *cert_chain,
+                                                       OUT void **trust_anchor OPTIONAL,
+                                                       OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
-  This function sends CHALLENGE
-  to authenticate the device based upon the key in one slot.
-
-  This function verifies the signature in the challenge auth.
-
-  If basic mutual authentication is requested from the responder,
-  this function also perform the basic mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the challenge.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  slot_mask                     A pointer to a destination to store the slot mask.
-
-  @retval RETURN_SUCCESS               The challenge auth is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends CHALLENGE
+ * to authenticate the device based upon the key in one slot.
+ *
+ * This function verifies the signature in the challenge auth.
+ *
+ * If basic mutual authentication is requested from the responder,
+ * this function also perform the basic mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the challenge.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  slot_mask                     A pointer to a destination to store the slot mask.
+ *
+ * @retval RETURN_SUCCESS               The challenge auth is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_challenge(IN void *spdm_context, IN uint8_t slot_id,
-                 IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash,
-                 OUT uint8_t *slot_mask);
+                                IN uint8_t measurement_hash_type,
+                                OUT void *measurement_hash,
+                                OUT uint8_t *slot_mask);
 
 /**
-  This function sends CHALLENGE
-  to authenticate the device based upon the key in one slot.
-
-  This function verifies the signature in the challenge auth.
-
-  If basic mutual authentication is requested from the responder,
-  this function also perform the basic mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the challenge.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  slot_mask                     A pointer to a destination to store the slot mask.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The challenge auth is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends CHALLENGE
+ * to authenticate the device based upon the key in one slot.
+ *
+ * This function verifies the signature in the challenge auth.
+ *
+ * If basic mutual authentication is requested from the responder,
+ * this function also perform the basic mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the challenge.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  slot_mask                     A pointer to a destination to store the slot mask.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The challenge auth is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
-                 IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash,
-                 OUT uint8_t *slot_mask,
-                 IN void *requester_nonce_in OPTIONAL,
-                 OUT void *requester_nonce OPTIONAL,
-                 OUT void *responder_nonce OPTIONAL);
+                                   IN uint8_t measurement_hash_type,
+                                   OUT void *measurement_hash,
+                                   OUT uint8_t *slot_mask,
+                                   IN void *requester_nonce_in OPTIONAL,
+                                   OUT void *requester_nonce OPTIONAL,
+                                   OUT void *responder_nonce OPTIONAL);
 
 /**
-  This function sends GET_MEASUREMENT
-  to get measurement from the device.
-
-  If the signature is requested, this function verifies the signature of the measurement.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  request_attribute             The request attribute of the request message.
-  @param  measurement_operation         The measurement operation of the request message.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  content_changed               The measurement content changed output param.
-  @param  number_of_blocks               The number of blocks of the measurement record.
-  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
-                                       On output, indicate the size in bytes of the measurement record.
-  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-
-  @retval RETURN_SUCCESS               The measurement is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_MEASUREMENT
+ * to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute             The request attribute of the request message.
+ * @param  measurement_operation         The measurement operation of the request message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  content_changed               The measurement content changed output param.
+ * @param  number_of_blocks               The number of blocks of the measurement record.
+ * @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                     On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_measurement(IN void *spdm_context, IN uint32_t *session_id,
-                   IN uint8_t request_attribute,
-                   IN uint8_t measurement_operation,
-                   IN uint8_t slot_id,
-                   OUT uint8_t *content_changed,
-                   OUT uint8_t *number_of_blocks,
-                   IN OUT uint32_t *measurement_record_length,
-                   OUT void *measurement_record);
+                                      IN uint8_t request_attribute,
+                                      IN uint8_t measurement_operation,
+                                      IN uint8_t slot_id,
+                                      OUT uint8_t *content_changed,
+                                      OUT uint8_t *number_of_blocks,
+                                      IN OUT uint32_t *measurement_record_length,
+                                      OUT void *measurement_record);
 
 /**
-  This function sends GET_MEASUREMENT
-  to get measurement from the device.
-
-  If the signature is requested, this function verifies the signature of the measurement.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  request_attribute             The request attribute of the request message.
-  @param  measurement_operation         The measurement operation of the request message.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  content_changed               The measurement content changed output param.
-  @param  number_of_blocks               The number of blocks of the measurement record.
-  @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
-                                       On output, indicate the size in bytes of the measurement record.
-  @param  measurement_record            A pointer to a destination buffer to store the measurement record.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The measurement is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_MEASUREMENT
+ * to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute             The request attribute of the request message.
+ * @param  measurement_operation         The measurement operation of the request message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  content_changed               The measurement content changed output param.
+ * @param  number_of_blocks               The number of blocks of the measurement record.
+ * @param  measurement_record_length      On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                     On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record            A pointer to a destination buffer to store the measurement record.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_id,
-                   IN uint8_t request_attribute,
-                   IN uint8_t measurement_operation,
-                   IN uint8_t slot_id,
-                   OUT uint8_t *content_changed,
-                   OUT uint8_t *number_of_blocks,
-                   IN OUT uint32_t *measurement_record_length,
-                   OUT void *measurement_record,
-                   IN void *requester_nonce_in OPTIONAL,
-                   OUT void *requester_nonce OPTIONAL,
-                   OUT void *responder_nonce OPTIONAL);
+                                         IN uint8_t request_attribute,
+                                         IN uint8_t measurement_operation,
+                                         IN uint8_t slot_id,
+                                         OUT uint8_t *content_changed,
+                                         OUT uint8_t *number_of_blocks,
+                                         IN OUT uint32_t *measurement_record_length,
+                                         OUT void *measurement_record,
+                                         IN void *requester_nonce_in OPTIONAL,
+                                         OUT void *requester_nonce OPTIONAL,
+                                         OUT void *responder_nonce OPTIONAL);
 
 /**
-  This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
-  to start an SPDM Session.
-
-  If encapsulated mutual authentication is requested from the responder,
-  this function also perform the encapsulated mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
-                                       TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    The session ID of the session.
-  @param  heartbeat_period              The heartbeat period for the session.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-
-  @retval RETURN_SUCCESS               The SPDM session is started.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
+ * to start an SPDM Session.
+ *
+ * If encapsulated mutual authentication is requested from the responder,
+ * this function also perform the encapsulated mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    The session ID of the session.
+ * @param  heartbeat_period              The heartbeat period for the session.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ *
+ * @retval RETURN_SUCCESS               The SPDM session is started.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
-                 IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id,
-                 IN uint8_t session_policy,
-                 OUT uint32_t *session_id,
-                 OUT uint8_t *heartbeat_period,
-                 OUT void *measurement_hash);
+                                    IN uint8_t measurement_hash_type,
+                                    IN uint8_t slot_id,
+                                    IN uint8_t session_policy,
+                                    OUT uint32_t *session_id,
+                                    OUT uint8_t *heartbeat_period,
+                                    OUT void *measurement_hash);
 
 /**
-  This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
-  to start an SPDM Session.
-
-  If encapsulated mutual authentication is requested from the responder,
-  this function also perform the encapsulated mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
-                                       TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  session_policy               The policy for the session.
-  @param  session_id                    The session ID of the session.
-  @param  heartbeat_period              The heartbeat period for the session.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
-  @param  requester_random_in_size      The size of requester_random_in.
-                                        If use_psk is FALSE, it must be 32 bytes.
-                                        If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
-                                        but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
-  @param  requester_random              A buffer to hold the requester random, if not NULL.
-  @param  requester_random_size         On input, the size of requester_random buffer.
-                                        On output, the size of data returned in requester_random buffer.
-                                        If use_psk is FALSE, it must be 32 bytes.
-                                        If use_psk is TRUE, it means the PSK context and must be 32 bytes at least.
-  @param  responder_random              A buffer to hold the responder random, if not NULL.
-  @param  responder_random_size         On input, the size of requester_random buffer.
-                                        On output, the size of data returned in requester_random buffer.
-                                        If use_psk is FALSE, it must be 32 bytes.
-                                        If use_psk is TRUE, it means the PSK context. It could be 0 if device does not support context.
-
-  @retval RETURN_SUCCESS               The SPDM session is started.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
+ * to start an SPDM Session.
+ *
+ * If encapsulated mutual authentication is requested from the responder,
+ * this function also perform the encapsulated mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  session_policy               The policy for the session.
+ * @param  session_id                    The session ID of the session.
+ * @param  heartbeat_period              The heartbeat period for the session.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
+ * @param  requester_random_in_size      The size of requester_random_in.
+ *                                      If use_psk is FALSE, it must be 32 bytes.
+ *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
+ *                                      but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
+ * @param  requester_random              A buffer to hold the requester random, if not NULL.
+ * @param  requester_random_size         On input, the size of requester_random buffer.
+ *                                      On output, the size of data returned in requester_random buffer.
+ *                                      If use_psk is FALSE, it must be 32 bytes.
+ *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least.
+ * @param  responder_random              A buffer to hold the responder random, if not NULL.
+ * @param  responder_random_size         On input, the size of requester_random buffer.
+ *                                      On output, the size of data returned in requester_random buffer.
+ *                                      If use_psk is FALSE, it must be 32 bytes.
+ *                                      If use_psk is TRUE, it means the PSK context. It could be 0 if device does not support context.
+ *
+ * @retval RETURN_SUCCESS               The SPDM session is started.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
-                 IN uint8_t measurement_hash_type,
-                 IN uint8_t slot_id,
-                 IN uint8_t session_policy,
-                 OUT uint32_t *session_id,
-                 OUT uint8_t *heartbeat_period,
-                 OUT void *measurement_hash,
-                 IN void *requester_random_in OPTIONAL,
-                 IN uintn requester_random_in_size OPTIONAL,
-                 OUT void *requester_random OPTIONAL,
-                 OUT uintn *requester_random_size OPTIONAL,
-                 OUT void *responder_random OPTIONAL,
-                 OUT uintn *responder_random_size OPTIONAL);
+                                       IN uint8_t measurement_hash_type,
+                                       IN uint8_t slot_id,
+                                       IN uint8_t session_policy,
+                                       OUT uint32_t *session_id,
+                                       OUT uint8_t *heartbeat_period,
+                                       OUT void *measurement_hash,
+                                       IN void *requester_random_in OPTIONAL,
+                                       IN uintn requester_random_in_size OPTIONAL,
+                                       OUT void *requester_random OPTIONAL,
+                                       OUT uintn *requester_random_size OPTIONAL,
+                                       OUT void *responder_random OPTIONAL,
+                                       OUT uintn *responder_random_size OPTIONAL);
 
 /**
-  This function sends END_SESSION
-  to stop an SPDM Session.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session ID of the session.
-  @param  end_session_attributes         The end session attribute for the session.
-
-  @retval RETURN_SUCCESS               The SPDM session is stopped.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends END_SESSION
+ * to stop an SPDM Session.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session ID of the session.
+ * @param  end_session_attributes         The end session attribute for the session.
+ *
+ * @retval RETURN_SUCCESS               The SPDM session is stopped.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_stop_session(IN void *spdm_context, IN uint32_t session_id,
-                IN uint8_t end_session_attributes);
+                                   IN uint8_t end_session_attributes);
 
 /**
-  Send and receive an SPDM or APP message.
-
-  The SPDM message can be a normal message or a secured message in SPDM session.
-
-  The APP message is encoded to a secured message directly in SPDM session.
-  The APP message format is defined by the transport layer.
-  Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicates if it is a secured message protected via SPDM session.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-  @param  is_app_message                 Indicates if it is an APP message or SPDM message.
-  @param  request                      A pointer to the request data.
-  @param  request_size                  size in bytes of the request data.
-  @param  response                     A pointer to the response data.
-  @param  response_size                 size in bytes of the response data.
-                                       On input, it means the size in bytes of response data buffer.
-                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-
-  @retval RETURN_SUCCESS               The SPDM request is set successfully.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Send and receive an SPDM or APP message.
+ *
+ * The SPDM message can be a normal message or a secured message in SPDM session.
+ *
+ * The APP message is encoded to a secured message directly in SPDM session.
+ * The APP message format is defined by the transport layer.
+ * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  request                      A pointer to the request data.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  response                     A pointer to the response data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *
+ * @retval RETURN_SUCCESS               The SPDM request is set successfully.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_send_receive_data(IN void *spdm_context,
-                     IN uint32_t *session_id,
-                     IN boolean is_app_message,
-                     IN void *request, IN uintn request_size,
-                     OUT void *response,
-                     IN OUT uintn *response_size);
+                                        IN uint32_t *session_id,
+                                        IN boolean is_app_message,
+                                        IN void *request, IN uintn request_size,
+                                        OUT void *response,
+                                        IN OUT uintn *response_size);
 
 /**
-  This function sends HEARTBEAT
-  to an SPDM Session.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session ID of the session.
-
-  @retval RETURN_SUCCESS               The heartbeat is sent and received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends HEARTBEAT
+ * to an SPDM Session.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session ID of the session.
+ *
+ * @retval RETURN_SUCCESS               The heartbeat is sent and received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_heartbeat(IN void *spdm_context, IN uint32_t session_id);
 
 /**
-  This function sends KEY_UPDATE
-  to update keys for an SPDM Session.
-
-  After keys are updated, this function also uses VERIFY_NEW_KEY to verify the key.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    The session ID of the session.
-  @param  single_direction              TRUE means the operation is UPDATE_KEY.
-                                       FALSE means the operation is UPDATE_ALL_KEYS.
-
-  @retval RETURN_SUCCESS               The keys of the session are updated.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends KEY_UPDATE
+ * to update keys for an SPDM Session.
+ *
+ * After keys are updated, this function also uses VERIFY_NEW_KEY to verify the key.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session ID of the session.
+ * @param  single_direction              TRUE means the operation is UPDATE_KEY.
+ *                                     FALSE means the operation is UPDATE_ALL_KEYS.
+ *
+ * @retval RETURN_SUCCESS               The keys of the session are updated.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_key_update(IN void *spdm_context, IN uint32_t session_id,
-                  IN boolean single_direction);
+                                 IN boolean single_direction);
 
 /**
-  This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
-
-  This function starts with the first encapsulated request (such as GET_ENCAPSULATED_REQUEST)
-  and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_SLOT_NUMBER).
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    Indicate if the encapsulated request is a secured message.
-                                       If session_id is NULL, it is a normal message.
-                                       If session_id is NOT NULL, it is a secured message.
-
-  @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
+ *
+ * This function starts with the first encapsulated request (such as GET_ENCAPSULATED_REQUEST)
+ * and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_SLOT_NUMBER).
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicate if the encapsulated request is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ *
+ * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status libspdm_send_receive_encap_request(IN void *spdm_context,
-                          IN uint32_t *session_id);
+                                                 IN uint32_t *session_id);
 
 /**
-  Process the encapsulated request and return the encapsulated response.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  spdm_request_size              size in bytes of the request data.
-  @param  spdm_request                  A pointer to the request data.
-  @param  spdm_response_size             size in bytes of the response data.
-                                       On input, it means the size in bytes of response data buffer.
-                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  spdm_response                 A pointer to the response data.
-
-  @retval RETURN_SUCCESS               The request is processed and the response is returned.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Process the encapsulated request and return the encapsulated response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_request_size              size in bytes of the request data.
+ * @param  spdm_request                  A pointer to the request data.
+ * @param  spdm_response_size             size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  spdm_response                 A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The request is processed and the response is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 typedef return_status (*libspdm_get_encap_response_func)(
     IN void *spdm_context, IN uintn spdm_request_size,
     IN void *spdm_request, IN OUT uintn *spdm_response_size,
     OUT void *spdm_response);
 
 /**
-  Register an SPDM encapsulated message process function.
-
-  If the default encapsulated message process function cannot handle the encapsulated message,
-  this function will be invoked.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  get_encap_response_func         The function to process the encapsuled message.
-**/
+ * Register an SPDM encapsulated message process function.
+ *
+ * If the default encapsulated message process function cannot handle the encapsulated message,
+ * this function will be invoked.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  get_encap_response_func         The function to process the encapsuled message.
+ **/
 void libspdm_register_get_encap_response_func(IN void *spdm_context,
-                       IN libspdm_get_encap_response_func
-                           get_encap_response_func);
+                                              IN libspdm_get_encap_response_func
+                                              get_encap_response_func);
 
 /**
-  Generate encapsulated ERROR message.
-
-  This function can be called in libspdm_get_encap_response_func.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  error_code                    The error code of the message.
-  @param  error_data                    The error data of the message.
-  @param  spdm_response_size             size in bytes of the response data.
-                                       On input, it means the size in bytes of data buffer.
-                                       On output, it means the size in bytes of copied data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  spdm_response                 A pointer to the response data.
-
-  @retval RETURN_SUCCESS               The error message is generated.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Generate encapsulated ERROR message.
+ *
+ * This function can be called in libspdm_get_encap_response_func.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  error_code                    The error code of the message.
+ * @param  error_data                    The error data of the message.
+ * @param  spdm_response_size             size in bytes of the response data.
+ *                                     On input, it means the size in bytes of data buffer.
+ *                                     On output, it means the size in bytes of copied data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  spdm_response                 A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The error message is generated.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status libspdm_generate_encap_error_response(
     IN void *spdm_context, IN uint8_t error_code, IN uint8_t error_data,
     IN OUT uintn *spdm_response_size, OUT void *spdm_response);
 
 /**
-  Generate encapsulated ERROR message with extended error data.
-
-  This function can be called in libspdm_get_encap_response_func.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  error_code                    The error code of the message.
-  @param  error_data                    The error data of the message.
-  @param  extended_error_data_size        The size in bytes of the extended error data.
-  @param  extended_error_data            A pointer to the extended error data.
-  @param  spdm_response_size             size in bytes of the response data.
-                                       On input, it means the size in bytes of response data buffer.
-                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  spdm_response                 A pointer to the response data.
-
-  @retval RETURN_SUCCESS               The error message is generated.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-**/
+ * Generate encapsulated ERROR message with extended error data.
+ *
+ * This function can be called in libspdm_get_encap_response_func.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  error_code                    The error code of the message.
+ * @param  error_data                    The error data of the message.
+ * @param  extended_error_data_size        The size in bytes of the extended error data.
+ * @param  extended_error_data            A pointer to the extended error data.
+ * @param  spdm_response_size             size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  spdm_response                 A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The error message is generated.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
 return_status libspdm_generate_encap_extended_error_response(
     IN void *spdm_context, IN uint8_t error_code, IN uint8_t error_data,
     IN uintn extended_error_data_size, IN uint8_t *extended_error_data,

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -45,7 +45,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     copy_mem(response, &spdm_transport_header, 1);
     copy_mem((uint8_t *)response + 1,
              (uint8_t *)spdm_test_context->test_buffer + TEST_MESSAGE_TYPE_SPDM +
-                 FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+             FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
              FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     calling_index++;
 

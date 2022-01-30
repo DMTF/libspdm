@@ -1,18 +1,18 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
 /**
-  Validate Crypto Ed Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto Ed Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_ecd(void)
 {
     void *ecd1;
@@ -33,13 +33,13 @@ return_status validate_crypt_ecd(void)
         goto Exit;
     }
 
-    
+
     /* Verify Ed-DSA*/
-    
+
     sig1_size = sizeof(signature1);
     my_print("\n- Ed-DSA Signing ... ");
     status = eddsa_sign(ecd1, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                signature1, &sig1_size);
+                        signature1, &sig1_size);
     if (!status) {
         my_print("[Fail]");
         ecd_free(ecd1);
@@ -48,7 +48,7 @@ return_status validate_crypt_ecd(void)
 
     my_print("Ed-DSA Verification ... ");
     status = eddsa_verify(ecd1, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                  signature1, sig1_size);
+                          signature1, sig1_size);
     if (!status) {
         my_print("[Fail]");
         ecd_free(ecd1);
@@ -68,7 +68,7 @@ return_status validate_crypt_ecd(void)
     sig2_size = sizeof(signature2);
     my_print("\n- Ed-DSA Signing ... ");
     status = eddsa_sign(ecd2, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                signature2, &sig2_size);
+                        signature2, &sig2_size);
     if (!status) {
         my_print("[Fail]");
         ecd_free(ecd2);
@@ -77,7 +77,7 @@ return_status validate_crypt_ecd(void)
 
     my_print("Ed-DSA Verification ... ");
     status = eddsa_verify(ecd2, CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                  signature2, sig2_size);
+                          signature2, sig2_size);
     if (!status) {
         my_print("[Fail]");
         ecd_free(ecd2);

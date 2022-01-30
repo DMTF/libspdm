@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -127,12 +127,12 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sm4_gcm_tag[] = {
 };
 
 /**
-  Validate Crypto AEAD Ciphers Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto AEAD Ciphers Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_aead_cipher(void)
 {
     boolean status;
@@ -147,10 +147,10 @@ return_status validate_crypt_aead_cipher(void)
     OutBufferSize = sizeof(OutBuffer);
     OutTagSize = sizeof(m_gcm_tag);
     status = aead_aes_gcm_encrypt(m_gcm_key, sizeof(m_gcm_key), m_gcm_iv,
-                      sizeof(m_gcm_iv), m_gcm_aad,
-                      sizeof(m_gcm_aad), m_gcm_pt,
-                      sizeof(m_gcm_pt), OutTag, OutTagSize,
-                      OutBuffer, &OutBufferSize);
+                                  sizeof(m_gcm_iv), m_gcm_aad,
+                                  sizeof(m_gcm_aad), m_gcm_pt,
+                                  sizeof(m_gcm_pt), OutTag, OutTagSize,
+                                  OutBuffer, &OutBufferSize);
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -207,12 +207,12 @@ return_status validate_crypt_aead_cipher(void)
         return RETURN_ABORTED;
     }
     if (const_compare_mem(OutBuffer, m_chacha20_poly1305_ct,
-            sizeof(m_chacha20_poly1305_ct)) != 0) {
+                          sizeof(m_chacha20_poly1305_ct)) != 0) {
         my_print("[Fail]");
         return RETURN_ABORTED;
     }
     if (const_compare_mem(OutTag, m_chacha20_poly1305_tag,
-            sizeof(m_chacha20_poly1305_tag)) != 0) {
+                          sizeof(m_chacha20_poly1305_tag)) != 0) {
         my_print("[Fail]");
         return RETURN_ABORTED;
     }
@@ -235,7 +235,7 @@ return_status validate_crypt_aead_cipher(void)
         return RETURN_ABORTED;
     }
     if (const_compare_mem(OutBuffer, m_chacha20_poly1305_pt,
-            sizeof(m_chacha20_poly1305_pt)) != 0) {
+                          sizeof(m_chacha20_poly1305_pt)) != 0) {
         my_print("[Fail]");
         return RETURN_ABORTED;
     }
@@ -247,10 +247,10 @@ return_status validate_crypt_aead_cipher(void)
     OutTagSize = sizeof(m_sm4_gcm_tag);
     status =
         aead_sm4_gcm_encrypt(m_sm4_gcm_key, sizeof(m_sm4_gcm_key),
-                     m_sm4_gcm_iv, sizeof(m_sm4_gcm_iv),
-                     m_sm4_gcm_aad, sizeof(m_sm4_gcm_aad),
-                     m_sm4_gcm_pt, sizeof(m_sm4_gcm_pt), OutTag,
-                     OutTagSize, OutBuffer, &OutBufferSize);
+                             m_sm4_gcm_iv, sizeof(m_sm4_gcm_iv),
+                             m_sm4_gcm_aad, sizeof(m_sm4_gcm_aad),
+                             m_sm4_gcm_pt, sizeof(m_sm4_gcm_pt), OutTag,
+                             OutTagSize, OutBuffer, &OutBufferSize);
     if (!status) {
         my_print("[Fail]");
         goto Exit;
@@ -271,11 +271,11 @@ return_status validate_crypt_aead_cipher(void)
 
     my_print("\n- SM4-GCM Decryption: ");
     status = aead_sm4_gcm_decrypt(m_sm4_gcm_key, sizeof(m_sm4_gcm_key),
-                      m_sm4_gcm_iv, sizeof(m_sm4_gcm_iv),
-                      m_sm4_gcm_aad, sizeof(m_sm4_gcm_aad),
-                      m_sm4_gcm_ct, sizeof(m_sm4_gcm_ct),
-                      m_sm4_gcm_tag, sizeof(m_sm4_gcm_tag),
-                      OutBuffer, &OutBufferSize);
+                                  m_sm4_gcm_iv, sizeof(m_sm4_gcm_iv),
+                                  m_sm4_gcm_aad, sizeof(m_sm4_gcm_aad),
+                                  m_sm4_gcm_ct, sizeof(m_sm4_gcm_ct),
+                                  m_sm4_gcm_tag, sizeof(m_sm4_gcm_tag),
+                                  OutBuffer, &OutBufferSize);
     if (!status) {
         my_print("[Fail]");
         goto Exit;

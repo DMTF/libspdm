@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -78,15 +78,15 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_rsa_pkcs1_signature[] = {
 /* Default public key 0x10001 = 65537*/
 
 GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_default_public_key[] = { 0x01, 0x00,
-                                     0x01 };
+                                                                       0x01 };
 
 /**
-  Validate Crypto RSA Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto RSA Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_rsa(void)
 {
     void *rsa;
@@ -371,7 +371,7 @@ return_status validate_crypt_rsa(void)
     }
 
     status = sha256_update(sha256_ctx, m_rsa_sign_data,
-                   ascii_str_len(m_rsa_sign_data));
+                           ascii_str_len(m_rsa_sign_data));
     if (!status) {
         my_print("[Fail]");
         sha256_free(sha256_ctx);
@@ -425,7 +425,7 @@ return_status validate_crypt_rsa(void)
 
     sig_size = 0;
     status = rsa_pkcs1_sign_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                     hash_size, NULL, &sig_size);
+                                     hash_size, NULL, &sig_size);
     if (status || sig_size == 0) {
         my_print("[Fail]");
         rsa_free(rsa);
@@ -439,7 +439,7 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
     status = rsa_pkcs1_sign_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                     hash_size, signature, &sig_size);
+                                     hash_size, signature, &sig_size);
     if (!status) {
         my_print("[Fail]");
         free_pool(signature);
@@ -461,7 +461,7 @@ return_status validate_crypt_rsa(void)
     my_print("PKCS#1 signature Verification ... ");
 
     status = rsa_pkcs1_verify_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                       hash_size, signature, sig_size);
+                                       hash_size, signature, sig_size);
     if (!status) {
         my_print("[Fail]");
         rsa_free(rsa);
@@ -507,7 +507,7 @@ return_status validate_crypt_rsa(void)
 
     sig_size = 0;
     status = rsa_pss_sign(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                  NULL, &sig_size);
+                          NULL, &sig_size);
     if (status || sig_size == 0) {
         my_print("[Fail]");
         rsa_free(rsa);
@@ -521,7 +521,7 @@ return_status validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
     status = rsa_pss_sign(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                  signature, &sig_size);
+                          signature, &sig_size);
     if (!status) {
         my_print("[Fail]");
         free_pool(signature);
@@ -536,7 +536,7 @@ return_status validate_crypt_rsa(void)
     my_print("PSS signature Verification ... ");
 
     status = rsa_pss_verify(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                signature, sig_size);
+                            signature, sig_size);
     if (!status) {
         my_print("[Fail]");
         free_pool(signature);

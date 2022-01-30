@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -23,34 +23,34 @@ typedef struct {
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
-  This function sends CHALLENGE
-  to authenticate the device based upon the key in one slot.
-
-  This function verifies the signature in the challenge auth.
-
-  If basic mutual authentication is requested from the responder,
-  this function also perform the basic mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the challenge.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  slot_mask                     A pointer to a destination to store the slot mask.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The challenge auth is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends CHALLENGE
+ * to authenticate the device based upon the key in one slot.
+ *
+ * This function verifies the signature in the challenge auth.
+ *
+ * If basic mutual authentication is requested from the responder,
+ * this function also perform the basic mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the challenge.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  slot_mask                     A pointer to a destination to store the slot mask.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The challenge auth is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
-                 IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash,
-                 OUT uint8_t *slot_mask,
-                 IN void *requester_nonce_in OPTIONAL,
-                 OUT void *requester_nonce OPTIONAL,
-                 OUT void *responder_nonce OPTIONAL)
+                                 IN uint8_t measurement_hash_type,
+                                 OUT void *measurement_hash,
+                                 OUT uint8_t *slot_mask,
+                                 IN void *requester_nonce_in OPTIONAL,
+                                 OUT void *requester_nonce OPTIONAL,
+                                 OUT void *responder_nonce OPTIONAL)
 {
     return_status status;
     boolean result;
@@ -74,7 +74,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
 
     spdm_context = context;
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                    SPDM_CHALLENGE);
+                                               SPDM_CHALLENGE);
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, TRUE, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
@@ -111,7 +111,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     }
 
     status = spdm_send_spdm_request(spdm_context, NULL,
-                    sizeof(spdm_request), &spdm_request);
+                                    sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -139,7 +139,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
             return status;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_CHALLENGE_AUTH) {
+               SPDM_CHALLENGE_AUTH) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response_size < sizeof(spdm_challenge_auth_response_t)) {
@@ -157,8 +157,10 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 && (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
-            (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 && auth_attribute != slot_id)) {
+        if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 &&
+             (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
+            (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
+             auth_attribute != slot_id)) {
             return RETURN_DEVICE_ERROR;
         }
         if ((spdm_response.header.param2 & (1 << slot_id)) == 0) {
@@ -181,9 +183,9 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
         spdm_context, TRUE, measurement_hash_type);
 
     if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
-                      hash_size + SPDM_NONCE_SIZE +
-                      measurement_summary_hash_size +
-                      sizeof(uint16_t)) {
+        hash_size + SPDM_NONCE_SIZE +
+        measurement_summary_hash_size +
+        sizeof(uint16_t)) {
         return RETURN_DEVICE_ERROR;
     }
 
@@ -195,7 +197,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     internal_dump_data(cert_chain_hash, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
     result = spdm_verify_certificate_chain_hash(spdm_context,
-                            cert_chain_hash, hash_size);
+                                                cert_chain_hash, hash_size);
     if (!result) {
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
@@ -216,7 +218,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
     internal_dump_data(measurement_summary_hash,
-               measurement_summary_hash_size);
+                       measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
@@ -228,22 +230,22 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     /* Cache data*/
 
     status = libspdm_append_message_c(spdm_context, &spdm_request,
-                       sizeof(spdm_request));
+                                      sizeof(spdm_request));
     if (RETURN_ERROR(status)) {
         return RETURN_SECURITY_VIOLATION;
     }
     if (spdm_response_size <
         sizeof(spdm_challenge_auth_response_t) + hash_size +
-            SPDM_NONCE_SIZE + measurement_summary_hash_size +
-            sizeof(uint16_t) + opaque_length + signature_size) {
+        SPDM_NONCE_SIZE + measurement_summary_hash_size +
+        sizeof(uint16_t) + opaque_length + signature_size) {
         return RETURN_DEVICE_ERROR;
     }
     spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
-                 hash_size + SPDM_NONCE_SIZE +
-                 measurement_summary_hash_size + sizeof(uint16_t) +
-                 opaque_length + signature_size;
+                         hash_size + SPDM_NONCE_SIZE +
+                         measurement_summary_hash_size + sizeof(uint16_t) +
+                         opaque_length + signature_size;
     status = libspdm_append_message_c(spdm_context, &spdm_response,
-                       spdm_response_size - signature_size);
+                                      spdm_response_size - signature_size);
     if (RETURN_ERROR(status)) {
         libspdm_reset_message_c(spdm_context);
         return RETURN_SECURITY_VIOLATION;
@@ -270,7 +272,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
 
     if (measurement_hash != NULL) {
         copy_mem(measurement_hash, measurement_summary_hash,
-             measurement_summary_hash_size);
+                 measurement_summary_hash_size);
     }
     if (slot_mask != NULL) {
         *slot_mask = spdm_response.header.param2;
@@ -297,28 +299,28 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
 }
 
 /**
-  This function sends CHALLENGE
-  to authenticate the device based upon the key in one slot.
-
-  This function verifies the signature in the challenge auth.
-
-  If basic mutual authentication is requested from the responder,
-  this function also perform the basic mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the challenge.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  slot_mask                     A pointer to a destination to store the slot mask.
-
-  @retval RETURN_SUCCESS               The challenge auth is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends CHALLENGE
+ * to authenticate the device based upon the key in one slot.
+ *
+ * This function verifies the signature in the challenge auth.
+ *
+ * If basic mutual authentication is requested from the responder,
+ * this function also perform the basic mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the challenge.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  slot_mask                     A pointer to a destination to store the slot mask.
+ *
+ * @retval RETURN_SUCCESS               The challenge auth is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
-                 IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash,
-                 OUT uint8_t *slot_mask)
+                                IN uint8_t measurement_hash_type,
+                                OUT void *measurement_hash,
+                                OUT uint8_t *slot_mask)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -328,8 +330,8 @@ return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_challenge(spdm_context, slot_id,
-                        measurement_hash_type,
-                        measurement_hash, slot_mask, NULL, NULL, NULL);
+                                    measurement_hash_type,
+                                    measurement_hash, slot_mask, NULL, NULL, NULL);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }
@@ -339,34 +341,34 @@ return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
 }
 
 /**
-  This function sends CHALLENGE
-  to authenticate the device based upon the key in one slot.
-
-  This function verifies the signature in the challenge auth.
-
-  If basic mutual authentication is requested from the responder,
-  this function also perform the basic mutual authentication.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_id                      The number of slot for the challenge.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-  @param  slot_mask                     A pointer to a destination to store the slot mask.
-  @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
-  @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
-  @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
-
-  @retval RETURN_SUCCESS               The challenge auth is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends CHALLENGE
+ * to authenticate the device based upon the key in one slot.
+ *
+ * This function verifies the signature in the challenge auth.
+ *
+ * If basic mutual authentication is requested from the responder,
+ * this function also perform the basic mutual authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                      The number of slot for the challenge.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ * @param  slot_mask                     A pointer to a destination to store the slot mask.
+ * @param  requester_nonce_in            A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce               A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce               A buffer to hold the responder nonce (32 bytes), if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The challenge auth is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
-                 IN uint8_t measurement_hash_type,
-                 OUT void *measurement_hash,
-                 OUT uint8_t *slot_mask,
-                 IN void *requester_nonce_in OPTIONAL,
-                 OUT void *requester_nonce OPTIONAL,
-                 OUT void *responder_nonce OPTIONAL)
+                                   IN uint8_t measurement_hash_type,
+                                   OUT void *measurement_hash,
+                                   OUT uint8_t *slot_mask,
+                                   IN void *requester_nonce_in OPTIONAL,
+                                   OUT void *requester_nonce OPTIONAL,
+                                   OUT void *responder_nonce OPTIONAL)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -376,11 +378,11 @@ return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_challenge(spdm_context, slot_id,
-                        measurement_hash_type,
-                        measurement_hash,
-                        slot_mask,
-                        requester_nonce_in,
-                        requester_nonce, responder_nonce);
+                                    measurement_hash_type,
+                                    measurement_hash,
+                                    slot_mask,
+                                    requester_nonce_in,
+                                    requester_nonce, responder_nonce);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

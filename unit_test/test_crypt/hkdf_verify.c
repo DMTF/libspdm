@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -37,12 +37,12 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_hkdf_sha256_okm[42] = {
 };
 
 /**
-  Validate Crypto HMAC Key Derivation Function Interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto HMAC Key Derivation Function Interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_hkdf(void)
 {
     uint8_t prk_out[32];
@@ -52,16 +52,16 @@ return_status validate_crypt_hkdf(void)
     my_print(" \nCrypto HKDF Engine Testing:\n");
 
     my_print("- HKDF-SHA256: ");
-    
+
     /* HKDF-SHA-256 digest Validation*/
-    
+
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sha256_extract (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                prk_out, sizeof(prk_out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        prk_out, sizeof(prk_out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -77,10 +77,10 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("expand... ");
     status = hkdf_sha256_expand (
-                m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -96,11 +96,11 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("extract_and_expand... ");
     status = hkdf_sha256_extract_and_expand (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -116,16 +116,16 @@ return_status validate_crypt_hkdf(void)
     my_print("[Pass]\n");
 
     my_print("- HKDF-SHA3_256: ");
-    
+
     /* HKDF-SHA3-256 digest Validation*/
-    
+
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sha3_256_extract (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                prk_out, sizeof(prk_out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        prk_out, sizeof(prk_out)
+        );
     if (!status) {
         my_print("[Fail]\n");
         return RETURN_SUCCESS;
@@ -134,10 +134,10 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("expand... ");
     status = hkdf_sha3_256_expand (
-                m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -146,11 +146,11 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("extract_and_expand... ");
     status = hkdf_sha3_256_extract_and_expand (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -159,16 +159,16 @@ return_status validate_crypt_hkdf(void)
     my_print("[Pass]\n");
 
     my_print("- HKDF-SM3_256: ");
-    
+
     /* HKDF-SM3-256 digest Validation*/
-    
+
     my_print("extract... ");
     zero_mem(prk_out, sizeof(prk_out));
     status = hkdf_sm3_256_extract (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                prk_out, sizeof(prk_out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        prk_out, sizeof(prk_out)
+        );
     if (!status) {
         my_print("[Fail]\n");
         return RETURN_SUCCESS;
@@ -177,10 +177,10 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("expand... ");
     status = hkdf_sm3_256_expand (
-                m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_prk, sizeof(m_hkdf_sha256_prk),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;
@@ -189,11 +189,11 @@ return_status validate_crypt_hkdf(void)
     zero_mem(out, sizeof(out));
     my_print("extract_and_expand... ");
     status = hkdf_sm3_256_extract_and_expand (
-                m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
-                m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
-                m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
-                out, sizeof(out)
-                );
+        m_hkdf_sha256_ikm, sizeof(m_hkdf_sha256_ikm),
+        m_hkdf_sha256_salt, sizeof(m_hkdf_sha256_salt),
+        m_hkdf_sha256_info, sizeof(m_hkdf_sha256_info),
+        out, sizeof(out)
+        );
     if (!status) {
         my_print("[Fail]");
         return RETURN_ABORTED;

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
@@ -72,10 +72,11 @@ void test_spdm_responder_key_exchange_case1(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -84,7 +85,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -111,7 +112,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_KEY_EXCHANGE_RSP);
+                     SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
     free(data1);
 }
@@ -152,10 +153,11 @@ void test_spdm_responder_key_exchange_case2(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -164,7 +166,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request2.random_data);
+                              m_spdm_key_exchange_request2.random_data);
     m_spdm_key_exchange_request2.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request2.reserved = 0;
     ptr = m_spdm_key_exchange_request2.exchange_data;
@@ -188,9 +190,9 @@ void test_spdm_responder_key_exchange_case2(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -232,10 +234,11 @@ void test_spdm_responder_key_exchange_case3(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -244,7 +247,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -268,11 +271,11 @@ void test_spdm_responder_key_exchange_case3(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_BUSY);
+                     LIBSPDM_RESPONSE_STATE_BUSY);
     free(data1);
 }
 
@@ -313,10 +316,11 @@ void test_spdm_responder_key_exchange_case4(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -325,7 +329,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -349,12 +353,12 @@ void test_spdm_responder_key_exchange_case4(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_REQUEST_RESYNCH);
+                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
+                     LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     free(data1);
 }
 
@@ -396,10 +400,11 @@ void test_spdm_responder_key_exchange_case5(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -408,7 +413,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -430,18 +435,18 @@ void test_spdm_responder_key_exchange_case5(void **state)
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
-             sizeof(spdm_error_response_t) +
-                 sizeof(spdm_error_data_response_not_ready_t));
+                     sizeof(spdm_error_response_t) +
+                     sizeof(spdm_error_data_response_not_ready_t));
     spdm_response = (void *)response;
     error_data = (spdm_error_data_response_not_ready_t
                   *)(&spdm_response->rsp_session_id);
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->response_state,
-             LIBSPDM_RESPONSE_STATE_NOT_READY);
+                     LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_KEY_EXCHANGE);
     free(data1);
 }
@@ -483,10 +488,11 @@ void test_spdm_responder_key_exchange_case6(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -495,7 +501,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -519,9 +525,9 @@ void test_spdm_responder_key_exchange_case6(void **state)
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_ERROR);
+                     SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-             SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -562,10 +568,11 @@ void test_spdm_responder_key_exchange_case7(void **state)
         m_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_use_aead_algo;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     read_responder_public_certificate_chain(m_use_hash_algo,
-                        m_use_asym_algo, &data1,
-                        &data_size1, NULL, NULL);
+                                            m_use_asym_algo, &data1,
+                                            &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -574,19 +581,19 @@ void test_spdm_responder_key_exchange_case7(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
-                            spdm_context->transcript.message_m.max_buffer_size;
+        spdm_context->transcript.message_m.max_buffer_size;
     spdm_context->transcript.message_b.buffer_size =
-                            spdm_context->transcript.message_b.max_buffer_size;
+        spdm_context->transcript.message_b.max_buffer_size;
     spdm_context->transcript.message_c.buffer_size =
-                            spdm_context->transcript.message_c.max_buffer_size;
+        spdm_context->transcript.message_c.max_buffer_size;
     spdm_context->transcript.message_mut_b.buffer_size =
-                            spdm_context->transcript.message_mut_b.max_buffer_size;
+        spdm_context->transcript.message_mut_b.max_buffer_size;
     spdm_context->transcript.message_mut_c.buffer_size =
-                            spdm_context->transcript.message_mut_c.max_buffer_size;
+        spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                   m_spdm_key_exchange_request1.random_data);
+                              m_spdm_key_exchange_request1.random_data);
     m_spdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
@@ -613,7 +620,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
-             SPDM_KEY_EXCHANGE_RSP);
+                     SPDM_KEY_EXCHANGE_RSP);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -652,8 +659,8 @@ int spdm_responder_key_exchange_test_main(void)
     setup_spdm_test_context(&m_spdm_responder_key_exchange_test_context);
 
     return cmocka_run_group_tests(spdm_responder_key_exchange_tests,
-                      spdm_unit_test_group_setup,
-                      spdm_unit_test_group_teardown);
+                                  spdm_unit_test_group_setup,
+                                  spdm_unit_test_group_teardown);
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

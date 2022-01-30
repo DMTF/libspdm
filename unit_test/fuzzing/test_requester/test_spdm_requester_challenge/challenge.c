@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -56,8 +56,8 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     ptr += libspdm_get_hash_size(m_use_hash_algo);
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
-    /* zero_mem (ptr, libspdm_get_hash_size (m_use_hash_algo));*/
-    /* ptr += libspdm_get_hash_size (m_use_hash_algo);*/
+    /* zero_mem (ptr, libspdm_get_hash_size (m_use_hash_algo));
+     * ptr += libspdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)ptr = 0;
     ptr += sizeof(uint16_t);
     copy_mem(&m_local_buffer[m_local_buffer_size], spdm_response,
@@ -114,12 +114,13 @@ void test_spdm_requester_challenge_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -153,12 +154,13 @@ void test_spdm_requester_challenge_ex_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));

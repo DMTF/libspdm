@@ -1,16 +1,16 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "hal/base.h"
 
 uint64_t internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
-                OUT uint64_t *remainder OPTIONAL);
+                                      OUT uint64_t *remainder OPTIONAL);
 
 int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
-                   OUT int64_t *remainder OPTIONAL)
+                                     OUT int64_t *remainder OPTIONAL)
 {
     int64_t quot;
 
@@ -25,7 +25,7 @@ int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
 }
 
 int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
-             OUT int64_t *remainder OPTIONAL)
+                             OUT int64_t *remainder OPTIONAL)
 {
     return internal_math_div_rem_s64x64(dividend, divisor, remainder);
 }
@@ -36,70 +36,70 @@ int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
  */
 __declspec(naked) void __cdecl _alldvrm(void)
 {
-    
-    /*    int64_t*/
-    /*            div_s64x64_remainder (*/
-    /*      IN      int64_t     dividend,*/
-    /*      IN      int64_t     divisor,*/
-    /*      OUT     int64_t     *remainder  OPTIONAL*/
-    /*      )*/
-    
-  _asm {
 
-    ; Original local stack when calling _alldvrm
-    ;               -----------------
-    ;               |               |
-    ;               |---------------|
-    ;               |               |
-    ;               |--  divisor  --|
-    ;               |               |
-    ;               |---------------|
-    ;               |               |
-    ;               |--  dividend --|
-    ;               |               |
-    ;               |---------------|
-    ;               |  ReturnAddr** |
-    ;       ESP---->|---------------|
-    ;
+    /*    int64_t
+     *            div_s64x64_remainder (
+     *      IN      int64_t     dividend,
+     *      IN      int64_t     divisor,
+     *      OUT     int64_t     *remainder  OPTIONAL
+     *      )*/
 
-    ;
-    ; Set up the local stack for Reminder pointer
-    ;
-    sub  esp, 8
-    push esp
+    _asm {
 
-    ;
-    ; Set up the local stack for divisor parameter
-    ;
-    mov  eax, [esp + 28]
-    push eax
-    mov  eax, [esp + 28]
-    push eax
+        ; Original local stack when calling _alldvrm
+        ;               -----------------
+        ;               |               |
+        ;               |--------------- |
+        ;               |               |
+        ;               |--divisor--|
+        ;               |               |
+        ;               |--------------- |
+        ;               |               |
+        ;               |--dividend--|
+        ;               |               |
+        ;               |--------------- |
+        ;               |  ReturnAddr** |
+        ;       ESP---->|--------------- |
+        ;
 
-    ;
-    ; Set up the local stack for dividend parameter
-    ;
-    mov  eax, [esp + 28]
-    push eax
-    mov  eax, [esp + 28]
-    push eax
+        ;
+        ; Set up the local stack for Reminder pointer
+        ;
+        sub esp, 8
+        push esp
 
-    ;
-    ; Call native div_s64x64_remainder of BaseLib
-    ;
-    call div_s64x64_remainder
+        ;
+        ; Set up the local stack for divisor parameter
+        ;
+        mov eax, [esp + 28]
+        push eax
+        mov eax, [esp + 28]
+        push eax
 
-    ;
-    ; Put the Reminder in EBX:ECX as return value
-    ;
-    mov  ecx, [esp + 20]
-    mov  ebx, [esp + 24]
+        ;
+        ; Set up the local stack for dividend parameter
+        ;
+        mov eax, [esp + 28]
+        push eax
+        mov eax, [esp + 28]
+        push eax
 
-    ;
-    ; Adjust stack
-    ;
-    add  esp, 28
+        ;
+        ; Call native div_s64x64_remainder of BaseLib
+        ;
+        call div_s64x64_remainder
 
-    ret  16
-  }
+        ;
+        ; Put the Reminder in EBX:ECX as return value
+        ;
+        mov ecx, [esp + 20]
+        mov ebx, [esp + 24]
+
+        ;
+        ; Adjust stack
+        ;
+        add esp, 28
+
+        ret  16
+    }
 }

@@ -1,16 +1,16 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 /** @file
-  Definition for pcap file format and link type
-
-  https://www.tcpdump.org/manpages/pcap-savefile.5.txt
-
-  https://wiki.wireshark.org/Development/LibpcapFileFormat
-**/
+ * Definition for pcap file format and link type
+ *
+ * https://www.tcpdump.org/manpages/pcap-savefile.5.txt
+ *
+ * https://wiki.wireshark.org/Development/LibpcapFileFormat
+ **/
 
 #ifndef __PCAP_H__
 #define __PCAP_H__
@@ -18,10 +18,10 @@
 #pragma pack(1)
 
 
-/* PCAP file format:*/
-/* +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+*/
-/* | Global header | Packet header | Packet data | Packet header | Packet data | Packet header | Packet data | ... |*/
-/* +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+*/
+/* PCAP file format:
+ * +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+
+ * | Global header | Packet header | Packet data | Packet header | Packet data | Packet header | Packet data | ... |
+ * +---------------+---------------+-------------+---------------+-------------+---------------+-------------+-----+*/
 
 
 typedef struct {
@@ -45,8 +45,8 @@ typedef struct {
 
 typedef struct {
     uint32_t ts_sec;
-    /* PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond*/
-    /* PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond*/
+    /* PCAP_GLOBAL_HEADER_MAGIC      : MicroSecond
+    * PCAP_GLOBAL_HEADER_MAGIC_NANO : NanoSecond*/
     uint32_t ts_usec;
     uint32_t incl_len;
     uint32_t orig_len;

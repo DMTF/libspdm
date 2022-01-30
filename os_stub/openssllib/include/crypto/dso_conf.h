@@ -1,11 +1,11 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
-/* WARNING: do not edit! */
-/* Generated from crypto/include/internal/dso_conf.h.in */
+/* WARNING: do not edit!
+ * Generated from crypto/include/internal/dso_conf.h.in*/
 /*
  * Copyright 2016-2019 The OpenSSL Project Authors. All Rights Reserved.
  *

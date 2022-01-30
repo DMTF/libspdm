@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -48,7 +48,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 
         copy_mem((uint8_t *)temp_buf,
                  (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                     test_message_size * sub_index,
+                 test_message_size * sub_index,
                  temp_buf_size);
         break;
     case 5:
@@ -57,7 +57,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 
         copy_mem((uint8_t *)temp_buf,
                  (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                     temp_buf_size * sub_index,
+                 temp_buf_size * sub_index,
                  temp_buf_size);
         break;
     case 6:
@@ -65,7 +65,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         test_message_size = 16;
         copy_mem((uint8_t *)temp_buf,
                  (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                     test_message_size * sub_index + 28,
+                 test_message_size * sub_index + 28,
                  temp_buf_size);
         sub_index = 0;
         break;
@@ -79,7 +79,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     }
     /* WALKAROUND: If just use single context to encode message and then decode message */
     ((spdm_secured_message_context_t *)(session_info->secured_message_context))
-        ->application_secret.response_data_sequence_number--;
+    ->application_secret.response_data_sequence_number--;
 
     sub_index++;
     return RETURN_SUCCESS;
@@ -129,7 +129,7 @@ void test_spdm_requester_encap_request(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     session_id = 0xFFFFFFFF;

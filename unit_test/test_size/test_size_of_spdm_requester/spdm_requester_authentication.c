@@ -1,41 +1,41 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "spdm_requester.h"
 
 /**
-  This function sends GET_DIGEST, GET_CERTIFICATE, CHALLENGE
-  to authenticate the device.
-
-  This function is combination of libspdm_get_digest, libspdm_get_certificate, libspdm_challenge.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  slot_mask                     The slots which deploy the CertificateChain.
-  @param  total_digest_buffer            A pointer to a destination buffer to store the digest buffer.
-  @param  slot_id                      The number of slot for the certificate chain.
-  @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
-                                       On output, indicate the size in bytes of the certificate chain.
-  @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
-  @param  measurement_hash_type          The type of the measurement hash.
-  @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
-
-  @retval RETURN_SUCCESS               The authentication is got successfully.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * This function sends GET_DIGEST, GET_CERTIFICATE, CHALLENGE
+ * to authenticate the device.
+ *
+ * This function is combination of libspdm_get_digest, libspdm_get_certificate, libspdm_challenge.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_mask                     The slots which deploy the CertificateChain.
+ * @param  total_digest_buffer            A pointer to a destination buffer to store the digest buffer.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ * @param  measurement_hash_type          The type of the measurement hash.
+ * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
+ *
+ * @retval RETURN_SUCCESS               The authentication is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 return_status
 spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
-            OUT void *total_digest_buffer, IN uint8_t slot_id,
-            IN OUT uintn *cert_chain_size, OUT void *cert_chain,
-            IN uint8_t measurement_hash_type, OUT void *measurement_hash,
-            OUT uint8_t *auth_slot_mask)
+                    OUT void *total_digest_buffer, IN uint8_t slot_id,
+                    IN OUT uintn *cert_chain_size, OUT void *cert_chain,
+                    IN uint8_t measurement_hash_type, OUT void *measurement_hash,
+                    OUT uint8_t *auth_slot_mask)
 {
     return_status status;
 
-        status = RETURN_SUCCESS;
+    status = RETURN_SUCCESS;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     status = libspdm_get_digest(context, slot_mask, total_digest_buffer);
@@ -45,7 +45,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 
     if (slot_id != 0xFF) {
         status = libspdm_get_certificate(context, slot_id, cert_chain_size,
-                          cert_chain);
+                                         cert_chain);
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -54,7 +54,7 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, slot_id, measurement_hash_type,
-                measurement_hash, auth_slot_mask);
+                               measurement_hash, auth_slot_mask);
     if (RETURN_ERROR(status)) {
         return status;
     }
@@ -63,10 +63,10 @@ spdm_authentication(IN void *context, OUT uint8_t *slot_mask,
 }
 
 /**
-  This function executes SPDM authentication.
-
-  @param[in]  spdm_context            The SPDM context for the device.
-**/
+ * This function executes SPDM authentication.
+ *
+ * @param[in]  spdm_context            The SPDM context for the device.
+ **/
 return_status do_authentication_via_spdm(IN void *spdm_context)
 {
     return_status status;

@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __SPDM_LIB_CONFIG_H__
 #define __SPDM_LIB_CONFIG_H__
@@ -33,9 +33,9 @@
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
 
 
-/* Crypto Configuation*/
-/* In each category, at least one should be selected.*/
-/* NOTE: Not all combination can be supported. E.g. Don't mix NIST algo with SMx.*/
+/* Crypto Configuation
+ * In each category, at least one should be selected.
+ * NOTE: Not all combination can be supported. E.g. Don't mix NIST algo with SMx.*/
 
 #define LIBSPDM_RSA_SSA_SUPPORT 1
 #define LIBSPDM_RSA_PSS_SUPPORT 1
@@ -63,22 +63,22 @@
 
 /* Code space optimization for Optional request/response messages.*/
 
-/* Consumers of libspdm may wish to not fully implement all of the optional*/
-/* SPDM request/response messages. Therefore we have provided these*/
-/* SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization*/
-/* disable the code (#if 0) related to said optional capability, thereby*/
-/* reducing the code space used in the image.*/
+/* Consumers of libspdm may wish to not fully implement all of the optional
+ * SPDM request/response messages. Therefore we have provided these
+ * SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
+ * disable the code (#if 0) related to said optional capability, thereby
+ * reducing the code space used in the image.*/
 
-/* A single switch may enable/disable a single capability or group of related*/
-/* capabilities.*/
+/* A single switch may enable/disable a single capability or group of related
+ * capabilities.*/
 
-/* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.*/
-/* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.*/
-/* SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:*/
-/*                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
+/* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
+ * LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
+ * SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
+ *                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
 
-/* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.*/
-/* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.*/
+/* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
+ * LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.*/
 
 #define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1

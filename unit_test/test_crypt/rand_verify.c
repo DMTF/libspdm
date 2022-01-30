@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "test_crypt.h"
 
@@ -15,12 +15,12 @@ uint8_t m_previous_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 uint8_t m_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 
 /**
-  Validate Crypto pseudorandom number generator interfaces.
-
-  @retval  RETURN_SUCCESS  Validation succeeded.
-  @retval  RETURN_ABORTED  Validation failed.
-
-**/
+ * Validate Crypto pseudorandom number generator interfaces.
+ *
+ * @retval  RETURN_SUCCESS  Validation succeeded.
+ * @retval  RETURN_ABORTED  Validation failed.
+ *
+ **/
 return_status validate_crypt_prng(void)
 {
     uintn index;
@@ -44,13 +44,13 @@ return_status validate_crypt_prng(void)
         }
 
         if (const_compare_mem(m_previous_random_buffer, m_random_buffer,
-                RANDOM_NUMBER_SIZE) == 0) {
+                              RANDOM_NUMBER_SIZE) == 0) {
             my_print("[Fail]");
             return RETURN_ABORTED;
         }
 
         copy_mem(m_previous_random_buffer, m_random_buffer,
-             RANDOM_NUMBER_SIZE);
+                 RANDOM_NUMBER_SIZE);
     }
 
     my_print("[Pass]\n");

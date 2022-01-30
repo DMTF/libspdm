@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #ifndef __SPDM_UNIT_FUZZING_H__
 #define __SPDM_UNIT_FUZZING_H__
@@ -60,7 +60,7 @@ void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context);
 spdm_test_context_t *get_spdm_test_context(void);
 
 boolean read_input_file(IN char *file_name, OUT void **file_data,
-            OUT uintn *file_size);
+                        OUT uintn *file_size);
 
 void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
 

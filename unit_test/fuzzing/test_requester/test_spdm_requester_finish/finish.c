@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -87,7 +87,7 @@ void test_spdm_send_receive_finish_case1(void **State)
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-         data, data_size);
+             data, data_size);
 #endif
 
     session_id = 0xFFFFFFFF;

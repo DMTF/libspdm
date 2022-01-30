@@ -1,8 +1,8 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_requester_lib.h"
 
@@ -24,18 +24,18 @@ typedef struct {
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
-  This function sends FINISH and receives FINISH_RSP for SPDM finish.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  session_id                    session_id to the FINISH request.
-  @param  req_slot_id_param               req_slot_id_param to the FINISH request.
-
-  @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-**/
+ * This function sends FINISH and receives FINISH_RSP for SPDM finish.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id to the FINISH request.
+ * @param  req_slot_id_param               req_slot_id_param to the FINISH request.
+ *
+ * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
 return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-                       IN uint32_t session_id,
-                       IN uint8_t req_slot_id_param)
+                                           IN uint32_t session_id,
+                                           IN uint8_t req_slot_id_param)
 {
     return_status status;
     spdm_finish_request_mine_t spdm_request;
@@ -102,7 +102,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         spdm_request.header.param2 = req_slot_id_param;
         signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm
-                .req_base_asym_alg);
+            .req_base_asym_alg);
     } else {
         spdm_request.header.param1 = 0;
         spdm_request.header.param2 = 0;
@@ -117,11 +117,11 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     if (session_info->mut_auth_requested) {
         spdm_context->connection_info.local_used_cert_chain_buffer =
             spdm_context->local_context
-                .local_cert_chain_provision[req_slot_id_param];
+            .local_cert_chain_provision[req_slot_id_param];
         spdm_context->connection_info.local_used_cert_chain_buffer_size =
             spdm_context->local_context
-                .local_cert_chain_provision_size
-                    [req_slot_id_param];
+            .local_cert_chain_provision_size
+            [req_slot_id_param];
     }
 
     hmac_size = libspdm_get_hash_size(
@@ -131,20 +131,20 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     ptr = spdm_request.signature;
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
-                       sizeof(spdm_finish_request_t));
+                                      sizeof(spdm_finish_request_t));
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
     if (session_info->mut_auth_requested) {
         result = spdm_generate_finish_req_signature(spdm_context,
-                                session_info, ptr);
+                                                    session_info, ptr);
         if (!result) {
             status = RETURN_SECURITY_VIOLATION;
             goto error;
         }
         status = libspdm_append_message_f(spdm_context, session_info, TRUE, ptr,
-                           signature_size);
+                                          signature_size);
         if (RETURN_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
             goto error;
@@ -165,14 +165,14 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     status = spdm_send_spdm_request(spdm_context, &session_id,
-                    spdm_request_size, &spdm_request);
+                                    spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         status = RETURN_DEVICE_ERROR;
         goto error;
     }
 
     spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                        SPDM_FINISH);
+                                               SPDM_FINISH);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -203,7 +203,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
             goto error;
         }
     } else if (spdm_response.header.request_response_code !=
-           SPDM_FINISH_RSP) {
+               SPDM_FINISH_RSP) {
         status = RETURN_DEVICE_ERROR;
         goto error;
     }
@@ -221,7 +221,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     status = libspdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
-                       sizeof(spdm_finish_response_t));
+                                      sizeof(spdm_finish_response_t));
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -234,8 +234,8 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
         internal_dump_hex(spdm_response.verify_data, hmac_size);
         result = spdm_verify_finish_rsp_hmac(spdm_context, session_info,
-                             spdm_response.verify_data,
-                             hmac_size);
+                                             spdm_response.verify_data,
+                                             hmac_size);
         if (!result) {
             status = RETURN_SECURITY_VIOLATION;
             goto error;
@@ -244,7 +244,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         status = libspdm_append_message_f(
             spdm_context, session_info, TRUE,
             (uint8_t *)&spdm_response +
-                sizeof(spdm_finish_response_t),
+            sizeof(spdm_finish_response_t),
             hmac_size);
         if (RETURN_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
@@ -254,7 +254,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 
     DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
-                     th2_hash_data);
+                                        th2_hash_data);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -283,8 +283,8 @@ error:
 }
 
 return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-                       IN uint32_t session_id,
-                       IN uint8_t req_slot_id_param)
+                                       IN uint32_t session_id,
+                                       IN uint8_t req_slot_id_param)
 {
     uintn retry;
     return_status status;
@@ -292,7 +292,7 @@ return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     retry = spdm_context->retry_times;
     do {
         status = try_spdm_send_receive_finish(spdm_context, session_id,
-                              req_slot_id_param);
+                                              req_slot_id_param);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }
