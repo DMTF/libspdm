@@ -1,0 +1,94 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        crypto:
+          - mbedtls
+          - openssl
+        arch:
+          - x64
+          - ia32
+        target:
+          - Release
+        toolchain:
+          - GCC
+          - VS2015
+          - VS2019
+        exclude:
+          - os: ubuntu-latest
+            toolchain: VS2015
+          - os: ubuntu-latest
+            toolchain: VS2019
+          - os: ubuntu-latest
+            arch: ia32
+          - os: windows-latest
+            toolchain: GCC
+          - crypto: openssl
+            arch: ia32
+    steps:
+      - name: Toolchain Setup - VS2019 (x64)
+        if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Toolchain Setup - VS2019 (x86)
+        if: matrix.toolchain == 'VS2019' && matrix.arch == 'ia32'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+      - name: Toolchain Setup - VS2015 (x64)
+        if: matrix.toolchain == 'VS2015' && matrix.arch == 'x64'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: 14.0
+      - name: Toolchain Setup - VS2015 (x86)
+        if: matrix.toolchain == 'VS2015' && matrix.arch == 'ia32'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+          toolset: 14.0
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build - Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir build
+          cd build
+          cmake -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          make copy_sample_key
+          make
+      - name: Build - Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir build
+          cd build
+          cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          nmake copy_sample_key
+          nmake
+
+      - name: Test Requester
+        run: |
+          cd build/bin
+          ./test_spdm_requester
+      - name: Test Responder
+        run: |
+          cd build/bin
+          ./test_spdm_responder
