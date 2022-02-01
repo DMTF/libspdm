@@ -30,9 +30,8 @@ SET(src_test_crypt
 SET(test_crypt_LIBRARY
     memlib
     debuglib
-    ${CRYPTO_LIB_PATHS}
     rnglib
-    cryptlib_${CRYPTO}
+    cryptlib
     malloclib
 )
 
@@ -41,9 +40,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    ${src_test_crypt}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
-                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
                    $<TARGET_OBJECTS:rnglib>
-                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+                   $<TARGET_OBJECTS:cryptlib>
                    $<TARGET_OBJECTS:malloclib>
     )
 else()

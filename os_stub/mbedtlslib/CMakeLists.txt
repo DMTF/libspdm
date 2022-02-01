@@ -94,4 +94,4 @@ SET(src_mbedtlslib
     mbedtls/library/xtea.c
 )
 
-ADD_LIBRARY(mbedtlslib STATIC ${src_mbedtlslib})
+ADD_LIBRARY(cryptlib_mbedtls STATIC ${src_mbedtlslib})

@@ -1,20 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types -Wno-pointer-sign")
-endif()
-
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
-                    ${LIBSPDM_DIR}/os_stub/include
-                    ${LIBSPDM_DIR}/os_stub/cryptlib_mbedtls
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include/mbedtls
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include/mbedtls
-)
-
 SET(src_cryptlib_mbedtls
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
@@ -42,5 +27,36 @@ SET(src_cryptlib_mbedtls
     sys_call/crt_wrapper_host.c
     sys_call/timer_wrapper_host.c
 )
+ADD_LIBRARY(cryptlib STATIC ${src_cryptlib_mbedtls})
+TARGET_INCLUDE_DIRECTORIES(cryptlib PRIVATE
+    ${LIBSPDM_DIR}/include
+    ${LIBSPDM_DIR}/include/hal
+    ${LIBSPDM_DIR}/include/hal/${ARCH}
+    ${LIBSPDM_DIR}/os_stub/include
+    ${LIBSPDM_DIR}/os_stub/cryptlib_mbedtls
+    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include
+    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include/mbedtls
+    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include
+    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include/mbedtls
+)
 
-ADD_LIBRARY(cryptlib_mbedtls STATIC ${src_cryptlib_mbedtls})
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    TARGET_COMPILE_OPTIONS(cryptlib PRIVATE
+        -Wno-incompatible-pointer-types
+        -Wno-pointer-sign
+    )
+endif()
+
+if(ENABLE_BINARY_BUILD)
+    MESSAGE(FATAL_ERROR "Using prebuilt mbedtls libraries is not supported.")
+    TARGET_LINK_LIBRARIES(cryptlib PRIVATE
+        mbedtls
+        mbedx509
+        mbedcrypto
+    )
+else()
+    MESSAGE("Building mbedtls from source")
+    TARGET_LINK_LIBRARIES(cryptlib PRIVATE
+        cryptlib_mbedtls
+    )
+endif()

@@ -1,16 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
-                    ${LIBSPDM_DIR}/os_stub/include
-                    ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
-                    ${LIBSPDM_DIR}/os_stub/openssllib/include
-                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/include
-                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
-                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl
-)
-
 SET(src_cryptlib_openssl
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
@@ -37,4 +26,28 @@ SET(src_cryptlib_openssl
     sys_call/crt_wrapper_host.c
 )
 
-ADD_LIBRARY(cryptlib_openssl STATIC ${src_cryptlib_openssl})
+ADD_LIBRARY(cryptlib STATIC ${src_cryptlib_openssl})
+TARGET_INCLUDE_DIRECTORIES(cryptlib PRIVATE
+    ${LIBSPDM_DIR}/include
+    ${LIBSPDM_DIR}/include/hal
+    ${LIBSPDM_DIR}/include/hal/${ARCH}
+    ${LIBSPDM_DIR}/os_stub/include
+    ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
+    ${LIBSPDM_DIR}/os_stub/openssllib/include
+    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/include
+    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
+    ${LIBSPDM_DIR}/os_stub/openssllib/openssl
+)
+
+if(ENABLE_BINARY_BUILD)
+    MESSAGE("Using prebuilt openssl libraries")
+    TARGET_LINK_LIBRARIES(cryptlib PRIVATE
+        ssl
+        crypto
+    )
+else()
+    MESSAGE("Building openssl from source")
+    TARGET_LINK_LIBRARIES(cryptlib PRIVATE
+        cryptlib_openssl
+    )
+endif()

@@ -25,9 +25,8 @@ SET(test_spdm_transport_pci_doe_decode_message_LIBRARY
     debuglib
     spdm_transport_pcidoe_lib
     spdm_common_lib
-    ${CRYPTO_LIB_PATHS}
     rnglib
-    cryptlib_${CRYPTO}
+    cryptlib
     malloclib
     spdm_crypt_lib
     spdm_secured_message_lib
@@ -42,9 +41,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>
-                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
                    $<TARGET_OBJECTS:rnglib>
-                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+                   $<TARGET_OBJECTS:cryptlib>
                    $<TARGET_OBJECTS:malloclib>
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>

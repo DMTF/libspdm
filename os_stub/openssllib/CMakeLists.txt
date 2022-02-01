@@ -544,4 +544,4 @@ SET(src_openssllib
     rand_pool.c
 )
 
-ADD_LIBRARY(openssllib STATIC ${src_openssllib})
+ADD_LIBRARY(cryptlib_openssl STATIC ${src_openssllib})

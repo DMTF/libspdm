@@ -19,6 +19,9 @@ jobs:
         crypto:
           - mbedtls
           - openssl
+        crypto-build:
+          - 0
+          - 1
         arch:
           - x64
           - ia32
@@ -39,7 +42,20 @@ jobs:
             toolchain: GCC
           - crypto: openssl
             arch: ia32
+          - crypto: mbedtls
+            crypto-build: 1
+          - os: windows-latest
+            crypto-build: 1
+
     steps:
+      - name: Environment Setup - Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install --no-install-recommends -y \
+            libmbedtls-dev \
+            libssl-dev
+
       - name: Toolchain Setup - VS2019 (x64)
         if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
         uses: ilammy/msvc-dev-cmd@v1
@@ -72,7 +88,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} -DENABLE_BINARY_BUILD=${{ matrix.crypto-build }} ..
           make copy_sample_key
           make
       - name: Build - Windows
@@ -80,7 +96,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} -DENABLE_BINARY_BUILD=${{ matrix.crypto-build }} ..
           nmake copy_sample_key
           nmake
 

@@ -22,9 +22,7 @@ SET(test_size_of_spdm_responder_LIBRARY
     debuglib
     spdm_responder_lib
     spdm_common_lib
-#    cryptstublib_dummy
-#    ${CRYPTO_LIB_PATHS}
-#    cryptlib_${CRYPTO}
+#    cryptlib
 #    rnglib_null
     cryptlib_null
     malloclib_null
@@ -42,9 +40,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:debuglib>
                    $<TARGET_OBJECTS:spdm_responder_lib>
                    $<TARGET_OBJECTS:spdm_common_lib>
-#                   $<TARGET_OBJECTS:cryptstublib_dummy>
-#                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-#                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+#                   $<TARGET_OBJECTS:cryptlib>
 #                   $<TARGET_OBJECTS:rnglib_null>
                    $<TARGET_OBJECTS:cryptlib_null>
                    $<TARGET_OBJECTS:malloclib_null>
