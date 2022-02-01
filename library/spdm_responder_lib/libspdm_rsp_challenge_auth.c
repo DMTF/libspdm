@@ -203,10 +203,12 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     *(uint16_t *)ptr = (uint16_t)spdm_context->local_context
                        .opaque_challenge_auth_rsp_size;
     ptr += sizeof(uint16_t);
-    copy_mem(ptr, spdm_context->local_context.opaque_challenge_auth_rsp,
-             spdm_context->local_context.opaque_challenge_auth_rsp_size);
-    ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
 
+    if (spdm_context->local_context.opaque_challenge_auth_rsp != NULL) {
+        copy_mem(ptr, spdm_context->local_context.opaque_challenge_auth_rsp,
+            spdm_context->local_context.opaque_challenge_auth_rsp_size);
+        ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
+    }
 
     /* Calc Sign*/
 

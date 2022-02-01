@@ -20,9 +20,12 @@
  *   1) ("src_buf" or "dst_buf" are NULL) and "len" is greater 0.
  *   2) "src_buf" and "dst_buf" overlap.
  *   3) "len" is greater than "dst_len".
- *   4) "len" is greater than (MAX_ADDRESS - "dst_buf" + 1).
- *   5) "len" is greater than (MAX_ADDRESS - "src_buf" + 1).
- *   6) "len" is greater than (SIZE_MAX >> 1).
+ *   4) "len" or "dst_len" is greater than (MAX_ADDRESS - "dst_buf" + 1).
+ *   5) "len" or "dst_len" is greater than (MAX_ADDRESS - "src_buf" + 1).
+ *   6) "len" or "dst_len" is greater than (SIZE_MAX >> 1).
+ *
+ * In case of error, the "dst_buf" is left unmodifed. This behavior is different
+ * than memcopy_s, which zeros the "dst_buf" if "dst_buf" is valid.
  *
  * @param    dst_buf   Destination buffer to copy to.
  * @param    dst_len   Maximum length in bytes of the destination buffer.
@@ -40,7 +43,7 @@ int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN u
     dst = (uint8_t*) dst_buf;
     src = (const uint8_t*) src_buf;
 
-    if ((src == NULL || dst == NULL) && len > 0) {
+    if (src == NULL || dst == NULL) {
         ASSERT(0);
         return -1;
     }
