@@ -20,7 +20,7 @@ uintn spdm_get_opaque_data_version_selection_data_size(
     uintn size;
 
     if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+               .spdm_version_count == 0) {
         return 0;
     }
 
