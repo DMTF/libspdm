@@ -16,24 +16,29 @@
 #define __BASE_MEMORY_LIB__
 
 /**
- * Copies a source buffer to a destination buffer, and returns the destination buffer.
+ * Copies bytes from a source buffer to a destination buffer.
  *
- * This function copies length bytes from source_buffer to destination_buffer, and returns
- * destination_buffer.  The implementation must be reentrant, and it must handle the case
- * where source_buffer overlaps destination_buffer.
+ * This function copies "len" bytes from "src_buf" to "dst_buf".
  *
- * If length is greater than (MAX_ADDRESS - destination_buffer + 1), then ASSERT().
- * If length is greater than (MAX_ADDRESS - source_buffer + 1), then ASSERT().
+ * Asserts and returns a non-zero value if any of the following are true:
+ *   1) ("src_buf" or "dst_buf" are NULL) and "len" is greater 0.
+ *   2) "src_buf" and "dst_buf" overlap.
+ *   3) "len" is greater than "dst_len".
+ *   4) "len" is greater than (MAX_ADDRESS - "dst_buf" + 1).
+ *   5) "len" is greater than (MAX_ADDRESS - "src_buf" + 1).
+ *   6) "len" is greater than (SIZE_MAX >> 1).
  *
- * @param  destination_buffer   The pointer to the destination buffer of the memory copy.
- * @param  source_buffer        The pointer to the source buffer of the memory copy.
- * @param  length              The number of bytes to copy from source_buffer to destination_buffer.
+ * @param    dst_buf   Destination buffer to copy to.
+ * @param    dst_len   Maximum length in bytes of the destination buffer.
+ * @param    src_buf   Source buffer to copy from.
+ * @param    len       The number of bytes to copy.
  *
- * @return destination_buffer.
+ * @return   0 on success. non-zero on error.
  *
- **/
-void *copy_mem(OUT void *destination_buffer, IN const void *source_buffer,
-               IN uintn length);
+**/
+int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN uintn len);
+
+int copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
