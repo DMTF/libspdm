@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 2.8.12)
+
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_common_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_requester_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_responder_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_crypt_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_secured_message_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_transport_mctp_lib)
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/spdm_transport_pcidoe_lib)

@@ -6,11 +6,9 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMOCKA_FLAGS} -DHAVE_VSNPRINTF -DHAVE_SNPRINTF")
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/cmockalib
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/cmockalib
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
-                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
-                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
 )
 
 SET(src_CmockaLib
@@ -18,3 +16,7 @@ SET(src_CmockaLib
 )
 
 ADD_LIBRARY(cmockalib STATIC ${src_CmockaLib})
+TARGET_INCLUDE_DIRECTORIES(cmockalib PUBLIC
+    ${LIBSPDM_DIR}/cmockalib/cmocka/include
+    ${LIBSPDM_DIR}/cmockalib/cmocka/include/cmockery
+)

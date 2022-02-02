@@ -1,9 +1,9 @@
-[submodule "os_stub/openssllib/openssl"]
-    path = os_stub/openssllib/openssl
+[submodule "openssllib/openssl"]
+    path = openssllib/openssl
     url = https://github.com/openssl/openssl
-[submodule "os_stub/mbedtlslib/mbedtls"]
-    path = os_stub/mbedtlslib/mbedtls
+[submodule "mbedtlslib/mbedtls"]
+    path = mbedtlslib/mbedtls
     url = https://github.com/ARMmbed/mbedtls
-[submodule "unit_test/cmockalib/cmocka"]
-    path = unit_test/cmockalib/cmocka
+[submodule "cmockalib/cmocka"]
+    path = cmockalib/cmocka
     url = https://git.cryptomilk.org/projects/cmocka.git

@@ -11,11 +11,11 @@ endif()
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal 
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
-                    ${LIBSPDM_DIR}/os_stub/include
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/include/mbedtls
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include
-                    ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include/mbedtls
+                    ${LIBSPDM_DIR}/include
+                    ${LIBSPDM_DIR}/mbedtlslib/include
+                    ${LIBSPDM_DIR}/mbedtlslib/include/mbedtls
+                    ${LIBSPDM_DIR}/mbedtlslib/mbedtls/include
+                    ${LIBSPDM_DIR}/mbedtlslib/mbedtls/include/mbedtls
 )
 
 SET(src_mbedtlslib

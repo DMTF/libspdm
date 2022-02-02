@@ -33,10 +33,10 @@ TARGET_INCLUDE_DIRECTORIES(cryptlib PRIVATE
     ${LIBSPDM_DIR}/include/hal/${ARCH}
     ${LIBSPDM_DIR}/os_stub/include
     ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
-    ${LIBSPDM_DIR}/os_stub/openssllib/include
-    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/include
-    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
-    ${LIBSPDM_DIR}/os_stub/openssllib/openssl
+    ${LIBSPDM_DIR}/openssllib/include
+    ${LIBSPDM_DIR}/openssllib/openssl/include
+    ${LIBSPDM_DIR}/openssllib/openssl/crypto/include
+    ${LIBSPDM_DIR}/openssllib/openssl
 )
 
 if(ENABLE_BINARY_BUILD)
