@@ -143,12 +143,23 @@
    ```
 
    Example cmake commands: (Note the `..` at the end of the cmake command). 
+
+   ```
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+
+   ```
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
    ```
    cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=openssl ..
-   
-   cmake -G"NMake Makefiles" -DARCH=ia32 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
    
    ```
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl ..
+   ```
+
    Note ia32 build is not supported for CLANG build on windows.
 
 ### Linux Builds
@@ -166,8 +177,18 @@
    ```
 Example cmake commands: (Note the `..` at the end of the cmake command). 
    ```
+   cmake -DARCH=ia32 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
+   ```
+
+   ```
+   cmake -DARCH=ia32 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl ..
+   ```
+
+   ```
    cmake -DARCH=arm -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
-   
+   ```
+
+   ```
    cmake -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=Release -DCRYPTO=mbedtls ..
    
    ```
