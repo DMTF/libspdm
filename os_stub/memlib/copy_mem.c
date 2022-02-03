@@ -35,7 +35,7 @@
  * @return   0 on success. non-zero on error.
  *
 **/
-int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN uintn len)
+int copy_mem_s(OUT void* dst_buf, IN size_t dst_len, IN const void* src_buf, IN size_t len)
 {
     volatile uint8_t* dst;
     const volatile uint8_t* src;
@@ -48,16 +48,23 @@ int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN u
         return -1;
     }
 
-    if ((src < dst && src + len > dst)
-     || (dst < src && dst + len > src)) {
+    if ((src < dst && src + len > dst) || (dst < src && dst + len > src)) {
         ASSERT(0);
         return -1;
     }
 
-    if (len > dst_len
-     || len > MAX_ADDRESS - (uintn)dst + 1
-     || len > MAX_ADDRESS - (uintn)src + 1
-     || len > (SIZE_MAX >> 1)) {
+    if (len > dst_len ||
+        len > MAX_ADDRESS - (size_t)dst + 1 ||
+        len > MAX_ADDRESS - (size_t)src + 1 ||
+        len > (SIZE_MAX >> 1)) {
+
+        ASSERT(0);
+        return -1;
+    }
+
+    if (dst_len > MAX_ADDRESS - (size_t)dst + 1 ||
+        dst_len > MAX_ADDRESS - (size_t)src + 1 ||
+        dst_len > (SIZE_MAX >> 1)) {
 
         ASSERT(0);
         return -1;
