@@ -19,7 +19,7 @@
 #include <klee/klee.h>
 #endif
 
-boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
+bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
                          IN void **test_buffer, OUT uintn *buffer_size)
 {
     void *buffer;
@@ -34,7 +34,7 @@ boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
     /* 1. Allocate buffer*/
     buffer = malloc(max_buffer_size);
     if (buffer == NULL) {
-        return FALSE;
+        return false;
     }
 
     /* 2. Assign to test_buffer and buffer_size*/
@@ -47,7 +47,7 @@ boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
 #ifdef TEST_WITH_KLEE
     /* 3.1 For test with KLEE: write symbolic values to test_buffer*/
     klee_make_symbolic((uint8_t *)buffer, max_buffer_size, "buffer");
-    return TRUE;
+    return true;
 #endif
 
     file = fopen(file_name, "rb");
@@ -88,7 +88,7 @@ boolean init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
         *buffer_size = file_size;
     }
 
-    return TRUE;
+    return true;
 }
 
 uint8_t judge_requster_name(IN char *file_name)
@@ -149,7 +149,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 #else
 int main(int argc, char **argv)
 {
-    boolean res;
+    bool res;
     void *test_buffer;
     uintn test_buffer_size;
     char *file_name;

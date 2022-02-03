@@ -11,19 +11,19 @@
  *
  * @param data_type  SPDM data type.
  *
- * @retval TRUE  session info is required.
- * @retval FALSE session info is not required.
+ * @retval true  session info is required.
+ * @retval false session info is not required.
  **/
-boolean need_session_info_for_data(IN libspdm_data_type_t data_type)
+bool need_session_info_for_data(IN libspdm_data_type_t data_type)
 {
     switch (data_type) {
     case LIBSPDM_DATA_SESSION_USE_PSK:
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
     case LIBSPDM_DATA_SESSION_POLICY:
-        return TRUE;
+        return true;
     default:
-        return FALSE;
+        return false;
     }
 }
 
@@ -53,7 +53,7 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
 #if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    boolean status;
+    bool status;
 #endif
 
     if (!context || !data || data_type >= LIBSPDM_DATA_MAX) {
@@ -368,7 +368,7 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
             libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
-        status = FALSE;
+        status = false;
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
         if (!status) {
             status = rsa_get_public_key_from_x509(data, data_size,
@@ -399,7 +399,7 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
 #endif
         break;
     case LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED:
-        if (data_size != sizeof(boolean)) {
+        if (data_size != sizeof(bool)) {
             return RETURN_INVALID_PARAMETER;
         }
         mut_auth_requested = *(uint8_t *)data;
@@ -448,10 +448,10 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
         spdm_context->local_context.psk_hint = data;
         break;
     case LIBSPDM_DATA_SESSION_USE_PSK:
-        if (data_size != sizeof(boolean)) {
+        if (data_size != sizeof(bool)) {
             return RETURN_INVALID_PARAMETER;
         }
-        session_info->use_psk = *(boolean *)data;
+        session_info->use_psk = *(bool *)data;
         break;
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
         if (data_size != sizeof(uint8_t)) {
@@ -675,7 +675,7 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
         target_data = &spdm_context->response_state;
         break;
     case LIBSPDM_DATA_SESSION_USE_PSK:
-        target_data_size = sizeof(boolean);
+        target_data_size = sizeof(bool);
         target_data = &session_info->use_psk;
         break;
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
@@ -897,7 +897,7 @@ void libspdm_reset_message_k(IN void *context, IN void *session_info)
                                                          spdm_session_info->session_transcript.hmac_req_context_th_backup);
             spdm_session_info->session_transcript.hmac_req_context_th_backup = NULL;
         }
-        spdm_session_info->session_transcript.finished_key_ready = FALSE;
+        spdm_session_info->session_transcript.finished_key_ready = false;
     }
 #endif
 }
@@ -944,7 +944,7 @@ void libspdm_reset_message_f(IN void *context, IN void *session_info)
                 spdm_session_info->session_transcript.hmac_req_context_th_backup;
             spdm_session_info->session_transcript.hmac_req_context_th_backup = NULL;
         }
-        spdm_session_info->session_transcript.message_f_initialized = FALSE;
+        spdm_session_info->session_transcript.message_f_initialized = false;
     }
 #endif
 }
@@ -1044,7 +1044,7 @@ return_status libspdm_append_message_b(IN void *context, IN void *message,
                                  message, message_size);
 #else
     {
-        boolean result;
+        bool result;
 
         if (spdm_context->transcript.digest_context_m1m2 == NULL) {
             spdm_context->transcript.digest_context_m1m2 = libspdm_hash_new (
@@ -1106,7 +1106,7 @@ return_status libspdm_append_message_c(IN void *context, IN void *message,
                                  message, message_size);
 #else
     {
-        boolean result;
+        bool result;
 
         if (spdm_context->transcript.digest_context_m1m2 == NULL) {
             spdm_context->transcript.digest_context_m1m2 = libspdm_hash_new (
@@ -1168,7 +1168,7 @@ return_status libspdm_append_message_mut_b(IN void *context, IN void *message,
                                  message, message_size);
 #else
     {
-        boolean result;
+        bool result;
 
         if (spdm_context->transcript.digest_context_mut_m1m2 == NULL) {
             spdm_context->transcript.digest_context_mut_m1m2 = libspdm_hash_new (
@@ -1219,7 +1219,7 @@ return_status libspdm_append_message_mut_c(IN void *context, IN void *message,
                                  message, message_size);
 #else
     {
-        boolean result;
+        bool result;
 
         if (spdm_context->transcript.digest_context_mut_m1m2 == NULL) {
             spdm_context->transcript.digest_context_mut_m1m2 = libspdm_hash_new (
@@ -1280,7 +1280,7 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
     }
 #else
     {
-        boolean result;
+        bool result;
 
         if (spdm_session_info == NULL) {
             if (spdm_context->transcript.digest_context_l1l2 == NULL) {
@@ -1382,7 +1382,7 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_k(IN void *context, IN void *session_info,
-                                       IN boolean is_requester, IN void *message,
+                                       IN bool is_requester, IN void *message,
                                        IN uintn message_size)
 {
     spdm_session_info_t *spdm_session_info;
@@ -1398,10 +1398,10 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
         void *secured_message_context;
         uint8_t *cert_chain_buffer;
         uintn cert_chain_buffer_size;
-        boolean result;
+        bool result;
         uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
-        boolean finished_key_ready;
+        bool finished_key_ready;
 
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
@@ -1416,12 +1416,12 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
                         copy_mem(cert_chain_buffer_hash,
                                  spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
                                  hash_size);
-                        result = TRUE;
+                        result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
                             spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
                         if (!result) {
-                            return FALSE;
+                            return false;
                         }
                         hash_size = libspdm_get_hash_size(
                             spdm_context->connection_info.algorithm.base_hash_algo);
@@ -1430,7 +1430,7 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
                             cert_chain_buffer, cert_chain_buffer_size,
                             cert_chain_buffer_hash);
                         if (!result) {
-                            return FALSE;
+                            return false;
                         }
 
                     }
@@ -1439,7 +1439,7 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
                         spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
 
                     if (!result) {
-                        return FALSE;
+                        return false;
                     }
                     hash_size = libspdm_get_hash_size(
                         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -1448,7 +1448,7 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
                         cert_chain_buffer, cert_chain_buffer_size,
                         cert_chain_buffer_hash);
                     if (!result) {
-                        return FALSE;
+                        return false;
                     }
                 }
             }
@@ -1566,7 +1566,7 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_f(IN void *context, IN void *session_info,
-                                       IN boolean is_requester, IN void *message,
+                                       IN bool is_requester, IN void *message,
                                        IN uintn message_size)
 {
     spdm_session_info_t *spdm_session_info;
@@ -1582,10 +1582,10 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
         void *secured_message_context;
         uint8_t *mut_cert_chain_buffer;
         uintn mut_cert_chain_buffer_size;
-        boolean result;
+        bool result;
         uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
-        boolean finished_key_ready;
+        bool finished_key_ready;
         return_status status;
 
         spdm_context = context;
@@ -1635,7 +1635,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
                         copy_mem(mut_cert_chain_buffer_hash,
                                  spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
                                  hash_size);
-                        result = TRUE;
+                        result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
                             spdm_context,
@@ -1729,7 +1729,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
                                                        spdm_session_info->session_transcript.hmac_req_context_th, message,
                                                        message_size);
 
-        spdm_session_info->session_transcript.message_f_initialized = TRUE;
+        spdm_session_info->session_transcript.message_f_initialized = true;
         return RETURN_SUCCESS;
     }
 #endif
@@ -1741,18 +1741,18 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  version                      The SPDM version.
  *
- * @retval TRUE  the version is supported.
- * @retval FALSE the version is not supported.
+ * @retval true  the version is supported.
+ * @retval false the version is not supported.
  **/
-boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
+bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
                                   IN uint8_t version)
 {
     if (version ==
         (spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT)) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 /**
@@ -1775,12 +1775,12 @@ uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context)
  * @param  requester_capabilities_flag    The requester capabilities flag to be checked
  * @param  responder_capabilities_flag    The responder capabilities flag to be checked
  *
- * @retval TRUE  the capablities flag is supported.
- * @retval FALSE the capablities flag is not supported.
+ * @retval true  the capablities flag is supported.
+ * @retval false the capablities flag is not supported.
  **/
-boolean
+bool
 spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
-                                    IN boolean is_requester,
+                                    IN bool is_requester,
                                     IN uint32_t requester_capabilities_flag,
                                     IN uint32_t responder_capabilities_flag)
 {
@@ -1805,9 +1805,9 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
         ((responder_capabilities_flag == 0) ||
          ((negotiated_responder_capabilities_flag &
            responder_capabilities_flag) != 0))) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
@@ -2008,7 +2008,7 @@ void libspdm_reset_context(IN void *context)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->current_token = 0;
     spdm_context->last_spdm_request_session_id = INVALID_SESSION_ID;
-    spdm_context->last_spdm_request_session_id_valid = FALSE;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->last_spdm_request_size = 0;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
@@ -2017,7 +2017,7 @@ void libspdm_reset_context(IN void *context)
         spdm_session_info_init(spdm_context,
                                &spdm_context->session_info[index],
                                INVALID_SESSION_ID,
-                               FALSE);
+                               false);
     }
 }
 /**
@@ -2085,10 +2085,10 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
  * @param  res_ver_set                A pointer to the responder version set.
  * @param  res_ver_num                Version number of responder.
  *
- * @retval TRUE                       Negotiation successfully, connect version be saved to common_version.
- * @retval FALSE                      Negotiation failed.
+ * @retval true                       Negotiation successfully, connect version be saved to common_version.
+ * @retval false                      Negotiation failed.
  */
-boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
+bool spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
                                           IN spdm_version_number_t *req_ver_set,
                                           IN uintn req_ver_num,
                                           IN spdm_version_number_t *res_ver_set,
@@ -2098,7 +2098,7 @@ boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_v
     uintn res_index;
 
     if (req_ver_set == NULL || req_ver_num == 0 || res_ver_set == NULL || res_ver_num == 0) {
-        return FALSE;
+        return false;
     }
 
     /* Sort SPDMversion in descending order. */
@@ -2107,16 +2107,16 @@ boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_v
 
     /**
      * Find highest same version and make req_index point to it.
-     * If not found, return FALSE.
+     * If not found, return false.
      **/
     for (res_index = 0; res_index < res_ver_num; res_index++) {
         for (req_index = 0; req_index < req_ver_num; req_index++) {
             if (spdm_get_version_from_version_number(req_ver_set[req_index]) ==
                 spdm_get_version_from_version_number(res_ver_set[res_index])) {
                 *common_version = req_ver_set[req_index];
-                return TRUE;
+                return true;
             }
         }
     }
-    return FALSE;
+    return false;
 }

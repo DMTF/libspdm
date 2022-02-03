@@ -32,24 +32,24 @@ struct tm {
 
 time_t time(time_t *timer)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return 0;
 }
 
 struct tm *gmtime(const time_t *timer)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
 time_t _time64(time_t *t)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return 0;
 }
 
 struct tm *mbedtls_platform_gmtime_r(const time_t *tt, struct tm *tm_buf)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }

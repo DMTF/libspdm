@@ -17,7 +17,7 @@ return_status do_session_via_spdm(IN void *spdm_context)
     zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_start_session(
         spdm_context,
-        FALSE, /* KeyExchange*/
+        false, /* KeyExchange*/
         SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, 0,
         &session_id, &heartbeat_period, measurement_hash);
     if (RETURN_ERROR(status)) {

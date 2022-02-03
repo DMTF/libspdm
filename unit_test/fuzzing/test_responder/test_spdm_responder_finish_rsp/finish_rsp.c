@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_finish_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void spdm_secured_message_set_request_finished_key(IN void *spdm_secured_message_context,
@@ -28,7 +28,7 @@ void spdm_secured_message_set_request_finished_key(IN void *spdm_secured_message
     ASSERT(key_size == secured_message_context->hash_size);
     copy_mem(secured_message_context->handshake_secret.request_finished_key, key,
              secured_message_context->hash_size);
-    secured_message_context->finished_key_ready = TRUE;
+    secured_message_context->finished_key_ready = true;
 }
 
 typedef struct {
@@ -92,7 +92,7 @@ void test_spdm_responder_finish_case1(void **State)
     session_id = 0xFFFFFFFF;
     spdm_context.latest_session_id = session_id;
     session_info = &spdm_context.session_info[0];
-    spdm_session_info_init(&spdm_context, session_info, session_id, FALSE);
+    spdm_session_info_init(&spdm_context, session_info, session_id, false);
     hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_request_finished_key(session_info->secured_message_context,
@@ -211,7 +211,7 @@ void test_spdm_responder_finish_case6(void **State)
     spdm_context.local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    spdm_context.last_spdm_request_session_id_valid = !FALSE;
+    spdm_context.last_spdm_request_session_id_valid = !false;
     response_size = sizeof(response);
     spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
                              spdm_test_context->test_buffer, &response_size, response);
@@ -259,7 +259,7 @@ void test_spdm_responder_finish_case7(void **State)
     session_id = 0xFFFFFFFF;
     spdm_context.latest_session_id = session_id;
     session_info = &spdm_context.session_info[0];
-    spdm_session_info_init(&spdm_context, session_info, session_id, FALSE);
+    spdm_session_info_init(&spdm_context, session_info, session_id, false);
     hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_request_finished_key(session_info->secured_message_context,
@@ -336,7 +336,7 @@ void test_spdm_responder_finish_case8(void **State)
     session_id = 0xFFFFFEE;
     spdm_context.latest_session_id = session_id;
     session_info = &spdm_context.session_info[0];
-    spdm_session_info_init(&spdm_context, session_info, session_id, FALSE);
+    spdm_session_info_init(&spdm_context, session_info, session_id, false);
     hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_request_finished_key(session_info->secured_message_context,
@@ -367,7 +367,7 @@ void test_spdm_responder_finish_case8(void **State)
     append_managed_buffer(&th_curr, &m_spdm_finish_request, sizeof(spdm_finish_request_t));
     libspdm_requester_data_sign(
         m_spdm_finish_request.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_use_req_asym_algo, m_use_hash_algo, FALSE, get_managed_buffer(&th_curr),
+            m_use_req_asym_algo, m_use_hash_algo, false, get_managed_buffer(&th_curr),
             get_managed_buffer_size(&th_curr), ptr, &req_asym_signature_size);
     append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;

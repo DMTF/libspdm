@@ -305,7 +305,7 @@ void test_spdm_responder_version_case7(void **state)
 
 spdm_test_context_t m_spdm_responder_version_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 int spdm_responder_version_test_main(void)

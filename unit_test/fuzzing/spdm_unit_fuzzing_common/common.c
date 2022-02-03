@@ -53,7 +53,7 @@ uintn spdm_unit_test_group_teardown(void **State)
     return 0;
 }
 
-boolean read_input_file(IN char *file_name, OUT void **file_data,
+bool read_input_file(IN char *file_name, OUT void **file_data,
                         OUT uintn *file_size)
 {
     FILE *fp_in;
@@ -62,7 +62,7 @@ boolean read_input_file(IN char *file_name, OUT void **file_data,
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
         printf("Unable to open file %s\n", file_name);
         *file_data = NULL;
-        return FALSE;
+        return false;
     }
 
     fseek(fp_in, 0, SEEK_END);
@@ -72,7 +72,7 @@ boolean read_input_file(IN char *file_name, OUT void **file_data,
     if (NULL == *file_data) {
         printf("No sufficient memory to allocate %s\n", file_name);
         fclose(fp_in);
-        return FALSE;
+        return false;
     }
 
     fseek(fp_in, 0, SEEK_SET);
@@ -81,12 +81,12 @@ boolean read_input_file(IN char *file_name, OUT void **file_data,
         printf("Read input file error %s", file_name);
         free((void *)*file_data);
         fclose(fp_in);
-        return FALSE;
+        return false;
     }
 
     fclose(fp_in);
 
-    return TRUE;
+    return true;
 }
 
 void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size)

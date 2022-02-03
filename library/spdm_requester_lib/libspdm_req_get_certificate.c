@@ -49,7 +49,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
                                        OUT void **trust_anchor OPTIONAL,
                                        OUT uintn *trust_anchor_size OPTIONAL)
 {
-    boolean result;
+    bool result;
     return_status status;
     spdm_get_certificate_request_t spdm_request;
     spdm_certificate_response_max_t spdm_response;
@@ -62,7 +62,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return RETURN_UNSUPPORTED;
     }

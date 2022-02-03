@@ -53,7 +53,7 @@ return_status spdm_get_response_key_update(IN void *context,
             response_size, response);
     }
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
         return libspdm_generate_error_response(
@@ -153,7 +153,7 @@ return_status spdm_get_response_key_update(IN void *context,
                    session_id));
             status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
@@ -172,7 +172,7 @@ return_status spdm_get_response_key_update(IN void *context,
                    session_id));
             status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, TRUE);
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }

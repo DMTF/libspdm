@@ -43,7 +43,7 @@ return_status libspdm_process_message(IN void *context, IN OUT uint32_t **sessio
 {
     return_status status;
     spdm_context_t *spdm_context;
-    boolean is_app_message;
+    bool is_app_message;
     uint32_t tmp_session_id;
     uint32_t *session_id_ptr;
 

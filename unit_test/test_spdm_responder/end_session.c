@@ -77,10 +77,10 @@ void test_spdm_responder_end_session_case1(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -155,10 +155,10 @@ void test_spdm_responder_end_session_case2(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -237,10 +237,10 @@ void test_spdm_responder_end_session_case3(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -320,10 +320,10 @@ void test_spdm_responder_end_session_case4(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -405,10 +405,10 @@ void test_spdm_responder_end_session_case5(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -494,10 +494,10 @@ void test_spdm_responder_end_session_case6(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -575,10 +575,10 @@ void test_spdm_responder_end_session_case7(void **state)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -618,7 +618,7 @@ void test_spdm_responder_end_session_case7(void **state)
 
 spdm_test_context_t m_spdm_responder_end_session_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 int spdm_responder_end_session_test_main(void)

@@ -23,13 +23,13 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
+bool read_responder_root_public_certificate(IN uint32_t base_hash_algo,
                                                IN uint32_t base_asym_algo,
                                                OUT void **data, OUT uintn *size,
                                                OUT void **hash,
                                                OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -47,7 +47,7 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     }
 
     if (base_asym_algo == 0) {
-        return FALSE;
+        return false;
     }
 
     switch (base_asym_algo) {
@@ -82,8 +82,8 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
         file = "ed448/ca.cert.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -96,7 +96,7 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -121,16 +121,16 @@ boolean read_responder_root_public_certificate(IN uint32_t base_hash_algo,
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
-boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
+bool read_requester_root_public_certificate(IN uint32_t base_hash_algo,
                                                IN uint16_t req_base_asym_alg,
                                                OUT void **data, OUT uintn *size,
                                                OUT void **hash,
                                                OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -148,7 +148,7 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     }
 
     if (req_base_asym_alg == 0) {
-        return FALSE;
+        return false;
     }
 
     switch (req_base_asym_alg) {
@@ -183,8 +183,8 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
         file = "ed448/ca.cert.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
 
     digest_size = libspdm_get_hash_size(base_hash_algo);
@@ -198,7 +198,7 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -222,14 +222,14 @@ boolean read_requester_root_public_certificate(IN uint32_t base_hash_algo,
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
-boolean read_responder_public_certificate_chain(
+bool read_responder_public_certificate_chain(
     IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, OUT void **data,
     OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -249,7 +249,7 @@ boolean read_responder_public_certificate_chain(
     }
 
     if (base_asym_algo == 0) {
-        return FALSE;
+        return false;
     }
 
     switch (base_asym_algo) {
@@ -284,8 +284,8 @@ boolean read_responder_public_certificate_chain(
         file = "ed448/bundle_responder.certchain.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -298,7 +298,7 @@ boolean read_responder_public_certificate_chain(
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -341,14 +341,14 @@ boolean read_responder_public_certificate_chain(
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
-boolean read_requester_public_certificate_chain(
+bool read_requester_public_certificate_chain(
     IN uint32_t base_hash_algo, IN uint16_t req_base_asym_alg, OUT void **data,
     OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -368,7 +368,7 @@ boolean read_requester_public_certificate_chain(
     }
 
     if (req_base_asym_alg == 0) {
-        return FALSE;
+        return false;
     }
 
     switch (req_base_asym_alg) {
@@ -403,8 +403,8 @@ boolean read_requester_public_certificate_chain(
         file = "ed448/bundle_requester.certchain.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -417,7 +417,7 @@ boolean read_requester_public_certificate_chain(
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -460,14 +460,14 @@ boolean read_requester_public_certificate_chain(
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
-boolean read_responder_root_public_certificate_by_size(
+bool read_responder_root_public_certificate_by_size(
     IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, IN uint16_t chain_id,
     OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -498,8 +498,8 @@ boolean read_responder_root_public_certificate_by_size(
         file = "long_chains/LongerMAXUINT16_ca.cert.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -512,7 +512,7 @@ boolean read_responder_root_public_certificate_by_size(
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -537,14 +537,14 @@ boolean read_responder_root_public_certificate_by_size(
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
-boolean read_responder_public_certificate_chain_by_size(
+bool read_responder_public_certificate_chain_by_size(
     IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, IN uint16_t chain_id,
     OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -577,8 +577,8 @@ boolean read_responder_public_certificate_chain_by_size(
         file = "long_chains/LongerMAXUINT16_bundle_responder.certchain.der";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, &file_data, &file_size);
     if (!res) {
@@ -591,7 +591,7 @@ boolean read_responder_public_certificate_chain_by_size(
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -634,5 +634,5 @@ boolean read_responder_public_certificate_chain_by_size(
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }

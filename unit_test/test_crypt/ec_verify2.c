@@ -100,7 +100,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const char *m_ec_payload =
  **/
 return_status validate_crypt_ec_2(void)
 {
-    boolean status;
+    bool status;
     void *ec_priv_key;
     void *ec_pub_key;
     uint8_t hash_value[SHA256_DIGEST_SIZE];

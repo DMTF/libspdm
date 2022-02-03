@@ -26,7 +26,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
 return_status libspdm_send_request(IN void *spdm_context, IN uint32_t *session_id,
-                                   IN boolean is_app_message,
+                                   IN bool is_app_message,
                                    IN uintn request_size, IN void *request);
 
 /**
@@ -47,7 +47,7 @@ return_status libspdm_send_request(IN void *spdm_context, IN uint32_t *session_i
  **/
 return_status libspdm_receive_response(IN void *spdm_context,
                                        IN uint32_t *session_id,
-                                       IN boolean is_app_message,
+                                       IN bool is_app_message,
                                        IN OUT uintn *response_size,
                                        OUT void *response);
 
@@ -65,7 +65,7 @@ return_status libspdm_receive_response(IN void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status libspdm_init_connection(IN void *spdm_context,
-                                      IN boolean get_version_only);
+                                      IN bool get_version_only);
 
 /**
  * This function sends GET_DIGEST
@@ -329,8 +329,8 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
  * this function also perform the encapsulated mutual authentication.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
  * @param  measurement_hash_type          The type of the measurement hash.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  session_policy               The policy for the session.
@@ -342,7 +342,7 @@ return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
+return_status libspdm_start_session(IN void *spdm_context, IN bool use_psk,
                                     IN uint8_t measurement_hash_type,
                                     IN uint8_t slot_id,
                                     IN uint8_t session_policy,
@@ -358,8 +358,8 @@ return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
  * this function also perform the encapsulated mutual authentication.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
  * @param  measurement_hash_type          The type of the measurement hash.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  session_policy               The policy for the session.
@@ -368,25 +368,25 @@ return_status libspdm_start_session(IN void *spdm_context, IN boolean use_psk,
  * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
  * @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
  * @param  requester_random_in_size      The size of requester_random_in.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least,
  *                                      but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
  * @param  requester_random              A buffer to hold the requester random, if not NULL.
  * @param  requester_random_size         On input, the size of requester_random buffer.
  *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least.
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least.
  * @param  responder_random              A buffer to hold the responder random, if not NULL.
  * @param  responder_random_size         On input, the size of requester_random buffer.
  *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context. It could be 0 if device does not support context.
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
  *
  * @retval RETURN_SUCCESS               The SPDM session is started.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session_ex(IN void *spdm_context, IN boolean use_psk,
+return_status libspdm_start_session_ex(IN void *spdm_context, IN bool use_psk,
                                        IN uint8_t measurement_hash_type,
                                        IN uint8_t slot_id,
                                        IN uint8_t session_policy,
@@ -444,7 +444,7 @@ return_status libspdm_stop_session(IN void *spdm_context, IN uint32_t session_id
  **/
 return_status libspdm_send_receive_data(IN void *spdm_context,
                                         IN uint32_t *session_id,
-                                        IN boolean is_app_message,
+                                        IN bool is_app_message,
                                         IN void *request, IN uintn request_size,
                                         OUT void *response,
                                         IN OUT uintn *response_size);
@@ -470,15 +470,15 @@ return_status libspdm_heartbeat(IN void *spdm_context, IN uint32_t session_id);
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The session ID of the session.
- * @param  single_direction              TRUE means the operation is UPDATE_KEY.
- *                                     FALSE means the operation is UPDATE_ALL_KEYS.
+ * @param  single_direction              true means the operation is UPDATE_KEY.
+ *                                     false means the operation is UPDATE_ALL_KEYS.
  *
  * @retval RETURN_SUCCESS               The keys of the session are updated.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_key_update(IN void *spdm_context, IN uint32_t session_id,
-                                 IN boolean single_direction);
+                                 IN bool single_direction);
 
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.

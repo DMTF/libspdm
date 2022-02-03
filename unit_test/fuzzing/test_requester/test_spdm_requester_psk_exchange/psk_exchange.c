@@ -149,7 +149,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
                      get_managed_buffer_size(&th_curr), response_finished_key, hash_size, ptr);
     ptr += hmac_size;
 
-    spdm_transport_test_encode_message(spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf,
+    spdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buf_size, temp_buf,
                                        response_size, response);
     return RETURN_SUCCESS;
 }
@@ -250,7 +250,7 @@ void test_spdm_requester_psk_exchange_ex_case1(void **State)
 
 spdm_test_context_t m_spdm_requester_psk_exchange_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

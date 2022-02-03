@@ -172,7 +172,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
         return RETURN_UNSUPPORTED;
@@ -182,7 +182,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(FALSE);
+            ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
         ASSERT((mut_auth_requested == 0) ||
@@ -201,10 +201,10 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
     libspdm_reset_message_mut_c(spdm_context);
 
     if (session_id == NULL) {
-        spdm_context->last_spdm_request_session_id_valid = FALSE;
+        spdm_context->last_spdm_request_session_id_valid = false;
         spdm_context->last_spdm_request_session_id = 0;
     } else {
-        spdm_context->last_spdm_request_session_id_valid = TRUE;
+        spdm_context->last_spdm_request_session_id_valid = true;
         spdm_context->last_spdm_request_session_id = *session_id;
     }
 
@@ -278,7 +278,7 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
             sizeof(spdm_encapsulated_request_response_t);
     }
 
-    while (TRUE) {
+    while (true) {
 
         /* Process request*/
 

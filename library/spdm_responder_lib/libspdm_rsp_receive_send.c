@@ -119,7 +119,7 @@ spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
 return_status libspdm_process_request(IN void *context, OUT uint32_t **session_id,
-                                      OUT boolean *is_app_message,
+                                      OUT bool *is_app_message,
                                       IN uintn request_size, IN void *request)
 {
     spdm_context_t *spdm_context;
@@ -139,11 +139,11 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
     DEBUG((DEBUG_INFO, "SpdmReceiveRequest[.] ...\n"));
 
     message_session_id = NULL;
-    spdm_context->last_spdm_request_session_id_valid = FALSE;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->last_spdm_request_size =
         sizeof(spdm_context->last_spdm_request);
     status = spdm_context->transport_decode_message(
-        spdm_context, &message_session_id, is_app_message, TRUE,
+        spdm_context, &message_session_id, is_app_message, true,
         request_size, request, &spdm_context->last_spdm_request_size,
         spdm_context->last_spdm_request);
     if (RETURN_ERROR(status)) {
@@ -154,7 +154,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
              * In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
 
             *session_id = &spdm_context->last_spdm_error.session_id;
-            *is_app_message = FALSE;
+            *is_app_message = false;
             return RETURN_SUCCESS;
         }
         return status;
@@ -180,7 +180,7 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
         }
         spdm_context->last_spdm_request_session_id =
             *message_session_id;
-        spdm_context->last_spdm_request_session_id_valid = TRUE;
+        spdm_context->last_spdm_request_session_id_valid = true;
     }
 
     DEBUG((DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
@@ -231,7 +231,7 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(FALSE);
+        ASSERT(false);
         return;
     }
 
@@ -302,7 +302,7 @@ void spdm_set_connection_state(IN spdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
 return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
-                                     IN boolean is_app_message,
+                                     IN bool is_app_message,
                                      IN OUT uintn *response_size,
                                      OUT void *response)
 {
@@ -338,7 +338,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             status = RETURN_UNSUPPORTED;
             break;
         default:
-            ASSERT(FALSE);
+            ASSERT(false);
             status = RETURN_UNSUPPORTED;
         }
 
@@ -352,7 +352,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         internal_dump_hex(my_response, my_response_size);
 
         status = spdm_context->transport_encode_message(
-            spdm_context, session_id, FALSE, FALSE,
+            spdm_context, session_id, false, false,
             my_response_size, my_response, response_size, response);
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_INFO, "transport_encode_message : %p\n",
@@ -369,7 +369,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(FALSE);
+            ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
     }
@@ -433,7 +433,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     internal_dump_hex(my_response, my_response_size);
 
     status = spdm_context->transport_encode_message(
-        spdm_context, session_id, is_app_message, FALSE,
+        spdm_context, session_id, is_app_message, false,
         my_response_size, my_response, response_size, response);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO, "transport_encode_message : %p\n", status));
@@ -445,7 +445,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         switch (spdm_response->request_response_code) {
         case SPDM_FINISH_RSP:
             if (!spdm_is_capabilities_flag_supported(
-                    spdm_context, FALSE,
+                    spdm_context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
                 spdm_set_session_state(
@@ -470,7 +470,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
         switch (spdm_response->request_response_code) {
         case SPDM_FINISH_RSP:
             if (spdm_is_capabilities_flag_supported(
-                    spdm_context, FALSE,
+                    spdm_context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
                 spdm_set_session_state(
@@ -534,7 +534,7 @@ return_status libspdm_register_session_state_callback_func(
             return RETURN_SUCCESS;
         }
     }
-    ASSERT(FALSE);
+    ASSERT(false);
 
     return RETURN_ALREADY_STARTED;
 }
@@ -566,7 +566,7 @@ return_status libspdm_register_connection_state_callback_func(
             return RETURN_SUCCESS;
         }
     }
-    ASSERT(FALSE);
+    ASSERT(false);
 
     return RETURN_ALREADY_STARTED;
 }

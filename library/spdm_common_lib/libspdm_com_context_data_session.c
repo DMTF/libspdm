@@ -14,7 +14,7 @@
  **/
 void spdm_session_info_init(IN spdm_context_t *spdm_context,
                             IN spdm_session_info_t *session_info,
-                            IN uint32_t session_id, IN boolean use_psk)
+                            IN uint32_t session_id, IN bool use_psk)
 {
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
@@ -35,7 +35,7 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
         session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
         break;
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         session_type = LIBSPDM_SESSION_TYPE_MAX;
         break;
     }
@@ -93,7 +93,7 @@ void *libspdm_get_session_info_via_session_id(IN void *context,
     if (session_id == INVALID_SESSION_ID) {
         DEBUG((DEBUG_ERROR,
                "libspdm_get_session_info_via_session_id - Invalid session_id\n"));
-        ASSERT(FALSE);
+        ASSERT(false);
         return NULL;
     }
 
@@ -162,7 +162,7 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
  * @return session info associated with this new session ID.
  **/
 void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
-                                IN boolean use_psk)
+                                IN bool use_psk)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -173,7 +173,7 @@ void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
     if (session_id == INVALID_SESSION_ID) {
         DEBUG((DEBUG_ERROR,
                "libspdm_assign_session_id - Invalid session_id\n"));
-        ASSERT(FALSE);
+        ASSERT(false);
         return NULL;
     }
 
@@ -183,7 +183,7 @@ void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
         if (session_info[index].session_id == session_id) {
             DEBUG((DEBUG_ERROR,
                    "libspdm_assign_session_id - Duplicated session_id\n"));
-            ASSERT(FALSE);
+            ASSERT(false);
             return NULL;
         }
     }
@@ -271,7 +271,7 @@ void libspdm_free_session_id(IN void *context, IN uint32_t session_id)
     if (session_id == INVALID_SESSION_ID) {
         DEBUG((DEBUG_ERROR,
                "libspdm_free_session_id - Invalid session_id\n"));
-        ASSERT(FALSE);
+        ASSERT(false);
         return;
     }
 
@@ -280,12 +280,12 @@ void libspdm_free_session_id(IN void *context, IN uint32_t session_id)
         if (session_info[index].session_id == session_id) {
             spdm_session_info_init(spdm_context,
                                    &session_info[index],
-                                   INVALID_SESSION_ID, FALSE);
+                                   INVALID_SESSION_ID, false);
             return;
         }
     }
 
     DEBUG((DEBUG_ERROR, "libspdm_free_session_id - MAX session_id\n"));
-    ASSERT(FALSE);
+    ASSERT(false);
     return;
 }

@@ -24,17 +24,17 @@
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -47,16 +47,16 @@ boolean hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -69,16 +69,16 @@ boolean hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -93,17 +93,17 @@ boolean hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -116,16 +116,16 @@ boolean hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -138,16 +138,16 @@ boolean hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -162,17 +162,17 @@ boolean hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -185,16 +185,16 @@ boolean hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -207,14 +207,14 @@ boolean hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }

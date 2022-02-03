@@ -26,30 +26,30 @@ static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 /**
  * Construct a X509 object from DER-encoded certificate data.
  *
- * If cert is NULL, then return FALSE.
- * If single_x509_cert is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If single_x509_cert is NULL, then return false.
  *
  * @param[in]  cert            Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size        The size of certificate data in bytes.
  * @param[out] single_x509_cert  The generated X509 object.
  *
- * @retval     TRUE            The X509 object generation succeeded.
- * @retval     FALSE           The operation failed.
+ * @retval     true            The X509 object generation succeeded.
+ * @retval     false           The operation failed.
  *
  **/
-boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
                                    OUT uint8_t **single_x509_cert)
 {
     mbedtls_x509_crt *mbedtls_cert;
     int32_t ret;
 
     if (cert == NULL || single_x509_cert == NULL || cert_size == 0) {
-        return FALSE;
+        return false;
     }
 
     mbedtls_cert = allocate_pool(sizeof(mbedtls_x509_crt));
     if (mbedtls_cert == NULL) {
-        return FALSE;
+        return false;
     }
 
     mbedtls_x509_crt_init(mbedtls_cert);
@@ -60,7 +60,7 @@ boolean x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
     return ret == 0;
 }
 
-static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
+static bool X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
                                               IN VA_LIST args)
 {
     uint8_t *cert;
@@ -69,7 +69,7 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     int32_t ret;
 
     if (x509_stack == NULL) {
-        return FALSE;
+        return false;
     }
 
     ret = 0;
@@ -77,7 +77,7 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
     if (crt == NULL) {
         crt = allocate_pool(sizeof(mbedtls_x509_crt));
         if (crt == NULL) {
-            return FALSE;
+            return false;
         }
         mbedtls_x509_crt_init(crt);
         *x509_stack = (uint8_t *)crt;
@@ -109,7 +109,7 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
 /**
  * Construct a X509 stack object from a list of DER-encoded certificate data.
  *
- * If x509_stack is NULL, then return FALSE.
+ * If x509_stack is NULL, then return false.
  *
  * @param[in, out]  x509_stack  On input, pointer to an existing or NULL X509 stack object.
  *                            On output, pointer to the X509 stack object with new
@@ -118,14 +118,14 @@ static boolean X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
  *                            by certificate size. A NULL terminates the list. The
  *                            pairs are the arguments to x509_construct_certificate().
  *
- * @retval     TRUE            The X509 stack construction succeeded.
- * @retval     FALSE           The construction operation failed.
+ * @retval     true            The X509 stack construction succeeded.
+ * @retval     false           The construction operation failed.
  *
  **/
-boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
+bool x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 {
     VA_LIST args;
-    boolean result;
+    bool result;
 
     VA_START(args, x509_stack);
     result = X509ConstructCertificateStackV(x509_stack, args);
@@ -136,7 +136,7 @@ boolean x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...)
 /**
  * Release the specified X509 object.
  *
- * If x509_cert is NULL, then return FALSE.
+ * If x509_cert is NULL, then return false.
  *
  * @param[in]  x509_cert  Pointer to the X509 object to be released.
  *
@@ -152,7 +152,7 @@ void x509_free(IN void *x509_cert)
 /**
  * Release the specified X509 stack object.
  *
- * If x509_stack is NULL, then return FALSE.
+ * If x509_stack is NULL, then return false.
  *
  * @param[in]  x509_stack  Pointer to the X509 stack object to be released.
  *
@@ -174,16 +174,16 @@ void x509_stack_free(IN void *x509_stack)
  * @param length   The variable that will receive the length
  * @param tag      The expected tag
  *
- * @retval      TRUE   Get tag successful
+ * @retval      true   Get tag successful
  * @retval      FALSe  Failed to get tag or tag not match
  **/
-boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
+bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
                      IN uint32_t tag)
 {
     if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
@@ -196,27 +196,27 @@ boolean asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
  * @param[in, out] subject_size  The size in bytes of the cert_subject buffer on input,
  *                             and the size of buffer returned cert_subject on output.
  *
- * If cert is NULL, then return FALSE.
- * If subject_size is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If subject_size is NULL, then return false.
  *
- * @retval  TRUE   The certificate subject retrieved successfully.
- * @retval  FALSE  Invalid certificate, or the subject_size is too small for the result.
+ * @retval  true   The certificate subject retrieved successfully.
+ * @retval  false  Invalid certificate, or the subject_size is too small for the result.
  *                The subject_size will be updated with the required size.
  *
  **/
-boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
                               OUT uint8_t *cert_subject,
                               IN OUT uintn *subject_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    boolean status;
+    bool status;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -225,14 +225,14 @@ boolean x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
     if (ret == 0) {
         if (*subject_size < crt.subject_raw.len) {
             *subject_size = crt.subject_raw.len;
-            status = FALSE;
+            status = false;
             goto cleanup;
         }
         if (cert_subject != NULL) {
             copy_mem(cert_subject, crt.subject_raw.p, crt.subject_raw.len);
         }
         *subject_size = crt.subject_raw.len;
-        status = TRUE;
+        status = true;
     }
 
 cleanup:
@@ -277,7 +277,7 @@ internal_x509_get_subject_nid_name(IN const uint8_t *cert, IN uintn cert_size,
     return_status status;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
     status = RETURN_INVALID_PARAMETER;
@@ -309,7 +309,7 @@ internal_x509_get_issuer_nid_name(IN const uint8_t *cert, IN uintn cert_size,
     return_status status;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
     status = RETURN_INVALID_PARAMETER;
@@ -409,14 +409,14 @@ x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
  *                         RSA public key component. Use rsa_free() function to free the
  *                         resource.
  *
- * If cert is NULL, then return FALSE.
- * If rsa_context is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If rsa_context is NULL, then return false.
  *
- * @retval  TRUE   RSA public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve RSA public key from X509 certificate.
+ * @retval  true   RSA public key was retrieved successfully.
+ * @retval  false  Fail to retrieve RSA public key from X509 certificate.
  *
  **/
-boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
+bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
                                      OUT void **rsa_context)
 {
     mbedtls_x509_crt crt;
@@ -426,29 +426,29 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     mbedtls_x509_crt_init(&crt);
 
     if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
-        return FALSE;
+        return false;
     }
 
     if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_RSA) {
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
 
     rsa = rsa_new();
     if (rsa == NULL) {
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
     ret = mbedtls_rsa_copy(rsa, mbedtls_pk_rsa(crt.pk));
     if (ret != 0) {
         rsa_free(rsa);
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
     mbedtls_x509_crt_free(&crt);
 
     *rsa_context = rsa;
-    return TRUE;
+    return true;
 }
 
 /**
@@ -460,14 +460,14 @@ boolean rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *                         EC public key component. Use ec_free() function to free the
  *                         resource.
  *
- * If cert is NULL, then return FALSE.
- * If ec_context is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If ec_context is NULL, then return false.
  *
- * @retval  TRUE   EC public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve EC public key from X509 certificate.
+ * @retval  true   EC public key was retrieved successfully.
+ * @retval  false  Fail to retrieve EC public key from X509 certificate.
  *
  **/
-boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
+bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
                                     OUT void **ec_context)
 {
     mbedtls_x509_crt crt;
@@ -477,18 +477,18 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
     mbedtls_x509_crt_init(&crt);
 
     if (mbedtls_x509_crt_parse_der(&crt, cert, cert_size) != 0) {
-        return FALSE;
+        return false;
     }
 
     if (mbedtls_pk_get_type(&crt.pk) != MBEDTLS_PK_ECKEY) {
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
 
     ecdh = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
     if (ecdh == NULL) {
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
     mbedtls_ecdh_init(ecdh);
 
@@ -498,12 +498,12 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
         mbedtls_ecdh_free(ecdh);
         free_pool(ecdh);
         mbedtls_x509_crt_free(&crt);
-        return FALSE;
+        return false;
     }
     mbedtls_x509_crt_free(&crt);
 
     *ec_context = ecdh;
-    return TRUE;
+    return true;
 }
 
 /**
@@ -515,17 +515,17 @@ boolean ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *                         Ed public key component. Use ecd_free() function to free the
  *                         resource.
  *
- * If cert is NULL, then return FALSE.
- * If ecd_context is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If ecd_context is NULL, then return false.
  *
- * @retval  TRUE   Ed public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve Ed public key from X509 certificate.
+ * @retval  true   Ed public key was retrieved successfully.
+ * @retval  false  Fail to retrieve Ed public key from X509 certificate.
  *
  **/
-boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
+bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
                                      OUT void **ecd_context)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -537,17 +537,17 @@ boolean ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *                         sm2 public key component. Use sm2_free() function to free the
  *                         resource.
  *
- * If cert is NULL, then return FALSE.
- * If ecd_context is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If ecd_context is NULL, then return false.
  *
- * @retval  TRUE   sm2 public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve sm2 public key from X509 certificate.
+ * @retval  true   sm2 public key was retrieved successfully.
+ * @retval  false  Fail to retrieve sm2 public key from X509 certificate.
  *
  **/
-boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
+bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
                                      OUT void **sm2_context)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -558,15 +558,15 @@ boolean sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  * @param[in]      ca_cert       Pointer to the DER-encoded trusted CA certificate.
  * @param[in]      ca_cert_size   size of the CA Certificate in bytes.
  *
- * If cert is NULL, then return FALSE.
- * If ca_cert is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If ca_cert is NULL, then return false.
  *
- * @retval  TRUE   The certificate was issued by the trusted CA.
- * @retval  FALSE  Invalid certificate or the certificate was not issued by the given
+ * @retval  true   The certificate was issued by the trusted CA.
+ * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  *
  **/
-boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
                          IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
     int32_t ret;
@@ -575,7 +575,7 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
     mbedtls_x509_crt_profile profile = { 0 };
 
     if (cert == NULL || ca_cert == NULL) {
-        return FALSE;
+        return false;
     }
 
     copy_mem(&profile, &mbedtls_x509_crt_profile_default,
@@ -615,11 +615,11 @@ boolean x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
  *
  * @param[in]      root_cert_length    Trusted Root Certificate buffer length
  *
- * @retval  TRUE   All cerificates was issued by the first certificate in X509Certchain.
- * @retval  FALSE  Invalid certificate or the certificate was not issued by the given
+ * @retval  true   All cerificates was issued by the first certificate in X509Certchain.
+ * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
+bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
                                IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
     uintn asn1_len;
@@ -629,9 +629,9 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
     uint8_t *current_cert;
     uint8_t *tmp_ptr;
     uint32_t ret;
-    boolean verify_flag;
+    bool verify_flag;
 
-    verify_flag = FALSE;
+    verify_flag = false;
     preceding_cert = root_cert;
     preceding_cert_len = root_cert_length;
 
@@ -653,11 +653,11 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
 
         if (x509_verify_cert(current_cert, current_cert_len,
                              preceding_cert,
-                             preceding_cert_len) == FALSE) {
-            verify_flag = FALSE;
+                             preceding_cert_len) == false) {
+            verify_flag = false;
             break;
         } else {
-            verify_flag = TRUE;
+            verify_flag = true;
         }
 
 
@@ -670,7 +670,7 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
         /* Move current certificate to next;*/
 
         current_cert = current_cert + current_cert_len;
-    } while (TRUE);
+    } while (true);
 
     return verify_flag;
 }
@@ -690,10 +690,10 @@ boolean x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
  * @param[out]     cert              The certificate at the index of cert_chain.
  * @param[out]     cert_length        The length certificate at the index of cert_chain.
  *
- * @retval  TRUE   Success.
- * @retval  FALSE  Failed to get certificate from certificate chain.
+ * @retval  true   Success.
+ * @retval  false  Failed to get certificate from certificate chain.
  **/
-boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
+bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
                                       IN uintn cert_chain_length,
                                       IN int32_t cert_index, OUT uint8_t **cert,
                                       OUT uintn *cert_length)
@@ -710,7 +710,7 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 
     if ((cert_chain == NULL) || (cert == NULL) || (cert_index < -1) ||
         (cert_length == NULL)) {
-        return FALSE;
+        return false;
     }
 
     current_cert = cert_chain;
@@ -719,7 +719,7 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
 
     /* Traverse the certificate chain*/
 
-    while (TRUE) {
+    while (true) {
 
         /* Get asn1 tag len*/
 
@@ -737,7 +737,7 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
         if (current_index == cert_index) {
             *cert = current_cert;
             *cert_length = current_cert_len;
-            return TRUE;
+            return true;
         }
 
 
@@ -752,10 +752,10 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
     if (cert_index == -1 && current_index >= 0) {
         *cert = current_cert - current_cert_len;
         *cert_length = current_cert_len;
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 /**
@@ -766,26 +766,26 @@ boolean x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
  * @param[out]     tbs_cert      DER-Encoded to-Be-Signed certificate.
  * @param[out]     tbs_cert_size  size of the TBS certificate in bytes.
  *
- * If cert is NULL, then return FALSE.
- * If tbs_cert is NULL, then return FALSE.
- * If tbs_cert_size is NULL, then return FALSE.
+ * If cert is NULL, then return false.
+ * If tbs_cert is NULL, then return false.
+ * If tbs_cert_size is NULL, then return false.
  *
- * @retval  TRUE   The TBSCertificate was retrieved successfully.
- * @retval  FALSE  Invalid X.509 certificate.
+ * @retval  true   The TBSCertificate was retrieved successfully.
+ * @retval  false  Invalid X.509 certificate.
  *
  **/
-boolean x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
                           OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
  * Retrieve the version from one X.509 certificate.
  *
- * If cert is NULL, then return FALSE.
- * If cert_size is 0, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If cert is NULL, then return false.
+ * If cert_size is 0, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size     size of the X509 certificate in bytes.
@@ -826,9 +826,9 @@ return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
 /**
  * Retrieve the serialNumber from one X.509 certificate.
  *
- * If cert is NULL, then return FALSE.
- * If cert_size is 0, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If cert is NULL, then return false.
+ * If cert_size is 0, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size     size of the X509 certificate in bytes.
@@ -886,9 +886,9 @@ cleanup:
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
  *
- * If cert is NULL, then return FALSE.
- * If issuer_size is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If cert is NULL, then return false.
+ * If issuer_size is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size     size of the X509 certificate in bytes.
@@ -896,25 +896,25 @@ cleanup:
  * @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
  *                             and the size of buffer returned cert_issuer on output.
  *
- * @retval  TRUE   The certificate issuer retrieved successfully.
- * @retval  FALSE  Invalid certificate, or the issuer_size is too small for the result.
+ * @retval  true   The certificate issuer retrieved successfully.
+ * @retval  false  Invalid certificate, or the issuer_size is too small for the result.
  *                The issuer_size will be updated with the required size.
- * @retval  FALSE  This interface is not supported.
+ * @retval  false  This interface is not supported.
  *
  **/
-boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
                              OUT uint8_t *cert_issuer,
                              IN OUT uintn *issuer_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    boolean status;
+    bool status;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -923,14 +923,14 @@ boolean x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
     if (ret == 0) {
         if (*issuer_size < crt.issuer_raw.len) {
             *issuer_size = crt.issuer_raw.len;
-            status = FALSE;
+            status = false;
             goto cleanup;
         }
         if (cert_issuer != NULL) {
             copy_mem(cert_issuer, crt.issuer_raw.p, crt.issuer_raw.len);
         }
         *issuer_size = crt.issuer_raw.len;
-        status = TRUE;
+        status = true;
     }
 
 cleanup:
@@ -1096,11 +1096,11 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *o
 
     ret = 0;
 
-    while (TRUE) {
+    while (true) {
         /*
          * Extension  ::=  SEQUENCE  {
          *      extnID      OBJECT IDENTIFIER,
-         *      critical    boolean DEFAULT FALSE,
+         *      critical    bool DEFAULT false,
          *      extnValue   OCTET STRING  }
          */
         extension_ptr = ptr;
@@ -1225,9 +1225,9 @@ cleanup:
 /**
  * Retrieve the Validity from one X.509 certificate
  *
- * If cert is NULL, then return FALSE.
- * If CertIssuerSize is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If cert is NULL, then return false.
+ * If CertIssuerSize is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size     size of the X509 certificate in bytes.
@@ -1239,25 +1239,25 @@ cleanup:
  * Note: x509_compare_date_time to compare date_time oject
  *      x509SetDateTime to get a date_time object from a date_time_str
  *
- * @retval  TRUE   The certificate Validity retrieved successfully.
- * @retval  FALSE  Invalid certificate, or Validity retrieve failed.
- * @retval  FALSE  This interface is not supported.
+ * @retval  true   The certificate Validity retrieved successfully.
+ * @retval  false  Invalid certificate, or Validity retrieve failed.
+ * @retval  false  This interface is not supported.
  **/
-boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
                           IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
                           IN OUT uintn *to_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    boolean status;
+    bool status;
     uintn t_size;
     uintn f_size;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -1284,7 +1284,7 @@ boolean x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
             copy_mem(to, &(crt.valid_to),
                      sizeof(mbedtls_x509_time));
         }
-        status = TRUE;
+        status = true;
     }
 
 done:
@@ -1300,22 +1300,22 @@ done:
  * @param[in]      cert_size         size of the X509 certificate in bytes.
  * @param[out]     usage            key usage (CRYPTO_X509_KU_*)
  *
- * @retval  TRUE   The certificate key usage retrieved successfully.
- * @retval  FALSE  Invalid certificate, or usage is NULL
- * @retval  FALSE  This interface is not supported.
+ * @retval  true   The certificate key usage retrieved successfully.
+ * @retval  false  Invalid certificate, or usage is NULL
+ * @retval  false  This interface is not supported.
  **/
-boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
+bool x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
                            OUT uintn *usage)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    boolean status;
+    bool status;
 
     if (cert == NULL) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -1323,7 +1323,7 @@ boolean x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
 
     if (ret == 0) {
         *usage = crt.key_usage;
-        status = TRUE;
+        status = true;
     }
     mbedtls_x509_crt_free(&crt);
 
@@ -1415,9 +1415,9 @@ static int32_t internal_atoi(char *p_start, char *p_end)
 /**
  * format a date_time object into DataTime buffer
  *
- * If date_time_str is NULL, then return FALSE.
- * If date_time_size is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If date_time_str is NULL, then return false.
+ * If date_time_size is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      date_time_str      date_time string like YYYYMMDDhhmmssZ
  *                                 Ref: https://www.w3.org/TR/NOTE-datetime

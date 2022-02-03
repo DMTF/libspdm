@@ -45,14 +45,14 @@ void sm2_dsa_free(IN void *sm2_context)
  * @param[in]       public         Pointer to the buffer to receive generated public X,Y.
  * @param[in]       public_size     The size of public buffer in bytes.
  *
- * @retval  TRUE   sm2 public key component was set successfully.
- * @retval  FALSE  Invalid sm2 public key component.
+ * @retval  true   sm2 public key component was set successfully.
+ * @retval  false  Invalid sm2 public key component.
  *
  **/
-boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
+bool sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
                             IN uintn public_key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -65,14 +65,14 @@ boolean sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval  TRUE   sm2 key component was retrieved successfully.
- * @retval  FALSE  Invalid sm2 key component.
+ * @retval  true   sm2 key component was retrieved successfully.
+ * @retval  false  Invalid sm2 key component.
  *
  **/
-boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
+bool sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
                             IN OUT uintn *public_key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -80,17 +80,17 @@ boolean sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
  * NOTE: This function performs integrity checks on all the sm2 key material, so
  *      the sm2 key structure must contain all the private key data.
  *
- * If sm2_context is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
  *
  * @param[in]  sm2_context  Pointer to sm2 context to check.
  *
- * @retval  TRUE   sm2 key components are valid.
- * @retval  FALSE  sm2 key components are not valid.
+ * @retval  true   sm2 key components are valid.
+ * @retval  false  sm2 key components are not valid.
  *
  **/
-boolean sm2_dsa_check_key(IN void *sm2_context)
+bool sm2_dsa_check_key(IN void *sm2_context)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -101,29 +101,29 @@ boolean sm2_dsa_check_key(IN void *sm2_context)
  * X is the first half of public with size being public_size / 2,
  * Y is the second half of public with size being public_size / 2.
  * sm2 context is updated accordingly.
- * If the public buffer is too small to hold the public X, Y, FALSE is returned and
+ * If the public buffer is too small to hold the public X, Y, false is returned and
  * public_size is set to the required buffer size to obtain the public X, Y.
  *
  * The public_size is 64. first 32-byte is X, second 32-byte is Y.
  *
- * If sm2_context is NULL, then return FALSE.
- * If public_size is NULL, then return FALSE.
- * If public_size is large enough but public is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
+ * If public_size is NULL, then return false.
+ * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  sm2_context     Pointer to the sm2 context.
  * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval TRUE   sm2 public X,Y generation succeeded.
- * @retval FALSE  sm2 public X,Y generation failed.
- * @retval FALSE  public_size is not large enough.
+ * @retval true   sm2 public X,Y generation succeeded.
+ * @retval false  sm2 public X,Y generation failed.
+ * @retval false  public_size is not large enough.
  *
  **/
-boolean sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
+bool sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
                              IN OUT uintn *public_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -162,18 +162,18 @@ void sm2_key_exchange_free(IN void *sm2_context)
  * @param[in]  id_b                the ID-B of the key exchange context.
  * @param[in]  id_b_size           size of ID-B key exchange context.
  * @param[in]  is_initiator        if the caller is initiator.
- *                                TRUE: initiator
- *                                FALSE: not an initiator
+ *                                true: initiator
+ *                                false: not an initiator
  *
- * @retval TRUE   sm2 context is initialized.
- * @retval FALSE  sm2 context is not initialized.
+ * @retval true   sm2 context is initialized.
+ * @retval false  sm2 context is not initialized.
  **/
-boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
+bool sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
                               IN const uint8_t *id_a, IN uintn id_a_size,
                               IN const uint8_t *id_b, IN uintn id_b_size,
-                              IN const boolean is_initiator)
+                              IN const bool is_initiator)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -184,29 +184,29 @@ boolean sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
  * X is the first half of public with size being public_size / 2,
  * Y is the second half of public with size being public_size / 2.
  * sm2 context is updated accordingly.
- * If the public buffer is too small to hold the public X, Y, FALSE is returned and
+ * If the public buffer is too small to hold the public X, Y, false is returned and
  * public_size is set to the required buffer size to obtain the public X, Y.
  *
  * The public_size is 64. first 32-byte is X, second 32-byte is Y.
  *
- * If sm2_context is NULL, then return FALSE.
- * If public_size is NULL, then return FALSE.
- * If public_size is large enough but public is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
+ * If public_size is NULL, then return false.
+ * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  sm2_context     Pointer to the sm2 context.
  * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval TRUE   sm2 public X,Y generation succeeded.
- * @retval FALSE  sm2 public X,Y generation failed.
- * @retval FALSE  public_size is not large enough.
+ * @retval true   sm2 public X,Y generation succeeded.
+ * @retval false  sm2 public X,Y generation failed.
+ * @retval false  public_size is not large enough.
  *
  **/
-boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
+bool sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
                                       IN OUT uintn *public_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -217,10 +217,10 @@ boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *pub
  * X is the first half of peer_public with size being peer_public_size / 2,
  * Y is the second half of peer_public with size being peer_public_size / 2.
  *
- * If sm2_context is NULL, then return FALSE.
- * If peer_public is NULL, then return FALSE.
- * If peer_public_size is 0, then return FALSE.
- * If key is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
+ * If peer_public is NULL, then return false.
+ * If peer_public_size is 0, then return false.
+ * If key is NULL, then return false.
  *
  * The id_a_size and id_b_size must be smaller than 2^16-1.
  * The peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
@@ -232,29 +232,29 @@ boolean sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *pub
  * @param[out]      key                Pointer to the buffer to receive generated key.
  * @param[in]       key_size            On input, the size of key buffer in bytes.
  *
- * @retval TRUE   sm2 exchanged key generation succeeded.
- * @retval FALSE  sm2 exchanged key generation failed.
+ * @retval true   sm2 exchanged key generation succeeded.
+ * @retval false  sm2 exchanged key generation failed.
  *
  **/
-boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
+bool sm2_key_exchange_compute_key(IN OUT void *sm2_context,
                                      IN const uint8_t *peer_public,
                                      IN uintn peer_public_size, OUT uint8_t *key,
                                      IN uintn *key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
  * Carries out the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
  *
  * This function carries out the SM2 signature.
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If sm2_context is NULL, then return FALSE.
- * If message is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
+ * If message is NULL, then return false.
  * hash_nid must be SM3_256.
- * If sig_size is large enough but signature is NULL, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
  *
  * The id_a_size must be smaller than 2^16-1.
  * The sig_size is 64. first 32-byte is R, second 32-byte is S.
@@ -269,25 +269,25 @@ boolean sm2_key_exchange_compute_key(IN OUT void *sm2_context,
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                              On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in SM2.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated in SM2.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  *
  **/
-boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
+bool sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
                      IN const uint8_t *id_a, IN uintn id_a_size,
                      IN const uint8_t *message, IN uintn size,
                      OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
  * Verifies the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
  *
- * If sm2_context is NULL, then return FALSE.
- * If message is NULL, then return FALSE.
- * If signature is NULL, then return FALSE.
+ * If sm2_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If signature is NULL, then return false.
  * hash_nid must be SM3_256.
  *
  * The id_a_size must be smaller than 2^16-1.
@@ -302,14 +302,14 @@ boolean sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
  * @param[in]  signature    Pointer to SM2 signature to be verified.
  * @param[in]  sig_size      size of signature in bytes.
  *
- * @retval  TRUE   Valid signature encoded in SM2.
- * @retval  FALSE  Invalid signature or invalid sm2 context.
+ * @retval  true   Valid signature encoded in SM2.
+ * @retval  false  Invalid signature or invalid sm2 context.
  *
  **/
-boolean sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
+bool sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
                        IN const uint8_t *id_a, IN uintn id_a_size,
                        IN const uint8_t *message, IN uintn size,
                        IN const uint8_t *signature, IN uintn sig_size)
 {
-    return FALSE;
+    return false;
 }

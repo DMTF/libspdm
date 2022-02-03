@@ -35,7 +35,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     spdm_challenge_request_t *spdm_request;
     uintn spdm_request_size;
     spdm_challenge_auth_response_t *spdm_response;
-    boolean result;
+    bool result;
     uintn signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
@@ -61,7 +61,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
             response_size, response);
     }
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -79,7 +79,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(spdm_context, FALSE, 0,
+    if (!spdm_is_capabilities_flag_supported(spdm_context, false, 0,
                                              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         spdm_request->header.param2 > 0) {
         return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -102,7 +102,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
-        spdm_context, FALSE, spdm_request->header.param2);
+        spdm_context, false, spdm_request->header.param2);
     if ((measurement_summary_hash_size == 0) &&
         (spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
         return libspdm_generate_error_response(spdm_context,
@@ -129,17 +129,17 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     auth_attribute = (uint8_t)(slot_id & 0xF);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP) &&
             spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0) &&
             (spdm_is_capabilities_flag_supported(
-                 spdm_context, FALSE,
+                 spdm_context, false,
                  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0) ||
              spdm_is_capabilities_flag_supported(
-                 spdm_context, FALSE,
+                 spdm_context, false,
                  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
             if (spdm_context->local_context.basic_mut_auth_requested) {
                 auth_attribute =
@@ -178,7 +178,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     ptr += SPDM_NONCE_SIZE;
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
         result = libspdm_generate_measurement_summary_hash(
             spdm_context->connection_info.version,
@@ -190,7 +190,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
             &measurement_summary_hash_size);
     }
     else {
-        result = TRUE;
+        result = true;
     }
 
     if (!result) {
@@ -226,7 +226,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    result = spdm_generate_challenge_auth_signature(spdm_context, FALSE,
+    result = spdm_generate_challenge_auth_signature(spdm_context, false,
                                                     ptr);
     if (!result) {
         libspdm_reset_message_c(spdm_context);

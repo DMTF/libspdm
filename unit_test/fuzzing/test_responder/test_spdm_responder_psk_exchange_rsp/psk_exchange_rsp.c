@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_psk_exchange_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 typedef struct {

@@ -18,7 +18,7 @@ void spdm_secured_message_set_response_finished_key(IN void *spdm_secured_messag
     ASSERT(key_size == secured_message_context->hash_size);
     copy_mem(secured_message_context->handshake_secret.response_finished_key, key,
              secured_message_context->hash_size);
-    secured_message_context->finished_key_ready = TRUE;
+    secured_message_context->finished_key_ready = true;
 }
 
 uintn get_max_buffer_size(void)
@@ -92,7 +92,7 @@ void test_spdm_send_receive_finish_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+    spdm_session_info_init(spdm_context, session_info, session_id, false);
     hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_finished_key(session_info->secured_message_context,
@@ -117,7 +117,7 @@ void test_spdm_send_receive_finish_case1(void **State)
 
 spdm_test_context_t m_spdm_requester_finish_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

@@ -95,7 +95,7 @@ return_status validate_crypt_rsa(void)
     void *sha256_ctx;
     uint8_t *signature;
     uintn sig_size;
-    boolean status;
+    bool status;
     uintn key_size;
     uint8_t *KeyBuffer;
 

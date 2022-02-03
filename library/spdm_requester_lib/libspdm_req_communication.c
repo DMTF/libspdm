@@ -19,7 +19,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status libspdm_init_connection(IN void *context,
-                                      IN boolean get_version_only)
+                                      IN bool get_version_only)
 {
     return_status status;
     spdm_context_t *spdm_context;
@@ -52,8 +52,8 @@ return_status libspdm_init_connection(IN void *context,
  * this function also perform the encapsulated mutual authentication.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
  * @param  measurement_hash_type          The type of the measurement hash.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  session_policy               The policy for the session.
@@ -65,7 +65,7 @@ return_status libspdm_init_connection(IN void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session(IN void *context, IN boolean use_psk,
+return_status libspdm_start_session(IN void *context, IN bool use_psk,
                                     IN uint8_t measurement_hash_type,
                                     IN uint8_t slot_id,
                                     IN uint8_t session_policy,
@@ -100,7 +100,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(FALSE);
+            ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
 
@@ -138,7 +138,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
@@ -155,7 +155,7 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
 
         /* send PSK_FINISH only if Responder supports context.*/
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, TRUE, 0,
+                spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = spdm_send_receive_psk_finish(spdm_context,
                                                   *session_id);
@@ -176,8 +176,8 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
  * this function also perform the encapsulated mutual authentication.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       FALSE means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     TRUE means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
  * @param  measurement_hash_type          The type of the measurement hash.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  session_id                    The session ID of the session.
@@ -186,25 +186,25 @@ return_status libspdm_start_session(IN void *context, IN boolean use_psk,
  * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
  * @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
  * @param  requester_random_in_size      The size of requester_random_in.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least,
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least,
  *                                      but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
  * @param  requester_random              A buffer to hold the requester random, if not NULL.
  * @param  requester_random_size         On input, the size of requester_random buffer.
  *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context and must be 32 bytes at least.
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least.
  * @param  responder_random              A buffer to hold the responder random, if not NULL.
  * @param  responder_random_size         On input, the size of requester_random buffer.
  *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is FALSE, it must be 32 bytes.
- *                                      If use_psk is TRUE, it means the PSK context. It could be 0 if device does not support context.
+ *                                      If use_psk is false, it must be 32 bytes.
+ *                                      If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
  *
  * @retval RETURN_SUCCESS               The SPDM session is started.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
+return_status libspdm_start_session_ex(IN void *context, IN bool use_psk,
                                        IN uint8_t measurement_hash_type,
                                        IN uint8_t slot_id,
                                        IN uint8_t session_policy,
@@ -249,7 +249,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(FALSE);
+            ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
 
@@ -287,7 +287,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
                "libspdm_start_session - spdm_send_receive_finish - %p\n",
                status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
@@ -307,7 +307,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
 
         /* send PSK_FINISH only if Responder supports context.*/
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, TRUE, 0,
+                spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = spdm_send_receive_psk_finish(spdm_context,
                                                   *session_id);
@@ -316,7 +316,7 @@ return_status libspdm_start_session_ex(IN void *context, IN boolean use_psk,
                    status));
         }
     #else /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
@@ -380,7 +380,7 @@ return_status libspdm_stop_session(IN void *context, IN uint32_t session_id,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_send_receive_data(IN void *context, IN uint32_t *session_id,
-                                        IN boolean is_app_message,
+                                        IN bool is_app_message,
                                         IN void *request, IN uintn request_size,
                                         IN OUT void *response,
                                         IN OUT uintn *response_size)

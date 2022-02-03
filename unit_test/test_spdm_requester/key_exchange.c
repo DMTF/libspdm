@@ -255,7 +255,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo,
-                TRUE);
+                true);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                                  &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -298,7 +298,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_use_asym_algo, m_use_hash_algo,
-                FALSE, get_managed_buffer(&th_curr),
+                false, get_managed_buffer(&th_curr),
                 get_managed_buffer_size(&th_curr), ptr,
                 &signature_size);
         copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -334,8 +334,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
     }
@@ -410,7 +410,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo,
-                TRUE);
+                true);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                                  &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -453,7 +453,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_use_asym_algo, m_use_hash_algo,
-                FALSE, get_managed_buffer(&th_curr),
+                false, get_managed_buffer(&th_curr),
                 get_managed_buffer_size(&th_curr), ptr,
                 &signature_size);
         copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -489,8 +489,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
     }
@@ -504,8 +504,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -519,8 +519,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -538,7 +538,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
             sub_index1++;
@@ -615,7 +615,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             ptr = (void *)(spdm_response + 1);
             dhe_context = libspdm_dhe_new(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                    m_use_dhe_algo, TRUE);
+                    m_use_dhe_algo, true);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                                      &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -665,7 +665,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_KEY_EXCHANGE_RSP,
                     m_use_asym_algo, m_use_hash_algo,
-                    FALSE, get_managed_buffer(&th_curr),
+                    false, get_managed_buffer(&th_curr),
                     get_managed_buffer_size(&th_curr), ptr,
                     &signature_size);
             copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -709,7 +709,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             ptr += hmac_size;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE, temp_buf_size,
+                spdm_context, NULL, false, false, temp_buf_size,
                 temp_buf, response_size, response);
         }
     }
@@ -723,8 +723,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -744,8 +744,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE;
         spdm_response.extend_error_data.token = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -770,7 +770,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response.extend_error_data.token = 1;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
             sub_index2++;
@@ -847,7 +847,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             ptr = (void *)(spdm_response + 1);
             dhe_context = libspdm_dhe_new(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                    m_use_dhe_algo, TRUE);
+                    m_use_dhe_algo, true);
             libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                                      &dhe_key_size);
             final_key_size = sizeof(final_key);
@@ -897,7 +897,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_KEY_EXCHANGE_RSP,
                     m_use_asym_algo, m_use_hash_algo,
-                    FALSE, get_managed_buffer(&th_curr),
+                    false, get_managed_buffer(&th_curr),
                     get_managed_buffer_size(&th_curr), ptr,
                     &signature_size);
             copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -941,7 +941,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             ptr += hmac_size;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE, temp_buf_size,
+                spdm_context, NULL, false, false, temp_buf_size,
                 temp_buf, response_size, response);
         }
     }
@@ -960,7 +960,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response.header.param1 = (uint8_t) error_code;
             spdm_response.header.param2 = 0;
 
-            spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE,
+            spdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                                 sizeof(spdm_response), &spdm_response,
                                                 response_size, response);
         }
@@ -1046,7 +1046,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, m_use_dhe_algo,
-                TRUE);
+                true);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr,
                                  &dhe_key_size);
         final_key_size = sizeof(final_key);
@@ -1089,7 +1089,7 @@ return_status spdm_requester_key_exchange_test_receive_message(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_use_asym_algo, m_use_hash_algo,
-                FALSE, get_managed_buffer(&th_curr),
+                false, get_managed_buffer(&th_curr),
                 get_managed_buffer_size(&th_curr), ptr,
                 &signature_size);
         copy_mem(&m_local_buffer[m_local_buffer_size], ptr,
@@ -1125,8 +1125,8 @@ return_status spdm_requester_key_exchange_test_receive_message(
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
     }
@@ -1935,7 +1935,7 @@ void test_spdm_requester_key_exchange_case11(void **state)
 
 spdm_test_context_t m_spdm_requester_key_exchange_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_requester_key_exchange_test_send_message,
     spdm_requester_key_exchange_test_receive_message,
 };

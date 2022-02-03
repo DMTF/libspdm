@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_challenge_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void test_spdm_responder_challenge_case1(void **State)

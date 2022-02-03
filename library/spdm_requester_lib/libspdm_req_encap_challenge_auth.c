@@ -31,7 +31,7 @@ return_status spdm_get_encap_response_challenge_auth(
 {
     spdm_challenge_request_t *spdm_request;
     spdm_challenge_auth_response_t *spdm_response;
-    boolean result;
+    bool result;
     uintn signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
@@ -52,7 +52,7 @@ return_status spdm_get_encap_response_challenge_auth(
     }
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -149,7 +149,7 @@ return_status spdm_get_encap_response_challenge_auth(
             response_size, response);
     }
     result =
-        spdm_generate_challenge_auth_signature(spdm_context, TRUE, ptr);
+        spdm_generate_challenge_auth_signature(spdm_context, true, ptr);
     if (!result) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,

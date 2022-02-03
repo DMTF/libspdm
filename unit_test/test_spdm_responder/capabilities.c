@@ -1131,7 +1131,7 @@ void test_spdm_responder_capabilities_case22(void **state)
 
 spdm_test_context_t m_spdm_responder_capabilities_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 int spdm_responder_capabilities_test_main(void)

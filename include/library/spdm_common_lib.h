@@ -401,8 +401,8 @@ void libspdm_register_device_io_func(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 typedef return_status (*libspdm_transport_encode_message_func)(
-    IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
-    IN boolean is_requester, IN uintn spdm_message_size,
+    IN void *spdm_context, IN uint32_t *session_id, IN bool is_app_message,
+    IN bool is_requester, IN uintn spdm_message_size,
     IN void *spdm_message, IN OUT uintn *transport_message_size,
     OUT void *transport_message);
 
@@ -434,7 +434,7 @@ typedef return_status (*libspdm_transport_encode_message_func)(
  **/
 typedef return_status (*libspdm_transport_decode_message_func)(
     IN void *spdm_context, OUT uint32_t **session_id,
-    OUT boolean *is_app_message, IN boolean is_requester,
+    OUT bool *is_app_message, IN bool is_requester,
     IN uintn transport_message_size, IN void *transport_message,
     IN OUT uintn *message_size, OUT void *message);
 
@@ -654,7 +654,7 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_k(IN void *context, IN void *spdm_session_info,
-                                       IN boolean is_requester, IN void *message,
+                                       IN bool is_requester, IN void *message,
                                        IN uintn message_size);
 
 /**
@@ -670,7 +670,7 @@ return_status libspdm_append_message_k(IN void *context, IN void *spdm_session_i
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_f(IN void *context, IN void *spdm_session_info,
-                                       IN boolean is_requester, IN void *message,
+                                       IN bool is_requester, IN void *message,
                                        IN uintn message_size);
 
 /**
@@ -714,7 +714,7 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
  * @return session info associated with this new session ID.
  **/
 void *libspdm_assign_session_id(IN void *spdm_context, IN uint32_t session_id,
-                                IN boolean use_psk);
+                                IN bool use_psk);
 
 /**
  * This function frees a session ID.
@@ -737,7 +737,7 @@ void libspdm_free_session_id(IN void *spdm_context, IN uint32_t session_id);
  *
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
-boolean libspdm_calculate_th_for_exchange(
+bool libspdm_calculate_th_for_exchange(
     IN void *spdm_context, IN void *spdm_session_info,
     IN uint8_t *cert_chain_buffer, OPTIONAL IN uintn cert_chain_buffer_size,
     OPTIONAL IN OUT uintn *th_data_buffer_size, OUT void *th_data_buffer);
@@ -752,7 +752,7 @@ boolean libspdm_calculate_th_for_exchange(
  *
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
-boolean libspdm_calculate_th_hash_for_exchange(
+bool libspdm_calculate_th_hash_for_exchange(
     IN void *context, IN void *spdm_session_info,
     OPTIONAL IN OUT uintn *th_hash_buffer_size, OUT void *th_hash_buffer);
 
@@ -766,8 +766,8 @@ boolean libspdm_calculate_th_hash_for_exchange(
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-boolean libspdm_calculate_th_hmac_for_exchange_rsp(
-    IN void *context, IN void *spdm_session_info, IN boolean is_requester,
+bool libspdm_calculate_th_hmac_for_exchange_rsp(
+    IN void *context, IN void *spdm_session_info, IN bool is_requester,
     OPTIONAL IN OUT uintn *th_hmac_buffer_size, OUT void *th_hmac_buffer);
 #endif
 
@@ -786,7 +786,7 @@ boolean libspdm_calculate_th_hmac_for_exchange_rsp(
  *
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
-boolean libspdm_calculate_th_for_finish(IN void *spdm_context,
+bool libspdm_calculate_th_for_finish(IN void *spdm_context,
                                         IN void *spdm_session_info,
                                         IN uint8_t *cert_chain_buffer,
                                         OPTIONAL IN uintn cert_chain_buffer_size,
@@ -805,7 +805,7 @@ boolean libspdm_calculate_th_for_finish(IN void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
-boolean libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
+bool libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
                                              IN void *spdm_session_info,
                                              OPTIONAL IN OUT uintn *th_hash_buffer_size,
                                              OUT void *th_hash_buffer);
@@ -820,7 +820,7 @@ boolean libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
+bool libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
                                                  IN void *spdm_session_info,
                                                  OPTIONAL IN OUT uintn *th_hmac_buffer_size,
                                                  OUT void *th_hmac_buffer);
@@ -835,7 +835,7 @@ boolean libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-boolean libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
+bool libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
                                                  IN void *spdm_session_info,
                                                  OPTIONAL IN OUT uintn *th_hmac_buffer_size,
                                                  OUT void *th_hmac_buffer);
@@ -853,7 +853,7 @@ boolean libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
  */
 return_status libspdm_calculate_th1_hash(IN void *spdm_context,
                                          IN void *spdm_session_info,
-                                         IN boolean is_requester,
+                                         IN bool is_requester,
                                          OUT uint8_t *th1_hash_data);
 
 /*
@@ -868,7 +868,7 @@ return_status libspdm_calculate_th1_hash(IN void *spdm_context,
  */
 return_status libspdm_calculate_th2_hash(IN void *spdm_context,
                                          IN void *spdm_session_info,
-                                         IN boolean is_requester,
+                                         IN bool is_requester,
                                          OUT uint8_t *th2_hash_data);
 
 /**
@@ -878,10 +878,10 @@ return_status libspdm_calculate_th2_hash(IN void *spdm_context,
  * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
  *
- * @retval TRUE  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
- * @retval FALSE Peer certificate chain buffer including spdm_cert_chain_t header is not found.
+ * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
+ * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-boolean libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
+bool libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
                                            OUT void **cert_chain_buffer,
                                            OUT uintn *cert_chain_buffer_size);
 
@@ -892,10 +892,10 @@ boolean libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
  * @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size            size in bytes of the certitiface chain data.
  *
- * @retval TRUE  Peer certificate chain data without spdm_cert_chain_t header is returned.
- * @retval FALSE Peer certificate chain data without spdm_cert_chain_t header is not found.
+ * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
+ * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
-boolean libspdm_get_peer_cert_chain_data(IN void *spdm_context,
+bool libspdm_get_peer_cert_chain_data(IN void *spdm_context,
                                          OUT void **cert_chain_data,
                                          OUT uintn *cert_chain_data_size);
 
@@ -906,10 +906,10 @@ boolean libspdm_get_peer_cert_chain_data(IN void *spdm_context,
  * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
  *
- * @retval TRUE  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
- * @retval FALSE Local used certificate chain buffer including spdm_cert_chain_t header is not found.
+ * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
+ * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-boolean libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
+bool libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
                                             OUT void **cert_chain_buffer,
                                             OUT uintn *cert_chain_buffer_size);
 
@@ -920,10 +920,10 @@ boolean libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
  * @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size            size in bytes of the certitiface chain data.
  *
- * @retval TRUE  Local used certificate chain data without spdm_cert_chain_t header is returned.
- * @retval FALSE Local used certificate chain data without spdm_cert_chain_t header is not found.
+ * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
+ * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
-boolean libspdm_get_local_cert_chain_data(IN void *spdm_context,
+bool libspdm_get_local_cert_chain_data(IN void *spdm_context,
                                           OUT void **cert_chain_data,
                                           OUT uintn *cert_chain_data_size);
 

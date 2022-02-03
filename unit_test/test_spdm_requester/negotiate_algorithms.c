@@ -130,8 +130,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -155,8 +155,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -171,8 +171,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -187,8 +187,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -207,7 +207,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
@@ -232,7 +232,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
             spdm_response.ext_hash_sel_count = 0;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         }
@@ -249,8 +249,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -271,8 +271,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
             SPDM_NEGOTIATE_ALGORITHMS;
         spdm_response.extend_error_data.token = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -298,7 +298,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
             spdm_response.extend_error_data.token = 1;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index2 == 1) {
@@ -323,7 +323,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
             spdm_response.ext_hash_sel_count = 0;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         }
@@ -348,8 +348,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -373,8 +373,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -398,8 +398,8 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -423,7 +423,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE,
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                             sizeof(spdm_message_header_t), &spdm_response,
                                             response_size, response);
     }
@@ -446,7 +446,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.base_hash_sel = m_use_hash_algo;
 
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE,
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                             sizeof(spdm_algorithms_response_t)/2, &spdm_response,
                                             response_size, response);
     }
@@ -470,7 +470,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 2;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -493,7 +493,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 2;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -515,7 +515,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
      *   spdm_response.ext_asym_sel_count = 0;
      *   spdm_response.ext_hash_sel_count = 0;*/
 
-    /*   spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response), &spdm_response, response_size, response);
+    /*   spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response), &spdm_response, response_size, response);
      * }
      *   return RETURN_SUCCESS;*/
 
@@ -537,7 +537,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -560,7 +560,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -584,7 +584,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -608,7 +608,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -632,7 +632,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.ext_asym_sel_count = 0;
         spdm_response.ext_hash_sel_count = 0;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -671,7 +671,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -710,7 +710,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -749,7 +749,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -789,7 +789,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -829,7 +829,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -868,7 +868,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = BIT5;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -908,7 +908,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -948,7 +948,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -988,7 +988,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -1027,7 +1027,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response.struct_table[3].alg_count = 0x20;
         spdm_response.struct_table[3].alg_supported = m_use_key_schedule_algo | BIT5;
 
-        spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message (spdm_context, NULL, false, false, sizeof(spdm_response),
                                             &spdm_response, response_size, response);
     }
         return RETURN_SUCCESS;
@@ -1969,7 +1969,7 @@ void test_spdm_requester_negotiate_algorithms_case31(void **state) {
 
 spdm_test_context_t m_spdm_requester_negotiate_algorithms_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_requester_negotiate_algorithms_test_send_message,
     spdm_requester_negotiate_algorithm_test_receive_message,
 };

@@ -22,7 +22,7 @@ return_status validate_crypt_ecd(void)
     uint8_t signature2[57 * 2];
     uintn sig1_size;
     uintn sig2_size;
-    boolean status;
+    bool status;
 
     my_print("\nCrypto Ed-DSA Signing Verification Testing:\n");
 

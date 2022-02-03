@@ -32,7 +32,7 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.last_encap_request_size = 0;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return RETURN_DEVICE_ERROR;
     }
@@ -86,11 +86,11 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
  **/
 return_status spdm_process_encap_response_certificate(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue)
+    IN void *encap_response, OUT bool *need_continue)
 {
     spdm_certificate_response_t *spdm_response;
     uintn spdm_response_size;
-    boolean result;
+    bool result;
     return_status status;
     uint16_t request_offset;
 
@@ -167,11 +167,11 @@ return_status spdm_process_encap_response_certificate(
     }
 
     if (spdm_response->remainder_length != 0) {
-        *need_continue = TRUE;
+        *need_continue = true;
         return RETURN_SUCCESS;
     }
 
-    *need_continue = FALSE;
+    *need_continue = false;
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         status = spdm_context->local_context.verify_peer_spdm_cert_chain (

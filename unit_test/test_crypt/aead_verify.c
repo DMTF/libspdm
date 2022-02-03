@@ -135,7 +135,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sm4_gcm_tag[] = {
  **/
 return_status validate_crypt_aead_cipher(void)
 {
-    boolean status;
+    bool status;
     uint8_t OutBuffer[1024];
     uintn OutBufferSize;
     uint8_t OutTag[1024];

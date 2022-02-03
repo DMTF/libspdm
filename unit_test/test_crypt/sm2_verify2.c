@@ -90,7 +90,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_sm2_test_pem_key[] = {
  **/
 return_status validate_crypt_sm2_2(void)
 {
-    boolean status;
+    bool status;
     void *sm2_priv_key;
     void *sm2_pub_key;
     uint8_t message[] = "Sm2Test";

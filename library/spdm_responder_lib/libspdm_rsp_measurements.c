@@ -18,10 +18,10 @@
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  *
- * @retval TRUE  measurement signature is created.
- * @retval FALSE measurement signature is not created.
+ * @retval true  measurement signature is created.
+ * @retval false measurement signature is not created.
  **/
-boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
+bool spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
                                           IN spdm_session_info_t *session_info,
                                           IN OUT void *response_message,
                                           IN uintn response_message_size)
@@ -29,7 +29,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
     uint8_t *ptr;
     uintn measurment_sig_size;
     uintn signature_size;
-    boolean result;
+    bool result;
     return_status status;
 
     signature_size = libspdm_get_asym_signature_size(
@@ -43,7 +43,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
                    measurment_sig_size);
 
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
-        return FALSE;
+        return false;
     }
     ptr += SPDM_NONCE_SIZE;
 
@@ -57,7 +57,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
     status = libspdm_append_message_m(spdm_context, session_info, response_message,
                                       response_message_size - signature_size);
     if (RETURN_ERROR(status)) {
-        return FALSE;
+        return false;
     }
 
     result = spdm_generate_measurement_signature(spdm_context, session_info, ptr);
@@ -71,7 +71,7 @@ boolean spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
-boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
+bool spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
                                        IN OUT void *response_message,
                                        IN uintn response_message_size)
 {
@@ -86,7 +86,7 @@ boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
                    measurment_no_sig_size);
 
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
-        return FALSE;
+        return false;
     }
     ptr += SPDM_NONCE_SIZE;
 
@@ -97,7 +97,7 @@ boolean spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
              spdm_context->local_context.opaque_measurement_rsp_size);
     ptr += spdm_context->local_context.opaque_measurement_rsp_size;
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -138,7 +138,7 @@ return_status spdm_get_response_measurements(IN void *context,
     uint8_t *measurements;
     uint8_t measurements_count;
     uintn measurements_size;
-    boolean ret;
+    bool ret;
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t content_changed;
@@ -159,7 +159,7 @@ return_status spdm_get_response_measurements(IN void *context,
     }
     /* check local context here, because meas_cap is reserved for requester.*/
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -237,7 +237,7 @@ return_status spdm_get_response_measurements(IN void *context,
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
         0) {
         if (!spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE, 0,
+                spdm_context, false, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,

@@ -33,7 +33,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 {
     spdm_psk_exchange_request_t *spdm_request;
     spdm_psk_exchange_response_t *spdm_response;
-    boolean result;
+    bool result;
     uint8_t slot_id;
     uint32_t session_id;
     uintn measurement_summary_hash_size;
@@ -68,7 +68,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
         return libspdm_generate_error_response(
@@ -85,7 +85,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     {
         /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, TRUE, 0,
+                spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
                 .measurement_spec !=
@@ -125,7 +125,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     }
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         if (spdm_context->encap_context.error_state !=
@@ -138,7 +138,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
         }
     }
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         spdm_request->header.param1 > 0) {
         return libspdm_generate_error_response(
@@ -153,7 +153,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     }
 
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
-        spdm_context, FALSE, spdm_request->header.param1);
+        spdm_context, false, spdm_request->header.param1);
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
@@ -188,7 +188,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     opaque_psk_exchange_rsp_size =
         spdm_get_opaque_data_version_selection_data_size(spdm_context);
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     } else {
@@ -215,7 +215,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             response_size, response);
     }
     session_id = (req_session_id << 16) | rsp_session_id;
-    session_info = libspdm_assign_session_id(spdm_context, session_id, TRUE);
+    session_info = libspdm_assign_session_id(spdm_context, session_id, true);
     if (session_info == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
@@ -234,7 +234,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     ptr = (void *)(spdm_response + 1);
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            spdm_context, false, 0,  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
         result = libspdm_generate_measurement_summary_hash(
             spdm_context->connection_info.version,
@@ -246,7 +246,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             &measurement_summary_hash_size);
     }
     else {
-        result = TRUE;
+        result = true;
     }
 
     if ((measurement_summary_hash_size == 0) &&
@@ -276,7 +276,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
     ptr += opaque_psk_exchange_rsp_size;
 
 
-    status = libspdm_append_message_k(spdm_context, session_info, FALSE, request, request_size);
+    status = libspdm_append_message_k(spdm_context, session_info, false, request, request_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
@@ -284,7 +284,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                                                response_size, response);
     }
 
-    status = libspdm_append_message_k(spdm_context, session_info, FALSE, spdm_response,
+    status = libspdm_append_message_k(spdm_context, session_info, false, spdm_response,
                                       (uintn)ptr - (uintn)spdm_response);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
@@ -295,7 +295,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
 
     DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
            session_id));
-    status = libspdm_calculate_th1_hash(spdm_context, session_info, FALSE,
+    status = libspdm_calculate_th1_hash(spdm_context, session_info, false,
                                         th1_hash_data);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
@@ -320,7 +320,7 @@ return_status spdm_get_response_psk_exchange(IN void *context,
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
             0, response_size, response);
     }
-    status = libspdm_append_message_k(spdm_context, session_info, FALSE, ptr, hmac_size);
+    status = libspdm_append_message_k(spdm_context, session_info, false, ptr, hmac_size);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
@@ -336,14 +336,14 @@ return_status spdm_get_response_psk_exchange(IN void *context,
                            LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to receive PSK_FINISH, enter application phase directly.*/
 
         DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
-                                            FALSE, th2_hash_data);
+                                            false, th2_hash_data);
         if (RETURN_ERROR(status)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,

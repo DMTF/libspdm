@@ -17,9 +17,9 @@
 /**
  * Performs AEAD ChaCha20Poly1305 authenticated encryption on a data buffer and additional authenticated data (AAD).
  *
- * iv_size must be 12, otherwise FALSE is returned.
- * key_size must be 32, otherwise FALSE is returned.
- * tag_size must be 16, otherwise FALSE is returned.
+ * iv_size must be 12, otherwise false is returned.
+ * key_size must be 32, otherwise false is returned.
+ * tag_size must be 16, otherwise false is returned.
  *
  * @param[in]   key         Pointer to the encryption key.
  * @param[in]   key_size     size of the encryption key in bytes.
@@ -34,11 +34,11 @@
  * @param[out]  data_out     Pointer to a buffer that receives the encryption output.
  * @param[out]  data_out_size size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD ChaCha20Poly1305 authenticated encryption succeeded.
- * @retval FALSE  AEAD ChaCha20Poly1305 authenticated encryption failed.
+ * @retval true   AEAD ChaCha20Poly1305 authenticated encryption succeeded.
+ * @retval false  AEAD ChaCha20Poly1305 authenticated encryption failed.
  *
  **/
-boolean aead_chacha20_poly1305_encrypt(
+bool aead_chacha20_poly1305_encrypt(
     IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
     IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
     IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
@@ -48,24 +48,24 @@ boolean aead_chacha20_poly1305_encrypt(
     int32_t ret;
 
     if (data_in_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (a_data_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (iv_size != 12) {
-        return FALSE;
+        return false;
     }
     if (key_size != 32) {
-        return FALSE;
+        return false;
     }
     if (tag_size != 16) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
-            return FALSE;
+            return false;
         }
     }
 
@@ -73,7 +73,7 @@ boolean aead_chacha20_poly1305_encrypt(
 
     ret = mbedtls_chachapoly_setkey(&ctx, key);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
     ret = mbedtls_chachapoly_encrypt_and_tag(&ctx, (uint32_t)data_in_size, iv,
@@ -81,22 +81,22 @@ boolean aead_chacha20_poly1305_encrypt(
                                              data_in, data_out, tag_out);
     mbedtls_chachapoly_free(&ctx);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         *data_out_size = data_in_size;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
  * Performs AEAD ChaCha20Poly1305 authenticated decryption on a data buffer and additional authenticated data (AAD).
  *
- * iv_size must be 12, otherwise FALSE is returned.
- * key_size must be 32, otherwise FALSE is returned.
- * tag_size must be 16, otherwise FALSE is returned.
- * If additional authenticated data verification fails, FALSE is returned.
+ * iv_size must be 12, otherwise false is returned.
+ * key_size must be 32, otherwise false is returned.
+ * tag_size must be 16, otherwise false is returned.
+ * If additional authenticated data verification fails, false is returned.
  *
  * @param[in]   key         Pointer to the encryption key.
  * @param[in]   key_size     size of the encryption key in bytes.
@@ -111,11 +111,11 @@ boolean aead_chacha20_poly1305_encrypt(
  * @param[out]  data_out     Pointer to a buffer that receives the decryption output.
  * @param[out]  data_out_size size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD ChaCha20Poly1305 authenticated decryption succeeded.
- * @retval FALSE  AEAD ChaCha20Poly1305 authenticated decryption failed.
+ * @retval true   AEAD ChaCha20Poly1305 authenticated decryption succeeded.
+ * @retval false  AEAD ChaCha20Poly1305 authenticated decryption failed.
  *
  **/
-boolean aead_chacha20_poly1305_decrypt(
+bool aead_chacha20_poly1305_decrypt(
     IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
     IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
     IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
@@ -125,24 +125,24 @@ boolean aead_chacha20_poly1305_decrypt(
     int32_t ret;
 
     if (data_in_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (a_data_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (iv_size != 12) {
-        return FALSE;
+        return false;
     }
     if (key_size != 32) {
-        return FALSE;
+        return false;
     }
     if (tag_size != 16) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
-            return FALSE;
+            return false;
         }
     }
 
@@ -150,7 +150,7 @@ boolean aead_chacha20_poly1305_decrypt(
 
     ret = mbedtls_chachapoly_setkey(&ctx, key);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
     ret = mbedtls_chachapoly_auth_decrypt(&ctx, (uint32_t)data_in_size, iv,
@@ -158,11 +158,11 @@ boolean aead_chacha20_poly1305_decrypt(
                                           data_in, data_out);
     mbedtls_chachapoly_free(&ctx);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         *data_out_size = data_in_size;
     }
 
-    return TRUE;
+    return true;
 }

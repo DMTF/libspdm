@@ -114,7 +114,7 @@ void test_spdm_responder_digests_case4(void **State)
 
 spdm_test_context_t m_spdm_responder_digests_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

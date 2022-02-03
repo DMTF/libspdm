@@ -23,7 +23,7 @@ void test_libspdm_decode_secured_message(void **State)
     uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     spdm_session_info_t *session_info;
-    boolean is_requester;
+    bool is_requester;
     uint32_t session_id;
     spdm_secured_message_context_t *secured_message_context;
 
@@ -41,7 +41,7 @@ void test_libspdm_decode_secured_message(void **State)
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, FALSE);
+    spdm_session_info_init(spdm_context, session_info, session_id, false);
     secured_message_context = session_info->secured_message_context;
     secured_message_context->session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
     secured_message_context->session_state = LIBSPDM_SESSION_STATE_HANDSHAKING;
@@ -56,7 +56,7 @@ void test_libspdm_decode_secured_message(void **State)
 
 spdm_test_context_t m_spdm_transport_mctp_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

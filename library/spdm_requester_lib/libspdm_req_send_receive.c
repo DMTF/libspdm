@@ -23,7 +23,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
 return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
-                                   IN boolean is_app_message,
+                                   IN bool is_app_message,
                                    IN uintn request_size, IN void *request)
 {
     spdm_context_t *spdm_context;
@@ -39,7 +39,7 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
 
     message_size = sizeof(message);
     status = spdm_context->transport_encode_message(
-        spdm_context, session_id, is_app_message, TRUE, request_size,
+        spdm_context, session_id, is_app_message, true, request_size,
         request, &message_size, message);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO, "transport_encode_message status - %p\n",
@@ -74,7 +74,7 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
 return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id,
-                                       IN boolean is_app_message,
+                                       IN bool is_app_message,
                                        IN OUT uintn *response_size,
                                        OUT void *response)
 {
@@ -83,7 +83,7 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
     uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
     uint32_t *message_session_id;
-    boolean is_message_app_message;
+    bool is_message_app_message;
 
     spdm_context = context;
 
@@ -100,10 +100,10 @@ return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id
     }
 
     message_session_id = NULL;
-    is_message_app_message = FALSE;
+    is_message_app_message = false;
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, &is_message_app_message,
-        FALSE, message_size, message, response_size, response);
+        false, message_size, message, response_size, response);
 
     if (session_id != NULL) {
         if (message_session_id == NULL) {
@@ -180,7 +180,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
 
     if ((session_id != NULL) &&
         spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         session_info = libspdm_get_session_info_via_session_id(
@@ -197,7 +197,7 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
         }
     }
 
-    return libspdm_send_request(spdm_context, session_id, FALSE, request_size,
+    return libspdm_send_request(spdm_context, session_id, false, request_size,
                                 request);
 }
 
@@ -226,7 +226,7 @@ return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
 
     if ((session_id != NULL) &&
         spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         session_info = libspdm_get_session_info_via_session_id(
@@ -243,6 +243,6 @@ return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
         }
     }
 
-    return libspdm_receive_response(spdm_context, session_id, FALSE,
+    return libspdm_receive_response(spdm_context, session_id, false,
                                     response_size, response);
 }

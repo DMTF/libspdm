@@ -44,7 +44,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
     session_state = libspdm_secured_message_get_session_state(
@@ -56,7 +56,7 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP)) {
         end_session_attributes = 0;
     }

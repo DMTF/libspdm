@@ -24,7 +24,7 @@ uint8_t m_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 return_status validate_crypt_prng(void)
 {
     uintn index;
-    boolean status;
+    bool status;
 
     my_print(" \nCrypto PRNG Engine Testing:\n");
 

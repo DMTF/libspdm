@@ -47,7 +47,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
     }
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
         return libspdm_generate_encap_error_response(
@@ -101,7 +101,7 @@ return_status spdm_get_encap_response_key_update(IN void *context,
                session_id));
         status = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
-            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
         break;
     default:
         status = RETURN_UNSUPPORTED;

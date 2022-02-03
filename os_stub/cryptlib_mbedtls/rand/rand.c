@@ -23,34 +23,34 @@
  * @param[in]  seed_size  size of seed value.
  *                      If seed is NULL, this parameter is ignored.
  *
- * @retval TRUE   Pseudorandom number generator has enough entropy for random generation.
- * @retval FALSE  Pseudorandom number generator does not have enough entropy for random generation.
+ * @retval true   Pseudorandom number generator has enough entropy for random generation.
+ * @retval false  Pseudorandom number generator does not have enough entropy for random generation.
  *
  **/
-boolean random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
+bool random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size)
 {
     /* TBD*/
-    return TRUE;
+    return true;
 }
 
 /**
  * Generates a pseudorandom byte stream of the specified size.
  *
- * If output is NULL, then return FALSE.
+ * If output is NULL, then return false.
  *
  * @param[out]  output  Pointer to buffer to receive random value.
  * @param[in]   size    size of random bytes to generate.
  *
- * @retval TRUE   Pseudorandom byte stream generated successfully.
- * @retval FALSE  Pseudorandom number generator fails to generate due to lack of entropy.
+ * @retval true   Pseudorandom byte stream generated successfully.
+ * @retval false  Pseudorandom number generator fails to generate due to lack of entropy.
  *
  **/
-boolean random_bytes(OUT uint8_t *output, IN uintn size)
+bool random_bytes(OUT uint8_t *output, IN uintn size)
 {
-    boolean ret;
+    bool ret;
     uint64_t temp_rand;
 
-    ret = FALSE;
+    ret = false;
 
     while (size > 0) {
         /* Use rnglib to get random number*/
@@ -74,7 +74,7 @@ boolean random_bytes(OUT uint8_t *output, IN uintn size)
 
 int myrand(void *rng_state, unsigned char *output, size_t len)
 {
-    boolean result = random_bytes(output, len);
+    bool result = random_bytes(output, len);
 
 
     /* The MbedTLS function f_rng, which myrand implements, is not

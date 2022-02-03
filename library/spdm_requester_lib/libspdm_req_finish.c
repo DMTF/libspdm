@@ -46,12 +46,12 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     uintn spdm_response_size;
     spdm_session_info_t *session_info;
     uint8_t *ptr;
-    boolean result;
+    bool result;
     uint8_t th2_hash_data[64];
     libspdm_session_state_t session_state;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
         status = RETURN_UNSUPPORTED;
@@ -67,7 +67,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(FALSE);
+        ASSERT(false);
         status = RETURN_UNSUPPORTED;
         goto error;
     }
@@ -130,7 +130,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         sizeof(spdm_finish_request_t) + signature_size + hmac_size;
     ptr = spdm_request.signature;
 
-    status = libspdm_append_message_f(spdm_context, session_info, TRUE, (uint8_t *)&spdm_request,
+    status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)&spdm_request,
                                       sizeof(spdm_finish_request_t));
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
@@ -143,7 +143,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
             status = RETURN_SECURITY_VIOLATION;
             goto error;
         }
-        status = libspdm_append_message_f(spdm_context, session_info, TRUE, ptr,
+        status = libspdm_append_message_f(spdm_context, session_info, true, ptr,
                                           signature_size);
         if (RETURN_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
@@ -158,7 +158,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         goto error;
     }
 
-    status = libspdm_append_message_f(spdm_context, session_info, TRUE, ptr, hmac_size);
+    status = libspdm_append_message_f(spdm_context, session_info, true, ptr, hmac_size);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -209,7 +209,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         hmac_size = 0;
@@ -220,7 +220,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         goto error;
     }
 
-    status = libspdm_append_message_f(spdm_context, session_info, TRUE, &spdm_response,
+    status = libspdm_append_message_f(spdm_context, session_info, true, &spdm_response,
                                       sizeof(spdm_finish_response_t));
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
@@ -228,7 +228,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
@@ -242,7 +242,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
         }
 
         status = libspdm_append_message_f(
-            spdm_context, session_info, TRUE,
+            spdm_context, session_info, true,
             (uint8_t *)&spdm_response +
             sizeof(spdm_finish_response_t),
             hmac_size);
@@ -253,7 +253,7 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
     }
 
     DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
-    status = libspdm_calculate_th2_hash(spdm_context, session_info, TRUE,
+    status = libspdm_calculate_th2_hash(spdm_context, session_info, true,
                                         th2_hash_data);
     if (RETURN_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;

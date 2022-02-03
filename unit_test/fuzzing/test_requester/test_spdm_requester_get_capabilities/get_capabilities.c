@@ -48,7 +48,7 @@ void test_spdm_requester_get_capabilities(void **State)
 
 spdm_test_context_t test_spdm_requester_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

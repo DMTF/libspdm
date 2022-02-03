@@ -30,7 +30,7 @@ return_status validate_crypt_sm2(void)
     uint8_t message[] = "Sm2Test";
     uint8_t signature[66 * 2];
     uintn sig_size;
-    boolean status;
+    bool status;
 
     my_print("\nCrypto SM2 key Exchange Testing:\n");
 
@@ -61,7 +61,7 @@ return_status validate_crypt_sm2(void)
     }
 
     my_print("Initialize key1 ... ");
-    status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, TRUE);
+    status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, true);
     if (!status) {
         my_print("[Fail]");
         sm2_key_exchange_free(Sm2_1);
@@ -70,7 +70,7 @@ return_status validate_crypt_sm2(void)
     }
 
     my_print("Initialize key1 ... ");
-    status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, FALSE);
+    status = sm2_key_exchange_init (Sm2_1, CRYPTO_NID_SM3_256, NULL, 0, NULL, 0, false);
     if (!status) {
         my_print("[Fail]");
         sm2_key_exchange_free(Sm2_1);

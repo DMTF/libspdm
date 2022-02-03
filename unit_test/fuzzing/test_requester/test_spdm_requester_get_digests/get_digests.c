@@ -64,7 +64,7 @@ void test_spdm_requester_get_diges(void **State)
 
 spdm_test_context_t m_spdm_requester_get_diges_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

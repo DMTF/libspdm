@@ -61,7 +61,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
                                        OUT void *requester_nonce OPTIONAL,
                                        OUT void *responder_nonce OPTIONAL)
 {
-    boolean result;
+    bool result;
     return_status status;
     spdm_get_measurements_request_t spdm_request;
     uintn spdm_request_size;
@@ -84,7 +84,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         return RETURN_UNSUPPORTED;
     }
@@ -104,7 +104,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(FALSE);
+            ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
         session_state = libspdm_secured_message_get_session_state(
@@ -125,7 +125,7 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG) &&
         (request_attribute != 0)) {
         return RETURN_INVALID_PARAMETER;

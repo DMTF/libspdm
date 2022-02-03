@@ -38,7 +38,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         return RETURN_UNSUPPORTED;
@@ -51,7 +51,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
     session_state = libspdm_secured_message_get_session_state(

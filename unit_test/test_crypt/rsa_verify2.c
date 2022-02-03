@@ -473,7 +473,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const char *m_payload =
  **/
 return_status validate_crypt_rsa_2(void)
 {
-    boolean status;
+    bool status;
     void *rsa_priv_key;
     void *rsa_pub_key;
     uint8_t *signature;

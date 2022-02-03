@@ -53,7 +53,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
                                  OUT void *responder_nonce OPTIONAL)
 {
     return_status status;
-    boolean result;
+    bool result;
     spdm_challenge_request_t spdm_request;
     spdm_challenge_auth_response_max_t spdm_response;
     uintn spdm_response_size;
@@ -76,7 +76,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                SPDM_CHALLENGE);
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         return RETURN_UNSUPPORTED;
     }
@@ -169,7 +169,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     }
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         if (!spdm_is_capabilities_flag_supported(
-                spdm_context, TRUE,
+                spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
             return RETURN_DEVICE_ERROR;
@@ -180,7 +180,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
-        spdm_context, TRUE, measurement_hash_type);
+        spdm_context, true, measurement_hash_type);
 
     if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
         hash_size + SPDM_NONCE_SIZE +
@@ -260,7 +260,7 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
     DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
     internal_dump_hex(signature, signature_size);
     result = spdm_verify_challenge_auth_signature(
-        spdm_context, TRUE, signature, signature_size);
+        spdm_context, true, signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
         spdm_context->error_state =

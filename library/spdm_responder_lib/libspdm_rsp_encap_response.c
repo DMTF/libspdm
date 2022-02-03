@@ -37,7 +37,7 @@ typedef return_status (*spdm_get_encap_request_func)(
  **/
 typedef return_status (*spdm_process_encap_response_func)(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue);
+    IN void *encap_response, OUT bool *need_continue);
 
 typedef struct {
     uint8_t request_op_code;
@@ -74,7 +74,7 @@ spdm_get_encap_struct_via_op_code(IN uint8_t request_op_code)
             return &m_encap_response_struct[index];
         }
     }
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
@@ -100,7 +100,7 @@ void spdm_encap_move_to_next_op_code(IN spdm_context_t *spdm_context)
             return;
         }
     }
-    ASSERT(FALSE);
+    ASSERT(false);
 }
 
 /**
@@ -121,11 +121,11 @@ return_status spdm_process_encapsulated_response(
     OUT void *encap_request)
 {
     return_status status;
-    boolean need_continue;
+    bool need_continue;
     spdm_encap_response_struct_t *encap_response_struct;
 
     /* Process previous response*/
-    need_continue = FALSE;
+    need_continue = false;
 
     if (spdm_context->encap_context.current_request_op_code != 0) {
         encap_response_struct = spdm_get_encap_struct_via_op_code(
@@ -216,7 +216,7 @@ void spdm_init_mut_auth_encap_state(IN spdm_context_t *spdm_context,
              sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Session Mutual Auth*/
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0) ||
         (mut_auth_requested ==
          SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED)) {
@@ -268,7 +268,7 @@ void spdm_init_basic_mut_auth_encap_state(IN spdm_context_t *spdm_context)
              sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Basic Mutual Auth*/
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0)) {
         spdm_context->encap_context.request_op_code_count = 1;
         spdm_context->encap_context.request_op_code_sequence[0] =
@@ -352,7 +352,7 @@ return_status spdm_get_response_encapsulated_request(
     spdm_request = request;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
         return libspdm_generate_error_response(
@@ -451,7 +451,7 @@ return_status spdm_get_response_encapsulated_response_ack(
     spdm_request = request;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
         return libspdm_generate_error_response(

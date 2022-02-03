@@ -23,7 +23,7 @@
 #include "library/malloclib.h"
 #include "hal/library/cryptlib.h"
 
-boolean read_input_file(IN char *file_name, OUT void **file_data,
+bool read_input_file(IN char *file_name, OUT void **file_data,
                         OUT uintn *file_size);
 
 uintn ascii_str_len(IN const char *string);

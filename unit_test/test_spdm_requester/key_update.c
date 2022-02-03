@@ -57,7 +57,7 @@ static void spdm_set_standard_key_update_test_state(
 
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -141,7 +141,7 @@ return_status spdm_requester_key_update_test_send_message(
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
-        boolean is_app_message;
+        bool is_app_message;
         spdm_session_info_t *session_info;
 
         message_session_id = NULL;
@@ -160,7 +160,7 @@ return_status spdm_requester_key_update_test_send_message(
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
-                                                    &message_session_id, &is_app_message, TRUE,
+                                                    &message_session_id, &is_app_message, true,
                                                     request_size,
                                                     request, &decoded_message_size,
                                                     decoded_message);
@@ -181,7 +181,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -200,7 +200,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -224,7 +224,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -243,7 +243,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -267,7 +267,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -286,7 +286,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -310,7 +310,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -329,7 +329,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -356,7 +356,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t    *session_info;
 
             message_session_id = NULL;
@@ -375,7 +375,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -408,7 +408,7 @@ return_status spdm_requester_key_update_test_send_message(
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
-        boolean is_app_message;
+        bool is_app_message;
         spdm_session_info_t *session_info;
 
         message_session_id = NULL;
@@ -427,7 +427,7 @@ return_status spdm_requester_key_update_test_send_message(
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
-                                                    &message_session_id, &is_app_message, TRUE,
+                                                    &message_session_id, &is_app_message, true,
                                                     request_size,
                                                     request, &decoded_message_size,
                                                     decoded_message);
@@ -448,7 +448,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t    *session_info;
 
             message_session_id = NULL;
@@ -467,7 +467,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -493,7 +493,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t    *session_info;
 
             message_session_id = NULL;
@@ -512,7 +512,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -537,7 +537,7 @@ return_status spdm_requester_key_update_test_send_message(
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
-        boolean is_app_message;
+        bool is_app_message;
         spdm_session_info_t *session_info;
 
         message_session_id = NULL;
@@ -556,7 +556,7 @@ return_status spdm_requester_key_update_test_send_message(
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
-                                                    &message_session_id, &is_app_message, TRUE,
+                                                    &message_session_id, &is_app_message, true,
                                                     request_size,
                                                     request, &decoded_message_size,
                                                     decoded_message);
@@ -574,7 +574,7 @@ return_status spdm_requester_key_update_test_send_message(
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
-        boolean is_app_message;
+        bool is_app_message;
         spdm_session_info_t *session_info;
 
         message_session_id = NULL;
@@ -593,7 +593,7 @@ return_status spdm_requester_key_update_test_send_message(
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
-                                                    &message_session_id, &is_app_message, TRUE,
+                                                    &message_session_id, &is_app_message, true,
                                                     request_size,
                                                     request, &decoded_message_size,
                                                     decoded_message);
@@ -614,7 +614,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -633,7 +633,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -657,7 +657,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -676,7 +676,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -700,7 +700,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t *session_info;
 
             message_session_id = NULL;
@@ -719,7 +719,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -746,7 +746,7 @@ return_status spdm_requester_key_update_test_send_message(
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
-            boolean is_app_message;
+            bool is_app_message;
             spdm_session_info_t    *session_info;
 
             message_session_id = NULL;
@@ -765,7 +765,7 @@ return_status spdm_requester_key_update_test_send_message(
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
-                                                        &message_session_id, &is_app_message, TRUE,
+                                                        &message_session_id, &is_app_message, true,
                                                         request_size,
                                                         request, &decoded_message_size,
                                                         decoded_message);
@@ -827,7 +827,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -868,7 +868,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -898,7 +898,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -926,7 +926,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -959,7 +959,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -978,7 +978,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -997,7 +997,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1029,7 +1029,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1062,7 +1062,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.extend_error_data.token = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1102,7 +1102,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.extend_error_data.token = 1;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1121,7 +1121,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1140,7 +1140,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1177,7 +1177,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1232,7 +1232,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1274,7 +1274,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1315,7 +1315,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1356,7 +1356,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1398,7 +1398,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1440,7 +1440,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1476,7 +1476,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1494,7 +1494,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1532,7 +1532,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1550,7 +1550,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1588,7 +1588,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1607,7 +1607,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1627,7 +1627,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1665,7 +1665,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1683,7 +1683,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1721,7 +1721,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1744,7 +1744,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.extend_error_data.token = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1782,7 +1782,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1805,7 +1805,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.extend_error_data.token = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1825,7 +1825,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -1865,7 +1865,7 @@ return_status spdm_requester_key_update_test_receive_message(
                 spdm_response.header.param2 = my_last_token;
 
                 spdm_transport_test_encode_message(spdm_context,
-                                                   &session_id, FALSE, FALSE,
+                                                   &session_id, false, false,
                                                    sizeof(spdm_response), &spdm_response,
                                                    response_size, response);
                 /* WALKAROUND: If just use single context to encode
@@ -1884,7 +1884,7 @@ return_status spdm_requester_key_update_test_receive_message(
                 spdm_response.header.param2 = 0;
 
                 spdm_transport_test_encode_message(spdm_context,
-                                                   &session_id, FALSE, FALSE,
+                                                   &session_id, false, false,
                                                    sizeof(spdm_response), &spdm_response,
                                                    response_size, response);
                 /* WALKAROUND: If just use single context to encode
@@ -1947,7 +1947,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -1989,7 +1989,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -2031,7 +2031,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -2075,7 +2075,7 @@ return_status spdm_requester_key_update_test_receive_message(
         }
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
@@ -2129,7 +2129,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
 
         /*restore new key*/
@@ -2189,7 +2189,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
 
         /*restore new key*/
@@ -2252,7 +2252,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
 
@@ -2276,7 +2276,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -2294,7 +2294,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -2349,7 +2349,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
 
         /*restore new key*/
@@ -2411,7 +2411,7 @@ return_status spdm_requester_key_update_test_receive_message(
         spdm_response.extend_error_data.token = 0;
 
         spdm_transport_test_encode_message(spdm_context, &session_id,
-                                           FALSE, FALSE, sizeof(spdm_response),
+                                           false, false, sizeof(spdm_response),
                                            &spdm_response, response_size, response);
 
         /*restore new key*/
@@ -2481,7 +2481,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.extend_error_data.token = 1;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
 
@@ -2505,7 +2505,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -2523,7 +2523,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = my_last_token;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
@@ -2583,7 +2583,7 @@ return_status spdm_requester_key_update_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(spdm_context,
-                                               &session_id, FALSE, FALSE,
+                                               &session_id, false, false,
                                                sizeof(spdm_response), &spdm_response,
                                                response_size, response);
 
@@ -2653,7 +2653,7 @@ void test_spdm_requester_key_update_case1(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
@@ -2699,7 +2699,7 @@ void test_spdm_requester_key_update_case2(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -2751,7 +2751,7 @@ void test_spdm_requester_key_update_case3(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
 }
@@ -2792,7 +2792,7 @@ void test_spdm_requester_key_update_case4(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -2843,7 +2843,7 @@ void test_spdm_requester_key_update_case5(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -2901,7 +2901,7 @@ void test_spdm_requester_key_update_case6(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -2951,7 +2951,7 @@ void test_spdm_requester_key_update_case7(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -2995,7 +2995,7 @@ void test_spdm_requester_key_update_case8(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3053,7 +3053,7 @@ void test_spdm_requester_key_update_case9(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3111,7 +3111,7 @@ void test_spdm_requester_key_update_case10(void **state)
         /*no keys are updated*/
 
         status = libspdm_key_update(
-            spdm_context, session_id, TRUE);
+            spdm_context, session_id, true);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
@@ -3189,7 +3189,7 @@ void test_spdm_requester_key_update_case11(void **state)
 #endif
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3254,7 +3254,7 @@ void test_spdm_requester_key_update_case12(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3305,7 +3305,7 @@ void test_spdm_requester_key_update_case13(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3362,7 +3362,7 @@ void test_spdm_requester_key_update_case14(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3414,7 +3414,7 @@ void test_spdm_requester_key_update_case15(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3466,7 +3466,7 @@ void test_spdm_requester_key_update_case16(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3522,7 +3522,7 @@ void test_spdm_requester_key_update_case17(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3579,7 +3579,7 @@ void test_spdm_requester_key_update_case18(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3637,7 +3637,7 @@ void test_spdm_requester_key_update_case19(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3687,7 +3687,7 @@ void test_spdm_requester_key_update_case20(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -3736,7 +3736,7 @@ void test_spdm_requester_key_update_case21(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3793,7 +3793,7 @@ void test_spdm_requester_key_update_case22(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3856,7 +3856,7 @@ void test_spdm_requester_key_update_case23(void **state)
         /*response side *not* updated*/
 
         status = libspdm_key_update(
-            spdm_context, session_id, TRUE);
+            spdm_context, session_id, true);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
@@ -3928,7 +3928,7 @@ void test_spdm_requester_key_update_case24(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -3985,7 +3985,7 @@ void test_spdm_requester_key_update_case25(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4042,7 +4042,7 @@ void test_spdm_requester_key_update_case26(void **state)
     /*response side *not* updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, TRUE);
+        spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4102,7 +4102,7 @@ void test_spdm_requester_key_update_case27(void **state)
                                sizeof(m_rsp_secret_buffer));
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4166,7 +4166,7 @@ void test_spdm_requester_key_update_case28(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4231,7 +4231,7 @@ void test_spdm_requester_key_update_case29(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4306,7 +4306,7 @@ void test_spdm_requester_key_update_case30(void **state)
                                sizeof(m_rsp_secret_buffer));
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4369,7 +4369,7 @@ void test_spdm_requester_key_update_case31(void **state)
                                   ->application_secret.response_data_sequence_number;
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -4426,7 +4426,7 @@ void test_spdm_requester_key_update_case32(void **state)
     /*no keys are updated*/
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4501,7 +4501,7 @@ void test_spdm_requester_key_update_case33(void **state)
                                sizeof(m_rsp_secret_buffer));
 
     status = libspdm_key_update(
-        spdm_context, session_id, FALSE);
+        spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_memory_equal(((spdm_secured_message_context_t
@@ -4572,7 +4572,7 @@ void test_spdm_requester_key_update_case34(void **state)
         /*no keys are updated*/
 
         status = libspdm_key_update(
-            spdm_context, session_id, FALSE);
+            spdm_context, session_id, false);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
@@ -4605,7 +4605,7 @@ void test_spdm_requester_key_update_case34(void **state)
 
 spdm_test_context_t m_spdm_requester_key_update_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_requester_key_update_test_send_message,
     spdm_requester_key_update_test_receive_message,
 };

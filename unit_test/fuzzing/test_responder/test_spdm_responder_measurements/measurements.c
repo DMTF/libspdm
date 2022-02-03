@@ -73,10 +73,10 @@ void test_spdm_responder_measurements_case2(void **State)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
 
     response_size = sizeof(response);
 
@@ -167,10 +167,10 @@ void test_spdm_responder_measurements_case4(void **State)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
 
     response_size = sizeof(response);
 
@@ -182,7 +182,7 @@ void test_spdm_responder_measurements_case4(void **State)
 
 spdm_test_context_t m_spdm_responder_measurements_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
@@ -199,7 +199,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_responder_measurements_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
-    /*last_spdm_request_session_id_valid: TRUE*/
+    /*last_spdm_request_session_id_valid: true*/
     spdm_unit_test_group_setup(&State);
     test_spdm_responder_measurements_case2(&State);
     spdm_unit_test_group_teardown(&State);
@@ -210,7 +210,7 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     spdm_unit_test_group_teardown(&State);
 
     /*Select version based on GET_VERSION/VERSION support
-     * last_spdm_request_session_id_valid: TRUE*/
+     * last_spdm_request_session_id_valid: true*/
     spdm_unit_test_group_setup(&State);
     test_spdm_responder_measurements_case4(&State);
     spdm_unit_test_group_teardown(&State);

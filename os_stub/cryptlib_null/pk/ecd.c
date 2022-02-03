@@ -50,14 +50,14 @@ void ecd_free(IN void *ecd_context)
  * @param[in]       public         Pointer to the buffer to receive generated public X,Y.
  * @param[in]       public_size     The size of public buffer in bytes.
  *
- * @retval  TRUE   Ed public key component was set successfully.
- * @retval  FALSE  Invalid EC public key component.
+ * @retval  true   Ed public key component was set successfully.
+ * @retval  false  Invalid EC public key component.
  *
  **/
-boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
+bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
                         IN uintn public_key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -71,14 +71,14 @@ boolean ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval  TRUE   Ed key component was retrieved successfully.
- * @retval  FALSE  Invalid EC public key component.
+ * @retval  true   Ed key component was retrieved successfully.
+ * @retval  false  Invalid EC public key component.
  *
  **/
-boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
+bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
                         IN OUT uintn *public_key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -86,17 +86,17 @@ boolean ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * NOTE: This function performs integrity checks on all the Ed key material, so
  *      the Ed key structure must contain all the private key data.
  *
- * If ecd_context is NULL, then return FALSE.
+ * If ecd_context is NULL, then return false.
  *
  * @param[in]  ecd_context  Pointer to Ed context to check.
  *
- * @retval  TRUE   Ed key components are valid.
- * @retval  FALSE  Ed key components are not valid.
+ * @retval  true   Ed key components are valid.
+ * @retval  false  Ed key components are not valid.
  *
  **/
-boolean ecd_check_key(IN void *ecd_context)
+bool ecd_check_key(IN void *ecd_context)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -105,37 +105,37 @@ boolean ecd_check_key(IN void *ecd_context)
  * For ed25519, the public_size is 32.
  * For ed448, the public_size is 57.
  *
- * If ecd_context is NULL, then return FALSE.
- * If public_size is NULL, then return FALSE.
- * If public_size is large enough but public is NULL, then return FALSE.
+ * If ecd_context is NULL, then return false.
+ * If public_size is NULL, then return false.
+ * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  ecd_context      Pointer to the Ed context.
  * @param[out]      public         Pointer to the buffer to receive generated public key.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval TRUE   Ed public key generation succeeded.
- * @retval FALSE  Ed public key generation failed.
- * @retval FALSE  public_size is not large enough.
+ * @retval true   Ed public key generation succeeded.
+ * @retval false  Ed public key generation failed.
+ * @retval false  public_size is not large enough.
  *
  **/
-boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
+bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
                          IN OUT uintn *public_key_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
  * Carries out the Ed-DSA signature.
  *
  * This function carries out the Ed-DSA signature.
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If ecd_context is NULL, then return FALSE.
- * If message is NULL, then return FALSE.
+ * If ecd_context is NULL, then return false.
+ * If message is NULL, then return false.
  * hash_nid must be NULL.
- * If sig_size is large enough but signature is NULL, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
  *
  * For ed25519, context must be NULL and context_size must be 0.
  * For ed448, context must be maximum of 255 octets.
@@ -153,25 +153,25 @@ boolean ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                              On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in Ed-DSA.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated in Ed-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  *
  **/
-boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
+bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
                    IN const uint8_t *context, IN uintn context_size,
                    IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
                    IN OUT uintn *sig_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
  * Verifies the Ed-DSA signature.
  *
- * If ecd_context is NULL, then return FALSE.
- * If message is NULL, then return FALSE.
- * If signature is NULL, then return FALSE.
+ * If ecd_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If signature is NULL, then return false.
  * hash_nid must be NULL.
  *
  * For ed25519, context must be NULL and context_size must be 0.
@@ -189,14 +189,14 @@ boolean eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
  * @param[in]  signature    Pointer to Ed-DSA signature to be verified.
  * @param[in]  sig_size      size of signature in bytes.
  *
- * @retval  TRUE   Valid signature encoded in Ed-DSA.
- * @retval  FALSE  Invalid signature or invalid Ed context.
+ * @retval  true   Valid signature encoded in Ed-DSA.
+ * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-boolean eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
+bool eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
                      IN const uint8_t *context, IN uintn context_size,
                      IN const uint8_t *message, IN uintn size,
                      IN const uint8_t *signature, IN uintn sig_size)
 {
-    return FALSE;
+    return false;
 }

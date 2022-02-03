@@ -81,7 +81,7 @@ typedef struct {
 
     /* Responder policy*/
 
-    boolean basic_mut_auth_requested;
+    bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
 } spdm_local_context_t;
@@ -233,8 +233,8 @@ typedef struct {
 #else
     /* the message_k must be plan text because we do not know the finished_key yet.*/
     medium_managed_buffer_t temp_message_k;
-    boolean message_f_initialized;
-    boolean finished_key_ready;
+    bool message_f_initialized;
+    bool finished_key_ready;
     void                   *digest_context_th;
     void                   *digest_context_l1l2;
     void                   *hmac_rsp_context_th;
@@ -248,7 +248,7 @@ typedef struct {
 
 typedef struct {
     uint32_t session_id;
-    boolean use_psk;
+    bool use_psk;
     uint8_t mut_auth_requested;
     uint8_t end_session_attributes;
     uint8_t session_policy;
@@ -302,7 +302,7 @@ typedef struct {
     /* Cache session_id in this spdm_message, only valid for secured message.*/
 
     uint32_t last_spdm_request_session_id;
-    boolean last_spdm_request_session_id_valid;
+    bool last_spdm_request_session_id_valid;
 
     /* Cache the error in libspdm_process_request. It is handled in libspdm_build_response.*/
 
@@ -467,7 +467,7 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
  **/
 void spdm_session_info_init(IN spdm_context_t *spdm_context,
                             IN spdm_session_info_t *session_info,
-                            IN uint32_t session_id, IN boolean use_psk);
+                            IN uint32_t session_id, IN bool use_psk);
 
 /**
  * This function allocates half of session ID for a requester.
@@ -493,10 +493,10 @@ uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context);
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  version                      The SPDM version.
  *
- * @retval TRUE  the version is supported.
- * @retval FALSE the version is not supported.
+ * @retval true  the version is supported.
+ * @retval false the version is not supported.
  **/
-boolean spdm_is_version_supported(IN spdm_context_t *spdm_context,
+bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
                                   IN uint8_t version);
 
 /**
@@ -516,12 +516,12 @@ uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context);
  * @param  requester_capabilities_flag    The requester capabilities flag to be checked
  * @param  responder_capabilities_flag    The responder capabilities flag to be checked
  *
- * @retval TRUE  the capablities flag is supported.
- * @retval FALSE the capablities flag is not supported.
+ * @retval true  the capablities flag is supported.
+ * @retval false the capablities flag is not supported.
  **/
-boolean
+bool
 spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
-                                    IN boolean is_requester,
+                                    IN bool is_requester,
                                     IN uint32_t requester_capabilities_flag,
                                     IN uint32_t responder_capabilities_flag);
 
@@ -536,7 +536,7 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
+bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
                             IN OUT uintn *m1m2_buffer_size,
                             OUT void *m1m2_buffer);
 #else
@@ -550,7 +550,7 @@ boolean spdm_calculate_m1m2(IN void *context, IN boolean is_mut,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
+bool spdm_calculate_m1m2_hash(IN void *context, IN bool is_mut,
                                  IN OUT uintn *m1m2_hash_size,
                                  OUT void *m1m2_hash);
 #endif
@@ -568,7 +568,7 @@ boolean spdm_calculate_m1m2_hash(IN void *context, IN boolean is_mut,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
+bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
                             IN OUT uintn *l1l2_buffer_size, OUT void *l1l2_buffer);
 #else
 /*
@@ -583,7 +583,7 @@ boolean spdm_calculate_l1l2(IN void *context, IN void *session_info,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
+bool spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
                                  IN OUT uintn *l1l2_hash_size, OUT void *l1l2_hash);
 #endif
 
@@ -594,10 +594,10 @@ boolean spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
  * @param  slot_id                    The slot index of the certificate chain.
  * @param  signature                    The buffer to store the certificate chain hash.
  *
- * @retval TRUE  certificate chain hash is generated.
- * @retval FALSE certificate chain hash is not generated.
+ * @retval true  certificate chain hash is generated.
+ * @retval false certificate chain hash is not generated.
  **/
-boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
+bool spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
                                       IN uintn slot_id, OUT uint8_t *hash);
 
 /**
@@ -607,10 +607,10 @@ boolean spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
  * @param  digest                       The digest data buffer.
  * @param  digest_count                   size of the digest data buffer.
  *
- * @retval TRUE  digest verification pass.
- * @retval FALSE digest verification fail.
+ * @retval true  digest verification pass.
+ * @retval false digest verification fail.
  **/
-boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
+bool spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
                                  IN void *digest, IN uintn digest_count);
 
 /**
@@ -622,10 +622,10 @@ boolean spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
  * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
  *
- * @retval TRUE  Peer certificate chain buffer verification passed.
- * @retval FALSE Peer certificate chain buffer verification failed.
+ * @retval true  Peer certificate chain buffer verification passed.
+ * @retval false Peer certificate chain buffer verification failed.
  **/
-boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
+bool spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
                                            IN void *cert_chain_buffer,
                                            IN uintn cert_chain_buffer_size,
                                            OUT void **trust_anchor OPTIONAL,
@@ -638,11 +638,11 @@ boolean spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
  * @param  is_requester                  Indicate of the signature generation for a requester or a responder.
  * @param  signature                    The buffer to store the challenge signature.
  *
- * @retval TRUE  challenge signature is generated.
- * @retval FALSE challenge signature is not generated.
+ * @retval true  challenge signature is generated.
+ * @retval false challenge signature is not generated.
  **/
-boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                               IN boolean is_requester,
+bool spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
+                                               IN bool is_requester,
                                                OUT uint8_t *signature);
 
 /**
@@ -652,10 +652,10 @@ boolean spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
  * @param  certificate_chain_hash         The certificate chain hash data buffer.
  * @param  certificate_chain_hash_size     size in bytes of the certificate chain hash data buffer.
  *
- * @retval TRUE  hash verification pass.
- * @retval FALSE hash verification fail.
+ * @retval true  hash verification pass.
+ * @retval false hash verification fail.
  **/
-boolean
+bool
 spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
                                    IN void *certificate_chain_hash,
                                    IN uintn certificate_chain_hash_size);
@@ -668,11 +668,11 @@ spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
  * @param  sign_data                     The signature data buffer.
  * @param  sign_data_size                 size in bytes of the signature data buffer.
  *
- * @retval TRUE  signature verification pass.
- * @retval FALSE signature verification fail.
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
  **/
-boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                             IN boolean is_requester,
+bool spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
+                                             IN bool is_requester,
                                              IN void *sign_data,
                                              IN uintn sign_data_size);
 
@@ -688,7 +688,7 @@ boolean spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
  **/
 uint32_t
 spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
-                                       IN boolean is_requester,
+                                       IN bool is_requester,
                                        IN uint8_t measurement_summary_hash_type);
 
 /**
@@ -700,10 +700,10 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
  * @param  session_info                  A pointer to the SPDM session context.
  * @param  signature                    The buffer to store the signature.
  *
- * @retval TRUE  measurement signature is generated.
- * @retval FALSE measurement signature is not generated.
+ * @retval true  measurement signature is generated.
+ * @retval false measurement signature is not generated.
  **/
-boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
+bool spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
                                             IN spdm_session_info_t *session_info,
                                             OUT uint8_t *signature);
 
@@ -717,10 +717,10 @@ boolean spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
  * @param  sign_data                     The signature data buffer.
  * @param  sign_data_size                 size in bytes of the signature data buffer.
  *
- * @retval TRUE  signature verification pass.
- * @retval FALSE signature verification fail.
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
  **/
-boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
+bool spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
                                           IN spdm_session_info_t *session_info,
                                           IN void *sign_data,
                                           IN uintn sign_data_size);
@@ -732,10 +732,10 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  signature                    The buffer to store the key exchange signature.
  *
- * @retval TRUE  key exchange signature is generated.
- * @retval FALSE key exchange signature is not generated.
+ * @retval true  key exchange signature is generated.
+ * @retval false key exchange signature is not generated.
  **/
-boolean
+bool
 spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
                                          IN spdm_session_info_t *session_info,
                                          OUT uint8_t *signature);
@@ -747,10 +747,10 @@ spdm_generate_key_exchange_rsp_signature(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  hmac                         The buffer to store the key exchange HMAC.
  *
- * @retval TRUE  key exchange HMAC is generated.
- * @retval FALSE key exchange HMAC is not generated.
+ * @retval true  key exchange HMAC is generated.
+ * @retval false key exchange HMAC is not generated.
  **/
-boolean
+bool
 spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
                                     IN spdm_session_info_t *session_info,
                                     OUT uint8_t *hmac);
@@ -763,10 +763,10 @@ spdm_generate_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  sign_data                     The signature data buffer.
  * @param  sign_data_size                 size in bytes of the signature data buffer.
  *
- * @retval TRUE  signature verification pass.
- * @retval FALSE signature verification fail.
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
  **/
-boolean spdm_verify_key_exchange_rsp_signature(
+bool spdm_verify_key_exchange_rsp_signature(
     IN spdm_context_t *spdm_context, IN spdm_session_info_t *session_info,
     IN void *sign_data, IN intn sign_data_size);
 
@@ -778,10 +778,10 @@ boolean spdm_verify_key_exchange_rsp_signature(
  * @param  hmac_data                     The HMAC data buffer.
  * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
  *
- * @retval TRUE  HMAC verification pass.
- * @retval FALSE HMAC verification fail.
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
  **/
-boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
+bool spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
                                           IN spdm_session_info_t *session_info,
                                           IN void *hmac_data,
                                           IN uintn hmac_data_size);
@@ -793,10 +793,10 @@ boolean spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  signature                    The buffer to store the finish signature.
  *
- * @retval TRUE  finish signature is generated.
- * @retval FALSE finish signature is not generated.
+ * @retval true  finish signature is generated.
+ * @retval false finish signature is not generated.
  **/
-boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
+bool spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
                                            IN spdm_session_info_t *session_info,
                                            OUT uint8_t *signature);
 
@@ -807,10 +807,10 @@ boolean spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  hmac                         The buffer to store the finish HMAC.
  *
- * @retval TRUE  finish HMAC is generated.
- * @retval FALSE finish HMAC is not generated.
+ * @retval true  finish HMAC is generated.
+ * @retval false finish HMAC is not generated.
  **/
-boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
+bool spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
                                       IN spdm_session_info_t *session_info,
                                       OUT void *hmac);
 
@@ -822,10 +822,10 @@ boolean spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @param  sign_data                     The signature data buffer.
  * @param  sign_data_size                 size in bytes of the signature data buffer.
  *
- * @retval TRUE  signature verification pass.
- * @retval FALSE signature verification fail.
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
  **/
-boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
+bool spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
                                          IN spdm_session_info_t *session_info,
                                          IN void *sign_data,
                                          IN intn sign_data_size);
@@ -838,10 +838,10 @@ boolean spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
  * @param  hmac_data                     The HMAC data buffer.
  * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
  *
- * @retval TRUE  HMAC verification pass.
- * @retval FALSE HMAC verification fail.
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
  **/
-boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
+bool spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
                                     IN spdm_session_info_t *session_info,
                                     IN uint8_t *hmac, IN uintn hmac_size);
 
@@ -852,10 +852,10 @@ boolean spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  hmac                         The buffer to store the finish HMAC.
  *
- * @retval TRUE  finish HMAC is generated.
- * @retval FALSE finish HMAC is not generated.
+ * @retval true  finish HMAC is generated.
+ * @retval false finish HMAC is not generated.
  **/
-boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
+bool spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
                                       IN spdm_session_info_t *session_info,
                                       OUT uint8_t *hmac);
 
@@ -867,10 +867,10 @@ boolean spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  hmac_data                     The HMAC data buffer.
  * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
  *
- * @retval TRUE  HMAC verification pass.
- * @retval FALSE HMAC verification fail.
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
  **/
-boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
+bool spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
                                     IN spdm_session_info_t *session_info,
                                     IN void *hmac_data,
                                     IN uintn hmac_data_size);
@@ -882,10 +882,10 @@ boolean spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  hmac                         The buffer to store the PSK exchange HMAC.
  *
- * @retval TRUE  PSK exchange HMAC is generated.
- * @retval FALSE PSK exchange HMAC is not generated.
+ * @retval true  PSK exchange HMAC is generated.
+ * @retval false PSK exchange HMAC is not generated.
  **/
-boolean
+bool
 spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
                                     IN spdm_session_info_t *session_info,
                                     OUT uint8_t *hmac);
@@ -898,10 +898,10 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  hmac_data                     The HMAC data buffer.
  * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
  *
- * @retval TRUE  HMAC verification pass.
- * @retval FALSE HMAC verification fail.
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
  **/
-boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
+bool spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
                                           IN spdm_session_info_t *session_info,
                                           IN void *hmac_data,
                                           IN uintn hmac_data_size);
@@ -913,10 +913,10 @@ boolean spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @param  session_info                  The session info of an SPDM session.
  * @param  hmac                         The buffer to store the finish HMAC.
  *
- * @retval TRUE  PSK finish HMAC is generated.
- * @retval FALSE PSK finish HMAC is not generated.
+ * @retval true  PSK finish HMAC is generated.
+ * @retval false PSK finish HMAC is not generated.
  **/
-boolean
+bool
 spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
                                     IN spdm_session_info_t *session_info,
                                     OUT void *hmac);
@@ -929,10 +929,10 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
  * @param  hmac_data                     The HMAC data buffer.
  * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
  *
- * @retval TRUE  HMAC verification pass.
- * @retval FALSE HMAC verification fail.
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
  **/
-boolean spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
+bool spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
                                         IN spdm_session_info_t *session_info,
                                         IN uint8_t *hmac, IN uintn hmac_size);
 
@@ -1054,10 +1054,10 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
  * @param  res_ver_set                A pointer to the responder version set.
  * @param  res_ver_num                Version number of responder.
  *
- * @retval TRUE                       Negotiation successfully, connect version be saved to common_version.
- * @retval FALSE                      Negotiation failed.
+ * @retval true                       Negotiation successfully, connect version be saved to common_version.
+ * @retval false                      Negotiation failed.
  */
-boolean spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
+bool spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
                                           IN spdm_version_number_t *req_ver_set,
                                           IN uintn req_ver_num,
                                           IN spdm_version_number_t *res_ver_set,

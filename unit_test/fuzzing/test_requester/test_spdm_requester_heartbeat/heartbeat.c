@@ -63,7 +63,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     copy_mem(&spdm_response, (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
              spdm_test_context->test_buffer_size);
 
-    spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE,
+    spdm_transport_test_encode_message(spdm_context, &session_id, false, false,
                                        spdm_test_context->test_buffer_size, &spdm_response,
                                        response_size, response);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -125,7 +125,7 @@ void test_spdm_requester_heartbeat_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     set_mem(
@@ -150,7 +150,7 @@ void test_spdm_requester_heartbeat_case1(void **State)
 
 spdm_test_context_t m_spdm_requester_heartbeat_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

@@ -497,7 +497,7 @@ return_status spdm_get_response_algorithms(IN void *context,
         spdm_response->base_hash_sel;
 
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
@@ -522,7 +522,7 @@ return_status spdm_get_response_algorithms(IN void *context,
                                                response_size, response);
     }
     if (spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         algo_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);
@@ -550,7 +550,7 @@ return_status spdm_get_response_algorithms(IN void *context,
         }
 
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
             algo_size = libspdm_get_dhe_pub_key_size(
@@ -564,11 +564,11 @@ return_status spdm_get_response_algorithms(IN void *context,
             }
         }
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP) ||
             spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
             algo_size = libspdm_get_aead_key_size(
@@ -582,7 +582,7 @@ return_status spdm_get_response_algorithms(IN void *context,
             }
         }
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
             algo_size = libspdm_get_req_asym_signature_size(
@@ -596,11 +596,11 @@ return_status spdm_get_response_algorithms(IN void *context,
             }
         }
         if (spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ||
             spdm_is_capabilities_flag_supported(
-                spdm_context, FALSE,
+                spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
             if (spdm_context->connection_info.algorithm

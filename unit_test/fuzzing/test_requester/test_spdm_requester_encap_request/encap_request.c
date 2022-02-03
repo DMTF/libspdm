@@ -70,7 +70,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         sub_index = 0;
         break;
     }
-    spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE, temp_buf_size,
+    spdm_transport_test_encode_message(spdm_context, &session_id, false, false, temp_buf_size,
                                        temp_buf, response_size, response);
 
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -87,7 +87,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 
 spdm_test_context_t m_spdm_requester_encap_request_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };
@@ -134,7 +134,7 @@ void test_spdm_requester_encap_request(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_register_get_encap_response_func(spdm_context,spdm_get_encap_response_digest);

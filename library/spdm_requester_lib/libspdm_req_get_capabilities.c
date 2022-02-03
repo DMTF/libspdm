@@ -17,7 +17,7 @@
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
+bool spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
                                              IN uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
@@ -39,34 +39,34 @@ boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
 
     switch (version) {
     case SPDM_MESSAGE_VERSION_10:
-        return TRUE;
+        return true;
 
     case SPDM_MESSAGE_VERSION_11:
     case SPDM_MESSAGE_VERSION_12:
     {
         /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
         if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*MAC_cap set and psk_cap+key_ex_cap cleared*/
         if (mac_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*Key_ex_cap set and encrypt_cap+mac_cap cleared*/
         if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*PSK_cap set and encrypt_cap+mac_cap cleared*/
         if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*Muth_auth_cap set and encap_cap cleared*/
         if (mut_auth_cap != 0 && encap_cap == 0) {
-            return FALSE;
+            return false;
         }
         /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/
         if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
-            return FALSE;
+            return false;
         }
         /*Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
          * It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
@@ -75,17 +75,17 @@ boolean spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
 
         /*Pub_key_id_cap set and cert_cap set*/
         if (pub_key_id_cap != 0 && cert_cap != 0) {
-            return FALSE;
+            return false;
         }
         /*reserved values selected in flags*/
         if (meas_cap == 3 || psk_cap == 3) {
-            return FALSE;
+            return false;
         }
     }
-        return TRUE;
+        return true;
 
     default:
-        return TRUE;
+        return true;
     }
 }
 

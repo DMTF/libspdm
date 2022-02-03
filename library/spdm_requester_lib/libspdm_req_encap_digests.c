@@ -38,7 +38,7 @@ return_status spdm_get_encap_response_digest(IN void *context,
     uint8_t *digest;
     spdm_context_t *spdm_context;
     return_status status;
-    boolean result;
+    bool result;
 
     spdm_context = context;
     spdm_request = request;
@@ -50,7 +50,7 @@ return_status spdm_get_encap_response_digest(IN void *context,
     }
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE,
+            spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,

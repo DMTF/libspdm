@@ -67,7 +67,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED const uint8_t m_ecd_test_pem_key[] = {
  **/
 return_status validate_crypt_ecd_2(void)
 {
-    boolean status;
+    bool status;
     void *ecd_priv_key;
     void *ecd_pub_key;
     uint8_t message[] = "EdDsaTest";
