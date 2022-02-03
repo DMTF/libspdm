@@ -24,7 +24,7 @@
 #include "spdm_device_secret_lib_internal.h"
 
 bool read_responder_private_certificate(IN uint32_t base_asym_algo,
-                                           OUT void **data, OUT uintn *size)
+                                        OUT void **data, OUT uintn *size)
 {
     bool res;
     char *file;
@@ -69,7 +69,7 @@ bool read_responder_private_certificate(IN uint32_t base_asym_algo,
 }
 
 bool read_requester_private_certificate(IN uint16_t req_base_asym_alg,
-                                           OUT void **data, OUT uintn *size)
+                                        OUT void **data, OUT uintn *size)
 {
     bool res;
     char *file;

@@ -24,10 +24,10 @@
 #include "spdm_device_secret_lib_internal.h"
 
 bool read_responder_root_public_certificate(IN uint32_t base_hash_algo,
-                                               IN uint32_t base_asym_algo,
-                                               OUT void **data, OUT uintn *size,
-                                               OUT void **hash,
-                                               OUT uintn *hash_size)
+                                            IN uint32_t base_asym_algo,
+                                            OUT void **data, OUT uintn *size,
+                                            OUT void **hash,
+                                            OUT uintn *hash_size)
 {
     bool res;
     void *file_data;
@@ -125,10 +125,10 @@ bool read_responder_root_public_certificate(IN uint32_t base_hash_algo,
 }
 
 bool read_requester_root_public_certificate(IN uint32_t base_hash_algo,
-                                               IN uint16_t req_base_asym_alg,
-                                               OUT void **data, OUT uintn *size,
-                                               OUT void **hash,
-                                               OUT uintn *hash_size)
+                                            IN uint16_t req_base_asym_alg,
+                                            OUT void **data, OUT uintn *size,
+                                            OUT void **hash,
+                                            OUT uintn *hash_size)
 {
     bool res;
     void *file_data;
