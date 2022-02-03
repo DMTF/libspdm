@@ -20,7 +20,7 @@
 #endif
 
 bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
-                         IN void **test_buffer, OUT uintn *buffer_size)
+                      IN void **test_buffer, OUT uintn *buffer_size)
 {
     void *buffer;
     FILE *file;

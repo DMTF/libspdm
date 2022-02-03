@@ -24,7 +24,7 @@
 #include "hal/library/cryptlib.h"
 
 bool read_input_file(IN char *file_name, OUT void **file_data,
-                        OUT uintn *file_size);
+                     OUT uintn *file_size);
 
 uintn ascii_str_len(IN const char *string);
 
