@@ -83,6 +83,6 @@ void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
 void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
 
 bool read_input_file(IN char *file_name, OUT void **file_data,
-                        OUT uintn *file_size);
+                     OUT uintn *file_size);
 
 #endif
