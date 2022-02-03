@@ -16,14 +16,14 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void test_spdm_responder_encap_get_digests_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
-    boolean need_continue;
+    bool need_continue;
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;

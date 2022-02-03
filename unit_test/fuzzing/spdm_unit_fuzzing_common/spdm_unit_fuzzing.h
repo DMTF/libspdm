@@ -38,7 +38,7 @@ extern uint16_t m_use_key_schedule_algo;
 
 typedef struct {
     uint32_t signature;
-    boolean is_requester;
+    bool is_requester;
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
     void *spdm_context;
@@ -59,7 +59,7 @@ void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context);
 
 spdm_test_context_t *get_spdm_test_context(void);
 
-boolean read_input_file(IN char *file_name, OUT void **file_data,
+bool read_input_file(IN char *file_name, OUT void **file_data,
                         OUT uintn *file_size);
 
 void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);

@@ -240,7 +240,7 @@ void test_spdm_requester_get_measurement_case3(void **State)
     session_id = 0xFFFFFFFF;
     test_message_header = TEST_MESSAGE_TYPE_SECURED_TEST;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -330,7 +330,7 @@ void test_spdm_requester_get_measurement_case4(void **State)
 
 spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

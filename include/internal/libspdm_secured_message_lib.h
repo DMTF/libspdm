@@ -53,15 +53,15 @@ typedef struct {
     uintn aead_key_size;
     uintn aead_iv_size;
     uintn aead_tag_size;
-    boolean use_psk;
-    boolean finished_key_ready;
+    bool use_psk;
+    bool finished_key_ready;
     libspdm_session_state_t session_state;
     spdm_session_info_struct_master_secret_t master_secret;
     spdm_session_info_struct_handshake_secret_t handshake_secret;
     spdm_session_info_struct_application_secret_t application_secret;
     spdm_session_info_struct_application_secret_t application_secret_backup;
-    boolean requester_backup_valid;
-    boolean responder_backup_valid;
+    bool requester_backup_valid;
+    bool responder_backup_valid;
     uintn psk_hint_size;
     void *psk_hint;
 

@@ -72,17 +72,17 @@ void libspdm_secured_message_init_context(IN void *spdm_secured_message_context)
  * @param  use_psk                       Indicate if the SPDM session use PSK.
  */
 void libspdm_secured_message_set_use_psk(IN void *spdm_secured_message_context,
-                                         IN boolean use_psk);
+                                         IN bool use_psk);
 
 /**
  * Return if finished_key is ready.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  *
- * @retval TRUE  finished_key is ready.
- * @retval FALSE finished_key is not ready.
+ * @retval true  finished_key is ready.
+ * @retval false finished_key is not ready.
  */
-boolean
+bool
 libspdm_secured_message_is_finished_key_ready(IN void *spdm_secured_message_context);
 
 /**
@@ -219,13 +219,13 @@ libspdm_secured_message_import_session_keys(IN void *spdm_secured_message_contex
  *
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  is_initiator                   if the caller is initiator.
- *                                       TRUE: initiator
- *                                       FALSE: not an initiator
+ *                                       true: initiator
+ *                                       false: not an initiator
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
 void *libspdm_secured_message_dhe_new(IN spdm_version_number_t spdm_version,
-                                      IN uint16_t dhe_named_group, IN const boolean is_initiator);
+                                      IN uint16_t dhe_named_group, IN const bool is_initiator);
 
 /**
  * Release the specified DHE context,
@@ -243,7 +243,7 @@ void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
  *
  * This function generates random secret exponent, and computes the public key, which is
  * returned via parameter public_key and public_key_size. DH context is updated accordingly.
- * If the public_key buffer is too small to hold the public key, FALSE is returned and
+ * If the public_key buffer is too small to hold the public key, false is returned and
  * public_key_size is set to the required buffer size to obtain the public key.
  *
  * @param  dhe_named_group                SPDM dhe_named_group
@@ -252,11 +252,11 @@ void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
  * @param  public_key_size                On input, the size of public_key buffer in bytes.
  *                                     On output, the size of data returned in public_key buffer in bytes.
  *
- * @retval TRUE   DHE public key generation succeeded.
- * @retval FALSE  DHE public key generation failed.
- * @retval FALSE  public_key_size is not large enough.
+ * @retval true   DHE public key generation succeeded.
+ * @retval false  DHE public key generation failed.
+ * @retval false  public_key_size is not large enough.
  **/
-boolean libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
+bool libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
                                                  IN OUT void *dhe_context,
                                                  OUT uint8_t *public_key,
                                                  IN OUT uintn *public_key_size);
@@ -274,11 +274,11 @@ boolean libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
  * @param  peer_public_key_size            size of peer's public key in bytes.
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  *
- * @retval TRUE   DHE exchanged key generation succeeded.
- * @retval FALSE  DHE exchanged key generation failed.
- * @retval FALSE  key_size is not large enough.
+ * @retval true   DHE exchanged key generation succeeded.
+ * @retval false  DHE exchanged key generation failed.
+ * @retval false  key_size is not large enough.
  **/
-boolean libspdm_secured_message_dhe_compute_key(
+bool libspdm_secured_message_dhe_compute_key(
     IN uint16_t dhe_named_group, IN OUT void *dhe_context,
     IN const uint8_t *peer_public, IN uintn peer_public_size,
     IN OUT void *spdm_secured_message_context);
@@ -317,10 +317,10 @@ void libspdm_hmac_free_with_request_finished_key(
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  hmac_ctx  Pointer to HMAC context.
  *
- * @retval TRUE   The key is set successfully.
- * @retval FALSE  The key is set unsuccessfully.
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
  **/
-boolean libspdm_hmac_init_with_request_finished_key(
+bool libspdm_hmac_init_with_request_finished_key(
     IN void *spdm_secured_message_context, OUT void *hmac_ctx);
 
 /**
@@ -330,10 +330,10 @@ boolean libspdm_hmac_init_with_request_finished_key(
  * @param  hmac_ctx     Pointer to HMAC context being copied.
  * @param  new_hmac_ctx  Pointer to new HMAC context.
  *
- * @retval TRUE   HMAC context copy succeeded.
- * @retval FALSE  HMAC context copy failed.
+ * @retval true   HMAC context copy succeeded.
+ * @retval false  HMAC context copy failed.
  **/
-boolean libspdm_hmac_duplicate_with_request_finished_key(
+bool libspdm_hmac_duplicate_with_request_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx);
 
@@ -345,10 +345,10 @@ boolean libspdm_hmac_duplicate_with_request_finished_key(
  * @param  data              Pointer to the buffer containing the data to be digested.
  * @param  data_size          size of data buffer in bytes.
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  **/
-boolean libspdm_hmac_update_with_request_finished_key(
+bool libspdm_hmac_update_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size);
@@ -360,10 +360,10 @@ boolean libspdm_hmac_update_with_request_finished_key(
  * @param  hmac_ctx     Pointer to HMAC context being copied.
  * @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  **/
-boolean libspdm_hmac_final_with_request_finished_key(
+bool libspdm_hmac_final_with_request_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value);
 
@@ -375,10 +375,10 @@ boolean libspdm_hmac_final_with_request_finished_key(
  * @param  data_size                     size of data buffer in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
  *
- * @retval TRUE   HMAC computation succeeded.
- * @retval FALSE  HMAC computation failed.
+ * @retval true   HMAC computation succeeded.
+ * @retval false  HMAC computation failed.
  **/
-boolean
+bool
 libspdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
                                            IN const void *data, IN uintn data_size,
                                            OUT uint8_t *hmac_value);
@@ -410,10 +410,10 @@ void libspdm_hmac_free_with_response_finished_key(
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  hmac_ctx  Pointer to HMAC context.
  *
- * @retval TRUE   The key is set successfully.
- * @retval FALSE  The key is set unsuccessfully.
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
  **/
-boolean libspdm_hmac_init_with_response_finished_key(
+bool libspdm_hmac_init_with_response_finished_key(
     IN void *spdm_secured_message_context, OUT void *hmac_ctx);
 
 /**
@@ -423,10 +423,10 @@ boolean libspdm_hmac_init_with_response_finished_key(
  * @param  hmac_ctx     Pointer to HMAC context being copied.
  * @param  new_hmac_ctx  Pointer to new HMAC context.
  *
- * @retval TRUE   HMAC context copy succeeded.
- * @retval FALSE  HMAC context copy failed.
+ * @retval true   HMAC context copy succeeded.
+ * @retval false  HMAC context copy failed.
  **/
-boolean libspdm_hmac_duplicate_with_response_finished_key(
+bool libspdm_hmac_duplicate_with_response_finished_key(
     IN void *spdm_secured_message_context,
     IN const void *hmac_ctx, OUT void *new_hmac_ctx);
 
@@ -438,10 +438,10 @@ boolean libspdm_hmac_duplicate_with_response_finished_key(
  * @param  data              Pointer to the buffer containing the data to be digested.
  * @param  data_size          size of data buffer in bytes.
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  **/
-boolean libspdm_hmac_update_with_response_finished_key(
+bool libspdm_hmac_update_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx, IN const void *data,
     IN uintn data_size);
@@ -453,10 +453,10 @@ boolean libspdm_hmac_update_with_response_finished_key(
  * @param  hmac_ctx     Pointer to HMAC context being copied.
  * @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  **/
-boolean libspdm_hmac_final_with_response_finished_key(
+bool libspdm_hmac_final_with_response_finished_key(
     IN void *spdm_secured_message_context,
     OUT void *hmac_ctx,  OUT uint8_t *hmac_value);
 
@@ -468,10 +468,10 @@ boolean libspdm_hmac_final_with_response_finished_key(
  * @param  data_size                     size of data buffer in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
  *
- * @retval TRUE   HMAC computation succeeded.
- * @retval FALSE  HMAC computation failed.
+ * @retval true   HMAC computation succeeded.
+ * @retval false  HMAC computation failed.
  **/
-boolean libspdm_hmac_all_with_response_finished_key(
+bool libspdm_hmac_all_with_response_finished_key(
     IN void *spdm_secured_message_context, IN const void *data,
     IN uintn data_size, OUT uint8_t *hmac_value);
 
@@ -548,7 +548,7 @@ libspdm_create_update_session_data_key(IN void *spdm_secured_message_context,
 return_status
 libspdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
                                          IN libspdm_key_update_action_t action,
-                                         IN boolean use_new_key);
+                                         IN bool use_new_key);
 
 /**
  * Get sequence number in an SPDM secure message.
@@ -607,7 +607,7 @@ typedef struct {
  **/
 return_status libspdm_encode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN boolean is_requester, IN uintn app_message_size,
+    IN bool is_requester, IN uintn app_message_size,
     IN void *app_message, IN OUT uintn *secured_message_size,
     OUT void *secured_message,
     IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
@@ -630,7 +630,7 @@ return_status libspdm_encode_secured_message(
  **/
 return_status libspdm_decode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN boolean is_requester, IN uintn secured_message_size,
+    IN bool is_requester, IN uintn secured_message_size,
     IN void *secured_message, IN OUT uintn *app_message_size,
     OUT void *app_message,
     IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);

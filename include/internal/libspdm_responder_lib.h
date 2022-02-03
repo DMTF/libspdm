@@ -491,7 +491,7 @@ spdm_get_encap_request_get_digest(IN spdm_context_t *spdm_context,
 
 return_status spdm_process_encap_response_digest(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue);
+    IN void *encap_response, OUT bool *need_continue);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
@@ -527,7 +527,7 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
  **/
 return_status spdm_process_encap_response_certificate(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue);
+    IN void *encap_response, OUT bool *need_continue);
 
 /**
  * Get the SPDM encapsulated CHALLENGE request.
@@ -560,7 +560,7 @@ return_status spdm_get_encap_request_challenge(IN spdm_context_t *spdm_context,
  **/
 return_status spdm_process_encap_response_challenge_auth(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue);
+    IN void *encap_response, OUT bool *need_continue);
 
 /**
  * Get the SPDM encapsulated KEY_UPDATE request.
@@ -594,7 +594,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
  **/
 return_status spdm_process_encap_response_key_update(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue);
+    IN void *encap_response, OUT bool *need_continue);
 
 /**
  * Return the GET_SPDM_RESPONSE function via request code.

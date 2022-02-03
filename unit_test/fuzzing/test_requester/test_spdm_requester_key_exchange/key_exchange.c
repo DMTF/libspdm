@@ -143,7 +143,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         ptr = (void *)(spdm_response + 1);
         dhe_context =
             libspdm_dhe_new(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                            m_use_dhe_algo, TRUE);
+                            m_use_dhe_algo, true);
         libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
         final_key_size = sizeof(final_key);
         libspdm_dhe_compute_key(m_use_dhe_algo, dhe_context,
@@ -177,7 +177,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         free(data);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_KEY_EXCHANGE_RSP, m_use_asym_algo, m_use_hash_algo, FALSE,
+                SPDM_KEY_EXCHANGE_RSP, m_use_asym_algo, m_use_hash_algo, false,
                 get_managed_buffer(&th_curr), get_managed_buffer_size(
                 &th_curr), ptr, &signature_size);
         copy_mem(&m_local_buffer[m_local_buffer_size], ptr, signature_size);
@@ -205,7 +205,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
                          get_managed_buffer_size(&th_curr), response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE, FALSE, temp_buff_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buff_size,
                                            temp_buf, response_size, response);
         break;
     }
@@ -216,7 +216,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
         copy_mem(&spdm_response,
                  (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
                  spdm_test_context->test_buffer_size);
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE, FALSE,
+        spdm_transport_test_encode_message(spdm_context, NULL, false, false,
                                            spdm_test_context->test_buffer_size, &spdm_response,
                                            response_size, response);
         break;
@@ -419,7 +419,7 @@ void test_spdm_requester_key_exchange_ex_case1(void **State)
 
 spdm_test_context_t m_spdm_requester_key_exchange_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

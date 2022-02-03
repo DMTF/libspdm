@@ -23,7 +23,7 @@ void spdm_dispatch(void)
         return;
     }
 
-    while (TRUE) {
+    while (true) {
         status = libspdm_responder_dispatch_message(spdm_context);
         if (status != RETURN_UNSUPPORTED) {
             continue;

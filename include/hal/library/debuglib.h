@@ -71,9 +71,9 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
  * Internal worker macro that calls debug_assert().
  *
  * This macro calls debug_assert(), passing in the filename, line number, and an
- * expression that evaluated to FALSE.
+ * expression that evaluated to false.
  *
- * @param  expression  Boolean expression that evaluated to FALSE
+ * @param  expression  Boolean expression that evaluated to false
  *
  **/
 #define _ASSERT(expression) debug_assert(__FILE__, __LINE__, #expression)
@@ -94,15 +94,15 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
 #define _DEBUG_PRINT(PrintLevel, ...)                                          \
     do {                                                                   \
         debug_print(PrintLevel, ## __VA_ARGS__);                        \
-    } while (FALSE)
+    } while (false)
 #define _DEBUG(expression) _DEBUG_PRINT expression
 
 /**
- * Macro that calls debug_assert() if an expression evaluates to FALSE.
+ * Macro that calls debug_assert() if an expression evaluates to false.
  *
  * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_ASSERT_ENABLED
  * bit of PcdDebugProperyMask is set, then this macro evaluates the Boolean
- * expression specified by expression.  If expression evaluates to FALSE, then
+ * expression specified by expression.  If expression evaluates to false, then
  * debug_assert() is called passing in the source filename, source line number,
  * and expression.
  *
@@ -116,7 +116,7 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
             _ASSERT(expression);                                   \
             ANALYZER_UNREACHABLE();                                \
         }                                                              \
-    } while (FALSE)
+    } while (false)
 #else
 #define ASSERT(expression)
 #endif
@@ -137,7 +137,7 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
 #define DEBUG(expression)                                                      \
     do {                                                                   \
         _DEBUG(expression);                                            \
-    } while (FALSE)
+    } while (false)
 #else
 #define DEBUG(expression)
 #endif
@@ -163,7 +163,7 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
                    status_parameter));                             \
             _ASSERT(!RETURN_ERROR(status_parameter));              \
         }                                                              \
-    } while (FALSE)
+    } while (false)
 #else
 #define ASSERT_RETURN_ERROR(status_parameter)
 #endif
@@ -194,7 +194,7 @@ void debug_assert(IN const char *file_name, IN uintn line_number,
     __debug_code_local = 0;                                                \
     __debug_code_local++;                                                  \
     }                                                                      \
-    while (FALSE)
+    while (false)
 
 /**
  * The macro that declares a section of debug source code.

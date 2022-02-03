@@ -84,7 +84,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     uint8_t *file_buffer;
     uintn file_buffer_size;
     return_status ret;
-    boolean status;
+    bool status;
 
     status = read_input_file("rsa2048/end_requester.cert.der",
                              (void **)&file_buffer, &file_buffer_size);
@@ -167,7 +167,7 @@ void test_spdm_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 
 void test_spdm_crypt_spdm_x509_certificate_check(void **state)
 {
-    boolean status;
+    bool status;
     uint8_t *file_buffer;
     uintn file_buffer_size;
 

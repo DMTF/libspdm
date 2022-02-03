@@ -26,11 +26,11 @@
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
+bool hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
                                    IN const uint8_t *key, IN uintn key_size,
                                    IN const uint8_t *salt, IN uintn salt_size,
                                    IN const uint8_t *info, IN uintn info_size,
@@ -42,7 +42,7 @@ boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
     if (key == NULL || salt == NULL || info == NULL || out == NULL ||
         key_size > INT_MAX || salt_size > INT_MAX || info_size > INT_MAX ||
         out_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
     md = mbedtls_md_info_from_type(md_type);
@@ -51,10 +51,10 @@ boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
     ret = mbedtls_hkdf(md, salt, (uint32_t)salt_size, key, (uint32_t)key_size,
                        info, (uint32_t)info_size, out, (uint32_t)out_size);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -68,11 +68,11 @@ boolean hkdf_md_extract_and_expand(IN mbedtls_md_type_t md_type,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
+bool hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
                         IN uintn key_size, IN const uint8_t *salt,
                         IN uintn salt_size, OUT uint8_t *prk_out,
                         IN uintn prk_out_size)
@@ -84,7 +84,7 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
     if (key == NULL || salt == NULL || prk_out == NULL ||
         key_size > INT_MAX || salt_size > INT_MAX ||
         prk_out_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
     md_size = 0;
@@ -99,10 +99,10 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
         md_size = SHA512_DIGEST_SIZE;
         break;
     default:
-        return FALSE;
+        return false;
     }
     if (prk_out_size != md_size) {
-        return FALSE;
+        return false;
     }
 
     md = mbedtls_md_info_from_type(md_type);
@@ -111,10 +111,10 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
     ret = mbedtls_hkdf_extract(md, salt, (uint32_t)salt_size, key,
                                (uint32_t)key_size, prk_out);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -128,11 +128,11 @@ boolean hkdf_md_extract(IN mbedtls_md_type_t md_type, IN const uint8_t *key,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
+bool hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
                        IN uintn prk_size, IN const uint8_t *info,
                        IN uintn info_size, OUT uint8_t *out, IN uintn out_size)
 {
@@ -142,7 +142,7 @@ boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
 
     if (prk == NULL || info == NULL || out == NULL || prk_size > INT_MAX ||
         info_size > INT_MAX || out_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
     switch (md_type) {
@@ -156,11 +156,11 @@ boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
         md_size = SHA512_DIGEST_SIZE;
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     if (prk_size != md_size) {
-        return FALSE;
+        return false;
     }
 
     md = mbedtls_md_info_from_type(md_type);
@@ -169,10 +169,10 @@ boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
     ret = mbedtls_hkdf_expand(md, prk, (uint32_t)prk_size, info,
                               (uint32_t)info_size, out, (uint32_t)out_size);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -187,11 +187,11 @@ boolean hkdf_md_expand(IN mbedtls_md_type_t md_type, IN const uint8_t *prk,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
@@ -211,11 +211,11 @@ boolean hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
@@ -233,11 +233,11 @@ boolean hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {
@@ -257,11 +257,11 @@ boolean hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
@@ -281,11 +281,11 @@ boolean hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
@@ -303,11 +303,11 @@ boolean hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {
@@ -327,11 +327,11 @@ boolean hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
                                        IN const uint8_t *salt, IN uintn salt_size,
                                        IN const uint8_t *info, IN uintn info_size,
                                        OUT uint8_t *out, IN uintn out_size)
@@ -351,11 +351,11 @@ boolean hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  prk_out           Pointer to buffer to receive hkdf value.
  * @param[in]   prk_out_size       size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
+bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
                             IN const uint8_t *salt, IN uintn salt_size,
                             OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
@@ -373,11 +373,11 @@ boolean hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  out              Pointer to buffer to receive hkdf value.
  * @param[in]   out_size          size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  *
  **/
-boolean hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
+bool hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
                            IN const uint8_t *info, IN uintn info_size,
                            OUT uint8_t *out, IN uintn out_size)
 {

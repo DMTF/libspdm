@@ -66,26 +66,26 @@ intn PasswordCallback(OUT char *buf, IN intn size, IN intn flag, IN void *key)
  *                         RSA private key component. Use rsa_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If rsa_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If rsa_context is NULL, then return false.
  *
- * @retval  TRUE   RSA Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   RSA Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **rsa_context)
 {
-    boolean status;
+    bool status;
     BIO *pem_bio;
 
 
     /* Check input parameters.*/
 
     if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
 
@@ -93,16 +93,16 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
 
     /* Read encrypted PEM data.*/
@@ -124,7 +124,7 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                                    (pem_password_cb *)&PasswordCallback,
                                    (void *)password);
     if (*rsa_context != NULL) {
-        status = TRUE;
+        status = true;
     }
 
 done:
@@ -146,25 +146,25 @@ done:
  *                         EC private key component. Use ec_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If ec_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If ec_context is NULL, then return false.
  *
- * @retval  TRUE   EC Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   EC Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
+bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
                                     IN const char *password,
                                     OUT void **ec_context)
 {
-    boolean status;
+    bool status;
     BIO *pem_bio;
 
 
     /* Check input parameters.*/
 
     if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
 
@@ -172,16 +172,16 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
 
     /* Read encrypted PEM data.*/
@@ -203,7 +203,7 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
                                   (pem_password_cb *)&PasswordCallback,
                                   (void *)password);
     if (*ec_context != NULL) {
-        status = TRUE;
+        status = true;
     }
 
 done:
@@ -225,19 +225,19 @@ done:
  *                         Ed private key component. Use ecd_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If ecd_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If ecd_context is NULL, then return false.
  *
- * @retval  TRUE   Ed Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   Ed Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **ecd_context)
 {
-    boolean status;
+    bool status;
     BIO *pem_bio;
     EVP_PKEY *pkey;
     int32_t type;
@@ -246,7 +246,7 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
     /* Check input parameters.*/
 
     if (pem_data == NULL || ecd_context == NULL || pem_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
 
@@ -254,16 +254,16 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
 
     if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
     if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
-        return FALSE;
+        return false;
     }
 
-    status = FALSE;
+    status = false;
 
 
     /* Read encrypted PEM data.*/
@@ -291,7 +291,7 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
         goto done;
     }
     *ecd_context = pkey;
-    status = TRUE;
+    status = true;
 
 done:
 
@@ -312,19 +312,19 @@ done:
  *                         sm2 private key component. Use sm2_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If sm2_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If sm2_context is NULL, then return false.
  *
- * @retval  TRUE   sm2 Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   sm2 Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **sm2_context)
 {
-    boolean status;
+    bool status;
     BIO *pem_bio;
     EVP_PKEY *pkey;
     int32_t result;
@@ -335,7 +335,7 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     /* Check input parameters.*/
 
     if (pem_data == NULL || sm2_context == NULL || pem_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
 
@@ -343,10 +343,10 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
      * NOTE: Only support SM4 for the encrypted PEM.*/
 
     /*if (EVP_add_cipher (EVP_sm4_cbc ()) == 0) {
-     *  return FALSE;
+     *  return false;
      *}*/
 
-    status = FALSE;
+    status = false;
 
 
     /* Read encrypted PEM data.*/
@@ -380,7 +380,7 @@ boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
     }
 
     *sm2_context = pkey;
-    status = TRUE;
+    status = true;
 
 done:
 

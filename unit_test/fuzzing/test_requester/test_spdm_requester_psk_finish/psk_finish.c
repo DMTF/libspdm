@@ -19,7 +19,7 @@ static void spdm_secured_message_set_dummy_finished_key(IN void *spdm_secured_me
     spdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    secured_message_context->finished_key_ready = TRUE;
+    secured_message_context->finished_key_ready = true;
 }
 
 void spdm_secured_message_set_response_handshake_encryption_key(
@@ -73,7 +73,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
              (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
              spdm_test_context->test_buffer_size);
 
-    spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE, temp_buf_size,
+    spdm_transport_test_encode_message(spdm_context, &session_id, false, false, temp_buf_size,
                                        temp_buf, response_size, response);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
@@ -134,7 +134,7 @@ void test_spdm_requester_psk_finish_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -161,7 +161,7 @@ void test_spdm_requester_psk_finish_case1(void **State)
 
 spdm_test_context_t m_spdm_requester_psk_finish_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

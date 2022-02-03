@@ -25,9 +25,11 @@
 #include LIBSPDM_STDINT_ALT
 #endif
 
-
-typedef unsigned char boolean;
-
+#ifndef LIBSPDM_STDBOOL_ALT
+#include <stdbool.h>
+#else
+#include LIBSPDM_STDBOOL_ALT
+#endif
 
 /* Processor specific defines*/
 

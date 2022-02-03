@@ -23,10 +23,10 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-boolean read_responder_private_certificate(IN uint32_t base_asym_algo,
+bool read_responder_private_certificate(IN uint32_t base_asym_algo,
                                            OUT void **data, OUT uintn *size)
 {
-    boolean res;
+    bool res;
     char *file;
 
     switch (base_asym_algo) {
@@ -61,17 +61,17 @@ boolean read_responder_private_certificate(IN uint32_t base_asym_algo,
         file = "ed448/end_responder.key";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, data, size);
     return res;
 }
 
-boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
+bool read_requester_private_certificate(IN uint16_t req_base_asym_alg,
                                            OUT void **data, OUT uintn *size)
 {
-    boolean res;
+    bool res;
     char *file;
 
     switch (req_base_asym_alg) {
@@ -106,8 +106,8 @@ boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
         file = "ed448/end_requester.key";
         break;
     default:
-        ASSERT(FALSE);
-        return FALSE;
+        ASSERT(false);
+        return false;
     }
     res = read_input_file(file, data, size);
     return res;
@@ -119,7 +119,7 @@ boolean read_requester_private_certificate(IN uint16_t req_base_asym_alg,
  * @return measurement block size.
  **/
 uintn fill_measurement_image_hash_block (
-    boolean use_bit_stream,
+    bool use_bit_stream,
     IN uint32_t measurement_hash_algo,
     IN uint8_t measurements_index,
     IN spdm_measurement_block_dmtf_t *measurement_block
@@ -127,7 +127,7 @@ uintn fill_measurement_image_hash_block (
 {
     uintn hash_size;
     uint8_t data[MEASUREMENT_RAW_DATA_SIZE];
-    boolean result;
+    bool result;
 
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
 
@@ -359,7 +359,7 @@ return_status libspdm_measurement_collection(
     uintn hash_size;
     uint8_t index;
     uintn total_size_needed;
-    boolean use_bit_stream;
+    bool use_bit_stream;
     uintn measurement_block_size;
 
     ASSERT(measurement_specification ==
@@ -373,11 +373,11 @@ return_status libspdm_measurement_collection(
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
     ASSERT(hash_size != 0);
 
-    use_bit_stream = FALSE;
+    use_bit_stream = false;
     if ((measurement_hash_algo == SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) ||
         ((request_attribute & SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED) !=
          0)) {
-        use_bit_stream = TRUE;
+        use_bit_stream = true;
     }
 
     if (measurements_index ==
@@ -561,10 +561,10 @@ return_status libspdm_measurement_collection(
  * @param  measurement_summary_hash        The buffer to store the measurement summary hash.
  * @param  measurement_summary_hash_size   The size in bytes of the buffer.
  *
- * @retval TRUE  measurement summary hash is generated or skipped.
- * @retval FALSE measurement summary hash is not generated.
+ * @retval true  measurement summary hash is generated or skipped.
+ * @retval false measurement summary hash is not generated.
  **/
-boolean libspdm_generate_measurement_summary_hash(
+bool libspdm_generate_measurement_summary_hash(
     IN spdm_version_number_t spdm_version, IN uint32_t base_hash_algo,
     IN uint8_t measurement_specification, IN uint32_t measurement_hash_algo,
     IN uint8_t measurement_summary_hash_type,
@@ -580,7 +580,7 @@ boolean libspdm_generate_measurement_summary_hash(
     uint8_t device_measurement_count;
     uintn device_measurement_size;
     return_status status;
-    boolean result;
+    bool result;
 
     switch (measurement_summary_hash_type) {
     case SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
@@ -589,7 +589,7 @@ boolean libspdm_generate_measurement_summary_hash(
     case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
     case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
         if (*measurement_summary_hash_size != libspdm_get_hash_size(base_hash_algo)) {
-            return FALSE;
+            return false;
         }
 
         /* get all measurement data*/
@@ -603,7 +603,7 @@ boolean libspdm_generate_measurement_summary_hash(
             &device_measurement_count, device_measurement,
             &device_measurement_size);
         if (RETURN_ERROR(status)) {
-            return FALSE;
+            return false;
         }
 
         ASSERT(device_measurement_count <=
@@ -680,14 +680,14 @@ boolean libspdm_generate_measurement_summary_hash(
         result = libspdm_hash_all(base_hash_algo, measurement_data,
                                   measurment_data_size, measurement_summary_hash);
         if (!result) {
-            return FALSE;
+            return false;
         }
         break;
     default:
-        return FALSE;
+        return false;
         break;
     }
-    return TRUE;
+    return true;
 }
 
 /**
@@ -701,25 +701,25 @@ boolean libspdm_generate_measurement_summary_hash(
  * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
  *                                     On output, indicates the size in bytes of the signature in the buffer.
  *
- * @retval TRUE  signing success.
- * @retval FALSE signing fail.
+ * @retval true  signing success.
+ * @retval false signing fail.
  **/
-boolean libspdm_requester_data_sign(
+bool libspdm_requester_data_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
-    IN uint32_t base_hash_algo, IN boolean is_data_hash,
+    IN uint32_t base_hash_algo, IN bool is_data_hash,
     IN const uint8_t *message, IN uintn message_size,
     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     void *context;
     void *private_pem;
     uintn private_pem_size;
-    boolean result;
+    bool result;
 
     result = read_requester_private_certificate(
         req_base_asym_alg, &private_pem, &private_pem_size);
     if (!result) {
-        return FALSE;
+        return false;
     }
 
     result = libspdm_req_asym_get_private_key_from_pem(req_base_asym_alg,
@@ -727,7 +727,7 @@ boolean libspdm_requester_data_sign(
                                                        private_pem_size, NULL,
                                                        &context);
     if (!result) {
-        return FALSE;
+        return false;
     }
     if (is_data_hash) {
         result = libspdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg,
@@ -755,31 +755,31 @@ boolean libspdm_requester_data_sign(
  * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
  *                                     On output, indicates the size in bytes of the signature in the buffer.
  *
- * @retval TRUE  signing success.
- * @retval FALSE signing fail.
+ * @retval true  signing success.
+ * @retval false signing fail.
  **/
-boolean libspdm_responder_data_sign(
+bool libspdm_responder_data_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo,
-    IN uint32_t base_hash_algo, IN boolean is_data_hash,
+    IN uint32_t base_hash_algo, IN bool is_data_hash,
     IN const uint8_t *message, IN uintn message_size,
     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     void *context;
     void *private_pem;
     uintn private_pem_size;
-    boolean result;
+    bool result;
 
     result = read_responder_private_certificate(
         base_asym_algo, &private_pem, &private_pem_size);
     if (!result) {
-        return FALSE;
+        return false;
     }
 
     result = libspdm_asym_get_private_key_from_pem(
         base_asym_algo, private_pem, private_pem_size, NULL, &context);
     if (!result) {
-        return FALSE;
+        return false;
     }
     if (is_data_hash) {
         result = libspdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo,
@@ -813,10 +813,10 @@ uint8_t m_bin_str0[0x11] = {
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-boolean libspdm_psk_handshake_secret_hkdf_expand(
+bool libspdm_psk_handshake_secret_hkdf_expand(
     IN spdm_version_number_t spdm_version,
     IN uint32_t base_hash_algo,
     IN const uint8_t *psk_hint,
@@ -828,7 +828,7 @@ boolean libspdm_psk_handshake_secret_hkdf_expand(
     void *psk;
     uintn psk_size;
     uintn hash_size;
-    boolean result;
+    bool result;
     uint8_t handshake_secret[64];
 
     if ((psk_hint == NULL) && (psk_hint_size == 0)) {
@@ -841,7 +841,7 @@ boolean libspdm_psk_handshake_secret_hkdf_expand(
         psk = TEST_PSK_DATA_STRING;
         psk_size = sizeof(TEST_PSK_DATA_STRING);
     } else {
-        return FALSE;
+        return false;
     }
     printf("[PSK]: ");
     dump_hex_str(psk, psk_size);
@@ -873,10 +873,10 @@ boolean libspdm_psk_handshake_secret_hkdf_expand(
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-boolean libspdm_psk_master_secret_hkdf_expand(
+bool libspdm_psk_master_secret_hkdf_expand(
     IN spdm_version_number_t spdm_version,
     IN uint32_t base_hash_algo,
     IN const uint8_t *psk_hint,
@@ -888,7 +888,7 @@ boolean libspdm_psk_master_secret_hkdf_expand(
     void *psk;
     uintn psk_size;
     uintn hash_size;
-    boolean result;
+    bool result;
     uint8_t handshake_secret[64];
     uint8_t salt1[64];
     uint8_t master_secret[64];
@@ -903,7 +903,7 @@ boolean libspdm_psk_master_secret_hkdf_expand(
         psk = TEST_PSK_DATA_STRING;
         psk_size = sizeof(TEST_PSK_DATA_STRING);
     } else {
-        return FALSE;
+        return false;
     }
 
     hash_size = libspdm_get_hash_size(base_hash_algo);

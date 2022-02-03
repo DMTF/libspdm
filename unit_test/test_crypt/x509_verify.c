@@ -16,7 +16,7 @@ static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  **/
 return_status validate_crypt_x509(char *Path, uintn len)
 {
-    boolean status;
+    bool status;
     uint8_t *leaf_cert;
     uintn leaf_cert_len;
     uint8_t *test_cert;

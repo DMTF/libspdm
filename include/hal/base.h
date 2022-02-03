@@ -214,21 +214,6 @@
 
 #define OPTIONAL
 
-
-/* Boolean true value.*/
-
-#ifndef TRUE
-#define TRUE ((boolean)(1 == 1))
-#endif
-
-
-/* Boolean false value.*/
-
-#ifndef FALSE
-#define FALSE ((boolean)(0 == 1))
-#endif
-
-
 /* NULL pointer (void *)*/
 
 #ifndef NULL
@@ -660,8 +645,8 @@ typedef uintn *BASE_LIST;
 
 
 STATIC_ASSERT(
-    sizeof(boolean) == 1,
-    "sizeof (boolean) does not meet data Type requirements");
+    sizeof(bool) == 1,
+    "sizeof (bool) does not meet data Type requirements");
 STATIC_ASSERT(
     sizeof(int8_t) == 1,
     "sizeof (int8_t) does not meet data Type requirements");
@@ -840,14 +825,14 @@ typedef uintn return_status;
 #define ENCODE_WARNING(status_code) ((return_status)(status_code))
 
 /**
- * Returns TRUE if a specified return_status code is an error code.
+ * Returns true if a specified return_status code is an error code.
  *
- * This function returns TRUE if status_code has the high bit set.  Otherwise, FALSE is returned.
+ * This function returns true if status_code has the high bit set.  Otherwise, false is returned.
  *
  * @param  status_code    The status code value to evaluate.
  *
- * @retval TRUE          The high bit of status_code is set.
- * @retval FALSE         The high bit of status_code is clear.
+ * @retval true          The high bit of status_code is set.
+ * @retval false         The high bit of status_code is clear.
  *
  **/
 #define RETURN_ERROR(status_code) (((intn)(return_status)(status_code)) < 0)

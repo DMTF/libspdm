@@ -60,7 +60,7 @@ void rsa_free(IN void *rsa_context)
  * represented in RSA PKCS#1).
  * If big_number is NULL, then the specified key component in RSA context is cleared.
  *
- * If rsa_context is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
  *
  * @param[in, out]  rsa_context  Pointer to RSA context being set.
  * @param[in]       key_tag      tag of RSA key component being set.
@@ -70,15 +70,15 @@ void rsa_free(IN void *rsa_context)
  * @param[in]       bn_size      size of big number buffer in bytes.
  *                             If big_number is NULL, then it is ignored.
  *
- * @retval  TRUE   RSA key component was set successfully.
- * @retval  FALSE  Invalid RSA key component tag.
+ * @retval  true   RSA key component was set successfully.
+ * @retval  false  Invalid RSA key component tag.
  *
  **/
-boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
+bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
                     IN const uint8_t *big_number, IN uintn bn_size)
 {
     RSA *rsa_key;
-    boolean status;
+    bool status;
     BIGNUM *bn_n, *bn_n_tmp;
     BIGNUM *bn_e, *bn_e_tmp;
     BIGNUM *bn_d, *bn_d_tmp;
@@ -92,7 +92,7 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     /* Check input parameters.*/
 
     if (rsa_context == NULL || bn_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
     bn_n = NULL;
@@ -151,7 +151,7 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
         }
 
         if ((bn_n == NULL) || (bn_e == NULL) || (bn_d == NULL)) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
@@ -166,12 +166,12 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
             bn_d = BN_bin2bn(big_number, (uint32_t)bn_size, bn_d);
             break;
         default:
-            status = FALSE;
+            status = false;
             goto err;
         }
         if (RSA_set0_key(rsa_key, BN_dup(bn_n), BN_dup(bn_e),
                          BN_dup(bn_d)) == 0) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
@@ -191,7 +191,7 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
             bn_q_tmp = bn_q;
         }
         if ((bn_p == NULL) || (bn_q == NULL)) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
@@ -203,12 +203,12 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
             bn_q = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q);
             break;
         default:
-            status = FALSE;
+            status = false;
             goto err;
         }
         if (RSA_set0_factors(rsa_key, BN_dup(bn_p), BN_dup(bn_q)) ==
             0) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
@@ -234,7 +234,7 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
             bn_q_inv_tmp = bn_q_inv;
         }
         if ((bn_dp == NULL) || (bn_dq == NULL) || (bn_q_inv == NULL)) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
@@ -250,23 +250,23 @@ boolean rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
                                  bn_q_inv);
             break;
         default:
-            status = FALSE;
+            status = false;
             goto err;
         }
         if (RSA_set0_crt_params(rsa_key, BN_dup(bn_dp), BN_dup(bn_dq),
                                 BN_dup(bn_q_inv)) == 0) {
-            status = FALSE;
+            status = false;
             goto err;
         }
 
         break;
 
     default:
-        status = FALSE;
+        status = false;
         goto err;
     }
 
-    status = TRUE;
+    status = true;
 
 err:
     BN_free(bn_n_tmp);
@@ -285,9 +285,9 @@ err:
  * Verifies the RSA-SSA signature with EMSA-PKCS1-v1_5 encoding scheme defined in
  * RSA PKCS#1.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
- * If signature is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
+ * If signature is NULL, then return false.
  * If hash_size need match the hash_nid. hash_nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
  *
  * @param[in]  rsa_context   Pointer to RSA context for signature verification.
@@ -297,11 +297,11 @@ err:
  * @param[in]  signature    Pointer to RSA PKCS1-v1_5 signature to be verified.
  * @param[in]  sig_size      size of signature in bytes.
  *
- * @retval  TRUE   Valid signature encoded in PKCS1-v1_5.
- * @retval  FALSE  Invalid signature or invalid RSA context.
+ * @retval  true   Valid signature encoded in PKCS1-v1_5.
+ * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
                                   IN const uint8_t *message_hash,
                                   IN uintn hash_size, IN const uint8_t *signature,
                                   IN uintn sig_size)
@@ -313,62 +313,62 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
     /* Check input parameters.*/
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
-        return FALSE;
+        return false;
     }
 
     if (sig_size > INT_MAX || sig_size == 0) {
-        return FALSE;
+        return false;
     }
 
     switch (hash_nid) {
     case CRYPTO_NID_SHA256:
         digest_type = NID_sha256;
         if (hash_size != SHA256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA384:
         digest_type = NID_sha384;
         if (hash_size != SHA384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA512:
         digest_type = NID_sha512;
         if (hash_size != SHA512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_256:
         digest_type = NID_sha3_256;
         if (hash_size != SHA3_256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_384:
         digest_type = NID_sha3_384;
         if (hash_size != SHA3_384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_512:
         digest_type = NID_sha3_512;
         if (hash_size != SHA3_512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     default:
-        return FALSE;
+        return false;
     }
 
     sig_buf = (uint8_t *)signature;
-    return (boolean)RSA_verify(digest_type, message_hash, (uint32_t)hash_size,
+    return (bool)RSA_verify(digest_type, message_hash, (uint32_t)hash_size,
                                sig_buf, (uint32_t)sig_size,
                                (RSA *)rsa_context);
 }
@@ -379,9 +379,9 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  * The salt length is same as digest length.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
- * If signature is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
+ * If signature is NULL, then return false.
  * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
  *
  * @param[in]  rsa_context   Pointer to RSA context for signature verification.
@@ -391,94 +391,94 @@ boolean rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @param[in]  signature    Pointer to RSA-SSA PSS signature to be verified.
  * @param[in]  sig_size      size of signature in bytes.
  *
- * @retval  TRUE   Valid signature encoded in RSA-SSA PSS.
- * @retval  FALSE  Invalid signature or invalid RSA context.
+ * @retval  true   Valid signature encoded in RSA-SSA PSS.
+ * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-boolean rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
                        IN const uint8_t *message_hash, IN uintn hash_size,
                        IN const uint8_t *signature, IN uintn sig_size)
 {
     RSA *rsa;
-    boolean result;
+    bool result;
     int32_t size;
     const EVP_MD *evp_md;
     void *buffer;
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
-        return FALSE;
+        return false;
     }
 
     if (sig_size > INT_MAX || sig_size == 0) {
-        return FALSE;
+        return false;
     }
 
     rsa = rsa_context;
     size = RSA_size(rsa);
     if (sig_size != (uintn)size) {
-        return FALSE;
+        return false;
     }
 
     switch (hash_nid) {
     case CRYPTO_NID_SHA256:
         evp_md = EVP_sha256();
         if (hash_size != SHA256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA384:
         evp_md = EVP_sha384();
         if (hash_size != SHA384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA512:
         evp_md = EVP_sha512();
         if (hash_size != SHA512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_256:
         evp_md = EVP_sha3_256();
         if (hash_size != SHA3_256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_384:
         evp_md = EVP_sha3_384();
         if (hash_size != SHA3_384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_512:
         evp_md = EVP_sha3_512();
         if (hash_size != SHA3_512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     default:
-        return FALSE;
+        return false;
     }
 
     buffer = allocate_pool(size);
     if (buffer == NULL) {
-        return FALSE;
+        return false;
     }
 
     size = RSA_public_decrypt(size, signature, buffer, rsa, RSA_NO_PADDING);
     if (size <= 0) {
         free_pool(buffer);
-        return FALSE;
+        return false;
     }
     ASSERT(sig_size == (uintn)size);
 
-    result = (boolean)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
+    result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
                                            buffer, RSA_PSS_SALTLEN_DIGEST);
     free_pool(buffer);
 

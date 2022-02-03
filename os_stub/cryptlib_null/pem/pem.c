@@ -20,20 +20,20 @@
  *                         RSA private key component. Use rsa_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If rsa_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If rsa_context is NULL, then return false.
  *
- * @retval  TRUE   RSA Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   RSA Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **rsa_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -46,19 +46,19 @@ boolean rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
  *                         EC private key component. Use ec_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If ec_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If ec_context is NULL, then return false.
  *
- * @retval  TRUE   EC Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   EC Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
+bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
                                     IN const char *password,
                                     OUT void **ec_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -71,20 +71,20 @@ boolean ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_siz
  *                         Ed private key component. Use ecd_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If ecd_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If ecd_context is NULL, then return false.
  *
- * @retval  TRUE   Ed Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   Ed Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **ecd_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -97,18 +97,18 @@ boolean ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
  *                         sm2 private key component. Use sm2_free() function to free the
  *                         resource.
  *
- * If pem_data is NULL, then return FALSE.
- * If sm2_context is NULL, then return FALSE.
+ * If pem_data is NULL, then return false.
+ * If sm2_context is NULL, then return false.
  *
- * @retval  TRUE   sm2 Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   sm2 Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-boolean sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
+bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
                                      IN uintn pem_size,
                                      IN const char *password,
                                      OUT void **sm2_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }

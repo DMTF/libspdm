@@ -37,7 +37,7 @@ typedef struct {
 return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
                                   OUT void *total_digest_buffer)
 {
-    boolean result;
+    bool result;
     return_status status;
     spdm_get_digest_request_t spdm_request;
     spdm_digests_response_max_t spdm_response;
@@ -49,7 +49,7 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
 
     spdm_context = context;
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, TRUE, 0,
+            spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return RETURN_UNSUPPORTED;
     }

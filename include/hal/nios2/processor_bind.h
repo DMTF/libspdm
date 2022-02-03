@@ -28,9 +28,11 @@
 #include LIBSPDM_STDINT_ALT
 #endif
 
-
-typedef unsigned char boolean;
-
+#ifndef LIBSPDM_STDBOOL_ALT
+#include <stdbool.h>
+#else
+#include LIBSPDM_STDBOOL_ALT
+#endif
 
 /* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
  * 8 bytes on supported 64-bit processor instructions)*/

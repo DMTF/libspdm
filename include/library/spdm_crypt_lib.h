@@ -48,25 +48,25 @@ typedef void (*libspdm_hash_free_func)(IN void *hash_context);
  * @param  base_hash_algo                 SPDM base_hash_algo
  * @param  hash_context                   Pointer to hash context being initialized.
  *
- * @retval TRUE   Hash context initialization succeeded.
- * @retval FALSE  Hash context initialization failed.
+ * @retval true   Hash context initialization succeeded.
+ * @retval false  Hash context initialization failed.
  **/
-typedef boolean (*libspdm_hash_init_func)(OUT void *hash_context);
+typedef bool (*libspdm_hash_init_func)(OUT void *hash_context);
 
 /**
  * Makes a copy of an existing hash context.
  *
- * If hash_ctx is NULL, then return FALSE.
- * If new_hash_ctx is NULL, then return FALSE.
+ * If hash_ctx is NULL, then return false.
+ * If new_hash_ctx is NULL, then return false.
  *
  * @param[in]  hash_ctx     Pointer to hash context being copied.
  * @param[out] new_hash_ctx  Pointer to new hash context.
  *
- * @retval TRUE   hash context copy succeeded.
- * @retval FALSE  hash context copy failed.
+ * @retval true   hash context copy succeeded.
+ * @retval false  hash context copy failed.
  *
  **/
-typedef boolean (*libspdm_hash_duplicate_func)(IN const void *hash_ctx,
+typedef bool (*libspdm_hash_duplicate_func)(IN const void *hash_ctx,
                                                OUT void *new_hash_ctx);
 
 /**
@@ -77,16 +77,16 @@ typedef boolean (*libspdm_hash_duplicate_func)(IN const void *hash_ctx,
  * Hash context should be already correctly initialized by hash_init(), and should not be finalized
  * by hash_final(). Behavior with invalid context is undefined.
  *
- * If hash_context is NULL, then return FALSE.
+ * If hash_context is NULL, then return false.
  *
  * @param[in, out]  hash_context   Pointer to the MD context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size      Size of data buffer in bytes.
  *
- * @retval TRUE   hash data digest succeeded.
- * @retval FALSE  hash data digest failed.
+ * @retval true   hash data digest succeeded.
+ * @retval false  hash data digest failed.
  **/
-typedef boolean (*libspdm_hash_update_func)(IN OUT void *hash_context, IN const void *data,
+typedef bool (*libspdm_hash_update_func)(IN OUT void *hash_context, IN const void *data,
                                             IN uintn data_size);
 
 /**
@@ -98,16 +98,16 @@ typedef boolean (*libspdm_hash_update_func)(IN OUT void *hash_context, IN const 
  * hash context should be already correctly initialized by hash_init(), and should not be
  * finalized by hash_final(). Behavior with invalid hash context is undefined.
  *
- * If hash_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If hash_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  hash_context    Pointer to the hash context.
  * @param[out]      hash_value      Pointer to a buffer that receives the hash digest value.
  *
- * @retval TRUE   hash digest computation succeeded.
- * @retval FALSE  hash digest computation failed.
+ * @retval true   hash digest computation succeeded.
+ * @retval false  hash digest computation failed.
  **/
-typedef boolean (*libspdm_hash_final_func)(IN OUT void *hash_context, OUT uint8_t *hash_value);
+typedef bool (*libspdm_hash_final_func)(IN OUT void *hash_context, OUT uint8_t *hash_value);
 
 /**
  * Computes the hash of a input data buffer.
@@ -118,10 +118,10 @@ typedef boolean (*libspdm_hash_final_func)(IN OUT void *hash_context, OUT uint8_
  * @param  data_size                     size of data buffer in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the hash value.
  *
- * @retval TRUE   hash computation succeeded.
- * @retval FALSE  hash computation failed.
+ * @retval true   hash computation succeeded.
+ * @retval false  hash computation failed.
  **/
-typedef boolean (*libspdm_hash_all_func)(IN const void *data, IN uintn data_size,
+typedef bool (*libspdm_hash_all_func)(IN const void *data, IN uintn data_size,
                                          OUT uint8_t *hash_value);
 
 /**
@@ -143,33 +143,33 @@ typedef void (*libspdm_hmac_free_func)(IN void *hmac_ctx);
  * Set user-supplied key for subsequent use. It must be done before any
  * calling to hmac_update().
  *
- * If hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
  *
  * @param[out]  hmac_ctx  Pointer to HMAC context.
  * @param[in]   key                Pointer to the user-supplied key.
  * @param[in]   key_size            key size in bytes.
  *
- * @retval TRUE   The key is set successfully.
- * @retval FALSE  The key is set unsuccessfully.
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
  *
  **/
-typedef boolean (*libspdm_hmac_set_key_func)(OUT void *hmac_ctx, IN const uint8_t *key,
+typedef bool (*libspdm_hmac_set_key_func)(OUT void *hmac_ctx, IN const uint8_t *key,
                                              IN uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC context.
  *
- * If hmac_ctx is NULL, then return FALSE.
- * If new_hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
+ * If new_hmac_ctx is NULL, then return false.
  *
  * @param[in]  hmac_ctx     Pointer to HMAC context being copied.
  * @param[out] new_hmac_ctx  Pointer to new HMAC context.
  *
- * @retval TRUE   HMAC context copy succeeded.
- * @retval FALSE  HMAC context copy failed.
+ * @retval true   HMAC context copy succeeded.
+ * @retval false  HMAC context copy failed.
  *
  **/
-typedef boolean (*libspdm_hmac_duplicate_func)(IN const void *hmac_ctx,
+typedef bool (*libspdm_hmac_duplicate_func)(IN const void *hmac_ctx,
                                                OUT void *new_hmac_ctx);
 
 /**
@@ -180,17 +180,17 @@ typedef boolean (*libspdm_hmac_duplicate_func)(IN const void *hmac_ctx,
  * HMAC context should be initialized by hmac_new(), and should not be finalized
  * by hmac_final(). Behavior with invalid context is undefined.
  *
- * If hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
  *
  * @param[in, out]  hmac_ctx Pointer to the HMAC context.
  * @param[in]       data              Pointer to the buffer containing the data to be digested.
  * @param[in]       data_size          size of data buffer in bytes.
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  *
  **/
-typedef boolean (*libspdm_hmac_update_func)(IN OUT void *hmac_ctx, IN const void *data,
+typedef bool (*libspdm_hmac_update_func)(IN OUT void *hmac_ctx, IN const void *data,
                                             IN uintn data_size);
 
 /**
@@ -200,18 +200,18 @@ typedef boolean (*libspdm_hmac_update_func)(IN OUT void *hmac_ctx, IN const void
  * the specified memory. After this function has been called, the HMAC context cannot
  * be used again.
  *
- * If hmac_ctx is NULL, then return FALSE.
- * If hmac_value is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
+ * If hmac_value is NULL, then return false.
  *
  * @param[in, out]  hmac_ctx  Pointer to the HMAC context.
  * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
  *                                    value.
  *
- * @retval TRUE   HMAC digest computation succeeded.
- * @retval FALSE  HMAC digest computation failed.
+ * @retval true   HMAC digest computation succeeded.
+ * @retval false  HMAC digest computation failed.
  *
  **/
-typedef boolean (*libspdm_hmac_final_func)(IN OUT void *hmac_ctx, OUT uint8_t *hmac_value);
+typedef bool (*libspdm_hmac_final_func)(IN OUT void *hmac_ctx, OUT uint8_t *hmac_value);
 
 /**
  * Computes the HMAC of a input data buffer.
@@ -224,10 +224,10 @@ typedef boolean (*libspdm_hmac_final_func)(IN OUT void *hmac_ctx, OUT uint8_t *h
  * @param  key_size                      key size in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
  *
- * @retval TRUE   HMAC computation succeeded.
- * @retval FALSE  HMAC computation failed.
+ * @retval true   HMAC computation succeeded.
+ * @retval false  HMAC computation failed.
  **/
-typedef boolean (*libspdm_hmac_all_func)(IN const void *data, IN uintn data_size,
+typedef bool (*libspdm_hmac_all_func)(IN const void *data, IN uintn data_size,
                                          IN const uint8_t *key, IN uintn key_size,
                                          OUT uint8_t *hmac_value);
 
@@ -241,10 +241,10 @@ typedef boolean (*libspdm_hmac_all_func)(IN const void *data, IN uintn data_size
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-typedef boolean (*libspdm_hkdf_expand_func)(IN const uint8_t *prk, IN uintn prk_size,
+typedef bool (*libspdm_hkdf_expand_func)(IN const uint8_t *prk, IN uintn prk_size,
                                             IN const uint8_t *info, IN uintn info_size,
                                             OUT uint8_t *out, IN uintn out_size);
 
@@ -256,10 +256,10 @@ typedef boolean (*libspdm_hkdf_expand_func)(IN const uint8_t *prk, IN uintn prk_
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve public key from X509 certificate.
+ * @retval  true   public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
-typedef boolean (*libspdm_asym_get_public_key_from_x509_func)(IN const uint8_t *cert,
+typedef bool (*libspdm_asym_get_public_key_from_x509_func)(IN const uint8_t *cert,
                                                               IN uintn cert_size,
                                                               OUT void **context);
 
@@ -288,10 +288,10 @@ typedef void (*libspdm_asym_free_func)(IN void *context);
  * @param  signature                    Pointer to asymmetric signature to be verified.
  * @param  sig_size                      size of signature in bytes.
  *
- * @retval  TRUE   Valid asymmetric signature.
- * @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-typedef boolean (*libspdm_asym_verify_func)(IN void *context, IN uintn hash_nid,
+typedef bool (*libspdm_asym_verify_func)(IN void *context, IN uintn hash_nid,
                                             IN const uint8_t *param, IN uintn param_size,
                                             IN const uint8_t *message,
                                             IN uintn message_size,
@@ -307,10 +307,10 @@ typedef boolean (*libspdm_asym_verify_func)(IN void *context, IN uintn hash_nid,
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  **/
-typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *pem_data,
+typedef bool (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *pem_data,
                                                               IN uintn pem_size,
                                                               IN const char *password,
                                                               OUT void **context);
@@ -318,7 +318,7 @@ typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *
 /**
  * Carries out the signature generation.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
  * For RSA/ECDSA/EdDSA25519, param is NULL.
@@ -335,11 +335,11 @@ typedef boolean (*libspdm_asym_get_private_key_from_pem_func)(IN const uint8_t *
  * @param  sig_size                      On input, the size of signature buffer in bytes.
  *                                     On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  **/
-typedef boolean (*libspdm_asym_sign_func)(IN void *context, IN uintn hash_nid,
+typedef bool (*libspdm_asym_sign_func)(IN void *context, IN uintn hash_nid,
                                           IN const uint8_t *param, IN uintn param_size,
                                           IN const uint8_t *message,
                                           IN uintn message_size, OUT uint8_t *signature,
@@ -359,7 +359,7 @@ typedef void *(*libspdm_dhe_new_by_nid_func)(IN uintn nid);
  *
  * This function generates random secret exponent, and computes the public key, which is
  * returned via parameter public_key and public_key_size. DH context is updated accordingly.
- * If the public_key buffer is too small to hold the public key, FALSE is returned and
+ * If the public_key buffer is too small to hold the public key, false is returned and
  * public_key_size is set to the required buffer size to obtain the public key.
  *
  * @param  context                      Pointer to the DHE context.
@@ -367,11 +367,11 @@ typedef void *(*libspdm_dhe_new_by_nid_func)(IN uintn nid);
  * @param  public_key_size                On input, the size of public_key buffer in bytes.
  *                                     On output, the size of data returned in public_key buffer in bytes.
  *
- * @retval TRUE   DHE public key generation succeeded.
- * @retval FALSE  DHE public key generation failed.
- * @retval FALSE  public_key_size is not large enough.
+ * @retval true   DHE public key generation succeeded.
+ * @retval false  DHE public key generation failed.
+ * @retval false  public_key_size is not large enough.
  **/
-typedef boolean (*libspdm_dhe_generate_key_func)(IN OUT void *context,
+typedef bool (*libspdm_dhe_generate_key_func)(IN OUT void *context,
                                                  OUT uint8_t *public_key,
                                                  IN OUT uintn *public_key_size);
 
@@ -388,11 +388,11 @@ typedef boolean (*libspdm_dhe_generate_key_func)(IN OUT void *context,
  * @param  key_size                      On input, the size of key buffer in bytes.
  *                                     On output, the size of data returned in key buffer in bytes.
  *
- * @retval TRUE   DHE exchanged key generation succeeded.
- * @retval FALSE  DHE exchanged key generation failed.
- * @retval FALSE  key_size is not large enough.
+ * @retval true   DHE exchanged key generation succeeded.
+ * @retval false  DHE exchanged key generation failed.
+ * @retval false  key_size is not large enough.
  **/
-typedef boolean (*libspdm_dhe_compute_key_func)(IN OUT void *context,
+typedef bool (*libspdm_dhe_compute_key_func)(IN OUT void *context,
                                                 IN const uint8_t *peer_public,
                                                 IN uintn peer_public_size,
                                                 OUT uint8_t *key, IN OUT uintn *key_size);
@@ -420,10 +420,10 @@ typedef void (*libspdm_dhe_free_func)(IN void *context);
  * @param  data_out                      Pointer to a buffer that receives the encryption output.
  * @param  data_out_size                  size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD authenticated encryption succeeded.
- * @retval FALSE  AEAD authenticated encryption failed.
+ * @retval true   AEAD authenticated encryption succeeded.
+ * @retval false  AEAD authenticated encryption failed.
  **/
-typedef boolean (*libspdm_aead_encrypt_func)(
+typedef bool (*libspdm_aead_encrypt_func)(
     IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
     IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
     IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
@@ -445,10 +445,10 @@ typedef boolean (*libspdm_aead_encrypt_func)(
  * @param  data_out                      Pointer to a buffer that receives the decryption output.
  * @param  data_out_size                  size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD authenticated decryption succeeded.
- * @retval FALSE  AEAD authenticated decryption failed.
+ * @retval true   AEAD authenticated decryption succeeded.
+ * @retval false  AEAD authenticated decryption failed.
  **/
-typedef boolean (*libspdm_aead_decrypt_func)(
+typedef bool (*libspdm_aead_decrypt_func)(
     IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
     IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
     IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
@@ -488,25 +488,25 @@ void libspdm_hash_free(IN uint32_t base_hash_algo, IN void *hash_context);
  * @param  base_hash_algo                 SPDM base_hash_algo
  * @param  hash_context                   Pointer to hash context being initialized.
  *
- * @retval TRUE   Hash context initialization succeeded.
- * @retval FALSE  Hash context initialization failed.
+ * @retval true   Hash context initialization succeeded.
+ * @retval false  Hash context initialization failed.
  **/
-boolean libspdm_hash_init(IN uint32_t base_hash_algo, OUT void *hash_context);
+bool libspdm_hash_init(IN uint32_t base_hash_algo, OUT void *hash_context);
 
 /**
  * Makes a copy of an existing hash context.
  *
- * If hash_ctx is NULL, then return FALSE.
- * If new_hash_ctx is NULL, then return FALSE.
+ * If hash_ctx is NULL, then return false.
+ * If new_hash_ctx is NULL, then return false.
  *
  * @param[in]  hash_ctx     Pointer to hash context being copied.
  * @param[out] new_hash_ctx  Pointer to new hash context.
  *
- * @retval TRUE   hash context copy succeeded.
- * @retval FALSE  hash context copy failed.
+ * @retval true   hash context copy succeeded.
+ * @retval false  hash context copy failed.
  *
  **/
-boolean libspdm_hash_duplicate(IN uint32_t base_hash_algo,
+bool libspdm_hash_duplicate(IN uint32_t base_hash_algo,
                                IN const void *hash_ctx, OUT void *new_hash_ctx);
 
 /**
@@ -517,16 +517,16 @@ boolean libspdm_hash_duplicate(IN uint32_t base_hash_algo,
  * Hash context should be already correctly initialized by hash_init(), and should not be finalized
  * by hash_final(). Behavior with invalid context is undefined.
  *
- * If hash_context is NULL, then return FALSE.
+ * If hash_context is NULL, then return false.
  *
  * @param[in, out]  hash_context   Pointer to the MD context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size      Size of data buffer in bytes.
  *
- * @retval TRUE   hash data digest succeeded.
- * @retval FALSE  hash data digest failed.
+ * @retval true   hash data digest succeeded.
+ * @retval false  hash data digest failed.
  **/
-boolean libspdm_hash_update(IN uint32_t base_hash_algo, IN OUT void *hash_context,
+bool libspdm_hash_update(IN uint32_t base_hash_algo, IN OUT void *hash_context,
                             IN const void *data, IN uintn data_size);
 
 /**
@@ -538,16 +538,16 @@ boolean libspdm_hash_update(IN uint32_t base_hash_algo, IN OUT void *hash_contex
  * hash context should be already correctly initialized by hash_init(), and should not be
  * finalized by hash_final(). Behavior with invalid hash context is undefined.
  *
- * If hash_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If hash_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  hash_context    Pointer to the hash context.
  * @param[out]      hash_value      Pointer to a buffer that receives the hash digest value.
  *
- * @retval TRUE   hash digest computation succeeded.
- * @retval FALSE  hash digest computation failed.
+ * @retval true   hash digest computation succeeded.
+ * @retval false  hash digest computation failed.
  **/
-boolean libspdm_hash_final(IN uint32_t base_hash_algo, IN OUT void *hash_context,
+bool libspdm_hash_final(IN uint32_t base_hash_algo, IN OUT void *hash_context,
                            OUT uint8_t *hash_value);
 
 /**
@@ -572,34 +572,34 @@ void libspdm_hmac_free(IN uint32_t base_hash_algo, IN void *hmac_ctx);
  * Set user-supplied key for subsequent use. It must be done before any
  * calling to hmac_update().
  *
- * If hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
  *
  * @param[out]  hmac_ctx  Pointer to HMAC context.
  * @param[in]   key                Pointer to the user-supplied key.
  * @param[in]   key_size            key size in bytes.
  *
- * @retval TRUE   The key is set successfully.
- * @retval FALSE  The key is set unsuccessfully.
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
  *
  **/
-boolean libspdm_hmac_init(IN uint32_t base_hash_algo,
+bool libspdm_hmac_init(IN uint32_t base_hash_algo,
                           OUT void *hmac_ctx, IN const uint8_t *key,
                           IN uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC context.
  *
- * If hmac_ctx is NULL, then return FALSE.
- * If new_hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
+ * If new_hmac_ctx is NULL, then return false.
  *
  * @param[in]  hmac_ctx     Pointer to HMAC context being copied.
  * @param[out] new_hmac_ctx  Pointer to new HMAC context.
  *
- * @retval TRUE   HMAC context copy succeeded.
- * @retval FALSE  HMAC context copy failed.
+ * @retval true   HMAC context copy succeeded.
+ * @retval false  HMAC context copy failed.
  *
  **/
-boolean libspdm_hmac_duplicate(IN uint32_t base_hash_algo,
+bool libspdm_hmac_duplicate(IN uint32_t base_hash_algo,
                                IN const void *hmac_ctx, OUT void *new_hmac_ctx);
 /**
  * Digests the input data and updates HMAC context.
@@ -609,17 +609,17 @@ boolean libspdm_hmac_duplicate(IN uint32_t base_hash_algo,
  * HMAC context should be initialized by hmac_new(), and should not be finalized
  * by hmac_final(). Behavior with invalid context is undefined.
  *
- * If hmac_ctx is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
  *
  * @param[in, out]  hmac_ctx Pointer to the HMAC context.
  * @param[in]       data              Pointer to the buffer containing the data to be digested.
  * @param[in]       data_size          size of data buffer in bytes.
  *
- * @retval TRUE   HMAC data digest succeeded.
- * @retval FALSE  HMAC data digest failed.
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
  *
  **/
-boolean libspdm_hmac_update(IN uint32_t base_hash_algo,
+bool libspdm_hmac_update(IN uint32_t base_hash_algo,
                             OUT void *hmac_ctx, IN const void *data,
                             IN uintn data_size);
 /**
@@ -629,18 +629,18 @@ boolean libspdm_hmac_update(IN uint32_t base_hash_algo,
  * the specified memory. After this function has been called, the HMAC context cannot
  * be used again.
  *
- * If hmac_ctx is NULL, then return FALSE.
- * If hmac_value is NULL, then return FALSE.
+ * If hmac_ctx is NULL, then return false.
+ * If hmac_value is NULL, then return false.
  *
  * @param[in, out]  hmac_ctx  Pointer to the HMAC context.
  * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
  *                                    value.
  *
- * @retval TRUE   HMAC digest computation succeeded.
- * @retval FALSE  HMAC digest computation failed.
+ * @retval true   HMAC digest computation succeeded.
+ * @retval false  HMAC digest computation failed.
  *
  **/
-boolean libspdm_hmac_final(IN uint32_t base_hash_algo,
+bool libspdm_hmac_final(IN uint32_t base_hash_algo,
                            OUT void *hmac_ctx,  OUT uint8_t *hmac_value);
 
 /**
@@ -653,10 +653,10 @@ boolean libspdm_hmac_final(IN uint32_t base_hash_algo,
  * @param  data_size                     size of data buffer in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the hash value.
  *
- * @retval TRUE   hash computation succeeded.
- * @retval FALSE  hash computation failed.
+ * @retval true   hash computation succeeded.
+ * @retval false  hash computation failed.
  **/
-boolean libspdm_hash_all(IN uint32_t base_hash_algo, IN const void *data,
+bool libspdm_hash_all(IN uint32_t base_hash_algo, IN const void *data,
                          IN uintn data_size, OUT uint8_t *hash_value);
 
 /**
@@ -679,10 +679,10 @@ uint32_t libspdm_get_measurement_hash_size(IN uint32_t measurement_hash_algo);
  * @param  data_size                     size of data buffer in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the hash value.
  *
- * @retval TRUE   hash computation succeeded.
- * @retval FALSE  hash computation failed.
+ * @retval true   hash computation succeeded.
+ * @retval false  hash computation failed.
  **/
-boolean libspdm_measurement_hash_all(IN uint32_t measurement_hash_algo,
+bool libspdm_measurement_hash_all(IN uint32_t measurement_hash_algo,
                                      IN const void *data, IN uintn data_size,
                                      OUT uint8_t *hash_value);
 
@@ -698,10 +698,10 @@ boolean libspdm_measurement_hash_all(IN uint32_t measurement_hash_algo,
  * @param  key_size                      key size in bytes.
  * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
  *
- * @retval TRUE   HMAC computation succeeded.
- * @retval FALSE  HMAC computation failed.
+ * @retval true   HMAC computation succeeded.
+ * @retval false  HMAC computation failed.
  **/
-boolean libspdm_hmac_all(IN uint32_t base_hash_algo, IN const void *data,
+bool libspdm_hmac_all(IN uint32_t base_hash_algo, IN const void *data,
                          IN uintn data_size, IN const uint8_t *key,
                          IN uintn key_size, OUT uint8_t *hmac_value);
 
@@ -716,10 +716,10 @@ boolean libspdm_hmac_all(IN uint32_t base_hash_algo, IN const void *data,
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-boolean libspdm_hkdf_expand(IN uint32_t base_hash_algo, IN const uint8_t *prk,
+bool libspdm_hkdf_expand(IN uint32_t base_hash_algo, IN const uint8_t *prk,
                             IN uintn prk_size, IN const uint8_t *info,
                             IN uintn info_size, OUT uint8_t *out, IN uintn out_size);
 
@@ -742,10 +742,10 @@ uint32_t libspdm_get_asym_signature_size(IN uint32_t base_asym_algo);
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve public key from X509 certificate.
+ * @retval  true   public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
-boolean libspdm_asym_get_public_key_from_x509(IN uint32_t base_asym_algo,
+bool libspdm_asym_get_public_key_from_x509(IN uint32_t base_asym_algo,
                                               IN const uint8_t *cert,
                                               IN uintn cert_size,
                                               OUT void **context);
@@ -771,10 +771,10 @@ void libspdm_asym_free(IN uint32_t base_asym_algo, IN void *context);
  * @param  signature                    Pointer to asymmetric signature to be verified.
  * @param  sig_size                      size of signature in bytes.
  *
- * @retval  TRUE   Valid asymmetric signature.
- * @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-boolean libspdm_asym_verify(
+bool libspdm_asym_verify(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo, IN uint32_t base_hash_algo,
     IN void *context, IN const uint8_t *message,
@@ -793,10 +793,10 @@ boolean libspdm_asym_verify(
  * @param  signature                    Pointer to asymmetric signature to be verified.
  * @param  sig_size                      size of signature in bytes.
  *
- * @retval  TRUE   Valid asymmetric signature.
- * @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-boolean libspdm_asym_verify_hash(
+bool libspdm_asym_verify_hash(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo, IN uint32_t base_hash_algo,
     IN void *context, IN const uint8_t *message_hash,
@@ -813,10 +813,10 @@ boolean libspdm_asym_verify_hash(
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  **/
-boolean libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
+bool libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
                                               IN const uint8_t *pem_data,
                                               IN uintn pem_size,
                                               IN const char *password,
@@ -825,7 +825,7 @@ boolean libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
 /**
  * Carries out the signature generation.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
  * @param  base_asym_algo                 SPDM base_asym_algo
@@ -837,11 +837,11 @@ boolean libspdm_asym_get_private_key_from_pem(IN uint32_t base_asym_algo,
  * @param  sig_size                      On input, the size of signature buffer in bytes.
  *                                     On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  **/
-boolean libspdm_asym_sign(
+bool libspdm_asym_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo, IN uint32_t base_hash_algo,
     IN void *context, IN const uint8_t *message,
@@ -851,7 +851,7 @@ boolean libspdm_asym_sign(
 /**
  * Carries out the signature generation.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
  * @param  base_asym_algo                 SPDM base_asym_algo
@@ -863,11 +863,11 @@ boolean libspdm_asym_sign(
  * @param  sig_size                      On input, the size of signature buffer in bytes.
  *                                     On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  **/
-boolean libspdm_asym_sign_hash(
+bool libspdm_asym_sign_hash(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo, IN uint32_t base_hash_algo,
     IN void *context, IN const uint8_t *message_hash,
@@ -893,10 +893,10 @@ uint32_t libspdm_get_req_asym_signature_size(IN uint16_t req_base_asym_alg);
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve public key from X509 certificate.
+ * @retval  true   public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
-boolean libspdm_req_asym_get_public_key_from_x509(IN uint16_t req_base_asym_alg,
+bool libspdm_req_asym_get_public_key_from_x509(IN uint16_t req_base_asym_alg,
                                                   IN const uint8_t *cert,
                                                   IN uintn cert_size,
                                                   OUT void **context);
@@ -922,10 +922,10 @@ void libspdm_req_asym_free(IN uint16_t req_base_asym_alg, IN void *context);
  * @param  signature                    Pointer to asymmetric signature to be verified.
  * @param  sig_size                      size of signature in bytes.
  *
- * @retval  TRUE   Valid asymmetric signature.
- * @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-boolean libspdm_req_asym_verify(
+bool libspdm_req_asym_verify(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
     IN uint32_t base_hash_algo, IN void *context,
@@ -944,10 +944,10 @@ boolean libspdm_req_asym_verify(
  * @param  signature                    Pointer to asymmetric signature to be verified.
  * @param  sig_size                      size of signature in bytes.
  *
- * @retval  TRUE   Valid asymmetric signature.
- * @retval  FALSE  Invalid asymmetric signature or invalid asymmetric context.
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-boolean libspdm_req_asym_verify_hash(
+bool libspdm_req_asym_verify_hash(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
     IN uint32_t base_hash_algo, IN void *context,
@@ -964,10 +964,10 @@ boolean libspdm_req_asym_verify_hash(
  * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
- * @retval  TRUE   Private key was retrieved successfully.
- * @retval  FALSE  Invalid PEM key data or incorrect password.
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
  **/
-boolean libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
+bool libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
                                                   IN const uint8_t *pem_data,
                                                   IN uintn pem_size,
                                                   IN const char *password,
@@ -976,7 +976,7 @@ boolean libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
 /**
  * Carries out the signature generation.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
  * @param  req_base_asym_alg               SPDM req_base_asym_alg
@@ -988,11 +988,11 @@ boolean libspdm_req_asym_get_private_key_from_pem(IN uint16_t req_base_asym_alg,
  * @param  sig_size                      On input, the size of signature buffer in bytes.
  *                                     On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  **/
-boolean libspdm_req_asym_sign(
+bool libspdm_req_asym_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
     IN uint32_t base_hash_algo, IN void *context,
@@ -1002,7 +1002,7 @@ boolean libspdm_req_asym_sign(
 /**
  * Carries out the signature generation.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
  * @param  req_base_asym_alg               SPDM req_base_asym_alg
@@ -1014,11 +1014,11 @@ boolean libspdm_req_asym_sign(
  * @param  sig_size                      On input, the size of signature buffer in bytes.
  *                                     On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  **/
-boolean libspdm_req_asym_sign_hash(
+bool libspdm_req_asym_sign_hash(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
     IN uint32_t base_hash_algo, IN void *context,
@@ -1040,13 +1040,13 @@ uint32_t libspdm_get_dhe_pub_key_size(IN uint16_t dhe_named_group);
  *
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  is_initiator                   if the caller is initiator.
- *                                       TRUE: initiator
- *                                       FALSE: not an initiator
+ *                                       true: initiator
+ *                                       false: not an initiator
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
 void *libspdm_dhe_new(IN spdm_version_number_t spdm_version,
-                      IN uint16_t dhe_named_group, IN const boolean is_initiator);
+                      IN uint16_t dhe_named_group, IN const bool is_initiator);
 
 /**
  * Release the specified DHE context,
@@ -1063,7 +1063,7 @@ void libspdm_dhe_free(IN uint16_t dhe_named_group, IN void *context);
  *
  * This function generates random secret exponent, and computes the public key, which is
  * returned via parameter public_key and public_key_size. DH context is updated accordingly.
- * If the public_key buffer is too small to hold the public key, FALSE is returned and
+ * If the public_key buffer is too small to hold the public key, false is returned and
  * public_key_size is set to the required buffer size to obtain the public key.
  *
  * @param  dhe_named_group                SPDM dhe_named_group
@@ -1072,11 +1072,11 @@ void libspdm_dhe_free(IN uint16_t dhe_named_group, IN void *context);
  * @param  public_key_size                On input, the size of public_key buffer in bytes.
  *                                     On output, the size of data returned in public_key buffer in bytes.
  *
- * @retval TRUE   DHE public key generation succeeded.
- * @retval FALSE  DHE public key generation failed.
- * @retval FALSE  public_key_size is not large enough.
+ * @retval true   DHE public key generation succeeded.
+ * @retval false  DHE public key generation failed.
+ * @retval false  public_key_size is not large enough.
  **/
-boolean libspdm_dhe_generate_key(IN uint16_t dhe_named_group, IN OUT void *context,
+bool libspdm_dhe_generate_key(IN uint16_t dhe_named_group, IN OUT void *context,
                                  OUT uint8_t *public_key,
                                  IN OUT uintn *public_key_size);
 
@@ -1095,11 +1095,11 @@ boolean libspdm_dhe_generate_key(IN uint16_t dhe_named_group, IN OUT void *conte
  * @param  key_size                      On input, the size of key buffer in bytes.
  *                                     On output, the size of data returned in key buffer in bytes.
  *
- * @retval TRUE   DHE exchanged key generation succeeded.
- * @retval FALSE  DHE exchanged key generation failed.
- * @retval FALSE  key_size is not large enough.
+ * @retval true   DHE exchanged key generation succeeded.
+ * @retval false  DHE exchanged key generation failed.
+ * @retval false  key_size is not large enough.
  **/
-boolean libspdm_dhe_compute_key(IN uint16_t dhe_named_group, IN OUT void *context,
+bool libspdm_dhe_compute_key(IN uint16_t dhe_named_group, IN OUT void *context,
                                 IN const uint8_t *peer_public,
                                 IN uintn peer_public_size, OUT uint8_t *key,
                                 IN OUT uintn *key_size);
@@ -1149,10 +1149,10 @@ uint32_t libspdm_get_aead_tag_size(IN uint16_t aead_cipher_suite);
  * @param  data_out                      Pointer to a buffer that receives the encryption output.
  * @param  data_out_size                  size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD authenticated encryption succeeded.
- * @retval FALSE  AEAD authenticated encryption failed.
+ * @retval true   AEAD authenticated encryption succeeded.
+ * @retval false  AEAD authenticated encryption failed.
  **/
-boolean libspdm_aead_encryption(IN spdm_version_number_t secured_message_version,
+bool libspdm_aead_encryption(IN spdm_version_number_t secured_message_version,
                                 IN uint16_t aead_cipher_suite, IN const uint8_t *key,
                                 IN uintn key_size, IN const uint8_t *iv,
                                 IN uintn iv_size, IN const uint8_t *a_data,
@@ -1179,10 +1179,10 @@ boolean libspdm_aead_encryption(IN spdm_version_number_t secured_message_version
  * @param  data_out                      Pointer to a buffer that receives the decryption output.
  * @param  data_out_size                  size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD authenticated decryption succeeded.
- * @retval FALSE  AEAD authenticated decryption failed.
+ * @retval true   AEAD authenticated decryption succeeded.
+ * @retval false  AEAD authenticated decryption failed.
  **/
-boolean libspdm_aead_decryption(IN spdm_version_number_t secured_message_version,
+bool libspdm_aead_decryption(IN spdm_version_number_t secured_message_version,
                                 IN uint16_t aead_cipher_suite, IN const uint8_t *key,
                                 IN uintn key_size, IN const uint8_t *iv,
                                 IN uintn iv_size, IN const uint8_t *a_data,
@@ -1198,7 +1198,7 @@ boolean libspdm_aead_decryption(IN spdm_version_number_t secured_message_version
  * @param  size                         size of random bytes to generate.
  * @param  rand                         Pointer to buffer to receive random value.
  **/
-boolean libspdm_get_random_number(IN uintn size, OUT uint8_t *rand);
+bool libspdm_get_random_number(IN uintn size, OUT uint8_t *rand);
 
 /**
  * Certificate Check for SPDM leaf cert.
@@ -1206,10 +1206,10 @@ boolean libspdm_get_random_number(IN uintn size, OUT uint8_t *rand);
  * @param[in]  cert            Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size        The size of certificate data in bytes.
  *
- * @retval  TRUE   Success.
- * @retval  FALSE  Certificate is not valid
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid
  **/
-boolean libspdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size);
+bool libspdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_size);
 
 /**
  * Return certificate is root cert or not.
@@ -1218,10 +1218,10 @@ boolean libspdm_x509_certificate_check(IN const uint8_t *cert, IN uintn cert_siz
  * @param[in]  cert            Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size        The size of certificate data in bytes.
  *
- * @retval  TRUE   Certificate is self-signed.
- * @retval  FALSE  Certificate is not self-signed.
+ * @retval  true   Certificate is self-signed.
+ * @retval  false  Certificate is not self-signed.
  **/
-boolean libspdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size);
+bool libspdm_is_root_certificate(IN const uint8_t *cert, IN uintn cert_size);
 
 /**
  * Retrieve the SubjectAltName from SubjectAltName Bytes.
@@ -1294,10 +1294,10 @@ libspdm_get_dmtf_subject_alt_name(IN const uint8_t *cert, IN intn cert_size,
  * @param  cert_chain_data          The certificate chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size      size in bytes of the certificate chain data.
  *
- * @retval TRUE  certificate chain data integrity verification pass.
- * @retval FALSE certificate chain data integrity verification fail.
+ * @retval true  certificate chain data integrity verification pass.
+ * @retval false certificate chain data integrity verification fail.
  **/
-boolean libspdm_verify_cert_chain_data(IN uint8_t *cert_chain_data,
+bool libspdm_verify_cert_chain_data(IN uint8_t *cert_chain_data,
                                        IN uintn cert_chain_data_size);
 
 /**
@@ -1307,10 +1307,10 @@ boolean libspdm_verify_cert_chain_data(IN uint8_t *cert_chain_data,
  * @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  *
- * @retval TRUE  certificate chain buffer integrity verification pass.
- * @retval FALSE certificate chain buffer integrity verification fail.
+ * @retval true  certificate chain buffer integrity verification pass.
+ * @retval false certificate chain buffer integrity verification fail.
  **/
-boolean libspdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
+bool libspdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
                                                 IN void *cert_chain_buffer,
                                                 IN uintn cert_chain_buffer_size);
 
@@ -1325,10 +1325,10 @@ boolean libspdm_verify_certificate_chain_buffer(IN uint32_t base_hash_algo,
  * @param  cert_chain_data_size          size in bytes of the certitiface chain data.
  * @param  public_key                    Pointer to new-generated asymmetric context which contain the retrieved public key component.
  *
- * @retval  TRUE   public key was retrieved successfully.
- * @retval  FALSE  Fail to retrieve public key from X509 certificate.
+ * @retval  true   public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
-boolean libspdm_get_leaf_cert_public_key_from_cert_chain(IN uint32_t base_hash_algo,
+bool libspdm_get_leaf_cert_public_key_from_cert_chain(IN uint32_t base_hash_algo,
                                                          IN uint32_t base_asym_alg,
                                                          IN uint8_t *cert_chain_data,
                                                          IN uintn cert_chain_data_size,

@@ -33,10 +33,10 @@ static void spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_
 
     *session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = *session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -98,7 +98,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void test_spdm_process_encap_response_key_update_case1(void **State)
@@ -106,7 +106,7 @@ void test_spdm_process_encap_response_key_update_case1(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_context_t *spdm_context;
     uint32_t session_id;
-    boolean need_continue;
+    bool need_continue;
     spdm_session_info_t *session_info;
     spdm_secured_message_context_t *secured_message_context;
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
@@ -170,10 +170,10 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
@@ -219,10 +219,10 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);

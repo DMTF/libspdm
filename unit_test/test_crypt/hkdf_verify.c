@@ -47,7 +47,7 @@ return_status validate_crypt_hkdf(void)
 {
     uint8_t prk_out[32];
     uint8_t out[42];
-    boolean status;
+    bool status;
 
     my_print(" \nCrypto HKDF Engine Testing:\n");
 

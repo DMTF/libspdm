@@ -50,7 +50,7 @@ return_status spdm_get_response_heartbeat(IN void *context,
             response_size, response);
     }
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         return libspdm_generate_error_response(spdm_context,

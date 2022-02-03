@@ -15,11 +15,11 @@
  *
  * @param[out] rand_data     buffer pointer to store the 64-bit random value.
  *
- * @retval TRUE         Random number generated successfully.
- * @retval FALSE        Failed to generate the random number.
+ * @retval true         Random number generated successfully.
+ * @retval false        Failed to generate the random number.
  *
  **/
-boolean get_random_number_64(OUT uint64 *rand_data)
+bool get_random_number_64(OUT uint64 *rand_data)
 {
     uint8 *ptr;
 
@@ -35,5 +35,5 @@ boolean get_random_number_64(OUT uint64 *rand_data)
     ptr[6] = (uint8)rand();
     ptr[7] = (uint8)rand();
 
-    return TRUE;
+    return true;
 }

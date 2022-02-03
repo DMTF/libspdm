@@ -44,7 +44,7 @@ return_status validate_crypt_hmac(void)
 {
     void *hmac_ctx;
     uint8_t digest[MAX_DIGEST_SIZE];
-    boolean status;
+    bool status;
 
     my_print(" \nCrypto HMAC Engine Testing:\n");
 

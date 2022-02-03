@@ -131,8 +131,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.ct_exponent = 0;
         spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -149,8 +149,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.ct_exponent = 0;
         spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -165,8 +165,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -181,8 +181,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -201,7 +201,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             spdm_response.header.param2 = 0;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
@@ -218,7 +218,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         }
@@ -235,8 +235,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -257,8 +257,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             SPDM_GET_CAPABILITIES;
         spdm_response.extend_error_data.token = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -284,7 +284,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             spdm_response.extend_error_data.token = 1;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index2 == 1) {
@@ -301,7 +301,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         }
@@ -325,8 +325,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -348,8 +348,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -367,8 +367,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags =
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -384,7 +384,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.header.param2 = 0;
 
         spdm_transport_test_encode_message(
-            spdm_context, NULL, FALSE, FALSE,
+            spdm_context, NULL, false, false,
             sizeof(spdm_message_header_t), &spdm_response,
             response_size, response);
     }
@@ -402,7 +402,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
         spdm_transport_test_encode_message(
-            spdm_context, NULL, FALSE, FALSE,
+            spdm_context, NULL, false, false,
             sizeof(spdm_response) + sizeof(uint8_t), &spdm_response,
             response_size, response);
     }
@@ -420,7 +420,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags = DEFAULT_CAPABILITY_FLAG;
 
         spdm_transport_test_encode_message(
-            spdm_context, NULL, FALSE, FALSE,
+            spdm_context, NULL, false, false,
             sizeof(spdm_response) - sizeof(uint8_t), &spdm_response,
             response_size, response);
     }
@@ -438,8 +438,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags =
             DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -461,8 +461,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -485,8 +485,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -507,8 +507,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -530,8 +530,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -554,8 +554,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -578,8 +578,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -599,8 +599,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             (0xFFFFFFFF ^
              (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -620,8 +620,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             (0xFFFFFFFF ^
              (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -643,8 +643,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP));
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -663,8 +663,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 |
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -683,8 +683,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags =
             DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -702,8 +702,8 @@ return_status spdm_requester_get_capabilities_test_receive_message(
         spdm_response.flags =
             DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -722,7 +722,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
             spdm_response.header.param1 = (uint8_t) error_code;
             spdm_response.header.param2 = 0;
 
-            spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE,
+            spdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                                 sizeof(spdm_response), &spdm_response,
                                                 response_size, response);
         }
@@ -1430,7 +1430,7 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
 
 spdm_test_context_t m_spdm_requester_get_capabilities_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_requester_get_capabilities_test_send_message,
     spdm_requester_get_capabilities_test_receive_message,
 };

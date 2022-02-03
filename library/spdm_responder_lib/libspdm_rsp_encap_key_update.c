@@ -33,7 +33,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
     spdm_context->encap_context.last_encap_request_size = 0;
 
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE,
+            spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
         return RETURN_UNSUPPORTED;
@@ -98,7 +98,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
                session_id));
         status = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
-            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, TRUE);
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -126,7 +126,7 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
  **/
 return_status spdm_process_encap_response_key_update(
     IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT boolean *need_continue)
+    IN void *encap_response, OUT bool *need_continue)
 {
     spdm_key_update_request_t *spdm_request;
     spdm_key_update_response_t *spdm_response;
@@ -179,10 +179,10 @@ return_status spdm_process_encap_response_key_update(
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
         DEBUG((DEBUG_INFO, "libspdm_key_update[%x] success\n",
                session_id));
-        *need_continue = TRUE;
+        *need_continue = true;
     } else {
         DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
-        *need_continue = FALSE;
+        *need_continue = false;
     }
 
     return RETURN_SUCCESS;

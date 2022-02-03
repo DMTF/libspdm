@@ -25,7 +25,7 @@ return_status validate_crypt_ecx(void)
     uintn key1_length;
     uint8_t key2[56];
     uintn key2_length;
-    boolean Status;
+    bool Status;
 
     my_print("\nCrypto Montgomery Curve key Exchange Testing:\n");
 

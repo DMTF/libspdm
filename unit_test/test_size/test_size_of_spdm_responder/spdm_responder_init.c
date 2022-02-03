@@ -30,9 +30,9 @@ void *spdm_server_init(void)
     uint8_t data8;
     uint16_t data16;
     uint32_t data32;
-    boolean has_rsp_pub_cert;
-    boolean has_rsp_priv_key;
-    boolean has_req_pub_cert;
+    bool has_rsp_pub_cert;
+    bool has_rsp_priv_key;
+    bool has_req_pub_cert;
 
     spdm_context = (void *)allocate_pool(libspdm_get_context_size());
     if (spdm_context == NULL) {
@@ -45,9 +45,9 @@ void *spdm_server_init(void)
                                           libspdm_transport_mctp_encode_message,
                                           libspdm_transport_mctp_decode_message);
 
-    has_rsp_pub_cert = FALSE;
-    has_rsp_priv_key = FALSE;
-    has_req_pub_cert = FALSE;
+    has_rsp_pub_cert = false;
+    has_rsp_priv_key = false;
+    has_req_pub_cert = false;
 
     data8 = 0;
     zero_mem(&parameter, sizeof(parameter));

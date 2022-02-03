@@ -15,7 +15,7 @@
 
 int my_printf(const char *fmt, ...)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return 0;
 }
 
@@ -23,7 +23,7 @@ int (*mbedtls_printf)(const char *format, ...) = my_printf;
 
 int my_snprintf(char *str, size_t size, const char *format, ...)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return 0;
 }
 

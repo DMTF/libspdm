@@ -26,12 +26,12 @@
  * represented in RSA PKCS#1).
  * If specified key component has not been set or has been cleared, then returned
  * bn_size is set to 0.
- * If the big_number buffer is too small to hold the contents of the key, FALSE
+ * If the big_number buffer is too small to hold the contents of the key, false
  * is returned and bn_size is set to the required buffer size to obtain the key.
  *
- * If rsa_context is NULL, then return FALSE.
- * If bn_size is NULL, then return FALSE.
- * If bn_size is large enough but big_number is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If bn_size is NULL, then return false.
+ * If bn_size is large enough but big_number is NULL, then return false.
  *
  * @param[in, out]  rsa_context  Pointer to RSA context being set.
  * @param[in]       key_tag      tag of RSA key component being set.
@@ -39,16 +39,16 @@
  * @param[in, out]  bn_size      On input, the size of big number buffer in bytes.
  *                             On output, the size of data returned in big number buffer in bytes.
  *
- * @retval  TRUE   RSA key component was retrieved successfully.
- * @retval  FALSE  Invalid RSA key component tag.
- * @retval  FALSE  bn_size is too small.
+ * @retval  true   RSA key component was retrieved successfully.
+ * @retval  false  Invalid RSA key component tag.
+ * @retval  false  bn_size is too small.
  *
  **/
-boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
+bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
                     OUT uint8_t *big_number, IN OUT uintn *bn_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -61,23 +61,23 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * Before this function can be invoked, pseudorandom number generator must be correctly
  * initialized by random_seed().
  *
- * If rsa_context is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
  *
  * @param[in, out]  rsa_context           Pointer to RSA context being set.
  * @param[in]       modulus_length        length of RSA modulus N in bits.
  * @param[in]       public_exponent       Pointer to RSA public exponent.
  * @param[in]       public_exponent_size   size of RSA public exponent buffer in bytes.
  *
- * @retval  TRUE   RSA key component was generated successfully.
- * @retval  FALSE  Invalid RSA key component tag.
+ * @retval  true   RSA key component was generated successfully.
+ * @retval  false  Invalid RSA key component tag.
  *
  **/
-boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
+bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
                          IN const uint8_t *public_exponent,
                          IN uintn public_exponent_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -91,18 +91,18 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
  * - Whether n = p * q
  * - Whether d*e = 1  mod lcm(p-1,q-1)
  *
- * If rsa_context is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
  *
  * @param[in]  rsa_context  Pointer to RSA context to check.
  *
- * @retval  TRUE   RSA key components are valid.
- * @retval  FALSE  RSA key components are not valid.
+ * @retval  true   RSA key components are valid.
+ * @retval  false  RSA key components are not valid.
  *
  **/
-boolean rsa_check_key(IN void *rsa_context)
+bool rsa_check_key(IN void *rsa_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -110,14 +110,14 @@ boolean rsa_check_key(IN void *rsa_context)
  *
  * This function carries out the RSA-SSA signature generation with EMSA-PKCS1-v1_5 encoding scheme defined in
  * RSA PKCS#1.
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
  * If hash_size need match the hash_nid. hash_nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      rsa_context   Pointer to RSA context for signature generation.
  * @param[in]      hash_nid      hash NID
@@ -127,19 +127,19 @@ boolean rsa_check_key(IN void *rsa_context)
  * @param[in, out] sig_size      On input, the size of signature buffer in bytes.
  *                             On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in PKCS1-v1_5.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
- * @retval  FALSE  This interface is not supported.
+ * @retval  true   signature successfully generated in PKCS1-v1_5.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ * @retval  false  This interface is not supported.
  *
  **/
-boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
                                 IN const uint8_t *message_hash,
                                 IN uintn hash_size, OUT uint8_t *signature,
                                 IN OUT uintn *sig_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -150,13 +150,13 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  * The salt length is same as digest length.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
  * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
  *
  * @param[in]       rsa_context   Pointer to RSA context for signature generation.
  * @param[in]       hash_nid      hash NID
@@ -166,15 +166,15 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                              On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in RSA-SSA PSS.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated in RSA-SSA PSS.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  *
  **/
-boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
                      IN const uint8_t *message_hash, IN uintn hash_size,
                      OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }

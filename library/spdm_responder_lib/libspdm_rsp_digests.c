@@ -34,12 +34,12 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     uintn spdm_request_size;
     spdm_digest_response_t *spdm_response;
     uintn index;
-    boolean no_local_cert_chain;
+    bool no_local_cert_chain;
     uint32_t hash_size;
     uint8_t *digest;
     spdm_context_t *spdm_context;
     return_status status;
-    boolean result;
+    bool result;
 
     spdm_context = context;
     spdm_request = request;
@@ -56,7 +56,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
             response_size, response);
     }
     if (!spdm_is_capabilities_flag_supported(
-            spdm_context, FALSE, 0,
+            spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -80,11 +80,11 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 
     spdm_request_size = request_size;
 
-    no_local_cert_chain = TRUE;
+    no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
             .local_cert_chain_provision[index] != NULL) {
-            no_local_cert_chain = FALSE;
+            no_local_cert_chain = false;
         }
     }
     if (no_local_cert_chain) {

@@ -32,12 +32,12 @@
  * represented in RSA PKCS#1).
  * If specified key component has not been set or has been cleared, then returned
  * bn_size is set to 0.
- * If the big_number buffer is too small to hold the contents of the key, FALSE
+ * If the big_number buffer is too small to hold the contents of the key, false
  * is returned and bn_size is set to the required buffer size to obtain the key.
  *
- * If rsa_context is NULL, then return FALSE.
- * If bn_size is NULL, then return FALSE.
- * If bn_size is large enough but big_number is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If bn_size is NULL, then return false.
+ * If bn_size is large enough but big_number is NULL, then return false.
  *
  * @param[in, out]  rsa_context  Pointer to RSA context being set.
  * @param[in]       key_tag      tag of RSA key component being set.
@@ -45,12 +45,12 @@
  * @param[in, out]  bn_size      On input, the size of big number buffer in bytes.
  *                             On output, the size of data returned in big number buffer in bytes.
  *
- * @retval  TRUE   RSA key component was retrieved successfully.
- * @retval  FALSE  Invalid RSA key component tag.
- * @retval  FALSE  bn_size is too small.
+ * @retval  true   RSA key component was retrieved successfully.
+ * @retval  false  Invalid RSA key component tag.
+ * @retval  false  bn_size is too small.
  *
  **/
-boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
+bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
                     OUT uint8_t *big_number, IN OUT uintn *bn_size)
 {
     RSA *rsa_key;
@@ -61,7 +61,7 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
     /* Check input parameters.*/
 
     if (rsa_context == NULL || bn_size == NULL) {
-        return FALSE;
+        return false;
     }
 
     rsa_key = (RSA *)rsa_context;
@@ -130,11 +130,11 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
         break;
 
     default:
-        return FALSE;
+        return false;
     }
 
     if (bn_key == NULL) {
-        return FALSE;
+        return false;
     }
 
     *bn_size = size;
@@ -142,16 +142,16 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
 
     if (*bn_size < size) {
         *bn_size = size;
-        return FALSE;
+        return false;
     }
 
     if (big_number == NULL) {
         *bn_size = size;
-        return TRUE;
+        return true;
     }
     *bn_size = BN_bn2bin(bn_key, big_number);
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -164,38 +164,38 @@ boolean rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * Before this function can be invoked, pseudorandom number generator must be correctly
  * initialized by random_seed().
  *
- * If rsa_context is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
  *
  * @param[in, out]  rsa_context           Pointer to RSA context being set.
  * @param[in]       modulus_length        length of RSA modulus N in bits.
  * @param[in]       public_exponent       Pointer to RSA public exponent.
  * @param[in]       public_exponent_size   size of RSA public exponent buffer in bytes.
  *
- * @retval  TRUE   RSA key component was generated successfully.
- * @retval  FALSE  Invalid RSA key component tag.
+ * @retval  true   RSA key component was generated successfully.
+ * @retval  false  Invalid RSA key component tag.
  *
  **/
-boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
+bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
                          IN const uint8_t *public_exponent,
                          IN uintn public_exponent_size)
 {
     BIGNUM *bn_e;
-    boolean ret_val;
+    bool ret_val;
 
 
     /* Check input parameters.*/
 
     if (rsa_context == NULL || modulus_length > INT_MAX ||
         public_exponent_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
 
     bn_e = BN_new();
     if (bn_e == NULL) {
-        return FALSE;
+        return false;
     }
 
-    ret_val = FALSE;
+    ret_val = false;
 
     if (public_exponent == NULL) {
         if (BN_set_word(bn_e, 0x10001) == 0) {
@@ -210,7 +210,7 @@ boolean rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
 
     if (RSA_generate_key_ex((RSA *)rsa_context, (uint32_t)modulus_length,
                             bn_e, NULL) == 1) {
-        ret_val = TRUE;
+        ret_val = true;
     }
 
 done:
@@ -229,15 +229,15 @@ done:
  * - Whether n = p * q
  * - Whether d*e = 1  mod lcm(p-1,q-1)
  *
- * If rsa_context is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
  *
  * @param[in]  rsa_context  Pointer to RSA context to check.
  *
- * @retval  TRUE   RSA key components are valid.
- * @retval  FALSE  RSA key components are not valid.
+ * @retval  true   RSA key components are valid.
+ * @retval  false  RSA key components are not valid.
  *
  **/
-boolean rsa_check_key(IN void *rsa_context)
+bool rsa_check_key(IN void *rsa_context)
 {
     uintn reason;
 
@@ -245,7 +245,7 @@ boolean rsa_check_key(IN void *rsa_context)
     /* Check input parameters.*/
 
     if (rsa_context == NULL) {
-        return FALSE;
+        return false;
     }
 
     if (RSA_check_key((RSA *)rsa_context) != 1) {
@@ -254,11 +254,11 @@ boolean rsa_check_key(IN void *rsa_context)
             reason == RSA_R_Q_NOT_PRIME ||
             reason == RSA_R_N_DOES_NOT_EQUAL_P_Q ||
             reason == RSA_R_D_E_NOT_CONGRUENT_TO_1) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
@@ -266,14 +266,14 @@ boolean rsa_check_key(IN void *rsa_context)
  *
  * This function carries out the RSA-SSA signature generation with EMSA-PKCS1-v1_5 encoding scheme defined in
  * RSA PKCS#1.
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
  * If hash_size need match the hash_nid. hash_nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]      rsa_context   Pointer to RSA context for signature generation.
  * @param[in]      hash_nid      hash NID
@@ -283,13 +283,13 @@ boolean rsa_check_key(IN void *rsa_context)
  * @param[in, out] sig_size      On input, the size of signature buffer in bytes.
  *                             On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in PKCS1-v1_5.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
- * @retval  FALSE  This interface is not supported.
+ * @retval  true   signature successfully generated in PKCS1-v1_5.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ * @retval  false  This interface is not supported.
  *
  **/
-boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
                                 IN const uint8_t *message_hash,
                                 IN uintn hash_size, OUT uint8_t *signature,
                                 IN OUT uintn *sig_size)
@@ -302,7 +302,7 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
     /* Check input parameters.*/
 
     if (rsa_context == NULL || message_hash == NULL) {
-        return FALSE;
+        return false;
     }
 
     rsa = (RSA *)rsa_context;
@@ -310,61 +310,61 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
     if (*sig_size < size) {
         *sig_size = size;
-        return FALSE;
+        return false;
     }
 
     if (signature == NULL) {
-        return FALSE;
+        return false;
     }
 
     switch (hash_nid) {
     case CRYPTO_NID_SHA256:
         digest_type = NID_sha256;
         if (hash_size != SHA256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA384:
         digest_type = NID_sha384;
         if (hash_size != SHA384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA512:
         digest_type = NID_sha512;
         if (hash_size != SHA512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_256:
         digest_type = NID_sha3_256;
         if (hash_size != SHA3_256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_384:
         digest_type = NID_sha3_384;
         if (hash_size != SHA3_384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_512:
         digest_type = NID_sha3_512;
         if (hash_size != SHA3_512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     default:
-        return FALSE;
+        return false;
     }
 
-    return (boolean)RSA_sign(digest_type, message_hash, (uint32_t)hash_size,
+    return (bool)RSA_sign(digest_type, message_hash, (uint32_t)hash_size,
                              signature, (uint32_t *)sig_size,
                              (RSA *)rsa_context);
 }
@@ -377,13 +377,13 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  * The salt length is same as digest length.
  *
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If rsa_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
  * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
  *
  * @param[in]       rsa_context   Pointer to RSA context for signature generation.
  * @param[in]       hash_nid      hash NID
@@ -393,23 +393,23 @@ boolean rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                              On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in RSA-SSA PSS.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated in RSA-SSA PSS.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  *
  **/
-boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
+bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
                      IN const uint8_t *message_hash, IN uintn hash_size,
                      OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     RSA *rsa;
-    boolean result;
+    bool result;
     int32_t size;
     const EVP_MD *evp_md;
     void *buffer;
 
     if (rsa_context == NULL || message_hash == NULL) {
-        return FALSE;
+        return false;
     }
 
     rsa = (RSA *)rsa_context;
@@ -417,7 +417,7 @@ boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
 
     if (*sig_size < (uintn)size) {
         *sig_size = size;
-        return FALSE;
+        return false;
     }
     *sig_size = size;
 
@@ -425,68 +425,68 @@ boolean rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
     case CRYPTO_NID_SHA256:
         evp_md = EVP_sha256();
         if (hash_size != SHA256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA384:
         evp_md = EVP_sha384();
         if (hash_size != SHA384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA512:
         evp_md = EVP_sha512();
         if (hash_size != SHA512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_256:
         evp_md = EVP_sha3_256();
         if (hash_size != SHA3_256_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_384:
         evp_md = EVP_sha3_384();
         if (hash_size != SHA3_384_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     case CRYPTO_NID_SHA3_512:
         evp_md = EVP_sha3_512();
         if (hash_size != SHA3_512_DIGEST_SIZE) {
-            return FALSE;
+            return false;
         }
         break;
 
     default:
-        return FALSE;
+        return false;
     }
 
     buffer = allocate_pool(size);
     if (buffer == NULL) {
-        return FALSE;
+        return false;
     }
 
-    result = (boolean)RSA_padding_add_PKCS1_PSS(
+    result = (bool)RSA_padding_add_PKCS1_PSS(
         rsa, buffer, message_hash, evp_md, RSA_PSS_SALTLEN_DIGEST);
     if (!result) {
         free_pool(buffer);
-        return FALSE;
+        return false;
     }
 
     size = RSA_private_encrypt(size, buffer, signature, rsa,
                                RSA_NO_PADDING);
     free_pool(buffer);
     if (size <= 0) {
-        return FALSE;
+        return false;
     } else {
         ASSERT(*sig_size == (uintn)size);
-        return TRUE;
+        return true;
     }
 }

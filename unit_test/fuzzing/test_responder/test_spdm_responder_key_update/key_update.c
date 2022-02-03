@@ -44,10 +44,10 @@ spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
 
     *session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = *session_id;
-    spdm_context->last_spdm_request_session_id_valid = TRUE;
+    spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -120,7 +120,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_key_update_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void test_spdm_responder_key_update(void **State)

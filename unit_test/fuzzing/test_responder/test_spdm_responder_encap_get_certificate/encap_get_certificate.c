@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
 
 spdm_test_context_t m_spdm_responder_encap_get_certificate_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void test_spdm_responder_encap_get_certificate_case1(void **State)
@@ -24,7 +24,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_certificate_response_t *spdm_response;
     uintn spdm_response_size;
-    boolean need_continue;
+    bool need_continue;
 
     spdm_context_t *spdm_context;
     void *data;

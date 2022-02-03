@@ -13,13 +13,13 @@
 
 void *hmac_md_new(void);
 void hmac_md_free(IN void *hmac_md_ctx);
-boolean hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
+bool hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
                         IN const uint8_t *key, IN uintn key_size);
-boolean hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx);
-boolean hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
+bool hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx);
+bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
                        IN uintn data_size);
-boolean hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value);
-boolean hmac_md_all(IN const EVP_MD *md, IN const void *data,
+bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value);
+bool hmac_md_all(IN const EVP_MD *md, IN const void *data,
                     IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
                     OUT uint8_t *hmac_value);
 
@@ -50,17 +50,17 @@ void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx)
  * Set user-supplied key for subsequent use. It must be done before any
  * calling to hmac_sm3_256_update().
  *
- * If hmac_sm3_256_ctx is NULL, then return FALSE.
+ * If hmac_sm3_256_ctx is NULL, then return false.
  *
  * @param[out]  hmac_sm3_256_ctx  Pointer to HMAC-SM3_256 context.
  * @param[in]   key                Pointer to the user-supplied key.
  * @param[in]   key_size            key size in bytes.
  *
- * @retval TRUE   The key is set successfully.
- * @retval FALSE  The key is set unsuccessfully.
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
  *
  **/
-boolean hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
+bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
                              IN uintn key_size)
 {
     return hmac_md_set_key(EVP_sm3(), hmac_sm3_256_ctx, key, key_size);
@@ -69,17 +69,17 @@ boolean hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
 /**
  * Makes a copy of an existing HMAC-SM3_256 context.
  *
- * If hmac_sm3_256_ctx is NULL, then return FALSE.
- * If new_hmac_sm3_256_ctx is NULL, then return FALSE.
+ * If hmac_sm3_256_ctx is NULL, then return false.
+ * If new_hmac_sm3_256_ctx is NULL, then return false.
  *
  * @param[in]  hmac_sm3_256_ctx     Pointer to HMAC-SM3_256 context being copied.
  * @param[out] new_hmac_sm3_256_ctx  Pointer to new HMAC-SM3_256 context.
  *
- * @retval TRUE   HMAC-SM3_256 context copy succeeded.
- * @retval FALSE  HMAC-SM3_256 context copy failed.
+ * @retval true   HMAC-SM3_256 context copy succeeded.
+ * @retval false  HMAC-SM3_256 context copy failed.
  *
  **/
-boolean hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
+bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
                                OUT void *new_hmac_sm3_256_ctx)
 {
     return hmac_md_duplicate(hmac_sm3_256_ctx, new_hmac_sm3_256_ctx);
@@ -93,17 +93,17 @@ boolean hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
  * HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
  * by hmac_sm3_256_final(). Behavior with invalid context is undefined.
  *
- * If hmac_sm3_256_ctx is NULL, then return FALSE.
+ * If hmac_sm3_256_ctx is NULL, then return false.
  *
  * @param[in, out]  hmac_sm3_256_ctx Pointer to the HMAC-SM3_256 context.
  * @param[in]       data              Pointer to the buffer containing the data to be digested.
  * @param[in]       data_size          size of data buffer in bytes.
  *
- * @retval TRUE   HMAC-SM3_256 data digest succeeded.
- * @retval FALSE  HMAC-SM3_256 data digest failed.
+ * @retval true   HMAC-SM3_256 data digest succeeded.
+ * @retval false  HMAC-SM3_256 data digest failed.
  *
  **/
-boolean hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
+bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
                             IN uintn data_size)
 {
     return hmac_md_update(hmac_sm3_256_ctx, data, data_size);
@@ -118,18 +118,18 @@ boolean hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
  * HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
  * by hmac_sm3_256_final(). Behavior with invalid HMAC-SM3_256 context is undefined.
  *
- * If hmac_sm3_256_ctx is NULL, then return FALSE.
- * If hmac_value is NULL, then return FALSE.
+ * If hmac_sm3_256_ctx is NULL, then return false.
+ * If hmac_value is NULL, then return false.
  *
  * @param[in, out]  hmac_sm3_256_ctx  Pointer to the HMAC-SM3_256 context.
  * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC-SM3_256 digest
  *                                    value (32 bytes).
  *
- * @retval TRUE   HMAC-SM3_256 digest computation succeeded.
- * @retval FALSE  HMAC-SM3_256 digest computation failed.
+ * @retval true   HMAC-SM3_256 digest computation succeeded.
+ * @retval false  HMAC-SM3_256 digest computation failed.
  *
  **/
-boolean hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value)
+bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value)
 {
     return hmac_md_final(hmac_sm3_256_ctx, hmac_value);
 }
@@ -140,7 +140,7 @@ boolean hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_valu
  * This function performs the HMAC-SM3_256 digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be digested.
  * @param[in]   data_size    size of data buffer in bytes.
@@ -149,12 +149,12 @@ boolean hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_valu
  * @param[out]  hash_value   Pointer to a buffer that receives the HMAC-SM3_256 digest
  *                         value (32 bytes).
  *
- * @retval TRUE   HMAC-SM3_256 digest computation succeeded.
- * @retval FALSE  HMAC-SM3_256 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   HMAC-SM3_256 digest computation succeeded.
+ * @retval false  HMAC-SM3_256 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean hmac_sm3_256_all(IN const void *data, IN uintn data_size,
+bool hmac_sm3_256_all(IN const void *data, IN uintn data_size,
                          IN const uint8_t *key, IN uintn key_size,
                          OUT uint8_t *hmac_value)
 {

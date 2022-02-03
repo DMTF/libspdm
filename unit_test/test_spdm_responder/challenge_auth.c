@@ -876,7 +876,7 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
 
 spdm_test_context_t m_spdm_responder_challenge_auth_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 int spdm_responder_challenge_auth_test_main(void)

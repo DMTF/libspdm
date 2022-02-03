@@ -35,7 +35,7 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 typedef return_status (*libspdm_get_response_func)(
-    IN void *spdm_context, IN uint32_t *session_id, IN boolean is_app_message,
+    IN void *spdm_context, IN uint32_t *session_id, IN bool is_app_message,
     IN uintn request_size, IN void *request, IN OUT uintn *response_size,
     OUT void *response);
 
@@ -69,7 +69,7 @@ void libspdm_register_get_response_func(
  **/
 return_status libspdm_process_request(IN void *spdm_context,
                                       OUT uint32_t **session_id,
-                                      OUT boolean *is_app_message,
+                                      OUT bool *is_app_message,
                                       IN uintn request_size, IN void *request);
 
 /**
@@ -89,7 +89,7 @@ return_status libspdm_process_request(IN void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
 return_status libspdm_build_response(IN void *spdm_context, IN uint32_t *session_id,
-                                     IN boolean is_app_message,
+                                     IN bool is_app_message,
                                      IN OUT uintn *response_size,
                                      OUT void *response);
 

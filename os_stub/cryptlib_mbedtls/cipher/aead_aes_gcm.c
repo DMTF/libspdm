@@ -17,9 +17,9 @@
 /**
  * Performs AEAD AES-GCM authenticated encryption on a data buffer and additional authenticated data (AAD).
  *
- * iv_size must be 12, otherwise FALSE is returned.
- * key_size must be 16, 24 or 32, otherwise FALSE is returned.
- * tag_size must be 12, 13, 14, 15, 16, otherwise FALSE is returned.
+ * iv_size must be 12, otherwise false is returned.
+ * key_size must be 16, 24 or 32, otherwise false is returned.
+ * tag_size must be 12, 13, 14, 15, 16, otherwise false is returned.
  *
  * @param[in]   key         Pointer to the encryption key.
  * @param[in]   key_size     size of the encryption key in bytes.
@@ -34,11 +34,11 @@
  * @param[out]  data_out     Pointer to a buffer that receives the encryption output.
  * @param[out]  data_out_size size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD AES-GCM authenticated encryption succeeded.
- * @retval FALSE  AEAD AES-GCM authenticated encryption failed.
+ * @retval true   AEAD AES-GCM authenticated encryption succeeded.
+ * @retval false  AEAD AES-GCM authenticated encryption failed.
  *
  **/
-boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
+bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
                              IN const uint8_t *iv, IN uintn iv_size,
                              IN const uint8_t *a_data, IN uintn a_data_size,
                              IN const uint8_t *data_in, IN uintn data_in_size,
@@ -49,13 +49,13 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
     int32_t ret;
 
     if (data_in_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (a_data_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (iv_size != 12) {
-        return FALSE;
+        return false;
     }
     switch (key_size) {
     case 16:
@@ -63,16 +63,16 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
     case 32:
         break;
     default:
-        return FALSE;
+        return false;
     }
     if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
         (tag_size != 15) && (tag_size != 16)) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
-            return FALSE;
+            return false;
         }
     }
 
@@ -81,7 +81,7 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
     ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
                              (uint32_t)(key_size * 8));
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
     ret = mbedtls_gcm_crypt_and_tag(&ctx, MBEDTLS_GCM_ENCRYPT,
@@ -91,22 +91,22 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
                                     tag_size, tag_out);
     mbedtls_gcm_free(&ctx);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         *data_out_size = data_in_size;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**
  * Performs AEAD AES-GCM authenticated decryption on a data buffer and additional authenticated data (AAD).
  *
- * iv_size must be 12, otherwise FALSE is returned.
- * key_size must be 16, 24 or 32, otherwise FALSE is returned.
- * tag_size must be 12, 13, 14, 15, 16, otherwise FALSE is returned.
- * If additional authenticated data verification fails, FALSE is returned.
+ * iv_size must be 12, otherwise false is returned.
+ * key_size must be 16, 24 or 32, otherwise false is returned.
+ * tag_size must be 12, 13, 14, 15, 16, otherwise false is returned.
+ * If additional authenticated data verification fails, false is returned.
  *
  * @param[in]   key         Pointer to the encryption key.
  * @param[in]   key_size     size of the encryption key in bytes.
@@ -121,11 +121,11 @@ boolean aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
  * @param[out]  data_out     Pointer to a buffer that receives the decryption output.
  * @param[out]  data_out_size size of the output data buffer in bytes.
  *
- * @retval TRUE   AEAD AES-GCM authenticated decryption succeeded.
- * @retval FALSE  AEAD AES-GCM authenticated decryption failed.
+ * @retval true   AEAD AES-GCM authenticated decryption succeeded.
+ * @retval false  AEAD AES-GCM authenticated decryption failed.
  *
  **/
-boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
+bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
                              IN const uint8_t *iv, IN uintn iv_size,
                              IN const uint8_t *a_data, IN uintn a_data_size,
                              IN const uint8_t *data_in, IN uintn data_in_size,
@@ -136,13 +136,13 @@ boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
     int32_t ret;
 
     if (data_in_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (a_data_size > INT_MAX) {
-        return FALSE;
+        return false;
     }
     if (iv_size != 12) {
-        return FALSE;
+        return false;
     }
     switch (key_size) {
     case 16:
@@ -150,16 +150,16 @@ boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
     case 32:
         break;
     default:
-        return FALSE;
+        return false;
     }
     if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
         (tag_size != 15) && (tag_size != 16)) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
-            return FALSE;
+            return false;
         }
     }
 
@@ -168,7 +168,7 @@ boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
     ret = mbedtls_gcm_setkey(&ctx, MBEDTLS_CIPHER_ID_AES, key,
                              (uint32_t)(key_size * 8));
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
 
     ret = mbedtls_gcm_auth_decrypt(&ctx, (uint32_t)data_in_size, iv,
@@ -177,11 +177,11 @@ boolean aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
                                    (uint32_t)tag_size, data_in, data_out);
     mbedtls_gcm_free(&ctx);
     if (ret != 0) {
-        return FALSE;
+        return false;
     }
     if (data_out_size != NULL) {
         *data_out_size = data_in_size;
     }
 
-    return TRUE;
+    return true;
 }

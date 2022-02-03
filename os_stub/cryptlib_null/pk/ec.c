@@ -25,7 +25,7 @@
  **/
 void *ec_new_by_nid(IN uintn nid)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
@@ -37,7 +37,7 @@ void *ec_new_by_nid(IN uintn nid)
  **/
 void ec_free(IN void *ec_context)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
 }
 
 /**
@@ -48,32 +48,32 @@ void ec_free(IN void *ec_context)
  * X is the first half of public with size being public_size / 2,
  * Y is the second half of public with size being public_size / 2.
  * EC context is updated accordingly.
- * If the public buffer is too small to hold the public X, Y, FALSE is returned and
+ * If the public buffer is too small to hold the public X, Y, false is returned and
  * public_size is set to the required buffer size to obtain the public X, Y.
  *
  * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
  * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
  * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
  *
- * If ec_context is NULL, then return FALSE.
- * If public_size is NULL, then return FALSE.
- * If public_size is large enough but public is NULL, then return FALSE.
+ * If ec_context is NULL, then return false.
+ * If public_size is NULL, then return false.
+ * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  ec_context      Pointer to the EC context.
  * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
- * @retval TRUE   EC public X,Y generation succeeded.
- * @retval FALSE  EC public X,Y generation failed.
- * @retval FALSE  public_size is not large enough.
+ * @retval true   EC public X,Y generation succeeded.
+ * @retval false  EC public X,Y generation failed.
+ * @retval false  public_size is not large enough.
  *
  **/
-boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
+bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
                         IN OUT uintn *public_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -84,11 +84,11 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
  * X is the first half of peer_public with size being peer_public_size / 2,
  * Y is the second half of peer_public with size being peer_public_size / 2.
  *
- * If ec_context is NULL, then return FALSE.
- * If peer_public is NULL, then return FALSE.
- * If peer_public_size is 0, then return FALSE.
- * If key is NULL, then return FALSE.
- * If key_size is not large enough, then return FALSE.
+ * If ec_context is NULL, then return false.
+ * If peer_public is NULL, then return false.
+ * If peer_public_size is 0, then return false.
+ * If key is NULL, then return false.
+ * If key_size is not large enough, then return false.
  *
  * For P-256, the peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
  * For P-384, the peer_public_size is 96. first 48-byte is X, second 48-byte is Y.
@@ -101,30 +101,30 @@ boolean ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
  * @param[in, out]  key_size            On input, the size of key buffer in bytes.
  *                                    On output, the size of data returned in key buffer in bytes.
  *
- * @retval TRUE   EC exchanged key generation succeeded.
- * @retval FALSE  EC exchanged key generation failed.
- * @retval FALSE  key_size is not large enough.
+ * @retval true   EC exchanged key generation succeeded.
+ * @retval false  EC exchanged key generation failed.
+ * @retval false  key_size is not large enough.
  *
  **/
-boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
+bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
                        IN uintn peer_public_size, OUT uint8_t *key,
                        IN OUT uintn *key_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
  * Carries out the EC-DSA signature.
  *
  * This function carries out the EC-DSA signature.
- * If the signature buffer is too small to hold the contents of signature, FALSE
+ * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * If ec_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
+ * If ec_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
  * If hash_size need match the hash_nid. hash_nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return FALSE.
+ * If sig_size is large enough but signature is NULL, then return false.
  *
  * For P-256, the sig_size is 64. first 32-byte is R, second 32-byte is S.
  * For P-384, the sig_size is 96. first 48-byte is R, second 48-byte is S.
@@ -138,25 +138,25 @@ boolean ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                              On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  TRUE   signature successfully generated in EC-DSA.
- * @retval  FALSE  signature generation failed.
- * @retval  FALSE  sig_size is too small.
+ * @retval  true   signature successfully generated in EC-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
  *
  **/
-boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
+bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
                    IN const uint8_t *message_hash, IN uintn hash_size,
                    OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
  * Verifies the EC-DSA signature.
  *
- * If ec_context is NULL, then return FALSE.
- * If message_hash is NULL, then return FALSE.
- * If signature is NULL, then return FALSE.
+ * If ec_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
+ * If signature is NULL, then return false.
  * If hash_size need match the hash_nid. hash_nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
  *
  * For P-256, the sig_size is 64. first 32-byte is R, second 32-byte is S.
@@ -170,14 +170,14 @@ boolean ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
  * @param[in]  signature    Pointer to EC-DSA signature to be verified.
  * @param[in]  sig_size      size of signature in bytes.
  *
- * @retval  TRUE   Valid signature encoded in EC-DSA.
- * @retval  FALSE  Invalid signature or invalid EC context.
+ * @retval  true   Valid signature encoded in EC-DSA.
+ * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-boolean ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
+bool ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
                      IN const uint8_t *message_hash, IN uintn hash_size,
                      IN const uint8_t *signature, IN uintn sig_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }

@@ -20,12 +20,12 @@ void test_spdm_transport_mctp_decode_message(void **State)
     spdm_context_t *spdm_context;
     uintn transport_message_size;
     uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    boolean is_app_message;
-    boolean is_requester;
+    bool is_app_message;
+    bool is_requester;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     is_requester = spdm_test_context->is_requester;
-    is_app_message = FALSE;
+    is_app_message = false;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
@@ -39,7 +39,7 @@ void test_spdm_transport_mctp_decode_message(void **State)
 
 spdm_test_context_t m_spdm_transport_mctp_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

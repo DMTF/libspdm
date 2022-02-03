@@ -23,7 +23,7 @@
  **/
 return_status libspdm_encode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN boolean is_requester, IN uintn app_message_size,
+    IN bool is_requester, IN uintn app_message_size,
     IN void *app_message, IN OUT uintn *secured_message_size,
     OUT void *secured_message,
     IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
@@ -44,7 +44,7 @@ return_status libspdm_encode_secured_message(
     spdm_secured_message_a_data_header2_t *record_header2;
     uintn record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
-    boolean result;
+    bool result;
     uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];
     uint8_t salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
@@ -124,7 +124,7 @@ return_status libspdm_encode_secured_message(
         }
         break;
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
         break;
     }
@@ -165,7 +165,7 @@ return_status libspdm_encode_secured_message(
         }
         break;
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
 
@@ -274,7 +274,7 @@ return_status libspdm_encode_secured_message(
         break;
 
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
     if (!result) {
@@ -301,7 +301,7 @@ return_status libspdm_encode_secured_message(
  **/
 return_status libspdm_decode_secured_message(
     IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN boolean is_requester, IN uintn secured_message_size,
+    IN bool is_requester, IN uintn secured_message_size,
     IN void *secured_message, IN OUT uintn *app_message_size,
     OUT void *app_message,
     IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
@@ -320,7 +320,7 @@ return_status libspdm_decode_secured_message(
     spdm_secured_message_a_data_header2_t *record_header2;
     uintn record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
-    boolean result;
+    bool result;
     uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];
     uint8_t salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
@@ -409,7 +409,7 @@ return_status libspdm_decode_secured_message(
         }
         break;
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
 
@@ -451,7 +451,7 @@ return_status libspdm_decode_secured_message(
         }
         break;
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
 
@@ -521,7 +521,7 @@ return_status libspdm_decode_secured_message(
                 status = libspdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
-                    FALSE);
+                    false);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -616,7 +616,7 @@ return_status libspdm_decode_secured_message(
                 status = libspdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
-                    FALSE);
+                    false);
                 if (RETURN_ERROR(status)) {
                     return status;
                 }
@@ -654,7 +654,7 @@ return_status libspdm_decode_secured_message(
         break;
 
     default:
-        ASSERT(FALSE);
+        ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
 

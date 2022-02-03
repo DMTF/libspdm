@@ -31,7 +31,7 @@ void *spdm_client_init(void)
     uint8_t data8;
     uint16_t data16;
     uint32_t data32;
-    boolean has_rsp_pub_cert;
+    bool has_rsp_pub_cert;
 
     spdm_context = (void *)allocate_pool(libspdm_get_context_size());
     if (spdm_context == NULL) {
@@ -44,7 +44,7 @@ void *spdm_client_init(void)
                                           libspdm_transport_mctp_encode_message,
                                           libspdm_transport_mctp_decode_message);
 
-    has_rsp_pub_cert = FALSE;
+    has_rsp_pub_cert = false;
 
     data8 = 0;
     zero_mem(&parameter, sizeof(parameter));
@@ -89,7 +89,7 @@ void *spdm_client_init(void)
     libspdm_set_data(spdm_context, LIBSPDM_DATA_KEY_SCHEDULE, &parameter, &data16,
                      sizeof(data16));
 
-    status = libspdm_init_connection(spdm_context, FALSE);
+    status = libspdm_init_connection(spdm_context, false);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_ERROR, "libspdm_init_connection - %r\n", status));
         free_pool(spdm_context);

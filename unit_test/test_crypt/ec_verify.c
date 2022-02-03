@@ -29,7 +29,7 @@ return_status validate_crypt_ec(void)
     uintn hash_size;
     uint8_t signature[66 * 2];
     uintn sig_size;
-    boolean status;
+    bool status;
 
     my_print("\nCrypto EC-DH key Exchange Testing:\n");
 

@@ -95,7 +95,7 @@ return_status validate_crypt_digest(void)
     void *hash_ctx;
     uintn data_size;
     uint8_t digest[MAX_DIGEST_SIZE];
-    boolean status;
+    bool status;
 
     my_print(" Crypt hash Engine Testing:\n");
     data_size = ascii_str_len(m_hash_data);
@@ -299,9 +299,9 @@ return_status validate_crypt_digest(void)
         my_print("Check value... ");
         if (const_compare_mem(digest, m_sha3_256_digest,
                               SHA3_256_DIGEST_SIZE) == 0) {
-            status = TRUE;
+            status = true;
         } else {
-            status = FALSE;
+            status = false;
         }
     }
 
@@ -345,9 +345,9 @@ return_status validate_crypt_digest(void)
         my_print("Check value... ");
         if (const_compare_mem(digest, m_sha3_384_digest,
                               SHA3_384_DIGEST_SIZE) == 0) {
-            status = TRUE;
+            status = true;
         } else {
-            status = FALSE;
+            status = false;
         }
     }
 
@@ -391,9 +391,9 @@ return_status validate_crypt_digest(void)
         my_print("Check value... ");
         if (const_compare_mem(digest, m_sha3_512_digest,
                               SHA3_512_DIGEST_SIZE) == 0) {
-            status = TRUE;
+            status = true;
         } else {
-            status = FALSE;
+            status = false;
         }
     }
 
@@ -422,9 +422,9 @@ return_status validate_crypt_digest(void)
     if (status) {
         if (const_compare_mem(digest, m_sm3_256_digest,
                               SM3_256_DIGEST_SIZE) == 0) {
-            status = TRUE;
+            status = true;
         } else {
-            status = FALSE;
+            status = false;
         }
     }
     if (status) {

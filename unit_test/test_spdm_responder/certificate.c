@@ -994,7 +994,7 @@ void test_spdm_responder_certificate_case12(void **state)
 
 spdm_test_context_t m_spdm_responder_certificate_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    FALSE,
+    false,
 };
 
 int spdm_responder_certificate_test_main(void)

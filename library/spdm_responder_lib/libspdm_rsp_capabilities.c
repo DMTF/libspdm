@@ -17,7 +17,7 @@
  * @retval True                         The received SPDM version is valid.
  * @retval False                        The received SPDM version is invalid.
  **/
-boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8_t version)
+bool spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8_t version)
 {
     uint8_t local_ver;
     uintn index;
@@ -29,10 +29,10 @@ boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, 
             spdm_context->local_context.version.spdm_version[index]);
         if (local_ver == version) {
             spdm_context->connection_info.version = version << SPDM_VERSION_NUMBER_SHIFT_BIT;
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 /**
@@ -46,7 +46,7 @@ boolean spdm_check_request_version_compability(IN spdm_context_t *spdm_context, 
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-boolean spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
+bool spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
                                             IN uint8_t version)
 {
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
@@ -67,42 +67,42 @@ boolean spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
 
     switch (version) {
     case SPDM_MESSAGE_VERSION_10:
-        return TRUE;
+        return true;
 
     case SPDM_MESSAGE_VERSION_11:
     case SPDM_MESSAGE_VERSION_12:
     {
         /*meas_cap shall be set to 00b*/
         if (meas_cap != 0) {
-            return FALSE;
+            return false;
         }
         /*meas_fresh_cap shall be set to 0b*/
         if (meas_fresh_cap != 0) {
-            return FALSE;
+            return false;
         }
         /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
         if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*MAC_cap set and psk_cap+key_ex_cap cleared*/
         if (mac_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*Key_ex_cap set and encrypt_cap+mac_cap cleared*/
         if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*PSK_cap set and encrypt_cap+mac_cap cleared*/
         if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return FALSE;
+            return false;
         }
         /*Muth_auth_cap set and encap_cap cleared*/
         if (mut_auth_cap != 0 && encap_cap == 0) {
-            return FALSE;
+            return false;
         }
         /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/
         if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
-            return FALSE;
+            return false;
         }
         /*Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
          * It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
@@ -111,17 +111,17 @@ boolean spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
 
         /*Pub_key_id_cap set and cert_cap set*/
         if (pub_key_id_cap != 0 && cert_cap != 0) {
-            return FALSE;
+            return false;
         }
         /*reserved values selected in flags*/
         if (psk_cap == 2 || psk_cap == 3) {
-            return FALSE;
+            return false;
         }
     }
-        return TRUE;
+        return true;
 
     default:
-        return TRUE;
+        return true;
     }
 }
 

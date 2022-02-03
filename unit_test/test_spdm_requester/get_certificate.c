@@ -14,11 +14,11 @@ static uintn m_local_certificate_chain_size;
 
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
-boolean read_responder_public_certificate_chain_expiration(
+bool read_responder_public_certificate_chain_expiration(
     OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
 {
     uint32_t base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
-    boolean res;
+    bool res;
     void *file_data;
     uintn file_size;
     spdm_cert_chain_t *cert_chain;
@@ -49,7 +49,7 @@ boolean read_responder_public_certificate_chain_expiration(
     cert_chain = (void *)malloc(cert_chain_size);
     if (cert_chain == NULL) {
         free(file_data);
-        return FALSE;
+        return false;
     }
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
@@ -80,7 +80,7 @@ boolean read_responder_public_certificate_chain_expiration(
     }
 
     free(file_data);
-    return TRUE;
+    return true;
 }
 
 return_status spdm_requester_get_certificate_test_send_message(
@@ -200,8 +200,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -264,8 +264,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -287,8 +287,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -302,8 +302,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -322,7 +322,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
             sub_index1++;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
@@ -380,7 +380,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
                      portion_length);
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE, temp_buf_size,
+                spdm_context, NULL, false, false, temp_buf_size,
                 temp_buf, response_size, response);
 
             calling_index++;
@@ -402,8 +402,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response.header.param2 = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -423,8 +423,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
             SPDM_GET_CERTIFICATE;
         spdm_response.extend_error_data.token = 0;
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, sizeof(spdm_response),
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, sizeof(spdm_response),
                                            &spdm_response,
                                            response_size, response);
     }
@@ -450,7 +450,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
             sub_index2++;
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE,
+                spdm_context, NULL, false, false,
                 sizeof(spdm_response), &spdm_response,
                 response_size, response);
         } else if (sub_index2 == 1) {
@@ -508,7 +508,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
                      portion_length);
 
             spdm_transport_test_encode_message(
-                spdm_context, NULL, FALSE, FALSE, temp_buf_size,
+                spdm_context, NULL, false, false, temp_buf_size,
                 temp_buf, response_size, response);
 
             calling_index++;
@@ -571,8 +571,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -660,8 +660,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -724,8 +724,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -788,8 +788,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -854,8 +854,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  get_cert_length * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -918,8 +918,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -946,7 +946,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
             spdm_response.header.param1 = (uint8_t) error_code;
             spdm_response.header.param2 = 0;
 
-            spdm_transport_test_encode_message (spdm_context, NULL, FALSE, FALSE,
+            spdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                                 sizeof(spdm_response), &spdm_response,
                                                 response_size, response);
         }
@@ -1055,8 +1055,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -1165,8 +1165,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -1229,8 +1229,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -1293,8 +1293,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -1357,8 +1357,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -1423,8 +1423,8 @@ return_status spdm_requester_get_certificate_test_receive_message(
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                  portion_length);
 
-        spdm_transport_test_encode_message(spdm_context, NULL, FALSE,
-                                           FALSE, temp_buf_size,
+        spdm_transport_test_encode_message(spdm_context, NULL, false,
+                                           false, temp_buf_size,
                                            temp_buf, response_size,
                                            response);
 
@@ -2839,7 +2839,7 @@ void test_spdm_requester_get_certificate_case22(void **state)
 
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_requester_get_certificate_test_send_message,
     spdm_requester_get_certificate_test_receive_message,
 };

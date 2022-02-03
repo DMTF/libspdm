@@ -56,10 +56,10 @@ return_status libspdm_measurement_collection(
  * @param  measurement_summary_hash        The buffer to store the measurement summary hash.
  * @param  measurement_summary_hash_size   The size in bytes of the buffer.
  *
- * @retval TRUE  measurement summary hash is generated or skipped.
- * @retval FALSE measurement summary hash is not generated.
+ * @retval true  measurement summary hash is generated or skipped.
+ * @retval false measurement summary hash is not generated.
  **/
-boolean
+bool
 libspdm_generate_measurement_summary_hash(
     IN spdm_version_number_t spdm_version,
     IN uint32_t base_hash_algo,
@@ -69,7 +69,7 @@ libspdm_generate_measurement_summary_hash(
     OUT uint8_t  *measurement_summary_hash,
     IN OUT uintn *measurement_summary_hash_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -77,24 +77,24 @@ libspdm_generate_measurement_summary_hash(
  *
  * @param  req_base_asym_alg               Indicates the signing algorithm.
  * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  is_data_hash                   Indicate the message type. TRUE: raw message before hash, FALSE: message hash.
+ * @param  is_data_hash                   Indicate the message type. true: raw message before hash, false: message hash.
  * @param  message                      A pointer to a message to be signed.
  * @param  message_size                  The size in bytes of the message to be signed.
  * @param  signature                    A pointer to a destination buffer to store the signature.
  * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
  *                                     On output, indicates the size in bytes of the signature in the buffer.
  *
- * @retval TRUE  signing success.
- * @retval FALSE signing fail.
+ * @retval true  signing success.
+ * @retval false signing fail.
  **/
-boolean libspdm_requester_data_sign(
+bool libspdm_requester_data_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint16_t req_base_asym_alg,
-    IN uint32_t base_hash_algo, IN boolean is_data_hash,
+    IN uint32_t base_hash_algo, IN bool is_data_hash,
     IN const uint8_t *message, IN uintn message_size,
     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -102,24 +102,24 @@ boolean libspdm_requester_data_sign(
  *
  * @param  base_asym_algo                 Indicates the signing algorithm.
  * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  is_data_hash                   Indicate the message type. TRUE: raw message before hash, FALSE: message hash.
+ * @param  is_data_hash                   Indicate the message type. true: raw message before hash, false: message hash.
  * @param  message                      A pointer to a message to be signed.
  * @param  message_size                  The size in bytes of the message to be signed.
  * @param  signature                    A pointer to a destination buffer to store the signature.
  * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
  *                                     On output, indicates the size in bytes of the signature in the buffer.
  *
- * @retval TRUE  signing success.
- * @retval FALSE signing fail.
+ * @retval true  signing success.
+ * @retval false signing fail.
  **/
-boolean libspdm_responder_data_sign(
+bool libspdm_responder_data_sign(
     IN spdm_version_number_t spdm_version, IN uint8_t op_code,
     IN uint32_t base_asym_algo,
-    IN uint32_t base_hash_algo, IN boolean is_data_hash,
+    IN uint32_t base_hash_algo, IN bool is_data_hash,
     IN const uint8_t *message, IN uintn message_size,
     OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -133,10 +133,10 @@ boolean libspdm_responder_data_sign(
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-boolean libspdm_psk_handshake_secret_hkdf_expand(
+bool libspdm_psk_handshake_secret_hkdf_expand(
     IN spdm_version_number_t spdm_version,
     IN uint32_t base_hash_algo,
     IN const uint8_t *psk_hint,
@@ -145,7 +145,7 @@ boolean libspdm_psk_handshake_secret_hkdf_expand(
     IN uintn info_size,
     OUT uint8_t *out, IN uintn out_size)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -159,10 +159,10 @@ boolean libspdm_psk_handshake_secret_hkdf_expand(
  * @param  out                          Pointer to buffer to receive hkdf value.
  * @param  out_size                      size of hkdf bytes to generate.
  *
- * @retval TRUE   Hkdf generated successfully.
- * @retval FALSE  Hkdf generation failed.
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
  **/
-boolean libspdm_psk_master_secret_hkdf_expand(
+bool libspdm_psk_master_secret_hkdf_expand(
     IN spdm_version_number_t spdm_version,
     IN uint32_t base_hash_algo,
     IN const uint8_t *psk_hint,
@@ -171,5 +171,5 @@ boolean libspdm_psk_master_secret_hkdf_expand(
     IN uintn info_size, OUT uint8_t *out,
     IN uintn out_size)
 {
-    return FALSE;
+    return false;
 }

@@ -68,11 +68,11 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     internal_dump_hex(m_local_buffer, m_local_buffer_size);
     sig_size = libspdm_get_asym_signature_size(m_use_asym_algo);
     libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                                SPDM_CHALLENGE_AUTH, m_use_asym_algo, m_use_hash_algo, FALSE,
+                                SPDM_CHALLENGE_AUTH, m_use_asym_algo, m_use_hash_algo, false,
                                 m_local_buffer, m_local_buffer_size, ptr, &sig_size);
     ptr += sig_size;
 
-    spdm_transport_test_encode_message(spdm_context, NULL, FALSE, FALSE, temp_buf_size, temp_buf,
+    spdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buf_size, temp_buf,
                                        response_size, response);
 
     return RETURN_SUCCESS;
@@ -170,7 +170,7 @@ void test_spdm_requester_challenge_ex_case1(void **State)
 }
 spdm_test_context_t m_spdm_requester_challenge_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

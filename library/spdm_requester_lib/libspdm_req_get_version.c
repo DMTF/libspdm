@@ -27,7 +27,7 @@ typedef struct {
 return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
 {
     return_status status;
-    boolean result;
+    bool result;
     spdm_get_version_request_t spdm_request;
     spdm_version_response_max_t spdm_response;
     uintn spdm_response_size;
@@ -122,7 +122,7 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
                                                spdm_context->local_context.version.spdm_version_count,
                                                spdm_response.version_number_entry,
                                                spdm_response.version_number_entry_count);
-    if (result == FALSE) {
+    if (result == false) {
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
     } else {

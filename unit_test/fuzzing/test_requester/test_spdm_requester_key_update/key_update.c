@@ -46,7 +46,7 @@ static void spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_
 #endif
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, TRUE);
+    spdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -138,7 +138,7 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     if (sub_index != 0) {
         sub_index = 0;
     }
-    spdm_transport_test_encode_message(spdm_context, &session_id, FALSE, FALSE,
+    spdm_transport_test_encode_message(spdm_context, &session_id, false, false,
                                        sizeof(spdm_response), &spdm_response, response_size,
                                        response);
     /* WALKAROUND: If just use single context to encode
@@ -179,7 +179,7 @@ void test_spdm_requester_key_update_case1(void **State)
         m_req_secret_buffer, m_req_secret_buffer, sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    libspdm_key_update(spdm_context, session_id, TRUE);
+    libspdm_key_update(spdm_context, session_id, true);
 }
 
 void test_spdm_requester_key_update_case2(void **state)
@@ -213,12 +213,12 @@ void test_spdm_requester_key_update_case2(void **state)
         ((spdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_rsp_secret_buffer, m_rsp_secret_buffer, sizeof(m_rsp_secret_buffer));
 
-    libspdm_key_update(spdm_context, session_id, FALSE);
+    libspdm_key_update(spdm_context, session_id, false);
 }
 
 spdm_test_context_t m_spdm_requester_key_update_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
-    TRUE,
+    true,
     spdm_device_send_message,
     spdm_device_receive_message,
 };

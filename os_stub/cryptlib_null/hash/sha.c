@@ -19,7 +19,7 @@
  **/
 void *sha256_new(void)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
@@ -31,45 +31,45 @@ void *sha256_new(void)
  **/
 void sha256_free(IN void *sha256_ctx)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
 }
 
 /**
  * Initializes user-supplied memory pointed by sha256_context as SHA-256 hash context for
  * subsequent use.
  *
- * If sha256_context is NULL, then return FALSE.
+ * If sha256_context is NULL, then return false.
  *
  * @param[out]  sha256_context  Pointer to SHA-256 context being initialized.
  *
- * @retval TRUE   SHA-256 context initialization succeeded.
- * @retval FALSE  SHA-256 context initialization failed.
+ * @retval true   SHA-256 context initialization succeeded.
+ * @retval false  SHA-256 context initialization failed.
  *
  **/
-boolean sha256_init(OUT void *sha256_context)
+bool sha256_init(OUT void *sha256_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
  * Makes a copy of an existing SHA-256 context.
  *
- * If sha256_context is NULL, then return FALSE.
- * If new_sha256_context is NULL, then return FALSE.
+ * If sha256_context is NULL, then return false.
+ * If new_sha256_context is NULL, then return false.
  *
  * @param[in]  sha256_context     Pointer to SHA-256 context being copied.
  * @param[out] new_sha256_context  Pointer to new SHA-256 context.
  *
- * @retval TRUE   SHA-256 context copy succeeded.
- * @retval FALSE  SHA-256 context copy failed.
+ * @retval true   SHA-256 context copy succeeded.
+ * @retval false  SHA-256 context copy failed.
  *
  **/
-boolean sha256_duplicate(IN const void *sha256_context,
+bool sha256_duplicate(IN const void *sha256_context,
                          OUT void *new_sha256_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -80,21 +80,21 @@ boolean sha256_duplicate(IN const void *sha256_context,
  * SHA-256 context should be already correctly initialized by sha256_init(), and should not be finalized
  * by sha256_final(). Behavior with invalid context is undefined.
  *
- * If sha256_context is NULL, then return FALSE.
+ * If sha256_context is NULL, then return false.
  *
  * @param[in, out]  sha256_context  Pointer to the SHA-256 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA-256 data digest succeeded.
- * @retval FALSE  SHA-256 data digest failed.
+ * @retval true   SHA-256 data digest succeeded.
+ * @retval false  SHA-256 data digest failed.
  *
  **/
-boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
+bool sha256_update(IN OUT void *sha256_context, IN const void *data,
                       IN uintn data_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -106,21 +106,21 @@ boolean sha256_update(IN OUT void *sha256_context, IN const void *data,
  * SHA-256 context should be already correctly initialized by sha256_init(), and should not be
  * finalized by sha256_final(). Behavior with invalid SHA-256 context is undefined.
  *
- * If sha256_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha256_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha256_context  Pointer to the SHA-256 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA-256 digest
  *                                value (32 bytes).
  *
- * @retval TRUE   SHA-256 digest computation succeeded.
- * @retval FALSE  SHA-256 digest computation failed.
+ * @retval true   SHA-256 digest computation succeeded.
+ * @retval false  SHA-256 digest computation failed.
  *
  **/
-boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
+bool sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -129,23 +129,23 @@ boolean sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
  * This function performs the SHA-256 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA-256 digest
  *                         value (32 bytes).
  *
- * @retval TRUE   SHA-256 digest computation succeeded.
- * @retval FALSE  SHA-256 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA-256 digest computation succeeded.
+ * @retval false  SHA-256 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha256_hash_all(IN const void *data, IN uintn data_size,
+bool sha256_hash_all(IN const void *data, IN uintn data_size,
                         OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -157,7 +157,7 @@ boolean sha256_hash_all(IN const void *data, IN uintn data_size,
  **/
 void *sha384_new(void)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
@@ -169,47 +169,47 @@ void *sha384_new(void)
  **/
 void sha384_free(IN void *sha384_ctx)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
 }
 
 /**
  * Initializes user-supplied memory pointed by sha384_context as SHA-384 hash context for
  * subsequent use.
  *
- * If sha384_context is NULL, then return FALSE.
+ * If sha384_context is NULL, then return false.
  *
  * @param[out]  sha384_context  Pointer to SHA-384 context being initialized.
  *
- * @retval TRUE   SHA-384 context initialization succeeded.
- * @retval FALSE  SHA-384 context initialization failed.
+ * @retval true   SHA-384 context initialization succeeded.
+ * @retval false  SHA-384 context initialization failed.
  *
  **/
-boolean sha384_init(OUT void *sha384_context)
+bool sha384_init(OUT void *sha384_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
  * Makes a copy of an existing SHA-384 context.
  *
- * If sha384_context is NULL, then return FALSE.
- * If new_sha384_context is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sha384_context is NULL, then return false.
+ * If new_sha384_context is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]  sha384_context     Pointer to SHA-384 context being copied.
  * @param[out] new_sha384_context  Pointer to new SHA-384 context.
  *
- * @retval TRUE   SHA-384 context copy succeeded.
- * @retval FALSE  SHA-384 context copy failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA-384 context copy succeeded.
+ * @retval false  SHA-384 context copy failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha384_duplicate(IN const void *sha384_context,
+bool sha384_duplicate(IN const void *sha384_context,
                          OUT void *new_sha384_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -220,21 +220,21 @@ boolean sha384_duplicate(IN const void *sha384_context,
  * SHA-384 context should be already correctly initialized by sha384_init(), and should not be finalized
  * by sha384_final(). Behavior with invalid context is undefined.
  *
- * If sha384_context is NULL, then return FALSE.
+ * If sha384_context is NULL, then return false.
  *
  * @param[in, out]  sha384_context  Pointer to the SHA-384 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA-384 data digest succeeded.
- * @retval FALSE  SHA-384 data digest failed.
+ * @retval true   SHA-384 data digest succeeded.
+ * @retval false  SHA-384 data digest failed.
  *
  **/
-boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
+bool sha384_update(IN OUT void *sha384_context, IN const void *data,
                       IN uintn data_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -246,21 +246,21 @@ boolean sha384_update(IN OUT void *sha384_context, IN const void *data,
  * SHA-384 context should be already correctly initialized by sha384_init(), and should not be
  * finalized by sha384_final(). Behavior with invalid SHA-384 context is undefined.
  *
- * If sha384_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha384_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha384_context  Pointer to the SHA-384 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA-384 digest
  *                                value (48 bytes).
  *
- * @retval TRUE   SHA-384 digest computation succeeded.
- * @retval FALSE  SHA-384 digest computation failed.
+ * @retval true   SHA-384 digest computation succeeded.
+ * @retval false  SHA-384 digest computation failed.
  *
  **/
-boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
+bool sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -269,23 +269,23 @@ boolean sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
  * This function performs the SHA-384 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA-384 digest
  *                         value (48 bytes).
  *
- * @retval TRUE   SHA-384 digest computation succeeded.
- * @retval FALSE  SHA-384 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA-384 digest computation succeeded.
+ * @retval false  SHA-384 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha384_hash_all(IN const void *data, IN uintn data_size,
+bool sha384_hash_all(IN const void *data, IN uintn data_size,
                         OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -297,7 +297,7 @@ boolean sha384_hash_all(IN const void *data, IN uintn data_size,
  **/
 void *sha512_new(void)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
     return NULL;
 }
 
@@ -309,47 +309,47 @@ void *sha512_new(void)
  **/
 void sha512_free(IN void *sha512_ctx)
 {
-    ASSERT(FALSE);
+    ASSERT(false);
 }
 
 /**
  * Initializes user-supplied memory pointed by sha512_context as SHA-512 hash context for
  * subsequent use.
  *
- * If sha512_context is NULL, then return FALSE.
+ * If sha512_context is NULL, then return false.
  *
  * @param[out]  sha512_context  Pointer to SHA-512 context being initialized.
  *
- * @retval TRUE   SHA-512 context initialization succeeded.
- * @retval FALSE  SHA-512 context initialization failed.
+ * @retval true   SHA-512 context initialization succeeded.
+ * @retval false  SHA-512 context initialization failed.
  *
  **/
-boolean sha512_init(OUT void *sha512_context)
+bool sha512_init(OUT void *sha512_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
  * Makes a copy of an existing SHA-512 context.
  *
- * If sha512_context is NULL, then return FALSE.
- * If new_sha512_context is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sha512_context is NULL, then return false.
+ * If new_sha512_context is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]  sha512_context     Pointer to SHA-512 context being copied.
  * @param[out] new_sha512_context  Pointer to new SHA-512 context.
  *
- * @retval TRUE   SHA-512 context copy succeeded.
- * @retval FALSE  SHA-512 context copy failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA-512 context copy succeeded.
+ * @retval false  SHA-512 context copy failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha512_duplicate(IN const void *sha512_context,
+bool sha512_duplicate(IN const void *sha512_context,
                          OUT void *new_sha512_context)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -360,21 +360,21 @@ boolean sha512_duplicate(IN const void *sha512_context,
  * SHA-512 context should be already correctly initialized by sha512_init(), and should not be finalized
  * by sha512_final(). Behavior with invalid context is undefined.
  *
- * If sha512_context is NULL, then return FALSE.
+ * If sha512_context is NULL, then return false.
  *
  * @param[in, out]  sha512_context  Pointer to the SHA-512 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA-512 data digest succeeded.
- * @retval FALSE  SHA-512 data digest failed.
+ * @retval true   SHA-512 data digest succeeded.
+ * @retval false  SHA-512 data digest failed.
  *
  **/
-boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
+bool sha512_update(IN OUT void *sha512_context, IN const void *data,
                       IN uintn data_size)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -386,21 +386,21 @@ boolean sha512_update(IN OUT void *sha512_context, IN const void *data,
  * SHA-512 context should be already correctly initialized by sha512_init(), and should not be
  * finalized by sha512_final(). Behavior with invalid SHA-512 context is undefined.
  *
- * If sha512_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha512_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha512_context  Pointer to the SHA-512 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA-512 digest
  *                                value (64 bytes).
  *
- * @retval TRUE   SHA-512 digest computation succeeded.
- * @retval FALSE  SHA-512 digest computation failed.
+ * @retval true   SHA-512 digest computation succeeded.
+ * @retval false  SHA-512 digest computation failed.
  *
  **/
-boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
+bool sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }
 
 /**
@@ -409,21 +409,21 @@ boolean sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
  * This function performs the SHA-512 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA-512 digest
  *                         value (64 bytes).
  *
- * @retval TRUE   SHA-512 digest computation succeeded.
- * @retval FALSE  SHA-512 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA-512 digest computation succeeded.
+ * @retval false  SHA-512 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha512_hash_all(IN const void *data, IN uintn data_size,
+bool sha512_hash_all(IN const void *data, IN uintn data_size,
                         OUT uint8_t *hash_value)
 {
-    ASSERT(FALSE);
-    return FALSE;
+    ASSERT(false);
+    return false;
 }

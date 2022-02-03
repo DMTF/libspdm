@@ -13,11 +13,11 @@
 
 void *hash_md_new(void);
 void hash_md_free(IN void *md_ctx);
-boolean hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
-boolean hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
-boolean hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
-boolean hash_md_final(IN void *md_ctx, OUT void *hash_value);
-boolean hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
+bool hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
+bool hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
+bool hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
+bool hash_md_final(IN void *md_ctx, OUT void *hash_value);
+bool hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
                          OUT uint8_t *hash_value);
 
 /**
@@ -47,15 +47,15 @@ void sha3_256_free(IN void *sha3_256_ctx)
  * Initializes user-supplied memory pointed by sha3_256_context as SHA3-256 hash context for
  * subsequent use.
  *
- * If sha3_256_context is NULL, then return FALSE.
+ * If sha3_256_context is NULL, then return false.
  *
  * @param[out]  sha3_256_context  Pointer to SHA3-256 context being initialized.
  *
- * @retval TRUE   SHA3-256 context initialization succeeded.
- * @retval FALSE  SHA3-256 context initialization failed.
+ * @retval true   SHA3-256 context initialization succeeded.
+ * @retval false  SHA3-256 context initialization failed.
  *
  **/
-boolean sha3_256_init(OUT void *sha3_256_context)
+bool sha3_256_init(OUT void *sha3_256_context)
 {
     return hash_md_init (EVP_sha3_256(), sha3_256_context);
 }
@@ -63,19 +63,19 @@ boolean sha3_256_init(OUT void *sha3_256_context)
 /**
  * Makes a copy of an existing SHA3-256 context.
  *
- * If sha3_256_context is NULL, then return FALSE.
- * If new_sha3_256_context is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sha3_256_context is NULL, then return false.
+ * If new_sha3_256_context is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]  sha3_256_context     Pointer to SHA3-256 context being copied.
  * @param[out] new_sha3_256_context  Pointer to new SHA3-256 context.
  *
- * @retval TRUE   SHA3-256 context copy succeeded.
- * @retval FALSE  SHA3-256 context copy failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-256 context copy succeeded.
+ * @retval false  SHA3-256 context copy failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_256_duplicate(IN const void *sha3_256_context,
+bool sha3_256_duplicate(IN const void *sha3_256_context,
                            OUT void *new_sha3_256_context)
 {
     return hash_md_duplicate (sha3_256_context, new_sha3_256_context);
@@ -89,17 +89,17 @@ boolean sha3_256_duplicate(IN const void *sha3_256_context,
  * SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be finalized
  * by sha3_256_final(). Behavior with invalid context is undefined.
  *
- * If sha3_256_context is NULL, then return FALSE.
+ * If sha3_256_context is NULL, then return false.
  *
  * @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA3-256 data digest succeeded.
- * @retval FALSE  SHA3-256 data digest failed.
+ * @retval true   SHA3-256 data digest succeeded.
+ * @retval false  SHA3-256 data digest failed.
  *
  **/
-boolean sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
+bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
                         IN uintn data_size)
 {
     return hash_md_update (sha3_256_context, data, data_size);
@@ -114,18 +114,18 @@ boolean sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
  * SHA3-256 context should be already correctly initialized by sha3_256_init(), and should not be
  * finalized by sha3_256_final(). Behavior with invalid SHA3-256 context is undefined.
  *
- * If sha3_256_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha3_256_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha3_256_context  Pointer to the SHA3-256 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA3-256 digest
  *                                value (256 / 8 bytes).
  *
- * @retval TRUE   SHA3-256 digest computation succeeded.
- * @retval FALSE  SHA3-256 digest computation failed.
+ * @retval true   SHA3-256 digest computation succeeded.
+ * @retval false  SHA3-256 digest computation failed.
  *
  **/
-boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
+bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
 {
     return hash_md_final (sha3_256_context, hash_value);
 }
@@ -136,19 +136,19 @@ boolean sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
  * This function performs the SHA3-256 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA3-256 digest
  *                         value (256 / 8 bytes).
  *
- * @retval TRUE   SHA3-256 digest computation succeeded.
- * @retval FALSE  SHA3-256 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-256 digest computation succeeded.
+ * @retval false  SHA3-256 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_256_hash_all(IN const void *data, IN uintn data_size,
+bool sha3_256_hash_all(IN const void *data, IN uintn data_size,
                           OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
@@ -181,15 +181,15 @@ void sha3_384_free(IN void *sha3_384_ctx)
  * Initializes user-supplied memory pointed by sha3_384_context as SHA3-384 hash context for
  * subsequent use.
  *
- * If sha3_384_context is NULL, then return FALSE.
+ * If sha3_384_context is NULL, then return false.
  *
  * @param[out]  sha3_384_context  Pointer to SHA3-384 context being initialized.
  *
- * @retval TRUE   SHA3-384 context initialization succeeded.
- * @retval FALSE  SHA3-384 context initialization failed.
+ * @retval true   SHA3-384 context initialization succeeded.
+ * @retval false  SHA3-384 context initialization failed.
  *
  **/
-boolean sha3_384_init(OUT void *sha3_384_context)
+bool sha3_384_init(OUT void *sha3_384_context)
 {
     return hash_md_init (EVP_sha3_384(), sha3_384_context);
 }
@@ -197,19 +197,19 @@ boolean sha3_384_init(OUT void *sha3_384_context)
 /**
  * Makes a copy of an existing SHA3-384 context.
  *
- * If sha3_384_context is NULL, then return FALSE.
- * If new_sha3_384_context is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sha3_384_context is NULL, then return false.
+ * If new_sha3_384_context is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]  sha3_384_context     Pointer to SHA3-384 context being copied.
  * @param[out] new_sha3_384_context  Pointer to new SHA3-384 context.
  *
- * @retval TRUE   SHA3-384 context copy succeeded.
- * @retval FALSE  SHA3-384 context copy failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-384 context copy succeeded.
+ * @retval false  SHA3-384 context copy failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_384_duplicate(IN const void *sha3_384_context,
+bool sha3_384_duplicate(IN const void *sha3_384_context,
                            OUT void *new_sha3_384_context)
 {
     return hash_md_duplicate (sha3_384_context, new_sha3_384_context);
@@ -223,17 +223,17 @@ boolean sha3_384_duplicate(IN const void *sha3_384_context,
  * SHA3-384 context should be already correctly initialized by sha3_384_init(), and should not be finalized
  * by sha3_384_final(). Behavior with invalid context is undefined.
  *
- * If sha3_384_context is NULL, then return FALSE.
+ * If sha3_384_context is NULL, then return false.
  *
  * @param[in, out]  sha3_384_context  Pointer to the SHA3-384 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA3-384 data digest succeeded.
- * @retval FALSE  SHA3-384 data digest failed.
+ * @retval true   SHA3-384 data digest succeeded.
+ * @retval false  SHA3-384 data digest failed.
  *
  **/
-boolean sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
+bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
                         IN uintn data_size)
 {
     return hash_md_update (sha3_384_context, data, data_size);
@@ -248,18 +248,18 @@ boolean sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
  * SHA3-384 context should be already correctly initialized by sha3_384_init(), and should not be
  * finalized by sha3_384_final(). Behavior with invalid SHA3-384 context is undefined.
  *
- * If sha3_384_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha3_384_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha3_384_context  Pointer to the SHA3-384 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA3-384 digest
  *                                value (384 / 8 bytes).
  *
- * @retval TRUE   SHA3-384 digest computation succeeded.
- * @retval FALSE  SHA3-384 digest computation failed.
+ * @retval true   SHA3-384 digest computation succeeded.
+ * @retval false  SHA3-384 digest computation failed.
  *
  **/
-boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
+bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
 {
     return hash_md_final (sha3_384_context, hash_value);
 }
@@ -270,19 +270,19 @@ boolean sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
  * This function performs the SHA3-384 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA3-384 digest
  *                         value (384 / 8 bytes).
  *
- * @retval TRUE   SHA3-384 digest computation succeeded.
- * @retval FALSE  SHA3-384 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-384 digest computation succeeded.
+ * @retval false  SHA3-384 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_384_hash_all(IN const void *data, IN uintn data_size,
+bool sha3_384_hash_all(IN const void *data, IN uintn data_size,
                           OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
@@ -315,15 +315,15 @@ void sha3_512_free(IN void *sha3_512_ctx)
  * Initializes user-supplied memory pointed by sha3_512_context as SHA3-512 hash context for
  * subsequent use.
  *
- * If sha3_512_context is NULL, then return FALSE.
+ * If sha3_512_context is NULL, then return false.
  *
  * @param[out]  sha3_512_context  Pointer to SHA3-512 context being initialized.
  *
- * @retval TRUE   SHA3-512 context initialization succeeded.
- * @retval FALSE  SHA3-512 context initialization failed.
+ * @retval true   SHA3-512 context initialization succeeded.
+ * @retval false  SHA3-512 context initialization failed.
  *
  **/
-boolean sha3_512_init(OUT void *sha3_512_context)
+bool sha3_512_init(OUT void *sha3_512_context)
 {
     return hash_md_init (EVP_sha3_512(), sha3_512_context);
 }
@@ -331,19 +331,19 @@ boolean sha3_512_init(OUT void *sha3_512_context)
 /**
  * Makes a copy of an existing SHA3-512 context.
  *
- * If sha3_512_context is NULL, then return FALSE.
- * If new_sha3_512_context is NULL, then return FALSE.
- * If this interface is not supported, then return FALSE.
+ * If sha3_512_context is NULL, then return false.
+ * If new_sha3_512_context is NULL, then return false.
+ * If this interface is not supported, then return false.
  *
  * @param[in]  sha3_512_context     Pointer to SHA3-512 context being copied.
  * @param[out] new_sha3_512_context  Pointer to new SHA3-512 context.
  *
- * @retval TRUE   SHA3-512 context copy succeeded.
- * @retval FALSE  SHA3-512 context copy failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-512 context copy succeeded.
+ * @retval false  SHA3-512 context copy failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_512_duplicate(IN const void *sha3_512_context,
+bool sha3_512_duplicate(IN const void *sha3_512_context,
                            OUT void *new_sha3_512_context)
 {
     return hash_md_duplicate (sha3_512_context, new_sha3_512_context);
@@ -357,17 +357,17 @@ boolean sha3_512_duplicate(IN const void *sha3_512_context,
  * SHA3-512 context should be already correctly initialized by sha3_512_init(), and should not be finalized
  * by sha3_512_final(). Behavior with invalid context is undefined.
  *
- * If sha3_512_context is NULL, then return FALSE.
+ * If sha3_512_context is NULL, then return false.
  *
  * @param[in, out]  sha3_512_context  Pointer to the SHA3-512 context.
  * @param[in]       data           Pointer to the buffer containing the data to be hashed.
  * @param[in]       data_size       size of data buffer in bytes.
  *
- * @retval TRUE   SHA3-512 data digest succeeded.
- * @retval FALSE  SHA3-512 data digest failed.
+ * @retval true   SHA3-512 data digest succeeded.
+ * @retval false  SHA3-512 data digest failed.
  *
  **/
-boolean sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
+bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
                         IN uintn data_size)
 {
     return hash_md_update (sha3_512_context, data, data_size);
@@ -382,18 +382,18 @@ boolean sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
  * SHA3-512 context should be already correctly initialized by sha3_512_init(), and should not be
  * finalized by sha3_512_final(). Behavior with invalid SHA3-512 context is undefined.
  *
- * If sha3_512_context is NULL, then return FALSE.
- * If hash_value is NULL, then return FALSE.
+ * If sha3_512_context is NULL, then return false.
+ * If hash_value is NULL, then return false.
  *
  * @param[in, out]  sha3_512_context  Pointer to the SHA3-512 context.
  * @param[out]      hash_value      Pointer to a buffer that receives the SHA3-512 digest
  *                                value (512 / 8 bytes).
  *
- * @retval TRUE   SHA3-512 digest computation succeeded.
- * @retval FALSE  SHA3-512 digest computation failed.
+ * @retval true   SHA3-512 digest computation succeeded.
+ * @retval false  SHA3-512 digest computation failed.
  *
  **/
-boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
+bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
 {
     return hash_md_final (sha3_512_context, hash_value);
 }
@@ -404,19 +404,19 @@ boolean sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
  * This function performs the SHA3-512 message digest of a given data buffer, and places
  * the digest value into the specified memory.
  *
- * If this interface is not supported, then return FALSE.
+ * If this interface is not supported, then return false.
  *
  * @param[in]   data        Pointer to the buffer containing the data to be hashed.
  * @param[in]   data_size    size of data buffer in bytes.
  * @param[out]  hash_value   Pointer to a buffer that receives the SHA3-512 digest
  *                         value (512 / 8 bytes).
  *
- * @retval TRUE   SHA3-512 digest computation succeeded.
- * @retval FALSE  SHA3-512 digest computation failed.
- * @retval FALSE  This interface is not supported.
+ * @retval true   SHA3-512 digest computation succeeded.
+ * @retval false  SHA3-512 digest computation failed.
+ * @retval false  This interface is not supported.
  *
  **/
-boolean sha3_512_hash_all(IN const void *data, IN uintn data_size,
+bool sha3_512_hash_all(IN const void *data, IN uintn data_size,
                           OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
