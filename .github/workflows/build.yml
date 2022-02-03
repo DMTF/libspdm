@@ -74,7 +74,7 @@ jobs:
           cd build
           cmake -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
-          make
+          make -j`nproc`
       - name: Build - Windows
         if: matrix.os == 'windows-latest'
         run: |
