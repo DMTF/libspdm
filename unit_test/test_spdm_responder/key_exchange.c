@@ -731,7 +731,7 @@ void test_spdm_responder_key_exchange_case8(void **state)
     m_spdm_key_exchange_request3.reserved = 0;
     ptr = m_spdm_key_exchange_request3.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -757,7 +757,7 @@ void test_spdm_responder_key_exchange_case8(void **state)
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
-        spdm_context, FALSE, m_spdm_key_exchange_request3.header.param1);
+        spdm_context, false, m_spdm_key_exchange_request3.header.param1);
     libspdm_generate_measurement_summary_hash(
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -840,7 +840,7 @@ void test_spdm_responder_key_exchange_case9(void **state)
     m_spdm_key_exchange_request4.reserved = 0;
     ptr = m_spdm_key_exchange_request4.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -866,7 +866,7 @@ void test_spdm_responder_key_exchange_case9(void **state)
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
     measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
-        spdm_context, FALSE, m_spdm_key_exchange_request4.header.param1);
+        spdm_context, false, m_spdm_key_exchange_request4.header.param1);
     libspdm_generate_measurement_summary_hash(
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -947,7 +947,7 @@ void test_spdm_responder_key_exchange_case10(void **state)
     m_spdm_key_exchange_request5.reserved = 0;
     ptr = m_spdm_key_exchange_request5.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -1038,7 +1038,7 @@ void test_spdm_responder_key_exchange_case11(void **state)
     m_spdm_key_exchange_request3.reserved = 0;
     ptr = m_spdm_key_exchange_request3.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -1123,7 +1123,7 @@ void test_spdm_responder_key_exchange_case12(void **state)
     m_spdm_key_exchange_request6.reserved = 0;
     ptr = m_spdm_key_exchange_request6.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -1209,7 +1209,7 @@ void test_spdm_responder_key_exchange_case13(void **state)
     m_spdm_key_exchange_request7.reserved = 0;
     ptr = m_spdm_key_exchange_request7.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -1295,7 +1295,7 @@ void test_spdm_responder_key_exchange_case14(void **state)
     m_spdm_key_exchange_request7.reserved = 0;
     ptr = m_spdm_key_exchange_request7.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
@@ -1389,7 +1389,7 @@ void test_spdm_responder_key_exchange_case15(void **state)
     m_spdm_key_exchange_request1.reserved = 0;
     ptr = m_spdm_key_exchange_request1.exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_use_dhe_algo);
-    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, FALSE);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_use_dhe_algo, false);
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
