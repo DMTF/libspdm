@@ -55,7 +55,7 @@ void ecd_free(IN void *ecd_context)
  *
  **/
 bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
-                        IN uintn public_key_size)
+                     IN uintn public_key_size)
 {
     return false;
 }
@@ -76,7 +76,7 @@ bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
  *
  **/
 bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                        IN OUT uintn *public_key_size)
+                     IN OUT uintn *public_key_size)
 {
     return false;
 }
@@ -120,7 +120,7 @@ bool ecd_check_key(IN void *ecd_context)
  *
  **/
 bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                         IN OUT uintn *public_key_size)
+                      IN OUT uintn *public_key_size)
 {
     return false;
 }
@@ -159,9 +159,9 @@ bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  *
  **/
 bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-                   IN const uint8_t *context, IN uintn context_size,
-                   IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
-                   IN OUT uintn *sig_size)
+                IN const uint8_t *context, IN uintn context_size,
+                IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
+                IN OUT uintn *sig_size)
 {
     return false;
 }
@@ -194,9 +194,9 @@ bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
  *
  **/
 bool eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-                     IN const uint8_t *context, IN uintn context_size,
-                     IN const uint8_t *message, IN uintn size,
-                     IN const uint8_t *signature, IN uintn sig_size)
+                  IN const uint8_t *context, IN uintn context_size,
+                  IN const uint8_t *message, IN uintn size,
+                  IN const uint8_t *signature, IN uintn sig_size)
 {
     return false;
 }

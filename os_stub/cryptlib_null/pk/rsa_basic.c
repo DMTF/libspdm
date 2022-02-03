@@ -65,7 +65,7 @@ void rsa_free(IN void *rsa_context)
  *
  **/
 bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                    IN const uint8_t *big_number, IN uintn bn_size)
+                 IN const uint8_t *big_number, IN uintn bn_size)
 {
     ASSERT(false);
     return false;
@@ -92,9 +92,9 @@ bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  *
  **/
 bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                                  IN const uint8_t *message_hash,
-                                  IN uintn hash_size, IN const uint8_t *signature,
-                                  IN uintn sig_size)
+                               IN const uint8_t *message_hash,
+                               IN uintn hash_size, IN const uint8_t *signature,
+                               IN uintn sig_size)
 {
     ASSERT(false);
     return false;
@@ -123,8 +123,8 @@ bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  **/
 bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-                       IN const uint8_t *message_hash, IN uintn hash_size,
-                       IN const uint8_t *signature, IN uintn sig_size)
+                    IN const uint8_t *message_hash, IN uintn hash_size,
+                    IN const uint8_t *signature, IN uintn sig_size)
 {
     ASSERT(false);
     return false;

@@ -56,9 +56,9 @@ void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
  * @retval false  public_key_size is not large enough.
  **/
 bool libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
-                                                 IN OUT void *dhe_context,
-                                                 OUT uint8_t *public_key,
-                                                 IN OUT uintn *public_key_size)
+                                              IN OUT void *dhe_context,
+                                              OUT uint8_t *public_key,
+                                              IN OUT uintn *public_key_size)
 {
     return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key,
                                     public_key_size);

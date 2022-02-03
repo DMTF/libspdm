@@ -40,11 +40,11 @@
  *
  **/
 bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
-                             IN const uint8_t *iv, IN uintn iv_size,
-                             IN const uint8_t *a_data, IN uintn a_data_size,
-                             IN const uint8_t *data_in, IN uintn data_in_size,
-                             OUT uint8_t *tag_out, IN uintn tag_size,
-                             OUT uint8_t *data_out, OUT uintn *data_out_size)
+                          IN const uint8_t *iv, IN uintn iv_size,
+                          IN const uint8_t *a_data, IN uintn a_data_size,
+                          IN const uint8_t *data_in, IN uintn data_in_size,
+                          OUT uint8_t *tag_out, IN uintn tag_size,
+                          OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
     EVP_CIPHER_CTX *ctx;
     const EVP_CIPHER *cipher;
@@ -95,7 +95,7 @@ bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
     }
 
     ret_value = (bool)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
-                                             (int32_t)iv_size, NULL);
+                                          (int32_t)iv_size, NULL);
     if (!ret_value) {
         goto done;
     }
@@ -112,14 +112,14 @@ bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
     }
 
     ret_value = (bool)EVP_EncryptUpdate(ctx, data_out,
-                                           (int32_t *)&temp_out_size, data_in,
-                                           (int32_t)data_in_size);
+                                        (int32_t *)&temp_out_size, data_in,
+                                        (int32_t)data_in_size);
     if (!ret_value) {
         goto done;
     }
 
     ret_value = (bool)EVP_EncryptFinal_ex(ctx, data_out,
-                                             (int32_t *)&temp_out_size);
+                                          (int32_t *)&temp_out_size);
     if (!ret_value) {
         goto done;
     }
@@ -166,11 +166,11 @@ done:
  *
  **/
 bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
-                             IN const uint8_t *iv, IN uintn iv_size,
-                             IN const uint8_t *a_data, IN uintn a_data_size,
-                             IN const uint8_t *data_in, IN uintn data_in_size,
-                             IN const uint8_t *tag, IN uintn tag_size,
-                             OUT uint8_t *data_out, OUT uintn *data_out_size)
+                          IN const uint8_t *iv, IN uintn iv_size,
+                          IN const uint8_t *a_data, IN uintn a_data_size,
+                          IN const uint8_t *data_in, IN uintn data_in_size,
+                          IN const uint8_t *tag, IN uintn tag_size,
+                          OUT uint8_t *data_out, OUT uintn *data_out_size)
 {
     EVP_CIPHER_CTX *ctx;
     const EVP_CIPHER *cipher;
@@ -221,7 +221,7 @@ bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
     }
 
     ret_value = (bool)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN,
-                                             (int32_t)iv_size, NULL);
+                                          (int32_t)iv_size, NULL);
     if (!ret_value) {
         goto done;
     }
@@ -238,20 +238,20 @@ bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
     }
 
     ret_value = (bool)EVP_DecryptUpdate(ctx, data_out,
-                                           (int32_t *)&temp_out_size, data_in,
-                                           (int32_t)data_in_size);
+                                        (int32_t *)&temp_out_size, data_in,
+                                        (int32_t)data_in_size);
     if (!ret_value) {
         goto done;
     }
 
     ret_value = (bool)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
-                                             (int32_t)tag_size, (void *)tag);
+                                          (int32_t)tag_size, (void *)tag);
     if (!ret_value) {
         goto done;
     }
 
     ret_value = (bool)EVP_DecryptFinal_ex(ctx, data_out,
-                                             (int32_t *)&temp_out_size);
+                                          (int32_t *)&temp_out_size);
 
 done:
     EVP_CIPHER_CTX_free(ctx);

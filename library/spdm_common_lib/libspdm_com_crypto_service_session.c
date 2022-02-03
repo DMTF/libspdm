@@ -226,13 +226,13 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_finish(IN void *context,
-                                        IN void *spdm_session_info,
-                                        IN uint8_t *cert_chain_buffer,
-                                        OPTIONAL IN uintn cert_chain_buffer_size,
-                                        OPTIONAL IN uint8_t *mut_cert_chain_buffer,
-                                        OPTIONAL IN uintn mut_cert_chain_buffer_size,
-                                        OPTIONAL IN OUT uintn *th_data_buffer_size,
-                                        OUT void *th_data_buffer)
+                                     IN void *spdm_session_info,
+                                     IN uint8_t *cert_chain_buffer,
+                                     OPTIONAL IN uintn cert_chain_buffer_size,
+                                     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
+                                     OPTIONAL IN uintn mut_cert_chain_buffer_size,
+                                     OPTIONAL IN OUT uintn *th_data_buffer_size,
+                                     OUT void *th_data_buffer)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -345,9 +345,9 @@ bool libspdm_calculate_th_for_finish(IN void *context,
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_finish(IN void *context,
-                                             IN void *spdm_session_info,
-                                             OPTIONAL IN OUT uintn *th_hash_buffer_size,
-                                             OUT void *th_hash_buffer)
+                                          IN void *spdm_session_info,
+                                          OPTIONAL IN OUT uintn *th_hash_buffer_size,
+                                          OUT void *th_hash_buffer)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -400,9 +400,9 @@ bool libspdm_calculate_th_hash_for_finish(IN void *context,
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
-                                                 IN void *spdm_session_info,
-                                                 OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-                                                 OUT void *th_hmac_buffer)
+                                              IN void *spdm_session_info,
+                                              OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                                              OUT void *th_hmac_buffer)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -457,9 +457,9 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(IN void *context,
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_req(IN void *context,
-                                                 IN void *spdm_session_info,
-                                                 OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-                                                 OUT void *th_hmac_buffer)
+                                              IN void *spdm_session_info,
+                                              OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                                              OUT void *th_hmac_buffer)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -814,9 +814,9 @@ bool spdm_verify_key_exchange_rsp_signature(
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN void *hmac_data,
-                                          IN uintn hmac_data_size)
+                                       IN spdm_session_info_t *session_info,
+                                       IN void *hmac_data,
+                                       IN uintn hmac_data_size)
 {
     uintn hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
@@ -885,8 +885,8 @@ bool spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false finish signature is not generated.
  **/
 bool spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
-                                           IN spdm_session_info_t *session_info,
-                                           OUT uint8_t *signature)
+                                        IN spdm_session_info_t *session_info,
+                                        OUT uint8_t *signature)
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
@@ -981,8 +981,8 @@ bool spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
  * @retval false finish HMAC is not generated.
  **/
 bool spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                      IN spdm_session_info_t *session_info,
-                                      OUT void *hmac)
+                                   IN spdm_session_info_t *session_info,
+                                   OUT void *hmac)
 {
     uintn hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
@@ -1061,9 +1061,9 @@ bool spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false signature verification fail.
  **/
 bool spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
-                                         IN spdm_session_info_t *session_info,
-                                         IN void *sign_data,
-                                         IN intn sign_data_size)
+                                      IN spdm_session_info_t *session_info,
+                                      IN void *sign_data,
+                                      IN intn sign_data_size)
 {
     uintn hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -1226,8 +1226,8 @@ bool spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                    IN spdm_session_info_t *session_info,
-                                    IN uint8_t *hmac, IN uintn hmac_size)
+                                 IN spdm_session_info_t *session_info,
+                                 IN uint8_t *hmac, IN uintn hmac_size)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
     uintn hash_size;
@@ -1309,8 +1309,8 @@ bool spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false finish HMAC is not generated.
  **/
 bool spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-                                      IN spdm_session_info_t *session_info,
-                                      OUT uint8_t *hmac)
+                                   IN spdm_session_info_t *session_info,
+                                   OUT uint8_t *hmac)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
     uintn hash_size;
@@ -1389,8 +1389,8 @@ bool spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-                                    IN spdm_session_info_t *session_info,
-                                    IN void *hmac_data, IN uintn hmac_data_size)
+                                 IN spdm_session_info_t *session_info,
+                                 IN void *hmac_data, IN uintn hmac_data_size)
 {
     uintn hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
@@ -1530,9 +1530,9 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN void *hmac_data,
-                                          IN uintn hmac_data_size)
+                                       IN spdm_session_info_t *session_info,
+                                       IN void *hmac_data,
+                                       IN uintn hmac_data_size)
 {
     uintn hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
@@ -1651,8 +1651,8 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                        IN spdm_session_info_t *session_info,
-                                        IN uint8_t *hmac, IN uintn hmac_size)
+                                     IN spdm_session_info_t *session_info,
+                                     IN uint8_t *hmac, IN uintn hmac_size)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
     uintn hash_size;

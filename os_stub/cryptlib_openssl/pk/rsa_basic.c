@@ -75,7 +75,7 @@ void rsa_free(IN void *rsa_context)
  *
  **/
 bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                    IN const uint8_t *big_number, IN uintn bn_size)
+                 IN const uint8_t *big_number, IN uintn bn_size)
 {
     RSA *rsa_key;
     bool status;
@@ -302,9 +302,9 @@ err:
  *
  **/
 bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                                  IN const uint8_t *message_hash,
-                                  IN uintn hash_size, IN const uint8_t *signature,
-                                  IN uintn sig_size)
+                               IN const uint8_t *message_hash,
+                               IN uintn hash_size, IN const uint8_t *signature,
+                               IN uintn sig_size)
 {
     int32_t digest_type;
     uint8_t *sig_buf;
@@ -369,8 +369,8 @@ bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
 
     sig_buf = (uint8_t *)signature;
     return (bool)RSA_verify(digest_type, message_hash, (uint32_t)hash_size,
-                               sig_buf, (uint32_t)sig_size,
-                               (RSA *)rsa_context);
+                            sig_buf, (uint32_t)sig_size,
+                            (RSA *)rsa_context);
 }
 
 /**
@@ -396,8 +396,8 @@ bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  **/
 bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-                       IN const uint8_t *message_hash, IN uintn hash_size,
-                       IN const uint8_t *signature, IN uintn sig_size)
+                    IN const uint8_t *message_hash, IN uintn hash_size,
+                    IN const uint8_t *signature, IN uintn sig_size)
 {
     RSA *rsa;
     bool result;
@@ -479,7 +479,7 @@ bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
     ASSERT(sig_size == (uintn)size);
 
     result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
-                                           buffer, RSA_PSS_SALTLEN_DIGEST);
+                                        buffer, RSA_PSS_SALTLEN_DIGEST);
     free_pool(buffer);
 
     return result;

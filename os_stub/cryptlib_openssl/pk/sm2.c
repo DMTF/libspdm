@@ -110,7 +110,7 @@ void sm2_dsa_free(IN void *sm2_context)
  *
  **/
 bool sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
-                            IN uintn public_key_size)
+                         IN uintn public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -162,7 +162,7 @@ bool sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
     }
 
     ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -202,7 +202,7 @@ done:
  *
  **/
 bool sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
-                            IN OUT uintn *public_key_size)
+                         IN OUT uintn *public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -260,7 +260,7 @@ bool sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
     }
 
     ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -357,7 +357,7 @@ bool sm2_dsa_check_key(IN void *sm2_context)
  *
  **/
 bool sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
-                             IN OUT uintn *public_size)
+                          IN OUT uintn *public_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -419,7 +419,7 @@ bool sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
     }
 
     ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -494,9 +494,9 @@ void sm2_key_exchange_free(IN void *sm2_context)
  * @retval false  sm2 context is not initialized.
  **/
 bool sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
-                              IN const uint8_t *id_a, IN uintn id_a_size,
-                              IN const uint8_t *id_b, IN uintn id_b_size,
-                              IN const bool is_initiator)
+                           IN const uint8_t *id_a, IN uintn id_a_size,
+                           IN const uint8_t *id_b, IN uintn id_b_size,
+                           IN const bool is_initiator)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -530,7 +530,7 @@ bool sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
  *
  **/
 bool sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
-                                      IN OUT uintn *public_size)
+                                   IN OUT uintn *public_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -564,9 +564,9 @@ bool sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public
  *
  **/
 bool sm2_key_exchange_compute_key(IN OUT void *sm2_context,
-                                     IN const uint8_t *peer_public,
-                                     IN uintn peer_public_size, OUT uint8_t *key,
-                                     IN uintn *key_size)
+                                  IN const uint8_t *peer_public,
+                                  IN uintn peer_public_size, OUT uint8_t *key,
+                                  IN uintn *key_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -711,9 +711,9 @@ static void ecc_signature_bin_to_der(IN uint8_t *signature, IN uintn sig_size,
  *
  **/
 bool sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
-                     IN const uint8_t *id_a, IN uintn id_a_size,
-                     IN const uint8_t *message, IN uintn size,
-                     OUT uint8_t *signature, IN OUT uintn *sig_size)
+                  IN const uint8_t *id_a, IN uintn id_a_size,
+                  IN const uint8_t *message, IN uintn size,
+                  OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -820,9 +820,9 @@ bool sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
  *
  **/
 bool sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
-                       IN const uint8_t *id_a, IN uintn id_a_size,
-                       IN const uint8_t *message, IN uintn size,
-                       IN const uint8_t *signature, IN uintn sig_size)
+                    IN const uint8_t *id_a, IN uintn id_a_size,
+                    IN const uint8_t *message, IN uintn size,
+                    IN const uint8_t *signature, IN uintn sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;

@@ -22,9 +22,9 @@
  * @retval false measurement signature is not created.
  **/
 bool spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN OUT void *response_message,
-                                          IN uintn response_message_size)
+                                       IN spdm_session_info_t *session_info,
+                                       IN OUT void *response_message,
+                                       IN uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_sig_size;
@@ -72,8 +72,8 @@ bool spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
 bool spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
-                                       IN OUT void *response_message,
-                                       IN uintn response_message_size)
+                                    IN OUT void *response_message,
+                                    IN uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_no_sig_size;

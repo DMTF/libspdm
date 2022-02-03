@@ -1745,7 +1745,7 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
  * @retval false the version is not supported.
  **/
 bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
-                                  IN uint8_t version)
+                               IN uint8_t version)
 {
     if (version ==
         (spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT)) {
@@ -2089,10 +2089,10 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
  * @retval false                      Negotiation failed.
  */
 bool spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
-                                          IN spdm_version_number_t *req_ver_set,
-                                          IN uintn req_ver_num,
-                                          IN spdm_version_number_t *res_ver_set,
-                                          IN uintn res_ver_num)
+                                       IN spdm_version_number_t *req_ver_set,
+                                       IN uintn req_ver_num,
+                                       IN spdm_version_number_t *res_ver_set,
+                                       IN uintn res_ver_num)
 {
     uintn req_index;
     uintn res_index;

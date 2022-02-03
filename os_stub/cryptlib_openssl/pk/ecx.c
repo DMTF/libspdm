@@ -100,7 +100,7 @@ void ecx_free(IN void *ecx_context)
  *
  **/
 bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
-                         IN OUT uintn *public_size)
+                      IN OUT uintn *public_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -163,8 +163,8 @@ bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
  *
  **/
 bool ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
-                        IN uintn peer_public_size, OUT uint8_t *key,
-                        IN OUT uintn *key_size)
+                     IN uintn peer_public_size, OUT uint8_t *key,
+                     IN OUT uintn *key_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;

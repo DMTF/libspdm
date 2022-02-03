@@ -133,7 +133,7 @@ void dh_free(IN void *dh_context)
  *
  **/
 bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-                              IN uintn prime_length, OUT uint8_t *prime)
+                           IN uintn prime_length, OUT uint8_t *prime)
 {
     return false;
 }
@@ -160,7 +160,7 @@ bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
  *
  **/
 bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-                         IN uintn prime_length, IN const uint8_t *prime)
+                      IN uintn prime_length, IN const uint8_t *prime)
 {
     return false;
 }
@@ -192,7 +192,7 @@ bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
  *
  **/
 bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
-                        IN OUT uintn *public_key_size)
+                     IN OUT uintn *public_key_size)
 {
     int32_t ret;
     mbedtls_dhm_context *ctx;
@@ -269,8 +269,8 @@ bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
  *
  **/
 bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
-                       IN uintn peer_public_key_size, OUT uint8_t *key,
-                       IN OUT uintn *key_size)
+                    IN uintn peer_public_key_size, OUT uint8_t *key,
+                    IN OUT uintn *key_size)
 {
     int32_t ret;
     mbedtls_dhm_context *ctx;

@@ -15,17 +15,17 @@
 #include <openssl/kdf.h>
 
 bool hkdf_md_extract_and_expand(IN const EVP_MD *md, IN const uint8_t *key,
-                                   IN uintn key_size, IN const uint8_t *salt,
-                                   IN uintn salt_size, IN const uint8_t *info,
-                                   IN uintn info_size, OUT uint8_t *out,
-                                   IN uintn out_size);
+                                IN uintn key_size, IN const uint8_t *salt,
+                                IN uintn salt_size, IN const uint8_t *info,
+                                IN uintn info_size, OUT uint8_t *out,
+                                IN uintn out_size);
 bool hkdf_md_extract(IN const EVP_MD *md, IN const uint8_t *key,
-                        IN uintn key_size, IN const uint8_t *salt,
-                        IN uintn salt_size, OUT uint8_t *prk_out,
-                        IN uintn prk_out_size);
+                     IN uintn key_size, IN const uint8_t *salt,
+                     IN uintn salt_size, OUT uint8_t *prk_out,
+                     IN uintn prk_out_size);
 bool hkdf_md_expand(IN const EVP_MD *md, IN const uint8_t *prk,
-                       IN uintn prk_size, IN const uint8_t *info,
-                       IN uintn info_size, OUT uint8_t *out, IN uintn out_size);
+                    IN uintn prk_size, IN const uint8_t *info,
+                    IN uintn info_size, OUT uint8_t *out, IN uintn out_size);
 
 /**
  * Derive SM3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
@@ -44,9 +44,9 @@ bool hkdf_md_expand(IN const EVP_MD *md, IN const uint8_t *prk,
  *
  **/
 bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                        IN const uint8_t *salt, IN uintn salt_size,
-                                        IN const uint8_t *info, IN uintn info_size,
-                                        OUT uint8_t *out, IN uintn out_size)
+                                     IN const uint8_t *salt, IN uintn salt_size,
+                                     IN const uint8_t *info, IN uintn info_size,
+                                     OUT uint8_t *out, IN uintn out_size)
 {
     return hkdf_md_extract_and_expand(EVP_sm3(), key, key_size, salt,
                                       salt_size, info, info_size, out,
@@ -68,8 +68,8 @@ bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  *
  **/
 bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
-                             IN const uint8_t *salt, IN uintn salt_size,
-                             OUT uint8_t *prk_out, IN uintn prk_out_size)
+                          IN const uint8_t *salt, IN uintn salt_size,
+                          OUT uint8_t *prk_out, IN uintn prk_out_size)
 {
     return hkdf_md_extract(EVP_sm3(), key, key_size, salt, salt_size,
                            prk_out, prk_out_size);
@@ -90,8 +90,8 @@ bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
  *
  **/
 bool hkdf_sm3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                            IN const uint8_t *info, IN uintn info_size,
-                            OUT uint8_t *out, IN uintn out_size)
+                         IN const uint8_t *info, IN uintn info_size,
+                         OUT uint8_t *out, IN uintn out_size)
 {
     return hkdf_md_expand(EVP_sm3(), prk, prk_size, info, info_size, out,
                           out_size);

@@ -14,14 +14,14 @@
 void *hmac_md_new(void);
 void hmac_md_free(IN void *hmac_md_ctx);
 bool hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
-                        IN const uint8_t *key, IN uintn key_size);
+                     IN const uint8_t *key, IN uintn key_size);
 bool hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx);
 bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-                       IN uintn data_size);
+                    IN uintn data_size);
 bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value);
 bool hmac_md_all(IN const EVP_MD *md, IN const void *data,
-                    IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-                    OUT uint8_t *hmac_value);
+                 IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
+                 OUT uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SM3_256 use.
@@ -61,7 +61,7 @@ void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx)
  *
  **/
 bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
-                             IN uintn key_size)
+                          IN uintn key_size)
 {
     return hmac_md_set_key(EVP_sm3(), hmac_sm3_256_ctx, key, key_size);
 }
@@ -80,7 +80,7 @@ bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
  *
  **/
 bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
-                               OUT void *new_hmac_sm3_256_ctx)
+                            OUT void *new_hmac_sm3_256_ctx)
 {
     return hmac_md_duplicate(hmac_sm3_256_ctx, new_hmac_sm3_256_ctx);
 }
@@ -104,7 +104,7 @@ bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
  *
  **/
 bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
-                            IN uintn data_size)
+                         IN uintn data_size)
 {
     return hmac_md_update(hmac_sm3_256_ctx, data, data_size);
 }
@@ -155,8 +155,8 @@ bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value)
  *
  **/
 bool hmac_sm3_256_all(IN const void *data, IN uintn data_size,
-                         IN const uint8_t *key, IN uintn key_size,
-                         OUT uint8_t *hmac_value)
+                      IN const uint8_t *key, IN uintn key_size,
+                      OUT uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sm3(), data, data_size, key, key_size,
                        hmac_value);

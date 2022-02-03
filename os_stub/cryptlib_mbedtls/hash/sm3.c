@@ -88,7 +88,7 @@ bool sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
  *
  **/
 bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
-                       IN uintn data_size)
+                    IN uintn data_size)
 {
     return false;
 }
@@ -137,7 +137,7 @@ bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
  *
  **/
 bool sm3_256_hash_all(IN const void *data, IN uintn data_size,
-                         OUT uint8_t *hash_value)
+                      OUT uint8_t *hash_value)
 {
     return false;
 }

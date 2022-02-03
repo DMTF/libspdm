@@ -497,7 +497,7 @@ uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context);
  * @retval false the version is not supported.
  **/
 bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
-                                  IN uint8_t version);
+                               IN uint8_t version);
 
 /**
  * This function returns connection version negotiated by GET_VERSION/VERSION.
@@ -537,8 +537,8 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
 bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
-                            IN OUT uintn *m1m2_buffer_size,
-                            OUT void *m1m2_buffer);
+                         IN OUT uintn *m1m2_buffer_size,
+                         OUT void *m1m2_buffer);
 #else
 /*
  * This function calculates m1m2 hash.
@@ -551,8 +551,8 @@ bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
 bool spdm_calculate_m1m2_hash(IN void *context, IN bool is_mut,
-                                 IN OUT uintn *m1m2_hash_size,
-                                 OUT void *m1m2_hash);
+                              IN OUT uintn *m1m2_hash_size,
+                              OUT void *m1m2_hash);
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -569,7 +569,7 @@ bool spdm_calculate_m1m2_hash(IN void *context, IN bool is_mut,
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
 bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
-                            IN OUT uintn *l1l2_buffer_size, OUT void *l1l2_buffer);
+                         IN OUT uintn *l1l2_buffer_size, OUT void *l1l2_buffer);
 #else
 /*
  * This function calculates l1l2 hash.
@@ -584,7 +584,7 @@ bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
 bool spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
-                                 IN OUT uintn *l1l2_hash_size, OUT void *l1l2_hash);
+                              IN OUT uintn *l1l2_hash_size, OUT void *l1l2_hash);
 #endif
 
 /**
@@ -598,7 +598,7 @@ bool spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
  * @retval false certificate chain hash is not generated.
  **/
 bool spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
-                                      IN uintn slot_id, OUT uint8_t *hash);
+                                   IN uintn slot_id, OUT uint8_t *hash);
 
 /**
  * This function verifies the digest.
@@ -611,7 +611,7 @@ bool spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
  * @retval false digest verification fail.
  **/
 bool spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
-                                 IN void *digest, IN uintn digest_count);
+                              IN void *digest, IN uintn digest_count);
 
 /**
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
@@ -626,10 +626,10 @@ bool spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
  * @retval false Peer certificate chain buffer verification failed.
  **/
 bool spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
-                                           IN void *cert_chain_buffer,
-                                           IN uintn cert_chain_buffer_size,
-                                           OUT void **trust_anchor OPTIONAL,
-                                           OUT uintn *trust_anchor_size OPTIONAL);
+                                        IN void *cert_chain_buffer,
+                                        IN uintn cert_chain_buffer_size,
+                                        OUT void **trust_anchor OPTIONAL,
+                                        OUT uintn *trust_anchor_size OPTIONAL);
 
 /**
  * This function generates the challenge signature based upon m1m2 for authentication.
@@ -642,8 +642,8 @@ bool spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
  * @retval false challenge signature is not generated.
  **/
 bool spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                               IN bool is_requester,
-                                               OUT uint8_t *signature);
+                                            IN bool is_requester,
+                                            OUT uint8_t *signature);
 
 /**
  * This function verifies the certificate chain hash.
@@ -672,9 +672,9 @@ spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
  * @retval false signature verification fail.
  **/
 bool spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                             IN bool is_requester,
-                                             IN void *sign_data,
-                                             IN uintn sign_data_size);
+                                          IN bool is_requester,
+                                          IN void *sign_data,
+                                          IN uintn sign_data_size);
 
 /**
  * This function calculate the measurement summary hash size.
@@ -704,8 +704,8 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
  * @retval false measurement signature is not generated.
  **/
 bool spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
-                                            IN spdm_session_info_t *session_info,
-                                            OUT uint8_t *signature);
+                                         IN spdm_session_info_t *session_info,
+                                         OUT uint8_t *signature);
 
 /**
  * This function verifies the measurement signature based upon l1l2.
@@ -721,9 +721,9 @@ bool spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
  * @retval false signature verification fail.
  **/
 bool spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN void *sign_data,
-                                          IN uintn sign_data_size);
+                                       IN spdm_session_info_t *session_info,
+                                       IN void *sign_data,
+                                       IN uintn sign_data_size);
 
 /**
  * This function generates the key exchange signature based upon TH.
@@ -782,9 +782,9 @@ bool spdm_verify_key_exchange_rsp_signature(
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN void *hmac_data,
-                                          IN uintn hmac_data_size);
+                                       IN spdm_session_info_t *session_info,
+                                       IN void *hmac_data,
+                                       IN uintn hmac_data_size);
 
 /**
  * This function generates the finish signature based upon TH.
@@ -797,8 +797,8 @@ bool spdm_verify_key_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false finish signature is not generated.
  **/
 bool spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
-                                           IN spdm_session_info_t *session_info,
-                                           OUT uint8_t *signature);
+                                        IN spdm_session_info_t *session_info,
+                                        OUT uint8_t *signature);
 
 /**
  * This function generates the finish HMAC based upon TH.
@@ -811,8 +811,8 @@ bool spdm_generate_finish_req_signature(IN spdm_context_t *spdm_context,
  * @retval false finish HMAC is not generated.
  **/
 bool spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                      IN spdm_session_info_t *session_info,
-                                      OUT void *hmac);
+                                   IN spdm_session_info_t *session_info,
+                                   OUT void *hmac);
 
 /**
  * This function verifies the finish signature based upon TH.
@@ -826,9 +826,9 @@ bool spdm_generate_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false signature verification fail.
  **/
 bool spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
-                                         IN spdm_session_info_t *session_info,
-                                         IN void *sign_data,
-                                         IN intn sign_data_size);
+                                      IN spdm_session_info_t *session_info,
+                                      IN void *sign_data,
+                                      IN intn sign_data_size);
 
 /**
  * This function verifies the finish HMAC based upon TH.
@@ -842,8 +842,8 @@ bool spdm_verify_finish_req_signature(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                    IN spdm_session_info_t *session_info,
-                                    IN uint8_t *hmac, IN uintn hmac_size);
+                                 IN spdm_session_info_t *session_info,
+                                 IN uint8_t *hmac, IN uintn hmac_size);
 
 /**
  * This function generates the finish HMAC based upon TH.
@@ -856,8 +856,8 @@ bool spdm_verify_finish_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false finish HMAC is not generated.
  **/
 bool spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-                                      IN spdm_session_info_t *session_info,
-                                      OUT uint8_t *hmac);
+                                   IN spdm_session_info_t *session_info,
+                                   OUT uint8_t *hmac);
 
 /**
  * This function verifies the finish HMAC based upon TH.
@@ -871,9 +871,9 @@ bool spdm_generate_finish_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_finish_rsp_hmac(IN spdm_context_t *spdm_context,
-                                    IN spdm_session_info_t *session_info,
-                                    IN void *hmac_data,
-                                    IN uintn hmac_data_size);
+                                 IN spdm_session_info_t *session_info,
+                                 IN void *hmac_data,
+                                 IN uintn hmac_data_size);
 
 /**
  * This function generates the PSK exchange HMAC based upon TH.
@@ -902,9 +902,9 @@ spdm_generate_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_psk_exchange_rsp_hmac(IN spdm_context_t *spdm_context,
-                                          IN spdm_session_info_t *session_info,
-                                          IN void *hmac_data,
-                                          IN uintn hmac_data_size);
+                                       IN spdm_session_info_t *session_info,
+                                       IN void *hmac_data,
+                                       IN uintn hmac_data_size);
 
 /**
  * This function generates the PSK finish HMAC based upon TH.
@@ -933,8 +933,8 @@ spdm_generate_psk_exchange_req_hmac(IN spdm_context_t *spdm_context,
  * @retval false HMAC verification fail.
  **/
 bool spdm_verify_psk_finish_req_hmac(IN spdm_context_t *spdm_context,
-                                        IN spdm_session_info_t *session_info,
-                                        IN uint8_t *hmac, IN uintn hmac_size);
+                                     IN spdm_session_info_t *session_info,
+                                     IN uint8_t *hmac, IN uintn hmac_size);
 
 /**
  * Return the size in bytes of opaque data supproted version.
@@ -1058,9 +1058,9 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
  * @retval false                      Negotiation failed.
  */
 bool spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
-                                          IN spdm_version_number_t *req_ver_set,
-                                          IN uintn req_ver_num,
-                                          IN spdm_version_number_t *res_ver_set,
-                                          IN uintn res_ver_num);
+                                       IN spdm_version_number_t *req_ver_set,
+                                       IN uintn req_ver_num,
+                                       IN spdm_version_number_t *res_ver_set,
+                                       IN uintn res_ver_num);
 
 #endif
