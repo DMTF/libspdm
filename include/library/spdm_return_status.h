@@ -1,25 +1,32 @@
 #ifndef SPDM_RETURN_STATUS_H
 #define SPDM_RETURN_STATUS_H
 
+#include <stdint.h>
+
 /** The layout of libspdm_return_t is
- *    [31] - severity
- * [30:24] - reserved
+ * [31:28] - severity
+ * [27:24] - reserved
  * [23:16] - source
- *  [15:0] - code
+ * [15:00] - code
  **/
 typedef uint32_t libspdm_return_t;
 
-/* Returns 0 if status is LIBSPDM_STATUS_SUCCESS else it returns 1. */
-#define LIBSPDM_STATUS_IS_ERR(status) ((status) >> 31)
+/* Returns 1 if severity is LIBSPDM_SEVERITY_SUCCESS else it returns 0. */
+#define LIBSPDM_STATUS_IS_SUCCESS(status) \
+    (LIBSPDM_STATUS_SEVERITY(status) == LIBSPDM_SEVERITY_SUCCESS)
+
+/* Returns 1 if severity is LIBSPDM_SEVERITY_ERROR else it returns 0. */
+#define LIBSPDM_STATUS_IS_ERROR(status) \
+    (LIBSPDM_STATUS_SEVERITY(status) == LIBSPDM_SEVERITY_ERROR)
 
 /* Returns the severity of the status. */
-#define LIBSPDM_STATUS_SEVERITY(status) ((status) >> 31)
+#define LIBSPDM_STATUS_SEVERITY(status) (((status) >> 28) &0xf)
 
 /* Returns the source of the status. */
 #define LIBSPDM_STATUS_SOURCE(status) (((status) >> 16) & 0xff)
 
 #define LIBSPDM_SEVERITY_SUCCESS 0x0
-#define LIBSPDM_SEVERITY_ERROR 0x1
+#define LIBSPDM_SEVERITY_ERROR 0x8
 
 #define LIBSPDM_SOURCE_SUCCESS 0x00
 #define LIBSPDM_SOURCE_CORE 0x01
@@ -30,7 +37,7 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_SOURCE_RNG 0x06
 
 #define LIBSPDM_STATUS_CONSTRUCT(severity, source, code) \
-    (((severity) << 31) | ((source) << 16) | (code))
+    (((severity) << 28) | ((source) << 16) | (code))
 
 /* Success status is always 0x00000000. */
 #define LIBSPDM_STATUS_SUCCESS \
