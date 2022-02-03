@@ -15,6 +15,8 @@
 #ifndef __BASE_MEMORY_LIB__
 #define __BASE_MEMORY_LIB__
 
+#include <stddef.h>
+
 /**
  * Copies bytes from a source buffer to a destination buffer.
  *

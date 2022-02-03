@@ -10,6 +10,7 @@
 
 #include "base.h"
 #include "library/debuglib.h"
+#include <stddef.h>
 
 /**
  * Copies bytes from a source buffer to a destination buffer.
