@@ -35,7 +35,7 @@
  *
  * @return   0 on success. non-zero on error.
  *
-**/
+ **/
 int copy_mem_s(OUT void* dst_buf, IN size_t dst_len, IN const void* src_buf, IN size_t len)
 {
     volatile uint8_t* dst;
