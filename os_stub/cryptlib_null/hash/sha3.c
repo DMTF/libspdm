@@ -65,7 +65,7 @@ bool sha3_256_init(OUT void *sha3_256_context)
  *
  **/
 bool sha3_256_duplicate(IN const void *sha3_256_context,
-                           OUT void *new_sha3_256_context)
+                        OUT void *new_sha3_256_context)
 {
     return false;
 }
@@ -89,7 +89,7 @@ bool sha3_256_duplicate(IN const void *sha3_256_context,
  *
  **/
 bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return false;
 }
@@ -138,7 +138,7 @@ bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_256_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return false;
 }
@@ -198,7 +198,7 @@ bool sha3_384_init(OUT void *sha3_384_context)
  *
  **/
 bool sha3_384_duplicate(IN const void *sha3_384_context,
-                           OUT void *new_sha3_384_context)
+                        OUT void *new_sha3_384_context)
 {
     return false;
 }
@@ -222,7 +222,7 @@ bool sha3_384_duplicate(IN const void *sha3_384_context,
  *
  **/
 bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return false;
 }
@@ -271,7 +271,7 @@ bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_384_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return false;
 }
@@ -331,7 +331,7 @@ bool sha3_512_init(OUT void *sha3_512_context)
  *
  **/
 bool sha3_512_duplicate(IN const void *sha3_512_context,
-                           OUT void *new_sha3_512_context)
+                        OUT void *new_sha3_512_context)
 {
     return false;
 }
@@ -355,7 +355,7 @@ bool sha3_512_duplicate(IN const void *sha3_512_context,
  *
  **/
 bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return false;
 }
@@ -404,7 +404,7 @@ bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_512_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return false;
 }

@@ -66,7 +66,7 @@ bool sha256_init(OUT void *sha256_context)
  *
  **/
 bool sha256_duplicate(IN const void *sha256_context,
-                         OUT void *new_sha256_context)
+                      OUT void *new_sha256_context)
 {
     ASSERT(false);
     return false;
@@ -91,7 +91,7 @@ bool sha256_duplicate(IN const void *sha256_context,
  *
  **/
 bool sha256_update(IN OUT void *sha256_context, IN const void *data,
-                      IN uintn data_size)
+                   IN uintn data_size)
 {
     ASSERT(false);
     return false;
@@ -142,7 +142,7 @@ bool sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha256_hash_all(IN const void *data, IN uintn data_size,
-                        OUT uint8_t *hash_value)
+                     OUT uint8_t *hash_value)
 {
     ASSERT(false);
     return false;
@@ -206,7 +206,7 @@ bool sha384_init(OUT void *sha384_context)
  *
  **/
 bool sha384_duplicate(IN const void *sha384_context,
-                         OUT void *new_sha384_context)
+                      OUT void *new_sha384_context)
 {
     ASSERT(false);
     return false;
@@ -231,7 +231,7 @@ bool sha384_duplicate(IN const void *sha384_context,
  *
  **/
 bool sha384_update(IN OUT void *sha384_context, IN const void *data,
-                      IN uintn data_size)
+                   IN uintn data_size)
 {
     ASSERT(false);
     return false;
@@ -282,7 +282,7 @@ bool sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha384_hash_all(IN const void *data, IN uintn data_size,
-                        OUT uint8_t *hash_value)
+                     OUT uint8_t *hash_value)
 {
     ASSERT(false);
     return false;
@@ -346,7 +346,7 @@ bool sha512_init(OUT void *sha512_context)
  *
  **/
 bool sha512_duplicate(IN const void *sha512_context,
-                         OUT void *new_sha512_context)
+                      OUT void *new_sha512_context)
 {
     ASSERT(false);
     return false;
@@ -371,7 +371,7 @@ bool sha512_duplicate(IN const void *sha512_context,
  *
  **/
 bool sha512_update(IN OUT void *sha512_context, IN const void *data,
-                      IN uintn data_size)
+                   IN uintn data_size)
 {
     ASSERT(false);
     return false;
@@ -422,7 +422,7 @@ bool sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha512_hash_all(IN const void *data, IN uintn data_size,
-                        OUT uint8_t *hash_value)
+                     OUT uint8_t *hash_value)
 {
     ASSERT(false);
     return false;

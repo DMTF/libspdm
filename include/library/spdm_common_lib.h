@@ -787,13 +787,13 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_finish(IN void *spdm_context,
-                                        IN void *spdm_session_info,
-                                        IN uint8_t *cert_chain_buffer,
-                                        OPTIONAL IN uintn cert_chain_buffer_size,
-                                        OPTIONAL IN uint8_t *mut_cert_chain_buffer,
-                                        OPTIONAL IN uintn mut_cert_chain_buffer_size,
-                                        OPTIONAL IN OUT uintn *th_data_buffer_size,
-                                        OUT void *th_data_buffer);
+                                     IN void *spdm_session_info,
+                                     IN uint8_t *cert_chain_buffer,
+                                     OPTIONAL IN uintn cert_chain_buffer_size,
+                                     OPTIONAL IN uint8_t *mut_cert_chain_buffer,
+                                     OPTIONAL IN uintn mut_cert_chain_buffer_size,
+                                     OPTIONAL IN OUT uintn *th_data_buffer_size,
+                                     OUT void *th_data_buffer);
 #else
 /*
  * This function calculates current TH hash with message A, message K and message F.
@@ -806,9 +806,9 @@ bool libspdm_calculate_th_for_finish(IN void *spdm_context,
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
-                                             IN void *spdm_session_info,
-                                             OPTIONAL IN OUT uintn *th_hash_buffer_size,
-                                             OUT void *th_hash_buffer);
+                                          IN void *spdm_session_info,
+                                          OPTIONAL IN OUT uintn *th_hash_buffer_size,
+                                          OUT void *th_hash_buffer);
 
 /*
  * This function calculates current TH hmac with message A, message K and message F, with response finished_key.
@@ -821,9 +821,9 @@ bool libspdm_calculate_th_hash_for_finish(IN void *spdm_context,
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
-                                                 IN void *spdm_session_info,
-                                                 OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-                                                 OUT void *th_hmac_buffer);
+                                              IN void *spdm_session_info,
+                                              OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                                              OUT void *th_hmac_buffer);
 
 /*
  * This function calculates current TH hmac with message A, message K and message F, with request finished_key.
@@ -836,9 +836,9 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(IN void *spdm_context,
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_req(IN void *spdm_context,
-                                                 IN void *spdm_session_info,
-                                                 OPTIONAL IN OUT uintn *th_hmac_buffer_size,
-                                                 OUT void *th_hmac_buffer);
+                                              IN void *spdm_session_info,
+                                              OPTIONAL IN OUT uintn *th_hmac_buffer_size,
+                                              OUT void *th_hmac_buffer);
 #endif
 
 /*
@@ -882,8 +882,8 @@ return_status libspdm_calculate_th2_hash(IN void *spdm_context,
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
-                                           OUT void **cert_chain_buffer,
-                                           OUT uintn *cert_chain_buffer_size);
+                                        OUT void **cert_chain_buffer,
+                                        OUT uintn *cert_chain_buffer_size);
 
 /**
  * This function returns peer certificate chain data without spdm_cert_chain_t header.
@@ -896,8 +896,8 @@ bool libspdm_get_peer_cert_chain_buffer(IN void *spdm_context,
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_data(IN void *spdm_context,
-                                         OUT void **cert_chain_data,
-                                         OUT uintn *cert_chain_data_size);
+                                      OUT void **cert_chain_data,
+                                      OUT uintn *cert_chain_data_size);
 
 /**
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
@@ -910,8 +910,8 @@ bool libspdm_get_peer_cert_chain_data(IN void *spdm_context,
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
-                                            OUT void **cert_chain_buffer,
-                                            OUT uintn *cert_chain_buffer_size);
+                                         OUT void **cert_chain_buffer,
+                                         OUT uintn *cert_chain_buffer_size);
 
 /**
  * This function returns local used certificate chain data without spdm_cert_chain_t header.
@@ -924,8 +924,8 @@ bool libspdm_get_local_cert_chain_buffer(IN void *spdm_context,
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_data(IN void *spdm_context,
-                                          OUT void **cert_chain_data,
-                                          OUT uintn *cert_chain_data_size);
+                                       OUT void **cert_chain_data,
+                                       OUT uintn *cert_chain_data_size);
 
 /**
  * Reads a 24-bit value from memory that may be unaligned.

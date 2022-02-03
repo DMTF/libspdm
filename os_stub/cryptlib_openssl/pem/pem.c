@@ -74,9 +74,9 @@ intn PasswordCallback(OUT char *buf, IN intn size, IN intn flag, IN void *key)
  *
  **/
 bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **rsa_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **rsa_context)
 {
     bool status;
     BIO *pem_bio;
@@ -154,8 +154,8 @@ done:
  *
  **/
 bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                                    IN const char *password,
-                                    OUT void **ec_context)
+                                 IN const char *password,
+                                 OUT void **ec_context)
 {
     bool status;
     BIO *pem_bio;
@@ -233,9 +233,9 @@ done:
  *
  **/
 bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **ecd_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **ecd_context)
 {
     bool status;
     BIO *pem_bio;
@@ -320,9 +320,9 @@ done:
  *
  **/
 bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **sm2_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **sm2_context)
 {
     bool status;
     BIO *pem_bio;

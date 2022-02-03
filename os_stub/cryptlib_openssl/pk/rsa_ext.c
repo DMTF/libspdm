@@ -51,7 +51,7 @@
  *
  **/
 bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                    OUT uint8_t *big_number, IN OUT uintn *bn_size)
+                 OUT uint8_t *big_number, IN OUT uintn *bn_size)
 {
     RSA *rsa_key;
     BIGNUM *bn_key;
@@ -176,8 +176,8 @@ bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  *
  **/
 bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
-                         IN const uint8_t *public_exponent,
-                         IN uintn public_exponent_size)
+                      IN const uint8_t *public_exponent,
+                      IN uintn public_exponent_size)
 {
     BIGNUM *bn_e;
     bool ret_val;
@@ -290,9 +290,9 @@ bool rsa_check_key(IN void *rsa_context)
  *
  **/
 bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                                IN const uint8_t *message_hash,
-                                IN uintn hash_size, OUT uint8_t *signature,
-                                IN OUT uintn *sig_size)
+                             IN const uint8_t *message_hash,
+                             IN uintn hash_size, OUT uint8_t *signature,
+                             IN OUT uintn *sig_size)
 {
     RSA *rsa;
     uintn size;
@@ -365,8 +365,8 @@ bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
     }
 
     return (bool)RSA_sign(digest_type, message_hash, (uint32_t)hash_size,
-                             signature, (uint32_t *)sig_size,
-                             (RSA *)rsa_context);
+                          signature, (uint32_t *)sig_size,
+                          (RSA *)rsa_context);
 }
 
 /**
@@ -399,8 +399,8 @@ bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  *
  **/
 bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
-                     IN const uint8_t *message_hash, IN uintn hash_size,
-                     OUT uint8_t *signature, IN OUT uintn *sig_size)
+                  IN const uint8_t *message_hash, IN uintn hash_size,
+                  OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     RSA *rsa;
     bool result;

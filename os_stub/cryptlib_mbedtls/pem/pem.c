@@ -49,9 +49,9 @@ static uintn ascii_str_len(IN const char *string)
  *
  **/
 bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **rsa_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **rsa_context)
 {
     int32_t ret;
     mbedtls_pk_context pk;
@@ -135,8 +135,8 @@ bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
  *
  **/
 bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                                    IN const char *password,
-                                    OUT void **ec_context)
+                                 IN const char *password,
+                                 OUT void **ec_context)
 {
     int32_t ret;
     mbedtls_pk_context pk;
@@ -225,9 +225,9 @@ bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
  *
  **/
 bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **ecd_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **ecd_context)
 {
     return false;
 }
@@ -250,9 +250,9 @@ bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
  *
  **/
 bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                     IN uintn pem_size,
-                                     IN const char *password,
-                                     OUT void **sm2_context)
+                                  IN uintn pem_size,
+                                  IN const char *password,
+                                  OUT void **sm2_context)
 {
     return false;
 }

@@ -18,7 +18,7 @@
  * @retval False                        The received Capabilities flag is invalid.
  **/
 bool spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
-                                             IN uint8_t version)
+                                          IN uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;

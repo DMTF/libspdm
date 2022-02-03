@@ -25,7 +25,7 @@
  *
  **/
 bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
-                                   OUT uint8_t **single_x509_cert)
+                                OUT uint8_t **single_x509_cert)
 {
     ASSERT(false);
     return false;
@@ -91,7 +91,7 @@ void x509_stack_free(IN void *x509_stack)
  * @retval      FALSe  Failed to get tag or tag not match
  **/
 bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
-                     IN uint32_t tag)
+                  IN uint32_t tag)
 {
     ASSERT(false);
     return false;
@@ -115,8 +115,8 @@ bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
  *
  **/
 bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
-                              OUT uint8_t *cert_subject,
-                              IN OUT uintn *subject_size)
+                           OUT uint8_t *cert_subject,
+                           IN OUT uintn *subject_size)
 {
     ASSERT(false);
     return false;
@@ -208,7 +208,7 @@ x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **rsa_context)
+                                  OUT void **rsa_context)
 {
     ASSERT(false);
     return false;
@@ -231,7 +231,7 @@ bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                    OUT void **ec_context)
+                                 OUT void **ec_context)
 {
     ASSERT(false);
     return false;
@@ -254,7 +254,7 @@ bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **ecd_context)
+                                  OUT void **ecd_context)
 {
     ASSERT(false);
     return false;
@@ -277,7 +277,7 @@ bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **sm2_context)
+                                  OUT void **sm2_context)
 {
     ASSERT(false);
     return false;
@@ -300,7 +300,7 @@ bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
-                         IN const uint8_t *ca_cert, IN uintn ca_cert_size)
+                      IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
     ASSERT(false);
     return false;
@@ -325,7 +325,7 @@ bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
  *                trusted CA.
  **/
 bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
-                               IN uint8_t *cert_chain, IN uintn cert_chain_length)
+                            IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
     ASSERT(false);
     return false;
@@ -350,9 +350,9 @@ bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
  * @retval  false  Failed to get certificate from certificate chain.
  **/
 bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
-                                      IN uintn cert_chain_length,
-                                      IN int32_t cert_index, OUT uint8_t **cert,
-                                      OUT uintn *cert_length)
+                                   IN uintn cert_chain_length,
+                                   IN int32_t cert_index, OUT uint8_t **cert,
+                                   OUT uintn *cert_length)
 {
     ASSERT(false);
     return false;
@@ -375,7 +375,7 @@ bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
  *
  **/
 bool x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
-                          OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
+                       OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
     ASSERT(false);
     return false;
@@ -455,8 +455,8 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
-                             OUT uint8_t *cert_issuer,
-                             IN OUT uintn *issuer_size)
+                          OUT uint8_t *cert_issuer,
+                          IN OUT uintn *issuer_size)
 {
     ASSERT(false);
     return false;
@@ -609,8 +609,8 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
  * @retval  false  This interface is not supported.
  **/
 bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
-                          IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
-                          IN OUT uintn *to_size)
+                       IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
+                       IN OUT uintn *to_size)
 {
     ASSERT(false);
     return false;
@@ -628,7 +628,7 @@ bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  This interface is not supported.
  **/
 bool x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
-                           OUT uintn *usage)
+                        OUT uintn *usage)
 {
     ASSERT(false);
     return false;

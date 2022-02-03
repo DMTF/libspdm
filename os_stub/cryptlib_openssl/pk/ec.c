@@ -90,7 +90,7 @@ void ec_free(IN void *ec_context)
  *
  **/
 bool ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
-                       IN uintn public_key_size)
+                    IN uintn public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -140,7 +140,7 @@ bool ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
     }
 
     ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -182,7 +182,7 @@ done:
  *
  **/
 bool ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
-                       IN OUT uintn *public_key_size)
+                    IN OUT uintn *public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -239,7 +239,7 @@ bool ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
     }
 
     ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -331,7 +331,7 @@ bool ec_check_key(IN void *ec_context)
  *
  **/
 bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
-                        IN OUT uintn *public_size)
+                     IN OUT uintn *public_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -391,7 +391,7 @@ bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
     }
 
     ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -452,8 +452,8 @@ done:
  *
  **/
 bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
-                       IN uintn peer_public_size, OUT uint8_t *key,
-                       IN OUT uintn *key_size)
+                    IN uintn peer_public_size, OUT uint8_t *key,
+                    IN OUT uintn *key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -509,7 +509,7 @@ bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
     }
 
     ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                       bn_x, bn_y, NULL);
+                                                    bn_x, bn_y, NULL);
     if (!ret_val) {
         goto done;
     }
@@ -573,8 +573,8 @@ done:
  *
  **/
 bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-                   IN const uint8_t *message_hash, IN uintn hash_size,
-                   OUT uint8_t *signature, IN OUT uintn *sig_size)
+                IN const uint8_t *message_hash, IN uintn hash_size,
+                OUT uint8_t *signature, IN OUT uintn *sig_size)
 {
     EC_KEY *ec_key;
     ECDSA_SIG *ecdsa_sig;
@@ -687,8 +687,8 @@ bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
  *
  **/
 bool ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-                     IN const uint8_t *message_hash, IN uintn hash_size,
-                     IN const uint8_t *signature, IN uintn sig_size)
+                  IN const uint8_t *message_hash, IN uintn hash_size,
+                  IN const uint8_t *signature, IN uintn sig_size)
 {
     int32_t result;
     EC_KEY *ec_key;

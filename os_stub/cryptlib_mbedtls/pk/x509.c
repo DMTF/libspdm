@@ -38,7 +38,7 @@ static const uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
  *
  **/
 bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
-                                   OUT uint8_t **single_x509_cert)
+                                OUT uint8_t **single_x509_cert)
 {
     mbedtls_x509_crt *mbedtls_cert;
     int32_t ret;
@@ -61,7 +61,7 @@ bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
 }
 
 static bool X509ConstructCertificateStackV(IN OUT uint8_t **x509_stack,
-                                              IN VA_LIST args)
+                                           IN VA_LIST args)
 {
     uint8_t *cert;
     uintn cert_size;
@@ -178,7 +178,7 @@ void x509_stack_free(IN void *x509_stack)
  * @retval      FALSe  Failed to get tag or tag not match
  **/
 bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
-                     IN uint32_t tag)
+                  IN uint32_t tag)
 {
     if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
         return true;
@@ -205,8 +205,8 @@ bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
  *
  **/
 bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
-                              OUT uint8_t *cert_subject,
-                              IN OUT uintn *subject_size)
+                           OUT uint8_t *cert_subject,
+                           IN OUT uintn *subject_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
@@ -417,7 +417,7 @@ x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **rsa_context)
+                                  OUT void **rsa_context)
 {
     mbedtls_x509_crt crt;
     mbedtls_rsa_context *rsa;
@@ -468,7 +468,7 @@ bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                    OUT void **ec_context)
+                                 OUT void **ec_context)
 {
     mbedtls_x509_crt crt;
     mbedtls_ecdh_context *ecdh;
@@ -523,7 +523,7 @@ bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **ecd_context)
+                                  OUT void **ecd_context)
 {
     return false;
 }
@@ -545,7 +545,7 @@ bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT void **sm2_context)
+                                  OUT void **sm2_context)
 {
     return false;
 }
@@ -567,7 +567,7 @@ bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
-                         IN const uint8_t *ca_cert, IN uintn ca_cert_size)
+                      IN const uint8_t *ca_cert, IN uintn ca_cert_size)
 {
     int32_t ret;
     mbedtls_x509_crt ca, end;
@@ -620,7 +620,7 @@ bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
  *                trusted CA.
  **/
 bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
-                               IN uint8_t *cert_chain, IN uintn cert_chain_length)
+                            IN uint8_t *cert_chain, IN uintn cert_chain_length)
 {
     uintn asn1_len;
     uintn preceding_cert_len;
@@ -694,9 +694,9 @@ bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
  * @retval  false  Failed to get certificate from certificate chain.
  **/
 bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
-                                      IN uintn cert_chain_length,
-                                      IN int32_t cert_index, OUT uint8_t **cert,
-                                      OUT uintn *cert_length)
+                                   IN uintn cert_chain_length,
+                                   IN int32_t cert_index, OUT uint8_t **cert,
+                                   OUT uintn *cert_length)
 {
     uintn asn1_len;
     int32_t current_index;
@@ -775,7 +775,7 @@ bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
  *
  **/
 bool x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
-                          OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
+                       OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size)
 {
     return false;
 }
@@ -903,8 +903,8 @@ cleanup:
  *
  **/
 bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
-                             OUT uint8_t *cert_issuer,
-                             IN OUT uintn *issuer_size)
+                          OUT uint8_t *cert_issuer,
+                          IN OUT uintn *issuer_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
@@ -1244,8 +1244,8 @@ cleanup:
  * @retval  false  This interface is not supported.
  **/
 bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
-                          IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
-                          IN OUT uintn *to_size)
+                       IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
+                       IN OUT uintn *to_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
@@ -1305,7 +1305,7 @@ done:
  * @retval  false  This interface is not supported.
  **/
 bool x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
-                           OUT uintn *usage)
+                        OUT uintn *usage)
 {
     mbedtls_x509_crt crt;
     int32_t ret;

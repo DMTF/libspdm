@@ -58,7 +58,7 @@ void hmac_md_free(IN void *hmac_md_ctx)
  *
  **/
 bool hmac_md_set_key(IN mbedtls_md_type_t md_type, OUT void *hmac_md_ctx,
-                        IN const uint8_t *key, IN uintn key_size)
+                     IN const uint8_t *key, IN uintn key_size)
 {
     const mbedtls_md_info_t *md_info;
     int32_t ret;
@@ -124,7 +124,7 @@ int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
  *
  **/
 bool hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_ctx,
-                          OUT void *new_hmac_md_ctx)
+                       OUT void *new_hmac_md_ctx)
 {
     int32_t ret;
     const mbedtls_md_info_t *md_info;
@@ -175,7 +175,7 @@ bool hmac_md_duplicate(IN mbedtls_md_type_t md_type, IN const void *hmac_md_ctx,
  *
  **/
 bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-                       IN uintn data_size)
+                    IN uintn data_size)
 {
     int32_t ret;
 
@@ -255,8 +255,8 @@ bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
  *
  **/
 bool hmac_md_all(IN mbedtls_md_type_t md_type, IN const void *data,
-                    IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-                    OUT uint8_t *hmac_value)
+                 IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
+                 OUT uint8_t *hmac_value)
 {
     const mbedtls_md_info_t *md_info;
     int32_t ret;
@@ -310,7 +310,7 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx)
  *
  **/
 bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
-                            IN uintn key_size)
+                         IN uintn key_size)
 {
     return hmac_md_set_key(MBEDTLS_MD_SHA256, hmac_sha256_ctx, key,
                            key_size);
@@ -330,7 +330,7 @@ bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
  *
  **/
 bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
-                              OUT void *new_hmac_sha256_ctx)
+                           OUT void *new_hmac_sha256_ctx)
 {
     return hmac_md_duplicate(MBEDTLS_MD_SHA256, hmac_sha256_ctx, new_hmac_sha256_ctx);
 }
@@ -354,7 +354,7 @@ bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
  *
  **/
 bool hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
-                           IN uintn data_size)
+                        IN uintn data_size)
 {
     return hmac_md_update(hmac_sha256_ctx, data, data_size);
 }
@@ -405,8 +405,8 @@ bool hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
  *
  **/
 bool hmac_sha256_all(IN const void *data, IN uintn data_size,
-                        IN const uint8_t *key, IN uintn key_size,
-                        OUT uint8_t *hmac_value)
+                     IN const uint8_t *key, IN uintn key_size,
+                     OUT uint8_t *hmac_value)
 {
     return hmac_md_all(MBEDTLS_MD_SHA256, data, data_size, key, key_size,
                        hmac_value);
@@ -452,7 +452,7 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx)
  *
  **/
 bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
-                            IN uintn key_size)
+                         IN uintn key_size)
 {
     return hmac_md_set_key(MBEDTLS_MD_SHA384, hmac_sha384_ctx, key,
                            key_size);
@@ -474,7 +474,7 @@ bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
  *
  **/
 bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
-                              OUT void *new_hmac_sha384_ctx)
+                           OUT void *new_hmac_sha384_ctx)
 {
     return hmac_md_duplicate(MBEDTLS_MD_SHA384, hmac_sha384_ctx, new_hmac_sha384_ctx);
 }
@@ -500,7 +500,7 @@ bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
  *
  **/
 bool hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
-                           IN uintn data_size)
+                        IN uintn data_size)
 {
     return hmac_md_update(hmac_sha384_ctx, data, data_size);
 }
@@ -553,8 +553,8 @@ bool hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
  *
  **/
 bool hmac_sha384_all(IN const void *data, IN uintn data_size,
-                        IN const uint8_t *key, IN uintn key_size,
-                        OUT uint8_t *hmac_value)
+                     IN const uint8_t *key, IN uintn key_size,
+                     OUT uint8_t *hmac_value)
 {
     return hmac_md_all(MBEDTLS_MD_SHA384, data, data_size, key, key_size,
                        hmac_value);
@@ -600,7 +600,7 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx)
  *
  **/
 bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
-                            IN uintn key_size)
+                         IN uintn key_size)
 {
     return hmac_md_set_key(MBEDTLS_MD_SHA512, hmac_sha512_ctx, key,
                            key_size);
@@ -622,7 +622,7 @@ bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
  *
  **/
 bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
-                              OUT void *new_hmac_sha512_ctx)
+                           OUT void *new_hmac_sha512_ctx)
 {
     return hmac_md_duplicate(MBEDTLS_MD_SHA512, hmac_sha512_ctx, new_hmac_sha512_ctx);
 }
@@ -648,7 +648,7 @@ bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
  *
  **/
 bool hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
-                           IN uintn data_size)
+                        IN uintn data_size)
 {
     return hmac_md_update(hmac_sha512_ctx, data, data_size);
 }
@@ -701,8 +701,8 @@ bool hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
  *
  **/
 bool hmac_sha512_all(IN const void *data, IN uintn data_size,
-                        IN const uint8_t *key, IN uintn key_size,
-                        OUT uint8_t *hmac_value)
+                     IN const uint8_t *key, IN uintn key_size,
+                     OUT uint8_t *hmac_value)
 {
     return hmac_md_all(MBEDTLS_MD_SHA512, data, data_size, key, key_size,
                        hmac_value);

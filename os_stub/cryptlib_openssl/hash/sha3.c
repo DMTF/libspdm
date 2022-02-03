@@ -18,7 +18,7 @@ bool hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
 bool hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
 bool hash_md_final(IN void *md_ctx, OUT void *hash_value);
 bool hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-                         OUT uint8_t *hash_value);
+                      OUT uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
@@ -76,7 +76,7 @@ bool sha3_256_init(OUT void *sha3_256_context)
  *
  **/
 bool sha3_256_duplicate(IN const void *sha3_256_context,
-                           OUT void *new_sha3_256_context)
+                        OUT void *new_sha3_256_context)
 {
     return hash_md_duplicate (sha3_256_context, new_sha3_256_context);
 }
@@ -100,7 +100,7 @@ bool sha3_256_duplicate(IN const void *sha3_256_context,
  *
  **/
 bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return hash_md_update (sha3_256_context, data, data_size);
 }
@@ -149,7 +149,7 @@ bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_256_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
 }
@@ -210,7 +210,7 @@ bool sha3_384_init(OUT void *sha3_384_context)
  *
  **/
 bool sha3_384_duplicate(IN const void *sha3_384_context,
-                           OUT void *new_sha3_384_context)
+                        OUT void *new_sha3_384_context)
 {
     return hash_md_duplicate (sha3_384_context, new_sha3_384_context);
 }
@@ -234,7 +234,7 @@ bool sha3_384_duplicate(IN const void *sha3_384_context,
  *
  **/
 bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return hash_md_update (sha3_384_context, data, data_size);
 }
@@ -283,7 +283,7 @@ bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_384_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
 }
@@ -344,7 +344,7 @@ bool sha3_512_init(OUT void *sha3_512_context)
  *
  **/
 bool sha3_512_duplicate(IN const void *sha3_512_context,
-                           OUT void *new_sha3_512_context)
+                        OUT void *new_sha3_512_context)
 {
     return hash_md_duplicate (sha3_512_context, new_sha3_512_context);
 }
@@ -368,7 +368,7 @@ bool sha3_512_duplicate(IN const void *sha3_512_context,
  *
  **/
 bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
-                        IN uintn data_size)
+                     IN uintn data_size)
 {
     return hash_md_update (sha3_512_context, data, data_size);
 }
@@ -417,7 +417,7 @@ bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
  *
  **/
 bool sha3_512_hash_all(IN const void *data, IN uintn data_size,
-                          OUT uint8_t *hash_value)
+                       OUT uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
 }
