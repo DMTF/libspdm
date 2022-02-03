@@ -34,7 +34,7 @@ extern uint16_t m_use_req_asym_algo;
 extern uint16_t m_use_dhe_algo;
 extern uint16_t m_use_aead_algo;
 extern uint16_t m_use_key_schedule_algo;
-extern uint8_t  m_use_TCB_hash_value[LIBSPDM_MAX_HASH_SIZE];
+extern uint8_t m_use_TCB_hash_value[LIBSPDM_MAX_HASH_SIZE];
 
 
 /* SPDM reserved error code
