@@ -18,16 +18,16 @@
  * @param[in]   length        size of the buffer, in bytes,  to fill with.
  * @param[out]  RandBuffer    Pointer to the buffer to store the random result.
  *
- * @retval TRUE        Random bytes generation succeeded.
- * @retval FALSE       Failed to request random bytes.
+ * @retval true        Random bytes generation succeeded.
+ * @retval false       Failed to request random bytes.
  *
  **/
-static boolean rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
+static bool rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
 {
-    boolean ret;
+    bool ret;
     uint64_t temp_rand;
 
-    ret = FALSE;
+    ret = false;
 
     if (RandBuffer == NULL) {
         DEBUG((DEBUG_ERROR,
@@ -67,7 +67,7 @@ static boolean rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
  */
 size_t rand_pool_acquire_entropy(RAND_POOL *pool)
 {
-    boolean ret;
+    bool ret;
     size_t Bytes_needed;
     unsigned char *buffer;
 
@@ -77,7 +77,7 @@ size_t rand_pool_acquire_entropy(RAND_POOL *pool)
 
         if (buffer != NULL) {
             ret = rand_get_bytes(Bytes_needed, buffer);
-            if (FALSE == ret) {
+            if (false == ret) {
                 rand_pool_add_end(pool, 0, 0);
             } else {
                 rand_pool_add_end(pool, Bytes_needed,
