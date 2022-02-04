@@ -1948,7 +1948,7 @@ return_status libspdm_init_context(IN void *context)
     spdm_context->local_context.secured_message_version.spdm_version_count =
         1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
