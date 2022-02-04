@@ -21,15 +21,16 @@
  * This function copies "len" bytes from "src_buf" to "dst_buf".
  *
  * Asserts and returns a non-zero value if any of the following are true:
- *   1) ("src_buf" or "dst_buf" are NULL) and "len" is greater 0.
+ *   1) "src_buf" or "dst_buf" are NULL.
  *   2) "src_buf" and "dst_buf" overlap.
  *   3) "len" is greater than "dst_len".
  *   4) "len" or "dst_len" is greater than (MAX_ADDRESS - "dst_buf" + 1).
  *   5) "len" or "dst_len" is greater than (MAX_ADDRESS - "src_buf" + 1).
  *   6) "len" or "dst_len" is greater than (SIZE_MAX >> 1).
  *
- * In case of error, the "dst_buf" is left unmodifed. This behavior is different
- * than memcopy_s, which zeros the "dst_buf" if "dst_buf" is valid.
+ * In case of error, the "dst_buf" is left unmodifed.
+ * This behavior is different than C11 memcopy_s, which zeros the "dst_buf"
+ * if there is a runtime violation.
  *
  * @param    dst_buf   Destination buffer to copy to.
  * @param    dst_len   Maximum length in bytes of the destination buffer.
