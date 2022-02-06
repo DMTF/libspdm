@@ -173,7 +173,7 @@ return_status spdm_get_response_capabilities(IN void *context,
     if (!spdm_check_request_version_compability(
             spdm_context, spdm_request->header.spdm_version)) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
     }
 
