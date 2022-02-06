@@ -1997,6 +1997,7 @@ void libspdm_reset_context(IN void *context)
 
     spdm_context = context;
     /*Clear all info about last connection*/
+    zero_mem(&spdm_context->connection_info.version, sizeof(spdm_version_number_t));
     zero_mem(&spdm_context->connection_info.capability, sizeof(spdm_device_capability_t));
     zero_mem(&spdm_context->connection_info.algorithm, sizeof(spdm_device_algorithm_t));
     zero_mem(&spdm_context->last_spdm_error, sizeof(libspdm_error_struct_t));
