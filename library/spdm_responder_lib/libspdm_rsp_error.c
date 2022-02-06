@@ -36,6 +36,10 @@ return_status libspdm_generate_error_response(IN void *context,
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_get_connection_version (context);
+    if (spdm_response->header.spdm_version == 0) {
+        /* if version is not negotiated, then use default version 1.0 */
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    }
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
