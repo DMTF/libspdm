@@ -45,8 +45,8 @@ int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN u
     dst = (volatile uint8_t*) dst_buf;
     src = (const volatile uint8_t*) src_buf;
 
-    // Check for case where "dst" or "dst_len" may be invalid.
-    // Do not zero "dst" in this case.
+    /* Check for case where "dst" or "dst_len" may be invalid.
+     * Do not zero "dst" in this case. */
     if (dst == NULL ||
         dst_len > MAX_ADDRESS - (uintn)dst + 1 ||
         dst_len > MAX_ADDRESS - (uintn)src + 1 ||
@@ -55,21 +55,21 @@ int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN u
         return -1;
     }
 
-    // Gaurd against invalid source. Zero "dst" in this case.
+    /* Gaurd against invalid source. Zero "dst" in this case. */
     if (src == NULL) {
         set_mem(dst_buf, dst_len, 0);
         ASSERT(0);
         return -1;
     }
 
-    // Guard against overlap case. Zero "dst" in these cases.
+    /* Guard against overlap case. Zero "dst" in these cases. */
     if ((src < dst && src + len > dst) || (dst < src && dst + len > src)) {
         set_mem(dst_buf, dst_len, 0);
         ASSERT(0);
         return -1;
     }
 
-    // Guard against invalid lengths. Zero "dst" in these cases.
+    /* Guard against invalid lengths. Zero "dst" in these cases. */
     if (len > dst_len ||
         len > MAX_ADDRESS - (uintn)dst + 1 ||
         len > MAX_ADDRESS - (uintn)src + 1 ||
