@@ -26,7 +26,7 @@ return_status libspdm_init_connection(IN void *context,
 
     spdm_context = context;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     if (RETURN_ERROR(status)) {
         return status;
     }
