@@ -60,7 +60,9 @@ return_status spdm_handle_error_response_main(
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_version(IN spdm_context_t *spdm_context);
+return_status spdm_get_version(IN spdm_context_t *spdm_context,
+                               IN OUT uint8_t *version_number_entry_count,
+                               OUT spdm_version_number_t *version_number_entry);
 
 /**
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.

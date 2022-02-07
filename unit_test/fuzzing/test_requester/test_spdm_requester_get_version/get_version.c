@@ -43,7 +43,7 @@ void test_spdm_requester_get_version(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
-    spdm_get_version(spdm_context);
+    spdm_get_version(spdm_context, NULL, NULL);
 }
 
 spdm_test_context_t m_spdm_requester_get_version_test_context = {

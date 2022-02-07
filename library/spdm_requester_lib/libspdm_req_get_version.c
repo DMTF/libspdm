@@ -24,7 +24,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
+return_status try_spdm_get_version(IN spdm_context_t *spdm_context,
+                                   IN OUT uint8_t *version_number_entry_count,
+                                   OUT spdm_version_number_t *version_number_entry)
 {
     return_status status;
     bool result;
@@ -131,6 +133,19 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
                  sizeof(spdm_version_number_t));
     }
 
+    if (version_number_entry_count != NULL && version_number_entry != NULL) {
+        if (*version_number_entry_count < spdm_response.version_number_entry_count) {
+            *version_number_entry_count = spdm_response.version_number_entry_count;
+            libspdm_reset_message_a(spdm_context);
+            return RETURN_BUFFER_TOO_SMALL;
+        } else {
+            *version_number_entry_count = spdm_response.version_number_entry_count;
+            copy_mem (version_number_entry, spdm_response.version_number_entry,
+                      spdm_response.version_number_entry_count * sizeof(spdm_version_number_t));
+            spdm_version_number_sort (version_number_entry, *version_number_entry_count);
+        }
+    }
+
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
     return RETURN_SUCCESS;
@@ -146,7 +161,9 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_version(IN spdm_context_t *spdm_context)
+return_status spdm_get_version(IN spdm_context_t *spdm_context,
+                               IN OUT uint8_t *version_number_entry_count,
+                               OUT spdm_version_number_t *version_number_entry)
 {
     uintn retry;
     return_status status;
@@ -154,7 +171,8 @@ return_status spdm_get_version(IN spdm_context_t *spdm_context)
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_version(spdm_context);
+        status = try_spdm_get_version(spdm_context,
+                                      version_number_entry_count, version_number_entry);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

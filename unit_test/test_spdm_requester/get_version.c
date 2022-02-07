@@ -407,7 +407,7 @@ void test_spdm_requester_get_version_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -425,7 +425,7 @@ void test_spdm_requester_get_version_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -443,7 +443,7 @@ void test_spdm_requester_get_version_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -461,7 +461,7 @@ void test_spdm_requester_get_version_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -479,7 +479,7 @@ void test_spdm_requester_get_version_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_NO_RESPONSE);
 }
 
@@ -498,7 +498,7 @@ void test_spdm_requester_get_version_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -519,7 +519,7 @@ void test_spdm_requester_get_version_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
@@ -541,7 +541,7 @@ void test_spdm_requester_get_version_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -562,7 +562,7 @@ void test_spdm_requester_get_version_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -583,7 +583,7 @@ void test_spdm_requester_get_version_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -602,7 +602,7 @@ void test_spdm_requester_get_version_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -621,7 +621,7 @@ void test_spdm_requester_get_version_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -641,7 +641,7 @@ void test_spdm_requester_get_version_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
 
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -666,7 +666,7 @@ void test_spdm_requester_get_version_case14(void **state) {
     error_code = SPDM_ERROR_CODE_RESERVED_00;
     while(error_code <= 0xff) {
         /* no additional state control is necessary as a new GET_VERSION resets the state*/
-        status = spdm_get_version (spdm_context);
+        status = spdm_get_version (spdm_context, NULL, NULL);
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
         error_code++;
@@ -703,7 +703,7 @@ void test_spdm_requester_get_version_case15(void **state)
     spdm_context->local_context.version.spdm_version[2] = 0x09 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[3] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[4] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    status = spdm_get_version(spdm_context);
+    status = spdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
