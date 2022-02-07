@@ -2052,7 +2052,7 @@ bool libspdm_asym_verify(
             param = get_spdm_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -2154,7 +2154,7 @@ bool libspdm_asym_verify_hash(
             param = get_spdm_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -2458,7 +2458,7 @@ bool libspdm_asym_sign(
             param = get_spdm_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -2564,7 +2564,7 @@ bool libspdm_asym_sign_hash(
             param = get_spdm_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -2771,7 +2771,7 @@ bool libspdm_req_asym_verify(
             param = get_spdm_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -2872,7 +2872,7 @@ bool libspdm_req_asym_verify_hash(
             param = get_spdm_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -3030,7 +3030,7 @@ bool libspdm_req_asym_sign(
             param = get_spdm_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
@@ -3135,7 +3135,7 @@ bool libspdm_req_asym_sign_hash(
             param = get_spdm_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         default:
-            ASSERT(false);
+            /* pass thru for rest algorithm */
             break;
         }
 
