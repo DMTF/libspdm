@@ -28,9 +28,9 @@
  *   5) "len" or "dst_len" is greater than (MAX_ADDRESS - "src_buf" + 1).
  *   6) "len" or "dst_len" is greater than (SIZE_MAX >> 1).
  *
- * In case of error, the "dst_buf" is left unmodifed.
- * This behavior is different than C11 memcopy_s, which zeros the "dst_buf"
- * if there is a runtime violation.
+ * In case of error, "dst_len" bytes of "dst_buf" is zeroed, if "dst_buf"
+ * points to a non-NULL value and "dst_len" does not exceed
+ * ((MAX_ADDRESS - "dst_buf" + 1) or (MAX_ADDRESS - "src_buf" + 1) or (SIZE_MAX >> 1)).
  *
  * @param    dst_buf   Destination buffer to copy to.
  * @param    dst_len   Maximum length in bytes of the destination buffer.
@@ -42,7 +42,7 @@
  **/
 int copy_mem_s(OUT void* dst_buf, IN uintn dst_len, IN const void* src_buf, IN uintn len);
 
-int copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len);
+void* copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
