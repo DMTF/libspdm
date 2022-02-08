@@ -190,6 +190,11 @@ return_status spdm_send_spdm_request(spdm_context_t *spdm_context,
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
+    if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
+        (request_size > spdm_context->connection_info.capability.data_transfer_size)) {
+        return RETURN_BAD_BUFFER_SIZE;
+    }
+
     if ((session_id != NULL) &&
         spdm_is_capabilities_flag_supported(
             spdm_context, true,
