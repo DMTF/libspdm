@@ -434,6 +434,18 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             status = RETURN_NOT_FOUND;
         }
     }
+
+    if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
+        (my_response_size > spdm_context->connection_info.capability.data_transfer_size)) {
+        status = libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_LARGE_RESPONSE,
+            spdm_request->request_response_code, &my_response_size,
+            my_response);
+        if (RETURN_ERROR(status)) {
+            return status;
+        }
+    }
+
     /* if return the status: Responder drop the response
      * just ignore this message
      * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
