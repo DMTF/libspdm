@@ -8,6 +8,8 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP || LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+
 #define MY_TEST_TOKEN            0x30
 #define MY_WRONG_TEST_TOKEN      0x2F
 
@@ -1372,3 +1374,4 @@ int spdm_responder_respond_if_ready_test_main(void) {
     return cmocka_run_group_tests(spdm_responder_respond_if_ready_tests, spdm_unit_test_group_setup,
                                   spdm_unit_test_group_teardown);
 }
+#endif /*LIBSPDM_ENABLE_CAPABILITY_*_CAP*/

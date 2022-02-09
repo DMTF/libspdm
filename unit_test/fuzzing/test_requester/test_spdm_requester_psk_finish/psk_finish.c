@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+
 uint8_t test_message_header;
 static uint8_t m_local_psk_hint[32];
 static uint8_t m_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -180,3 +182,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_requester_psk_finish_case1(&State);
     spdm_unit_test_group_teardown(&State);
 }
+#else
+uintn get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+    
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

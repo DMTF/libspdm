@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+
 uint8_t test_message_header;
 static uint8_t m_local_psk_hint[32];
 static uintn m_local_buffer_size;
@@ -364,3 +366,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_requester_get_measurement_case4(&State);
     spdm_unit_test_group_teardown(&State);
 }
+#else
+uintn get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+    
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

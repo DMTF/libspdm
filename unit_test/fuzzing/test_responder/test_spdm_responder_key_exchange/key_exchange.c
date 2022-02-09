@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+
 uintn get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -407,3 +409,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_responder_key_exchange_case6(&State);
     spdm_unit_test_group_teardown(&State);
 }
+#else
+uintn get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+    
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

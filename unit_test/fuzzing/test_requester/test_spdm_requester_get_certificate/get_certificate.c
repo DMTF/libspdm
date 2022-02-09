@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+
 return_status test_libspdm_verify_spdm_cert_chain(IN void *spdm_context, IN uint8_t slot_id,
                                                   IN uintn cert_chain_size, IN void *cert_chain,
                                                   OUT void **trust_anchor OPTIONAL,
@@ -200,3 +202,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_requester_get_certificate_ex_case1(&State);
     spdm_unit_test_group_teardown(&State);
 }
+#else
+uintn get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+    
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
