@@ -5,7 +5,7 @@ if(TOOLCHAIN MATCHES "VS")
 endif()
 
 if(TOOLCHAIN MATCHES "CLANG")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-library-redeclaration")
+    ADD_COMPILE_OPTIONS(-Wno-incompatible-library-redeclaration)
 endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
