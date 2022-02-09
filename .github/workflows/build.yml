@@ -12,6 +12,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
@@ -28,6 +29,9 @@ jobs:
           - GCC
           - VS2015
           - VS2019
+        configurations:
+          - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
+          - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
         exclude:
           - os: ubuntu-latest
             toolchain: VS2015
@@ -72,7 +76,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -E env CFLAGS="${{ matrix.configurations }}" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
           make -j`nproc`
       - name: Build - Windows
@@ -80,7 +84,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch}} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -E env CFLAGS="${{ matrix.configurations }}" cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           nmake copy_sample_key
           nmake
 

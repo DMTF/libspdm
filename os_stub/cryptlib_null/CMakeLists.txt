@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types -Wno-pointer-sign")
+    ADD_COMPILE_OPTIONS(-Wno-incompatible-pointer-types -Wno-pointer-sign)
 endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_null
