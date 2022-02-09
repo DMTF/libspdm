@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+
 uintn get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -373,3 +375,13 @@ void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
     test_spdm_spdm_get_response_encapsulated_response_ack_case5(&State);
     spdm_unit_test_group_teardown(&State);
 }
+#else
+uintn get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
