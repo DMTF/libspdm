@@ -317,6 +317,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     spdm_message_header_t *spdm_response;
     bool session_state_established;
     bool result;
+    uint32_t watchdog_session_id;
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
@@ -455,12 +456,14 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                 spdm_set_session_state(
                     spdm_context, *session_id,
                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+                watchdog_session_id = *session_id;
                 session_state_established = true;
             }
             break;
         case SPDM_PSK_FINISH_RSP:
             spdm_set_session_state(spdm_context, *session_id,
                                    LIBSPDM_SESSION_STATE_ESTABLISHED);
+            watchdog_session_id = *session_id;
             session_state_established = true;
             break;
         case SPDM_END_SESSION_ACK:
@@ -487,6 +490,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
                     spdm_context,
                     spdm_context->latest_session_id,
                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+                watchdog_session_id = spdm_context->latest_session_id;
                 session_state_established = true;
             }
             break;
@@ -497,7 +501,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
     }
 
     if (session_state_established) {
-        result = libspdm_start_watchdog(*session_id,
+        result = libspdm_start_watchdog(watchdog_session_id,
                                         spdm_context->local_context.heartbeat_period);
         if (!result) {
             return RETURN_DEVICE_ERROR;
