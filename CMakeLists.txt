@@ -337,7 +337,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     elseif(TOOLCHAIN STREQUAL "AFL")
         SET(CMAKE_C_COMPILER afl-gcc)
-        SET(CMAKE_C_FLAGS "-std=c99 fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration")
+        SET(CMAKE_C_FLAGS "-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration")
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
            SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
         endif()
