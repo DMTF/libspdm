@@ -92,6 +92,7 @@ void test_spdm_responder_psk_finish_rsp_case1(void **State)
     response_size = sizeof(response);
     spdm_get_response_psk_finish(spdm_context, spdm_test_context->test_buffer_size,
                                  spdm_test_context->test_buffer, &response_size, response);
+    free(data1);
 }
 
 void test_spdm_responder_psk_finish_rsp_case2(void **State)
@@ -169,6 +170,7 @@ void test_spdm_responder_psk_finish_rsp_case2(void **State)
     response_size = sizeof(response);
     spdm_get_response_psk_finish(spdm_context, m_spdm_psk_finish_request_size,
                                  &m_spdm_psk_finish_request, &response_size, response);
+    free(data1);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

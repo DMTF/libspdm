@@ -178,6 +178,7 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
+    free(data);
 }
 
 void test_spdm_get_encap_request_key_update_case2(void **State)
@@ -227,6 +228,7 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
+    free(data);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

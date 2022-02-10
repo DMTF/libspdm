@@ -85,6 +85,7 @@ void test_spdm_responder_heartbeat(void **State)
                                 spdm_test_context->test_buffer_size,
                                 spdm_test_context->test_buffer,
                                 &response_size, response);
+    free(data1);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
