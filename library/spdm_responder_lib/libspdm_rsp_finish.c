@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
+#include "hal/library/platform_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
@@ -285,6 +286,12 @@ return_status spdm_get_response_finish(IN void *context, IN uintn request_size,
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
+    }
+
+    result = libspdm_start_watchdog(session_id,
+                                    spdm_context->local_context.heartbeat_period);
+    if (!result) {
+        return RETURN_DEVICE_ERROR;
     }
 
     return RETURN_SUCCESS;
