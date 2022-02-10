@@ -89,6 +89,7 @@ void test_spdm_responder_psk_exchange_case1(void **State)
 
     spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
                                    &m_spdm_psk_exchange_request, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_psk_exchange_case2(void **State)
@@ -146,6 +147,7 @@ void test_spdm_responder_psk_exchange_case2(void **State)
 
     spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
                                    &m_spdm_psk_exchange_request, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_psk_exchange_case3(void **State)
@@ -204,6 +206,7 @@ void test_spdm_responder_psk_exchange_case3(void **State)
 
     spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
                                    &m_spdm_psk_exchange_request, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_psk_exchange_case4(void **State)
@@ -267,6 +270,7 @@ void test_spdm_responder_psk_exchange_case4(void **State)
 
     spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
                                    &m_spdm_psk_exchange_request, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_psk_exchange_case5(void **State)
@@ -331,6 +335,7 @@ void test_spdm_responder_psk_exchange_case5(void **State)
 
     spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
                                    &m_spdm_psk_exchange_request, &response_size, response);
+    free(data);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

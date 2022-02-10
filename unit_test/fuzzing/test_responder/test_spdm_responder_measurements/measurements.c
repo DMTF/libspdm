@@ -124,6 +124,7 @@ void test_spdm_responder_measurements_case3(void **State)
 
     spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                    spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_measurements_case4(void **State)
@@ -180,6 +181,7 @@ void test_spdm_responder_measurements_case4(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                    spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 spdm_test_context_t m_spdm_responder_measurements_test_context = {
