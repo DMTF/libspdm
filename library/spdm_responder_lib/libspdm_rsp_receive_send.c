@@ -491,7 +491,11 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
             libspdm_free_session_id(spdm_context, *session_id);
             break;
         default:
-            /* No session state update needed */
+            /* reset watchdog in any session messages. */
+            result = libspdm_reset_watchdog(*session_id);
+            if (!result) {
+                return RETURN_DEVICE_ERROR;
+            }
             break;
         }
     } else {

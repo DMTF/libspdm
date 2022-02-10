@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
-#include "hal/library/platform_lib.h"
 
 /**
  * Process the SPDM HEARTBEAT request and return the response.
@@ -35,7 +34,6 @@ return_status spdm_get_response_heartbeat(IN void *context,
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-    bool result;
 
     spdm_context = context;
     spdm_request = request;
@@ -104,11 +102,6 @@ return_status spdm_get_response_heartbeat(IN void *context,
     spdm_response->header.request_response_code = SPDM_HEARTBEAT_ACK;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
-
-    result = libspdm_reset_watchdog(spdm_context->last_spdm_request_session_id);
-    if (!result) {
-        return RETURN_DEVICE_ERROR;
-    }
 
     return RETURN_SUCCESS;
 }
