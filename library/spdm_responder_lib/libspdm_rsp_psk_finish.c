@@ -175,7 +175,7 @@ return_status spdm_get_response_psk_finish(IN void *context,
     }
 
     result = libspdm_start_watchdog(session_id,
-                                    spdm_context->local_context.heartbeat_period);
+                                    spdm_context->local_context.heartbeat_period * 2);
     if (!result) {
         return RETURN_DEVICE_ERROR;
     }
