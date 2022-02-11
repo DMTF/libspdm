@@ -54,6 +54,11 @@ void test_spdm_get_response_encapsulated_request_case1(void **State)
     spdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
                                            spdm_test_context->test_buffer, &response_size,
                                            response);
+    free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_mut_m1m2);
+    #endif
 }
 
 void test_spdm_get_response_encapsulated_request_case2(void **State)
@@ -208,6 +213,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case1(void **State)
     spdm_get_response_encapsulated_response_ack(spdm_context, spdm_test_context->test_buffer_size,
                                                 spdm_test_context->test_buffer, &response_size,
                                                 response);
+    free(data);
 }
 
 void test_spdm_spdm_get_response_encapsulated_response_ack_case2(void **State)
@@ -274,6 +280,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case3(void **State)
     spdm_get_response_encapsulated_response_ack(spdm_context, spdm_test_context->test_buffer_size,
                                                 spdm_test_context->test_buffer, &response_size,
                                                 response);
+    free(data);
 }
 
 void test_spdm_spdm_get_response_encapsulated_response_ack_case4(void **State)

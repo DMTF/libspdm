@@ -54,6 +54,7 @@ void test_spdm_responder_certificate_case1(void **State)
                                   spdm_test_context->test_buffer_size,
                                   spdm_test_context->test_buffer,
                                   &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_certificate_case2(void **State)
@@ -90,6 +91,7 @@ void test_spdm_responder_certificate_case2(void **State)
                                   spdm_test_context->test_buffer_size,
                                   spdm_test_context->test_buffer,
                                   &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_certificate_case3(void **State)
@@ -170,6 +172,7 @@ void test_spdm_responder_certificate_case5(void **State)
                                   spdm_test_context->test_buffer_size,
                                   spdm_test_context->test_buffer,
                                   &response_size, response);
+    free(data);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

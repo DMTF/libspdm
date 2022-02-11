@@ -75,6 +75,10 @@ void test_spdm_responder_respond_if_ready(void **State)
                                        spdm_test_context->test_buffer_size,
                                        spdm_test_context->test_buffer,
                                        &response_size, response);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_m1m2);
+    #endif
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

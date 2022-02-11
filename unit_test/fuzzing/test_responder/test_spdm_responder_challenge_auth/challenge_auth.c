@@ -54,6 +54,7 @@ void test_spdm_responder_challenge_case1(void **State)
 
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_challenge_case2(void **State)
@@ -89,6 +90,7 @@ void test_spdm_responder_challenge_case2(void **State)
 
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_challenge_case3(void **State)
@@ -125,6 +127,7 @@ void test_spdm_responder_challenge_case3(void **State)
 
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_challenge_case4(void **State)
@@ -163,6 +166,7 @@ void test_spdm_responder_challenge_case4(void **State)
     libspdm_reset_message_c(spdm_context);
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void test_spdm_responder_challenge_case5(void **State)
@@ -200,6 +204,11 @@ void test_spdm_responder_challenge_case5(void **State)
 
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_m1m2);
+    #endif
 }
 
 void test_spdm_responder_challenge_case6(void **State)
@@ -239,6 +248,7 @@ void test_spdm_responder_challenge_case6(void **State)
     libspdm_reset_message_c(spdm_context);
     spdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer, &response_size, response);
+    free(data);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

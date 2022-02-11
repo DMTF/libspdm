@@ -103,6 +103,10 @@ void test_spdm_responder_encap_challenge_case1(void **State)
     spdm_process_encap_response_challenge_auth(spdm_context, spdm_response_size, spdm_response,
                                                NULL);
     free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_mut_m1m2);
+    #endif
 }
 
 void test_spdm_get_encap_request_challenge_case2(void **State)
@@ -137,6 +141,11 @@ void test_spdm_get_encap_request_challenge_case2(void **State)
 
     spdm_get_encap_request_challenge(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
+    free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_mut_m1m2);
+    #endif
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

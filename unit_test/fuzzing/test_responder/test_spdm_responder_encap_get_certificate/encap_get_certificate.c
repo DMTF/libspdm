@@ -63,6 +63,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
 
     spdm_process_encap_response_certificate(spdm_context, spdm_response_size, spdm_response,
                                             &need_continue);
+    free(data);
 }
 
 void test_spdm_get_encap_request_get_certificate_case2(void **State)
@@ -98,6 +99,11 @@ void test_spdm_get_encap_request_get_certificate_case2(void **State)
 
     spdm_get_encap_request_get_certificate(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
+    free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_mut_m1m2);
+    #endif
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
