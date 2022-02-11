@@ -30,9 +30,13 @@ return_status spdm_handle_simple_error_response(IN void *context,
  * For error code RESPONSE_NOT_READY, this function sends RESPOND_IF_READY and receives an expected SPDM response.
  * For error code BUSY, this function shrinks the managed buffer, and return RETURN_NO_RESPONSE.
  * For error code REQUEST_RESYNCH, this function shrinks the managed buffer, clears connection_state, and return RETURN_DEVICE_ERROR.
+ * For error code DECRYPT_ERROR, end the session: free session id and session key, return RETURN_SECURITY_VIOLATION.
  * For any other error code, this function shrinks the managed buffer, and return RETURN_DEVICE_ERROR.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                       If session_id is NULL, it is a normal message.
+ *                                       If session_id is NOT NULL, it is a secured message.
  * @param  response_size                 The size of the response.
  *                                     On input, it means the size in bytes of response data buffer.
  *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
@@ -45,6 +49,7 @@ return_status spdm_handle_simple_error_response(IN void *context,
  * @retval RETURN_NO_RESPONSE           The error code is BUSY.
  * @retval RETURN_DEVICE_ERROR          The error code is REQUEST_RESYNCH or others.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
 return_status spdm_handle_error_response_main(
     IN spdm_context_t *spdm_context, IN uint32_t *session_id,
