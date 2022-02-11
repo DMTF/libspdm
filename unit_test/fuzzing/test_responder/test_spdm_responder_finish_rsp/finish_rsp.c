@@ -120,6 +120,7 @@ void test_spdm_responder_finish_case1(void **State)
     response_size = sizeof(response);
     spdm_get_response_finish(&spdm_context, m_spdm_finish_request1_size, &m_spdm_finish_request1,
                              &response_size, response);
+    free(data1);
 }
 
 void test_spdm_responder_finish_case2(void **State)
@@ -274,6 +275,7 @@ void test_spdm_responder_finish_case7(void **State)
     response_size = sizeof(response);
     spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
                              spdm_test_context->test_buffer, &response_size, response);
+    free(data1);
 }
 
 void test_spdm_responder_finish_case8(void **State)
@@ -381,6 +383,8 @@ void test_spdm_responder_finish_case8(void **State)
     response_size = sizeof(response);
     spdm_get_response_finish(&spdm_context, m_spdm_finish_request_size, &m_spdm_finish_request,
                              &response_size, response);
+    free(data1);
+    free(data2);
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)

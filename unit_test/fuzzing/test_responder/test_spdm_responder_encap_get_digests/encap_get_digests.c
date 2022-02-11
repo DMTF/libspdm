@@ -76,6 +76,11 @@ void test_spdm_get_encap_request_get_digest_case2(void **State)
 
     spdm_get_encap_request_get_digest(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
+    free(data);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    #else
+    free(spdm_context->transcript.digest_context_mut_m1m2);
+    #endif
 }
 
 void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
