@@ -277,9 +277,6 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 error:
     if (RETURN_NO_RESPONSE != status) {
         libspdm_free_session_id(spdm_context, session_id);
-        if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
-            libspdm_clear_handshake_secret(session_info->secured_message_context);
-        }
     }
     return status;
 }
