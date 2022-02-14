@@ -129,6 +129,7 @@ void test_spdm_requester_challenge_case1(void **State)
     zero_mem(measurement_hash, sizeof(measurement_hash));
     libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                       measurement_hash, NULL);
+    free(data);
 }
 
 void test_spdm_requester_challenge_ex_case1(void **State)
@@ -171,6 +172,7 @@ void test_spdm_requester_challenge_ex_case1(void **State)
     libspdm_challenge_ex(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                          measurement_hash, NULL, requester_nonce_in, requester_nonce,
                          responder_nonce);
+    free(data);
 }
 spdm_test_context_t m_spdm_requester_challenge_test_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,

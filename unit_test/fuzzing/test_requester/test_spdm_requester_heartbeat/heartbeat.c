@@ -151,6 +151,7 @@ void test_spdm_requester_heartbeat_case1(void **State)
     ->application_secret.response_data_sequence_number = 0;
 
     libspdm_heartbeat(spdm_context, session_id);
+    free(data);
 }
 
 spdm_test_context_t m_spdm_requester_heartbeat_test_context = {
