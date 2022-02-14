@@ -111,3 +111,13 @@
    10.2) [memlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/memlib.h) provides memory operation.
 
    10.3) [debuglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/debuglib.h) provides debug functions.
+
+   10.4) [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h) provides sleep function and watchdog function.
+
+   10.4.1) sleep function.
+
+   The sleep function delays the execution of a message flow instance for a defined period of time.
+
+   10.4.2) watchdog function.
+
+   The wathdog function supports multiple software watchdogs for multiple sessions with one hardware watchdog.
