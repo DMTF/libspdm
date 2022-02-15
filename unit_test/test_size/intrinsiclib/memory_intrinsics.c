@@ -50,7 +50,7 @@ void *memset(void *dest, int ch, size_t count)
 
 void *memmove(void *dest, const void *src, size_t count)
 {
-    copy_mem(dest, src, count);
+    copy_mem_s(dest, count, src, count);
     return dest;
 }
 
