@@ -150,6 +150,7 @@ void test_spdm_requester_end_session(void **State)
     ->application_secret.response_data_sequence_number = 0;
 
     spdm_send_receive_end_session(spdm_context, session_id, 0);
+    free(data);
 }
 
 spdm_test_context_t m_spdm_requester_end_session_test_context = {

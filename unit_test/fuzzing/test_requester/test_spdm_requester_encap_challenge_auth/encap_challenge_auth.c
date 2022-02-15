@@ -63,6 +63,7 @@ void test_spdm_requester_encap_challenge(void **State)
                                            (uint8_t *)spdm_test_context->test_buffer +
                                            test_message_header_size,
                                            &response_size, response);
+    free(data);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
