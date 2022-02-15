@@ -25,8 +25,9 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     spdm_test_context_t *spdm_test_context;
 
     spdm_test_context = get_spdm_test_context();
+    copy_mem_s(response, *response_size,
+               spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
     *response_size = spdm_test_context->test_buffer_size;
-    copy_mem(response, spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
     return RETURN_SUCCESS;
 }
 
