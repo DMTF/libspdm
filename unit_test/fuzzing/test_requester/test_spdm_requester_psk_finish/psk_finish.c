@@ -31,8 +31,9 @@ void spdm_secured_message_set_response_handshake_encryption_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->aead_key_size);
-    copy_mem(secured_message_context->handshake_secret.response_handshake_encryption_key, key,
-             secured_message_context->aead_key_size);
+    copy_mem_s(secured_message_context->handshake_secret.response_handshake_encryption_key,
+               sizeof(secured_message_context->handshake_secret.response_handshake_encryption_key),
+               key, secured_message_context->aead_key_size);
 }
 
 void spdm_secured_message_set_response_handshake_salt(IN void *spdm_secured_message_context,
@@ -42,8 +43,9 @@ void spdm_secured_message_set_response_handshake_salt(IN void *spdm_secured_mess
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(salt_size == secured_message_context->aead_iv_size);
-    copy_mem(secured_message_context->handshake_secret.response_handshake_salt, salt,
-             secured_message_context->aead_iv_size);
+    copy_mem_s(secured_message_context->handshake_secret.response_handshake_salt,
+               sizeof(secured_message_context->handshake_secret.response_handshake_salt),
+               salt, secured_message_context->aead_iv_size);
 }
 
 uintn get_max_buffer_size(void)
@@ -71,9 +73,9 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     test_message_header_size = 1;
     session_id = 0xFFFFFFFF;
     temp_buf_size = spdm_test_context->test_buffer_size;
-    copy_mem((uint8_t *)temp_buf,
-             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-             spdm_test_context->test_buffer_size);
+    copy_mem_s((uint8_t *)temp_buf, sizeof(temp_buf),
+               (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+               spdm_test_context->test_buffer_size);
 
     spdm_transport_test_encode_message(spdm_context, &session_id, false, false, temp_buf_size,
                                        temp_buf, response_size, response);
@@ -126,11 +128,13 @@ void test_spdm_requester_psk_finish_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             data, data_size);
+    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
+               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+               data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
