@@ -237,7 +237,9 @@ return_status spdm_transport_test_decode_message(
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
     libspdm_error_struct_t spdm_error;
+    uintn init_message_size;
 
+    init_message_size = *message_size;
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
     libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
@@ -309,7 +311,7 @@ return_status spdm_transport_test_decode_message(
                 return RETURN_BUFFER_TOO_SMALL;
             }
             *message_size = app_message_size;
-            copy_mem(message, app_message, *message_size);
+            copy_mem_s(message, init_message_size, app_message, *message_size);
             return RETURN_SUCCESS;
         } else {
             *is_app_message = false;
