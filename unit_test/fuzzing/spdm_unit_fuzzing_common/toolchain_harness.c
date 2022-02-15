@@ -139,7 +139,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     if (size > max_buffer_size) {
         size = max_buffer_size;
     }
-    copy_mem(test_buffer, data, size);
+    copy_mem_s(test_buffer, max_buffer_size, data, size);
     /* 2. Run test*/
     run_test_harness(test_buffer, size);
     /* 3. Clean up*/
