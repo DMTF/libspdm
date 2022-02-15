@@ -37,8 +37,9 @@ static void spdm_secured_message_set_request_finished_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem(secured_message_context->handshake_secret.request_finished_key,
-             key, secured_message_context->hash_size);
+    copy_mem_s(secured_message_context->handshake_secret.request_finished_key,
+               sizeof(secured_message_context->handshake_secret.request_finished_key),
+               key, secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
@@ -102,8 +103,8 @@ void test_spdm_responder_psk_finish_case1(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -208,8 +209,8 @@ void test_spdm_responder_psk_finish_case2(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -317,8 +318,8 @@ void test_spdm_responder_psk_finish_case3(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -430,8 +431,8 @@ void test_spdm_responder_psk_finish_case4(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -545,8 +546,8 @@ void test_spdm_responder_psk_finish_case5(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -666,8 +667,8 @@ void test_spdm_responder_psk_finish_case6(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -771,8 +772,8 @@ void test_spdm_responder_psk_finish_case7(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -901,8 +902,8 @@ void test_spdm_responder_psk_finish_case8(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1013,8 +1014,8 @@ void test_spdm_responder_psk_finish_case9(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1122,8 +1123,8 @@ void test_spdm_responder_psk_finish_case10(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1225,8 +1226,8 @@ void test_spdm_responder_psk_finish_case11(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1332,8 +1333,8 @@ void test_spdm_responder_psk_finish_case12(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1365,7 +1366,8 @@ void test_spdm_responder_psk_finish_case12(void **state)
     libspdm_hmac_all(m_use_hash_algo, get_managed_buffer(&th_curr),
                      get_managed_buffer_size(&th_curr), request_finished_key,
                      hash_size, ptr);
-    copy_mem(ptr, ptr + hmac_size, hmac_size); /* 2x HMAC size*/
+    copy_mem_s(ptr, sizeof(m_spdm_psk_finish_request1.verify_data),
+               ptr + hmac_size, hmac_size); /* 2x HMAC size*/
     m_spdm_psk_finish_request1_size =
         sizeof(spdm_psk_finish_request_t) + 2*hmac_size;
     response_size = sizeof(response);
@@ -1444,8 +1446,8 @@ void test_spdm_responder_psk_finish_case13(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], TEST_PSK_HINT_STRING,
-             sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;

@@ -274,8 +274,9 @@ static void spdm_secured_message_set_request_finished_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem(secured_message_context->handshake_secret.request_finished_key,
-             key, secured_message_context->hash_size);
+    copy_mem_s(secured_message_context->handshake_secret.request_finished_key,
+               sizeof(secured_message_context->handshake_secret.request_finished_key),
+               key, secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
