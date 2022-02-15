@@ -65,12 +65,12 @@ static void spdm_set_standard_key_update_test_secrets(
     set_mem(m_req_secret_buffer, secured_message_context->hash_size,
             req_secret_fill);
 
-    copy_mem(
-        secured_message_context->application_secret.response_data_secret,
-        m_rsp_secret_buffer, secured_message_context->aead_key_size);
-    copy_mem(
-        secured_message_context->application_secret.request_data_secret,
-        m_req_secret_buffer, secured_message_context->aead_key_size);
+    copy_mem_s(secured_message_context->application_secret.response_data_secret,
+               sizeof(secured_message_context->application_secret.response_data_secret),
+               m_rsp_secret_buffer, secured_message_context->aead_key_size);
+    copy_mem_s(secured_message_context->application_secret.request_data_secret,
+               sizeof(secured_message_context->application_secret.request_data_secret),
+               m_req_secret_buffer, secured_message_context->aead_key_size);
 
     set_mem(secured_message_context->application_secret
             .response_data_encryption_key,
@@ -100,11 +100,12 @@ static void spdm_compute_secret_update(uintn hash_size,
     uint16_t length;
 
     length = (uint16_t)hash_size;
-    copy_mem(m_bin_str9, &length, sizeof(uint16_t));
-    copy_mem(m_bin_str9 + sizeof(uint16_t), SPDM_BIN_CONCAT_LABEL,
-             sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-             SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    copy_mem_s(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
+    copy_mem_s(m_bin_str9 + sizeof(uint16_t), sizeof(m_bin_str9) - sizeof(uint16_t),
+               SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    copy_mem_s(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+               sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+               SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
     m_bin_str9_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 +
                       sizeof(SPDM_BIN_STR_9_LABEL) - 1;
     /*context is NULL for key update*/
