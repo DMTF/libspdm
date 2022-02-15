@@ -57,14 +57,13 @@ void test_spdm_responder_respond_if_ready(void **State)
     spdm_context->local_context.slot_count = 1;
 
     spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
-    copy_mem(spdm_context->last_spdm_request, &m_spdm_get_digest_request,
-             m_spdm_get_digest_request_size);
+    copy_mem_s(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
+               &m_spdm_get_digest_request,  m_spdm_get_digest_request_size);
 
     spdm_context->cache_spdm_request_size =
         spdm_context->last_spdm_request_size;
-    copy_mem(spdm_context->cache_spdm_request,
-             spdm_context->last_spdm_request,
-             spdm_context->last_spdm_request_size);
+    copy_mem_s(spdm_context->cache_spdm_request, sizeof(spdm_context->cache_spdm_request),
+               spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
     spdm_context->error_data.rd_exponent = 1;
     spdm_context->error_data.rd_tm = 1;
     spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
