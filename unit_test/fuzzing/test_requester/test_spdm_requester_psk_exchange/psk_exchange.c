@@ -119,8 +119,8 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
     spdm_build_opaque_data_version_selection_data(spdm_context, &opaque_psk_exchange_rsp_size, ptr);
     ptr += opaque_psk_exchange_rsp_size;
     copy_mem_s(&m_local_buffer[m_local_buffer_size],
-             sizeof(m_local_buffer) - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-             spdm_response, (uintn)ptr - (uintn)spdm_response);
+               sizeof(m_local_buffer) - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+               spdm_response, (uintn)ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
     DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n", m_local_buffer_size));
     internal_dump_hex(m_local_buffer, m_local_buffer_size);
