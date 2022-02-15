@@ -35,10 +35,9 @@ return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *r
 
     spdm_test_context = get_spdm_test_context();
     test_message_header_size = 1;
-    copy_mem_s((uint8_t *)temp_buf,
-             sizeof(temp_buf),
-             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-             spdm_test_context->test_buffer_size);
+    copy_mem_s((uint8_t *)temp_buf, sizeof(temp_buf),
+               (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+               spdm_test_context->test_buffer_size);
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     ((spdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] = data_size;
