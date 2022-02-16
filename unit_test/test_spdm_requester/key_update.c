@@ -2582,7 +2582,7 @@ return_status spdm_requester_key_update_test_receive_message(
                        sizeof(secured_message_context->application_secret
                               .response_data_encryption_key),
                        curr_rsp_enc_key,
-                     secured_message_context->aead_key_size);
+                       secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
