@@ -15,7 +15,7 @@ static uintn m_local_certificate_chain_size;
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
 bool read_responder_public_certificate_chain_expiration(
-    OUT void **data, OUT uintn *size, OUT void **hash, OUT uintn *hash_size)
+    void **data, uintn *size, void **hash, uintn *hash_size)
 {
     uint32_t base_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
     bool res;
@@ -85,8 +85,8 @@ bool read_responder_public_certificate_chain_expiration(
 }
 
 return_status spdm_requester_get_certificate_test_send_message(
-    IN void *spdm_context, IN uintn request_size, IN void *request,
-    IN uint64_t timeout)
+    void *spdm_context, uintn request_size, const void *request,
+    uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
@@ -142,8 +142,8 @@ return_status spdm_requester_get_certificate_test_send_message(
 }
 
 return_status spdm_requester_get_certificate_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

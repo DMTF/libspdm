@@ -323,7 +323,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case5(void **State)
                                                 response);
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
@@ -388,7 +388,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

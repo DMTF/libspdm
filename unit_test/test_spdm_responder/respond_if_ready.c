@@ -268,7 +268,7 @@ uintn m_spdm_end_session_request_size = sizeof(m_spdm_end_session_request);
 static uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static void spdm_secured_message_set_request_finished_key(
-    IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+    void *spdm_secured_message_context, const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 

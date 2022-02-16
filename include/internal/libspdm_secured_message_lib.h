@@ -63,7 +63,7 @@ typedef struct {
     bool requester_backup_valid;
     bool responder_backup_valid;
     uintn psk_hint_size;
-    void *psk_hint;
+    const void *psk_hint;
 
     /* Cache the error in libspdm_decode_secured_message. It is handled in libspdm_build_response.*/
 

@@ -44,13 +44,13 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
-                                 IN uint8_t measurement_hash_type,
-                                 OUT void *measurement_hash,
-                                 OUT uint8_t *slot_mask,
-                                 IN void *requester_nonce_in OPTIONAL,
-                                 OUT void *requester_nonce OPTIONAL,
-                                 OUT void *responder_nonce OPTIONAL)
+return_status try_spdm_challenge(void *context, uint8_t slot_id,
+                                 uint8_t measurement_hash_type,
+                                 void *measurement_hash,
+                                 uint8_t *slot_mask,
+                                 const void *requester_nonce_in,
+                                 void *requester_nonce,
+                                 void *responder_nonce)
 {
     return_status status;
     bool result;
@@ -317,10 +317,10 @@ return_status try_spdm_challenge(IN void *context, IN uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
-                                IN uint8_t measurement_hash_type,
-                                OUT void *measurement_hash,
-                                OUT uint8_t *slot_mask)
+return_status libspdm_challenge(void *context, uint8_t slot_id,
+                                uint8_t measurement_hash_type,
+                                void *measurement_hash,
+                                uint8_t *slot_mask)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -363,13 +363,13 @@ return_status libspdm_challenge(IN void *context, IN uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge_ex(IN void *context, IN uint8_t slot_id,
-                                   IN uint8_t measurement_hash_type,
-                                   OUT void *measurement_hash,
-                                   OUT uint8_t *slot_mask,
-                                   IN void *requester_nonce_in OPTIONAL,
-                                   OUT void *requester_nonce OPTIONAL,
-                                   OUT void *responder_nonce OPTIONAL)
+return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
+                                   uint8_t measurement_hash_type,
+                                   void *measurement_hash,
+                                   uint8_t *slot_mask,
+                                   const void *requester_nonce_in,
+                                   void *requester_nonce,
+                                   void *responder_nonce)
 {
     spdm_context_t *spdm_context;
     uintn retry;

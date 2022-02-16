@@ -12,9 +12,9 @@
 #include "library/spdm_transport_mctp_lib.h"
 #include "library/malloclib.h"
 
-return_status do_authentication_via_spdm(IN void *spdm_context);
+return_status do_authentication_via_spdm(void *spdm_context);
 
-return_status do_session_via_spdm(IN void *spdm_context);
+return_status do_session_via_spdm(void *spdm_context);
 
 void *spdm_client_init(void);
 

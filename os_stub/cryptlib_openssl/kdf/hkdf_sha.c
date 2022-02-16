@@ -31,11 +31,11 @@
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_md_extract_and_expand(IN const EVP_MD *md, IN const uint8_t *key,
-                                IN uintn key_size, IN const uint8_t *salt,
-                                IN uintn salt_size, IN const uint8_t *info,
-                                IN uintn info_size, OUT uint8_t *out,
-                                IN uintn out_size)
+bool hkdf_md_extract_and_expand(const EVP_MD *md, const uint8_t *key,
+                                uintn key_size, const uint8_t *salt,
+                                uintn salt_size, const uint8_t *info,
+                                uintn info_size, uint8_t *out,
+                                uintn out_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     bool result;
@@ -91,10 +91,10 @@ bool hkdf_md_extract_and_expand(IN const EVP_MD *md, IN const uint8_t *key,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_md_extract(IN const EVP_MD *md, IN const uint8_t *key,
-                     IN uintn key_size, IN const uint8_t *salt,
-                     IN uintn salt_size, OUT uint8_t *prk_out,
-                     IN uintn prk_out_size)
+bool hkdf_md_extract(const EVP_MD *md, const uint8_t *key,
+                     uintn key_size, const uint8_t *salt,
+                     uintn salt_size, uint8_t *prk_out,
+                     uintn prk_out_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     bool result;
@@ -151,9 +151,9 @@ bool hkdf_md_extract(IN const EVP_MD *md, IN const uint8_t *key,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_md_expand(IN const EVP_MD *md, IN const uint8_t *prk,
-                    IN uintn prk_size, IN const uint8_t *info,
-                    IN uintn info_size, OUT uint8_t *out, IN uintn out_size)
+bool hkdf_md_expand(const EVP_MD *md, const uint8_t *prk,
+                    uintn prk_size, const uint8_t *info,
+                    uintn info_size, uint8_t *out, uintn out_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     bool result;
@@ -209,10 +209,10 @@ bool hkdf_md_expand(IN const EVP_MD *md, IN const uint8_t *prk,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(EVP_sha256(), key, key_size, salt,
                                       salt_size, info, info_size, out,
@@ -233,9 +233,9 @@ bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size)
+bool hkdf_sha256_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(EVP_sha256(), key, key_size, salt, salt_size,
                            prk_out, prk_out_size);
@@ -255,9 +255,9 @@ bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha256_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(EVP_sha256(), prk, prk_size, info, info_size, out,
                           out_size);
@@ -279,10 +279,10 @@ bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha384_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(EVP_sha384(), key, key_size, salt,
                                       salt_size, info, info_size, out,
@@ -303,9 +303,9 @@ bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size)
+bool hkdf_sha384_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(EVP_sha384(), key, key_size, salt, salt_size,
                            prk_out, prk_out_size);
@@ -325,9 +325,9 @@ bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha384_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(EVP_sha384(), prk, prk_size, info, info_size, out,
                           out_size);
@@ -349,10 +349,10 @@ bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha512_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(EVP_sha512(), key, key_size, salt,
                                       salt_size, info, info_size, out,
@@ -373,9 +373,9 @@ bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size)
+bool hkdf_sha512_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(EVP_sha512(), key, key_size, salt, salt_size,
                            prk_out, prk_out_size);
@@ -395,9 +395,9 @@ bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sha512_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(EVP_sha512(), prk, prk_size, info, info_size, out,
                           out_size);

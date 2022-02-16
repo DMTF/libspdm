@@ -13,7 +13,7 @@ static uint8_t m_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 static void spdm_secured_message_set_response_data_encryption_key(
-    IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+    void *spdm_secured_message_context, const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -25,8 +25,8 @@ static void spdm_secured_message_set_response_data_encryption_key(
 }
 
 static void spdm_secured_message_set_response_data_salt(
-    IN void *spdm_secured_message_context, IN void *salt,
-    IN uintn salt_size)
+    void *spdm_secured_message_context, const void *salt,
+    uintn salt_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -38,8 +38,8 @@ static void spdm_secured_message_set_response_data_salt(
 }
 
 return_status spdm_requester_end_session_test_send_message(
-    IN void *spdm_context, IN uintn request_size, IN void *request,
-    IN uint64_t timeout)
+    void *spdm_context, uintn request_size, const void *request,
+    uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
@@ -75,8 +75,8 @@ return_status spdm_requester_end_session_test_send_message(
 }
 
 return_status spdm_requester_end_session_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

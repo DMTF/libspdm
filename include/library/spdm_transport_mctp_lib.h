@@ -35,9 +35,9 @@
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_transport_mctp_encode_message(
-    IN void *spdm_context, IN uint32_t *session_id, IN bool is_app_message,
-    IN bool is_requester, IN uintn message_size, IN void *message,
-    IN OUT uintn *transport_message_size, OUT void *transport_message);
+    const void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    bool is_requester, uintn message_size, const void *message,
+    uintn *transport_message_size, void *transport_message);
 
 /**
  * Decode an SPDM or APP message from a transport layer message.
@@ -66,10 +66,10 @@ return_status libspdm_transport_mctp_encode_message(
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
 return_status libspdm_transport_mctp_decode_message(
-    IN void *spdm_context, OUT uint32_t **session_id,
-    OUT bool *is_app_message, IN bool is_requester,
-    IN uintn transport_message_size, IN void *transport_message,
-    IN OUT uintn *message_size, OUT void *message);
+    void *spdm_context, uint32_t **session_id,
+    bool *is_app_message, bool is_requester,
+    uintn transport_message_size, const void *transport_message,
+    uintn *message_size, void *message);
 
 /**
  * Get sequence number in an SPDM secure message.
@@ -84,8 +84,8 @@ return_status libspdm_transport_mctp_decode_message(
  *        It shall be no greater than 8.
  *        0 means no sequence number is required.
  **/
-uint8_t libspdm_mctp_get_sequence_number(IN uint64_t sequence_number,
-                                         IN OUT uint8_t *sequence_number_buffer);
+uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
+                                         uint8_t *sequence_number_buffer);
 
 /**
  * Return max random number count in an SPDM secure message.

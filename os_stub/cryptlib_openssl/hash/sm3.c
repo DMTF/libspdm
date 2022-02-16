@@ -12,13 +12,13 @@
 #include <openssl/evp.h>
 
 void *hash_md_new(void);
-void hash_md_free(IN void *md_ctx);
-bool hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
-bool hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
-bool hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
-bool hash_md_final(IN void *md_ctx, OUT void *hash_value);
-bool hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-                      OUT uint8_t *hash_value);
+void hash_md_free(const void *md_ctx);
+bool hash_md_init(const EVP_MD *md, void *md_ctx);
+bool hash_md_duplicate(const void *md_ctx, void *new_md_ctx);
+bool hash_md_update(const void *md_ctx, const void *data, uintn data_size);
+bool hash_md_final(const void *md_ctx, void *hash_value);
+bool hash_md_hash_all(const EVP_MD *md, const void *data, uintn data_size,
+                      uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SM3-256 use.
@@ -38,7 +38,7 @@ void *sm3_256_new(void)
  * @param[in]  sm3_256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sm3_256_free(IN void *sm3_256_ctx)
+void sm3_256_free(void *sm3_256_ctx)
 {
     hash_md_free(sm3_256_ctx);
 }
@@ -55,7 +55,7 @@ void sm3_256_free(IN void *sm3_256_ctx)
  * @retval false  SM3 context initialization failed.
  *
  **/
-bool sm3_256_init(OUT void *sm3_context)
+bool sm3_256_init(void *sm3_context)
 {
     return hash_md_init (EVP_sm3(), sm3_context);
 }
@@ -75,7 +75,7 @@ bool sm3_256_init(OUT void *sm3_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
+bool sm3_256_duplicate(const void *sm3_context, void *new_sm3_context)
 {
     return hash_md_duplicate (sm3_context, new_sm3_context);
 }
@@ -98,8 +98,8 @@ bool sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
  * @retval false  SM3 data digest failed.
  *
  **/
-bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
-                    IN uintn data_size)
+bool sm3_256_update(void *sm3_context, const void *data,
+                    uintn data_size)
 {
     return hash_md_update (sm3_context, data, data_size);
 }
@@ -124,7 +124,7 @@ bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
  * @retval false  SM3 digest computation failed.
  *
  **/
-bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
+bool sm3_256_final(void *sm3_context, uint8_t *hash_value)
 {
     return hash_md_final (sm3_context, hash_value);
 }
@@ -147,8 +147,8 @@ bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_hash_all(IN const void *data, IN uintn data_size,
-                      OUT uint8_t *hash_value)
+bool sm3_256_hash_all(const void *data, uintn data_size,
+                      uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sm3(), data, data_size, hash_value);
 }

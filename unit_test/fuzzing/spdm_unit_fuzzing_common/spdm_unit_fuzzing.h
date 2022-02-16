@@ -42,7 +42,7 @@ typedef struct {
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
     void *spdm_context;
-    void *test_buffer;
+    const void *test_buffer;
     uintn test_buffer_size;
 } spdm_test_context_t;
 
@@ -55,17 +55,17 @@ uintn spdm_unit_test_group_setup(void **State);
 
 uintn spdm_unit_test_group_teardown(void **State);
 
-void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context);
+void setup_spdm_test_context(spdm_test_context_t *spdm_test_context);
 
 spdm_test_context_t *get_spdm_test_context(void);
 
-bool read_input_file(IN char *file_name, OUT void **file_data,
-                     OUT uintn *file_size);
+bool read_input_file(const char *file_name, void **file_data,
+                     uintn *file_size);
 
-void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex_str(const uint8_t *buffer, uintn buffer_size);
 
-void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_data(const uint8_t *buffer, uintn buffer_size);
 
-void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex(const uint8_t *buffer, uintn buffer_size);
 
 #endif

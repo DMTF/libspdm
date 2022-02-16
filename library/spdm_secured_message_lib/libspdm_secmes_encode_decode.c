@@ -22,11 +22,11 @@
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_encode_secured_message(
-    IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN bool is_requester, IN uintn app_message_size,
-    IN void *app_message, IN OUT uintn *secured_message_size,
-    OUT void *secured_message,
-    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
+    void *spdm_secured_message_context, uint32_t session_id,
+    bool is_requester, uintn app_message_size,
+    const void *app_message, uintn *secured_message_size,
+    void *secured_message,
+    const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn total_secured_message_size;
@@ -300,11 +300,11 @@ return_status libspdm_encode_secured_message(
  * @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
  **/
 return_status libspdm_decode_secured_message(
-    IN void *spdm_secured_message_context, IN uint32_t session_id,
-    IN bool is_requester, IN uintn secured_message_size,
-    IN void *secured_message, IN OUT uintn *app_message_size,
-    OUT void *app_message,
-    IN libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
+    void *spdm_secured_message_context, uint32_t session_id,
+    bool is_requester, uintn secured_message_size,
+    const void *secured_message, uintn *app_message_size,
+    void *app_message,
+    const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     spdm_secured_message_context_t *secured_message_context;
     uintn plain_text_size;

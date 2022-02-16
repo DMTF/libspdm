@@ -11,10 +11,10 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-return_status test_libspdm_verify_spdm_cert_chain(IN void *spdm_context, IN uint8_t slot_id,
-                                                  IN uintn cert_chain_size, IN void *cert_chain,
-                                                  OUT void **trust_anchor OPTIONAL,
-                                                  OUT uintn *trust_anchor_size OPTIONAL)
+return_status test_libspdm_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
+                                                  uintn cert_chain_size, const void *cert_chain,
+                                                  void **trust_anchor,
+                                                  uintn *trust_anchor_size)
 {
     return RETURN_SUCCESS;
 }
@@ -24,8 +24,8 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_size,
-                                       IN void *request, IN uint64_t timeout)
+return_status spdm_device_send_message(void *spdm_context, uintn request_size,
+                                       const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
@@ -33,8 +33,8 @@ return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_s
 #define FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 0x408
 uintn calling_index = 0;
 
-return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
-                                          IN OUT void *response, IN uint64_t timeout)
+return_status spdm_device_receive_message(void *spdm_context, uintn *response_size,
+                                          void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
@@ -182,13 +182,13 @@ spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
     spdm_device_receive_message,
 };
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
     setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);
 
-    m_spdm_requester_get_certificate_test_context.test_buffer = test_buffer;
+    m_spdm_requester_get_certificate_test_context.test_buffer = (void *)test_buffer;
     m_spdm_requester_get_certificate_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response*/
@@ -211,7 +211,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

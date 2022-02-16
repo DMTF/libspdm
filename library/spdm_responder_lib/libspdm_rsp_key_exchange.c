@@ -25,13 +25,13 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_key_exchange(IN void *context,
-                                             IN uintn request_size,
-                                             IN void *request,
-                                             IN OUT uintn *response_size,
-                                             OUT void *response)
+return_status spdm_get_response_key_exchange(void *context,
+                                             uintn request_size,
+                                             const void *request,
+                                             uintn *response_size,
+                                             void *response)
 {
-    spdm_key_exchange_request_t *spdm_request;
+    const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
     uintn dhe_key_size;
     uintn measurement_summary_hash_size;

@@ -6,18 +6,18 @@
 
 #include "spdm_responder.h"
 
-return_status SpdmResponderSendMessage(IN void *spdm_context,
-                                       IN uintn message_size, IN void *message,
-                                       IN uint64_t timeout)
+return_status SpdmResponderSendMessage(const void *spdm_context,
+                                       uintn message_size, const void *message,
+                                       uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;
 }
 
-return_status SpdmResponderReceiveMessage(IN void *spdm_context,
-                                          IN OUT uintn *message_size,
-                                          IN OUT void *message,
-                                          IN uint64_t timeout)
+return_status SpdmResponderReceiveMessage(const void *spdm_context,
+                                          uintn *message_size,
+                                          void *message,
+                                          uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;

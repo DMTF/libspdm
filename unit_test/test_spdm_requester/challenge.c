@@ -12,10 +12,10 @@
 static uintn m_local_buffer_size;
 static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 
-return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
-                                                         IN uintn request_size,
-                                                         IN void *request,
-                                                         IN uint64_t timeout)
+return_status spdm_requester_challenge_test_send_message(void *spdm_context,
+                                                         uintn request_size,
+                                                         const void *request,
+                                                         uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
     uint8_t *ptr;
@@ -92,8 +92,8 @@ return_status spdm_requester_challenge_test_send_message(IN void *spdm_context,
 }
 
 return_status spdm_requester_challenge_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

@@ -12,7 +12,7 @@
  * @param milliseconds     The time interval for which execution is to be suspended, in milliseconds.
  *
  **/
-void libspdm_sleep(IN uint64_t milliseconds);
+void libspdm_sleep(uint64_t milliseconds);
 
 /**
  * If no heartbeat arrives in seconds, the watchdog timeout event
@@ -22,7 +22,7 @@ void libspdm_sleep(IN uint64_t milliseconds);
  * @param  seconds        heartbeat period, in seconds.
  *
  **/
-bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds);
+bool libspdm_start_watchdog(uint32_t session_id, uint64_t seconds);
 
 /**
  * stop watchdog.
@@ -30,7 +30,7 @@ bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds);
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_stop_watchdog(IN uint32_t session_id);
+bool libspdm_stop_watchdog(uint32_t session_id);
 
 /**
  * Reset the watchdog in heartbeat response.
@@ -38,6 +38,6 @@ bool libspdm_stop_watchdog(IN uint32_t session_id);
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_reset_watchdog(IN uint32_t session_id);
+bool libspdm_reset_watchdog(uint32_t session_id);
 
 #endif /* __PLATFORM_LIB_H__ */

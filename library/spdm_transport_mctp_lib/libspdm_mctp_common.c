@@ -21,10 +21,10 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status mctp_encode_message(IN uint32_t *session_id, IN uintn message_size,
-                                  IN void *message,
-                                  IN OUT uintn *transport_message_size,
-                                  OUT void *transport_message);
+return_status mctp_encode_message(const uint32_t *session_id, uintn message_size,
+                                  const void *message,
+                                  uintn *transport_message_size,
+                                  void *transport_message);
 
 /**
  * Decode a transport message to a normal message or secured message.
@@ -39,11 +39,11 @@ return_status mctp_encode_message(IN uint32_t *session_id, IN uintn message_size
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status mctp_decode_message(OUT uint32_t **session_id,
-                                  IN uintn transport_message_size,
-                                  IN void *transport_message,
-                                  IN OUT uintn *message_size,
-                                  OUT void *message);
+return_status mctp_decode_message(uint32_t **session_id,
+                                  uintn transport_message_size,
+                                  const void *transport_message,
+                                  uintn *message_size,
+                                  void *message);
 
 /**
  * Encode a normal message or secured message to a transport message.
@@ -60,8 +60,8 @@ return_status mctp_decode_message(OUT uint32_t **session_id,
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 typedef return_status (*transport_encode_message_func)(
-    IN uint32_t *session_id, IN uintn message_size, IN void *message,
-    IN OUT uintn *transport_message_size, OUT void *transport_message);
+    const uint32_t *session_id, uintn message_size, const void *message,
+    uintn *transport_message_size, void *transport_message);
 
 /**
  * Decode a transport message to a normal message or secured message.
@@ -77,9 +77,9 @@ typedef return_status (*transport_encode_message_func)(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 typedef return_status (*transport_decode_message_func)(
-    OUT uint32_t **session_id, IN uintn transport_message_size,
-    IN void *transport_message, IN OUT uintn *message_size,
-    OUT void *message);
+    uint32_t **session_id, uintn transport_message_size,
+    const void *transport_message, uintn *message_size,
+    void *message);
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
@@ -107,9 +107,9 @@ typedef return_status (*transport_decode_message_func)(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_transport_mctp_encode_message(
-    IN void *spdm_context, IN uint32_t *session_id, IN bool is_app_message,
-    IN bool is_requester, IN uintn message_size, IN void *message,
-    IN OUT uintn *transport_message_size, OUT void *transport_message)
+    const void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    bool is_requester, uintn message_size, const void *message,
+    uintn *transport_message_size, void *transport_message)
 {
     return_status status;
     transport_encode_message_func transport_encode_message;
@@ -156,7 +156,7 @@ return_status libspdm_transport_mctp_encode_message(
                 return RETURN_UNSUPPORTED;
             }
         } else {
-            app_message = message;
+            app_message = (void *)message;
             app_message_size = message_size;
         }
         /* APP message to secured message*/
@@ -222,10 +222,10 @@ return_status libspdm_transport_mctp_encode_message(
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
 return_status libspdm_transport_mctp_decode_message(
-    IN void *spdm_context, OUT uint32_t **session_id,
-    OUT bool *is_app_message, IN bool is_requester,
-    IN uintn transport_message_size, IN void *transport_message,
-    IN OUT uintn *message_size, OUT void *message)
+    void *spdm_context, uint32_t **session_id,
+    bool *is_app_message, bool is_requester,
+    uintn transport_message_size, const void *transport_message,
+    uintn *message_size, void *message)
 {
     return_status status;
     transport_decode_message_func transport_decode_message;

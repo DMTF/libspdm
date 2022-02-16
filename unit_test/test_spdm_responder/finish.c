@@ -38,7 +38,7 @@ uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 void spdm_secured_message_set_request_finished_key(
-    IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+    void *spdm_secured_message_context, const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 

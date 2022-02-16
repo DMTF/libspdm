@@ -106,7 +106,7 @@ void test_spdm_get_encap_request_get_certificate_case2(void **State)
     #endif
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
@@ -131,7 +131,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

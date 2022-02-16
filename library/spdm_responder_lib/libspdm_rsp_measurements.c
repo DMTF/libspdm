@@ -21,10 +21,10 @@
  * @retval true  measurement signature is created.
  * @retval false measurement signature is not created.
  **/
-bool spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
-                                       IN spdm_session_info_t *session_info,
-                                       IN OUT void *response_message,
-                                       IN uintn response_message_size)
+bool spdm_create_measurement_signature(spdm_context_t *spdm_context,
+                                       spdm_session_info_t *session_info,
+                                       void *response_message,
+                                       uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_sig_size;
@@ -74,9 +74,9 @@ bool spdm_create_measurement_signature(IN spdm_context_t *spdm_context,
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
-bool spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
-                                    IN OUT void *response_message,
-                                    IN uintn response_message_size)
+bool spdm_create_measurement_opaque(spdm_context_t *spdm_context,
+                                    void *response_message,
+                                    uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_no_sig_size;
@@ -123,14 +123,14 @@ bool spdm_create_measurement_opaque(IN spdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_measurements(IN void *context,
-                                             IN uintn request_size,
-                                             IN void *request,
-                                             IN OUT uintn *response_size,
-                                             OUT void *response)
+return_status spdm_get_response_measurements(void *context,
+                                             uintn request_size,
+                                             const void *request,
+                                             uintn *response_size,
+                                             void *response)
 {
     uint8_t index;
-    spdm_get_measurements_request_t *spdm_request;
+    const spdm_get_measurements_request_t *spdm_request;
     spdm_measurements_response_t *spdm_response;
     uintn spdm_response_size;
     return_status status;

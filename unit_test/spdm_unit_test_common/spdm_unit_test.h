@@ -73,17 +73,17 @@ int spdm_unit_test_group_setup(void **state);
 
 int spdm_unit_test_group_teardown(void **state);
 
-void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context);
+void setup_spdm_test_context(spdm_test_context_t *spdm_test_context);
 
 spdm_test_context_t *get_spdm_test_context(void);
 
-void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex_str(const uint8_t *buffer, uintn buffer_size);
 
-void dump_data(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_data(const uint8_t *buffer, uintn buffer_size);
 
-void dump_hex(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex(const uint8_t *buffer, uintn buffer_size);
 
-bool read_input_file(IN char *file_name, OUT void **file_data,
-                     OUT uintn *file_size);
+bool read_input_file(const char *file_name, void **file_data,
+                     uintn *file_size);
 
 #endif

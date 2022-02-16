@@ -15,7 +15,7 @@
  * @param milliseconds     The time interval for which execution is to be suspended, in milliseconds.
  *
  **/
-void libspdm_sleep(IN uint64_t milliseconds)
+void libspdm_sleep(uint64_t milliseconds)
 {
     Sleep((DWORD)milliseconds);
 }

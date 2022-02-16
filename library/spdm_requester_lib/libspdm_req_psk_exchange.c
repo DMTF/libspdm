@@ -60,16 +60,16 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status try_spdm_send_receive_psk_exchange(
-    IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t session_policy,
-    OUT uint32_t *session_id, OUT uint8_t *heartbeat_period,
-    OUT void *measurement_hash,
-    IN void *requester_context_in OPTIONAL,
-    IN uintn requester_context_in_size OPTIONAL,
-    OUT void *requester_context OPTIONAL,
-    OUT uintn *requester_context_size OPTIONAL,
-    OUT void *responder_context OPTIONAL,
-    OUT uintn *responder_context_size OPTIONAL)
+    spdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    uint8_t session_policy,
+    uint32_t *session_id, uint8_t *heartbeat_period,
+    void *measurement_hash,
+    const void *requester_context_in,
+    uintn requester_context_in_size,
+    void *requester_context,
+    uintn *requester_context_size,
+    void *responder_context,
+    uintn *responder_context_size)
 {
     bool result;
     return_status status;
@@ -407,12 +407,12 @@ return_status try_spdm_send_receive_psk_exchange(
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
-                                             IN uint8_t measurement_hash_type,
-                                             IN uint8_t session_policy,
-                                             OUT uint32_t *session_id,
-                                             OUT uint8_t *heartbeat_period,
-                                             OUT void *measurement_hash)
+return_status spdm_send_receive_psk_exchange(spdm_context_t *spdm_context,
+                                             uint8_t measurement_hash_type,
+                                             uint8_t session_policy,
+                                             uint32_t *session_id,
+                                             uint8_t *heartbeat_period,
+                                             void *measurement_hash)
 {
     uintn retry;
     return_status status;
@@ -456,18 +456,18 @@ return_status spdm_send_receive_psk_exchange(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange_ex(IN spdm_context_t *spdm_context,
-                                                IN uint8_t measurement_hash_type,
-                                                IN uint8_t session_policy,
-                                                OUT uint32_t *session_id,
-                                                OUT uint8_t *heartbeat_period,
-                                                OUT void *measurement_hash,
-                                                IN void *requester_context_in OPTIONAL,
-                                                IN uintn requester_context_in_size OPTIONAL,
-                                                OUT void *requester_context OPTIONAL,
-                                                OUT uintn *requester_context_size OPTIONAL,
-                                                OUT void *responder_context OPTIONAL,
-                                                OUT uintn *responder_context_size OPTIONAL)
+return_status spdm_send_receive_psk_exchange_ex(spdm_context_t *spdm_context,
+                                                uint8_t measurement_hash_type,
+                                                uint8_t session_policy,
+                                                uint32_t *session_id,
+                                                uint8_t *heartbeat_period,
+                                                void *measurement_hash,
+                                                const void *requester_context_in,
+                                                uintn requester_context_in_size,
+                                                void *requester_context,
+                                                uintn *requester_context_size,
+                                                void *responder_context,
+                                                uintn *responder_context_size)
 {
     uintn retry;
     return_status status;

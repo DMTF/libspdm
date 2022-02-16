@@ -14,7 +14,7 @@
  * @retval true  session info is required.
  * @retval false session info is not required.
  **/
-bool need_session_info_for_data(IN libspdm_data_type_t data_type)
+bool need_session_info_for_data(libspdm_data_type_t data_type)
 {
     switch (data_type) {
     case LIBSPDM_DATA_SESSION_USE_PSK:
@@ -42,9 +42,9 @@ bool need_session_info_for_data(IN libspdm_data_type_t data_type)
  * @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
  * @retval RETURN_NOT_READY             data is not ready to set.
  **/
-return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_type,
-                               IN libspdm_data_parameter_t *parameter, IN void *data,
-                               IN uintn data_size)
+return_status libspdm_set_data(void *context, const libspdm_data_type_t data_type,
+                               const libspdm_data_parameter_t *parameter, void *data,
+                               uintn data_size)
 {
     spdm_context_t *spdm_context;
     uint32_t session_id;
@@ -516,9 +516,9 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
  * @retval RETURN_NOT_READY             The data is not ready to return.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_type,
-                               IN libspdm_data_parameter_t *parameter,
-                               IN OUT void *data, IN OUT uintn *data_size)
+return_status libspdm_get_data(void *context, const libspdm_data_type_t data_type,
+                               const libspdm_data_parameter_t *parameter,
+                               void *data, uintn *data_size)
 {
     spdm_context_t *spdm_context;
     uintn target_data_size;
@@ -730,7 +730,7 @@ return_status libspdm_get_data(IN void *context, IN libspdm_data_type_t data_typ
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_a(IN void *context)
+void libspdm_reset_message_a(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -743,7 +743,7 @@ void libspdm_reset_message_a(IN void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_b(IN void *context)
+void libspdm_reset_message_b(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -764,7 +764,7 @@ void libspdm_reset_message_b(IN void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_c(IN void *context)
+void libspdm_reset_message_c(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -785,7 +785,7 @@ void libspdm_reset_message_c(IN void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_b(IN void *context)
+void libspdm_reset_message_mut_b(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -806,7 +806,7 @@ void libspdm_reset_message_mut_b(IN void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_c(IN void *context)
+void libspdm_reset_message_mut_c(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -830,7 +830,7 @@ void libspdm_reset_message_mut_c(IN void *context)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_m(IN void *context, IN void *session_info)
+void libspdm_reset_message_m(void *context, void *session_info)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *spdm_session_info;
@@ -866,7 +866,7 @@ void libspdm_reset_message_m(IN void *context, IN void *session_info)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_info              A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_k(IN void *context, IN void *session_info)
+void libspdm_reset_message_k(void *context, void *session_info)
 {
     spdm_session_info_t *spdm_session_info;
 
@@ -924,7 +924,7 @@ void libspdm_reset_message_k(IN void *context, IN void *session_info)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_info              A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_f(IN void *context, IN void *session_info)
+void libspdm_reset_message_f(void *context, void *session_info)
 {
     spdm_session_info_t *spdm_session_info;
 
@@ -972,8 +972,8 @@ void libspdm_reset_message_f(IN void *context, IN void *session_info)
  * @param  spdm_session_info             A pointer to the SPDM session context.
  * @param  spdm_request                   The SPDM request code.
  */
-void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *session_info,
-                                                IN uint8_t request_code)
+void spdm_reset_message_buffer_via_request_code(void *context, void *session_info,
+                                                uint8_t request_code)
 {
     spdm_context_t *spdm_context;
 
@@ -1029,8 +1029,8 @@ void spdm_reset_message_buffer_via_request_code(IN void *context, IN void *sessi
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_a(IN void *context, IN void *message,
-                                       IN uintn message_size)
+return_status libspdm_append_message_a(void *context, const void *message,
+                                       uintn message_size)
 {
     spdm_context_t *spdm_context;
 
@@ -1049,8 +1049,8 @@ return_status libspdm_append_message_a(IN void *context, IN void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_b(IN void *context, IN void *message,
-                                       IN uintn message_size)
+return_status libspdm_append_message_b(void *context, const void *message,
+                                       uintn message_size)
 {
     spdm_context_t *spdm_context;
 
@@ -1111,8 +1111,8 @@ return_status libspdm_append_message_b(IN void *context, IN void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_c(IN void *context, IN void *message,
-                                       IN uintn message_size)
+return_status libspdm_append_message_c(void *context, const void *message,
+                                       uintn message_size)
 {
     spdm_context_t *spdm_context;
 
@@ -1173,8 +1173,8 @@ return_status libspdm_append_message_c(IN void *context, IN void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_mut_b(IN void *context, IN void *message,
-                                           IN uintn message_size)
+return_status libspdm_append_message_mut_b(void *context, const void *message,
+                                           uintn message_size)
 {
     spdm_context_t *spdm_context;
 
@@ -1224,8 +1224,8 @@ return_status libspdm_append_message_mut_b(IN void *context, IN void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_mut_c(IN void *context, IN void *message,
-                                           IN uintn message_size)
+return_status libspdm_append_message_mut_c(void *context, const void *message,
+                                           uintn message_size)
 {
     spdm_context_t *spdm_context;
 
@@ -1278,8 +1278,8 @@ return_status libspdm_append_message_mut_c(IN void *context, IN void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_m(IN void *context, IN void *session_info,
-                                       IN void *message, IN uintn message_size)
+return_status libspdm_append_message_m(void *context, void *session_info,
+                                       const void *message, uintn message_size)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *spdm_session_info;
@@ -1397,9 +1397,9 @@ return_status libspdm_append_message_m(IN void *context, IN void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_k(IN void *context, IN void *session_info,
-                                       IN bool is_requester, IN void *message,
-                                       IN uintn message_size)
+return_status libspdm_append_message_k(void *context, void *session_info,
+                                       bool is_requester, const void *message,
+                                       uintn message_size)
 {
     spdm_session_info_t *spdm_session_info;
 
@@ -1581,9 +1581,9 @@ return_status libspdm_append_message_k(IN void *context, IN void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_f(IN void *context, IN void *session_info,
-                                       IN bool is_requester, IN void *message,
-                                       IN uintn message_size)
+return_status libspdm_append_message_f(void *context, void *session_info,
+                                       bool is_requester, const void *message,
+                                       uintn message_size)
 {
     spdm_session_info_t *spdm_session_info;
 
@@ -1760,8 +1760,8 @@ return_status libspdm_append_message_f(IN void *context, IN void *session_info,
  * @retval true  the version is supported.
  * @retval false the version is not supported.
  **/
-bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
-                               IN uint8_t version)
+bool spdm_is_version_supported(const spdm_context_t *spdm_context,
+                               uint8_t version)
 {
     if (version ==
         (spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT)) {
@@ -1778,7 +1778,7 @@ bool spdm_is_version_supported(IN spdm_context_t *spdm_context,
  *
  * @return the connection version.
  **/
-uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context)
+uint8_t spdm_get_connection_version(const spdm_context_t *spdm_context)
 {
     return (uint8_t)(spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
@@ -1795,10 +1795,10 @@ uint8_t spdm_get_connection_version(IN spdm_context_t *spdm_context)
  * @retval false the capablities flag is not supported.
  **/
 bool
-spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
-                                    IN bool is_requester,
-                                    IN uint32_t requester_capabilities_flag,
-                                    IN uint32_t responder_capabilities_flag)
+spdm_is_capabilities_flag_supported(const spdm_context_t *spdm_context,
+                                    bool is_requester,
+                                    uint32_t requester_capabilities_flag,
+                                    uint32_t responder_capabilities_flag)
 {
     uint32_t negotiated_requester_capabilities_flag;
     uint32_t negotiated_responder_capabilities_flag;
@@ -1837,8 +1837,8 @@ spdm_is_capabilities_flag_supported(IN spdm_context_t *spdm_context,
  * @param  receive_message               The fuction to receive an SPDM transport layer message.
  **/
 void libspdm_register_device_io_func(
-    IN void *context, IN libspdm_device_send_message_func send_message,
-    IN libspdm_device_receive_message_func receive_message)
+    void *context, const libspdm_device_send_message_func send_message,
+    const libspdm_device_receive_message_func receive_message)
 {
     spdm_context_t *spdm_context;
 
@@ -1858,9 +1858,9 @@ void libspdm_register_device_io_func(
  * @param  transport_decode_message       The fuction to decode an SPDM or APP message from a transport layer message.
  **/
 void libspdm_register_transport_layer_func(
-    IN void *context,
-    IN libspdm_transport_encode_message_func transport_encode_message,
-    IN libspdm_transport_decode_message_func transport_decode_message)
+    void *context,
+    const libspdm_transport_encode_message_func transport_encode_message,
+    const libspdm_transport_decode_message_func transport_decode_message)
 {
     spdm_context_t *spdm_context;
 
@@ -1877,7 +1877,7 @@ void libspdm_register_transport_layer_func(
  *
  * @return Last error of an SPDM context.
  */
-uint32_t libspdm_get_last_error(IN void *context)
+uint32_t libspdm_get_last_error(void *context)
 {
     spdm_context_t *spdm_context;
 
@@ -1891,8 +1891,8 @@ uint32_t libspdm_get_last_error(IN void *context)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
  */
-void libspdm_get_last_spdm_error_struct(IN void *context,
-                                        OUT libspdm_error_struct_t *last_spdm_error)
+void libspdm_get_last_spdm_error_struct(void *context,
+                                        libspdm_error_struct_t *last_spdm_error)
 {
     spdm_context_t *spdm_context;
 
@@ -1907,8 +1907,8 @@ void libspdm_get_last_spdm_error_struct(IN void *context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
  */
-void libspdm_set_last_spdm_error_struct(IN void *context,
-                                        IN libspdm_error_struct_t *last_spdm_error)
+void libspdm_set_last_spdm_error_struct(void *context,
+                                        libspdm_error_struct_t *last_spdm_error)
 {
     spdm_context_t *spdm_context;
 
@@ -1927,7 +1927,7 @@ void libspdm_set_last_spdm_error_struct(IN void *context,
  * @retval RETURN_SUCCESS       context is initialized.
  * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
-return_status libspdm_init_context(IN void *context)
+return_status libspdm_init_context(void *context)
 {
     spdm_context_t *spdm_context;
     void *secured_message_context;
@@ -2008,7 +2008,7 @@ return_status libspdm_init_context(IN void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  */
-void libspdm_reset_context(IN void *context)
+void libspdm_reset_context(void *context)
 {
     spdm_context_t *spdm_context;
     uintn index;
@@ -2057,7 +2057,7 @@ uintn libspdm_get_context_size(void)
  *
  * @return the SPDMversion of the version number struct.
  **/
-uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
+uint8_t spdm_get_version_from_version_number(const spdm_version_number_t ver)
 {
     return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
@@ -2069,7 +2069,7 @@ uint8_t spdm_get_version_from_version_number(IN spdm_version_number_t ver)
  * @param  ver_set                    A pointer to the version set.
  * @param  ver_num                    Version number.
  */
-void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ver_num)
+void spdm_version_number_sort(spdm_version_number_t *ver_set, uintn ver_num)
 {
     uintn index;
     uintn index_sort;
@@ -2107,11 +2107,11 @@ void spdm_version_number_sort(IN OUT spdm_version_number_t *ver_set, IN uintn ve
  * @retval true                       Negotiation successfully, connect version be saved to common_version.
  * @retval false                      Negotiation failed.
  */
-bool spdm_negotiate_connection_version(IN OUT spdm_version_number_t *common_version,
-                                       IN spdm_version_number_t *req_ver_set,
-                                       IN uintn req_ver_num,
-                                       IN spdm_version_number_t *res_ver_set,
-                                       IN uintn res_ver_num)
+bool spdm_negotiate_connection_version(spdm_version_number_t *common_version,
+                                       spdm_version_number_t *req_ver_set,
+                                       uintn req_ver_num,
+                                       spdm_version_number_t *res_ver_set,
+                                       uintn res_ver_num)
 {
     uintn req_index;
     uintn res_index;

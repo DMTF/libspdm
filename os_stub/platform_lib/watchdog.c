@@ -15,7 +15,7 @@
  * @param  seconds        heartbeat period, in seconds.
  *
  **/
-bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds)
+bool libspdm_start_watchdog(uint32_t session_id, uint64_t seconds)
 {
     return true;
 }
@@ -26,7 +26,7 @@ bool libspdm_start_watchdog(IN uint32_t session_id, IN uint64_t seconds)
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_stop_watchdog(IN uint32_t session_id)
+bool libspdm_stop_watchdog(uint32_t session_id)
 {
     return true;
 }
@@ -37,7 +37,7 @@ bool libspdm_stop_watchdog(IN uint32_t session_id)
  * @param  session_id     Indicate the SPDM session ID.
  *
  **/
-bool libspdm_reset_watchdog(IN uint32_t session_id)
+bool libspdm_reset_watchdog(uint32_t session_id)
 {
     return true;
 }

@@ -46,7 +46,7 @@ void *rsa_new(void)
  * @param[in]  rsa_context  Pointer to the RSA context to be released.
  *
  **/
-void rsa_free(IN void *rsa_context)
+void rsa_free(void *rsa_context)
 {
     mbedtls_rsa_free(rsa_context);
     free_pool(rsa_context);
@@ -74,8 +74,8 @@ void rsa_free(IN void *rsa_context)
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                 IN const uint8_t *big_number, IN uintn bn_size)
+bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
+                 const uint8_t *big_number, uintn bn_size)
 {
     mbedtls_rsa_context *rsa_key;
     int32_t ret;
@@ -152,10 +152,10 @@ bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                               IN const uint8_t *message_hash,
-                               IN uintn hash_size, IN const uint8_t *signature,
-                               IN uintn sig_size)
+bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
+                               const uint8_t *message_hash,
+                               uintn hash_size, const uint8_t *signature,
+                               uintn sig_size)
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;
@@ -232,9 +232,9 @@ bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-                    IN const uint8_t *message_hash, IN uintn hash_size,
-                    IN const uint8_t *signature, IN uintn sig_size)
+bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
+                    const uint8_t *message_hash, uintn hash_size,
+                    const uint8_t *signature, uintn sig_size)
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;

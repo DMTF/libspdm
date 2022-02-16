@@ -42,12 +42,12 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
-                                       IN uint16_t length,
-                                       IN OUT uintn *cert_chain_size,
-                                       OUT void *cert_chain,
-                                       OUT void **trust_anchor OPTIONAL,
-                                       OUT uintn *trust_anchor_size OPTIONAL)
+return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
+                                       uint16_t length,
+                                       uintn *cert_chain_size,
+                                       void *cert_chain,
+                                       void **trust_anchor,
+                                       uintn *trust_anchor_size)
 {
     bool result;
     return_status status;
@@ -307,9 +307,9 @@ done:
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_certificate(IN void *context, IN uint8_t slot_id,
-                                      IN OUT uintn *cert_chain_size,
-                                      OUT void *cert_chain)
+return_status libspdm_get_certificate(void *context, uint8_t slot_id,
+                                      uintn *cert_chain_size,
+                                      void *cert_chain)
 {
     return libspdm_get_certificate_choose_length(context, slot_id,
                                                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
@@ -338,11 +338,11 @@ return_status libspdm_get_certificate(IN void *context, IN uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
-                                         IN OUT uintn *cert_chain_size,
-                                         OUT void *cert_chain,
-                                         OUT void **trust_anchor,
-                                         OUT uintn *trust_anchor_size)
+return_status libspdm_get_certificate_ex(void *context, uint8_t slot_id,
+                                         uintn *cert_chain_size,
+                                         void *cert_chain,
+                                         void **trust_anchor,
+                                         uintn *trust_anchor_size)
 {
     return libspdm_get_certificate_choose_length_ex(context, slot_id,
                                                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
@@ -371,11 +371,11 @@ return_status libspdm_get_certificate_ex(IN void *context, IN uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_certificate_choose_length(IN void *context,
-                                                    IN uint8_t slot_id,
-                                                    IN uint16_t length,
-                                                    IN OUT uintn *cert_chain_size,
-                                                    OUT void *cert_chain)
+return_status libspdm_get_certificate_choose_length(void *context,
+                                                    uint8_t slot_id,
+                                                    uint16_t length,
+                                                    uintn *cert_chain_size,
+                                                    void *cert_chain)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -418,13 +418,13 @@ return_status libspdm_get_certificate_choose_length(IN void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_certificate_choose_length_ex(IN void *context,
-                                                       IN uint8_t slot_id,
-                                                       IN uint16_t length,
-                                                       IN OUT uintn *cert_chain_size,
-                                                       OUT void *cert_chain,
-                                                       OUT void **trust_anchor,
-                                                       OUT uintn *trust_anchor_size)
+return_status libspdm_get_certificate_choose_length_ex(void *context,
+                                                       uint8_t slot_id,
+                                                       uint16_t length,
+                                                       uintn *cert_chain_size,
+                                                       void *cert_chain,
+                                                       void **trust_anchor,
+                                                       uintn *trust_anchor_size)
 {
     spdm_context_t *spdm_context;
     uintn retry;

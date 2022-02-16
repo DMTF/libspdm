@@ -6,11 +6,11 @@
 
 #include "hal/base.h"
 
-uint64_t internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
-                                      OUT uint64_t *remainder OPTIONAL);
+uint64_t internal_math_div_rem_u64x64(uint64_t dividend, uint64_t divisor,
+                                      uint64_t *remainder);
 
-int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
-                                     OUT int64_t *remainder OPTIONAL)
+int64_t internal_math_div_rem_s64x64(const int64_t dividend, const int64_t divisor,
+                                     int64_t *remainder)
 {
     int64_t quot;
 
@@ -24,8 +24,8 @@ int64_t internal_math_div_rem_s64x64(IN int64_t dividend, IN int64_t divisor,
     return (dividend ^ divisor) >= 0 ? quot : -quot;
 }
 
-int64_t div_s64x64_remainder(IN int64_t dividend, IN int64_t divisor,
-                             OUT int64_t *remainder OPTIONAL)
+int64_t div_s64x64_remainder(const int64_t dividend, const int64_t divisor,
+                             int64_t *remainder)
 {
     return internal_math_div_rem_s64x64(dividend, divisor, remainder);
 }
@@ -39,9 +39,9 @@ __declspec(naked) void __cdecl _alldvrm(void)
 
     /*    int64_t
      *            div_s64x64_remainder (
-     *      IN      int64_t     dividend,
-     *      IN      int64_t     divisor,
-     *      OUT     int64_t     *remainder  OPTIONAL
+     *      const      int64_t     dividend,
+     *      const      int64_t     divisor,
+     *          int64_t     *remainder 
      *      )*/
 
     _asm {

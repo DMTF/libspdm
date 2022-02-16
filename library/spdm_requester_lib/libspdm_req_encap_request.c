@@ -34,8 +34,8 @@ spdm_get_encap_response_struct_t m_spdm_get_encap_response_struct[] = {
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  get_encap_response_func         The function to process the encapsuled message.
  **/
-void libspdm_register_get_encap_response_func(IN void *context,
-                                              IN libspdm_get_encap_response_func
+void libspdm_register_get_encap_response_func(void *context,
+                                              const libspdm_get_encap_response_func
                                               get_encap_response_func)
 {
     spdm_context_t *spdm_context;
@@ -54,7 +54,7 @@ void libspdm_register_get_encap_response_func(IN void *context,
  * @return GET_ENCAP_RESPONSE function according to the request code.
  **/
 libspdm_get_encap_response_func
-SpdmGetEncapResponseFuncViaRequestCode(IN uint8_t request_response_code)
+SpdmGetEncapResponseFuncViaRequestCode(uint8_t request_response_code)
 {
     uintn index;
 
@@ -84,11 +84,11 @@ SpdmGetEncapResponseFuncViaRequestCode(IN uint8_t request_response_code)
  * @retval RETURN_SUCCESS               The SPDM response is processed successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
-return_status SpdmProcessEncapsulatedRequest(IN spdm_context_t *spdm_context,
-                                             IN uintn encap_request_size,
-                                             IN void *encap_request,
-                                             IN OUT uintn *encap_response_size,
-                                             OUT void *encap_response)
+return_status SpdmProcessEncapsulatedRequest(spdm_context_t *spdm_context,
+                                             uintn encap_request_size,
+                                             void *encap_request,
+                                             uintn *encap_response_size,
+                                             void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
     return_status status;
@@ -142,10 +142,10 @@ return_status SpdmProcessEncapsulatedRequest(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
-                                        IN uint32_t *session_id,
-                                        IN uint8_t mut_auth_requested,
-                                        OUT uint8_t *req_slot_id_param)
+return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
+                                        const uint32_t *session_id,
+                                        uint8_t mut_auth_requested,
+                                        uint8_t *req_slot_id_param)
 {
     return_status status;
     uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -407,8 +407,8 @@ return_status spdm_encapsulated_request(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_encap_request(IN void *spdm_context,
-                                                 IN uint32_t *session_id)
+return_status libspdm_send_receive_encap_request(void *spdm_context,
+                                                 const uint32_t *session_id)
 {
     return spdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }

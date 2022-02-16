@@ -24,8 +24,8 @@ typedef struct {
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_psk_finish_request_mine_t;
 
-static void spdm_secured_message_set_request_finished_key(IN void *spdm_secured_message_context,
-                                                          IN void *key, IN uintn key_size)
+static void spdm_secured_message_set_request_finished_key(void *spdm_secured_message_context,
+                                                          const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -176,7 +176,7 @@ void test_spdm_responder_psk_finish_rsp_case2(void **State)
     free(data1);
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 

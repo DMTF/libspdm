@@ -70,7 +70,7 @@ spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
  * @return GET_SPDM_RESPONSE function according to the request code.
  **/
 spdm_get_spdm_response_func
-spdm_get_response_func_via_request_code(IN uint8_t request_code)
+spdm_get_response_func_via_request_code(uint8_t request_code)
 {
     uintn index;
 
@@ -94,7 +94,7 @@ spdm_get_response_func_via_request_code(IN uint8_t request_code)
  * @return GET_SPDM_RESPONSE function according to the last request.
  **/
 spdm_get_spdm_response_func
-spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
+spdm_get_response_func_via_last_request(spdm_context_t *spdm_context)
 {
     spdm_message_header_t *spdm_request;
 
@@ -119,9 +119,9 @@ spdm_get_response_func_via_last_request(IN spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The SPDM request is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
-return_status libspdm_process_request(IN void *context, OUT uint32_t **session_id,
-                                      OUT bool *is_app_message,
-                                      IN uintn request_size, IN void *request)
+return_status libspdm_process_request(void *context, uint32_t **session_id,
+                                      bool *is_app_message,
+                                      uintn request_size, const void *request)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -200,9 +200,9 @@ return_status libspdm_process_request(IN void *context, OUT uint32_t **session_i
  * @param  session_id                    The session_id of a session.
  * @param  session_state                 The state of a session.
  **/
-void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
-                                         IN uint32_t session_id,
-                                         IN libspdm_session_state_t session_state)
+void spdm_trigger_session_state_callback(spdm_context_t *spdm_context,
+                                         uint32_t session_id,
+                                         const libspdm_session_state_t session_state)
 {
     uintn index;
 
@@ -222,9 +222,9 @@ void spdm_trigger_session_state_callback(IN spdm_context_t *spdm_context,
  * @param  session_id                    Indicate the SPDM session ID.
  * @param  session_state                 Indicate the SPDM session state.
  */
-void spdm_set_session_state(IN spdm_context_t *spdm_context,
-                            IN uint32_t session_id,
-                            IN libspdm_session_state_t session_state)
+void spdm_set_session_state(spdm_context_t *spdm_context,
+                            uint32_t session_id,
+                            const libspdm_session_state_t session_state)
 {
     spdm_session_info_t *session_info;
     libspdm_session_state_t old_session_state;
@@ -252,8 +252,8 @@ void spdm_set_session_state(IN spdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  **/
-void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
-                                            IN libspdm_connection_state_t
+void spdm_trigger_connection_state_callback(spdm_context_t *spdm_context,
+                                            const libspdm_connection_state_t
                                             connection_state)
 {
     uintn index;
@@ -274,8 +274,8 @@ void spdm_trigger_connection_state_callback(IN spdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  */
-void spdm_set_connection_state(IN spdm_context_t *spdm_context,
-                               IN libspdm_connection_state_t connection_state)
+void spdm_set_connection_state(spdm_context_t *spdm_context,
+                               const libspdm_connection_state_t connection_state)
 {
     if (spdm_context->connection_info.connection_state !=
         connection_state) {
@@ -304,10 +304,10 @@ void spdm_set_connection_state(IN spdm_context_t *spdm_context,
  * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
  *                                      Continue the dispatch without send response.
  **/
-return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
-                                     IN bool is_app_message,
-                                     IN OUT uintn *response_size,
-                                     OUT void *response)
+return_status libspdm_build_response(void *context, const uint32_t *session_id,
+                                     bool is_app_message,
+                                     uintn *response_size,
+                                     void *response)
 {
     spdm_context_t *spdm_context;
     uint8_t my_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -530,7 +530,7 @@ return_status libspdm_build_response(IN void *context, IN uint32_t *session_id,
  * @param  get_response_func              The function to process the encapsuled message.
  **/
 void libspdm_register_get_response_func(
-    IN void *context, IN libspdm_get_response_func get_response_func)
+    void *context, const libspdm_get_response_func get_response_func)
 {
     spdm_context_t *spdm_context;
 
@@ -552,8 +552,8 @@ void libspdm_register_get_response_func(
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
 return_status libspdm_register_session_state_callback_func(
-    IN void *context,
-    IN libspdm_session_state_callback_func spdm_session_state_callback)
+    void *context,
+    const libspdm_session_state_callback_func spdm_session_state_callback)
 {
     spdm_context_t *spdm_context;
     uintn index;
@@ -583,8 +583,8 @@ return_status libspdm_register_session_state_callback_func(
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
 return_status libspdm_register_connection_state_callback_func(
-    IN void *context,
-    IN libspdm_connection_state_callback_func spdm_connection_state_callback)
+    void *context,
+    const libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
     spdm_context_t *spdm_context;
     uintn index;

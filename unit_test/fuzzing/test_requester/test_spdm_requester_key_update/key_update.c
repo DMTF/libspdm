@@ -9,8 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-static void spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_context,
-                                                    IN OUT uint32_t *session_id)
+static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context,
+                                                    uint32_t *session_id)
 {
     void *data;
     uintn data_size;
@@ -54,8 +54,8 @@ static void spdm_set_standard_key_update_test_state(IN OUT spdm_context_t *spdm_
     free(data);
 }
 
-static void spdm_compute_secret_update(uintn hash_size, IN const uint8_t *in_secret,
-                                       OUT uint8_t *out_secret, IN uintn out_secret_size)
+static void spdm_compute_secret_update(uintn hash_size, const uint8_t *in_secret,
+                                       uint8_t *out_secret, uintn out_secret_size)
 {
     uint8_t m_bin_str9[128];
     uintn m_bin_str9_size;
@@ -76,9 +76,9 @@ static void spdm_compute_secret_update(uintn hash_size, IN const uint8_t *in_sec
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    IN OUT spdm_secured_message_context_t *secured_message_context,
-    OUT uint8_t *m_rsp_secret_buffer, IN uint8_t rsp_secret_fill, OUT uint8_t *m_req_secret_buffer,
-    IN uint8_t req_secret_fill)
+    spdm_secured_message_context_t *secured_message_context,
+    uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill, uint8_t *m_req_secret_buffer,
+    uint8_t req_secret_fill)
 {
     set_mem(m_rsp_secret_buffer, secured_message_context->hash_size, rsp_secret_fill);
     set_mem(m_req_secret_buffer, secured_message_context->hash_size, req_secret_fill);
@@ -109,14 +109,14 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_size,
-                                       IN void *request, IN uint64_t timeout)
+return_status spdm_device_send_message(void *spdm_context, uintn request_size,
+                                       const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
-                                          IN OUT void *response, IN uint64_t timeout)
+return_status spdm_device_receive_message(void *spdm_context, uintn *response_size,
+                                          void *response, uint64_t timeout)
 {
     static uint8_t sub_index = 0;
     spdm_key_update_response_t spdm_response;
@@ -227,7 +227,7 @@ spdm_test_context_t m_spdm_requester_key_update_test_context = {
     spdm_device_receive_message,
 };
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 

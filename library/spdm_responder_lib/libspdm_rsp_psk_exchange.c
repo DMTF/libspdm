@@ -25,13 +25,13 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_psk_exchange(IN void *context,
-                                             IN uintn request_size,
-                                             IN void *request,
-                                             IN OUT uintn *response_size,
-                                             OUT void *response)
+return_status spdm_get_response_psk_exchange(void *context,
+                                             uintn request_size,
+                                             const void *request,
+                                             uintn *response_size,
+                                             void *response)
 {
-    spdm_psk_exchange_request_t *spdm_request;
+    const spdm_psk_exchange_request_t *spdm_request;
     spdm_psk_exchange_response_t *spdm_response;
     bool result;
     uint8_t slot_id;

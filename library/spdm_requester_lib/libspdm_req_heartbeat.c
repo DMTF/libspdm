@@ -26,7 +26,7 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
+return_status try_spdm_heartbeat(void *context, uint32_t session_id)
 {
     return_status status;
     spdm_heartbeat_request_t spdm_request;
@@ -105,7 +105,7 @@ return_status try_spdm_heartbeat(IN void *context, IN uint32_t session_id)
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_heartbeat(IN void *context, IN uint32_t session_id)
+return_status libspdm_heartbeat(void *context, uint32_t session_id)
 {
     uintn retry;
     return_status status;

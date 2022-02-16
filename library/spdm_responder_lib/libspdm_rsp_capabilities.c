@@ -17,7 +17,7 @@
  * @retval True                         The received SPDM version is valid.
  * @retval False                        The received SPDM version is invalid.
  **/
-bool spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN uint8_t version)
+bool spdm_check_request_version_compability(spdm_context_t *spdm_context, uint8_t version)
 {
     uint8_t local_ver;
     uintn index;
@@ -46,8 +46,8 @@ bool spdm_check_request_version_compability(IN spdm_context_t *spdm_context, IN 
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-bool spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
-                                         IN uint8_t version)
+bool spdm_check_request_flag_compability(uint32_t capabilities_flag,
+                                         uint8_t version)
 {
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
     /*uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;*/
@@ -142,14 +142,13 @@ bool spdm_check_request_flag_compability(IN uint32_t capabilities_flag,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_capabilities(IN void *context,
-                                             IN uintn request_size,
-                                             IN void *request,
-                                             IN OUT uintn *response_size,
-                                             OUT void *response)
+return_status spdm_get_response_capabilities(void *context,
+                                             uintn request_size,
+                                             const void *request,
+                                             uintn *response_size,
+                                             void *response)
 {
-    spdm_get_capabilities_request_t *spdm_request;
-    uintn spdm_request_size;
+    const spdm_get_capabilities_request_t *spdm_request;
     spdm_capabilities_response_t *spdm_response;
     spdm_context_t *spdm_context;
     return_status status;
@@ -205,7 +204,6 @@ return_status spdm_get_response_capabilities(IN void *context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    spdm_request_size = request_size;
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                spdm_request->header.request_response_code);
@@ -237,7 +235,7 @@ return_status spdm_get_response_capabilities(IN void *context,
     /* Cache*/
 
     status = libspdm_append_message_a(spdm_context, spdm_request,
-                                      spdm_request_size);
+                                      request_size);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

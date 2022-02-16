@@ -49,17 +49,17 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id,
-                                       IN uint8_t request_attribute,
-                                       IN uint8_t measurement_operation,
-                                       IN uint8_t slot_id_param,
-                                       OUT uint8_t *content_changed,
-                                       OUT uint8_t *number_of_blocks,
-                                       IN OUT uint32_t *measurement_record_length,
-                                       OUT void *measurement_record,
-                                       IN void *requester_nonce_in OPTIONAL,
-                                       OUT void *requester_nonce OPTIONAL,
-                                       OUT void *responder_nonce OPTIONAL)
+return_status try_spdm_get_measurement(void *context, const uint32_t *session_id,
+                                       uint8_t request_attribute,
+                                       uint8_t measurement_operation,
+                                       uint8_t slot_id_param,
+                                       uint8_t *content_changed,
+                                       uint8_t *number_of_blocks,
+                                       uint32_t *measurement_record_length,
+                                       void *measurement_record,
+                                       const void *requester_nonce_in,
+                                       void *requester_nonce,
+                                       void *responder_nonce)
 {
     bool result;
     return_status status;
@@ -494,14 +494,14 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32_t *session_id
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
-                                      IN uint8_t request_attribute,
-                                      IN uint8_t measurement_operation,
-                                      IN uint8_t slot_id_param,
-                                      OUT uint8_t *content_changed,
-                                      OUT uint8_t *number_of_blocks,
-                                      IN OUT uint32_t *measurement_record_length,
-                                      OUT void *measurement_record)
+return_status libspdm_get_measurement(void *context, const uint32_t *session_id,
+                                      uint8_t request_attribute,
+                                      uint8_t measurement_operation,
+                                      uint8_t slot_id_param,
+                                      uint8_t *content_changed,
+                                      uint8_t *number_of_blocks,
+                                      uint32_t *measurement_record_length,
+                                      void *measurement_record)
 {
     spdm_context_t *spdm_context;
     uintn retry;
@@ -549,17 +549,17 @@ return_status libspdm_get_measurement(IN void *context, IN uint32_t *session_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_measurement_ex(IN void *context, IN uint32_t *session_id,
-                                         IN uint8_t request_attribute,
-                                         IN uint8_t measurement_operation,
-                                         IN uint8_t slot_id_param,
-                                         OUT uint8_t *content_changed,
-                                         OUT uint8_t *number_of_blocks,
-                                         IN OUT uint32_t *measurement_record_length,
-                                         OUT void *measurement_record,
-                                         IN void *requester_nonce_in OPTIONAL,
-                                         OUT void *requester_nonce OPTIONAL,
-                                         OUT void *responder_nonce OPTIONAL) {
+return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_id,
+                                         uint8_t request_attribute,
+                                         uint8_t measurement_operation,
+                                         uint8_t slot_id_param,
+                                         uint8_t *content_changed,
+                                         uint8_t *number_of_blocks,
+                                         uint32_t *measurement_record_length,
+                                         void *measurement_record,
+                                         const void *requester_nonce_in,
+                                         void *requester_nonce,
+                                         void *responder_nonce) {
     spdm_context_t *spdm_context;
     uintn retry;
     return_status status;

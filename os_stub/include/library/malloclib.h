@@ -28,7 +28,7 @@
  * @return A pointer to the allocated buffer or NULL if allocation fails.
  *
  **/
-void *allocate_pool(IN uintn AllocationSize);
+void *allocate_pool(uintn AllocationSize);
 
 /**
  * Allocates and zeros a buffer of type EfiBootServicesData.
@@ -43,7 +43,7 @@ void *allocate_pool(IN uintn AllocationSize);
  * @return A pointer to the allocated buffer or NULL if allocation fails.
  *
  **/
-void *allocate_zero_pool(IN uintn AllocationSize);
+void *allocate_zero_pool(uintn AllocationSize);
 
 /**
  * Frees a buffer that was previously allocated with one of the pool allocation functions in the
@@ -59,6 +59,6 @@ void *allocate_zero_pool(IN uintn AllocationSize);
  * @param  buffer                Pointer to the buffer to free.
  *
  **/
-void free_pool(IN void *buffer);
+void free_pool(const void *buffer);
 
 #endif

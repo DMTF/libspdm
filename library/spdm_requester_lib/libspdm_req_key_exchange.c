@@ -56,13 +56,13 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status try_spdm_send_receive_key_exchange(
-    IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
-    OUT uint8_t *heartbeat_period,
-    OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
-    IN void *requester_random_in OPTIONAL,
-    OUT void *requester_random OPTIONAL,
-    OUT void *responder_random OPTIONAL)
+    spdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
+    uint8_t *heartbeat_period,
+    uint8_t *req_slot_id_param, void *measurement_hash,
+    const void *requester_random_in,
+    void *requester_random,
+    void *responder_random)
 {
     bool result;
     return_status status;
@@ -508,10 +508,10 @@ return_status try_spdm_send_receive_key_exchange(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status spdm_send_receive_key_exchange(
-    IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
-    OUT uint8_t *heartbeat_period,
-    OUT uint8_t *req_slot_id_param, OUT void *measurement_hash)
+    spdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
+    uint8_t *heartbeat_period,
+    uint8_t *req_slot_id_param, void *measurement_hash)
 {
     uintn retry;
     return_status status;
@@ -550,13 +550,13 @@ return_status spdm_send_receive_key_exchange(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status spdm_send_receive_key_exchange_ex(
-    IN spdm_context_t *spdm_context, IN uint8_t measurement_hash_type,
-    IN uint8_t slot_id, IN uint8_t session_policy, OUT uint32_t *session_id,
-    OUT uint8_t *heartbeat_period,
-    OUT uint8_t *req_slot_id_param, OUT void *measurement_hash,
-    IN void *requester_random_in OPTIONAL,
-    OUT void *requester_random OPTIONAL,
-    OUT void *responder_random OPTIONAL)
+    spdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
+    uint8_t *heartbeat_period,
+    uint8_t *req_slot_id_param, void *measurement_hash,
+    const void *requester_random_in,
+    void *requester_random,
+    void *responder_random)
 {
     uintn retry;
     return_status status;

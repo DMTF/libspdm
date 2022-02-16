@@ -251,7 +251,7 @@ void test_spdm_responder_challenge_case6(void **State)
     free(data);
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
@@ -297,7 +297,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

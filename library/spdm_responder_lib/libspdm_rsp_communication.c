@@ -36,10 +36,10 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_process_message(IN void *context, IN OUT uint32_t **session_id,
-                                      IN void *request, IN uintn request_size,
-                                      OUT void *response,
-                                      IN OUT uintn *response_size)
+return_status libspdm_process_message(void *context, uint32_t **session_id,
+                                      const void *request, uintn request_size,
+                                      void *response,
+                                      uintn *response_size)
 {
     return_status status;
     spdm_context_t *spdm_context;
@@ -85,7 +85,7 @@ return_status libspdm_process_message(IN void *context, IN OUT uint32_t **sessio
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_UNSUPPORTED           One request message is not supported.
  **/
-return_status libspdm_responder_dispatch_message(IN void *context)
+return_status libspdm_responder_dispatch_message(void *context)
 {
     return_status status;
     spdm_context_t *spdm_context;

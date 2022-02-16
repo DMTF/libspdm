@@ -23,8 +23,8 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-bool read_responder_private_certificate(IN uint32_t base_asym_algo,
-                                        OUT void **data, OUT uintn *size)
+bool read_responder_private_certificate(uint32_t base_asym_algo,
+                                        void **data, uintn *size)
 {
     bool res;
     char *file;
@@ -68,8 +68,8 @@ bool read_responder_private_certificate(IN uint32_t base_asym_algo,
     return res;
 }
 
-bool read_requester_private_certificate(IN uint16_t req_base_asym_alg,
-                                        OUT void **data, OUT uintn *size)
+bool read_requester_private_certificate(uint16_t req_base_asym_alg,
+                                        void **data, uintn *size)
 {
     bool res;
     char *file;
@@ -120,9 +120,9 @@ bool read_requester_private_certificate(IN uint16_t req_base_asym_alg,
  **/
 uintn fill_measurement_image_hash_block (
     bool use_bit_stream,
-    IN uint32_t measurement_hash_algo,
-    IN uint8_t measurements_index,
-    IN spdm_measurement_block_dmtf_t *measurement_block
+    uint32_t measurement_hash_algo,
+    uint8_t measurements_index,
+    spdm_measurement_block_dmtf_t *measurement_block
     )
 {
     uintn hash_size;
@@ -188,7 +188,7 @@ uintn fill_measurement_image_hash_block (
  * @return measurement block size.
  **/
 uintn fill_measurement_svn_block (
-    IN spdm_measurement_block_dmtf_t *measurement_block
+    spdm_measurement_block_dmtf_t *measurement_block
     )
 {
     spdm_measurements_secure_version_number_t svn;
@@ -225,7 +225,7 @@ uintn fill_measurement_svn_block (
  * @return measurement block size.
  **/
 uintn fill_measurement_manifest_block (
-    IN spdm_measurement_block_dmtf_t *measurement_block
+    spdm_measurement_block_dmtf_t *measurement_block
     )
 {
     uint8_t data[MEASUREMENT_MANIFEST_SIZE];
@@ -263,7 +263,7 @@ uintn fill_measurement_manifest_block (
  * @return measurement block size.
  **/
 uintn fill_measurement_device_mode_block (
-    IN spdm_measurement_block_dmtf_t *measurement_block
+    spdm_measurement_block_dmtf_t *measurement_block
     )
 {
     spdm_measurements_device_mode_t device_mode;
@@ -346,15 +346,15 @@ uintn fill_measurement_device_mode_block (
  **/
 
 return_status libspdm_measurement_collection(
-    IN spdm_version_number_t spdm_version,
-    IN uint8_t measurement_specification,
-    IN uint32_t measurement_hash_algo,
-    IN uint8_t measurements_index,
-    IN uint8_t request_attribute,
-    OUT uint8_t *content_changed,
-    OUT uint8_t *measurements_count,
-    OUT void *measurements,
-    IN OUT uintn *measurements_size)
+    const spdm_version_number_t spdm_version,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    uint8_t measurements_index,
+    uint8_t request_attribute,
+    uint8_t *content_changed,
+    uint8_t *measurements_count,
+    void *measurements,
+    uintn *measurements_size)
 {
     spdm_measurement_block_dmtf_t *measurement_block;
     uintn hash_size;
@@ -566,11 +566,11 @@ return_status libspdm_measurement_collection(
  * @retval false measurement summary hash is not generated.
  **/
 bool libspdm_generate_measurement_summary_hash(
-    IN spdm_version_number_t spdm_version, IN uint32_t base_hash_algo,
-    IN uint8_t measurement_specification, IN uint32_t measurement_hash_algo,
-    IN uint8_t measurement_summary_hash_type,
-    OUT uint8_t *measurement_summary_hash,
-    IN OUT uintn *measurement_summary_hash_size)
+    const spdm_version_number_t spdm_version, uint32_t base_hash_algo,
+    uint8_t measurement_specification, uint32_t measurement_hash_algo,
+    uint8_t measurement_summary_hash_type,
+    uint8_t *measurement_summary_hash,
+    uintn *measurement_summary_hash_size)
 {
     uint8_t measurement_data[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uintn index;
@@ -705,11 +705,11 @@ bool libspdm_generate_measurement_summary_hash(
  * @retval false signing fail.
  **/
 bool libspdm_requester_data_sign(
-    IN spdm_version_number_t spdm_version, IN uint8_t op_code,
-    IN uint16_t req_base_asym_alg,
-    IN uint32_t base_hash_algo, IN bool is_data_hash,
-    IN const uint8_t *message, IN uintn message_size,
-    OUT uint8_t *signature, IN OUT uintn *sig_size)
+    const spdm_version_number_t spdm_version, uint8_t op_code,
+    uint16_t req_base_asym_alg,
+    uint32_t base_hash_algo, bool is_data_hash,
+    const uint8_t *message, uintn message_size,
+    uint8_t *signature, uintn *sig_size)
 {
     void *context;
     void *private_pem;
@@ -759,11 +759,11 @@ bool libspdm_requester_data_sign(
  * @retval false signing fail.
  **/
 bool libspdm_responder_data_sign(
-    IN spdm_version_number_t spdm_version, IN uint8_t op_code,
-    IN uint32_t base_asym_algo,
-    IN uint32_t base_hash_algo, IN bool is_data_hash,
-    IN const uint8_t *message, IN uintn message_size,
-    OUT uint8_t *signature, IN OUT uintn *sig_size)
+    const spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t base_asym_algo,
+    uint32_t base_hash_algo, bool is_data_hash,
+    const uint8_t *message, uintn message_size,
+    uint8_t *signature, uintn *sig_size)
 {
     void *context;
     void *private_pem;
@@ -817,13 +817,13 @@ uint8_t m_bin_str0[0x11] = {
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_handshake_secret_hkdf_expand(
-    IN spdm_version_number_t spdm_version,
-    IN uint32_t base_hash_algo,
-    IN const uint8_t *psk_hint,
-    OPTIONAL IN uintn psk_hint_size,
-    OPTIONAL IN const uint8_t *info,
-    IN uintn info_size,
-    OUT uint8_t *out, IN uintn out_size)
+    const spdm_version_number_t spdm_version,
+    uint32_t base_hash_algo,
+    const uint8_t *psk_hint,
+    uintn psk_hint_size,
+    const uint8_t *info,
+    uintn info_size,
+    uint8_t *out, uintn out_size)
 {
     void *psk;
     uintn psk_size;
@@ -877,13 +877,13 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_master_secret_hkdf_expand(
-    IN spdm_version_number_t spdm_version,
-    IN uint32_t base_hash_algo,
-    IN const uint8_t *psk_hint,
-    OPTIONAL IN uintn psk_hint_size,
-    OPTIONAL IN const uint8_t *info,
-    IN uintn info_size, OUT uint8_t *out,
-    IN uintn out_size)
+    const spdm_version_number_t spdm_version,
+    uint32_t base_hash_algo,
+    const uint8_t *psk_hint,
+    uintn psk_hint_size,
+    const uint8_t *info,
+    uintn info_size, uint8_t *out,
+    uintn out_size)
 {
     void *psk;
     uintn psk_size;

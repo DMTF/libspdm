@@ -80,7 +80,7 @@ void test_spdm_responder_respond_if_ready(void **State)
     #endif
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 

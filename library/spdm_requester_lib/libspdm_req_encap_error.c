@@ -23,11 +23,11 @@
  * @retval RETURN_SUCCESS               The error message is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_generate_encap_error_response(IN void *context,
-                                                    IN uint8_t error_code,
-                                                    IN uint8_t error_data,
-                                                    IN OUT uintn *response_size,
-                                                    OUT void *response)
+return_status libspdm_generate_encap_error_response(const void *context,
+                                                    uint8_t error_code,
+                                                    uint8_t error_data,
+                                                    uintn *response_size,
+                                                    void *response)
 {
     spdm_error_response_t *spdm_response;
 
@@ -63,9 +63,9 @@ return_status libspdm_generate_encap_error_response(IN void *context,
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status libspdm_generate_encap_extended_error_response(
-    IN void *context, IN uint8_t error_code, IN uint8_t error_data,
-    IN uintn extended_error_data_size, IN uint8_t *extended_error_data,
-    IN OUT uintn *response_size, OUT void *response)
+    const void *context, uint8_t error_code, uint8_t error_data,
+    uintn extended_error_data_size, const uint8_t *extended_error_data,
+    uintn *response_size, void *response)
 {
     spdm_error_response_t *spdm_response;
 

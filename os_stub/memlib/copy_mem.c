@@ -48,8 +48,8 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int copy_mem_s(OUT void *restrict dst_buf, IN uintn dst_len,
-               IN const void *restrict src_buf, IN uintn src_len)
+int copy_mem_s(void *restrict dst_buf, uintn dst_len,
+               const void *restrict src_buf, uintn src_len)
 {
     volatile uint8_t* dst;
     const volatile uint8_t* src;
@@ -94,7 +94,7 @@ int copy_mem_s(OUT void *restrict dst_buf, IN uintn dst_len,
     return 0;
 }
 
-void* copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len)
+void* copy_mem(void* dst_buf, const void* src_buf, uintn len)
 {
     copy_mem_s(dst_buf, len, src_buf, len);
     return dst_buf;

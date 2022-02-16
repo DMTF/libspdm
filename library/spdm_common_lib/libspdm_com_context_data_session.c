@@ -12,9 +12,9 @@
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The SPDM session ID.
  **/
-void spdm_session_info_init(IN spdm_context_t *spdm_context,
-                            IN spdm_session_info_t *session_info,
-                            IN uint32_t session_id, IN bool use_psk)
+void spdm_session_info_init(spdm_context_t *spdm_context,
+                            spdm_session_info_t *session_info,
+                            uint32_t session_id, bool use_psk)
 {
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
@@ -83,10 +83,10 @@ void spdm_session_info_init(IN spdm_context_t *spdm_context,
  *
  * @return session info.
  **/
-void *libspdm_get_session_info_via_session_id(IN void *context,
-                                              IN uint32_t session_id)
+void *libspdm_get_session_info_via_session_id(const void *context,
+                                              uint32_t session_id)
 {
-    spdm_context_t *spdm_context;
+    const spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
     uintn index;
 
@@ -99,7 +99,7 @@ void *libspdm_get_session_info_via_session_id(IN void *context,
 
     spdm_context = context;
 
-    session_info = spdm_context->session_info;
+    session_info = (spdm_session_info_t *)spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             return &session_info[index];
@@ -119,8 +119,8 @@ void *libspdm_get_session_info_via_session_id(IN void *context,
  *
  * @return secured message context.
  **/
-void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
-                                                         IN uint32_t session_id)
+void *libspdm_get_secured_message_context_via_session_id(const void *spdm_context,
+                                                         uint32_t session_id)
 {
     spdm_session_info_t *session_info;
 
@@ -141,7 +141,7 @@ void *libspdm_get_secured_message_context_via_session_id(IN void *spdm_context,
  * @return secured message context.
  **/
 void *
-libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
+libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
 {
     spdm_session_info_t *session_info;
 
@@ -161,8 +161,8 @@ libspdm_get_secured_message_context_via_session_info(IN void *spdm_session_info)
  *
  * @return session info associated with this new session ID.
  **/
-void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
-                                IN bool use_psk)
+void *libspdm_assign_session_id(void *context, uint32_t session_id,
+                                bool use_psk)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
@@ -209,7 +209,7 @@ void *libspdm_assign_session_id(IN void *context, IN uint32_t session_id,
  *
  * @return half of session ID for a requester.
  **/
-uint16_t spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
+uint16_t spdm_allocate_req_session_id(spdm_context_t *spdm_context)
 {
     uint16_t req_session_id;
     spdm_session_info_t *session_info;
@@ -235,10 +235,10 @@ uint16_t spdm_allocate_req_session_id(IN spdm_context_t *spdm_context)
  *
  * @return half of session ID for a responder.
  **/
-uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
+uint16_t spdm_allocate_rsp_session_id(const spdm_context_t *spdm_context)
 {
     uint16_t rsp_session_id;
-    spdm_session_info_t *session_info;
+    const spdm_session_info_t *session_info;
     uintn index;
 
     session_info = spdm_context->session_info;
@@ -260,7 +260,7 @@ uint16_t spdm_allocate_rsp_session_id(IN spdm_context_t *spdm_context)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The SPDM session ID.
  **/
-void libspdm_free_session_id(IN void *context, IN uint32_t session_id)
+void libspdm_free_session_id(void *context, uint32_t session_id)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;

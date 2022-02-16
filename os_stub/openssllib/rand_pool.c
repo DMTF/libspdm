@@ -22,7 +22,7 @@
  * @retval false       Failed to request random bytes.
  *
  **/
-static bool rand_get_bytes(IN uintn length, OUT uint8_t *RandBuffer)
+static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
 {
     bool ret;
     uint64_t temp_rand;

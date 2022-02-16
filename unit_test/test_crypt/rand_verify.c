@@ -8,7 +8,7 @@
 
 #define RANDOM_NUMBER_SIZE 256
 
-const uint8_t m_seed_string[] = "This is the random seed for PRNG verification.";
+uint8_t m_seed_string[] = "This is the random seed for PRNG verification.";
 
 uint8_t m_previous_random_buffer[RANDOM_NUMBER_SIZE] = { 0x0 };
 

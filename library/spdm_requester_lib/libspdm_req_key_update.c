@@ -32,8 +32,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
-                                  IN bool single_direction, IN OUT bool *key_updated)
+return_status try_spdm_key_update(void *context, uint32_t session_id,
+                                  bool single_direction, bool *key_updated)
 {
     return_status status;
     return_status temp_status;
@@ -265,8 +265,8 @@ return_status try_spdm_key_update(IN void *context, IN uint32_t session_id,
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_key_update(IN void *context, IN uint32_t session_id,
-                                 IN bool single_direction)
+return_status libspdm_key_update(void *context, uint32_t session_id,
+                                 bool single_direction)
 {
     spdm_context_t *spdm_context;
     uintn retry;

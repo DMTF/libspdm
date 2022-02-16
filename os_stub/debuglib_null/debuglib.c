@@ -6,11 +6,11 @@
 
 #include <base.h>
 
-void debug_assert(IN const char *file_name, IN uintn line_number,
-                  IN const char *description)
+void debug_assert(const char *file_name, uintn line_number,
+                  const char *description)
 {
 }
 
-void debug_print(IN uintn error_level, IN const char *format, ...)
+void debug_print(uintn error_level, const char *format, ...)
 {
 }

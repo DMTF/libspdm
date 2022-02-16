@@ -25,13 +25,12 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
-                                        IN void *request,
-                                        IN OUT uintn *response_size,
-                                        OUT void *response)
+return_status spdm_get_response_digests(void *context, uintn request_size,
+                                        const void *request,
+                                        uintn *response_size,
+                                        void *response)
 {
-    spdm_get_digest_request_t *spdm_request;
-    uintn spdm_request_size;
+    const spdm_get_digest_request_t *spdm_request;
     spdm_digest_response_t *spdm_response;
     uintn index;
     bool no_local_cert_chain;
@@ -77,8 +76,6 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                spdm_request->header.request_response_code);
-
-    spdm_request_size = request_size;
 
     no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
@@ -131,7 +128,7 @@ return_status spdm_get_response_digests(IN void *context, IN uintn request_size,
     /* Cache*/
 
     status = libspdm_append_message_b(spdm_context, spdm_request,
-                                      spdm_request_size);
+                                      request_size);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
