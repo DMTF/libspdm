@@ -523,9 +523,9 @@ return_status spdm_requester_finish_test_receive_message(
             spdm_response->header.param2 = 0;
             ptr = (void *)(spdm_response + 1);
             copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                      sizeof(m_local_buffer)
-                      - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                      spdm_response, sizeof(spdm_finish_response_t));
+                       sizeof(m_local_buffer)
+                       - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                       spdm_response, sizeof(spdm_finish_response_t));
             m_local_buffer_size += sizeof(spdm_finish_response_t);
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
