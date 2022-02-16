@@ -1447,8 +1447,8 @@ void test_spdm_requester_heartbeat_case11(void **state)
                data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-     copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-                TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
