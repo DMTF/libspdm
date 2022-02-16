@@ -596,6 +596,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
 
     result = libspdm_verify_certificate_chain_buffer(
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
         cert_chain_buffer, cert_chain_buffer_size);
     if (!result) {
         return false;

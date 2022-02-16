@@ -305,7 +305,7 @@ bool libspdm_read_responder_public_certificate_chain(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = libspdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size, base_asym_algo, base_hash_algo);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -425,7 +425,7 @@ bool libspdm_read_requester_public_certificate_chain(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = libspdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size, req_base_asym_alg, base_hash_algo);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -601,7 +601,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-    res = libspdm_verify_cert_chain_data(file_data, file_size);
+    res = libspdm_verify_cert_chain_data(file_data, file_size, base_asym_algo, base_hash_algo);
     if (!res) {
         free(file_data);
         free(cert_chain);

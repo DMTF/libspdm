@@ -890,7 +890,9 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
         if (m_libspdm_local_certificate_chain == NULL) {
             libspdm_read_responder_public_certificate_chain_by_size(
-                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                m_libspdm_use_hash_algo,
+                /*MAXUINT16_CERT signature_algo is SHA256RSA */
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
                 LIBSPDM_TEST_CERT_MAXUINT16, &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
@@ -2392,12 +2394,14 @@ void libspdm_test_requester_get_certificate_case15(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
+
     libspdm_read_responder_public_certificate_chain_by_size(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, LIBSPDM_TEST_CERT_MAXUINT16, &data,
-        &data_size, &hash, &hash_size);
+        /*MAXUINT16_CERT signature_algo is SHA256RSA */
+        m_libspdm_use_hash_algo, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+        LIBSPDM_TEST_CERT_MAXUINT16, &data, &data_size, &hash, &hash_size);
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert, &root_cert_size);
+                                           data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+                                           &root_cert, &root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
