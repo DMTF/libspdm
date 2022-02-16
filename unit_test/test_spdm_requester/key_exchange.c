@@ -143,8 +143,8 @@ return_status spdm_requester_key_exchange_test_send_message(
             message_size = spdm_test_get_key_exchange_request_size(
                 spdm_context, (uint8_t *)request + header_size,
                 request_size - header_size);
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer),
-                   (uint8_t *)request + header_size, message_size);
+            copy_mem_s(m_local_buffer, sizeof(m_local_buffer),
+                       (uint8_t *)request + header_size, message_size);
             m_local_buffer_size += message_size;
             sub_index++;
         }
@@ -798,10 +798,10 @@ return_status spdm_requester_key_exchange_test_receive_message(
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
                 &data_size, NULL, NULL);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, (uintn)ptr - (uintn)spdm_response);
+            copy_mem_s(&m_local_buffer[m_local_buffer_size],
+                       sizeof(m_local_buffer)
+                       - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                       spdm_response, (uintn)ptr - (uintn)spdm_response);
             m_local_buffer_size +=
                 ((uintn)ptr - (uintn)spdm_response);
             DEBUG((DEBUG_INFO, "m_local_buffer_size (0x%x):\n",
