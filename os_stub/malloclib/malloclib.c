@@ -11,12 +11,12 @@
 #include <string.h>
 #include <assert.h>
 
-void *allocate_pool(IN uintn AllocationSize)
+void *allocate_pool(uintn AllocationSize)
 {
     return malloc(AllocationSize);
 }
 
-void *allocate_zero_pool(IN uintn AllocationSize)
+void *allocate_zero_pool(uintn AllocationSize)
 {
     void *buffer;
     buffer = malloc(AllocationSize);
@@ -27,7 +27,7 @@ void *allocate_zero_pool(IN uintn AllocationSize)
     return buffer;
 }
 
-void free_pool(IN void *buffer)
+void free_pool(const void *buffer)
 {
-    free(buffer);
+    free((void *)buffer);
 }

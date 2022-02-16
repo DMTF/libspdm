@@ -183,9 +183,9 @@ uint32_t m_other_params_support_priority_table[] = {
  *
  * @return final preferred supported algorithm
  **/
-uint32_t spdm_prioritize_algorithm(IN uint32_t *priority_table,
-                                   IN uintn priority_table_count,
-                                   IN uint32_t local_algo, IN uint32_t peer_algo)
+uint32_t spdm_prioritize_algorithm(const uint32_t *priority_table,
+                                   uintn priority_table_count,
+                                   uint32_t local_algo, uint32_t peer_algo)
 {
     uint32_t common_algo;
     uintn index;
@@ -217,13 +217,13 @@ uint32_t spdm_prioritize_algorithm(IN uint32_t *priority_table,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_algorithms(IN void *context,
-                                           IN uintn request_size,
-                                           IN void *request,
-                                           IN OUT uintn *response_size,
-                                           OUT void *response)
+return_status spdm_get_response_algorithms(void *context,
+                                           uintn request_size,
+                                           const void *request,
+                                           uintn *response_size,
+                                           void *response)
 {
-    spdm_negotiate_algorithms_request_t *spdm_request;
+    const spdm_negotiate_algorithms_request_t *spdm_request;
     uintn spdm_request_size;
     spdm_algorithms_response_mine_t *spdm_response;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;

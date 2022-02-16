@@ -51,10 +51,10 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int copy_mem_s(OUT void *restrict dst_buf, IN uintn dst_len,
-               IN const void *restrict src_buf, IN uintn src_len);
+int copy_mem_s(void *restrict dst_buf, uintn dst_len,
+               const void *restrict src_buf, uintn src_len);
 
-void* copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len);
+void* copy_mem(void* dst_buf, const void* src_buf, uintn len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
@@ -70,7 +70,7 @@ void* copy_mem(OUT void* dst_buf, IN const void* src_buf, IN uintn len);
  * @return buffer.
  *
  **/
-void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value);
+void *set_mem(void *buffer, uintn length, uint8_t value);
 
 /**
  * Fills a target buffer with zeros, and returns the target buffer.
@@ -86,7 +86,7 @@ void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value);
  * @return buffer.
  *
  **/
-void *zero_mem(OUT void *buffer, IN uintn length);
+void *zero_mem(void *buffer, uintn length);
 
 /**
  * Compares the contents of two buffers in const time.
@@ -109,7 +109,7 @@ void *zero_mem(OUT void *buffer, IN uintn length);
  * @retval Non-zero          There is mismatched between source_buffer and destination_buffer.
  *
  **/
-intn const_compare_mem(IN const void *destination_buffer,
-                       IN const void *source_buffer, IN uintn length);
+intn const_compare_mem(const void *destination_buffer,
+                       const void *source_buffer, uintn length);
 
 #endif

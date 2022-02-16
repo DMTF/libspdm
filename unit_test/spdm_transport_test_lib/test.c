@@ -23,8 +23,8 @@
  *        It shall be no greater than 8.
  *        0 means no sequence number is required.
  **/
-uint8_t test_get_sequence_number(IN uint64_t sequence_number,
-                                 IN OUT uint8_t *sequence_number_buffer)
+uint8_t test_get_sequence_number(uint64_t sequence_number,
+                                 uint8_t *sequence_number_buffer)
 {
     copy_mem_s(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
                &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
@@ -58,10 +58,10 @@ uint32_t test_get_max_random_number_count(void)
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status test_encode_message(IN uint32_t *session_id, IN uintn message_size,
-                                  IN void *message,
-                                  IN OUT uintn *transport_message_size,
-                                  OUT void *transport_message)
+return_status test_encode_message(const uint32_t *session_id, uintn message_size,
+                                  const void *message,
+                                  uintn *transport_message_size,
+                                  void *transport_message)
 {
     uintn aligned_message_size;
     uintn alignment;
@@ -117,13 +117,13 @@ return_status test_encode_message(IN uint32_t *session_id, IN uintn message_size
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status test_decode_message(OUT uint32_t **session_id,
-                                  IN uintn transport_message_size,
-                                  IN void *transport_message,
-                                  IN OUT uintn *message_size, OUT void *message)
+return_status test_decode_message(uint32_t **session_id,
+                                  uintn transport_message_size,
+                                  const void *transport_message,
+                                  uintn *message_size, void *message)
 {
     uintn alignment;
-    test_message_header_t *test_message_header;
+    const test_message_header_t *test_message_header;
     uintn init_message_size;
 
     init_message_size = *message_size;

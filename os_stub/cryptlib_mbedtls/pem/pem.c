@@ -16,7 +16,7 @@
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
 
-static uintn ascii_str_len(IN const char *string)
+static uintn ascii_str_len(const char *string)
 {
     uintn length;
 
@@ -48,10 +48,10 @@ static uintn ascii_str_len(IN const char *string)
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **rsa_context)
+bool rsa_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **rsa_context)
 {
     int32_t ret;
     mbedtls_pk_context pk;
@@ -134,9 +134,9 @@ bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                                 IN const char *password,
-                                 OUT void **ec_context)
+bool ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size,
+                                 const char *password,
+                                 void **ec_context)
 {
     int32_t ret;
     mbedtls_pk_context pk;
@@ -224,10 +224,10 @@ bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **ecd_context)
+bool ecd_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **ecd_context)
 {
     return false;
 }
@@ -249,10 +249,10 @@ bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **sm2_context)
+bool sm2_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **sm2_context)
 {
     return false;
 }

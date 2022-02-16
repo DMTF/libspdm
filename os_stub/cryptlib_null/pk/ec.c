@@ -23,7 +23,7 @@
  *         If the allocations fails, ec_new_by_nid() returns NULL.
  *
  **/
-void *ec_new_by_nid(IN uintn nid)
+void *ec_new_by_nid(uintn nid)
 {
     ASSERT(false);
     return NULL;
@@ -35,7 +35,7 @@ void *ec_new_by_nid(IN uintn nid)
  * @param[in]  ec_context  Pointer to the EC context to be released.
  *
  **/
-void ec_free(IN void *ec_context)
+void ec_free(void *ec_context)
 {
     ASSERT(false);
 }
@@ -69,8 +69,8 @@ void ec_free(IN void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
-                     IN OUT uintn *public_size)
+bool ec_generate_key(void *ec_context, uint8_t *public,
+                     uintn *public_size)
 {
     ASSERT(false);
     return false;
@@ -106,9 +106,9 @@ bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public,
  * @retval false  key_size is not large enough.
  *
  **/
-bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
-                    IN uintn peer_public_size, OUT uint8_t *key,
-                    IN OUT uintn *key_size)
+bool ec_compute_key(void *ec_context, const uint8_t *peer_public,
+                    uintn peer_public_size, uint8_t *key,
+                    uintn *key_size)
 {
     ASSERT(false);
     return false;
@@ -143,9 +143,9 @@ bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
  * @retval  false  sig_size is too small.
  *
  **/
-bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-                IN const uint8_t *message_hash, IN uintn hash_size,
-                OUT uint8_t *signature, IN OUT uintn *sig_size)
+bool ecdsa_sign(void *ec_context, uintn hash_nid,
+                const uint8_t *message_hash, uintn hash_size,
+                uint8_t *signature, uintn *sig_size)
 {
     ASSERT(false);
     return false;
@@ -174,9 +174,9 @@ bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-bool ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-                  IN const uint8_t *message_hash, IN uintn hash_size,
-                  IN const uint8_t *signature, IN uintn sig_size)
+bool ecdsa_verify(void *ec_context, uintn hash_nid,
+                  const uint8_t *message_hash, uintn hash_size,
+                  const uint8_t *signature, uintn sig_size)
 {
     ASSERT(false);
     return false;

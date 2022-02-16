@@ -44,8 +44,8 @@
  * @retval  false  bn_size is too small.
  *
  **/
-bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                 OUT uint8_t *big_number, IN OUT uintn *bn_size)
+bool rsa_get_key(void *rsa_context, const rsa_key_tag_t key_tag,
+                 uint8_t *big_number, uintn *bn_size)
 {
     ASSERT(false);
     return false;
@@ -72,9 +72,9 @@ bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
-                      IN const uint8_t *public_exponent,
-                      IN uintn public_exponent_size)
+bool rsa_generate_key(void *rsa_context, uintn modulus_length,
+                      const uint8_t *public_exponent,
+                      uintn public_exponent_size)
 {
     ASSERT(false);
     return false;
@@ -99,7 +99,7 @@ bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
  * @retval  false  RSA key components are not valid.
  *
  **/
-bool rsa_check_key(IN void *rsa_context)
+bool rsa_check_key(void *rsa_context)
 {
     ASSERT(false);
     return false;
@@ -133,10 +133,10 @@ bool rsa_check_key(IN void *rsa_context)
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                             IN const uint8_t *message_hash,
-                             IN uintn hash_size, OUT uint8_t *signature,
-                             IN OUT uintn *sig_size)
+bool rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
+                             const uint8_t *message_hash,
+                             uintn hash_size, uint8_t *signature,
+                             uintn *sig_size)
 {
     ASSERT(false);
     return false;
@@ -171,9 +171,9 @@ bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  sig_size is too small.
  *
  **/
-bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
-                  IN const uint8_t *message_hash, IN uintn hash_size,
-                  OUT uint8_t *signature, IN OUT uintn *sig_size)
+bool rsa_pss_sign(void *rsa_context, uintn hash_nid,
+                  const uint8_t *message_hash, uintn hash_size,
+                  uint8_t *signature, uintn *sig_size)
 {
     ASSERT(false);
     return false;

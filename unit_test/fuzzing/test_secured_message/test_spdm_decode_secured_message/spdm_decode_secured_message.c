@@ -59,7 +59,7 @@ spdm_test_context_t m_spdm_transport_mctp_test_context = {
     false,
 };
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 

@@ -68,7 +68,7 @@ spdm_key_update_request_t m_spdm_key_update_request10 = {
 uintn m_spdm_key_update_request10_size = sizeof(m_spdm_key_update_request10);
 
 static void spdm_set_standard_key_update_test_state(
-    IN OUT spdm_context_t *spdm_context, IN OUT uint32_t *session_id)
+    spdm_context_t *spdm_context, uint32_t *session_id)
 {
     spdm_session_info_t    *session_info;
 
@@ -112,9 +112,9 @@ static void spdm_set_standard_key_update_test_state(
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    IN OUT spdm_secured_message_context_t *secured_message_context,
-    OUT uint8_t *m_rsp_secret_buffer, IN uint8_t rsp_secret_fill,
-    OUT uint8_t *m_req_secret_buffer, IN uint8_t req_secret_fill)
+    spdm_secured_message_context_t *secured_message_context,
+    uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
+    uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
     set_mem(m_rsp_secret_buffer, secured_message_context
             ->hash_size, rsp_secret_fill);
@@ -150,8 +150,8 @@ static void spdm_set_standard_key_update_test_secrets(
 }
 
 static void spdm_compute_secret_update(uintn hash_size,
-                                       IN const uint8_t *in_secret, OUT uint8_t *out_secret,
-                                       IN uintn out_secret_size)
+                                       const uint8_t *in_secret, uint8_t *out_secret,
+                                       uintn out_secret_size)
 {
     uint8_t m_bin_str9[128];
     uintn m_bin_str9_size;

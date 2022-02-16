@@ -33,9 +33,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-                                           IN uint32_t session_id,
-                                           IN uint8_t req_slot_id_param)
+return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
+                                           uint32_t session_id,
+                                           uint8_t req_slot_id_param)
 {
     return_status status;
     spdm_finish_request_mine_t spdm_request;
@@ -281,9 +281,9 @@ error:
     return status;
 }
 
-return_status spdm_send_receive_finish(IN spdm_context_t *spdm_context,
-                                       IN uint32_t session_id,
-                                       IN uint8_t req_slot_id_param)
+return_status spdm_send_receive_finish(spdm_context_t *spdm_context,
+                                       uint32_t session_id,
+                                       uint8_t req_slot_id_param)
 {
     uintn retry;
     return_status status;

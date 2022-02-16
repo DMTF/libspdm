@@ -23,14 +23,14 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_end_session(IN void *context,
-                                            IN uintn request_size,
-                                            IN void *request,
-                                            IN OUT uintn *response_size,
-                                            OUT void *response)
+return_status spdm_get_response_end_session(void *context,
+                                            uintn request_size,
+                                            const void *request,
+                                            uintn *response_size,
+                                            void *response)
 {
     spdm_end_session_response_t *spdm_response;
-    spdm_end_session_request_t *spdm_request;
+    const spdm_end_session_request_t *spdm_request;
     spdm_context_t *spdm_context;
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;

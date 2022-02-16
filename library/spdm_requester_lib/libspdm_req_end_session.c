@@ -25,9 +25,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-                                                IN uint32_t session_id,
-                                                IN uint8_t end_session_attributes)
+return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
+                                                uint32_t session_id,
+                                                uint8_t end_session_attributes)
 {
     return_status status;
     spdm_end_session_request_t spdm_request;
@@ -117,9 +117,9 @@ return_status try_spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
     return RETURN_SUCCESS;
 }
 
-return_status spdm_send_receive_end_session(IN spdm_context_t *spdm_context,
-                                            IN uint32_t session_id,
-                                            IN uint8_t end_session_attributes)
+return_status spdm_send_receive_end_session(spdm_context_t *spdm_context,
+                                            uint32_t session_id,
+                                            uint8_t end_session_attributes)
 {
     uintn retry;
     return_status status;

@@ -17,8 +17,8 @@
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
-void *libspdm_secured_message_dhe_new(IN spdm_version_number_t spdm_version,
-                                      IN uint16_t dhe_named_group, IN const bool is_initiator)
+void *libspdm_secured_message_dhe_new(const spdm_version_number_t spdm_version,
+                                      uint16_t dhe_named_group, bool is_initiator)
 {
     return libspdm_dhe_new(spdm_version, dhe_named_group, is_initiator);
 }
@@ -30,8 +30,8 @@ void *libspdm_secured_message_dhe_new(IN spdm_version_number_t spdm_version,
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  dhe_context                   Pointer to the DHE context to be released.
  **/
-void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
-                                      IN void *dhe_context)
+void libspdm_secured_message_dhe_free(uint16_t dhe_named_group,
+                                      void *dhe_context)
 {
     libspdm_dhe_free(dhe_named_group, dhe_context);
 }
@@ -55,10 +55,10 @@ void libspdm_secured_message_dhe_free(IN uint16_t dhe_named_group,
  * @retval false  DHE public key generation failed.
  * @retval false  public_key_size is not large enough.
  **/
-bool libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
-                                              IN OUT void *dhe_context,
-                                              OUT uint8_t *public_key,
-                                              IN OUT uintn *public_key_size)
+bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
+                                              void *dhe_context,
+                                              uint8_t *public_key,
+                                              uintn *public_key_size)
 {
     return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key,
                                     public_key_size);
@@ -83,9 +83,9 @@ bool libspdm_secured_message_dhe_generate_key(IN uint16_t dhe_named_group,
  * @retval false  key_size is not large enough.
  **/
 bool libspdm_secured_message_dhe_compute_key(
-    IN uint16_t dhe_named_group, IN OUT void *dhe_context,
-    IN const uint8_t *peer_public, IN uintn peer_public_size,
-    IN OUT void *spdm_secured_message_context)
+    uint16_t dhe_named_group, void *dhe_context,
+    const uint8_t *peer_public, uintn peer_public_size,
+    void *spdm_secured_message_context)
 {
     spdm_secured_message_context_t *secured_message_context;
     uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];

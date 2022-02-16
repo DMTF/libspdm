@@ -25,8 +25,8 @@ typedef struct {
 #pragma pack()
 
 return_status spdm_requester_negotiate_algorithms_test_send_message(
-    IN void *spdm_context, IN uintn request_size, IN void *request,
-    IN uint64_t timeout)
+    void *spdm_context, uintn request_size, const void *request,
+    uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
@@ -102,8 +102,8 @@ return_status spdm_requester_negotiate_algorithms_test_send_message(
 }
 
 return_status spdm_requester_negotiate_algorithm_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

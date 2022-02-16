@@ -22,9 +22,9 @@
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
-                                   IN bool is_app_message,
-                                   IN uintn request_size, IN void *request)
+return_status libspdm_send_request(void *context, const uint32_t *session_id,
+                                   bool is_app_message,
+                                   uintn request_size, const void *request)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -76,10 +76,10 @@ return_status libspdm_send_request(IN void *context, IN uint32_t *session_id,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status libspdm_receive_response(IN void *context, IN uint32_t *session_id,
-                                       IN bool is_app_message,
-                                       IN OUT uintn *response_size,
-                                       OUT void *response)
+return_status libspdm_receive_response(void *context, const uint32_t *session_id,
+                                       bool is_app_message,
+                                       uintn *response_size,
+                                       void *response)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -183,9 +183,9 @@ error:
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
-                                     IN uint32_t *session_id,
-                                     IN uintn request_size, IN void *request)
+return_status spdm_send_spdm_request(spdm_context_t *spdm_context,
+                                     const uint32_t *session_id,
+                                     uintn request_size, const void *request)
 {
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -228,10 +228,10 @@ return_status spdm_send_spdm_request(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status spdm_receive_spdm_response(IN spdm_context_t *spdm_context,
-                                         IN uint32_t *session_id,
-                                         IN OUT uintn *response_size,
-                                         OUT void *response)
+return_status spdm_receive_spdm_response(spdm_context_t *spdm_context,
+                                         const uint32_t *session_id,
+                                         uintn *response_size,
+                                         void *response)
 {
     spdm_session_info_t *session_info;
     libspdm_session_state_t session_state;

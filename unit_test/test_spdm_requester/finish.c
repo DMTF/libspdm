@@ -16,7 +16,7 @@ static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 void spdm_secured_message_set_response_finished_key(
-    IN void *spdm_secured_message_context, IN void *key, IN uintn key_size)
+    void *spdm_secured_message_context, const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -28,10 +28,10 @@ void spdm_secured_message_set_response_finished_key(
     secured_message_context->finished_key_ready = true;
 }
 
-return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
-                                                      IN uintn request_size,
-                                                      IN void *request,
-                                                      IN uint64_t timeout)
+return_status spdm_requester_finish_test_send_message(void *spdm_context,
+                                                      uintn request_size,
+                                                      const void *request,
+                                                      uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
     uint8_t *ptr;
@@ -152,8 +152,8 @@ return_status spdm_requester_finish_test_send_message(IN void *spdm_context,
 }
 
 return_status spdm_requester_finish_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

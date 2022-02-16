@@ -22,9 +22,9 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
-                                       IN OUT uintn *encap_request_size,
-                                       OUT void *encap_request)
+spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
+                                       uintn *encap_request_size,
+                                       void *encap_request)
 {
     spdm_get_certificate_request_t *spdm_request;
     return_status status;
@@ -85,10 +85,10 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_certificate(
-    IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT bool *need_continue)
+    spdm_context_t *spdm_context, uintn encap_response_size,
+    const void *encap_response, bool *need_continue)
 {
-    spdm_certificate_response_t *spdm_response;
+    const spdm_certificate_response_t *spdm_response;
     uintn spdm_response_size;
     bool result;
     return_status status;

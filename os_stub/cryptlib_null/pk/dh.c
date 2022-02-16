@@ -22,7 +22,7 @@
  *         If the allocations fails, dh_new() returns NULL.
  *
  **/
-void *dh_new_by_nid(IN uintn nid)
+void *dh_new_by_nid(uintn nid)
 {
     ASSERT(false);
     return NULL;
@@ -36,7 +36,7 @@ void *dh_new_by_nid(IN uintn nid)
  * @param[in]  dh_context  Pointer to the DH context to be released.
  *
  **/
-void dh_free(IN void *dh_context)
+void dh_free(void *dh_context)
 {
     ASSERT(false);
 }
@@ -63,8 +63,8 @@ void dh_free(IN void *dh_context)
  * @retval false  PRNG fails to generate random prime number with prime_length.
  *
  **/
-bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-                           IN uintn prime_length, OUT uint8_t *prime)
+bool dh_generate_parameter(void *dh_context, uintn generator,
+                           uintn prime_length, uint8_t *prime)
 {
     ASSERT(false);
     return false;
@@ -91,8 +91,8 @@ bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
  * @retval false  value of prime is not a safe prime number.
  *
  **/
-bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-                      IN uintn prime_length, IN const uint8_t *prime)
+bool dh_set_parameter(void *dh_context, uintn generator,
+                      uintn prime_length, const uint8_t *prime)
 {
     ASSERT(false);
     return false;
@@ -120,8 +120,8 @@ bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
  * @retval false  public_key_size is not large enough.
  *
  **/
-bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
-                     IN OUT uintn *public_key_size)
+bool dh_generate_key(void *dh_context, uint8_t *public_key,
+                     uintn *public_key_size)
 {
     ASSERT(false);
     return false;
@@ -151,9 +151,9 @@ bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
  * @retval false  key_size is not large enough.
  *
  **/
-bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
-                    IN uintn peer_public_key_size, OUT uint8_t *key,
-                    IN OUT uintn *key_size)
+bool dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
+                    uintn peer_public_key_size, uint8_t *key,
+                    uintn *key_size)
 {
     ASSERT(false);
     return false;

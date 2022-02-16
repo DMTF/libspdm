@@ -6,16 +6,16 @@
 
 #include "hal/base.h"
 
-void *allocate_pool(IN uintn AllocationSize)
+void *allocate_pool(uintn AllocationSize)
 {
     return NULL;
 }
 
-void *allocate_zero_pool(IN uintn AllocationSize)
+void *allocate_zero_pool(uintn AllocationSize)
 {
     return NULL;
 }
 
-void free_pool(IN void *buffer)
+void free_pool(const void *buffer)
 {
 }

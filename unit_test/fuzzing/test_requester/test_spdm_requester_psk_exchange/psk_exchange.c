@@ -15,10 +15,10 @@ static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_local_psk_hint[32];
 static uintn m_local_buffer_size;
 
-uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context, IN void *buffer,
-                                              IN uintn buffer_size)
+uintn spdm_test_get_psk_exchange_request_size(const void *spdm_context, const void *buffer,
+                                              uintn buffer_size)
 {
-    spdm_psk_exchange_request_t *spdm_request;
+    const spdm_psk_exchange_request_t *spdm_request;
     uintn message_size;
 
     spdm_request = buffer;
@@ -51,8 +51,8 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_size,
-                                       IN void *request, IN uint64_t timeout)
+return_status spdm_device_send_message(void *spdm_context, uintn request_size,
+                                       const void *request, uint64_t timeout)
 {
     uintn header_size;
     uintn message_size;
@@ -67,8 +67,8 @@ return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_s
     return RETURN_SUCCESS;
 }
 
-return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
-                                          IN OUT void *response, IN uint64_t timeout)
+return_status spdm_device_receive_message(void *spdm_context, uintn *response_size,
+                                          void *response, uint64_t timeout)
 {
     spdm_psk_exchange_response_t *spdm_response;
     spdm_test_context_t *spdm_test_context;
@@ -266,13 +266,13 @@ spdm_test_context_t m_spdm_requester_psk_exchange_test_context = {
     spdm_device_receive_message,
 };
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
     setup_spdm_test_context(&m_spdm_requester_psk_exchange_test_context);
 
-    m_spdm_requester_psk_exchange_test_context.test_buffer = test_buffer;
+    m_spdm_requester_psk_exchange_test_context.test_buffer = (void *)test_buffer;
     m_spdm_requester_psk_exchange_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response*/
@@ -290,7 +290,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

@@ -60,7 +60,7 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
     return (int)const_compare_mem(buf1, buf2, count);
 }
 
-intn ascii_strcmp(IN const char *first_string, IN const char *second_string)
+intn ascii_strcmp(const char *first_string, const char *second_string)
 {
     while ((*first_string != '\0') && (*first_string == *second_string)) {
         first_string++;
@@ -75,7 +75,7 @@ int strcmp(const char *s1, const char *s2)
     return (int)ascii_strcmp(s1, s2);
 }
 
-uintn ascii_strlen(IN const char *string)
+uintn ascii_strlen(const char *string)
 {
     uintn length;
 
@@ -92,7 +92,7 @@ unsigned int strlen(char *s)
     return (unsigned int)ascii_strlen(s);
 }
 
-char *ascii_strstr(IN const char *string, IN const char *search_string)
+char *ascii_strstr(const char *string, const char *search_string)
 {
     const char *first_match;
     const char *search_string_tmp;

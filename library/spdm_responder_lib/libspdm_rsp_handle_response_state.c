@@ -22,10 +22,10 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_responder_handle_response_state(IN void *context,
-                                                   IN uint8_t request_code,
-                                                   IN OUT uintn *response_size,
-                                                   OUT void *response)
+return_status spdm_responder_handle_response_state(void *context,
+                                                   uint8_t request_code,
+                                                   uintn *response_size,
+                                                   void *response)
 {
     spdm_context_t *spdm_context;
     return_status status;

@@ -33,41 +33,41 @@
 /* public cert*/
 
 bool read_responder_public_certificate_chain(
-    IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, OUT void **data,
-    OUT uintn *size, OUT void **hash, OUT uintn *hash_size);
+    uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
+    uintn *size, void **hash, uintn *hash_size);
 
 bool read_requester_public_certificate_chain(
-    IN uint32_t base_hash_algo, IN uint16_t req_base_asym_alg, OUT void **data,
-    OUT uintn *size, OUT void **hash, OUT uintn *hash_size);
+    uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
+    uintn *size, void **hash, uintn *hash_size);
 
-bool read_responder_root_public_certificate(IN uint32_t base_hash_algo,
-                                            IN uint32_t base_asym_algo,
-                                            OUT void **data, OUT uintn *size,
-                                            OUT void **hash,
-                                            OUT uintn *hash_size);
+bool read_responder_root_public_certificate(uint32_t base_hash_algo,
+                                            uint32_t base_asym_algo,
+                                            void **data, uintn *size,
+                                            void **hash,
+                                            uintn *hash_size);
 
-bool read_requester_root_public_certificate(IN uint32_t base_hash_algo,
-                                            IN uint16_t req_base_asym_alg,
-                                            OUT void **data, OUT uintn *size,
-                                            OUT void **hash,
-                                            OUT uintn *hash_size);
+bool read_requester_root_public_certificate(uint32_t base_hash_algo,
+                                            uint16_t req_base_asym_alg,
+                                            void **data, uintn *size,
+                                            void **hash,
+                                            uintn *hash_size);
 
 bool read_responder_public_certificate_chain_by_size(
-    IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, IN uint16_t CertId,
-    OUT void **data, OUT uintn *size, OUT void **hash,
-    OUT uintn *hash_size);
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t CertId,
+    void **data, uintn *size, void **hash,
+    uintn *hash_size);
 
 bool read_responder_root_public_certificate_by_size(
-    IN uint32_t base_hash_algo, IN uint32_t base_asym_algo, IN uint16_t CertId,
-    OUT void **data, OUT uintn *size, OUT void **hash,
-    OUT uintn *hash_size);
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t CertId,
+    void **data, uintn *size, void **hash,
+    uintn *hash_size);
 
 
 /* External*/
 
-bool read_input_file(IN char *file_name, OUT void **file_data,
-                     OUT uintn *file_size);
+bool read_input_file(const char *file_name, void **file_data,
+                     uintn *file_size);
 
-void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size);
+void dump_hex_str(const uint8_t *buffer, uintn buffer_size);
 
 #endif

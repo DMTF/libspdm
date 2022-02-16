@@ -34,8 +34,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
-                                  OUT void *total_digest_buffer)
+return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
+                                  void *total_digest_buffer)
 {
     bool result;
     return_status status;
@@ -182,8 +182,8 @@ return_status try_spdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_digest(IN void *context, OUT uint8_t *slot_mask,
-                                 OUT void *total_digest_buffer)
+return_status libspdm_get_digest(void *context, uint8_t *slot_mask,
+                                 void *total_digest_buffer)
 {
     spdm_context_t *spdm_context;
     uintn retry;

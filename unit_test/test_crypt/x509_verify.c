@@ -5,7 +5,7 @@
  **/
 #include "test_crypt.h"
 
-static const uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
+static uint8_t m_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
 /**
  * Validate Crypto X509 certificate Verify

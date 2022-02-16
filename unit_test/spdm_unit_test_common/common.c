@@ -13,7 +13,7 @@ spdm_test_context_t *get_spdm_test_context(void)
     return m_spdm_test_context;
 }
 
-void setup_spdm_test_context(IN spdm_test_context_t *spdm_test_context)
+void setup_spdm_test_context(spdm_test_context_t *spdm_test_context)
 {
     m_spdm_test_context = spdm_test_context;
 }

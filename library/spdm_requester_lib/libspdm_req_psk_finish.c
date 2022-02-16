@@ -31,8 +31,8 @@ typedef struct {
  * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-                                               IN uint32_t session_id)
+return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
+                                               uint32_t session_id)
 {
     return_status status;
     spdm_psk_finish_request_mine_t spdm_request;
@@ -189,8 +189,8 @@ error:
     return status;
 }
 
-return_status spdm_send_receive_psk_finish(IN spdm_context_t *spdm_context,
-                                           IN uint32_t session_id)
+return_status spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
+                                           uint32_t session_id)
 {
     uintn retry;
     return_status status;

@@ -19,7 +19,7 @@
  * @retval false        Failed to generate the random number.
  *
  **/
-bool get_random_number_64(OUT uint64 *rand_data)
+bool get_random_number_64(uint64 *rand_data)
 {
     uint8 *ptr;
 

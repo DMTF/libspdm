@@ -24,14 +24,13 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_certificate(IN void *context,
-                                            IN uintn request_size,
-                                            IN void *request,
-                                            IN OUT uintn *response_size,
-                                            OUT void *response)
+return_status spdm_get_response_certificate(void *context,
+                                            uintn request_size,
+                                            const void *request,
+                                            uintn *response_size,
+                                            void *response)
 {
-    spdm_get_certificate_request_t *spdm_request;
-    uintn spdm_request_size;
+    const spdm_get_certificate_request_t *spdm_request;
     spdm_certificate_response_t *spdm_response;
     uint16_t offset;
     uint16_t length;
@@ -77,7 +76,6 @@ return_status spdm_get_response_certificate(IN void *context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    spdm_request_size = request_size;
 
     slot_id = spdm_request->header.param1 & SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
 
@@ -142,7 +140,7 @@ return_status spdm_get_response_certificate(IN void *context,
     /* Cache*/
 
     status = libspdm_append_message_b(spdm_context, spdm_request,
-                                      spdm_request_size);
+                                      request_size);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

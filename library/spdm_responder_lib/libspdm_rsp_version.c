@@ -32,13 +32,12 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_version(IN void *context, IN uintn request_size,
-                                        IN void *request,
-                                        IN OUT uintn *response_size,
-                                        OUT void *response)
+return_status spdm_get_response_version(void *context, uintn request_size,
+                                        const void *request,
+                                        uintn *response_size,
+                                        void *response)
 {
-    spdm_get_version_request_t *spdm_request;
-    uintn spdm_request_size;
+    const spdm_get_version_request_t *spdm_request;
     spdm_version_response_mine_t *spdm_response;
     spdm_context_t *spdm_context;
     return_status status;
@@ -73,7 +72,6 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    spdm_request_size = request_size;
 
     spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                spdm_request->header.request_response_code);
@@ -85,7 +83,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
     status = libspdm_append_message_a(spdm_context, spdm_request,
-                                      spdm_request_size);
+                                      request_size);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

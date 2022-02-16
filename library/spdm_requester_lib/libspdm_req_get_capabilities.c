@@ -17,8 +17,8 @@
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-bool spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
-                                          IN uint8_t version)
+bool spdm_check_response_flag_compability(uint32_t capabilities_flag,
+                                          uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
@@ -97,7 +97,7 @@ bool spdm_check_response_flag_compability(IN uint32_t capabilities_flag,
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
+return_status try_spdm_get_capabilities(spdm_context_t *spdm_context)
 {
     return_status status;
     spdm_get_capabilities_request_t spdm_request;
@@ -230,7 +230,7 @@ return_status try_spdm_get_capabilities(IN spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_capabilities(IN spdm_context_t *spdm_context)
+return_status spdm_get_capabilities(spdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;

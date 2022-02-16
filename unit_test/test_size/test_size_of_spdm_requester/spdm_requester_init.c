@@ -6,18 +6,18 @@
 
 #include "spdm_requester.h"
 
-return_status SpdmRequesterSendMessage(IN void *spdm_context,
-                                       IN uintn message_size, IN void *message,
-                                       IN uint64_t timeout)
+return_status SpdmRequesterSendMessage(const void *spdm_context,
+                                       uintn message_size, const void *message,
+                                       uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;
 }
 
-return_status SpdmRequesterReceiveMessage(IN void *spdm_context,
-                                          IN OUT uintn *message_size,
-                                          IN OUT void *message,
-                                          IN uint64_t timeout)
+return_status SpdmRequesterReceiveMessage(const void *spdm_context,
+                                          uintn *message_size,
+                                          void *message,
+                                          uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;

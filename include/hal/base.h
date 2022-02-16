@@ -198,22 +198,6 @@
 /* Modifiers for data Types used to self document code.*/
 
 
-
-/* Datum is passed to the function.*/
-
-#define IN
-
-
-/* Datum is returned from the function.*/
-
-#define OUT
-
-
-/* Passing the datum to the function is optional, and a NULL
- * is passed if the value is not supplied.*/
-
-#define OPTIONAL
-
 /* NULL pointer (void *)*/
 
 #ifndef NULL

@@ -32,7 +32,7 @@ void *hmac_md_new(void)
  * @param[in]  hmac_md_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_md_free(IN void *hmac_md_ctx)
+void hmac_md_free(const void *hmac_md_ctx)
 {
 
     /* Free OpenSSL HMAC_CTX context*/
@@ -55,8 +55,8 @@ void hmac_md_free(IN void *hmac_md_ctx)
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
-                     IN const uint8_t *key, IN uintn key_size)
+bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
+                     const uint8_t *key, uintn key_size)
 {
 
     /* Check input parameters.*/
@@ -86,7 +86,7 @@ bool hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
  * @retval false  HMAC-MD context copy failed.
  *
  **/
-bool hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
+bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx)
 {
 
     /* Check input parameters.*/
@@ -121,8 +121,8 @@ bool hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx)
  * @retval false  HMAC-MD data digest failed.
  *
  **/
-bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-                    IN uintn data_size)
+bool hmac_md_update(void *hmac_md_ctx, const void *data,
+                    uintn data_size)
 {
 
     /* Check input parameters.*/
@@ -168,7 +168,7 @@ bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
  * @retval false  HMAC-MD digest computation failed.
  *
  **/
-bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
+bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value)
 {
     uint32_t length;
 
@@ -213,9 +213,9 @@ bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_md_all(IN const EVP_MD *md, IN const void *data,
-                 IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-                 OUT uint8_t *hmac_value)
+bool hmac_md_all(const EVP_MD *md, const void *data,
+                 uintn data_size, const uint8_t *key, uintn key_size,
+                 uint8_t *hmac_value)
 {
     uint32_t length;
     HMAC_CTX *ctx;
@@ -267,7 +267,7 @@ void *hmac_sha256_new(void)
  * @param[in]  hmac_sha256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha256_free(IN void *hmac_sha256_ctx)
+void hmac_sha256_free(void *hmac_sha256_ctx)
 {
     hmac_md_free(hmac_sha256_ctx);
 }
@@ -286,8 +286,8 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx)
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
-                         IN uintn key_size)
+bool hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
+                         uintn key_size)
 {
     return hmac_md_set_key(EVP_sha256(), hmac_sha256_ctx, key, key_size);
 }
@@ -305,8 +305,8 @@ bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
  * @retval false  HMAC-SHA256 context copy failed.
  *
  **/
-bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
-                           OUT void *new_hmac_sha256_ctx)
+bool hmac_sha256_duplicate(const void *hmac_sha256_ctx,
+                           void *new_hmac_sha256_ctx)
 {
     return hmac_md_duplicate(hmac_sha256_ctx, new_hmac_sha256_ctx);
 }
@@ -329,8 +329,8 @@ bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
  * @retval false  HMAC-SHA256 data digest failed.
  *
  **/
-bool hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
-                        IN uintn data_size)
+bool hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
+                        uintn data_size)
 {
     return hmac_md_update(hmac_sha256_ctx, data, data_size);
 }
@@ -355,7 +355,7 @@ bool hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
  * @retval false  HMAC-SHA256 digest computation failed.
  *
  **/
-bool hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
+bool hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value)
 {
     return hmac_md_final(hmac_sha256_ctx, hmac_value);
 }
@@ -380,9 +380,9 @@ bool hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value)
+bool hmac_sha256_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha256(), data, data_size, key, key_size,
                        hmac_value);
@@ -406,7 +406,7 @@ void *hmac_sha384_new(void)
  * @param[in]  hmac_sha384_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha384_free(IN void *hmac_sha384_ctx)
+void hmac_sha384_free(void *hmac_sha384_ctx)
 {
     hmac_md_free(hmac_sha384_ctx);
 }
@@ -427,8 +427,8 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
-                         IN uintn key_size)
+bool hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
+                         uintn key_size)
 {
     return hmac_md_set_key(EVP_sha384(), hmac_sha384_ctx, key, key_size);
 }
@@ -448,8 +448,8 @@ bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
-                           OUT void *new_hmac_sha384_ctx)
+bool hmac_sha384_duplicate(const void *hmac_sha384_ctx,
+                           void *new_hmac_sha384_ctx)
 {
     return hmac_md_duplicate(hmac_sha384_ctx, new_hmac_sha384_ctx);
 }
@@ -474,8 +474,8 @@ bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
-                        IN uintn data_size)
+bool hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
+                        uintn data_size)
 {
     return hmac_md_update(hmac_sha384_ctx, data, data_size);
 }
@@ -502,7 +502,7 @@ bool hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
+bool hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value)
 {
     return hmac_md_final(hmac_sha384_ctx, hmac_value);
 }
@@ -527,9 +527,9 @@ bool hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value)
+bool hmac_sha384_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha384(), data, data_size, key, key_size,
                        hmac_value);
@@ -553,7 +553,7 @@ void *hmac_sha512_new(void)
  * @param[in]  hmac_sha512_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha512_free(IN void *hmac_sha512_ctx)
+void hmac_sha512_free(void *hmac_sha512_ctx)
 {
     hmac_md_free(hmac_sha512_ctx);
 }
@@ -574,8 +574,8 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
-                         IN uintn key_size)
+bool hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
+                         uintn key_size)
 {
     return hmac_md_set_key(EVP_sha512(), hmac_sha512_ctx, key, key_size);
 }
@@ -595,8 +595,8 @@ bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
-                           OUT void *new_hmac_sha512_ctx)
+bool hmac_sha512_duplicate(const void *hmac_sha512_ctx,
+                           void *new_hmac_sha512_ctx)
 {
     return hmac_md_duplicate(hmac_sha512_ctx, new_hmac_sha512_ctx);
 }
@@ -621,8 +621,8 @@ bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
-                        IN uintn data_size)
+bool hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
+                        uintn data_size)
 {
     return hmac_md_update(hmac_sha512_ctx, data, data_size);
 }
@@ -649,7 +649,7 @@ bool hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
+bool hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value)
 {
     return hmac_md_final(hmac_sha512_ctx, hmac_value);
 }
@@ -674,9 +674,9 @@ bool hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value)
+bool hmac_sha512_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha512(), data, data_size, key, key_size,
                        hmac_value);

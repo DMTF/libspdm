@@ -53,7 +53,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
+return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
 {
     return_status status;
     spdm_negotiate_algorithms_request_mine_t spdm_request;
@@ -406,7 +406,7 @@ return_status try_spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_negotiate_algorithms(IN spdm_context_t *spdm_context)
+return_status spdm_negotiate_algorithms(spdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;

@@ -14,7 +14,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_hex_str(IN uint8_t *data, IN uintn size);
+void internal_dump_hex_str(const uint8_t *data, uintn size);
 
 /**
  * This function dump raw data.
@@ -22,7 +22,7 @@ void internal_dump_hex_str(IN uint8_t *data, IN uintn size);
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_data(IN uint8_t *data, IN uintn size);
+void internal_dump_data(const uint8_t *data, uintn size);
 
 /**
  * This function dump raw data with colume format.
@@ -30,7 +30,7 @@ void internal_dump_data(IN uint8_t *data, IN uintn size);
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_hex(IN uint8_t *data, IN uintn size);
+void internal_dump_hex(const uint8_t *data, uintn size);
 
 /**
  * This function concatenates binary data, which is used as info in HKDF expand later.
@@ -46,10 +46,10 @@ void internal_dump_hex(IN uint8_t *data, IN uintn size);
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_bin_concat(IN char *label, IN uintn label_size,
-                                 IN uint8_t *context, IN uint16_t length,
-                                 IN uintn hash_size, OUT uint8_t *out_bin,
-                                 IN OUT uintn *out_bin_size)
+return_status libspdm_bin_concat(const char *label, uintn label_size,
+                                 const uint8_t *context, uint16_t length,
+                                 uintn hash_size, uint8_t *out_bin,
+                                 uintn *out_bin_size)
 {
     uintn final_size;
 
@@ -89,8 +89,8 @@ return_status libspdm_bin_concat(IN char *label, IN uintn label_size,
  * @retval RETURN_SUCCESS  SPDM AEAD key and IV for a session is generated.
  **/
 return_status spdm_generate_aead_key_and_iv(
-    IN spdm_secured_message_context_t *secured_message_context,
-    IN uint8_t *major_secret, OUT uint8_t *key, OUT uint8_t *iv)
+    spdm_secured_message_context_t *secured_message_context,
+    const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
 {
     return_status status;
     bool ret_val;
@@ -149,8 +149,8 @@ return_status spdm_generate_aead_key_and_iv(
  * @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
  **/
 return_status spdm_generate_finished_key(
-    IN spdm_secured_message_context_t *secured_message_context,
-    IN uint8_t *handshake_secret, OUT uint8_t *finished_key)
+    spdm_secured_message_context_t *secured_message_context,
+    const uint8_t *handshake_secret, uint8_t *finished_key)
 {
     return_status status;
     bool ret_val;
@@ -187,8 +187,8 @@ return_status spdm_generate_finished_key(
  * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
  **/
 return_status
-libspdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
-                                       IN uint8_t *th1_hash_data)
+libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
+                                       const uint8_t *th1_hash_data)
 {
     return_status status;
     bool ret_val;
@@ -367,8 +367,8 @@ libspdm_generate_session_handshake_key(IN void *spdm_secured_message_context,
  * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
  **/
 return_status
-libspdm_generate_session_data_key(IN void *spdm_secured_message_context,
-                                  IN uint8_t *th2_hash_data)
+libspdm_generate_session_data_key(void *spdm_secured_message_context,
+                                  const uint8_t *th2_hash_data)
 {
     return_status status;
     bool ret_val;
@@ -561,8 +561,8 @@ libspdm_generate_session_data_key(IN void *spdm_secured_message_context,
  * @retval RETURN_SUCCESS  SPDM DataKey update is created.
  **/
 return_status
-libspdm_create_update_session_data_key(IN void *spdm_secured_message_context,
-                                       IN libspdm_key_update_action_t action)
+libspdm_create_update_session_data_key(void *spdm_secured_message_context,
+                                       const libspdm_key_update_action_t action)
 {
     return_status status;
     bool ret_val;
@@ -708,7 +708,7 @@ libspdm_create_update_session_data_key(IN void *spdm_secured_message_context,
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  **/
-void libspdm_clear_handshake_secret(IN void *spdm_secured_message_context)
+void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -733,9 +733,9 @@ void libspdm_clear_handshake_secret(IN void *spdm_secured_message_context)
  * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
  **/
 return_status
-libspdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
-                                         IN libspdm_key_update_action_t action,
-                                         IN bool use_new_key)
+libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
+                                         const libspdm_key_update_action_t action,
+                                         bool use_new_key)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -835,7 +835,7 @@ libspdm_activate_update_session_data_key(IN void *spdm_secured_message_context,
  **/
 void *
 libspdm_hmac_new_with_request_finished_key(
-    IN void *spdm_secured_message_context)
+    void *spdm_secured_message_context)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -850,7 +850,7 @@ libspdm_hmac_new_with_request_finished_key(
  * @param  hmac_ctx                   Pointer to the HMAC context to be released.
  **/
 void libspdm_hmac_free_with_request_finished_key(
-    IN void *spdm_secured_message_context, IN void *hmac_ctx)
+    void *spdm_secured_message_context, void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -869,7 +869,7 @@ void libspdm_hmac_free_with_request_finished_key(
  * @retval false  The key is set unsuccessfully.
  **/
 bool libspdm_hmac_init_with_request_finished_key(
-    IN void *spdm_secured_message_context, OUT void *hmac_ctx)
+    void *spdm_secured_message_context, void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -891,8 +891,8 @@ bool libspdm_hmac_init_with_request_finished_key(
  * @retval false  HMAC context copy failed.
  **/
 bool libspdm_hmac_duplicate_with_request_finished_key(
-    IN void *spdm_secured_message_context,
-    IN const void *hmac_ctx, OUT void *new_hmac_ctx)
+    void *spdm_secured_message_context,
+    const void *hmac_ctx, void *new_hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -914,9 +914,9 @@ bool libspdm_hmac_duplicate_with_request_finished_key(
  * @retval false  HMAC data digest failed.
  **/
 bool libspdm_hmac_update_with_request_finished_key(
-    IN void *spdm_secured_message_context,
-    OUT void *hmac_ctx, IN const void *data,
-    IN uintn data_size)
+    void *spdm_secured_message_context,
+    void *hmac_ctx, const void *data,
+    uintn data_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -937,8 +937,8 @@ bool libspdm_hmac_update_with_request_finished_key(
  * @retval false  HMAC data digest failed.
  **/
 bool libspdm_hmac_final_with_request_finished_key(
-    IN void *spdm_secured_message_context,
-    OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
+    void *spdm_secured_message_context,
+    void *hmac_ctx,  uint8_t *hmac_value)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -960,9 +960,9 @@ bool libspdm_hmac_final_with_request_finished_key(
  * @retval false  HMAC computation failed.
  **/
 bool
-libspdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context,
-                                           IN const void *data, IN uintn data_size,
-                                           OUT uint8_t *hmac_value)
+libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
+                                           const void *data, uintn data_size,
+                                           uint8_t *hmac_value)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -982,7 +982,7 @@ libspdm_hmac_all_with_request_finished_key(IN void *spdm_secured_message_context
  **/
 void *
 libspdm_hmac_new_with_response_finished_key(
-    IN void *spdm_secured_message_context)
+    void *spdm_secured_message_context)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -997,7 +997,7 @@ libspdm_hmac_new_with_response_finished_key(
  * @param  hmac_ctx                   Pointer to the HMAC context to be released.
  **/
 void libspdm_hmac_free_with_response_finished_key(
-    IN void *spdm_secured_message_context, IN void *hmac_ctx)
+    void *spdm_secured_message_context, void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -1016,7 +1016,7 @@ void libspdm_hmac_free_with_response_finished_key(
  * @retval false  The key is set unsuccessfully.
  **/
 bool libspdm_hmac_init_with_response_finished_key(
-    IN void *spdm_secured_message_context, OUT void *hmac_ctx)
+    void *spdm_secured_message_context, void *hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -1038,8 +1038,8 @@ bool libspdm_hmac_init_with_response_finished_key(
  * @retval false  HMAC context copy failed.
  **/
 bool libspdm_hmac_duplicate_with_response_finished_key(
-    IN void *spdm_secured_message_context,
-    IN const void *hmac_ctx, OUT void *new_hmac_ctx)
+    void *spdm_secured_message_context,
+    const void *hmac_ctx, void *new_hmac_ctx)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -1061,9 +1061,9 @@ bool libspdm_hmac_duplicate_with_response_finished_key(
  * @retval false  HMAC data digest failed.
  **/
 bool libspdm_hmac_update_with_response_finished_key(
-    IN void *spdm_secured_message_context,
-    OUT void *hmac_ctx, IN const void *data,
-    IN uintn data_size)
+    void *spdm_secured_message_context,
+    void *hmac_ctx, const void *data,
+    uintn data_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -1084,8 +1084,8 @@ bool libspdm_hmac_update_with_response_finished_key(
  * @retval false  HMAC data digest failed.
  **/
 bool libspdm_hmac_final_with_response_finished_key(
-    IN void *spdm_secured_message_context,
-    OUT void *hmac_ctx,  OUT uint8_t *hmac_value)
+    void *spdm_secured_message_context,
+    void *hmac_ctx,  uint8_t *hmac_value)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -1107,8 +1107,8 @@ bool libspdm_hmac_final_with_response_finished_key(
  * @retval false  HMAC computation failed.
  **/
 bool libspdm_hmac_all_with_response_finished_key(
-    IN void *spdm_secured_message_context, IN const void *data,
-    IN uintn data_size, OUT uint8_t *hmac_value)
+    void *spdm_secured_message_context, const void *data,
+    uintn data_size, uint8_t *hmac_value)
 {
     spdm_secured_message_context_t *secured_message_context;
 

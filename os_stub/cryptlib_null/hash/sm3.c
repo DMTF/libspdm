@@ -28,7 +28,7 @@ void *sm3_256_new(void)
  * @param[in]  sm3_256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sm3_256_free(IN void *sm3_256_ctx)
+void sm3_256_free(void *sm3_256_ctx)
 {
 }
 
@@ -44,7 +44,7 @@ void sm3_256_free(IN void *sm3_256_ctx)
  * @retval false  SM3 context initialization failed.
  *
  **/
-bool sm3_256_init(OUT void *sm3_context)
+bool sm3_256_init(void *sm3_context)
 {
     return false;
 }
@@ -64,7 +64,7 @@ bool sm3_256_init(OUT void *sm3_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
+bool sm3_256_duplicate(const void *sm3_context, void *new_sm3_context)
 {
     return false;
 }
@@ -87,8 +87,8 @@ bool sm3_256_duplicate(IN const void *sm3_context, OUT void *new_sm3_context)
  * @retval false  SM3 data digest failed.
  *
  **/
-bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
-                    IN uintn data_size)
+bool sm3_256_update(void *sm3_context, const void *data,
+                    uintn data_size)
 {
     return false;
 }
@@ -113,7 +113,7 @@ bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
  * @retval false  SM3 digest computation failed.
  *
  **/
-bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
+bool sm3_256_final(void *sm3_context, uint8_t *hash_value)
 {
     return false;
 }
@@ -136,8 +136,8 @@ bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_hash_all(IN const void *data, IN uintn data_size,
-                      OUT uint8_t *hash_value)
+bool sm3_256_hash_all(const void *data, uintn data_size,
+                      uint8_t *hash_value)
 {
     return false;
 }

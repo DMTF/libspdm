@@ -20,7 +20,7 @@
  * @return buffer.
  *
  **/
-void *set_mem(OUT void *buffer, IN uintn length, IN uint8_t value)
+void *set_mem(void *buffer, uintn length, uint8_t value)
 {
     volatile uint8_t *pointer;
 

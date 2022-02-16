@@ -169,7 +169,7 @@ void *sha256_new(void);
  * @param[in]  sha256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha256_free(IN void *sha256_ctx);
+void sha256_free(void *sha256_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha256_context as SHA-256 hash context for
@@ -183,7 +183,7 @@ void sha256_free(IN void *sha256_ctx);
  * @retval false  SHA-256 context initialization failed.
  *
  **/
-bool sha256_init(OUT void *sha256_context);
+bool sha256_init(void *sha256_context);
 
 /**
  * Makes a copy of an existing SHA-256 context.
@@ -200,8 +200,8 @@ bool sha256_init(OUT void *sha256_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha256_duplicate(IN const void *sha256_context,
-                      OUT void *new_sha256_context);
+bool sha256_duplicate(const void *sha256_context,
+                      void *new_sha256_context);
 
 /**
  * Digests the input data and updates SHA-256 context.
@@ -221,8 +221,8 @@ bool sha256_duplicate(IN const void *sha256_context,
  * @retval false  SHA-256 data digest failed.
  *
  **/
-bool sha256_update(IN OUT void *sha256_context, IN const void *data,
-                   IN uintn data_size);
+bool sha256_update(void *sha256_context, const void *data,
+                   uintn data_size);
 
 /**
  * Completes computation of the SHA-256 digest value.
@@ -244,7 +244,7 @@ bool sha256_update(IN OUT void *sha256_context, IN const void *data,
  * @retval false  SHA-256 digest computation failed.
  *
  **/
-bool sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value);
+bool sha256_final(void *sha256_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA-256 message digest of a input data buffer.
@@ -264,8 +264,8 @@ bool sha256_final(IN OUT void *sha256_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha256_hash_all(IN const void *data, IN uintn data_size,
-                     OUT uint8_t *hash_value);
+bool sha256_hash_all(const void *data, uintn data_size,
+                     uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA384 use.
@@ -282,7 +282,7 @@ void *sha384_new(void);
  * @param[in]  sha384_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha384_free(IN void *sha384_ctx);
+void sha384_free(void *sha384_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha384_context as SHA-384 hash context for
@@ -296,7 +296,7 @@ void sha384_free(IN void *sha384_ctx);
  * @retval false  SHA-384 context initialization failed.
  *
  **/
-bool sha384_init(OUT void *sha384_context);
+bool sha384_init(void *sha384_context);
 
 /**
  * Makes a copy of an existing SHA-384 context.
@@ -313,8 +313,8 @@ bool sha384_init(OUT void *sha384_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha384_duplicate(IN const void *sha384_context,
-                      OUT void *new_sha384_context);
+bool sha384_duplicate(const void *sha384_context,
+                      void *new_sha384_context);
 
 /**
  * Digests the input data and updates SHA-384 context.
@@ -334,8 +334,8 @@ bool sha384_duplicate(IN const void *sha384_context,
  * @retval false  SHA-384 data digest failed.
  *
  **/
-bool sha384_update(IN OUT void *sha384_context, IN const void *data,
-                   IN uintn data_size);
+bool sha384_update(void *sha384_context, const void *data,
+                   uintn data_size);
 
 /**
  * Completes computation of the SHA-384 digest value.
@@ -357,7 +357,7 @@ bool sha384_update(IN OUT void *sha384_context, IN const void *data,
  * @retval false  SHA-384 digest computation failed.
  *
  **/
-bool sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value);
+bool sha384_final(void *sha384_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA-384 message digest of a input data buffer.
@@ -377,8 +377,8 @@ bool sha384_final(IN OUT void *sha384_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha384_hash_all(IN const void *data, IN uintn data_size,
-                     OUT uint8_t *hash_value);
+bool sha384_hash_all(const void *data, uintn data_size,
+                     uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA512 use.
@@ -395,7 +395,7 @@ void *sha512_new(void);
  * @param[in]  sha512_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha512_free(IN void *sha512_ctx);
+void sha512_free(void *sha512_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha512_context as SHA-512 hash context for
@@ -409,7 +409,7 @@ void sha512_free(IN void *sha512_ctx);
  * @retval false  SHA-512 context initialization failed.
  *
  **/
-bool sha512_init(OUT void *sha512_context);
+bool sha512_init(void *sha512_context);
 
 /**
  * Makes a copy of an existing SHA-512 context.
@@ -426,8 +426,8 @@ bool sha512_init(OUT void *sha512_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha512_duplicate(IN const void *sha512_context,
-                      OUT void *new_sha512_context);
+bool sha512_duplicate(const void *sha512_context,
+                      void *new_sha512_context);
 
 /**
  * Digests the input data and updates SHA-512 context.
@@ -447,8 +447,8 @@ bool sha512_duplicate(IN const void *sha512_context,
  * @retval false  SHA-512 data digest failed.
  *
  **/
-bool sha512_update(IN OUT void *sha512_context, IN const void *data,
-                   IN uintn data_size);
+bool sha512_update(void *sha512_context, const void *data,
+                   uintn data_size);
 
 /**
  * Completes computation of the SHA-512 digest value.
@@ -470,7 +470,7 @@ bool sha512_update(IN OUT void *sha512_context, IN const void *data,
  * @retval false  SHA-512 digest computation failed.
  *
  **/
-bool sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value);
+bool sha512_final(void *sha512_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA-512 message digest of a input data buffer.
@@ -490,8 +490,8 @@ bool sha512_final(IN OUT void *sha512_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha512_hash_all(IN const void *data, IN uintn data_size,
-                     OUT uint8_t *hash_value);
+bool sha512_hash_all(const void *data, uintn data_size,
+                     uint8_t *hash_value);
 
 /*=====================================================================================
  *    One-Way Cryptographic hash SHA3 Primitives
@@ -512,7 +512,7 @@ void *sha3_256_new(void);
  * @param[in]  sha3_256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_256_free(IN void *sha3_256_ctx);
+void sha3_256_free(void *sha3_256_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha3_256_context as SHA3-256 hash context for
@@ -526,7 +526,7 @@ void sha3_256_free(IN void *sha3_256_ctx);
  * @retval false  SHA3-256 context initialization failed.
  *
  **/
-bool sha3_256_init(OUT void *sha3_256_context);
+bool sha3_256_init(void *sha3_256_context);
 
 /**
  * Makes a copy of an existing SHA3-256 context.
@@ -543,8 +543,8 @@ bool sha3_256_init(OUT void *sha3_256_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_256_duplicate(IN const void *sha3_256_context,
-                        OUT void *new_sha3_256_context);
+bool sha3_256_duplicate(const void *sha3_256_context,
+                        void *new_sha3_256_context);
 
 /**
  * Digests the input data and updates SHA3-256 context.
@@ -564,8 +564,8 @@ bool sha3_256_duplicate(IN const void *sha3_256_context,
  * @retval false  SHA3-256 data digest failed.
  *
  **/
-bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
-                     IN uintn data_size);
+bool sha3_256_update(void *sha3_256_context, const void *data,
+                     uintn data_size);
 
 /**
  * Completes computation of the SHA3-256 digest value.
@@ -587,7 +587,7 @@ bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
  * @retval false  SHA3-256 digest computation failed.
  *
  **/
-bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value);
+bool sha3_256_final(void *sha3_256_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA3-256 message digest of a input data buffer.
@@ -607,8 +607,8 @@ bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_256_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value);
+bool sha3_256_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA3-384 use.
@@ -625,7 +625,7 @@ void *sha3_384_new(void);
  * @param[in]  sha3_384_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_384_free(IN void *sha3_384_ctx);
+void sha3_384_free(void *sha3_384_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha3_384_context as SHA3-384 hash context for
@@ -639,7 +639,7 @@ void sha3_384_free(IN void *sha3_384_ctx);
  * @retval false  SHA3-384 context initialization failed.
  *
  **/
-bool sha3_384_init(OUT void *sha3_384_context);
+bool sha3_384_init(void *sha3_384_context);
 
 /**
  * Makes a copy of an existing SHA3-384 context.
@@ -656,8 +656,8 @@ bool sha3_384_init(OUT void *sha3_384_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_384_duplicate(IN const void *sha3_384_context,
-                        OUT void *new_sha3_384_context);
+bool sha3_384_duplicate(const void *sha3_384_context,
+                        void *new_sha3_384_context);
 
 /**
  * Digests the input data and updates SHA3-384 context.
@@ -677,8 +677,8 @@ bool sha3_384_duplicate(IN const void *sha3_384_context,
  * @retval false  SHA3-384 data digest failed.
  *
  **/
-bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
-                     IN uintn data_size);
+bool sha3_384_update(void *sha3_384_context, const void *data,
+                     uintn data_size);
 
 /**
  * Completes computation of the SHA3-384 digest value.
@@ -700,7 +700,7 @@ bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
  * @retval false  SHA3-384 digest computation failed.
  *
  **/
-bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value);
+bool sha3_384_final(void *sha3_384_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA3-384 message digest of a input data buffer.
@@ -720,8 +720,8 @@ bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_384_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value);
+bool sha3_384_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA3-512 use.
@@ -738,7 +738,7 @@ void *sha3_512_new(void);
  * @param[in]  sha3_512_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_512_free(IN void *sha3_512_ctx);
+void sha3_512_free(void *sha3_512_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sha3_512_context as SHA3-512 hash context for
@@ -752,7 +752,7 @@ void sha3_512_free(IN void *sha3_512_ctx);
  * @retval false  SHA3-512 context initialization failed.
  *
  **/
-bool sha3_512_init(OUT void *sha3_512_context);
+bool sha3_512_init(void *sha3_512_context);
 
 /**
  * Makes a copy of an existing SHA3-512 context.
@@ -769,8 +769,8 @@ bool sha3_512_init(OUT void *sha3_512_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_512_duplicate(IN const void *sha3_512_context,
-                        OUT void *new_sha3_512_context);
+bool sha3_512_duplicate(const void *sha3_512_context,
+                        void *new_sha3_512_context);
 
 /**
  * Digests the input data and updates SHA3-512 context.
@@ -790,8 +790,8 @@ bool sha3_512_duplicate(IN const void *sha3_512_context,
  * @retval false  SHA3-512 data digest failed.
  *
  **/
-bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
-                     IN uintn data_size);
+bool sha3_512_update(void *sha3_512_context, const void *data,
+                     uintn data_size);
 
 /**
  * Completes computation of the SHA3-512 digest value.
@@ -813,7 +813,7 @@ bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
  * @retval false  SHA3-512 digest computation failed.
  *
  **/
-bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value);
+bool sha3_512_final(void *sha3_512_context, uint8_t *hash_value);
 
 /**
  * Computes the SHA3-512 message digest of a input data buffer.
@@ -833,8 +833,8 @@ bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_512_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value);
+bool sha3_512_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value);
 
 /*=====================================================================================
  *    One-Way Cryptographic hash SM3 Primitives
@@ -855,7 +855,7 @@ void *sm3_256_new(void);
  * @param[in]  sm3_256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sm3_256_free(IN void *sm3_256_ctx);
+void sm3_256_free(void *sm3_256_ctx);
 
 /**
  * Initializes user-supplied memory pointed by sm3_context as SM3 hash context for
@@ -869,7 +869,7 @@ void sm3_256_free(IN void *sm3_256_ctx);
  * @retval false  SM3 context initialization failed.
  *
  **/
-bool sm3_256_init(OUT void *sm3_context);
+bool sm3_256_init(void *sm3_context);
 
 /**
  * Makes a copy of an existing SM3 context.
@@ -886,8 +886,8 @@ bool sm3_256_init(OUT void *sm3_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_duplicate(IN const void *sm3_context,
-                       OUT void *new_sm3_context);
+bool sm3_256_duplicate(const void *sm3_context,
+                       void *new_sm3_context);
 
 /**
  * Digests the input data and updates SM3 context.
@@ -907,8 +907,8 @@ bool sm3_256_duplicate(IN const void *sm3_context,
  * @retval false  SM3 data digest failed.
  *
  **/
-bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
-                    IN uintn data_size);
+bool sm3_256_update(void *sm3_context, const void *data,
+                    uintn data_size);
 
 /**
  * Completes computation of the SM3 digest value.
@@ -930,7 +930,7 @@ bool sm3_256_update(IN OUT void *sm3_context, IN const void *data,
  * @retval false  SM3 digest computation failed.
  *
  **/
-bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value);
+bool sm3_256_final(void *sm3_context, uint8_t *hash_value);
 
 /**
  * Computes the SM3 message digest of a input data buffer.
@@ -950,8 +950,8 @@ bool sm3_256_final(IN OUT void *sm3_context, OUT uint8_t *hash_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool sm3_256_hash_all(IN const void *data, IN uintn data_size,
-                      OUT uint8_t *hash_value);
+bool sm3_256_hash_all(const void *data, uintn data_size,
+                      uint8_t *hash_value);
 
 /*=====================================================================================
  *    MAC (message Authentication Code) Primitive
@@ -972,7 +972,7 @@ void *hmac_sha256_new(void);
  * @param[in]  hmac_sha256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha256_free(IN void *hmac_sha256_ctx);
+void hmac_sha256_free(void *hmac_sha256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -990,8 +990,8 @@ void hmac_sha256_free(IN void *hmac_sha256_ctx);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
-                         IN uintn key_size);
+bool hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
+                         uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA256 context.
@@ -1008,8 +1008,8 @@ bool hmac_sha256_set_key(OUT void *hmac_sha256_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
-                           OUT void *new_hmac_sha256_ctx);
+bool hmac_sha256_duplicate(const void *hmac_sha256_ctx,
+                           void *new_hmac_sha256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA256 context.
@@ -1031,8 +1031,8 @@ bool hmac_sha256_duplicate(IN const void *hmac_sha256_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
-                        IN uintn data_size);
+bool hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
+                        uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA256 digest value.
@@ -1056,7 +1056,7 @@ bool hmac_sha256_update(IN OUT void *hmac_sha256_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA256 digest of a input data buffer.
@@ -1078,9 +1078,9 @@ bool hmac_sha256_final(IN OUT void *hmac_sha256_ctx, OUT uint8_t *hmac_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value);
+bool hmac_sha256_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA384 use.
@@ -1097,7 +1097,7 @@ void *hmac_sha384_new(void);
  * @param[in]  hmac_sha384_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha384_free(IN void *hmac_sha384_ctx);
+void hmac_sha384_free(void *hmac_sha384_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1115,8 +1115,8 @@ void hmac_sha384_free(IN void *hmac_sha384_ctx);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
-                         IN uintn key_size);
+bool hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
+                         uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA384 context.
@@ -1133,8 +1133,8 @@ bool hmac_sha384_set_key(OUT void *hmac_sha384_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
-                           OUT void *new_hmac_sha384_ctx);
+bool hmac_sha384_duplicate(const void *hmac_sha384_ctx,
+                           void *new_hmac_sha384_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA384 context.
@@ -1156,8 +1156,8 @@ bool hmac_sha384_duplicate(IN const void *hmac_sha384_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
-                        IN uintn data_size);
+bool hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
+                        uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA384 digest value.
@@ -1181,7 +1181,7 @@ bool hmac_sha384_update(IN OUT void *hmac_sha384_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA384 digest of a input data buffer.
@@ -1203,9 +1203,9 @@ bool hmac_sha384_final(IN OUT void *hmac_sha384_ctx, OUT uint8_t *hmac_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value);
+bool hmac_sha384_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA512 use.
@@ -1222,7 +1222,7 @@ void *hmac_sha512_new(void);
  * @param[in]  hmac_sha512_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha512_free(IN void *hmac_sha512_ctx);
+void hmac_sha512_free(void *hmac_sha512_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1240,8 +1240,8 @@ void hmac_sha512_free(IN void *hmac_sha512_ctx);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
-                         IN uintn key_size);
+bool hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
+                         uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA512 context.
@@ -1258,8 +1258,8 @@ bool hmac_sha512_set_key(OUT void *hmac_sha512_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
-                           OUT void *new_hmac_sha512_ctx);
+bool hmac_sha512_duplicate(const void *hmac_sha512_ctx,
+                           void *new_hmac_sha512_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA512 context.
@@ -1281,8 +1281,8 @@ bool hmac_sha512_duplicate(IN const void *hmac_sha512_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
-                        IN uintn data_size);
+bool hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
+                        uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA512 digest value.
@@ -1306,7 +1306,7 @@ bool hmac_sha512_update(IN OUT void *hmac_sha512_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA512 digest of a input data buffer.
@@ -1328,9 +1328,9 @@ bool hmac_sha512_final(IN OUT void *hmac_sha512_ctx, OUT uint8_t *hmac_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_all(IN const void *data, IN uintn data_size,
-                     IN const uint8_t *key, IN uintn key_size,
-                     OUT uint8_t *hmac_value);
+bool hmac_sha512_all(const void *data, uintn data_size,
+                     const uint8_t *key, uintn key_size,
+                     uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_256 use.
@@ -1347,7 +1347,7 @@ void *hmac_sha3_256_new(void);
  * @param[in]  hmac_sha3_256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx);
+void hmac_sha3_256_free(void *hmac_sha3_256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1363,8 +1363,8 @@ void hmac_sha3_256_free(IN void *hmac_sha3_256_ctx);
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8_t *key,
-                           IN uintn key_size);
+bool hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key,
+                           uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3_256 context.
@@ -1379,8 +1379,8 @@ bool hmac_sha3_256_set_key(OUT void *hmac_sha3_256_ctx, IN const uint8_t *key,
  * @retval false  HMAC-SHA3_256 context copy failed.
  *
  **/
-bool hmac_sha3_256_duplicate(IN const void *hmac_sha3_256_ctx,
-                             OUT void *new_hmac_sha3_256_ctx);
+bool hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx,
+                             void *new_hmac_sha3_256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3_256 context.
@@ -1400,8 +1400,8 @@ bool hmac_sha3_256_duplicate(IN const void *hmac_sha3_256_ctx,
  * @retval false  HMAC-SHA3_256 data digest failed.
  *
  **/
-bool hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data,
-                          IN uintn data_size);
+bool hmac_sha3_256_update(void *hmac_sha3_256_ctx, const void *data,
+                          uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA3_256 digest value.
@@ -1423,7 +1423,7 @@ bool hmac_sha3_256_update(IN OUT void *hmac_sha3_256_ctx, IN const void *data,
  * @retval false  HMAC-SHA3_256 digest computation failed.
  *
  **/
-bool hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha3_256_final(void *hmac_sha3_256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3_256 digest of a input data buffer.
@@ -1445,9 +1445,9 @@ bool hmac_sha3_256_final(IN OUT void *hmac_sha3_256_ctx, OUT uint8_t *hmac_value
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_256_all(IN const void *data, IN uintn data_size,
-                       IN const uint8_t *key, IN uintn key_size,
-                       OUT uint8_t *hmac_value);
+bool hmac_sha3_256_all(const void *data, uintn data_size,
+                       const uint8_t *key, uintn key_size,
+                       uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_384 use.
@@ -1464,7 +1464,7 @@ void *hmac_sha3_384_new(void);
  * @param[in]  hmac_sha3_384_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx);
+void hmac_sha3_384_free(void *hmac_sha3_384_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1482,8 +1482,8 @@ void hmac_sha3_384_free(IN void *hmac_sha3_384_ctx);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8_t *key,
-                           IN uintn key_size);
+bool hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key,
+                           uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3_384 context.
@@ -1500,8 +1500,8 @@ bool hmac_sha3_384_set_key(OUT void *hmac_sha3_384_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_384_duplicate(IN const void *hmac_sha3_384_ctx,
-                             OUT void *new_hmac_sha3_384_ctx);
+bool hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx,
+                             void *new_hmac_sha3_384_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3_384 context.
@@ -1523,8 +1523,8 @@ bool hmac_sha3_384_duplicate(IN const void *hmac_sha3_384_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data,
-                          IN uintn data_size);
+bool hmac_sha3_384_update(void *hmac_sha3_384_ctx, const void *data,
+                          uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA3_384 digest value.
@@ -1548,7 +1548,7 @@ bool hmac_sha3_384_update(IN OUT void *hmac_sha3_384_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha3_384_final(void *hmac_sha3_384_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3_384 digest of a input data buffer.
@@ -1570,9 +1570,9 @@ bool hmac_sha3_384_final(IN OUT void *hmac_sha3_384_ctx, OUT uint8_t *hmac_value
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_384_all(IN const void *data, IN uintn data_size,
-                       IN const uint8_t *key, IN uintn key_size,
-                       OUT uint8_t *hmac_value);
+bool hmac_sha3_384_all(const void *data, uintn data_size,
+                       const uint8_t *key, uintn key_size,
+                       uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA3_512 use.
@@ -1589,7 +1589,7 @@ void *hmac_sha3_512_new(void);
  * @param[in]  hmac_sha3_512_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx);
+void hmac_sha3_512_free(void *hmac_sha3_512_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1607,8 +1607,8 @@ void hmac_sha3_512_free(IN void *hmac_sha3_512_ctx);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8_t *key,
-                           IN uintn key_size);
+bool hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key,
+                           uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3_512 context.
@@ -1625,8 +1625,8 @@ bool hmac_sha3_512_set_key(OUT void *hmac_sha3_512_ctx, IN const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_512_duplicate(IN const void *hmac_sha3_512_ctx,
-                             OUT void *new_hmac_sha3_512_ctx);
+bool hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx,
+                             void *new_hmac_sha3_512_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3_512 context.
@@ -1648,8 +1648,8 @@ bool hmac_sha3_512_duplicate(IN const void *hmac_sha3_512_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data,
-                          IN uintn data_size);
+bool hmac_sha3_512_update(void *hmac_sha3_512_ctx, const void *data,
+                          uintn data_size);
 
 /**
  * Completes computation of the HMAC-SHA3_512 digest value.
@@ -1673,7 +1673,7 @@ bool hmac_sha3_512_update(IN OUT void *hmac_sha3_512_ctx, IN const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8_t *hmac_value);
+bool hmac_sha3_512_final(void *hmac_sha3_512_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3_512 digest of a input data buffer.
@@ -1695,9 +1695,9 @@ bool hmac_sha3_512_final(IN OUT void *hmac_sha3_512_ctx, OUT uint8_t *hmac_value
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha3_512_all(IN const void *data, IN uintn data_size,
-                       IN const uint8_t *key, IN uintn key_size,
-                       OUT uint8_t *hmac_value);
+bool hmac_sha3_512_all(const void *data, uintn data_size,
+                       const uint8_t *key, uintn key_size,
+                       uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SM3_256 use.
@@ -1714,7 +1714,7 @@ void *hmac_sm3_256_new(void);
  * @param[in]  hmac_sm3_256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx);
+void hmac_sm3_256_free(void *hmac_sm3_256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -1730,8 +1730,8 @@ void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx);
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
-                          IN uintn key_size);
+bool hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
+                          uintn key_size);
 
 /**
  * Makes a copy of an existing HMAC-SM3_256 context.
@@ -1746,8 +1746,8 @@ bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
  * @retval false  HMAC-SM3_256 context copy failed.
  *
  **/
-bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
-                            OUT void *new_hmac_sm3_256_ctx);
+bool hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
+                            void *new_hmac_sm3_256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SM3_256 context.
@@ -1767,8 +1767,8 @@ bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
  * @retval false  HMAC-SM3_256 data digest failed.
  *
  **/
-bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
-                         IN uintn data_size);
+bool hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
+                         uintn data_size);
 
 /**
  * Completes computation of the HMAC-SM3_256 digest value.
@@ -1790,7 +1790,7 @@ bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
  * @retval false  HMAC-SM3_256 digest computation failed.
  *
  **/
-bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value);
+bool hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SM3_256 digest of a input data buffer.
@@ -1812,9 +1812,9 @@ bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sm3_256_all(IN const void *data, IN uintn data_size,
-                      IN const uint8_t *key, IN uintn key_size,
-                      OUT uint8_t *hmac_value);
+bool hmac_sm3_256_all(const void *data, uintn data_size,
+                      const uint8_t *key, uintn key_size,
+                      uint8_t *hmac_value);
 
 /*=====================================================================================
  *    Authenticated Encryption with Associated data (AEAD) Cryptography Primitive
@@ -1844,12 +1844,12 @@ bool hmac_sm3_256_all(IN const void *data, IN uintn data_size,
  * @retval false  AEAD AES-GCM authenticated encryption failed.
  *
  **/
-bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *iv, IN uintn iv_size,
-                          IN const uint8_t *a_data, IN uintn a_data_size,
-                          IN const uint8_t *data_in, IN uintn data_in_size,
-                          OUT uint8_t *tag_out, IN uintn tag_size,
-                          OUT uint8_t *data_out, OUT uintn *data_out_size);
+bool aead_aes_gcm_encrypt(const uint8_t *key, uintn key_size,
+                          const uint8_t *iv, uintn iv_size,
+                          const uint8_t *a_data, uintn a_data_size,
+                          const uint8_t *data_in, uintn data_in_size,
+                          uint8_t *tag_out, uintn tag_size,
+                          uint8_t *data_out, uintn *data_out_size);
 
 /**
  * Performs AEAD AES-GCM authenticated decryption on a data buffer and additional authenticated data (AAD).
@@ -1876,12 +1876,12 @@ bool aead_aes_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
  * @retval false  AEAD AES-GCM authenticated decryption failed.
  *
  **/
-bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *iv, IN uintn iv_size,
-                          IN const uint8_t *a_data, IN uintn a_data_size,
-                          IN const uint8_t *data_in, IN uintn data_in_size,
-                          IN const uint8_t *tag, IN uintn tag_size,
-                          OUT uint8_t *data_out, OUT uintn *data_out_size);
+bool aead_aes_gcm_decrypt(const uint8_t *key, uintn key_size,
+                          const uint8_t *iv, uintn iv_size,
+                          const uint8_t *a_data, uintn a_data_size,
+                          const uint8_t *data_in, uintn data_in_size,
+                          const uint8_t *tag, uintn tag_size,
+                          uint8_t *data_out, uintn *data_out_size);
 
 /**
  * Performs AEAD ChaCha20Poly1305 authenticated encryption on a data buffer and additional authenticated data (AAD).
@@ -1908,10 +1908,10 @@ bool aead_aes_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
  *
  **/
 bool aead_chacha20_poly1305_encrypt(
-    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-    IN const uint8_t *data_in, IN uintn data_in_size, OUT uint8_t *tag_out,
-    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size);
+    const uint8_t *key, uintn key_size, const uint8_t *iv,
+    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
+    const uint8_t *data_in, uintn data_in_size, uint8_t *tag_out,
+    uintn tag_size, uint8_t *data_out, uintn *data_out_size);
 
 /**
  * Performs AEAD ChaCha20Poly1305 authenticated decryption on a data buffer and additional authenticated data (AAD).
@@ -1939,10 +1939,10 @@ bool aead_chacha20_poly1305_encrypt(
  *
  **/
 bool aead_chacha20_poly1305_decrypt(
-    IN const uint8_t *key, IN uintn key_size, IN const uint8_t *iv,
-    IN uintn iv_size, IN const uint8_t *a_data, IN uintn a_data_size,
-    IN const uint8_t *data_in, IN uintn data_in_size, IN const uint8_t *tag,
-    IN uintn tag_size, OUT uint8_t *data_out, OUT uintn *data_out_size);
+    const uint8_t *key, uintn key_size, const uint8_t *iv,
+    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
+    const uint8_t *data_in, uintn data_in_size, const uint8_t *tag,
+    uintn tag_size, uint8_t *data_out, uintn *data_out_size);
 
 /**
  * Performs AEAD SM4-GCM authenticated encryption on a data buffer and additional authenticated data (AAD).
@@ -1968,12 +1968,12 @@ bool aead_chacha20_poly1305_decrypt(
  * @retval false  AEAD SM4-GCM authenticated encryption failed.
  *
  **/
-bool aead_sm4_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *iv, IN uintn iv_size,
-                          IN const uint8_t *a_data, IN uintn a_data_size,
-                          IN const uint8_t *data_in, IN uintn data_in_size,
-                          OUT uint8_t *tag_out, IN uintn tag_size,
-                          OUT uint8_t *data_out, OUT uintn *data_out_size);
+bool aead_sm4_gcm_encrypt(const uint8_t *key, uintn key_size,
+                          const uint8_t *iv, uintn iv_size,
+                          const uint8_t *a_data, uintn a_data_size,
+                          const uint8_t *data_in, uintn data_in_size,
+                          uint8_t *tag_out, uintn tag_size,
+                          uint8_t *data_out, uintn *data_out_size);
 
 /**
  * Performs AEAD SM4-GCM authenticated decryption on a data buffer and additional authenticated data (AAD).
@@ -2000,12 +2000,12 @@ bool aead_sm4_gcm_encrypt(IN const uint8_t *key, IN uintn key_size,
  * @retval false  AEAD SM4-GCM authenticated decryption failed.
  *
  **/
-bool aead_sm4_gcm_decrypt(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *iv, IN uintn iv_size,
-                          IN const uint8_t *a_data, IN uintn a_data_size,
-                          IN const uint8_t *data_in, IN uintn data_in_size,
-                          IN const uint8_t *tag, IN uintn tag_size,
-                          OUT uint8_t *data_out, OUT uintn *data_out_size);
+bool aead_sm4_gcm_decrypt(const uint8_t *key, uintn key_size,
+                          const uint8_t *iv, uintn iv_size,
+                          const uint8_t *a_data, uintn a_data_size,
+                          const uint8_t *data_in, uintn data_in_size,
+                          const uint8_t *tag, uintn tag_size,
+                          uint8_t *data_out, uintn *data_out_size);
 
 /*=====================================================================================
  *    Asymmetric Cryptography Primitive
@@ -2028,7 +2028,7 @@ void *rsa_new(void);
  * @param[in]  rsa_context  Pointer to the RSA context to be released.
  *
  **/
-void rsa_free(IN void *rsa_context);
+void rsa_free(void *rsa_context);
 
 /**
  * Sets the tag-designated key component into the established RSA context.
@@ -2052,8 +2052,8 @@ void rsa_free(IN void *rsa_context);
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                 IN const uint8_t *big_number, IN uintn bn_size);
+bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
+                 const uint8_t *big_number, uintn bn_size);
 
 /**
  * Gets the tag-designated RSA key component from the established RSA context.
@@ -2083,8 +2083,8 @@ bool rsa_set_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
-                 OUT uint8_t *big_number, IN OUT uintn *bn_size);
+bool rsa_get_key(void *rsa_context, const rsa_key_tag_t key_tag,
+                 uint8_t *big_number, uintn *bn_size);
 
 /**
  * Generates RSA key components.
@@ -2109,9 +2109,9 @@ bool rsa_get_key(IN OUT void *rsa_context, IN rsa_key_tag_t key_tag,
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
-                      IN const uint8_t *public_exponent,
-                      IN uintn public_exponent_size);
+bool rsa_generate_key(void *rsa_context, uintn modulus_length,
+                      const uint8_t *public_exponent,
+                      uintn public_exponent_size);
 
 /**
  * Validates key components of RSA context.
@@ -2134,7 +2134,7 @@ bool rsa_generate_key(IN OUT void *rsa_context, IN uintn modulus_length,
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_check_key(IN void *rsa_context);
+bool rsa_check_key(void *rsa_context);
 
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PKCS1-v1_5 encoding scheme.
@@ -2164,10 +2164,10 @@ bool rsa_check_key(IN void *rsa_context);
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                             IN const uint8_t *message_hash,
-                             IN uintn hash_size, OUT uint8_t *signature,
-                             IN OUT uintn *sig_size);
+bool rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
+                             const uint8_t *message_hash,
+                             uintn hash_size, uint8_t *signature,
+                             uintn *sig_size);
 
 /**
  * Verifies the RSA-SSA signature with EMSA-PKCS1-v1_5 encoding scheme defined in
@@ -2189,10 +2189,10 @@ bool rsa_pkcs1_sign_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
-                               IN const uint8_t *message_hash,
-                               IN uintn hash_size, IN const uint8_t *signature,
-                               IN uintn sig_size);
+bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
+                               const uint8_t *message_hash,
+                               uintn hash_size, const uint8_t *signature,
+                               uintn sig_size);
 
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme.
@@ -2223,9 +2223,9 @@ bool rsa_pkcs1_verify_with_nid(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  sig_size is too small.
  *
  **/
-bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
-                  IN const uint8_t *message_hash, IN uintn hash_size,
-                  OUT uint8_t *signature, IN OUT uintn *sig_size);
+bool rsa_pss_sign(void *rsa_context, uintn hash_nid,
+                  const uint8_t *message_hash, uintn hash_size,
+                  uint8_t *signature, uintn *sig_size);
 
 /**
  * Verifies the RSA-SSA signature with EMSA-PSS encoding scheme defined in
@@ -2249,9 +2249,9 @@ bool rsa_pss_sign(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
-                    IN const uint8_t *message_hash, IN uintn hash_size,
-                    IN const uint8_t *signature, IN uintn sig_size);
+bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
+                    const uint8_t *message_hash, uintn hash_size,
+                    const uint8_t *signature, uintn sig_size);
 
 /**
  * Retrieve the RSA Private key from the password-protected PEM key data.
@@ -2272,10 +2272,10 @@ bool rsa_pss_verify(IN void *rsa_context, IN uintn hash_nid,
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **rsa_context);
+bool rsa_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **rsa_context);
 
 /**
  * Retrieve the RSA public key from one DER-encoded X509 certificate.
@@ -2295,8 +2295,8 @@ bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
  * @retval  false  This interface is not supported.
  *
  **/
-bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                  OUT void **rsa_context);
+bool rsa_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+                                  void **rsa_context);
 
 /**
  * Retrieve the EC Private key from the password-protected PEM key data.
@@ -2315,9 +2315,9 @@ bool rsa_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
-                                 IN const char *password,
-                                 OUT void **ec_context);
+bool ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size,
+                                 const char *password,
+                                 void **ec_context);
 
 /**
  * Retrieve the EC public key from one DER-encoded X509 certificate.
@@ -2335,8 +2335,8 @@ bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
  * @retval  false  Fail to retrieve EC public key from X509 certificate.
  *
  **/
-bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                 OUT void **ec_context);
+bool ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+                                 void **ec_context);
 
 /**
  * Retrieve the Ed Private key from the password-protected PEM key data.
@@ -2355,10 +2355,10 @@ bool ec_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **ecd_context);
+bool ecd_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **ecd_context);
 
 /**
  * Retrieve the Ed public key from one DER-encoded X509 certificate.
@@ -2376,8 +2376,8 @@ bool ecd_get_private_key_from_pem(IN const uint8_t *pem_data,
  * @retval  false  Fail to retrieve Ed public key from X509 certificate.
  *
  **/
-bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                  OUT void **ecd_context);
+bool ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+                                  void **ecd_context);
 
 /**
  * Retrieve the sm2 Private key from the password-protected PEM key data.
@@ -2396,10 +2396,10 @@ bool ecd_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
-                                  IN uintn pem_size,
-                                  IN const char *password,
-                                  OUT void **sm2_context);
+bool sm2_get_private_key_from_pem(const uint8_t *pem_data,
+                                  uintn pem_size,
+                                  const char *password,
+                                  void **sm2_context);
 
 /**
  * Retrieve the sm2 public key from one DER-encoded X509 certificate.
@@ -2417,8 +2417,8 @@ bool sm2_get_private_key_from_pem(IN const uint8_t *pem_data,
  * @retval  false  Fail to retrieve sm2 public key from X509 certificate.
  *
  **/
-bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
-                                  OUT void **sm2_context);
+bool sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+                                  void **sm2_context);
 
 /**
  * Retrieve the tag and length of the tag.
@@ -2431,8 +2431,8 @@ bool sm2_get_public_key_from_x509(IN const uint8_t *cert, IN uintn cert_size,
  * @retval      true   Get tag successful
  * @retval      FALSe  Failed to get tag or tag not match
  **/
-bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
-                  IN uint32_t tag);
+bool asn1_get_tag(uint8_t **ptr, const uint8_t *end, uintn *length,
+                  uint32_t tag);
 
 /**
  * Retrieve the subject bytes from one X.509 certificate.
@@ -2453,9 +2453,9 @@ bool asn1_get_tag(IN OUT uint8_t **ptr, IN uint8_t *end, OUT uintn *length,
  * @retval  false  This interface is not supported.
  *
  **/
-bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
-                           OUT uint8_t *cert_subject,
-                           IN OUT uintn *subject_size);
+bool x509_get_subject_name(const uint8_t *cert, uintn cert_size,
+                           uint8_t *cert_subject,
+                           uintn *subject_size);
 
 /**
  * Retrieve the common name (CN) string from one X.509 certificate.
@@ -2483,9 +2483,9 @@ bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                                   OUT char *common_name,
-                                   OPTIONAL IN OUT uintn *common_name_size);
+return_status x509_get_common_name(const uint8_t *cert, uintn cert_size,
+                                   char *common_name,
+                                   uintn *common_name_size);
 
 /**
  * Retrieve the organization name (O) string from one X.509 certificate.
@@ -2514,9 +2514,9 @@ return_status x509_get_common_name(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 return_status
-x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
-                           OUT char *name_buffer,
-                           OPTIONAL IN OUT uintn *name_buffer_size);
+x509_get_organization_name(const uint8_t *cert, uintn cert_size,
+                           char *name_buffer,
+                           uintn *name_buffer_size);
 
 /**
  * Retrieve the version from one X.509 certificate.
@@ -2534,8 +2534,8 @@ x509_get_organization_name(IN const uint8_t *cert, IN uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
-                               OUT uintn *version);
+return_status x509_get_version(const uint8_t *cert, uintn cert_size,
+                               uintn *version);
 
 /**
  * Retrieve the serialNumber from one X.509 certificate.
@@ -2560,9 +2560,9 @@ return_status x509_get_version(IN const uint8_t *cert, IN uintn cert_size,
  *                                 serial_number_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
-                                     OUT uint8_t *serial_number,
-                                     OPTIONAL IN OUT uintn *serial_number_size);
+return_status x509_get_serial_number(const uint8_t *cert, uintn cert_size,
+                                     uint8_t *serial_number,
+                                     uintn *serial_number_size);
 
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
@@ -2583,9 +2583,9 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  This interface is not supported.
  *
  **/
-bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
-                          OUT uint8_t *cert_issuer,
-                          IN OUT uintn *issuer_size);
+bool x509_get_issuer_name(const uint8_t *cert, uintn cert_size,
+                          uint8_t *cert_issuer,
+                          uintn *issuer_size);
 
 /**
  * Retrieve the issuer common name (CN) string from one X.509 certificate.
@@ -2614,9 +2614,9 @@ bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 return_status
-x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
-                            OUT char *common_name,
-                            OPTIONAL IN OUT uintn *common_name_size);
+x509_get_issuer_common_name(const uint8_t *cert, uintn cert_size,
+                            char *common_name,
+                            uintn *common_name_size);
 
 /**
  * Retrieve the issuer organization name (O) string from one X.509 certificate.
@@ -2645,9 +2645,9 @@ x509_get_issuer_common_name(IN const uint8_t *cert, IN uintn cert_size,
  *
  **/
 return_status
-x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
-                                 OUT char *name_buffer,
-                                 OPTIONAL IN OUT uintn *name_buffer_size);
+x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
+                                 char *name_buffer,
+                                 uintn *name_buffer_size);
 
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
@@ -2667,9 +2667,9 @@ x509_get_issuer_orgnization_name(IN const uint8_t *cert, IN uintn cert_size,
  *                                 is returned in the oid_size.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_signature_algorithm(IN const uint8_t *cert,
-                                           IN uintn cert_size, OUT uint8_t *oid,
-                                           OPTIONAL IN OUT uintn *oid_size);
+return_status x509_get_signature_algorithm(const uint8_t *cert,
+                                           uintn cert_size, uint8_t *oid,
+                                           uintn *oid_size);
 
 /**
  * Retrieve Extension data from one X.509 certificate.
@@ -2691,10 +2691,10 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
  *                                 is returned in the extension_data_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size,
-                                      IN const uint8_t *oid, IN uintn oid_size,
-                                      OUT uint8_t *extension_data,
-                                      IN OUT uintn *extension_data_size);
+return_status x509_get_extension_data(const uint8_t *cert, uintn cert_size,
+                                      const uint8_t *oid, uintn oid_size,
+                                      uint8_t *extension_data,
+                                      uintn *extension_data_size);
 
 /**
  * Retrieve the Validity from one X.509 certificate
@@ -2717,9 +2717,9 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
  * @retval  false  Invalid certificate, or Validity retrieve failed.
  * @retval  false  This interface is not supported.
  **/
-bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
-                       IN uint8_t *from, IN OUT uintn *from_size, IN uint8_t *to,
-                       IN OUT uintn *to_size);
+bool x509_get_validity(const uint8_t *cert, uintn cert_size,
+                       uint8_t *from, uintn *from_size, uint8_t *to,
+                       uintn *to_size);
 
 /**
  * format a date_time object into DataTime buffer
@@ -2744,8 +2744,8 @@ bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
  *                                 date_time_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
-                                 IN OUT uintn *date_time_size);
+return_status x509_set_date_time(char *date_time_str, void *date_time,
+                                 uintn *date_time_size);
 
 /**
  * Compare date_time1 object and date_time2 object.
@@ -2763,7 +2763,7 @@ return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
  * @retval  1      If date_time1 > date_time2
  * @retval  -1     If date_time1 < date_time2
  **/
-intn x509_compare_date_time(IN void *date_time1, IN void *date_time2);
+intn x509_compare_date_time(const void *date_time1, const void *date_time2);
 
 /**
  * Retrieve the key usage from one X.509 certificate.
@@ -2776,8 +2776,8 @@ intn x509_compare_date_time(IN void *date_time1, IN void *date_time2);
  * @retval  false  Invalid certificate, or usage is NULL
  * @retval  false  This interface is not supported.
  **/
-bool x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
-                        OUT uintn *usage);
+bool x509_get_key_usage(const uint8_t *cert, uintn cert_size,
+                        uintn *usage);
 
 /**
  * Retrieve the Extended key usage from one X.509 certificate.
@@ -2796,9 +2796,9 @@ bool x509_get_key_usage(IN const uint8_t *cert, IN uintn cert_size,
  *                                 is returned in the usage_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_extended_key_usage(IN const uint8_t *cert,
-                                          IN uintn cert_size, OUT uint8_t *usage,
-                                          IN OUT uintn *usage_size);
+return_status x509_get_extended_key_usage(const uint8_t *cert,
+                                          uintn cert_size, uint8_t *usage,
+                                          uintn *usage_size);
 
 /**
  * Verify one X509 certificate was issued by the trusted CA.
@@ -2818,8 +2818,8 @@ return_status x509_get_extended_key_usage(IN const uint8_t *cert,
  * @retval  false  This interface is not supported.
  *
  **/
-bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
-                      IN const uint8_t *ca_cert, IN uintn ca_cert_size);
+bool x509_verify_cert(const uint8_t *cert, uintn cert_size,
+                      const uint8_t *ca_cert, uintn ca_cert_size);
 
 /**
  * Verify one X509 certificate was issued by the trusted CA.
@@ -2839,9 +2839,9 @@ bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
-                            IN uint8_t *cert_chain,
-                            IN uintn cert_chain_length);
+bool x509_verify_cert_chain(uint8_t *root_cert, uintn root_cert_length,
+                            uint8_t *cert_chain,
+                            uintn cert_chain_length);
 
 /**
  * Get one X509 certificate from cert_chain.
@@ -2862,10 +2862,10 @@ bool x509_verify_cert_chain(IN uint8_t *root_cert, IN uintn root_cert_length,
  * @retval  true   Success.
  * @retval  false  Failed to get certificate from certificate chain.
  **/
-bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
-                                   IN uintn cert_chain_length,
-                                   IN int32_t cert_index, OUT uint8_t **cert,
-                                   OUT uintn *cert_length);
+bool x509_get_cert_from_cert_chain(uint8_t *cert_chain,
+                                   uintn cert_chain_length,
+                                   const int32_t cert_index, uint8_t **cert,
+                                   uintn *cert_length);
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -2883,8 +2883,8 @@ bool x509_get_cert_from_cert_chain(IN uint8_t *cert_chain,
  * @retval     false           This interface is not supported.
  *
  **/
-bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
-                                OUT uint8_t **single_x509_cert);
+bool x509_construct_certificate(const uint8_t *cert, uintn cert_size,
+                                uint8_t **single_x509_cert);
 
 /**
  * Construct a X509 stack object from a list of DER-encoded certificate data.
@@ -2904,7 +2904,7 @@ bool x509_construct_certificate(IN const uint8_t *cert, IN uintn cert_size,
  * @retval     false           This interface is not supported.
  *
  **/
-bool x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...);
+bool x509_construct_certificate_stack(uint8_t **x509_stack, ...);
 
 /**
  * Release the specified X509 object.
@@ -2914,7 +2914,7 @@ bool x509_construct_certificate_stack(IN OUT uint8_t **x509_stack, ...);
  * @param[in]  x509_cert  Pointer to the X509 object to be released.
  *
  **/
-void x509_free(IN void *x509_cert);
+void x509_free(void *x509_cert);
 
 /**
  * Release the specified X509 stack object.
@@ -2924,7 +2924,7 @@ void x509_free(IN void *x509_cert);
  * @param[in]  x509_stack  Pointer to the X509 stack object to be released.
  *
  **/
-void x509_stack_free(IN void *x509_stack);
+void x509_stack_free(void *x509_stack);
 
 /**
  * Retrieve the TBSCertificate from one given X.509 certificate.
@@ -2943,8 +2943,8 @@ void x509_stack_free(IN void *x509_stack);
  * @retval  false  Invalid X.509 certificate.
  *
  **/
-bool x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
-                       OUT uint8_t **tbs_cert, OUT uintn *tbs_cert_size);
+bool x509_get_tbs_cert(const uint8_t *cert, uintn cert_size,
+                       uint8_t **tbs_cert, uintn *tbs_cert_size);
 
 /*=====================================================================================
  *    DH key Exchange Primitive
@@ -2961,7 +2961,7 @@ bool x509_get_tbs_cert(IN const uint8_t *cert, IN uintn cert_size,
  *         If the interface is not supported, dh_new_by_nid() returns NULL.
  *
  **/
-void *dh_new_by_nid(IN uintn nid);
+void *dh_new_by_nid(uintn nid);
 
 /**
  * Release the specified DH context.
@@ -2971,7 +2971,7 @@ void *dh_new_by_nid(IN uintn nid);
  * @param[in]  dh_context  Pointer to the DH context to be released.
  *
  **/
-void dh_free(IN void *dh_context);
+void dh_free(void *dh_context);
 
 /**
  * Generates DH parameter.
@@ -2997,8 +2997,8 @@ void dh_free(IN void *dh_context);
  * @retval false  This interface is not supported.
  *
  **/
-bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
-                           IN uintn prime_length, OUT uint8_t *prime);
+bool dh_generate_parameter(void *dh_context, uintn generator,
+                           uintn prime_length, uint8_t *prime);
 
 /**
  * Sets generator and prime parameters for DH.
@@ -3023,8 +3023,8 @@ bool dh_generate_parameter(IN OUT void *dh_context, IN uintn generator,
  * @retval false  This interface is not supported.
  *
  **/
-bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
-                      IN uintn prime_length, IN const uint8_t *prime);
+bool dh_set_parameter(void *dh_context, uintn generator,
+                      uintn prime_length, const uint8_t *prime);
 
 /**
  * Generates DH public key.
@@ -3054,8 +3054,8 @@ bool dh_set_parameter(IN OUT void *dh_context, IN uintn generator,
  * @retval false  This interface is not supported.
  *
  **/
-bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
-                     IN OUT uintn *public_key_size);
+bool dh_generate_key(void *dh_context, uint8_t *public_key,
+                     uintn *public_key_size);
 
 /**
  * Computes exchanged common key.
@@ -3087,9 +3087,9 @@ bool dh_generate_key(IN OUT void *dh_context, OUT uint8_t *public_key,
  * @retval false  This interface is not supported.
  *
  **/
-bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
-                    IN uintn peer_public_key_size, OUT uint8_t *key,
-                    IN OUT uintn *key_size);
+bool dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
+                    uintn peer_public_key_size, uint8_t *key,
+                    uintn *key_size);
 
 /*=====================================================================================
  *    Elliptic Curve Primitive
@@ -3105,7 +3105,7 @@ bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
  *         If the allocations fails, ec_new_by_nid() returns NULL.
  *
  **/
-void *ec_new_by_nid(IN uintn nid);
+void *ec_new_by_nid(uintn nid);
 
 /**
  * Release the specified EC context.
@@ -3113,7 +3113,7 @@ void *ec_new_by_nid(IN uintn nid);
  * @param[in]  ec_context  Pointer to the EC context to be released.
  *
  **/
-void ec_free(IN void *ec_context);
+void ec_free(void *ec_context);
 
 /**
  * Sets the public key component into the established EC context.
@@ -3130,8 +3130,8 @@ void ec_free(IN void *ec_context);
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
-                    IN uintn public_key_size);
+bool ec_set_pub_key(void *ec_context, const uint8_t *public_key,
+                    uintn public_key_size);
 
 /**
  * Gets the public key component from the established EC context.
@@ -3149,8 +3149,8 @@ bool ec_set_pub_key(IN OUT void *ec_context, IN uint8_t *public_key,
  * @retval  false  Invalid EC key component.
  *
  **/
-bool ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
-                    IN OUT uintn *public_key_size);
+bool ec_get_pub_key(void *ec_context, uint8_t *public_key,
+                    uintn *public_key_size);
 
 /**
  * Validates key components of EC context.
@@ -3165,7 +3165,7 @@ bool ec_get_pub_key(IN OUT void *ec_context, OUT uint8_t *public_key,
  * @retval  false  EC key components are not valid.
  *
  **/
-bool ec_check_key(IN void *ec_context);
+bool ec_check_key(const void *ec_context);
 
 /**
  * Generates EC key and returns EC public key (X, Y).
@@ -3196,8 +3196,8 @@ bool ec_check_key(IN void *ec_context);
  * @retval false  public_size is not large enough.
  *
  **/
-bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public_key,
-                     IN OUT uintn *public_key_size);
+bool ec_generate_key(void *ec_context, uint8_t *public_key,
+                     uintn *public_key_size);
 
 /**
  * Computes exchanged common key.
@@ -3229,9 +3229,9 @@ bool ec_generate_key(IN OUT void *ec_context, OUT uint8_t *public_key,
  * @retval false  key_size is not large enough.
  *
  **/
-bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
-                    IN uintn peer_public_size, OUT uint8_t *key,
-                    IN OUT uintn *key_size);
+bool ec_compute_key(void *ec_context, const uint8_t *peer_public,
+                    uintn peer_public_size, uint8_t *key,
+                    uintn *key_size);
 
 /**
  * Carries out the EC-DSA signature.
@@ -3262,9 +3262,9 @@ bool ec_compute_key(IN OUT void *ec_context, IN const uint8_t *peer_public,
  * @retval  false  sig_size is too small.
  *
  **/
-bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
-                IN const uint8_t *message_hash, IN uintn hash_size,
-                OUT uint8_t *signature, IN OUT uintn *sig_size);
+bool ecdsa_sign(void *ec_context, uintn hash_nid,
+                const uint8_t *message_hash, uintn hash_size,
+                uint8_t *signature, uintn *sig_size);
 
 /**
  * Verifies the EC-DSA signature.
@@ -3289,9 +3289,9 @@ bool ecdsa_sign(IN void *ec_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-bool ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
-                  IN const uint8_t *message_hash, IN uintn hash_size,
-                  IN const uint8_t *signature, IN uintn sig_size);
+bool ecdsa_verify(void *ec_context, uintn hash_nid,
+                  const uint8_t *message_hash, uintn hash_size,
+                  const uint8_t *signature, uintn sig_size);
 
 /*=====================================================================================
  *    Edwards-Curve Primitive
@@ -3309,7 +3309,7 @@ bool ecdsa_verify(IN void *ec_context, IN uintn hash_nid,
  *         If the allocations fails, ecd_new_by_nid() returns NULL.
  *
  **/
-void *ecd_new_by_nid(IN uintn nid);
+void *ecd_new_by_nid(uintn nid);
 
 /**
  * Release the specified Ed context.
@@ -3317,7 +3317,7 @@ void *ecd_new_by_nid(IN uintn nid);
  * @param[in]  ecd_context  Pointer to the Ed context to be released.
  *
  **/
-void ecd_free(IN void *ecd_context);
+void ecd_free(void *ecd_context);
 
 /**
  * Sets the public key component into the established Ed context.
@@ -3333,8 +3333,8 @@ void ecd_free(IN void *ecd_context);
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
-                     IN uintn public_key_size);
+bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
+                     uintn public_key_size);
 
 /**
  * Gets the public key component from the established Ed context.
@@ -3351,8 +3351,8 @@ bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                     IN OUT uintn *public_key_size);
+bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
+                     uintn *public_key_size);
 
 /**
  * Validates key components of Ed context.
@@ -3367,7 +3367,7 @@ bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * @retval  false  Ed key components are not valid.
  *
  **/
-bool ecd_check_key(IN void *ecd_context);
+bool ecd_check_key(const void *ecd_context);
 
 /**
  * Generates Ed key and returns Ed public key.
@@ -3389,8 +3389,8 @@ bool ecd_check_key(IN void *ecd_context);
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                      IN OUT uintn *public_key_size);
+bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
+                      uintn *public_key_size);
 
 /**
  * Carries out the Ed-DSA signature.
@@ -3425,10 +3425,10 @@ bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * @retval  false  sig_size is too small.
  *
  **/
-bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-                IN const uint8_t *context, IN uintn context_size,
-                IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
-                IN OUT uintn *sig_size);
+bool eddsa_sign(const void *ecd_context, uintn hash_nid,
+                const uint8_t *context, uintn context_size,
+                const uint8_t *message, uintn size, uint8_t *signature,
+                uintn *sig_size);
 
 /**
  * Verifies the Ed-DSA signature.
@@ -3457,10 +3457,10 @@ bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-bool eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-                  IN const uint8_t *context, IN uintn context_size,
-                  IN const uint8_t *message, IN uintn size,
-                  IN const uint8_t *signature, IN uintn sig_size);
+bool eddsa_verify(const void *ecd_context, uintn hash_nid,
+                  const uint8_t *context, uintn context_size,
+                  const uint8_t *message, uintn size,
+                  const uint8_t *signature, uintn sig_size);
 
 /*=====================================================================================
  *    Montgomery-Curve Primitive
@@ -3476,7 +3476,7 @@ bool eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
  *         If the allocations fails, ecx_new_by_nid() returns NULL.
  *
  **/
-void *ecx_new_by_nid(IN uintn nid);
+void *ecx_new_by_nid(uintn nid);
 
 /**
  * Release the specified Ecx context.
@@ -3484,7 +3484,7 @@ void *ecx_new_by_nid(IN uintn nid);
  * @param[in]  ecx_context  Pointer to the Ecx context to be released.
  *
  **/
-void ecx_free(IN void *ecx_context);
+void ecx_free(const void *ecx_context);
 
 /**
  * Generates Ecx key and returns Ecx public key.
@@ -3512,8 +3512,8 @@ void ecx_free(IN void *ecx_context);
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
-                      IN OUT uintn *public_size);
+bool ecx_generate_key(void *ecx_context, uint8_t *public,
+                      uintn *public_size);
 
 /**
  * Computes exchanged common key.
@@ -3542,9 +3542,9 @@ bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
  * @retval false  key_size is not large enough.
  *
  **/
-bool ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
-                     IN uintn peer_public_size, OUT uint8_t *key,
-                     IN OUT uintn *key_size);
+bool ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
+                     uintn peer_public_size, uint8_t *key,
+                     uintn *key_size);
 
 /*=====================================================================================
  *    Shang-Mi2 Primitive
@@ -3561,7 +3561,7 @@ bool ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *sm2_dsa_new_by_nid(IN uintn nid);
+void *sm2_dsa_new_by_nid(uintn nid);
 
 /**
  * Release the specified sm2 context.
@@ -3569,7 +3569,7 @@ void *sm2_dsa_new_by_nid(IN uintn nid);
  * @param[in]  sm2_context  Pointer to the sm2 context to be released.
  *
  **/
-void sm2_dsa_free(IN void *sm2_context);
+void sm2_dsa_free(void *sm2_context);
 
 /**
  * Sets the public key component into the established sm2 context.
@@ -3584,8 +3584,8 @@ void sm2_dsa_free(IN void *sm2_context);
  * @retval  false  Invalid sm2 public key component.
  *
  **/
-bool sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
-                         IN uintn public_key_size);
+bool sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
+                         uintn public_key_size);
 
 /**
  * Gets the public key component from the established sm2 context.
@@ -3601,8 +3601,8 @@ bool sm2_dsa_set_pub_key(IN OUT void *sm2_context, IN uint8_t *public_key,
  * @retval  false  Invalid sm2 key component.
  *
  **/
-bool sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
-                         IN OUT uintn *public_key_size);
+bool sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
+                         uintn *public_key_size);
 
 /**
  * Validates key components of sm2 context.
@@ -3617,7 +3617,7 @@ bool sm2_dsa_get_pub_key(IN OUT void *sm2_context, OUT uint8_t *public_key,
  * @retval  false  sm2 key components are not valid.
  *
  **/
-bool sm2_dsa_check_key(IN void *sm2_context);
+bool sm2_dsa_check_key(const void *sm2_context);
 
 /**
  * Generates sm2 key and returns sm2 public key (X, Y), based upon GB/T 32918.3-2016: SM2 - Part3.
@@ -3646,8 +3646,8 @@ bool sm2_dsa_check_key(IN void *sm2_context);
  * @retval false  public_size is not large enough.
  *
  **/
-bool sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
-                          IN OUT uintn *public_size);
+bool sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
+                          uintn *public_size);
 
 /**
  * Allocates and Initializes one Shang-Mi2 context for subsequent use.
@@ -3660,7 +3660,7 @@ bool sm2_dsa_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *sm2_key_exchange_new_by_nid(IN uintn nid);
+void *sm2_key_exchange_new_by_nid(uintn nid);
 
 /**
  * Release the specified sm2 context.
@@ -3668,7 +3668,7 @@ void *sm2_key_exchange_new_by_nid(IN uintn nid);
  * @param[in]  sm2_context  Pointer to the sm2 context to be released.
  *
  **/
-void sm2_key_exchange_free(IN void *sm2_context);
+void sm2_key_exchange_free(void *sm2_context);
 
 /**
  * Initialize the specified sm2 context.
@@ -3686,10 +3686,10 @@ void sm2_key_exchange_free(IN void *sm2_context);
  * @retval true   sm2 context is initialized.
  * @retval false  sm2 context is not initialized.
  **/
-bool sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
-                           IN const uint8_t *id_a, IN uintn id_a_size,
-                           IN const uint8_t *id_b, IN uintn id_b_size,
-                           IN const bool is_initiator);
+bool sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
+                           const uint8_t *id_a, uintn id_a_size,
+                           const uint8_t *id_b, uintn id_b_size,
+                           bool is_initiator);
 
 /**
  * Generates sm2 key and returns sm2 public key (X, Y), based upon GB/T 32918.3-2016: SM2 - Part3.
@@ -3718,8 +3718,8 @@ bool sm2_key_exchange_init(IN void *sm2_context, IN uintn hash_nid,
  * @retval false  public_size is not large enough.
  *
  **/
-bool sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public,
-                                   IN OUT uintn *public_size);
+bool sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
+                                   uintn *public_size);
 
 /**
  * Computes exchanged common key, based upon GB/T 32918.3-2016: SM2 - Part3.
@@ -3748,10 +3748,10 @@ bool sm2_key_exchange_generate_key(IN OUT void *sm2_context, OUT uint8_t *public
  * @retval false  sm2 exchanged key generation failed.
  *
  **/
-bool sm2_key_exchange_compute_key(IN OUT void *sm2_context,
-                                  IN const uint8_t *peer_public,
-                                  IN uintn peer_public_size, OUT uint8_t *key,
-                                  IN uintn *key_size);
+bool sm2_key_exchange_compute_key(void *sm2_context,
+                                  const uint8_t *peer_public,
+                                  uintn peer_public_size, uint8_t *key,
+                                  uintn *key_size);
 
 /**
  * Carries out the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
@@ -3783,10 +3783,10 @@ bool sm2_key_exchange_compute_key(IN OUT void *sm2_context,
  * @retval  false  sig_size is too small.
  *
  **/
-bool sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
-                  IN const uint8_t *id_a, IN uintn id_a_size,
-                  IN const uint8_t *message, IN uintn size,
-                  OUT uint8_t *signature, IN OUT uintn *sig_size);
+bool sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
+                  const uint8_t *id_a, uintn id_a_size,
+                  const uint8_t *message, uintn size,
+                  uint8_t *signature, uintn *sig_size);
 
 /**
  * Verifies the SM2 signature, based upon GB/T 32918.2-2016: SM2 - Part2.
@@ -3812,10 +3812,10 @@ bool sm2_dsa_sign(IN void *sm2_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid sm2 context.
  *
  **/
-bool sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
-                    IN const uint8_t *id_a, IN uintn id_a_size,
-                    IN const uint8_t *message, IN uintn size,
-                    IN const uint8_t *signature, IN uintn sig_size);
+bool sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
+                    const uint8_t *id_a, uintn id_a_size,
+                    const uint8_t *message, uintn size,
+                    const uint8_t *signature, uintn sig_size);
 
 /*=====================================================================================
  *    Pseudo-Random Generation Primitive
@@ -3839,7 +3839,7 @@ bool sm2_dsa_verify(IN void *sm2_context, IN uintn hash_nid,
  * @retval false  This interface is not supported.
  *
  **/
-bool random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size);
+bool random_seed(const uint8_t *seed, uintn seed_size);
 
 /**
  * Generates a pseudorandom byte stream of the specified size.
@@ -3855,7 +3855,7 @@ bool random_seed(IN const uint8_t *seed OPTIONAL, IN uintn seed_size);
  * @retval false  This interface is not supported.
  *
  **/
-bool random_bytes(OUT uint8_t *output, IN uintn size);
+bool random_bytes(uint8_t *output, uintn size);
 
 /*=====================================================================================
  *    key Derivation Function Primitive
@@ -3877,10 +3877,10 @@ bool random_bytes(OUT uint8_t *output, IN uintn size);
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA256 HMAC-based Extract key Derivation Function (HKDF).
@@ -3896,9 +3896,9 @@ bool hkdf_sha256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha256_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA256 HMAC-based Expand key Derivation Function (HKDF).
@@ -3914,9 +3914,9 @@ bool hkdf_sha256_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha256_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size);
 
 /**
  * Derive key data using HMAC-SHA384 based KDF.
@@ -3934,10 +3934,10 @@ bool hkdf_sha256_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha384_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA384 HMAC-based Extract key Derivation Function (HKDF).
@@ -3953,9 +3953,9 @@ bool hkdf_sha384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha384_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA384 HMAC-based Expand key Derivation Function (HKDF).
@@ -3971,9 +3971,9 @@ bool hkdf_sha384_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha384_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size);
 
 /**
  * Derive key data using HMAC-SHA512 based KDF.
@@ -3991,10 +3991,10 @@ bool hkdf_sha384_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                    IN const uint8_t *salt, IN uintn salt_size,
-                                    IN const uint8_t *info, IN uintn info_size,
-                                    OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha512_extract_and_expand(const uint8_t *key, uintn key_size,
+                                    const uint8_t *salt, uintn salt_size,
+                                    const uint8_t *info, uintn info_size,
+                                    uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA512 HMAC-based Extract key Derivation Function (HKDF).
@@ -4010,9 +4010,9 @@ bool hkdf_sha512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
-                         IN const uint8_t *salt, IN uintn salt_size,
-                         OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha512_extract(const uint8_t *key, uintn key_size,
+                         const uint8_t *salt, uintn salt_size,
+                         uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA512 HMAC-based Expand key Derivation Function (HKDF).
@@ -4028,9 +4028,9 @@ bool hkdf_sha512_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
-                        IN const uint8_t *info, IN uintn info_size,
-                        OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha512_expand(const uint8_t *prk, uintn prk_size,
+                        const uint8_t *info, uintn info_size,
+                        uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
@@ -4048,10 +4048,10 @@ bool hkdf_sha512_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                      IN const uint8_t *salt, IN uintn salt_size,
-                                      IN const uint8_t *info, IN uintn info_size,
-                                      OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                      const uint8_t *salt, uintn salt_size,
+                                      const uint8_t *info, uintn info_size,
+                                      uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_256 HMAC-based Extract key Derivation Function (HKDF).
@@ -4067,9 +4067,9 @@ bool hkdf_sha3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_256_extract(IN const uint8_t *key, IN uintn key_size,
-                           IN const uint8_t *salt, IN uintn salt_size,
-                           OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha3_256_extract(const uint8_t *key, uintn key_size,
+                           const uint8_t *salt, uintn salt_size,
+                           uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA3_256 HMAC-based Expand key Derivation Function (HKDF).
@@ -4085,9 +4085,9 @@ bool hkdf_sha3_256_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                          IN const uint8_t *info, IN uintn info_size,
-                          OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_256_expand(const uint8_t *prk, uintn prk_size,
+                          const uint8_t *info, uintn info_size,
+                          uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_384 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
@@ -4105,10 +4105,10 @@ bool hkdf_sha3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                      IN const uint8_t *salt, IN uintn salt_size,
-                                      IN const uint8_t *info, IN uintn info_size,
-                                      OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_384_extract_and_expand(const uint8_t *key, uintn key_size,
+                                      const uint8_t *salt, uintn salt_size,
+                                      const uint8_t *info, uintn info_size,
+                                      uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_384 HMAC-based Extract key Derivation Function (HKDF).
@@ -4124,9 +4124,9 @@ bool hkdf_sha3_384_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_384_extract(IN const uint8_t *key, IN uintn key_size,
-                           IN const uint8_t *salt, IN uintn salt_size,
-                           OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha3_384_extract(const uint8_t *key, uintn key_size,
+                           const uint8_t *salt, uintn salt_size,
+                           uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA3_384 HMAC-based Expand key Derivation Function (HKDF).
@@ -4142,9 +4142,9 @@ bool hkdf_sha3_384_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_384_expand(IN const uint8_t *prk, IN uintn prk_size,
-                          IN const uint8_t *info, IN uintn info_size,
-                          OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_384_expand(const uint8_t *prk, uintn prk_size,
+                          const uint8_t *info, uintn info_size,
+                          uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_512 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
@@ -4162,10 +4162,10 @@ bool hkdf_sha3_384_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                      IN const uint8_t *salt, IN uintn salt_size,
-                                      IN const uint8_t *info, IN uintn info_size,
-                                      OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_512_extract_and_expand(const uint8_t *key, uintn key_size,
+                                      const uint8_t *salt, uintn salt_size,
+                                      const uint8_t *info, uintn info_size,
+                                      uint8_t *out, uintn out_size);
 
 /**
  * Derive SHA3_512 HMAC-based Extract key Derivation Function (HKDF).
@@ -4181,9 +4181,9 @@ bool hkdf_sha3_512_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_512_extract(IN const uint8_t *key, IN uintn key_size,
-                           IN const uint8_t *salt, IN uintn salt_size,
-                           OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sha3_512_extract(const uint8_t *key, uintn key_size,
+                           const uint8_t *salt, uintn salt_size,
+                           uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SHA3_512 HMAC-based Expand key Derivation Function (HKDF).
@@ -4199,9 +4199,9 @@ bool hkdf_sha3_512_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha3_512_expand(IN const uint8_t *prk, IN uintn prk_size,
-                          IN const uint8_t *info, IN uintn info_size,
-                          OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sha3_512_expand(const uint8_t *prk, uintn prk_size,
+                          const uint8_t *info, uintn info_size,
+                          uint8_t *out, uintn out_size);
 
 /**
  * Derive SM3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
@@ -4219,10 +4219,10 @@ bool hkdf_sha3_512_expand(IN const uint8_t *prk, IN uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                     IN const uint8_t *salt, IN uintn salt_size,
-                                     IN const uint8_t *info, IN uintn info_size,
-                                     OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sm3_256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                     const uint8_t *salt, uintn salt_size,
+                                     const uint8_t *info, uintn info_size,
+                                     uint8_t *out, uintn out_size);
 
 /**
  * Derive SM3_256 HMAC-based Extract key Derivation Function (HKDF).
@@ -4238,9 +4238,9 @@ bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *salt, IN uintn salt_size,
-                          OUT uint8_t *prk_out, IN uintn prk_out_size);
+bool hkdf_sm3_256_extract(const uint8_t *key, uintn key_size,
+                          const uint8_t *salt, uintn salt_size,
+                          uint8_t *prk_out, uintn prk_out_size);
 
 /**
  * Derive SM3_256 HMAC-based Expand key Derivation Function (HKDF).
@@ -4256,8 +4256,8 @@ bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                         IN const uint8_t *info, IN uintn info_size,
-                         OUT uint8_t *out, IN uintn out_size);
+bool hkdf_sm3_256_expand(const uint8_t *prk, uintn prk_size,
+                         const uint8_t *info, uintn info_size,
+                         uint8_t *out, uintn out_size);
 
 #endif /* __BASE_CRYPT_LIB_H__*/

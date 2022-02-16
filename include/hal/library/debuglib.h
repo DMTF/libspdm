@@ -41,7 +41,7 @@
  *                    based on the format string specified by format.
  *
  **/
-void debug_print(IN uintn error_level, IN const char *format, ...);
+void debug_print(uintn error_level, const char *format, ...);
 
 /**
  * Prints an assert message containing a filename, line number, and description.
@@ -64,8 +64,8 @@ void debug_print(IN uintn error_level, IN const char *format, ...);
  * @param  description  The pointer to the description of the assert condition.
  *
  **/
-void debug_assert(IN const char *file_name, IN uintn line_number,
-                  IN const char *description);
+void debug_assert(const char *file_name, uintn line_number,
+                  const char *description);
 
 /**
  * Internal worker macro that calls debug_assert().

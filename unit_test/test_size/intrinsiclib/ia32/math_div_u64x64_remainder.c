@@ -6,8 +6,8 @@
 
 #include "hal/base.h"
 
-uint64_t internal_math_div_rem_u64x32(IN uint64_t dividend, IN uint32_t divisor,
-                                      OUT uint32_t *remainder)
+uint64_t internal_math_div_rem_u64x32(uint64_t dividend, uint32_t divisor,
+                                      uint32_t *remainder)
 {
     _asm {
         mov ecx, divisor
@@ -26,8 +26,8 @@ RemainderNull:
 }
 
 __declspec(naked) uint64_t
-internal_math_div_rem_u64x64(IN uint64_t dividend, IN uint64_t divisor,
-                             OUT uint64_t *remainder OPTIONAL)
+internal_math_div_rem_u64x64(uint64_t dividend, uint64_t divisor,
+                             uint64_t *remainder)
 {
     _asm {
         mov ecx, [esp + 16]; ecx <-divisor[32..63]
@@ -89,8 +89,8 @@ __Return:
     }
 }
 
-uint64_t div_u64x64_remainder(IN uint64_t dividend, IN uint64_t divisor,
-                              OUT uint64_t *remainder OPTIONAL)
+uint64_t div_u64x64_remainder(uint64_t dividend, uint64_t divisor,
+                              uint64_t *remainder)
 {
     return internal_math_div_rem_u64x64(dividend, divisor, remainder);
 }
@@ -104,9 +104,9 @@ __declspec(naked) void __cdecl _aulldvrm(void)
 
     /*    uint64_t
      *            div_u64x64_remainder (
-     *      IN      uint64_t     dividend,
-     *      IN      uint64_t     divisor,
-     *      OUT     uint64_t     *remainder  OPTIONAL
+     *      const      uint64_t     dividend,
+     *      const      uint64_t     divisor,
+     *          uint64_t     *remainder 
      *      )*/
 
     _asm {

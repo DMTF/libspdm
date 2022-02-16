@@ -34,8 +34,8 @@ uintn AlignmentSize(uintn size, uint8_t req_or_res)
     return size;
 }
 
-bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
-                      IN void **test_buffer, OUT uintn *buffer_size)
+bool init_test_buffer(const char *file_name, uintn max_buffer_size,
+                      void **test_buffer, uintn *buffer_size)
 {
     void *buffer;
     FILE *file;
@@ -97,10 +97,17 @@ bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
     return true;
 }
 
-uint8_t judge_requster_name(IN char *file_name)
+uint8_t judge_requster_name(const char *file_name)
 {
-    char *file_p = file_name, *requester_name_p = NULL, *pSave = NULL, flag;
+    char *file_p;
+    char *requester_name_p;
+    char *pSave;
+    char flag;
     char requester_name[] = "test_spdm_requester";
+
+    file_p = (char *)file_name;
+    requester_name_p = NULL;
+    pSave = NULL;
 
     while (*file_p) {
         if (*file_p == requester_name[0] &&

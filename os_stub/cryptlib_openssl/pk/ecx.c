@@ -24,7 +24,7 @@
  *         If the allocations fails, ecx_new_by_nid() returns NULL.
  *
  **/
-void *ecx_new_by_nid(IN uintn nid)
+void *ecx_new_by_nid(uintn nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -68,7 +68,7 @@ void *ecx_new_by_nid(IN uintn nid)
  * @param[in]  ecx_context  Pointer to the Ecx context to be released.
  *
  **/
-void ecx_free(IN void *ecx_context)
+void ecx_free(const void *ecx_context)
 {
     EVP_PKEY_free((EVP_PKEY *)ecx_context);
 }
@@ -99,8 +99,8 @@ void ecx_free(IN void *ecx_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
-                      IN OUT uintn *public_size)
+bool ecx_generate_key(void *ecx_context, uint8_t *public,
+                      uintn *public_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -162,9 +162,9 @@ bool ecx_generate_key(IN OUT void *ecx_context, OUT uint8_t *public,
  * @retval false  key_size is not large enough.
  *
  **/
-bool ecx_compute_key(IN OUT void *ecx_context, IN const uint8_t *peer_public,
-                     IN uintn peer_public_size, OUT uint8_t *key,
-                     IN OUT uintn *key_size)
+bool ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
+                     uintn peer_public_size, uint8_t *key,
+                     uintn *key_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;

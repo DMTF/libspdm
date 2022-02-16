@@ -24,7 +24,7 @@
  * @return buffer.
  *
  **/
-void *zero_mem(OUT void *buffer, IN uintn length)
+void *zero_mem(void *buffer, uintn length)
 {
     volatile uint8_t *pointer;
 

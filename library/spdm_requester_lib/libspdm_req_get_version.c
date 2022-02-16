@@ -24,9 +24,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_version(IN spdm_context_t *spdm_context,
-                                   IN OUT uint8_t *version_number_entry_count,
-                                   OUT spdm_version_number_t *version_number_entry)
+return_status try_spdm_get_version(spdm_context_t *spdm_context,
+                                   uint8_t *version_number_entry_count,
+                                   spdm_version_number_t *version_number_entry)
 {
     return_status status;
     bool result;
@@ -161,9 +161,9 @@ return_status try_spdm_get_version(IN spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_version(IN spdm_context_t *spdm_context,
-                               IN OUT uint8_t *version_number_entry_count,
-                               OUT spdm_version_number_t *version_number_entry)
+return_status spdm_get_version(spdm_context_t *spdm_context,
+                               uint8_t *version_number_entry_count,
+                               spdm_version_number_t *version_number_entry)
 {
     uintn retry;
     return_status status;

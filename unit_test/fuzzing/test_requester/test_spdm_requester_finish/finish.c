@@ -11,8 +11,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-void spdm_secured_message_set_response_finished_key(IN void *spdm_secured_message_context,
-                                                    IN void *key, IN uintn key_size)
+void spdm_secured_message_set_response_finished_key(void *spdm_secured_message_context,
+                                                    const void *key, uintn key_size)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -29,14 +29,14 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(IN void *spdm_context, IN uintn request_size,
-                                       IN void *request, IN uint64_t timeout)
+return_status spdm_device_send_message(void *spdm_context, uintn request_size,
+                                       const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status spdm_device_receive_message(IN void *spdm_context, IN OUT uintn *response_size,
-                                          IN OUT void *response, IN uint64_t timeout)
+return_status spdm_device_receive_message(void *spdm_context, uintn *response_size,
+                                          void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 
@@ -128,13 +128,13 @@ spdm_test_context_t m_spdm_requester_finish_test_context = {
     spdm_device_receive_message,
 };
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size)
+void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
     setup_spdm_test_context(&m_spdm_requester_finish_test_context);
 
-    m_spdm_requester_finish_test_context.test_buffer = test_buffer;
+    m_spdm_requester_finish_test_context.test_buffer = (void *)test_buffer;
     m_spdm_requester_finish_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response*/
@@ -148,7 +148,7 @@ uintn get_max_buffer_size(void)
     return 0;
 }
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size){
+void run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

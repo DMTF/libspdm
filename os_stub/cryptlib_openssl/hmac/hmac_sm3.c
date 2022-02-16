@@ -12,16 +12,16 @@
 #include <openssl/hmac.h>
 
 void *hmac_md_new(void);
-void hmac_md_free(IN void *hmac_md_ctx);
-bool hmac_md_set_key(IN const EVP_MD *md, OUT void *hmac_md_ctx,
-                     IN const uint8_t *key, IN uintn key_size);
-bool hmac_md_duplicate(IN const void *hmac_md_ctx, OUT void *new_hmac_md_ctx);
-bool hmac_md_update(IN OUT void *hmac_md_ctx, IN const void *data,
-                    IN uintn data_size);
-bool hmac_md_final(IN OUT void *hmac_md_ctx, OUT uint8_t *hmac_value);
-bool hmac_md_all(IN const EVP_MD *md, IN const void *data,
-                 IN uintn data_size, IN const uint8_t *key, IN uintn key_size,
-                 OUT uint8_t *hmac_value);
+void hmac_md_free(const void *hmac_md_ctx);
+bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
+                     const uint8_t *key, uintn key_size);
+bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx);
+bool hmac_md_update(void *hmac_md_ctx, const void *data,
+                    uintn data_size);
+bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value);
+bool hmac_md_all(const EVP_MD *md, const void *data,
+                 uintn data_size, const uint8_t *key, uintn key_size,
+                 uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SM3_256 use.
@@ -41,7 +41,7 @@ void *hmac_sm3_256_new(void)
  * @param[in]  hmac_sm3_256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx)
+void hmac_sm3_256_free(void *hmac_sm3_256_ctx)
 {
     hmac_md_free(hmac_sm3_256_ctx);
 }
@@ -60,8 +60,8 @@ void hmac_sm3_256_free(IN void *hmac_sm3_256_ctx)
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
-                          IN uintn key_size)
+bool hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
+                          uintn key_size)
 {
     return hmac_md_set_key(EVP_sm3(), hmac_sm3_256_ctx, key, key_size);
 }
@@ -79,8 +79,8 @@ bool hmac_sm3_256_set_key(OUT void *hmac_sm3_256_ctx, IN const uint8_t *key,
  * @retval false  HMAC-SM3_256 context copy failed.
  *
  **/
-bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
-                            OUT void *new_hmac_sm3_256_ctx)
+bool hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
+                            void *new_hmac_sm3_256_ctx)
 {
     return hmac_md_duplicate(hmac_sm3_256_ctx, new_hmac_sm3_256_ctx);
 }
@@ -103,8 +103,8 @@ bool hmac_sm3_256_duplicate(IN const void *hmac_sm3_256_ctx,
  * @retval false  HMAC-SM3_256 data digest failed.
  *
  **/
-bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
-                         IN uintn data_size)
+bool hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
+                         uintn data_size)
 {
     return hmac_md_update(hmac_sm3_256_ctx, data, data_size);
 }
@@ -129,7 +129,7 @@ bool hmac_sm3_256_update(IN OUT void *hmac_sm3_256_ctx, IN const void *data,
  * @retval false  HMAC-SM3_256 digest computation failed.
  *
  **/
-bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value)
+bool hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value)
 {
     return hmac_md_final(hmac_sm3_256_ctx, hmac_value);
 }
@@ -154,9 +154,9 @@ bool hmac_sm3_256_final(IN OUT void *hmac_sm3_256_ctx, OUT uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sm3_256_all(IN const void *data, IN uintn data_size,
-                      IN const uint8_t *key, IN uintn key_size,
-                      OUT uint8_t *hmac_value)
+bool hmac_sm3_256_all(const void *data, uintn data_size,
+                      const uint8_t *key, uintn key_size,
+                      uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sm3(), data, data_size, key, key_size,
                        hmac_value);

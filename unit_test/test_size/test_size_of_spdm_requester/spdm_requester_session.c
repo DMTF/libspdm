@@ -6,7 +6,7 @@
 
 #include "spdm_requester.h"
 
-return_status do_session_via_spdm(IN void *spdm_context)
+return_status do_session_via_spdm(void *spdm_context)
 {
     return_status status;
     uint32_t session_id;

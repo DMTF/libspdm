@@ -16,11 +16,11 @@ static uintn m_local_buffer_size;
 static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_local_psk_hint[32];
 
-uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
-                                              IN void *buffer,
-                                              IN uintn buffer_size)
+uintn spdm_test_get_psk_exchange_request_size(const void *spdm_context,
+                                              const void *buffer,
+                                              uintn buffer_size)
 {
-    spdm_psk_exchange_request_t *spdm_request;
+    const spdm_psk_exchange_request_t *spdm_request;
     uintn message_size;
 
     spdm_request = buffer;
@@ -50,8 +50,8 @@ uintn spdm_test_get_psk_exchange_request_size(IN void *spdm_context,
 }
 
 return_status spdm_requester_psk_exchange_test_send_message(
-    IN void *spdm_context, IN uintn request_size, IN void *request,
-    IN uint64_t timeout)
+    void *spdm_context, uintn request_size, const void *request,
+    uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
     uintn header_size;
@@ -163,8 +163,8 @@ return_status spdm_requester_psk_exchange_test_send_message(
 }
 
 return_status spdm_requester_psk_exchange_test_receive_message(
-    IN void *spdm_context, IN OUT uintn *response_size,
-    IN OUT void *response, IN uint64_t timeout)
+    void *spdm_context, uintn *response_size,
+    void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
 

@@ -28,10 +28,10 @@
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
-                                     IN const uint8_t *salt, IN uintn salt_size,
-                                     IN const uint8_t *info, IN uintn info_size,
-                                     OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sm3_256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                     const uint8_t *salt, uintn salt_size,
+                                     const uint8_t *info, uintn info_size,
+                                     uint8_t *out, uintn out_size)
 {
     return false;
 }
@@ -50,9 +50,9 @@ bool hkdf_sm3_256_extract_and_expand(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
-                          IN const uint8_t *salt, IN uintn salt_size,
-                          OUT uint8_t *prk_out, IN uintn prk_out_size)
+bool hkdf_sm3_256_extract(const uint8_t *key, uintn key_size,
+                          const uint8_t *salt, uintn salt_size,
+                          uint8_t *prk_out, uintn prk_out_size)
 {
     return false;
 }
@@ -71,9 +71,9 @@ bool hkdf_sm3_256_extract(IN const uint8_t *key, IN uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sm3_256_expand(IN const uint8_t *prk, IN uintn prk_size,
-                         IN const uint8_t *info, IN uintn info_size,
-                         OUT uint8_t *out, IN uintn out_size)
+bool hkdf_sm3_256_expand(const uint8_t *prk, uintn prk_size,
+                         const uint8_t *info, uintn info_size,
+                         uint8_t *out, uintn out_size)
 {
     return false;
 }

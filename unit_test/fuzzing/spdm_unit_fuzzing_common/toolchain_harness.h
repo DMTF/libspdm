@@ -18,11 +18,11 @@
 #define LIBSPDM_MAX_BUFFER_SIZE 64
 #define NULL ((void *)0)
 
-void run_test_harness(IN void *test_buffer, IN uintn test_buffer_size);
+void run_test_harness(const void *test_buffer, uintn test_buffer_size);
 
 uintn get_max_buffer_size(void);
 
-uint8_t judge_requster_name(IN char *file_name);
+uint8_t judge_requster_name(const char *file_name);
 
 uintn AlignmentSize(uintn size, uint8_t req_or_res);
 

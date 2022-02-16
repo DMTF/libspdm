@@ -15,7 +15,7 @@
  * @return the size in bytes of opaque data version selection.
  **/
 uintn spdm_get_opaque_data_version_selection_data_size(
-    IN spdm_context_t *spdm_context)
+    const spdm_context_t *spdm_context)
 {
     uintn size;
 
@@ -45,7 +45,7 @@ uintn spdm_get_opaque_data_version_selection_data_size(
  * @return the size in bytes of opaque data supproted version.
  **/
 uintn spdm_get_opaque_data_supported_version_data_size(
-    IN spdm_context_t *spdm_context)
+    spdm_context_t *spdm_context)
 {
     uintn size;
 
@@ -84,9 +84,9 @@ uintn spdm_get_opaque_data_supported_version_data_size(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
-                                              IN OUT uintn *data_out_size,
-                                              OUT void *data_out)
+spdm_build_opaque_data_supported_version_data(spdm_context_t *spdm_context,
+                                              uintn *data_out_size,
+                                              void *data_out)
 {
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
@@ -170,9 +170,9 @@ spdm_build_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
  * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data supported version.
  **/
 return_status
-spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
-                                                IN uintn data_in_size,
-                                                IN void *data_in)
+spdm_process_opaque_data_supported_version_data(spdm_context_t *spdm_context,
+                                                uintn data_in_size,
+                                                void *data_in)
 {
     secured_message_general_opaque_data_table_header_t
     *general_opaque_data_table_header;
@@ -262,9 +262,9 @@ spdm_process_opaque_data_supported_version_data(IN spdm_context_t *spdm_context,
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
-                                              IN OUT uintn *data_out_size,
-                                              OUT void *data_out)
+spdm_build_opaque_data_version_selection_data(const spdm_context_t *spdm_context,
+                                              uintn *data_out_size,
+                                              void *data_out)
 {
     uintn final_data_size;
     secured_message_general_opaque_data_table_header_t
@@ -340,9 +340,9 @@ spdm_build_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
  * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
  **/
 return_status
-spdm_process_opaque_data_version_selection_data(IN spdm_context_t *spdm_context,
-                                                IN uintn data_in_size,
-                                                IN void *data_in)
+spdm_process_opaque_data_version_selection_data(spdm_context_t *spdm_context,
+                                                uintn data_in_size,
+                                                void *data_in)
 {
     secured_message_general_opaque_data_table_header_t
     *general_opaque_data_table_header;

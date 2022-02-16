@@ -12,13 +12,13 @@
 #include <openssl/evp.h>
 
 void *hash_md_new(void);
-void hash_md_free(IN void *md_ctx);
-bool hash_md_init(IN const EVP_MD *md, OUT void *md_ctx);
-bool hash_md_duplicate(IN const void *md_ctx, OUT void *new_md_ctx);
-bool hash_md_update(IN void *md_ctx, IN const void *data, IN uintn data_size);
-bool hash_md_final(IN void *md_ctx, OUT void *hash_value);
-bool hash_md_hash_all(IN const EVP_MD *md, IN const void *data, IN uintn data_size,
-                      OUT uint8_t *hash_value);
+void hash_md_free(void *md_ctx);
+bool hash_md_init(const EVP_MD *md, void *md_ctx);
+bool hash_md_duplicate(const void *md_ctx, void *new_md_ctx);
+bool hash_md_update(void *md_ctx, const void *data, uintn data_size);
+bool hash_md_final(void *md_ctx, void *hash_value);
+bool hash_md_hash_all(const EVP_MD *md, const void *data, uintn data_size,
+                      uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
@@ -38,7 +38,7 @@ void *sha3_256_new(void)
  * @param[in]  sha3_256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_256_free(IN void *sha3_256_ctx)
+void sha3_256_free(void *sha3_256_ctx)
 {
     hash_md_free(sha3_256_ctx);
 }
@@ -55,7 +55,7 @@ void sha3_256_free(IN void *sha3_256_ctx)
  * @retval false  SHA3-256 context initialization failed.
  *
  **/
-bool sha3_256_init(OUT void *sha3_256_context)
+bool sha3_256_init(void *sha3_256_context)
 {
     return hash_md_init (EVP_sha3_256(), sha3_256_context);
 }
@@ -75,8 +75,8 @@ bool sha3_256_init(OUT void *sha3_256_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_256_duplicate(IN const void *sha3_256_context,
-                        OUT void *new_sha3_256_context)
+bool sha3_256_duplicate(const void *sha3_256_context,
+                        void *new_sha3_256_context)
 {
     return hash_md_duplicate (sha3_256_context, new_sha3_256_context);
 }
@@ -99,8 +99,8 @@ bool sha3_256_duplicate(IN const void *sha3_256_context,
  * @retval false  SHA3-256 data digest failed.
  *
  **/
-bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
-                     IN uintn data_size)
+bool sha3_256_update(void *sha3_256_context, const void *data,
+                     uintn data_size)
 {
     return hash_md_update (sha3_256_context, data, data_size);
 }
@@ -125,7 +125,7 @@ bool sha3_256_update(IN OUT void *sha3_256_context, IN const void *data,
  * @retval false  SHA3-256 digest computation failed.
  *
  **/
-bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
+bool sha3_256_final(void *sha3_256_context, uint8_t *hash_value)
 {
     return hash_md_final (sha3_256_context, hash_value);
 }
@@ -148,8 +148,8 @@ bool sha3_256_final(IN OUT void *sha3_256_context, OUT uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_256_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value)
+bool sha3_256_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
 }
@@ -172,7 +172,7 @@ void *sha3_384_new(void)
  * @param[in]  sha3_384_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_384_free(IN void *sha3_384_ctx)
+void sha3_384_free(void *sha3_384_ctx)
 {
     hash_md_free(sha3_384_ctx);
 }
@@ -189,7 +189,7 @@ void sha3_384_free(IN void *sha3_384_ctx)
  * @retval false  SHA3-384 context initialization failed.
  *
  **/
-bool sha3_384_init(OUT void *sha3_384_context)
+bool sha3_384_init(void *sha3_384_context)
 {
     return hash_md_init (EVP_sha3_384(), sha3_384_context);
 }
@@ -209,8 +209,8 @@ bool sha3_384_init(OUT void *sha3_384_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_384_duplicate(IN const void *sha3_384_context,
-                        OUT void *new_sha3_384_context)
+bool sha3_384_duplicate(const void *sha3_384_context,
+                        void *new_sha3_384_context)
 {
     return hash_md_duplicate (sha3_384_context, new_sha3_384_context);
 }
@@ -233,8 +233,8 @@ bool sha3_384_duplicate(IN const void *sha3_384_context,
  * @retval false  SHA3-384 data digest failed.
  *
  **/
-bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
-                     IN uintn data_size)
+bool sha3_384_update(void *sha3_384_context, const void *data,
+                     uintn data_size)
 {
     return hash_md_update (sha3_384_context, data, data_size);
 }
@@ -259,7 +259,7 @@ bool sha3_384_update(IN OUT void *sha3_384_context, IN const void *data,
  * @retval false  SHA3-384 digest computation failed.
  *
  **/
-bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
+bool sha3_384_final(void *sha3_384_context, uint8_t *hash_value)
 {
     return hash_md_final (sha3_384_context, hash_value);
 }
@@ -282,8 +282,8 @@ bool sha3_384_final(IN OUT void *sha3_384_context, OUT uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_384_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value)
+bool sha3_384_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
 }
@@ -306,7 +306,7 @@ void *sha3_512_new(void)
  * @param[in]  sha3_512_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha3_512_free(IN void *sha3_512_ctx)
+void sha3_512_free(void *sha3_512_ctx)
 {
     hash_md_free(sha3_512_ctx);
 }
@@ -323,7 +323,7 @@ void sha3_512_free(IN void *sha3_512_ctx)
  * @retval false  SHA3-512 context initialization failed.
  *
  **/
-bool sha3_512_init(OUT void *sha3_512_context)
+bool sha3_512_init(void *sha3_512_context)
 {
     return hash_md_init (EVP_sha3_512(), sha3_512_context);
 }
@@ -343,8 +343,8 @@ bool sha3_512_init(OUT void *sha3_512_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_512_duplicate(IN const void *sha3_512_context,
-                        OUT void *new_sha3_512_context)
+bool sha3_512_duplicate(const void *sha3_512_context,
+                        void *new_sha3_512_context)
 {
     return hash_md_duplicate (sha3_512_context, new_sha3_512_context);
 }
@@ -367,8 +367,8 @@ bool sha3_512_duplicate(IN const void *sha3_512_context,
  * @retval false  SHA3-512 data digest failed.
  *
  **/
-bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
-                     IN uintn data_size)
+bool sha3_512_update(void *sha3_512_context, const void *data,
+                     uintn data_size)
 {
     return hash_md_update (sha3_512_context, data, data_size);
 }
@@ -393,7 +393,7 @@ bool sha3_512_update(IN OUT void *sha3_512_context, IN const void *data,
  * @retval false  SHA3-512 digest computation failed.
  *
  **/
-bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
+bool sha3_512_final(void *sha3_512_context, uint8_t *hash_value)
 {
     return hash_md_final (sha3_512_context, hash_value);
 }
@@ -416,8 +416,8 @@ bool sha3_512_final(IN OUT void *sha3_512_context, OUT uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha3_512_hash_all(IN const void *data, IN uintn data_size,
-                       OUT uint8_t *hash_value)
+bool sha3_512_hash_all(const void *data, uintn data_size,
+                       uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
 }

@@ -26,14 +26,13 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_challenge_auth(IN void *context,
-                                               IN uintn request_size,
-                                               IN void *request,
-                                               IN OUT uintn *response_size,
-                                               OUT void *response)
+return_status spdm_get_response_challenge_auth(void *context,
+                                               uintn request_size,
+                                               const void *request,
+                                               uintn *response_size,
+                                               void *response)
 {
-    spdm_challenge_request_t *spdm_request;
-    uintn spdm_request_size;
+    const spdm_challenge_request_t *spdm_request;
     spdm_challenge_auth_response_t *spdm_response;
     bool result;
     uintn signature_size;
@@ -85,8 +84,6 @@ return_status spdm_get_response_challenge_auth(IN void *context,
         return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
                                                 SPDM_CHALLENGE, response_size, response);
     }
-
-    spdm_request_size = request_size;
 
     slot_id = spdm_request->header.param1;
 
@@ -213,7 +210,7 @@ return_status spdm_get_response_challenge_auth(IN void *context,
     /* Calc Sign*/
 
     status = libspdm_append_message_c(spdm_context, spdm_request,
-                                      spdm_request_size);
+                                      request_size);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

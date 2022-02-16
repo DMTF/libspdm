@@ -12,7 +12,7 @@
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_hex_str(IN uint8_t *data, IN uintn size)
+void internal_dump_hex_str(const uint8_t *data, uintn size)
 {
     uintn index;
     for (index = 0; index < size; index++) {
@@ -26,7 +26,7 @@ void internal_dump_hex_str(IN uint8_t *data, IN uintn size)
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_data(IN uint8_t *data, IN uintn size)
+void internal_dump_data(const uint8_t *data, uintn size)
 {
     uintn index;
     for (index = 0; index < size; index++) {
@@ -40,7 +40,7 @@ void internal_dump_data(IN uint8_t *data, IN uintn size)
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void internal_dump_hex(IN uint8_t *data, IN uintn size)
+void internal_dump_hex(const uint8_t *data, uintn size)
 {
     uintn index;
     uintn count;
@@ -70,7 +70,7 @@ void internal_dump_hex(IN uint8_t *data, IN uintn size)
  *
  * @return The 24-bit value read from buffer.
  **/
-uint32_t libspdm_read_uint24(IN uint8_t *buffer)
+uint32_t libspdm_read_uint24(const uint8_t *buffer)
 {
     return (uint32_t)(buffer[0] | buffer[1] << 8 | buffer[2] << 16);
 }
@@ -81,7 +81,7 @@ uint32_t libspdm_read_uint24(IN uint8_t *buffer)
  * @param  buffer  The pointer to a 24-bit value that may be unaligned.
  * @param  value   24-bit value to write to buffer.
  **/
-void libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value)
+void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
 {
     buffer[0] = (uint8_t)(value & 0xFF);
     buffer[1] = (uint8_t)((value >> 8) & 0xFF);
@@ -99,8 +99,8 @@ void libspdm_write_uint24(IN uint8_t *buffer, IN uint32_t value)
  * @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
  * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
  **/
-return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
-                                    IN uintn buffer_size)
+return_status append_managed_buffer(void *m_buffer, const void *buffer,
+                                    uintn buffer_size)
 {
     managed_buffer_t *managed_buffer;
 
@@ -148,7 +148,7 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
  *
  * @param  managed_buffer_t                The managed buffer to be shrinked.
  **/
-void reset_managed_buffer(IN OUT void *m_buffer)
+void reset_managed_buffer(void *m_buffer)
 {
     managed_buffer_t *managed_buffer;
 
@@ -171,7 +171,7 @@ void reset_managed_buffer(IN OUT void *m_buffer)
  *
  * @return the size of managed buffer.
  **/
-uintn get_managed_buffer_size(IN OUT void *m_buffer)
+uintn get_managed_buffer_size(void *m_buffer)
 {
     managed_buffer_t *managed_buffer;
 
@@ -193,7 +193,7 @@ uintn get_managed_buffer_size(IN OUT void *m_buffer)
  *
  * @return the address of managed buffer.
  **/
-void *get_managed_buffer(IN OUT void *m_buffer)
+void *get_managed_buffer(void *m_buffer)
 {
     managed_buffer_t *managed_buffer;
 
@@ -214,7 +214,7 @@ void *get_managed_buffer(IN OUT void *m_buffer)
  * @param  managed_buffer_t                The managed buffer.
  * @param  max_buffer_size                The maximum size in bytes of the managed buffer.
  **/
-void init_managed_buffer(IN OUT void *m_buffer, IN uintn max_buffer_size)
+void init_managed_buffer(void *m_buffer, uintn max_buffer_size)
 {
     managed_buffer_t *managed_buffer;
 

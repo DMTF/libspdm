@@ -16,9 +16,9 @@
  * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_buffer(IN void *context,
-                                        OUT void **cert_chain_buffer,
-                                        OUT uintn *cert_chain_buffer_size)
+bool libspdm_get_peer_cert_chain_buffer(void *context,
+                                        void **cert_chain_buffer,
+                                        uintn *cert_chain_buffer_size)
 {
     spdm_context_t *spdm_context;
 
@@ -55,9 +55,9 @@ bool libspdm_get_peer_cert_chain_buffer(IN void *context,
  * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_data(IN void *context,
-                                      OUT void **cert_chain_data,
-                                      OUT uintn *cert_chain_data_size)
+bool libspdm_get_peer_cert_chain_data(void *context,
+                                      void **cert_chain_data,
+                                      uintn *cert_chain_data_size)
 {
     spdm_context_t *spdm_context;
     bool result;
@@ -91,9 +91,9 @@ bool libspdm_get_peer_cert_chain_data(IN void *context,
  * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_local_cert_chain_buffer(IN void *context,
-                                         OUT void **cert_chain_buffer,
-                                         OUT uintn *cert_chain_buffer_size)
+bool libspdm_get_local_cert_chain_buffer(void *context,
+                                         void **cert_chain_buffer,
+                                         uintn *cert_chain_buffer_size)
 {
     spdm_context_t *spdm_context;
 
@@ -120,9 +120,9 @@ bool libspdm_get_local_cert_chain_buffer(IN void *context,
  * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_local_cert_chain_data(IN void *context,
-                                       OUT void **cert_chain_data,
-                                       OUT uintn *cert_chain_data_size)
+bool libspdm_get_local_cert_chain_data(void *context,
+                                       void **cert_chain_data,
+                                       uintn *cert_chain_data_size)
 {
     spdm_context_t *spdm_context;
     bool result;
@@ -157,9 +157,9 @@ bool libspdm_get_local_cert_chain_data(IN void *context,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
-                         IN OUT uintn *m1m2_buffer_size,
-                         OUT void *m1m2_buffer)
+bool spdm_calculate_m1m2(void *context, bool is_mut,
+                         uintn *m1m2_buffer_size,
+                         void *m1m2_buffer)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -293,9 +293,9 @@ bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-bool spdm_calculate_m1m2_hash(IN void *context, IN bool is_mut,
-                              IN OUT uintn *m1m2_hash_size,
-                              OUT void *m1m2_hash)
+bool spdm_calculate_m1m2_hash(void *context, bool is_mut,
+                              uintn *m1m2_hash_size,
+                              void *m1m2_hash)
 {
     spdm_context_t *spdm_context;
     uint32_t hash_size;
@@ -346,8 +346,8 @@ bool spdm_calculate_m1m2_hash(IN void *context, IN bool is_mut,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
-                         IN OUT uintn *l1l2_buffer_size, OUT void *l1l2_buffer)
+bool spdm_calculate_l1l2(void *context, void *session_info,
+                         uintn *l1l2_buffer_size, void *l1l2_buffer)
 {
     spdm_context_t *spdm_context;
     return_status status;
@@ -443,8 +443,8 @@ bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
-                              IN OUT uintn *l1l2_hash_size, OUT void *l1l2_hash)
+bool spdm_calculate_l1l2_hash(void *context, void *session_info,
+                              uintn *l1l2_hash_size, void *l1l2_hash)
 {
     spdm_context_t *spdm_context;
     spdm_session_info_t *spdm_session_info;
@@ -490,8 +490,8 @@ bool spdm_calculate_l1l2_hash(IN void *context, IN void *session_info,
  * @retval true  certificate chain hash is generated.
  * @retval false certificate chain hash is not generated.
  **/
-bool spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
-                                   IN uintn slot_id, OUT uint8_t *hash)
+bool spdm_generate_cert_chain_hash(spdm_context_t *spdm_context,
+                                   uintn slot_id, uint8_t *hash)
 {
     ASSERT(slot_id < spdm_context->local_context.slot_count);
     return libspdm_hash_all(
@@ -512,8 +512,8 @@ bool spdm_generate_cert_chain_hash(IN spdm_context_t *spdm_context,
  * @retval true  digest verification pass.
  * @retval false digest verification fail.
  **/
-bool spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
-                              IN void *digest, IN uintn digest_count)
+bool spdm_verify_peer_digests(spdm_context_t *spdm_context,
+                              void *digest, uintn digest_count)
 {
     uintn hash_size;
     uint8_t *hash_buffer;
@@ -571,11 +571,11 @@ bool spdm_verify_peer_digests(IN spdm_context_t *spdm_context,
  * @retval true  Peer certificate chain buffer verification passed.
  * @retval false Peer certificate chain buffer verification failed.
  **/
-bool spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
-                                        IN void *cert_chain_buffer,
-                                        IN uintn cert_chain_buffer_size,
-                                        OUT void **trust_anchor OPTIONAL,
-                                        OUT uintn *trust_anchor_size OPTIONAL)
+bool spdm_verify_peer_cert_chain_buffer(spdm_context_t *spdm_context,
+                                        const void *cert_chain_buffer,
+                                        uintn cert_chain_buffer_size,
+                                        void **trust_anchor,
+                                        uintn *trust_anchor_size)
 {
     uint8_t *cert_chain_data;
     uintn cert_chain_data_size;
@@ -705,9 +705,9 @@ bool spdm_verify_peer_cert_chain_buffer(IN spdm_context_t *spdm_context,
  * @retval true  challenge signature is generated.
  * @retval false challenge signature is not generated.
  **/
-bool spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                            IN bool is_requester,
-                                            OUT uint8_t *signature)
+bool spdm_generate_challenge_auth_signature(spdm_context_t *spdm_context,
+                                            bool is_requester,
+                                            uint8_t *signature)
 {
     bool result;
     uintn signature_size;
@@ -786,9 +786,9 @@ bool spdm_generate_challenge_auth_signature(IN spdm_context_t *spdm_context,
  * @retval true  hash verification pass.
  * @retval false hash verification fail.
  **/
-bool spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
-                                        IN void *certificate_chain_hash,
-                                        IN uintn certificate_chain_hash_size)
+bool spdm_verify_certificate_chain_hash(spdm_context_t *spdm_context,
+                                        const void *certificate_chain_hash,
+                                        uintn certificate_chain_hash_size)
 {
     uintn hash_size;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -892,10 +892,10 @@ bool spdm_verify_certificate_chain_hash(IN spdm_context_t *spdm_context,
  * @retval true  signature verification pass.
  * @retval false signature verification fail.
  **/
-bool spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
-                                          IN bool is_requester,
-                                          IN void *sign_data,
-                                          IN uintn sign_data_size)
+bool spdm_verify_challenge_auth_signature(spdm_context_t *spdm_context,
+                                          bool is_requester,
+                                          const void *sign_data,
+                                          uintn sign_data_size)
 {
     bool result;
     uint8_t *cert_buffer;
@@ -1089,9 +1089,9 @@ bool spdm_verify_challenge_auth_signature(IN spdm_context_t *spdm_context,
  * @return measurement summary hash size according to type.
  **/
 uint32_t
-spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
-                                       IN bool is_requester,
-                                       IN uint8_t measurement_summary_hash_type)
+spdm_get_measurement_summary_hash_size(spdm_context_t *spdm_context,
+                                       bool is_requester,
+                                       uint8_t measurement_summary_hash_type)
 {
     if (!spdm_is_capabilities_flag_supported(
             spdm_context, is_requester, 0,
@@ -1127,9 +1127,9 @@ spdm_get_measurement_summary_hash_size(IN spdm_context_t *spdm_context,
  * @retval true  measurement signature is generated.
  * @retval false measurement signature is not generated.
  **/
-bool spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
-                                         IN spdm_session_info_t *session_info,
-                                         OUT uint8_t *signature)
+bool spdm_generate_measurement_signature(spdm_context_t *spdm_context,
+                                         spdm_session_info_t *session_info,
+                                         uint8_t *signature)
 {
     uintn signature_size;
     bool result;
@@ -1185,10 +1185,10 @@ bool spdm_generate_measurement_signature(IN spdm_context_t *spdm_context,
  * @retval true  signature verification pass.
  * @retval false signature verification fail.
  **/
-bool spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
-                                       IN spdm_session_info_t *session_info,
-                                       IN void *sign_data,
-                                       IN uintn sign_data_size)
+bool spdm_verify_measurement_signature(spdm_context_t *spdm_context,
+                                       spdm_session_info_t *session_info,
+                                       const void *sign_data,
+                                       uintn sign_data_size)
 {
     bool result;
     uint8_t *cert_buffer;

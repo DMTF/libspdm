@@ -26,7 +26,7 @@
  *         If the allocations fails, ecd_new_by_nid() returns NULL.
  *
  **/
-void *ecd_new_by_nid(IN uintn nid)
+void *ecd_new_by_nid(uintn nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -70,7 +70,7 @@ void *ecd_new_by_nid(IN uintn nid)
  * @param[in]  ecd_context  Pointer to the Ed context to be released.
  *
  **/
-void ecd_free(IN void *ecd_context)
+void ecd_free(void *ecd_context)
 {
     EVP_PKEY_free((EVP_PKEY *)ecd_context);
 }
@@ -89,8 +89,8 @@ void ecd_free(IN void *ecd_context)
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
-                     IN uintn public_key_size)
+bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
+                     uintn public_key_size)
 {
     /* TBD*/
     return false;
@@ -111,8 +111,8 @@ bool ecd_set_pub_key(IN OUT void *ecd_context, IN uint8_t *public_key,
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                     IN OUT uintn *public_key_size)
+bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
+                     uintn *public_key_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -161,7 +161,7 @@ bool ecd_get_pub_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * @retval  false  Ed key components are not valid.
  *
  **/
-bool ecd_check_key(IN void *ecd_context)
+bool ecd_check_key(const void *ecd_context)
 {
     /* TBD*/
     return false;
@@ -187,8 +187,8 @@ bool ecd_check_key(IN void *ecd_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
-                      IN OUT uintn *public_key_size)
+bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
+                      uintn *public_key_size)
 {
     /* TBD*/
     return true;
@@ -227,10 +227,10 @@ bool ecd_generate_key(IN OUT void *ecd_context, OUT uint8_t *public_key,
  * @retval  false  sig_size is too small.
  *
  **/
-bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
-                IN const uint8_t *context, IN uintn context_size,
-                IN const uint8_t *message, IN uintn size, OUT uint8_t *signature,
-                IN OUT uintn *sig_size)
+bool eddsa_sign(const void *ecd_context, uintn hash_nid,
+                const uint8_t *context, uintn context_size,
+                const uint8_t *message, uintn size, uint8_t *signature,
+                uintn *sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
@@ -317,10 +317,10 @@ bool eddsa_sign(IN void *ecd_context, IN uintn hash_nid,
  * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-bool eddsa_verify(IN void *ecd_context, IN uintn hash_nid,
-                  IN const uint8_t *context, IN uintn context_size,
-                  IN const uint8_t *message, IN uintn size,
-                  IN const uint8_t *signature, IN uintn sig_size)
+bool eddsa_verify(const void *ecd_context, uintn hash_nid,
+                  const uint8_t *context, uintn context_size,
+                  const uint8_t *message, uintn size,
+                  const uint8_t *signature, uintn sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;

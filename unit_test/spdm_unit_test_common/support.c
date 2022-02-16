@@ -6,7 +6,7 @@
 
 #include "spdm_unit_test.h"
 
-void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size)
+void dump_hex_str(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -15,7 +15,7 @@ void dump_hex_str(IN uint8_t *buffer, IN uintn buffer_size)
     }
 }
 
-void dump_data(IN uint8_t *buffer, IN uintn buffer_size)
+void dump_data(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -24,7 +24,7 @@ void dump_data(IN uint8_t *buffer, IN uintn buffer_size)
     }
 }
 
-void dump_hex(IN uint8_t *data, IN uintn size)
+void dump_hex(const uint8_t *data, uintn size)
 {
     uintn index;
     uintn count;
@@ -47,8 +47,8 @@ void dump_hex(IN uint8_t *data, IN uintn size)
     }
 }
 
-bool read_input_file(IN char *file_name, OUT void **file_data,
-                     OUT uintn *file_size)
+bool read_input_file(const char *file_name, void **file_data,
+                     uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;
@@ -83,8 +83,8 @@ bool read_input_file(IN char *file_name, OUT void **file_data,
     return true;
 }
 
-bool write_output_file(IN char *file_name, IN void *file_data,
-                       IN uintn file_size)
+bool write_output_file(const char *file_name, const void *file_data,
+                       uintn file_size)
 {
     FILE *fp_out;
 

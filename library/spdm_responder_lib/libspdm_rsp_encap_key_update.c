@@ -20,9 +20,9 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
-                                  IN OUT uintn *encap_request_size,
-                                  OUT void *encap_request)
+spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
+                                  uintn *encap_request_size,
+                                  void *encap_request)
 {
     spdm_key_update_request_t *spdm_request;
     uint32_t session_id;
@@ -125,11 +125,11 @@ spdm_get_encap_request_key_update(IN spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_key_update(
-    IN spdm_context_t *spdm_context, IN uintn encap_response_size,
-    IN void *encap_response, OUT bool *need_continue)
+    spdm_context_t *spdm_context, uintn encap_response_size,
+    const void *encap_response, bool *need_continue)
 {
     spdm_key_update_request_t *spdm_request;
-    spdm_key_update_response_t *spdm_response;
+    const spdm_key_update_response_t *spdm_response;
     uintn spdm_response_size;
     uint32_t session_id;
     spdm_session_info_t *session_info;
