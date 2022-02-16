@@ -393,8 +393,8 @@ return_status spdm_requester_get_measurements_test_send_message(
         ((spdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), app_message,
-                 app_message_size - 3);
+        copy_mem_s(m_local_buffer, sizeof(m_local_buffer),
+                   app_message, app_message_size - 3);
         m_local_buffer_size += app_message_size - 3;
         return RETURN_SUCCESS;
     default:
