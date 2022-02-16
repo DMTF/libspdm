@@ -174,42 +174,54 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
     assert_true(status);
     free(file_buffer);
 
     status = libspdm_read_input_file("rsa3072/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384);
     assert_true(status);
     free(file_buffer);
 
     status = libspdm_read_input_file("rsa4096/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512);
     assert_true(status);
     free(file_buffer);
 
     status = libspdm_read_input_file("ecp256/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
     assert_true(status);
     free(file_buffer);
 
     status = libspdm_read_input_file("ecp384/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384);
     assert_true(status);
     free(file_buffer);
 
     status = libspdm_read_input_file("ecp512/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
-    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512);
     assert_true(status);
     free(file_buffer);
 }

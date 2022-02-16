@@ -703,8 +703,9 @@ void libspdm_test_responder_certificate_case10(void **state)
 
     for (int i = 0; i < sizeof(test_cases) / sizeof(test_cases[0]); i++) {
         libspdm_read_responder_public_certificate_chain_by_size(
-            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, test_cases[i], &data,
-            &data_size, NULL, NULL);
+            /*MAXUINT16_CERT signature_algo is SHA256RSA */
+            m_libspdm_use_hash_algo, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            test_cases[i], &data, &data_size, NULL, NULL);
 
         spdm_context->local_context.local_cert_chain_provision[0] =
             data;
