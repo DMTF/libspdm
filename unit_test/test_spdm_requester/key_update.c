@@ -2132,13 +2132,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    my_last_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    my_last_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2157,13 +2157,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    curr_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    curr_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2203,13 +2203,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    my_last_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    my_last_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2231,13 +2231,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    curr_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    curr_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2282,13 +2282,13 @@ return_status spdm_requester_key_update_test_receive_message(
             copy_mem_s(secured_message_context->application_secret
                        .response_data_encryption_key,
                        sizeof(secured_message_context->application_secret
-                       .response_data_encryption_key),
+                              .response_data_encryption_key),
                        my_last_rsp_enc_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
-                       .response_data_salt),
+                              .response_data_salt),
                        my_last_rsp_salt,
                        secured_message_context->aead_iv_size);
             secured_message_context->application_secret
@@ -2309,13 +2309,13 @@ return_status spdm_requester_key_update_test_receive_message(
             copy_mem_s(secured_message_context->application_secret
                        .response_data_encryption_key,
                        sizeof(secured_message_context->application_secret
-                       .response_data_encryption_key),
+                              .response_data_encryption_key),
                        curr_rsp_enc_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
-                       .response_data_salt),
+                              .response_data_salt),
                        curr_rsp_salt,
                        secured_message_context->aead_iv_size);
             secured_message_context->application_secret
@@ -2394,13 +2394,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    my_last_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    my_last_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2465,13 +2465,13 @@ return_status spdm_requester_key_update_test_receive_message(
         copy_mem_s(secured_message_context->application_secret
                    .response_data_encryption_key,
                    sizeof(secured_message_context->application_secret
-                   .response_data_encryption_key),
+                          .response_data_encryption_key),
                    my_last_rsp_enc_key,
                    secured_message_context->aead_key_size);
         copy_mem_s(secured_message_context->application_secret
                    .response_data_salt,
                    sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                          .response_data_salt),
                    my_last_rsp_salt,
                    secured_message_context->aead_iv_size);
         secured_message_context->application_secret
@@ -2547,13 +2547,13 @@ return_status spdm_requester_key_update_test_receive_message(
             copy_mem_s(secured_message_context->application_secret
                        .response_data_encryption_key,
                        sizeof(secured_message_context->application_secret
-                       .response_data_encryption_key),
+                              .response_data_encryption_key),
                        my_last_rsp_enc_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
-                       .response_data_salt),
+                              .response_data_salt),
                        my_last_rsp_salt,
                        secured_message_context->aead_iv_size);
             secured_message_context->application_secret
@@ -2673,13 +2673,13 @@ return_status spdm_requester_key_update_test_receive_message(
             copy_mem_s(secured_message_context->application_secret
                        .response_data_encryption_key,
                        sizeof(secured_message_context->application_secret
-                       .response_data_encryption_key),
+                              .response_data_encryption_key),
                        my_last_rsp_enc_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
-                       .response_data_salt),
+                              .response_data_salt),
                        my_last_rsp_salt,
                        secured_message_context->aead_iv_size);
             secured_message_context->application_secret
@@ -2700,13 +2700,13 @@ return_status spdm_requester_key_update_test_receive_message(
             copy_mem_s(secured_message_context->application_secret
                        .response_data_encryption_key,
                        sizeof(secured_message_context->application_secret
-                       .response_data_encryption_key),
+                              .response_data_encryption_key),
                        curr_rsp_enc_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(secured_message_context->application_secret
                        .response_data_salt,
                        sizeof(secured_message_context->application_secret
-                       .response_data_salt),
+                              .response_data_salt),
                        curr_rsp_salt,
                        secured_message_context->aead_iv_size);
             secured_message_context->application_secret
