@@ -662,10 +662,10 @@ bool libspdm_generate_measurement_summary_hash(
                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM)) {
                 copy_mem_s(&measurement_data[measurment_data_size],
                            sizeof(measurement_data)
-                               - (&measurement_data[measurment_data_size] - measurement_data),
+                           - (&measurement_data[measurment_data_size] - measurement_data),
                            &cached_measurment_block->measurement_block_dmtf_header,
                            cached_measurment_block->measurement_block_common_header
-                               .measurement_size);
+                           .measurement_size);
 
                 measurment_data_size +=
                     cached_measurment_block
