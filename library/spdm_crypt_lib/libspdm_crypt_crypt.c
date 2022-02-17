@@ -1622,10 +1622,10 @@ create_spdm_signing_context (
 
     context_str = spdm_signing_context;
     for (index = 0; index < 4; index++) {
-        copy_mem (
-            context_str,
-            SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT,
-            SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE);
+        copy_mem_s(context_str,
+                   SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE,
+                   SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT,
+                   SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE);
         /* patch the version*/
         context_str[11] = (char)('0' + ((spdm_version >> 12) & 0xF));
         context_str[13] = (char)('0' + ((spdm_version >> 8) & 0xF));
@@ -1638,10 +1638,10 @@ create_spdm_signing_context (
             zero_mem (
                 context_str,
                 m_spdm_signing_context_str_table[index].zero_pad_size);
-            copy_mem (
-                context_str + m_spdm_signing_context_str_table[index].zero_pad_size,
-                m_spdm_signing_context_str_table[index].context,
-                m_spdm_signing_context_str_table[index].context_size);
+            copy_mem_s(context_str + m_spdm_signing_context_str_table[index].zero_pad_size,
+                       m_spdm_signing_context_str_table[index].context_size,
+                       m_spdm_signing_context_str_table[index].context,
+                       m_spdm_signing_context_str_table[index].context_size);
             return;
         }
     }
@@ -2160,8 +2160,11 @@ bool libspdm_asym_verify_hash(
 
         create_spdm_signing_context (spdm_version, op_code, false,
                                      spdm12_signing_context_with_hash);
-        copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
-                  message_hash, hash_size);
+        copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
+                   sizeof(spdm12_signing_context_with_hash)
+                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                       - spdm12_signing_context_with_hash),
+                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/
 
@@ -2570,8 +2573,11 @@ bool libspdm_asym_sign_hash(
 
         create_spdm_signing_context (spdm_version, op_code, false,
                                      spdm12_signing_context_with_hash);
-        copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
-                  message_hash, hash_size);
+        copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
+                   sizeof(spdm12_signing_context_with_hash)
+                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                       - spdm12_signing_context_with_hash),
+                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/
 
@@ -2877,8 +2883,11 @@ bool libspdm_req_asym_verify_hash(
         }
 
         create_spdm_signing_context (spdm_version, op_code, true, spdm12_signing_context_with_hash);
-        copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
-                  message_hash, hash_size);
+        copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
+                   sizeof(spdm12_signing_context_with_hash)
+                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                       - spdm12_signing_context_with_hash),
+                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/
 
@@ -3140,7 +3149,10 @@ bool libspdm_req_asym_sign_hash(
         }
 
         create_spdm_signing_context (spdm_version, op_code, true, spdm12_signing_context_with_hash);
-        copy_mem (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
+        copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
+                   sizeof(spdm12_signing_context_with_hash)
+                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                       - spdm12_signing_context_with_hash),
                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/
@@ -3314,12 +3326,14 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
         uint8_t spdm12_key_change_responder_context[
             SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE];
 
-        copy_mem (spdm12_key_change_requester_context,
-                  SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT,
-                  SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
-        copy_mem (spdm12_key_change_responder_context,
-                  SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT,
-                  SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
+        copy_mem_s(spdm12_key_change_requester_context,
+                   sizeof(spdm12_key_change_requester_context),
+                   SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT,
+                   SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
+        copy_mem_s(spdm12_key_change_responder_context,
+                   sizeof(spdm12_key_change_responder_context),
+                   SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT,
+                   SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
         /* patch the version*/
         spdm12_key_change_requester_context[25] = (char)('0' + ((spdm_version >> 12) & 0xF));
         spdm12_key_change_requester_context[27] = (char)('0' + ((spdm_version >> 8) & 0xF));
@@ -4158,7 +4172,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
         return RETURN_BUFFER_TOO_SMALL;
     }
     if (oid != NULL) {
-        copy_mem(oid, ptr, obj_len);
+        copy_mem_s(oid, *oid_size, ptr, obj_len);
         *oid_size = obj_len;
     }
 
@@ -4180,7 +4194,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
     }
 
     if (name_buffer != NULL) {
-        copy_mem(name_buffer, ptr, obj_len);
+        copy_mem_s(name_buffer, *name_buffer_size, ptr, obj_len);
         *name_buffer_size = obj_len + 1;
         name_buffer[obj_len] = 0;
     }

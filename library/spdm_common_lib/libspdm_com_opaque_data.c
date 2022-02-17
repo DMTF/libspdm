@@ -146,12 +146,13 @@ spdm_build_opaque_data_supported_version_data(spdm_context_t *spdm_context,
         spdm_context->local_context.secured_message_version.spdm_version_count;
 
     versions_list = (void *)(opaque_element_support_version + 1);
-    copy_mem(versions_list,
-             spdm_context->local_context.secured_message_version.spdm_version,
-             spdm_context->local_context.secured_message_version.spdm_version_count *
-             sizeof(spdm_version_number_t));
+    copy_mem_s(versions_list,
+               *data_out_size - ((uint8_t*)versions_list - (uint8_t*)data_out),
+               spdm_context->local_context.secured_message_version.spdm_version,
+               spdm_context->local_context.secured_message_version.spdm_version_count *
+               sizeof(spdm_version_number_t));
 
-    /* Zero Padding*/
+    /* Zero Padding. *data_out_size does not need to be changed, because data is 0 padded */
     end = versions_list + spdm_context->local_context.secured_message_version.spdm_version_count;
     zero_mem(end, (uintn)data_out + final_data_size - (uintn)end);
 
@@ -240,9 +241,10 @@ spdm_process_opaque_data_supported_version_data(spdm_context_t *spdm_context,
     if (result == false) {
         return RETURN_UNSUPPORTED;
     }
-    copy_mem(&(spdm_context->connection_info.secured_message_version),
-             &(common_version),
-             sizeof(spdm_version_number_t));
+    copy_mem_s(&(spdm_context->connection_info.secured_message_version),
+               sizeof(spdm_context->connection_info.secured_message_version),
+               &(common_version),
+               sizeof(spdm_version_number_t));
 
     return RETURN_SUCCESS;
 }
