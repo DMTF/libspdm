@@ -68,19 +68,17 @@ return_status libspdm_generate_encap_extended_error_response(
     IN OUT uintn *response_size, OUT void *response)
 {
     spdm_error_response_t *spdm_response;
-
     ASSERT(*response_size >=
            sizeof(spdm_error_response_t) + extended_error_data_size);
-    *response_size =
-        sizeof(spdm_error_response_t) + extended_error_data_size;
-    spdm_response = response;
 
+    spdm_response = response;
     spdm_response->header.spdm_version = spdm_get_connection_version (context);
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
-    copy_mem(spdm_response + 1, extended_error_data,
-             extended_error_data_size);
-
+    copy_mem_s(spdm_response + 1, *response_size - (sizeof(spdm_error_response_t)),
+               extended_error_data, extended_error_data_size);
+    *response_size =
+        sizeof(spdm_error_response_t) + extended_error_data_size;
     return RETURN_SUCCESS;
 }

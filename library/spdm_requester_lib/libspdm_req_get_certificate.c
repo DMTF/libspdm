@@ -57,6 +57,7 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
     large_managed_buffer_t certificate_chain_buffer;
     spdm_context_t *spdm_context;
     uint16_t total_responder_cert_chain_buffer_length;
+    uintn cert_chain_capacity;
 
     ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
@@ -230,9 +231,10 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         get_managed_buffer_size(&certificate_chain_buffer);
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             get_managed_buffer(&certificate_chain_buffer),
-             get_managed_buffer_size(&certificate_chain_buffer));
+    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
+               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+               get_managed_buffer(&certificate_chain_buffer),
+               get_managed_buffer_size(&certificate_chain_buffer));
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -272,13 +274,15 @@ return_status try_spdm_get_certificate(IN void *context, IN uint8_t slot_id,
                 &certificate_chain_buffer);
             return RETURN_BUFFER_TOO_SMALL;
         }
+        cert_chain_capacity = *cert_chain_size;
         *cert_chain_size =
             get_managed_buffer_size(&certificate_chain_buffer);
         if (cert_chain != NULL) {
-            copy_mem(cert_chain,
-                     get_managed_buffer(&certificate_chain_buffer),
-                     get_managed_buffer_size(
-                         &certificate_chain_buffer));
+            copy_mem_s(cert_chain,
+                       cert_chain_capacity,
+                       get_managed_buffer(&certificate_chain_buffer),
+                       get_managed_buffer_size(
+                           &certificate_chain_buffer));
         }
     }
 
