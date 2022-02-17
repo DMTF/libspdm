@@ -30,7 +30,7 @@ typedef struct {
 
 
 /* Allocates memory blocks */
-void *mbedtls_calloc(size_t num, size_t size)
+void *my_calloc(size_t num, size_t size)
 {
     CRYPTMEM_HEAD *pool_hdr;
     uintn new_size;
@@ -60,7 +60,7 @@ void *mbedtls_calloc(size_t num, size_t size)
 }
 
 /* De-allocates or frees a memory block */
-void mbedtls_free(void *ptr)
+void my_free(void *ptr)
 {
     CRYPTMEM_HEAD *pool_hdr;
 

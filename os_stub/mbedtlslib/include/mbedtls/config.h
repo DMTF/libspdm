@@ -186,6 +186,11 @@
  * Enable this layer to allow use of alternative memory allocators.
  */
 #define MBEDTLS_PLATFORM_MEMORY
+#include <stddef.h>
+extern void *my_calloc( size_t n, size_t size );
+extern void my_free( void *ptr );
+#define MBEDTLS_PLATFORM_CALLOC_MACRO my_calloc
+#define MBEDTLS_PLATFORM_FREE_MACRO my_free
 
 /**
  * \def MBEDTLS_PLATFORM_NO_STD_FUNCTIONS
@@ -232,9 +237,9 @@
 /*#define MBEDTLS_PLATFORM_EXIT_ALT
  *#define MBEDTLS_PLATFORM_TIME_ALT*/
 #define MBEDTLS_PLATFORM_FPRINTF_ALT
-#define MBEDTLS_PLATFORM_PRINTF_ALT
-#define MBEDTLS_PLATFORM_SNPRINTF_ALT
-/*#define MBEDTLS_PLATFORM_VSNPRINTF_ALT
+/*#define MBEDTLS_PLATFORM_PRINTF_ALT
+ *#define MBEDTLS_PLATFORM_SNPRINTF_ALT
+ *#define MBEDTLS_PLATFORM_VSNPRINTF_ALT
  *#define MBEDTLS_PLATFORM_NV_SEED_ALT
  *#define MBEDTLS_PLATFORM_SETUP_TEARDOWN_ALT*/
 
@@ -2601,7 +2606,7 @@
  *
  * This module is used for testing (ssl_client/server).
  */
-#define MBEDTLS_CERTS_C
+/*#define MBEDTLS_CERTS_C*/
 
 /**
  * \def MBEDTLS_CHACHA20_C
@@ -2685,7 +2690,7 @@
  *
  * This module provides debugging functions.
  */
-#define MBEDTLS_DEBUG_C
+/*#define MBEDTLS_DEBUG_C*/
 
 /**
  * \def MBEDTLS_DES_C
@@ -3009,7 +3014,7 @@
  *
  * This module provides networking routines.
  */
-#define MBEDTLS_NET_C
+/*#define MBEDTLS_NET_C*/
 
 /**
  * \def MBEDTLS_OID_C
@@ -3249,7 +3254,7 @@
  *           either MBEDTLS_PSA_ITS_FILE_C or a native implementation of
  *           the PSA ITS interface
  */
-#define MBEDTLS_PSA_CRYPTO_STORAGE_C
+/*#define MBEDTLS_PSA_CRYPTO_STORAGE_C */
 
 /**
  * \def MBEDTLS_PSA_ITS_FILE_C
@@ -3468,7 +3473,7 @@
  *
  * This module is used by the HAVEGE random number generator.
  */
-#define MBEDTLS_TIMING_C
+/*#define MBEDTLS_TIMING_C*/
 
 /**
  * \def MBEDTLS_VERSION_C
@@ -3668,6 +3673,12 @@
  *#define MBEDTLS_PLATFORM_VSNPRINTF_MACRO    vsnprintf   *< Default vsnprintf macro to use, can be undefined
  *#define MBEDTLS_PLATFORM_NV_SEED_READ_MACRO   mbedtls_platform_std_nv_seed_read   *< Default nv_seed_read function to use, can be undefined
  *#define MBEDTLS_PLATFORM_NV_SEED_WRITE_MACRO  mbedtls_platform_std_nv_seed_write   *< Default nv_seed_write function to use, can be undefined*/
+
+extern int my_printf(const char *fmt, ...);
+#define MBEDTLS_PLATFORM_PRINTF_MACRO my_printf
+
+extern int my_snprintf(char *str, size_t size, const char *format, ...);
+#define MBEDTLS_PLATFORM_SNPRINTF_MACRO my_snprintf
 
 /**
  * \brief       This macro is invoked by the library when an invalid parameter
@@ -3945,7 +3956,8 @@
  * C standards (e.g using memset_s() in C11) or calling a secure memset() from
  * their system (e.g explicit_bzero() in BSD).
  */
-/*#define MBEDTLS_PLATFORM_ZEROIZE_ALT*/
+#define MBEDTLS_PLATFORM_ZEROIZE_ALT
+
 
 /**
  * Uncomment the macro to let Mbed TLS use your alternate implementation of
