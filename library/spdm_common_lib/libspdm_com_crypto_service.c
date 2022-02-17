@@ -166,6 +166,7 @@ bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     large_managed_buffer_t m1m2;
+    uintn_t m1m2_buffer_capacity;
 
     spdm_context = context;
 
@@ -276,9 +277,10 @@ bool spdm_calculate_m1m2(IN void *context, IN bool is_mut,
             DEBUG((DEBUG_INFO, "\n"));
             );
     }
-
+    m1m2_buffer_capacity = *m1m2_buffer_capacity;
     *m1m2_buffer_size = get_managed_buffer_size(&m1m2);
-    copy_mem(m1m2_buffer, get_managed_buffer(&m1m2), *m1m2_buffer_size);
+    copy_mem_s(m1m2_buffer, m1m2_buffer_capacity,
+               get_managed_buffer(&m1m2), *m1m2_buffer_size);
 
     return true;
 }
@@ -355,6 +357,7 @@ bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     large_managed_buffer_t l1l2;
+    uintn l1l2_buffer_capacity;
 
     spdm_context = context;
     spdm_session_info = session_info;
@@ -425,8 +428,10 @@ bool spdm_calculate_l1l2(IN void *context, IN void *session_info,
         DEBUG((DEBUG_INFO, "\n"));
         );
 
+    l1l2_buffer_capacity = *l1l2_buffer_size;
     *l1l2_buffer_size = get_managed_buffer_size(&l1l2);
-    copy_mem(l1l2_buffer, get_managed_buffer(&l1l2), *l1l2_buffer_size);
+    copy_mem_s(l1l2_buffer, l1l2_buffer_capacity,
+               get_managed_buffer(&l1l2), *l1l2_buffer_size);
 
     return true;
 }

@@ -134,8 +134,9 @@ return_status append_managed_buffer(IN OUT void *m_buffer, IN void *buffer,
     ASSERT(buffer_size <=
            managed_buffer->max_buffer_size - managed_buffer->buffer_size);
 
-    copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
-             buffer, buffer_size);
+    copy_mem_s((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
+               buffer_size,
+               buffer, buffer_size);
     managed_buffer->buffer_size += buffer_size;
     return RETURN_SUCCESS;
 }
