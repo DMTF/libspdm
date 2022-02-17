@@ -376,6 +376,7 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
     X509_NAME_ENTRY *entry;
     ASN1_STRING *entry_data;
     uint8_t *utf8_name;
+    uintn common_name_capacity;
 
     status = RETURN_INVALID_PARAMETER;
     utf8_name = NULL;
@@ -429,9 +430,11 @@ internal_x509_get_nid_name(IN X509_NAME *x509_name, IN int32_t request_nid,
         *common_name_size = length + 1;
         status = RETURN_BUFFER_TOO_SMALL;
     } else {
+        common_name_capacity = *common_name_size;
         *common_name_size =
             MIN((uintn)length, *common_name_size - 1) + 1;
-        copy_mem(common_name, utf8_name, *common_name_size - 1);
+        copy_mem_s(common_name, common_name_capacity,
+                   utf8_name, *common_name_size - 1);
         common_name[*common_name_size - 1] = '\0';
         status = RETURN_SUCCESS;
     }
@@ -786,12 +789,13 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
         status = RETURN_BUFFER_TOO_SMALL;
         goto done;
     }
-    *serial_number_size = (uintn)asn1_integer->length;
+
     if (serial_number != NULL) {
-        copy_mem(serial_number, asn1_integer->data,
-                 *serial_number_size);
+        copy_mem_s(serial_number, *serial_number_size,
+                   asn1_integer->data, (uintn)asn1_integer->length);
         status = RETURN_SUCCESS;
     }
+    *serial_number_size = (uintn)asn1_integer->length;
 
 done:
 
@@ -1022,7 +1026,7 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
         goto done;
     }
     if (oid != NULL) {
-        copy_mem(oid, OBJ_get0_data(asn1_obj), obj_length);
+        copy_mem_s(oid, *oid_size, OBJ_get0_data(asn1_obj), obj_length);
     }
     *oid_size = obj_length;
     status = RETURN_SUCCESS;
@@ -1104,25 +1108,28 @@ bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
         *from_size = f_size;
         goto done;
     }
-    *from_size = f_size;
     if (from != NULL) {
-        copy_mem(from, f_time, sizeof(ASN1_TIME));
+        copy_mem_s(from, *from_size, f_time, sizeof(ASN1_TIME));
         ((ASN1_TIME *)from)->data = from + sizeof(ASN1_TIME);
-        copy_mem(from + sizeof(ASN1_TIME), f_time->data,
-                 f_time->length);
+        copy_mem_s(from + sizeof(ASN1_TIME),
+                   *from_size - sizeof(ASN1_TIME),
+                   f_time->data, f_time->length);
     }
+    *from_size = f_size;
 
     t_size = sizeof(ASN1_TIME) + t_time->length;
     if (*to_size < t_size) {
         *to_size = t_size;
         goto done;
     }
-    *to_size = t_size;
     if (to != NULL) {
-        copy_mem(to, t_time, sizeof(ASN1_TIME));
+        copy_mem_s(to, *to_size, t_time, sizeof(ASN1_TIME));
         ((ASN1_TIME *)to)->data = to + sizeof(ASN1_TIME);
-        copy_mem(to + sizeof(ASN1_TIME), t_time->data, t_time->length);
+        copy_mem_s(to + sizeof(ASN1_TIME),
+                   *to_size - sizeof(ASN1_TIME),
+                   t_time->data, t_time->length);
     }
+    *to_size = t_size;
 
     res = true;
 
@@ -1189,14 +1196,15 @@ return_status x509_set_date_time(IN char *date_time_str, OUT void *date_time,
         status = RETURN_BUFFER_TOO_SMALL;
         goto cleanup;
     }
-    *date_time_size = d_size;
     if (date_time != NULL) {
-        copy_mem(date_time, dt, sizeof(ASN1_TIME));
+        copy_mem_s(date_time, *date_time_size, dt, sizeof(ASN1_TIME));
         ((ASN1_TIME *)date_time)->data =
             (uint8_t *)date_time + sizeof(ASN1_TIME);
-        copy_mem((uint8_t *)date_time + sizeof(ASN1_TIME), dt->data,
-                 dt->length);
+        copy_mem_s((uint8_t *)date_time + sizeof(ASN1_TIME),
+                   *date_time_size - sizeof(ASN1_TIME),
+                   dt->data, dt->length);
     }
+    *date_time_size = d_size;
     status = RETURN_SUCCESS;
 
 cleanup:
@@ -1384,8 +1392,8 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem(extension_data, ASN1_STRING_get0_data(asn1_oct),
-                     asn1_oct->length);
+            copy_mem_s(extension_data, *extension_data_size,
+                       ASN1_STRING_get0_data(asn1_oct), asn1_oct->length);
         }
         *extension_data_size = oct_length;
         status = RETURN_SUCCESS;

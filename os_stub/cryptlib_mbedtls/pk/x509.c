@@ -229,7 +229,8 @@ bool x509_get_subject_name(IN const uint8_t *cert, IN uintn cert_size,
             goto cleanup;
         }
         if (cert_subject != NULL) {
-            copy_mem(cert_subject, crt.subject_raw.p, crt.subject_raw.len);
+            copy_mem_s(cert_subject, *subject_size,
+                       crt.subject_raw.p, crt.subject_raw.len);
         }
         *subject_size = crt.subject_raw.len;
         status = true;
@@ -255,7 +256,7 @@ internal_x509_get_nid_name(IN mbedtls_x509_name *name, IN uint8_t *oid,
             return RETURN_BUFFER_TOO_SMALL;
         }
         if (common_name != NULL) {
-            copy_mem(common_name, data->val.p, data->val.len);
+            copy_mem_s(common_name, *common_name_size, data->val.p, data->val.len);
             common_name[data->val.len] = '\0';
         }
         *common_name_size = data->val.len + 1;
@@ -578,8 +579,9 @@ bool x509_verify_cert(IN const uint8_t *cert, IN uintn cert_size,
         return false;
     }
 
-    copy_mem(&profile, &mbedtls_x509_crt_profile_default,
-             sizeof(mbedtls_x509_crt_profile));
+    copy_mem_s(&profile, sizeof(profile),
+               &mbedtls_x509_crt_profile_default,
+               sizeof(mbedtls_x509_crt_profile));
 
     mbedtls_x509_crt_init(&ca);
     mbedtls_x509_crt_init(&end);
@@ -871,7 +873,7 @@ return_status x509_get_serial_number(IN const uint8_t *cert, IN uintn cert_size,
             goto cleanup;
         }
         if (serial_number != NULL) {
-            copy_mem(serial_number, crt.serial.p, crt.serial.len);
+            copy_mem_s(serial_number, *serial_number_size, crt.serial.p, crt.serial.len);
             serial_number[crt.serial.len] = '\0';
         }
         *serial_number_size = crt.serial.len + 1;
@@ -927,7 +929,7 @@ bool x509_get_issuer_name(IN const uint8_t *cert, IN uintn cert_size,
             goto cleanup;
         }
         if (cert_issuer != NULL) {
-            copy_mem(cert_issuer, crt.issuer_raw.p, crt.issuer_raw.len);
+            copy_mem_s(cert_issuer, *issuer_size, crt.issuer_raw.p, crt.issuer_raw.len);
         }
         *issuer_size = crt.issuer_raw.len;
         status = true;
@@ -1055,7 +1057,7 @@ return_status x509_get_signature_algorithm(IN const uint8_t *cert,
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem(oid, crt.sig_oid.p, crt.sig_oid.len);
+            copy_mem_s(oid, *oid_size, crt.sig_oid.p, crt.sig_oid.len);
         }
         *oid_size = crt.sig_oid.len;
         status = RETURN_SUCCESS;
@@ -1210,7 +1212,7 @@ return_status x509_get_extension_data(IN const uint8_t *cert, IN uintn cert_size
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem(extension_data, ptr, obj_len);
+            copy_mem_s(extension_data, *extension_data_size, ptr, obj_len);
         }
         *extension_data_size = obj_len;
         status = RETURN_SUCCESS;
@@ -1269,21 +1271,21 @@ bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
             *from_size = f_size;
             goto done;
         }
-        *from_size = f_size;
         if (from != NULL) {
-            copy_mem(from, &(crt.valid_from), f_size);
+            copy_mem_s(from, *from_size, &(crt.valid_from), f_size);
         }
+        *from_size = f_size;
 
         t_size = sizeof(mbedtls_x509_time);
         if (*to_size < t_size) {
             *to_size = t_size;
             goto done;
         }
-        *to_size = t_size;
         if (to != NULL) {
-            copy_mem(to, &(crt.valid_to),
+            copy_mem_s(to, *to_size, &(crt.valid_to),
                      sizeof(mbedtls_x509_time));
         }
+        *to_size = t_size;
         status = true;
     }
 
@@ -1476,7 +1478,7 @@ return_status x509_set_date_time(char *date_time_str, IN OUT void *date_time,
         goto cleanup;
     }
     if (date_time != NULL) {
-        copy_mem(date_time, &dt, sizeof(mbedtls_x509_time));
+        copy_mem_s(date_time, *date_time_size, &dt, sizeof(mbedtls_x509_time));
     }
     *date_time_size = sizeof(mbedtls_x509_time);
     status = RETURN_SUCCESS;
