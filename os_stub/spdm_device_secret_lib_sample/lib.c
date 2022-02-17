@@ -176,7 +176,7 @@ uintn fill_measurement_image_hash_block (
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        (uint16_t)sizeof(data));
 
-        copy_mem((void *)(measurement_block + 1), data, sizeof(data));
+        copy_mem_s((void *)(measurement_block + 1), sizeof(data), data, sizeof(data));
 
         return sizeof(spdm_measurement_block_dmtf_t) + sizeof(data);
     }
@@ -214,7 +214,7 @@ uintn fill_measurement_svn_block (
         (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                    (uint16_t)sizeof(svn));
 
-    copy_mem((void *)(measurement_block + 1), (void *)&svn, sizeof(svn));
+    copy_mem_s((void *)(measurement_block + 1), sizeof(svn), (void *)&svn, sizeof(svn));
 
     return sizeof(spdm_measurement_block_dmtf_t) + sizeof(svn);
 }
@@ -252,7 +252,7 @@ uintn fill_measurement_manifest_block (
         (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                    (uint16_t)sizeof(data));
 
-    copy_mem((void *)(measurement_block + 1), data, sizeof(data));
+    copy_mem_s((void *)(measurement_block + 1), sizeof(data), data, sizeof(data));
 
     return sizeof(spdm_measurement_block_dmtf_t) + sizeof(data);
 }
@@ -306,7 +306,8 @@ uintn fill_measurement_device_mode_block (
         (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                    (uint16_t)sizeof(device_mode));
 
-    copy_mem((void *)(measurement_block + 1), (void *)&device_mode, sizeof(device_mode));
+    copy_mem_s((void *)(measurement_block + 1), sizeof(device_mode),
+               (void *)&device_mode, sizeof(device_mode));
 
     return sizeof(spdm_measurement_block_dmtf_t) + sizeof(device_mode);
 }
@@ -659,13 +660,12 @@ bool libspdm_generate_measurement_summary_hash(
                   .dmtf_spec_measurement_value_type &
                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) ==
                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM)) {
-                copy_mem(
-                    &measurement_data[measurment_data_size],
-                    &cached_measurment_block
-                    ->measurement_block_dmtf_header,
-                    cached_measurment_block
-                    ->measurement_block_common_header
-                    .measurement_size);
+                copy_mem_s(&measurement_data[measurment_data_size],
+                           sizeof(measurement_data)
+                               - (&measurement_data[measurment_data_size] - measurement_data),
+                           &cached_measurment_block->measurement_block_dmtf_header,
+                           cached_measurment_block->measurement_block_common_header
+                               .measurement_size);
 
                 measurment_data_size +=
                     cached_measurment_block

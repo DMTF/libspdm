@@ -64,7 +64,7 @@ bool random_bytes(OUT uint8_t *output, IN uintn size)
             output += sizeof(uint64_t);
             size -= sizeof(temp_rand);
         } else {
-            copy_mem(output, &temp_rand, size);
+            copy_mem_s(output, size, &temp_rand, size);
             size = 0;
         }
     }
