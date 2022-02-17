@@ -157,7 +157,8 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
                 return RETURN_DEVICE_ERROR;
             }
         } else {
-            copy_mem (spdm_request.nonce, requester_nonce_in, SPDM_NONCE_SIZE);
+            copy_mem_s(spdm_request.nonce, sizeof(spdm_request.nonce),
+                       requester_nonce_in, SPDM_NONCE_SIZE);
         }
         DEBUG((DEBUG_INFO, "ClientNonce - "));
         internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
@@ -165,7 +166,8 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         spdm_request.slot_id_param = slot_id_param;
 
         if (requester_nonce != NULL) {
-            copy_mem (requester_nonce, spdm_request.nonce, SPDM_NONCE_SIZE);
+            copy_mem_s(requester_nonce, SPDM_NONCE_SIZE,
+                       spdm_request.nonce, SPDM_NONCE_SIZE);
         }
     } else {
         spdm_request_size = sizeof(spdm_request.header);
@@ -278,7 +280,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         DEBUG((DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
-            copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
+            copy_mem_s(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
         opaque_length = *(uint16_t *)ptr;
@@ -347,7 +349,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         DEBUG((DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
-            copy_mem (responder_nonce, nonce, SPDM_NONCE_SIZE);
+            copy_mem_s(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
         opaque_length = *(uint16_t *)ptr;
@@ -463,8 +465,10 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         }
 
         *measurement_record_length = measurement_record_data_length;
-        copy_mem(measurement_record, measurement_record_data,
-                 measurement_record_data_length);
+        copy_mem_s(measurement_record,
+                   measurement_record_data_length,
+                   measurement_record_data,
+                   measurement_record_data_length);
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;

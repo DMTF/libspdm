@@ -117,14 +117,16 @@ return_status try_spdm_send_receive_key_exchange(
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        copy_mem (spdm_request.random_data, requester_random_in, SPDM_RANDOM_DATA_SIZE);
+        copy_mem_s(spdm_request.random_data, sizeof(spdm_request.random_data),
+                   requester_random_in, SPDM_RANDOM_DATA_SIZE);
     }
     DEBUG((DEBUG_INFO, "ClientRandomData (0x%x) - ",
            SPDM_RANDOM_DATA_SIZE));
     internal_dump_data(spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     if (requester_random != NULL) {
-        copy_mem (requester_random, spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
+        copy_mem_s(requester_random, SPDM_RANDOM_DATA_SIZE,
+                   spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
     req_session_id = spdm_allocate_req_session_id(spdm_context);
@@ -319,7 +321,8 @@ return_status try_spdm_send_receive_key_exchange(
     internal_dump_data(spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     if (responder_random != NULL) {
-        copy_mem (responder_random, spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
+        copy_mem_s(responder_random, SPDM_RANDOM_DATA_SIZE,
+                   spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
     DEBUG((DEBUG_INFO, "ServerKey (0x%x):\n", dhe_key_size));
@@ -478,8 +481,8 @@ return_status try_spdm_send_receive_key_exchange(
     }
 
     if (measurement_hash != NULL) {
-        copy_mem(measurement_hash, measurement_summary_hash,
-                 measurement_summary_hash_size);
+        copy_mem_s(measurement_hash, measurement_summary_hash_size,
+                   measurement_summary_hash, measurement_summary_hash_size);
     }
     session_info->mut_auth_requested = spdm_response.mut_auth_requested;
     session_info->session_policy = session_policy;

@@ -156,8 +156,8 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (total_digest_buffer != NULL) {
-        copy_mem(total_digest_buffer, spdm_response.digest,
-                 digest_size * digest_count);
+        copy_mem_s(total_digest_buffer, digest_size * digest_count,
+                   spdm_response.digest, digest_size * digest_count);
     }
 
     spdm_context->connection_info.connection_state =
