@@ -1283,7 +1283,7 @@ bool x509_get_validity(IN const uint8_t *cert, IN uintn cert_size,
         }
         if (to != NULL) {
             copy_mem_s(to, *to_size, &(crt.valid_to),
-                     sizeof(mbedtls_x509_time));
+                       sizeof(mbedtls_x509_time));
         }
         *to_size = t_size;
         status = true;
