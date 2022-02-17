@@ -108,8 +108,9 @@ bool read_responder_root_public_certificate(IN uint32_t base_hash_algo,
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -209,8 +210,9 @@ bool read_requester_root_public_certificate(IN uint32_t base_hash_algo,
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -328,8 +330,9 @@ bool read_responder_public_certificate_chain(
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -447,8 +450,9 @@ bool read_requester_public_certificate_chain(
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -524,8 +528,9 @@ bool read_responder_root_public_certificate_by_size(
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -621,8 +626,9 @@ bool read_responder_public_certificate_chain_by_size(
         free(cert_chain);
         return res;
     }
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             file_data, file_size);
+    copy_mem_s((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+               cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+               file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;

@@ -69,7 +69,7 @@ bool rsa_get_private_key_from_pem(IN const uint8_t *pem_data,
         if (new_pem_data == NULL) {
             return false;
         }
-        copy_mem(new_pem_data, pem_data, pem_size);
+        copy_mem_s(new_pem_data, pem_size + 1, pem_data, pem_size);
         new_pem_data[pem_size] = 0;
         pem_data = new_pem_data;
         pem_size += 1;
@@ -154,7 +154,7 @@ bool ec_get_private_key_from_pem(IN const uint8_t *pem_data, IN uintn pem_size,
         if (new_pem_data == NULL) {
             return false;
         }
-        copy_mem(new_pem_data, pem_data, pem_size);
+        copy_mem_s(new_pem_data, pem_size + 1, pem_data, pem_size);
         new_pem_data[pem_size] = 0;
         pem_data = new_pem_data;
         pem_size += 1;
