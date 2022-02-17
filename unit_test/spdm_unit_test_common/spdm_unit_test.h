@@ -45,6 +45,7 @@ extern uint8_t m_use_TCB_hash_value[LIBSPDM_MAX_HASH_SIZE];
 #define SPDM_ERROR_CODE_RESERVED_0D             0x0D
 #define SPDM_ERROR_CODE_RESERVED_3F             0x3F
 #define SPDM_ERROR_CODE_RESERVED_FD             0xFD
+#define NULL ((void *)0)
 
 #define ASSERT_INT_EQUAL_CASE(value, expected, case) { \
         if(value != expected) { \
