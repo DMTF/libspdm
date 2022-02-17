@@ -24,4 +24,6 @@ uintn get_max_buffer_size(void);
 
 uint8_t judge_requster_name(IN char *file_name);
 
+uintn AlignmentSize(uintn size, uint8_t req_or_res);
+
 #endif
