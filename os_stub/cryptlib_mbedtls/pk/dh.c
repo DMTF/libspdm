@@ -276,7 +276,7 @@ bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
     mbedtls_dhm_context *ctx;
     uintn return_size;
     uintn dh_key_size;
-
+    uintn key_capacity;
 
     /* Check input parameters.*/
 
@@ -309,6 +309,7 @@ bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
     if (*key_size < dh_key_size) {
         return false;
     }
+    key_capacity = *key_size;
     *key_size = dh_key_size;
 
     ret = mbedtls_dhm_read_public(dh_context, peer_public_key,
@@ -324,7 +325,9 @@ bool dh_compute_key(IN OUT void *dh_context, IN const uint8_t *peer_public_key,
         return false;
     }
     if (return_size < dh_key_size) {
-        copy_mem(key + dh_key_size - return_size, key, return_size);
+        copy_mem_s(key + dh_key_size - return_size,
+                   key_capacity - (dh_key_size - return_size),
+                   key, return_size);
         zero_mem(key, dh_key_size - return_size);
     }
 
