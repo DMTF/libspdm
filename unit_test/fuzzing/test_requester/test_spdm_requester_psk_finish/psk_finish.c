@@ -163,6 +163,7 @@ void test_spdm_requester_psk_finish_case1(void **State)
     spdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
     spdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
+    libspdm_reset_message_k(spdm_context, session_info);
 }
 
 spdm_test_context_t m_spdm_requester_psk_finish_test_context = {
