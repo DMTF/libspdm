@@ -13,11 +13,26 @@
 #ifdef TEST_WITH_LIBFUZZER
 #include <stdint.h>
 #include <stddef.h>
+uint8_t req_or_res = 0;
 #endif
-
 #ifdef TEST_WITH_KLEE
 #include <klee/klee.h>
 #endif
+
+uintn AlignmentSize(uintn size, uint8_t req_or_res)
+{
+    uintn alignment;
+    alignment = TEST_ALIGNMENT;
+
+    if (((size) & (alignment - 1)) == 3)
+        size += 1;
+    if (((size) & (alignment - 1)) == 2)
+        size += 2;
+    if (((size) & (alignment - 1)) == 1)
+        size += 3;
+    size = size + req_or_res;
+    return size;
+}
 
 bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
                       IN void **test_buffer, OUT uintn *buffer_size)
@@ -26,10 +41,7 @@ bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
     FILE *file;
     uintn file_size;
     uintn BytesRead;
-    uintn alignment;
     uint8_t return_status;
-
-    alignment = TEST_ALIGNMENT;
 
     /* 1. Allocate buffer*/
     buffer = malloc(max_buffer_size);
@@ -76,13 +88,7 @@ bool init_test_buffer(IN char *file_name, IN uintn max_buffer_size,
     }
     fclose(file);
 
-    if (((file_size) & (alignment - 1)) == 3)
-        file_size += 1;
-    if (((file_size) & (alignment - 1)) == 2)
-        file_size += 2;
-    if (((file_size) & (alignment - 1)) == 1)
-        file_size += 3;
-    file_size = file_size + return_status;
+    file_size = AlignmentSize(file_size, return_status);
 
     if (buffer_size != NULL) {
         *buffer_size = file_size;
@@ -139,11 +145,31 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     if (size > max_buffer_size) {
         size = max_buffer_size;
     }
-    copy_mem_s(test_buffer, max_buffer_size, data, size);
+
+    if (req_or_res == 1) {
+        *(uint8_t *)test_buffer = TEST_MESSAGE_TYPE_SPDM;
+        copy_mem_s((uint8_t *)test_buffer + 1, max_buffer_size - 1, data, size);
+    }
+    else{
+        copy_mem_s(test_buffer, max_buffer_size, data, size);
+    }
+    size = AlignmentSize(size, req_or_res);
     /* 2. Run test*/
     run_test_harness(test_buffer, size);
     /* 3. Clean up*/
     free(test_buffer);
+    return 0;
+}
+int LLVMFuzzerInitialize(int *argc, char ***argv)
+{
+    char *file_name;
+    if (*argc <= 1) {
+        printf("info - missing input file\n");
+    }
+    else{
+        file_name = (*argv)[1];
+        req_or_res = judge_requster_name(file_name);
+    }
     return 0;
 }
 #else
