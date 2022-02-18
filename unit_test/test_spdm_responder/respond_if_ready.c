@@ -524,7 +524,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
 
     spdm_context->last_spdm_request_size = m_spdm_get_measurements_request_size;
     copy_mem_s(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
-              &m_spdm_get_measurements_request, m_spdm_get_measurements_request_size);
+               &m_spdm_get_measurements_request, m_spdm_get_measurements_request_size);
 
     /*RESPOND_IF_READY specific data*/
     spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
