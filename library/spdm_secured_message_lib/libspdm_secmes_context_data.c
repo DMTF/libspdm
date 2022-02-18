@@ -72,7 +72,7 @@ libspdm_secured_message_is_finished_key_ready(void *spdm_secured_message_context
  */
 void libspdm_secured_message_set_session_state(
     void *spdm_secured_message_context,
-    const libspdm_session_state_t session_state)
+    libspdm_session_state_t session_state)
 {
     spdm_secured_message_context_t *secured_message_context;
 
@@ -108,7 +108,7 @@ libspdm_secured_message_get_session_state(void *spdm_secured_message_context)
  * @param  session_type                  Indicate the SPDM session type.
  */
 void libspdm_secured_message_set_session_type(void *spdm_secured_message_context,
-                                              const libspdm_session_type_t session_type)
+                                              libspdm_session_type_t session_type)
 {
     spdm_secured_message_context_t *secured_message_context;
 

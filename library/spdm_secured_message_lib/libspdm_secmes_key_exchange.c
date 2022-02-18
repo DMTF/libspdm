@@ -17,7 +17,7 @@
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
-void *libspdm_secured_message_dhe_new(const spdm_version_number_t spdm_version,
+void *libspdm_secured_message_dhe_new(spdm_version_number_t spdm_version,
                                       uint16_t dhe_named_group, bool is_initiator)
 {
     return libspdm_dhe_new(spdm_version, dhe_named_group, is_initiator);

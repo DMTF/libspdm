@@ -562,7 +562,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
  **/
 return_status
 libspdm_create_update_session_data_key(void *spdm_secured_message_context,
-                                       const libspdm_key_update_action_t action)
+                                       libspdm_key_update_action_t action)
 {
     return_status status;
     bool ret_val;
@@ -734,7 +734,7 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
  **/
 return_status
 libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
-                                         const libspdm_key_update_action_t action,
+                                         libspdm_key_update_action_t action,
                                          bool use_new_key)
 {
     spdm_secured_message_context_t *secured_message_context;

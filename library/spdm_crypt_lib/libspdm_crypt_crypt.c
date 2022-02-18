@@ -1574,7 +1574,7 @@ spdm_signing_context_str_t m_spdm_signing_context_str_table[]={
  **/
 void *
 get_spdm_signing_context_string (
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
     uintn *context_size)
@@ -1605,7 +1605,7 @@ get_spdm_signing_context_string (
  **/
 void
 create_spdm_signing_context (
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
     void *spdm_signing_context)
@@ -2007,7 +2007,7 @@ libspdm_asym_verify_func get_spdm_asym_verify(uint32_t base_asym_algo)
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
 bool libspdm_asym_verify(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
     uintn message_size, const uint8_t *signature,
@@ -2107,7 +2107,7 @@ bool libspdm_asym_verify(
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
 bool libspdm_asym_verify_hash(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
     uintn hash_size, const uint8_t *signature,
@@ -2413,7 +2413,7 @@ libspdm_asym_sign_func get_spdm_asym_sign(uint32_t base_asym_algo)
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_asym_sign(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
     uintn message_size, uint8_t *signature,
@@ -2517,7 +2517,7 @@ bool libspdm_asym_sign(
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_asym_sign_hash(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
     uintn hash_size, uint8_t *signature,
@@ -2726,7 +2726,7 @@ libspdm_asym_verify_func get_spdm_req_asym_verify(uint16_t req_base_asym_alg)
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
 bool libspdm_req_asym_verify(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message, uintn message_size,
@@ -2825,7 +2825,7 @@ bool libspdm_req_asym_verify(
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
 bool libspdm_req_asym_verify_hash(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message_hash, uintn hash_size,
@@ -2985,7 +2985,7 @@ libspdm_asym_sign_func get_spdm_req_asym_sign(uint16_t req_base_asym_alg)
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_req_asym_sign(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message, uintn message_size,
@@ -3088,7 +3088,7 @@ bool libspdm_req_asym_sign(
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_req_asym_sign_hash(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message_hash, uintn hash_size,
@@ -3286,7 +3286,7 @@ libspdm_dhe_new_by_nid_func get_spdm_dhe_new(uint16_t dhe_named_group)
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
-void *libspdm_dhe_new(const spdm_version_number_t spdm_version,
+void *libspdm_dhe_new(spdm_version_number_t spdm_version,
                       uint16_t dhe_named_group, bool is_initiator)
 {
     libspdm_dhe_new_by_nid_func new_function;

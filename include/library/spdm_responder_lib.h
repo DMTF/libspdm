@@ -203,7 +203,7 @@ return_status libspdm_generate_extended_error_response(
  **/
 typedef void (*libspdm_session_state_callback_func)(
     const void *spdm_context, uint32_t session_id,
-    const libspdm_session_state_t session_state);
+    libspdm_session_state_t session_state);
 
 /**
  * Register an SPDM state callback function.
@@ -218,7 +218,7 @@ typedef void (*libspdm_session_state_callback_func)(
  **/
 return_status libspdm_register_session_state_callback_func(
     void *spdm_context,
-    const libspdm_session_state_callback_func spdm_session_state_callback);
+    libspdm_session_state_callback_func spdm_session_state_callback);
 
 /**
  * Notify the connection state to an SPDM context register.
@@ -227,7 +227,7 @@ return_status libspdm_register_session_state_callback_func(
  * @param  connection_state              Indicate the SPDM connection state.
  **/
 typedef void (*libspdm_connection_state_callback_func)(
-    const void *spdm_context, const libspdm_connection_state_t connection_state);
+    const void *spdm_context, libspdm_connection_state_t connection_state);
 
 /**
  * Register an SPDM connection state callback function.

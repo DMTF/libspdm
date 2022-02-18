@@ -346,7 +346,7 @@ uintn fill_measurement_device_mode_block (
  **/
 
 return_status libspdm_measurement_collection(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
     uint8_t measurements_index,
@@ -566,7 +566,7 @@ return_status libspdm_measurement_collection(
  * @retval false measurement summary hash is not generated.
  **/
 bool libspdm_generate_measurement_summary_hash(
-    const spdm_version_number_t spdm_version, uint32_t base_hash_algo,
+    spdm_version_number_t spdm_version, uint32_t base_hash_algo,
     uint8_t measurement_specification, uint32_t measurement_hash_algo,
     uint8_t measurement_summary_hash_type,
     uint8_t *measurement_summary_hash,
@@ -705,7 +705,7 @@ bool libspdm_generate_measurement_summary_hash(
  * @retval false signing fail.
  **/
 bool libspdm_requester_data_sign(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, uintn message_size,
@@ -759,7 +759,7 @@ bool libspdm_requester_data_sign(
  * @retval false signing fail.
  **/
 bool libspdm_responder_data_sign(
-    const spdm_version_number_t spdm_version, uint8_t op_code,
+    spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, uintn message_size,
@@ -817,7 +817,7 @@ uint8_t m_bin_str0[0x11] = {
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_handshake_secret_hkdf_expand(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     const uint8_t *psk_hint,
     uintn psk_hint_size,
@@ -877,7 +877,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_master_secret_hkdf_expand(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     const uint8_t *psk_hint,
     uintn psk_hint_size,

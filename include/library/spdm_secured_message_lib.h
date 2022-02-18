@@ -93,7 +93,7 @@ libspdm_secured_message_is_finished_key_ready(void *spdm_secured_message_context
  */
 void libspdm_secured_message_set_session_state(
     void *spdm_secured_message_context,
-    const libspdm_session_state_t session_state);
+    libspdm_session_state_t session_state);
 
 /**
  * Return session_state of an SPDM secured message context.
@@ -112,7 +112,7 @@ libspdm_secured_message_get_session_state(void *spdm_secured_message_context);
  * @param  session_type                  Indicate the SPDM session type.
  */
 void libspdm_secured_message_set_session_type(void *spdm_secured_message_context,
-                                              const libspdm_session_type_t session_type);
+                                              libspdm_session_type_t session_type);
 
 /**
  * Set algorithm to an SPDM secured message context.
@@ -224,7 +224,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
-void *libspdm_secured_message_dhe_new(const spdm_version_number_t spdm_version,
+void *libspdm_secured_message_dhe_new(spdm_version_number_t spdm_version,
                                       uint16_t dhe_named_group, bool is_initiator);
 
 /**
@@ -534,7 +534,7 @@ typedef enum {
  **/
 return_status
 libspdm_create_update_session_data_key(void *spdm_secured_message_context,
-                                       const libspdm_key_update_action_t action);
+                                       libspdm_key_update_action_t action);
 
 /**
  * This function activates the update of SPDM DataKey for a session.
@@ -547,7 +547,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
  **/
 return_status
 libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
-                                         const libspdm_key_update_action_t action,
+                                         libspdm_key_update_action_t action,
                                          bool use_new_key);
 
 /**

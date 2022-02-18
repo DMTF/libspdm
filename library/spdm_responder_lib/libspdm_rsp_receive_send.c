@@ -202,7 +202,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
  **/
 void spdm_trigger_session_state_callback(spdm_context_t *spdm_context,
                                          uint32_t session_id,
-                                         const libspdm_session_state_t session_state)
+                                         libspdm_session_state_t session_state)
 {
     uintn index;
 
@@ -224,7 +224,7 @@ void spdm_trigger_session_state_callback(spdm_context_t *spdm_context,
  */
 void spdm_set_session_state(spdm_context_t *spdm_context,
                             uint32_t session_id,
-                            const libspdm_session_state_t session_state)
+                            libspdm_session_state_t session_state)
 {
     spdm_session_info_t *session_info;
     libspdm_session_state_t old_session_state;
@@ -275,7 +275,7 @@ void spdm_trigger_connection_state_callback(spdm_context_t *spdm_context,
  * @param  connection_state              Indicate the SPDM connection state.
  */
 void spdm_set_connection_state(spdm_context_t *spdm_context,
-                               const libspdm_connection_state_t connection_state)
+                               libspdm_connection_state_t connection_state)
 {
     if (spdm_context->connection_info.connection_state !=
         connection_state) {
@@ -553,7 +553,7 @@ void libspdm_register_get_response_func(
  **/
 return_status libspdm_register_session_state_callback_func(
     void *context,
-    const libspdm_session_state_callback_func spdm_session_state_callback)
+    libspdm_session_state_callback_func spdm_session_state_callback)
 {
     spdm_context_t *spdm_context;
     uintn index;
