@@ -72,10 +72,11 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     spdm_test_context = get_spdm_test_context();
     test_message_header_size = 1;
     session_id = 0xFFFFFFFF;
-    temp_buf_size = spdm_test_context->test_buffer_size;
+    /* because the next function is spdm_transport_test_encode_message, so here temp_buf_size should minus test_message_header_size. */
+    temp_buf_size = spdm_test_context->test_buffer_size - test_message_header_size;
     copy_mem_s((uint8_t *)temp_buf, sizeof(temp_buf),
                (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-               spdm_test_context->test_buffer_size);
+               temp_buf_size);
 
     spdm_transport_test_encode_message(spdm_context, &session_id, false, false, temp_buf_size,
                                        temp_buf, response_size, response);
