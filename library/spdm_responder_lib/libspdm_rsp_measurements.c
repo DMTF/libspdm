@@ -52,8 +52,10 @@ bool spdm_create_measurement_signature(spdm_context_t *spdm_context,
     ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
-        copy_mem(ptr, spdm_context->local_context.opaque_measurement_rsp,
-                 spdm_context->local_context.opaque_measurement_rsp_size);
+        copy_mem_s(ptr,
+                   response_message_size - (ptr - (uint8_t*)response_message),
+                   spdm_context->local_context.opaque_measurement_rsp,
+                   spdm_context->local_context.opaque_measurement_rsp_size);
         ptr += spdm_context->local_context.opaque_measurement_rsp_size;
     }
 
@@ -98,8 +100,10 @@ bool spdm_create_measurement_opaque(spdm_context_t *spdm_context,
     ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
-        copy_mem(ptr, spdm_context->local_context.opaque_measurement_rsp,
-                 spdm_context->local_context.opaque_measurement_rsp_size);
+        copy_mem_s(ptr,
+                   response_message_size - (ptr - (uint8_t*)response_message),
+                   spdm_context->local_context.opaque_measurement_rsp,
+                   spdm_context->local_context.opaque_measurement_rsp_size);
         ptr += spdm_context->local_context.opaque_measurement_rsp_size;
     }
 

@@ -52,9 +52,10 @@ return_status spdm_responder_handle_response_state(void *context,
         if(request_code != SPDM_RESPOND_IF_READY) {
             spdm_context->cache_spdm_request_size =
                 spdm_context->last_spdm_request_size;
-            copy_mem(spdm_context->cache_spdm_request,
-                     spdm_context->last_spdm_request,
-                     spdm_context->last_spdm_request_size);
+            copy_mem_s(spdm_context->cache_spdm_request,
+                       sizeof(spdm_context->cache_spdm_request),
+                       spdm_context->last_spdm_request,
+                       spdm_context->last_spdm_request_size);
             spdm_context->error_data.rd_exponent = 1;
             spdm_context->error_data.rd_tm = 1;
             spdm_context->error_data.request_code = request_code;
