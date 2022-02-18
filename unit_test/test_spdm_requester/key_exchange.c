@@ -4703,7 +4703,9 @@ void test_spdm_requester_key_exchange_case10(void **state) {
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem (spdm_context->connection_info.peer_used_cert_chain_buffer, data, data_size);
+    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
+               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+               data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
