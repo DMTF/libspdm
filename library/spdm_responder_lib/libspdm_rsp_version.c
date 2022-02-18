@@ -111,7 +111,7 @@ return_status spdm_get_response_version(IN void *context, IN uintn request_size,
                sizeof(spdm_response->version_number_entry),
                spdm_context->local_context.version.spdm_version,
                sizeof(spdm_version_number_t) *
-                   spdm_context->local_context.version.spdm_version_count);
+               spdm_context->local_context.version.spdm_version_count);
 
 
     /* Cache*/

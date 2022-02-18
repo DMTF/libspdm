@@ -339,37 +339,37 @@ spdm_secured_message_import_session_keys(IN void *spdm_secured_message_context,
 
     ptr = (void *)(session_keys_struct + 1);
     copy_mem_s(secured_message_context->application_secret
-                  .request_data_encryption_key,
+               .request_data_encryption_key,
                sizeof(secured_message_context->application_secret
-                   .request_data_encryption_key),
+                      .request_data_encryption_key),
                ptr, secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     copy_mem_s(secured_message_context->application_secret.request_data_salt,
                sizeof(secured_message_context->application_secret
-                   .request_data_salt),
+                      .request_data_salt),
                ptr, secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
     copy_mem_s(&secured_message_context->application_secret
-                   .request_data_sequence_number,
+               .request_data_sequence_number,
                sizeof(secured_message_context->application_secret
-                   .request_data_sequence_number),
+                      .request_data_sequence_number),
                ptr, sizeof(uint64_t));
     ptr += sizeof(uint64_t);
     copy_mem_s(secured_message_context->application_secret
-                  .response_data_encryption_key,
+               .response_data_encryption_key,
                sizeof(secured_message_context->application_secret
-                  .response_data_encryption_key),
+                      .response_data_encryption_key),
              ptr, secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     copy_mem_s(secured_message_context->application_secret.response_data_salt,
                sizeof(secured_message_context->application_secret
-                   .response_data_salt),
+                      .response_data_salt),
                ptr, secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
     copy_mem_s(&secured_message_context->application_secret
-                  .response_data_sequence_number,
+               .response_data_sequence_number,
                sizeof(secured_message_context->application_secret
-                  .response_data_sequence_number),
+                      .response_data_sequence_number),
                ptr, sizeof(uint64_t));
     ptr += sizeof(uint64_t);
     return RETURN_SUCCESS;

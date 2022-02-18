@@ -2162,8 +2162,8 @@ bool libspdm_asym_verify_hash(
                                      spdm12_signing_context_with_hash);
         copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
                    sizeof(spdm12_signing_context_with_hash)
-                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
-                       - spdm12_signing_context_with_hash),
+                   - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                      - spdm12_signing_context_with_hash),
                    message_hash, hash_size);
 
         /* assign message and message_size for signing*/
@@ -2575,8 +2575,8 @@ bool libspdm_asym_sign_hash(
                                      spdm12_signing_context_with_hash);
         copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
                    sizeof(spdm12_signing_context_with_hash)
-                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
-                       - spdm12_signing_context_with_hash),
+                   - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                      - spdm12_signing_context_with_hash),
                    message_hash, hash_size);
 
         /* assign message and message_size for signing*/
@@ -2885,8 +2885,8 @@ bool libspdm_req_asym_verify_hash(
         create_spdm_signing_context (spdm_version, op_code, true, spdm12_signing_context_with_hash);
         copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
                    sizeof(spdm12_signing_context_with_hash)
-                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
-                       - spdm12_signing_context_with_hash),
+                   - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                      - spdm12_signing_context_with_hash),
                    message_hash, hash_size);
 
         /* assign message and message_size for signing*/
@@ -3151,8 +3151,8 @@ bool libspdm_req_asym_sign_hash(
         create_spdm_signing_context (spdm_version, op_code, true, spdm12_signing_context_with_hash);
         copy_mem_s(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
                    sizeof(spdm12_signing_context_with_hash)
-                       - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
-                       - spdm12_signing_context_with_hash),
+                   - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                      - spdm12_signing_context_with_hash),
                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/

@@ -94,8 +94,8 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
                        sizeof(spdm_context->local_context.version.spdm_version),
                        data,
                        spdm_context->local_context.version
-                           .spdm_version_count *
-                           sizeof(spdm_version_number_t));
+                       .spdm_version_count *
+                       sizeof(spdm_version_number_t));
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
@@ -112,14 +112,14 @@ return_status libspdm_set_data(IN void *context, IN libspdm_data_type_t data_typ
             .spdm_version_count = (uint8_t)(
                 data_size / sizeof(spdm_version_number_t));
             copy_mem_s(spdm_context->local_context
-                           .secured_message_version.spdm_version,
+                       .secured_message_version.spdm_version,
                        sizeof(spdm_context->local_context
-                           .secured_message_version.spdm_version),
+                              .secured_message_version.spdm_version),
                        data,
                        spdm_context->local_context
-                           .secured_message_version
-                           .spdm_version_count *
-                           sizeof(spdm_version_number_t));
+                       .secured_message_version
+                       .spdm_version_count *
+                       sizeof(spdm_version_number_t));
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_FLAGS:

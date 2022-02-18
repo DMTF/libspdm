@@ -73,11 +73,11 @@ return_status libspdm_encode_secured_message(
         if (is_requester) {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->handshake_secret
-                           .request_handshake_encryption_key,
+                       .request_handshake_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->handshake_secret
-                           .request_handshake_salt,
+                       .request_handshake_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->handshake_secret
@@ -85,11 +85,11 @@ return_status libspdm_encode_secured_message(
         } else {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->handshake_secret
-                           .response_handshake_encryption_key,
+                       .response_handshake_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->handshake_secret
-                           .response_handshake_salt,
+                       .response_handshake_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->handshake_secret
@@ -100,11 +100,11 @@ return_status libspdm_encode_secured_message(
         if (is_requester) {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->application_secret
-                           .request_data_encryption_key,
+                       .request_data_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->application_secret
-                           .request_data_salt,
+                       .request_data_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->application_secret
@@ -112,11 +112,11 @@ return_status libspdm_encode_secured_message(
         } else {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->application_secret
-                           .response_data_encryption_key,
+                       .response_data_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->application_secret
-                           .response_data_salt,
+                       .response_data_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->application_secret
@@ -210,7 +210,7 @@ return_status libspdm_encode_secured_message(
         record_header1->session_id = session_id;
         copy_mem_s(record_header1 + 1,
                    *secured_message_size
-                       - ((uint8_t*)(record_header1 + 1) - (uint8_t*)secured_message),
+                   - ((uint8_t*)(record_header1 + 1) - (uint8_t*)secured_message),
                    &sequence_num_in_header,
                    sequence_num_in_header_size);
         record_header2->length =
@@ -220,7 +220,7 @@ return_status libspdm_encode_secured_message(
             (uint16_t)app_message_size;
         copy_mem_s(enc_msg_header + 1,
                    *secured_message_size
-                       - ((uint8_t*)(enc_msg_header + 1) - (uint8_t*)secured_message),
+                   - ((uint8_t*)(enc_msg_header + 1) - (uint8_t*)secured_message),
                    app_message, app_message_size);
         result = libspdm_get_random_number(rand_count,
                                            (uint8_t *)enc_msg_header +
@@ -264,14 +264,14 @@ return_status libspdm_encode_secured_message(
         record_header1->session_id = session_id;
         copy_mem_s(record_header1 + 1,
                    *secured_message_size
-                       - ((uint8_t*)(record_header1 + 1) - (uint8_t*)secured_message),
+                   - ((uint8_t*)(record_header1 + 1) - (uint8_t*)secured_message),
                    &sequence_num_in_header,
                    sequence_num_in_header_size);
         record_header2->length =
             (uint16_t)(app_message_size + aead_tag_size);
         copy_mem_s(record_header2 + 1,
                    *secured_message_size
-                       - ((uint8_t*)(record_header2 + 1) - (uint8_t*)secured_message),
+                   - ((uint8_t*)(record_header2 + 1) - (uint8_t*)secured_message),
                    app_message, app_message_size);
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
@@ -370,11 +370,11 @@ return_status libspdm_decode_secured_message(
         if (is_requester) {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->handshake_secret
-                           .request_handshake_encryption_key,
+                       .request_handshake_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->handshake_secret
-                           .request_handshake_salt,
+                       .request_handshake_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->handshake_secret
@@ -382,11 +382,11 @@ return_status libspdm_decode_secured_message(
         } else {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->handshake_secret
-                           .response_handshake_encryption_key,
+                       .response_handshake_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->handshake_secret
-                           .response_handshake_salt,
+                       .response_handshake_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->handshake_secret
@@ -397,11 +397,11 @@ return_status libspdm_decode_secured_message(
         if (is_requester) {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->application_secret
-                           .request_data_encryption_key,
+                       .request_data_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->application_secret
-                           .request_data_salt,
+                       .request_data_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->application_secret
@@ -409,11 +409,11 @@ return_status libspdm_decode_secured_message(
         } else {
             copy_mem_s(key, sizeof(key),
                        secured_message_context->application_secret
-                           .response_data_encryption_key,
+                       .response_data_encryption_key,
                        secured_message_context->aead_key_size);
             copy_mem_s(salt, sizeof(salt),
                        secured_message_context->application_secret
-                           .response_data_salt,
+                       .response_data_salt,
                        secured_message_context->aead_iv_size);
             sequence_number =
                 secured_message_context->application_secret
