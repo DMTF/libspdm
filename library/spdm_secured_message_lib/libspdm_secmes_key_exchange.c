@@ -101,8 +101,9 @@ bool libspdm_secured_message_dhe_compute_key(
     if (!ret) {
         return ret;
     }
-    copy_mem(secured_message_context->master_secret.dhe_secret, final_key,
-             final_key_size);
+    copy_mem_s(secured_message_context->master_secret.dhe_secret,
+               sizeof(secured_message_context->master_secret.dhe_secret),
+               final_key, final_key_size);
     zero_mem(final_key, final_key_size);
     secured_message_context->dhe_key_size = final_key_size;
     return true;
