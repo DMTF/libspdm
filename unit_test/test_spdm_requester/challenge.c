@@ -911,7 +911,7 @@ return_status spdm_requester_challenge_test_receive_message(
          * Ptr += libspdm_get_hash_size (m_use_hash_algo);*/
         *(uint16_t *)Ptr = 8;
         Ptr += sizeof(uint16_t);
-        copy_mem (Ptr, "openspdm", 8);
+        copy_mem_s(Ptr, sizeof(temp_buf) - (Ptr - temp_buf), "openspdm", 8);
         Ptr += 8;
         copy_mem_s(&m_local_buffer[m_local_buffer_size],
                    sizeof(m_local_buffer) - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
