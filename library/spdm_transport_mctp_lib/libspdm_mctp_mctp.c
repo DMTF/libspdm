@@ -27,8 +27,8 @@
 uint8_t libspdm_mctp_get_sequence_number(IN uint64_t sequence_number,
                                          IN OUT uint8_t *sequence_number_buffer)
 {
-    copy_mem(sequence_number_buffer, &sequence_number,
-             MCTP_SEQUENCE_NUMBER_COUNT);
+    copy_mem_s(sequence_number_buffer, MCTP_SEQUENCE_NUMBER_COUNT,
+               &sequence_number, MCTP_SEQUENCE_NUMBER_COUNT);
     return MCTP_SEQUENCE_NUMBER_COUNT;
 }
 
@@ -93,8 +93,9 @@ return_status mctp_encode_message(IN uint32_t *session_id, IN uintn message_size
     } else {
         mctp_message_header->message_type = MCTP_MESSAGE_TYPE_SPDM;
     }
-    copy_mem((uint8_t *)transport_message + sizeof(mctp_message_header_t),
-             message, message_size);
+    copy_mem_s((uint8_t *)transport_message + sizeof(mctp_message_header_t),
+               *transport_message_size - sizeof(mctp_message_header_t),
+               message, message_size);
     zero_mem((uint8_t *)transport_message + sizeof(mctp_message_header_t) +
              message_size,
              *transport_message_size - sizeof(mctp_message_header_t) -
@@ -166,10 +167,10 @@ return_status mctp_decode_message(OUT uint32_t **session_id,
 
         if (*message_size + alignment - 1 >=
             transport_message_size - sizeof(mctp_message_header_t)) {
-            copy_mem(message,
-                     (uint8_t *)transport_message +
-                     sizeof(mctp_message_header_t),
-                     *message_size);
+            copy_mem_s(message, *message_size,
+                       (uint8_t *)transport_message +
+                       sizeof(mctp_message_header_t),
+                       *message_size);
             return RETURN_SUCCESS;
         }
         ASSERT(*message_size >=
@@ -179,8 +180,8 @@ return_status mctp_decode_message(OUT uint32_t **session_id,
         return RETURN_BUFFER_TOO_SMALL;
     }
     *message_size = transport_message_size - sizeof(mctp_message_header_t);
-    copy_mem(message,
-             (uint8_t *)transport_message + sizeof(mctp_message_header_t),
-             *message_size);
+    copy_mem_s(message, *message_size,
+               (uint8_t *)transport_message + sizeof(mctp_message_header_t),
+               *message_size);
     return RETURN_SUCCESS;
 }
