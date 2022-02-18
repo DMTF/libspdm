@@ -64,8 +64,9 @@ spdm_get_encap_request_get_certificate(IN spdm_context_t *spdm_context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    copy_mem(&spdm_context->encap_context.last_encap_request_header,
-             &spdm_request->header, sizeof(spdm_message_header_t));
+    copy_mem_s(&spdm_context->encap_context.last_encap_request_header,
+               sizeof(spdm_context->encap_context.last_encap_request_header),
+               &spdm_request->header, sizeof(spdm_message_header_t));
     spdm_context->encap_context.last_encap_request_size =
         *encap_request_size;
 
@@ -205,12 +206,12 @@ return_status spdm_process_encap_response_certificate(
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer);
-    copy_mem(
-        spdm_context->connection_info.peer_used_cert_chain_buffer,
-        get_managed_buffer(
-            &spdm_context->encap_context.certificate_chain_buffer),
-        get_managed_buffer_size(
-            &spdm_context->encap_context.certificate_chain_buffer));
+    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
+               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+               get_managed_buffer(
+                   &spdm_context->encap_context.certificate_chain_buffer),
+               get_managed_buffer_size(
+                   &spdm_context->encap_context.certificate_chain_buffer));
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
