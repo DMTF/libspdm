@@ -8,16 +8,31 @@
 if ! command -v uncrustify &> /dev/null
 then
     echo "ERROR: Unable to execute uncrustify."
-    exit
+    exit 1
 fi
 
 # cd to top of repository.
 cd `dirname $0`
 cd ../
 
-# Run uncrustify and exclude submodules.
-find -not -path "./unit_test/test_size/intrinsiclib/ia32/*" \
--not -path "./os_stub/mbedtlslib/mbedtls/*" \
--not -path "./os_stub/openssllib/openssl/*" \
--not -path "./unit_test/cmockalib/cmocka/*" \
- \( -name "*.c" -o -name "*.h" \) -exec uncrustify -q -c ./.uncrustify.cfg --replace --no-backup {} +
+# Exclude non-libspdm submodules.
+EXCLUDE_PATH1="./unit_test/test_size/intrinsiclib/ia32/*"
+EXCLUDE_PATH2="./os_stub/mbedtlslib/mbedtls/*"
+EXCLUDE_PATH3="./os_stub/openssllib/openssl/*"
+EXCLUDE_PATH4="./unit_test/cmockalib/cmocka/*"
+
+# Run uncrustify.
+if [ $# -eq 0 ];
+then
+    find -not -path "$EXCLUDE_PATH1" -not -path "$EXCLUDE_PATH2" -not -path "$EXCLUDE_PATH3" -not -path "$EXCLUDE_PATH4" \
+    \( -name "*.c" -o -name "*.h" \) -exec uncrustify -q -c ./.uncrustify.cfg --replace --no-backup {} +
+    exit $?
+elif [ $1 = "--check" ];
+then
+    find -not -path "$EXCLUDE_PATH1" -not -path "$EXCLUDE_PATH2" -not -path "$EXCLUDE_PATH3" -not -path "$EXCLUDE_PATH4" \
+    \( -name "*.c" -o -name "*.h" \) -exec uncrustify -q -c ./.uncrustify.cfg --check {} +
+    exit $?
+else
+    echo "ERROR: Unknown argument."
+    exit 1
+fi

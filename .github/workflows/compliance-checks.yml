@@ -33,14 +33,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Check
-        # uncrustify is unable to parse the assembly directives in the ia32 intrinsiclib
-        # run an uncrustify check, if the check indicates problems, then apply the fixes and show the diff
+        # Run an uncrustify check. If the check indicates problems, then apply the fixes and show the diff.
         run: |
           set +e
-          find -not -path "./unit_test/test_size/intrinsiclib/ia32/*" \( -name "*.c" -o -name "*.h" \) -exec uncrustify -q -c ./.uncrustify.cfg --check {} +
+          ./script/format_nix.sh --check
           if [ $? -ne 0 ]; then
             set -e
-            find -not -path "./unit_test/test_size/intrinsiclib/ia32/*" \( -name "*.c" -o -name "*.h" \) -exec uncrustify -q -c ./.uncrustify.cfg --replace --no-backup {} +
+            ./script/format_nix.sh
             git diff
             exit 1
           fi
