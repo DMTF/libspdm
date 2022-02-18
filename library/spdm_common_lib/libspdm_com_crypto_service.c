@@ -166,7 +166,7 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     large_managed_buffer_t m1m2;
-    uintn_t m1m2_buffer_capacity;
+    uintn m1m2_buffer_capacity;
 
     spdm_context = context;
 
@@ -277,7 +277,7 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
             DEBUG((DEBUG_INFO, "\n"));
             );
     }
-    m1m2_buffer_capacity = *m1m2_buffer_capacity;
+    m1m2_buffer_capacity = *m1m2_buffer_size;
     *m1m2_buffer_size = get_managed_buffer_size(&m1m2);
     copy_mem_s(m1m2_buffer, m1m2_buffer_capacity,
                get_managed_buffer(&m1m2), *m1m2_buffer_size);
