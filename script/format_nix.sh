@@ -11,7 +11,7 @@ then
     exit 1
 fi
 
-# cd to top of repository.
+# Change directory to top of repository.
 cd `dirname $0`
 cd ../
 
