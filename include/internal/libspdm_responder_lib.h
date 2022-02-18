@@ -642,7 +642,7 @@ return_status spdm_handle_encap_error_response_main(
  */
 void spdm_set_session_state(spdm_context_t *spdm_context,
                             uint32_t session_id,
-                            const libspdm_session_state_t session_state);
+                            libspdm_session_state_t session_state);
 
 /**
  * Set connection_state to an SPDM context and trigger callback.
@@ -651,6 +651,6 @@ void spdm_set_session_state(spdm_context_t *spdm_context,
  * @param  connection_state              Indicate the SPDM connection state.
  */
 void spdm_set_connection_state(spdm_context_t *spdm_context,
-                               const libspdm_connection_state_t connection_state);
+                               libspdm_connection_state_t connection_state);
 
 #endif

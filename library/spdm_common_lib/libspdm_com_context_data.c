@@ -42,7 +42,7 @@ bool need_session_info_for_data(libspdm_data_type_t data_type)
  * @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
  * @retval RETURN_NOT_READY             data is not ready to set.
  **/
-return_status libspdm_set_data(void *context, const libspdm_data_type_t data_type,
+return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter, void *data,
                                uintn data_size)
 {
@@ -516,7 +516,7 @@ return_status libspdm_set_data(void *context, const libspdm_data_type_t data_typ
  * @retval RETURN_NOT_READY             The data is not ready to return.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_get_data(void *context, const libspdm_data_type_t data_type,
+return_status libspdm_get_data(void *context, libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter,
                                void *data, uintn *data_size)
 {
@@ -1837,8 +1837,8 @@ spdm_is_capabilities_flag_supported(const spdm_context_t *spdm_context,
  * @param  receive_message               The fuction to receive an SPDM transport layer message.
  **/
 void libspdm_register_device_io_func(
-    void *context, const libspdm_device_send_message_func send_message,
-    const libspdm_device_receive_message_func receive_message)
+    void *context, libspdm_device_send_message_func send_message,
+    libspdm_device_receive_message_func receive_message)
 {
     spdm_context_t *spdm_context;
 

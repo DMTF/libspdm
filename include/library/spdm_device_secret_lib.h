@@ -81,7 +81,7 @@
  *                                   indicating the type of failure
  **/
 return_status libspdm_measurement_collection(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
     uint8_t measurement_index,
@@ -112,7 +112,7 @@ return_status libspdm_measurement_collection(
  **/
 bool
 libspdm_generate_measurement_summary_hash(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -136,7 +136,7 @@ libspdm_generate_measurement_summary_hash(
  * @retval false signing fail.
  **/
 bool libspdm_requester_data_sign(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
@@ -159,7 +159,7 @@ bool libspdm_requester_data_sign(
  * @retval false signing fail.
  **/
 bool libspdm_responder_data_sign(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
@@ -181,7 +181,7 @@ bool libspdm_responder_data_sign(
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_handshake_secret_hkdf_expand(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint32_t base_hash_algo, const uint8_t *psk_hint,
     uintn psk_hint_size, const uint8_t *info,
     uintn info_size, uint8_t *out, uintn out_size);
@@ -201,7 +201,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_psk_master_secret_hkdf_expand(
-    const spdm_version_number_t spdm_version,
+    spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     const uint8_t *psk_hint,
     uintn psk_hint_size,

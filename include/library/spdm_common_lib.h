@@ -221,7 +221,7 @@ typedef enum {
  * @retval RETURN_NOT_READY             data is not ready to set.
  **/
 return_status libspdm_set_data(void *spdm_context,
-                               const libspdm_data_type_t data_type,
+                               libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter, void *data,
                                uintn data_size);
 
@@ -245,7 +245,7 @@ return_status libspdm_set_data(void *spdm_context,
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status libspdm_get_data(void *spdm_context,
-                               const libspdm_data_type_t data_type,
+                               libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter,
                                void *data, uintn *data_size);
 
@@ -380,8 +380,8 @@ typedef return_status (*libspdm_device_receive_message_func)(
  * @param  receive_message               The fuction to receive an SPDM transport layer message.
  **/
 void libspdm_register_device_io_func(
-    void *spdm_context, const libspdm_device_send_message_func send_message,
-    const libspdm_device_receive_message_func receive_message);
+    void *spdm_context, libspdm_device_send_message_func send_message,
+    libspdm_device_receive_message_func receive_message);
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
