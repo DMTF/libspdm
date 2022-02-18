@@ -122,7 +122,7 @@ return_status spdm_get_encap_response_certificate(void *context,
     copy_mem_s(spdm_response + 1,
                response_capacity - sizeof(spdm_certificate_response_t),
                (uint8_t *)spdm_context->local_context
-                    .local_cert_chain_provision[slot_id] + offset,
+               .local_cert_chain_provision[slot_id] + offset,
                length);
 
     /* Cache*/
