@@ -4,6 +4,8 @@
 # Beautification is needed to pass the CI/CD checks for a pull request.
 # This script can be run from any directory within the libspdm repository.
 
+set -e
+
 # Check if uncrustify is present.
 if ! command -v uncrustify &> /dev/null
 then
