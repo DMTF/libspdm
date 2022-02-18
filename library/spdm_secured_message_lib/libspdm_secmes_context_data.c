@@ -359,7 +359,7 @@ spdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                .response_data_encryption_key,
                sizeof(secured_message_context->application_secret
                       .response_data_encryption_key),
-             ptr, secured_message_context->aead_key_size);
+               ptr, secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     copy_mem_s(secured_message_context->application_secret.response_data_salt,
                sizeof(secured_message_context->application_secret

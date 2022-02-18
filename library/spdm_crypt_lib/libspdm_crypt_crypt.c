@@ -3153,7 +3153,7 @@ bool libspdm_req_asym_sign_hash(
                    sizeof(spdm12_signing_context_with_hash)
                    - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
                       - spdm12_signing_context_with_hash),
-                  message_hash, hash_size);
+                   message_hash, hash_size);
 
         /* assign message and message_size for signing*/
 
