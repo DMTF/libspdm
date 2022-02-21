@@ -530,7 +530,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
  * @param  get_response_func              The function to process the encapsuled message.
  **/
 void libspdm_register_get_response_func(
-    void *context, const libspdm_get_response_func get_response_func)
+    void *context, libspdm_get_response_func get_response_func)
 {
     spdm_context_t *spdm_context;
 
@@ -584,7 +584,7 @@ return_status libspdm_register_session_state_callback_func(
  **/
 return_status libspdm_register_connection_state_callback_func(
     void *context,
-    const libspdm_connection_state_callback_func spdm_connection_state_callback)
+    libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
     spdm_context_t *spdm_context;
     uintn index;
