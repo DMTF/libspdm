@@ -92,6 +92,7 @@ void test_spdm_requester_get_certificate_case1(void **State)
 
     libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
+    libspdm_reset_message_b(spdm_context);
 }
 
 void test_spdm_requester_get_certificate_case2(void **State)
@@ -133,6 +134,7 @@ void test_spdm_requester_get_certificate_case2(void **State)
 
     libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
+    libspdm_reset_message_b(spdm_context);
 }
 
 void test_spdm_requester_get_certificate_ex_case1(void **State)
@@ -173,6 +175,7 @@ void test_spdm_requester_get_certificate_ex_case1(void **State)
     zero_mem(cert_chain, sizeof(cert_chain));
     libspdm_get_certificate_ex(spdm_context, 0, &cert_chain_size, cert_chain, NULL, NULL);
     free(data);
+    libspdm_reset_message_b(spdm_context);
 }
 
 spdm_test_context_t m_spdm_requester_get_certificate_test_context = {
