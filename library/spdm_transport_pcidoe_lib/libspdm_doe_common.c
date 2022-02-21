@@ -107,7 +107,7 @@ typedef return_status (*transport_decode_message_func)(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_transport_pci_doe_encode_message(
-    const void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, uintn message_size, const void *message,
     uintn *transport_message_size, void *transport_message)
 {
