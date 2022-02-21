@@ -37,7 +37,7 @@
  *                                      Continue the dispatch without send response.
  **/
 typedef return_status (*libspdm_get_response_func)(
-    const void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    void *spdm_context, const uint32_t *session_id, bool is_app_message,
     uintn request_size, const void *request, uintn *response_size,
     void *response);
 
@@ -202,7 +202,7 @@ return_status libspdm_generate_extended_error_response(
  * @param  session_state                 The state of a session.
  **/
 typedef void (*libspdm_session_state_callback_func)(
-    const void *spdm_context, uint32_t session_id,
+    void *spdm_context, uint32_t session_id,
     libspdm_session_state_t session_state);
 
 /**
@@ -227,7 +227,7 @@ return_status libspdm_register_session_state_callback_func(
  * @param  connection_state              Indicate the SPDM connection state.
  **/
 typedef void (*libspdm_connection_state_callback_func)(
-    const void *spdm_context, libspdm_connection_state_t connection_state);
+    void *spdm_context, libspdm_connection_state_t connection_state);
 
 /**
  * Register an SPDM connection state callback function.
@@ -242,7 +242,7 @@ typedef void (*libspdm_connection_state_callback_func)(
  **/
 return_status libspdm_register_connection_state_callback_func(
     void *spdm_context,
-    const libspdm_connection_state_callback_func spdm_connection_state_callback);
+    libspdm_connection_state_callback_func spdm_connection_state_callback);
 
 /**
  * This function initializes the key_update encapsulated state.
