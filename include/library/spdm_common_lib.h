@@ -457,8 +457,8 @@ typedef return_status (*libspdm_transport_decode_message_func)(
  **/
 void libspdm_register_transport_layer_func(
     void *spdm_context,
-    const libspdm_transport_encode_message_func transport_encode_message,
-    const libspdm_transport_decode_message_func transport_decode_message);
+    libspdm_transport_encode_message_func transport_encode_message,
+    libspdm_transport_decode_message_func transport_decode_message);
 
 /**
  * Verify a SPDM cert chain in a slot.
