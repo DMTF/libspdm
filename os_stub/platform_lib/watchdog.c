@@ -15,7 +15,7 @@
  * @param  seconds        heartbeat period, in seconds.
  *
  **/
-bool libspdm_start_watchdog(uint32_t session_id, uint64_t seconds)
+bool libspdm_start_watchdog(uint32_t session_id, uint16_t seconds)
 {
     return true;
 }
