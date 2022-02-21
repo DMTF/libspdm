@@ -64,6 +64,7 @@ void test_spdm_requester_encap_challenge(void **State)
                                            test_message_header_size,
                                            &response_size, response);
     free(data);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {

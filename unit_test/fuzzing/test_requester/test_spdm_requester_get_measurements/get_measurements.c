@@ -153,6 +153,11 @@ void test_spdm_requester_get_measurement_case1(void **State)
     measurement_record_length = sizeof(measurement_record);
     libspdm_get_measurement(spdm_context, NULL, request_attribute, 1, 0, NULL, &number_of_block,
                             &measurement_record_length, measurement_record);
+    free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    free(spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void test_spdm_requester_get_measurement_case2(void **State)
@@ -207,6 +212,11 @@ void test_spdm_requester_get_measurement_case2(void **State)
     measurement_record_length = sizeof(measurement_record);
     libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1, 0, NULL, &number_of_block,
                                &measurement_record_length, measurement_record, NULL, NULL, NULL);
+    free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    free(spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void test_spdm_requester_get_measurement_case3(void **State)
@@ -281,6 +291,11 @@ void test_spdm_requester_get_measurement_case3(void **State)
     libspdm_get_measurement(spdm_context, &session_id, request_attribute, 1, 0, NULL,
                             &number_of_block, &measurement_record_length, measurement_record);
     test_message_header = 0;
+    free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    free(spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void test_spdm_requester_get_measurement_case4(void **State)
@@ -336,6 +351,11 @@ void test_spdm_requester_get_measurement_case4(void **State)
     libspdm_get_measurement(spdm_context, NULL, request_attribute,
                             SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS, 0,
                             NULL, &number_of_block, &measurement_record_length, measurement_record);
+    free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    free(spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 spdm_test_context_t m_spdm_requester_get_measurements_test_context = {
