@@ -49,7 +49,7 @@ intn PasswordCallback(char *buf, const intn size, const intn flag, const void *k
 
         key_length = (intn)ascii_str_len((char *)key);
         key_length = (key_length > size) ? size : key_length;
-        copy_mem_s(buf, size, key, (uintn)key_length);
+        copy_mem(buf, size, key, (uintn)key_length);
         return key_length;
     } else {
         return 0;

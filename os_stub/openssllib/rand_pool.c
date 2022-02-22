@@ -49,7 +49,7 @@ static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
             RandBuffer += sizeof(uint64_t);
             length -= sizeof(temp_rand);
         } else {
-            copy_mem_s(RandBuffer, length, &temp_rand, length);
+            copy_mem(RandBuffer, length, &temp_rand, length);
             length = 0;
         }
     }

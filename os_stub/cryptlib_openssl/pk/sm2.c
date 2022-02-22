@@ -610,12 +610,12 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
     }
     ASSERT(r_size <= half_size && s_size <= half_size);
     zero_mem(signature, sig_size);
-    copy_mem_s(&signature[0 + half_size - r_size],
-               sig_size - (0 + half_size - r_size),
-               bn_r, r_size);
-    copy_mem_s(&signature[half_size + half_size - s_size],
-               sig_size - (half_size + half_size - s_size),
-               bn_s, s_size);
+    copy_mem(&signature[0 + half_size - r_size],
+             sig_size - (0 + half_size - r_size),
+             bn_r, r_size);
+    copy_mem(&signature[half_size + half_size - s_size],
+             sig_size - (half_size + half_size - s_size),
+             bn_s, s_size);
 }
 
 static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
@@ -671,24 +671,24 @@ static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
     der_signature[2] = 0x02;
     der_signature[3] = der_r_size;
     if (bn_r[0] < 0x80) {
-        copy_mem_s(&der_signature[4],
-                   der_sig_size - (&der_signature[4] - der_signature),
-                   bn_r, r_size);
+        copy_mem(&der_signature[4],
+                 der_sig_size - (&der_signature[4] - der_signature),
+                 bn_r, r_size);
     } else {
-        copy_mem_s(&der_signature[5],
-                   der_sig_size - (&der_signature[5] - der_signature),
-                   bn_r, r_size);
+        copy_mem(&der_signature[5],
+                 der_sig_size - (&der_signature[5] - der_signature),
+                 bn_r, r_size);
     }
     der_signature[4 + der_r_size] = 0x02;
     der_signature[5 + der_r_size] = der_s_size;
     if (bn_s[0] < 0x80) {
-        copy_mem_s(&der_signature[6 + der_r_size],
-                   der_sig_size - (&der_signature[6 + der_r_size] - der_signature),
-                   bn_s, s_size);
+        copy_mem(&der_signature[6 + der_r_size],
+                 der_sig_size - (&der_signature[6 + der_r_size] - der_signature),
+                 bn_s, s_size);
     } else {
-        copy_mem_s(&der_signature[7 + der_r_size],
-                   der_sig_size - (&der_signature[7 + der_r_size] - der_signature),
-                   bn_s, s_size);
+        copy_mem(&der_signature[7 + der_r_size],
+                 der_sig_size - (&der_signature[7 + der_r_size] - der_signature),
+                 bn_s, s_size);
     }
 }
 

@@ -433,8 +433,8 @@ internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_nid,
         common_name_capacity = *common_name_size;
         *common_name_size =
             MIN((uintn)length, *common_name_size - 1) + 1;
-        copy_mem_s(common_name, common_name_capacity,
-                   utf8_name, *common_name_size - 1);
+        copy_mem(common_name, common_name_capacity,
+                 utf8_name, *common_name_size - 1);
         common_name[*common_name_size - 1] = '\0';
         status = RETURN_SUCCESS;
     }
@@ -791,8 +791,8 @@ return_status x509_get_serial_number(const uint8_t *cert, uintn cert_size,
     }
 
     if (serial_number != NULL) {
-        copy_mem_s(serial_number, *serial_number_size,
-                   asn1_integer->data, (uintn)asn1_integer->length);
+        copy_mem(serial_number, *serial_number_size,
+                 asn1_integer->data, (uintn)asn1_integer->length);
         status = RETURN_SUCCESS;
     }
     *serial_number_size = (uintn)asn1_integer->length;
@@ -1026,7 +1026,7 @@ return_status x509_get_signature_algorithm(const uint8_t *cert,
         goto done;
     }
     if (oid != NULL) {
-        copy_mem_s(oid, *oid_size, OBJ_get0_data(asn1_obj), obj_length);
+        copy_mem(oid, *oid_size, OBJ_get0_data(asn1_obj), obj_length);
     }
     *oid_size = obj_length;
     status = RETURN_SUCCESS;
@@ -1109,11 +1109,11 @@ bool x509_get_validity(const uint8_t *cert, uintn cert_size,
         goto done;
     }
     if (from != NULL) {
-        copy_mem_s(from, *from_size, f_time, sizeof(ASN1_TIME));
+        copy_mem(from, *from_size, f_time, sizeof(ASN1_TIME));
         ((ASN1_TIME *)from)->data = from + sizeof(ASN1_TIME);
-        copy_mem_s(from + sizeof(ASN1_TIME),
-                   *from_size - sizeof(ASN1_TIME),
-                   f_time->data, f_time->length);
+        copy_mem(from + sizeof(ASN1_TIME),
+                 *from_size - sizeof(ASN1_TIME),
+                 f_time->data, f_time->length);
     }
     *from_size = f_size;
 
@@ -1123,11 +1123,11 @@ bool x509_get_validity(const uint8_t *cert, uintn cert_size,
         goto done;
     }
     if (to != NULL) {
-        copy_mem_s(to, *to_size, t_time, sizeof(ASN1_TIME));
+        copy_mem(to, *to_size, t_time, sizeof(ASN1_TIME));
         ((ASN1_TIME *)to)->data = to + sizeof(ASN1_TIME);
-        copy_mem_s(to + sizeof(ASN1_TIME),
-                   *to_size - sizeof(ASN1_TIME),
-                   t_time->data, t_time->length);
+        copy_mem(to + sizeof(ASN1_TIME),
+                 *to_size - sizeof(ASN1_TIME),
+                 t_time->data, t_time->length);
     }
     *to_size = t_size;
 
@@ -1197,12 +1197,12 @@ return_status x509_set_date_time(char *date_time_str, void *date_time,
         goto cleanup;
     }
     if (date_time != NULL) {
-        copy_mem_s(date_time, *date_time_size, dt, sizeof(ASN1_TIME));
+        copy_mem(date_time, *date_time_size, dt, sizeof(ASN1_TIME));
         ((ASN1_TIME *)date_time)->data =
             (uint8_t *)date_time + sizeof(ASN1_TIME);
-        copy_mem_s((uint8_t *)date_time + sizeof(ASN1_TIME),
-                   *date_time_size - sizeof(ASN1_TIME),
-                   dt->data, dt->length);
+        copy_mem((uint8_t *)date_time + sizeof(ASN1_TIME),
+                 *date_time_size - sizeof(ASN1_TIME),
+                 dt->data, dt->length);
     }
     *date_time_size = d_size;
     status = RETURN_SUCCESS;
@@ -1392,8 +1392,8 @@ return_status x509_get_extension_data(const uint8_t *cert, uintn cert_size,
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem_s(extension_data, *extension_data_size,
-                       ASN1_STRING_get0_data(asn1_oct), asn1_oct->length);
+            copy_mem(extension_data, *extension_data_size,
+                     ASN1_STRING_get0_data(asn1_oct), asn1_oct->length);
         }
         *extension_data_size = oct_length;
         status = RETURN_SUCCESS;
