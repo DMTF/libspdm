@@ -44,7 +44,7 @@ bool aead_aes_gcm_encrypt(const uint8_t *key, uintn key_size,
                           uint8_t *tag_out, uintn tag_size,
                           uint8_t *data_out, uintn *data_out_size)
 {
-    copy_mem_s(data_out, *data_out_size, data_in, data_in_size);
+    copy_mem(data_out, *data_out_size, data_in, data_in_size);
     *data_out_size = data_in_size;
     zero_mem(tag_out, tag_size);
     return true;
@@ -82,7 +82,7 @@ bool aead_aes_gcm_decrypt(const uint8_t *key, uintn key_size,
                           const uint8_t *tag, uintn tag_size,
                           uint8_t *data_out, uintn *data_out_size)
 {
-    copy_mem_s(data_out, *data_out_size, data_in, data_in_size);
+    copy_mem(data_out, *data_out_size, data_in, data_in_size);
     *data_out_size = data_in_size;
     return true;
 }

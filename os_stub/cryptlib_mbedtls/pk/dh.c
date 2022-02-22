@@ -325,9 +325,9 @@ bool dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
         return false;
     }
     if (return_size < dh_key_size) {
-        copy_mem_s(key + dh_key_size - return_size,
-                   key_capacity - (dh_key_size - return_size),
-                   key, return_size);
+        copy_mem(key + dh_key_size - return_size,
+                 key_capacity - (dh_key_size - return_size),
+                 key, return_size);
         zero_mem(key, dh_key_size - return_size);
     }
 
