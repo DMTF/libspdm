@@ -20,8 +20,9 @@
 /* OID*/
 
 static uint8_t m_libspdm_oid_common_name[] = { 0x55, 0x04, 0x03 };
-static uint8_t m_libspdm_organization_name[] = { 0x55, 0x04, 0x0A };
+static uint8_t m_libspdm_oid_organization_name[] = { 0x55, 0x04, 0x0A };
 static uint8_t m_libspdm_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
+static const uint8_t m_libspdm_oid_basic_constraints[] = { 0x55, 0x1D, 0x13 };
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -397,8 +398,8 @@ libspdm_x509_get_organization_name(const uint8_t *cert, uintn cert_size,
                                    uintn *name_buffer_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
-        cert, cert_size, (uint8_t *)m_libspdm_organization_name,
-        sizeof(m_libspdm_organization_name), name_buffer, name_buffer_size);
+        cert, cert_size, (uint8_t *)m_libspdm_oid_organization_name,
+        sizeof(m_libspdm_oid_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -1010,8 +1011,8 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
                                          uintn *name_buffer_size)
 {
     return libspdm_internal_x509_get_issuer_nid_name(
-        cert, cert_size, (uint8_t *)m_libspdm_organization_name,
-        sizeof(m_libspdm_organization_name), name_buffer, name_buffer_size);
+        cert, cert_size, (uint8_t *)m_libspdm_oid_organization_name,
+        sizeof(m_libspdm_oid_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -1093,7 +1094,8 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
     size_t find_extension_len;
     size_t header_len;
 
-    status = RETURN_INVALID_PARAMETER;
+    /*If no Extension entry match oid*/
+    status = RETURN_NOT_FOUND;
     ptr = start;
 
     ret = 0;
@@ -1364,6 +1366,43 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
                                              sizeof(m_libspdm_oid_ext_key_usage), usage,
                                              usage_size);
 
+    return status;
+}
+
+/**
+ * Retrieve the basic constraints from one X.509 certificate.
+ *
+ * @param[in]      cert                     Pointer to the DER-encoded X509 certificate.
+ * @param[in]      cert_size                size of the X509 certificate in bytes.
+ * @param[out]     basic_constraints        basic constraints bytes.
+ * @param[in, out] basic_constraints_size   basic constraints buffer sizs in bytes.
+ *
+ * @retval RETURN_SUCCESS           The basic constraints retrieve successfully.
+ * @retval RETURN_INVALID_PARAMETER If cert is NULL.
+ *                                  If cert_size is NULL.
+ *                                  If basic_constraints is not NULL and *basic_constraints_size is 0.
+ *                                  If cert is invalid.
+ * @retval RETURN_BUFFER_TOO_SMALL  The required buffer size is small.
+ *                                  The return buffer size is basic_constraints_size parameter.
+ * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
+ * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ **/
+return_status x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                  uintn cert_size,
+                                                  uint8_t *basic_constraints,
+                                                  uintn *basic_constraints_size)
+{
+    return_status status;
+
+    if (cert == NULL || cert_size == 0 || basic_constraints_size == NULL) {
+        return RETURN_INVALID_PARAMETER;
+    }
+
+    status = x509_get_extension_data((uint8_t *)cert, cert_size,
+                                     (uint8_t *)m_libspdm_oid_basic_constraints,
+                                     sizeof(m_libspdm_oid_basic_constraints),
+                                     basic_constraints,
+                                     basic_constraints_size);
     return status;
 }
 

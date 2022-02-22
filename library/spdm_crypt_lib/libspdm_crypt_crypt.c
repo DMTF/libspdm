@@ -11,6 +11,14 @@
 #define LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN 10
 #endif
 
+/*leaf cert basic constraints len*/
+#ifndef BASIC_CONSTRAINTS_LEN
+#define BASIC_CONSTRAINTS_LEN 2
+#endif
+
+/*leaf cert basic_constraints CA: false*/
+static uint8_t libspdm_basic_constraints[] = {0x30, 0x00};
+
 /*SHAxxxRSA OID: https://oidref.com/1.2.840.113549.1.1 */
 #define SIGN_ALGO_SHA256RSA_OID {                 \
         0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x0B  \
@@ -4110,6 +4118,44 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size
 }
 
 /**
+ * Verify leaf cert basic_constraints CA is false
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ *
+ * @retval  true   verify pass,two case: 1.basic constraints is not present in cert;
+ *                                       2. cert basic_constraints CA is false;
+ * @retval  false  verify fail
+ **/
+bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, uintn cert_size)
+{
+    bool status;
+    return_status ret;
+    /*basic_constraints from cert*/
+    uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_LEN];
+    uintn len;
+
+    len = BASIC_CONSTRAINTS_LEN;
+
+    ret = x509_get_extended_basic_constraints(cert, cert_size,
+                                              cert_basic_constraints, &len);
+
+    if (ret == RETURN_NOT_FOUND) {
+        /* basic constraints is not present in cert */
+        status = true;
+        return status;
+    } else if (ret != RETURN_SUCCESS || len != BASIC_CONSTRAINTS_LEN ||
+               const_compare_mem(cert_basic_constraints,
+                                 libspdm_basic_constraints, len)) {
+        status = false;
+        return status;
+    }
+
+    status = true;
+    return status;
+}
+
+/**
  * Certificate Check for SPDM leaf cert.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
@@ -4270,6 +4316,14 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
         status = true;
     } else {
         status = false;
+        goto cleanup;
+    }
+
+    /* 10. verify basic constraints*/
+    status =
+        libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    if (!status) {
+        goto cleanup;
     }
 
 cleanup:
