@@ -87,8 +87,8 @@ bool libspdm_calculate_th_for_exchange(
 
     th_data_buffer_capacity = *th_data_buffer_size;
     *th_data_buffer_size = get_managed_buffer_size(&th_curr);
-    copy_mem_s(th_data_buffer, th_data_buffer_capacity,
-               get_managed_buffer(&th_curr), *th_data_buffer_size);
+    copy_mem(th_data_buffer, th_data_buffer_capacity,
+             get_managed_buffer(&th_curr), *th_data_buffer_size);
 
     return true;
 }
@@ -332,8 +332,8 @@ bool libspdm_calculate_th_for_finish(void *context,
 
     th_data_buffer_capacity = *th_data_buffer_size;
     *th_data_buffer_size = get_managed_buffer_size(&th_curr);
-    copy_mem_s(th_data_buffer, th_data_buffer_capacity,
-               get_managed_buffer(&th_curr), *th_data_buffer_size);
+    copy_mem(th_data_buffer, th_data_buffer_capacity,
+             get_managed_buffer(&th_curr), *th_data_buffer_size);
 
     return true;
 }
@@ -653,7 +653,7 @@ spdm_generate_key_exchange_rsp_hmac(spdm_context_t *spdm_context,
     DEBUG((DEBUG_INFO, "th_curr hmac - "));
     internal_dump_data(hmac_data, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
-    copy_mem_s(hmac, hash_size, hmac_data, hash_size);
+    copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -1048,7 +1048,7 @@ bool spdm_generate_finish_req_hmac(spdm_context_t *spdm_context,
     internal_dump_data(calc_hmac_data, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    copy_mem_s(hmac, hash_size, calc_hmac_data, hash_size);
+    copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
 
     return true;
 }
@@ -1376,7 +1376,7 @@ bool spdm_generate_finish_rsp_hmac(spdm_context_t *spdm_context,
     internal_dump_data(hmac_data, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    copy_mem_s(hmac, hash_size, hmac_data, hash_size);
+    copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -1517,7 +1517,7 @@ spdm_generate_psk_exchange_rsp_hmac(spdm_context_t *spdm_context,
     internal_dump_data(hmac_data, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    copy_mem_s(hmac, hash_size, hmac_data, hash_size);
+    copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -1638,7 +1638,7 @@ spdm_generate_psk_exchange_req_hmac(spdm_context_t *spdm_context,
     internal_dump_data(calc_hmac_data, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    copy_mem_s(hmac, hash_size, calc_hmac_data, hash_size);
+    copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
 
     return true;
 }

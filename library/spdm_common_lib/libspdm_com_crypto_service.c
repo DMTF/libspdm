@@ -279,8 +279,8 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
     }
     m1m2_buffer_capacity = *m1m2_buffer_size;
     *m1m2_buffer_size = get_managed_buffer_size(&m1m2);
-    copy_mem_s(m1m2_buffer, m1m2_buffer_capacity,
-               get_managed_buffer(&m1m2), *m1m2_buffer_size);
+    copy_mem(m1m2_buffer, m1m2_buffer_capacity,
+             get_managed_buffer(&m1m2), *m1m2_buffer_size);
 
     return true;
 }
@@ -430,8 +430,8 @@ bool spdm_calculate_l1l2(void *context, void *session_info,
 
     l1l2_buffer_capacity = *l1l2_buffer_size;
     *l1l2_buffer_size = get_managed_buffer_size(&l1l2);
-    copy_mem_s(l1l2_buffer, l1l2_buffer_capacity,
-               get_managed_buffer(&l1l2), *l1l2_buffer_size);
+    copy_mem(l1l2_buffer, l1l2_buffer_capacity,
+             get_managed_buffer(&l1l2), *l1l2_buffer_size);
 
     return true;
 }

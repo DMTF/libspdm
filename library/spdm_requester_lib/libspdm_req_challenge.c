@@ -101,15 +101,15 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        copy_mem_s(spdm_request.nonce, sizeof(spdm_request.nonce),
-                   requester_nonce_in, SPDM_NONCE_SIZE);
+        copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
+                 requester_nonce_in, SPDM_NONCE_SIZE);
     }
     DEBUG((DEBUG_INFO, "ClientNonce - "));
     internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
-        copy_mem_s(requester_nonce, SPDM_NONCE_SIZE,
-                   spdm_request.nonce, SPDM_NONCE_SIZE);
+        copy_mem(requester_nonce, SPDM_NONCE_SIZE,
+                 spdm_request.nonce, SPDM_NONCE_SIZE);
     }
 
     status = spdm_send_spdm_request(spdm_context, NULL,
@@ -212,7 +212,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     DEBUG((DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
     if (responder_nonce != NULL) {
-        copy_mem_s(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
+        copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
     }
 
     measurement_summary_hash = ptr;
@@ -273,8 +273,8 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (measurement_hash != NULL) {
-        copy_mem_s(measurement_hash, measurement_summary_hash_size,
-                   measurement_summary_hash, measurement_summary_hash_size);
+        copy_mem(measurement_hash, measurement_summary_hash_size,
+                 measurement_summary_hash, measurement_summary_hash_size);
     }
     if (slot_mask != NULL) {
         *slot_mask = spdm_response.header.param2;
