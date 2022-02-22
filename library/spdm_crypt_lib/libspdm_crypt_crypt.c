@@ -3150,10 +3150,10 @@ bool libspdm_req_asym_sign_hash(
 
         create_spdm_signing_context (spdm_version, op_code, true, spdm12_signing_context_with_hash);
         copy_mem(&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE],
-                   sizeof(spdm12_signing_context_with_hash)
-                   - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
-                      - spdm12_signing_context_with_hash),
-                   message_hash, hash_size);
+                 sizeof(spdm12_signing_context_with_hash)
+                 - (&spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE]
+                    - spdm12_signing_context_with_hash),
+                 message_hash, hash_size);
 
         /* assign message and message_size for signing*/
 
@@ -3327,13 +3327,13 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
             SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE];
 
         copy_mem(spdm12_key_change_requester_context,
-                   sizeof(spdm12_key_change_requester_context),
-                   SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT,
-                   SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
+                 sizeof(spdm12_key_change_requester_context),
+                 SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT,
+                 SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE);
         copy_mem(spdm12_key_change_responder_context,
-                   sizeof(spdm12_key_change_responder_context),
-                   SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT,
-                   SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
+                 sizeof(spdm12_key_change_responder_context),
+                 SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT,
+                 SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE);
         /* patch the version*/
         spdm12_key_change_requester_context[25] = (char)('0' + ((spdm_version >> 12) & 0xF));
         spdm12_key_change_requester_context[27] = (char)('0' + ((spdm_version >> 8) & 0xF));

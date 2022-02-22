@@ -1652,9 +1652,9 @@ return_status libspdm_append_message_f(void *context, void *session_info,
                         hash_size =
                             spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
                         copy_mem(mut_cert_chain_buffer_hash,
-                                   sizeof(mut_cert_chain_buffer_hash),
-                                   spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
-                                   hash_size);
+                                 sizeof(mut_cert_chain_buffer_hash),
+                                 spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                                 hash_size);
                         result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
