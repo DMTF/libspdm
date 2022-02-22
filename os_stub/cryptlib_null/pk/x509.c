@@ -660,6 +660,33 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
 }
 
 /**
+ * Retrieve the basic constraints from one X.509 certificate.
+ *
+ * @param[in]      cert                     Pointer to the DER-encoded X509 certificate.
+ * @param[in]      cert_size                size of the X509 certificate in bytes.
+ * @param[out]     basic_constraints        basic constraints bytes.
+ * @param[in, out] basic_constraints_size   basic constraints buffer sizs in bytes.
+ *
+ * @retval RETURN_SUCCESS           The basic constraints retrieve successfully.
+ * @retval RETURN_INVALID_PARAMETER If cert is NULL.
+ *                                  If cert_size is NULL.
+ *                                  If basic_constraints is not NULL and *basic_constraints_size is 0.
+ *                                  If cert is invalid.
+ * @retval RETURN_BUFFER_TOO_SMALL  The required buffer size is small.
+ *                                  The return buffer size is basic_constraints_size parameter.
+ * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
+ * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ **/
+return_status x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                  uintn cert_size,
+                                                  uint8_t *basic_constraints,
+                                                  uintn *basic_constraints_size)
+{
+    ASSERT(false);
+    return RETURN_UNSUPPORTED;
+}
+
+/**
  * format a date_time object into DataTime buffer
  *
  * If date_time_str is NULL, then return false.
