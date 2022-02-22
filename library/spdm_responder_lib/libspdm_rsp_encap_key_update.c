@@ -104,9 +104,9 @@ spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
         }
     }
 
-    copy_mem_s(&spdm_context->encap_context.last_encap_request_header,
-               sizeof(spdm_context->encap_context.last_encap_request_header),
-               &spdm_request->header, sizeof(spdm_message_header_t));
+    copy_mem(&spdm_context->encap_context.last_encap_request_header,
+             sizeof(spdm_context->encap_context.last_encap_request_header),
+             &spdm_request->header, sizeof(spdm_message_header_t));
     spdm_context->encap_context.last_encap_request_size =
         *encap_request_size;
 

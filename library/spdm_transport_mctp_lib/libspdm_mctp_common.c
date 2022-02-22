@@ -309,7 +309,7 @@ return_status libspdm_transport_mctp_decode_message(
                 return RETURN_BUFFER_TOO_SMALL;
             }
             *message_size = app_message_size;
-            copy_mem_s(message, *message_size, app_message, *message_size);
+            copy_mem(message, *message_size, app_message, *message_size);
             return RETURN_SUCCESS;
         } else {
             *is_app_message = false;
