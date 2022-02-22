@@ -94,8 +94,8 @@ int copy_mem_s(void *restrict dst_buf, uintn dst_len,
     return 0;
 }
 
-void* copy_mem(void* dst_buf, const void* src_buf, uintn len)
+int copy_mem(void *restrict dst_buf, uintn dst_len,
+             const void *restrict src_buf, uintn src_len)
 {
-    copy_mem_s(dst_buf, len, src_buf, len);
-    return dst_buf;
+    return copy_mem_s(dst_buf, dst_len, src_buf, src_len);
 }

@@ -128,10 +128,10 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
     } else {
-        copy_mem_s(&(spdm_context->connection_info.version),
-                   sizeof(spdm_context->connection_info.version),
-                   &(common_version),
-                   sizeof(spdm_version_number_t));
+        copy_mem(&(spdm_context->connection_info.version),
+                 sizeof(spdm_context->connection_info.version),
+                 &(common_version),
+                 sizeof(spdm_version_number_t));
     }
 
     if (version_number_entry_count != NULL && version_number_entry != NULL) {
@@ -141,10 +141,10 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
             return RETURN_BUFFER_TOO_SMALL;
         } else {
             *version_number_entry_count = spdm_response.version_number_entry_count;
-            copy_mem_s(version_number_entry,
-                       spdm_response.version_number_entry_count * sizeof(spdm_version_number_t),
-                       spdm_response.version_number_entry,
-                       spdm_response.version_number_entry_count * sizeof(spdm_version_number_t));
+            copy_mem(version_number_entry,
+                     spdm_response.version_number_entry_count * sizeof(spdm_version_number_t),
+                     spdm_response.version_number_entry,
+                     spdm_response.version_number_entry_count * sizeof(spdm_version_number_t));
             spdm_version_number_sort (version_number_entry, *version_number_entry_count);
         }
     }

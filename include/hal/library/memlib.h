@@ -54,7 +54,8 @@
 int copy_mem_s(void *restrict dst_buf, uintn dst_len,
                const void *restrict src_buf, uintn src_len);
 
-void* copy_mem(void* dst_buf, const void* src_buf, uintn len);
+int copy_mem(void *restrict dst_buf, uintn dst_len,
+             const void *restrict src_buf, uintn src_len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
