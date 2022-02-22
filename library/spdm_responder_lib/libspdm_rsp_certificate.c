@@ -133,11 +133,11 @@ return_status spdm_get_response_certificate(void *context,
     spdm_response->header.param2 = 0;
     spdm_response->portion_length = length;
     spdm_response->remainder_length = (uint16_t)remainder_length;
-    copy_mem_s(spdm_response + 1,
-               response_capacity - sizeof(spdm_certificate_response_t),
-               (uint8_t *)spdm_context->local_context
-               .local_cert_chain_provision[slot_id] + offset,
-               length);
+    copy_mem(spdm_response + 1,
+             response_capacity - sizeof(spdm_certificate_response_t),
+             (uint8_t *)spdm_context->local_context
+             .local_cert_chain_provision[slot_id] + offset,
+             length);
 
     /* Cache*/
 

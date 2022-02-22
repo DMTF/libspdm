@@ -105,11 +105,11 @@ return_status spdm_get_response_version(void *context, uintn request_size,
     spdm_response->header.param2 = 0;
     spdm_response->version_number_entry_count =
         spdm_context->local_context.version.spdm_version_count;
-    copy_mem_s(spdm_response->version_number_entry,
-               sizeof(spdm_response->version_number_entry),
-               spdm_context->local_context.version.spdm_version,
-               sizeof(spdm_version_number_t) *
-               spdm_context->local_context.version.spdm_version_count);
+    copy_mem(spdm_response->version_number_entry,
+             sizeof(spdm_response->version_number_entry),
+             spdm_context->local_context.version.spdm_version,
+             sizeof(spdm_version_number_t) *
+             spdm_context->local_context.version.spdm_version_count);
 
 
     /* Cache*/
