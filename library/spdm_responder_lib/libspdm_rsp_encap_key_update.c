@@ -20,19 +20,19 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
+spdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
                                   uintn *encap_request_size,
                                   void *encap_request)
 {
     spdm_key_update_request_t *spdm_request;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     return_status status;
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
@@ -59,11 +59,11 @@ spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  spdm_request->header.request_response_code);
 
     if (spdm_context->encap_context.last_encap_request_header
         .request_response_code != SPDM_KEY_UPDATE) {
@@ -126,14 +126,14 @@ spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_key_update(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     spdm_key_update_request_t *spdm_request;
     const spdm_key_update_response_t *spdm_response;
     uintn spdm_response_size;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
@@ -157,7 +157,7 @@ return_status spdm_process_encap_response_key_update(
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
-    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+    if (spdm_response->header.spdm_version != libspdm_get_connection_version (spdm_context)) {
         return RETURN_DEVICE_ERROR;
     }
 

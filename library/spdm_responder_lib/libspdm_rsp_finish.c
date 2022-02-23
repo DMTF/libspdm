@@ -38,8 +38,8 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
     uint8_t req_slot_id;
     const spdm_finish_request_t *spdm_request;
     spdm_finish_response_t *spdm_response;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     return_status status;
     libspdm_session_state_t session_state;
@@ -47,7 +47,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -58,7 +58,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
@@ -72,7 +72,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -152,8 +152,8 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  spdm_request->header.request_response_code);
 
     status = libspdm_append_message_f(spdm_context, session_info, false, request,
                                       sizeof(spdm_finish_request_t));
@@ -163,7 +163,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
                                                response_size, response);
     }
     if (session_info->mut_auth_requested) {
-        result = spdm_verify_finish_req_signature(
+        result = libspdm_verify_finish_req_signature(
             spdm_context, session_info,
             (uint8_t *)request + sizeof(spdm_finish_request_t),
             signature_size);
@@ -192,7 +192,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
         }
     }
 
-    result = spdm_verify_finish_req_hmac(
+    result = libspdm_verify_finish_req_hmac(
         spdm_context, session_info,
         (uint8_t *)request + signature_size +
         sizeof(spdm_finish_request_t),
@@ -222,7 +222,7 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -247,11 +247,11 @@ return_status spdm_get_response_finish(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-        result = spdm_generate_finish_rsp_hmac(
+        result = libspdm_generate_finish_rsp_hmac(
             spdm_context, session_info,
             (uint8_t *)spdm_response + sizeof(spdm_finish_request_t));
         if (!result) {

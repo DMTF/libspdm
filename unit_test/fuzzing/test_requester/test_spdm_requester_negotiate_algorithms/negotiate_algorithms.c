@@ -34,7 +34,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 void test_spdm_requester_negotiate_algorithms_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -51,7 +51,7 @@ void test_spdm_requester_negotiate_algorithms_case1(void **State)
 void test_spdm_requester_negotiate_algorithms_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
@@ -68,7 +68,7 @@ void test_spdm_requester_negotiate_algorithms_case2(void **State)
 void test_spdm_requester_negotiate_algorithms_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 

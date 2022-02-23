@@ -45,16 +45,16 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
     uintn digest_size;
     uintn digest_count;
     uintn index;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return RETURN_UNSUPPORTED;
     }
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_GET_DIGESTS);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_GET_DIGESTS);
     if (spdm_context->connection_info.connection_state !=
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
@@ -62,7 +62,7 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
@@ -140,12 +140,12 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
 
     for (index = 0; index < digest_count; index++) {
         DEBUG((DEBUG_INFO, "digest (0x%x) - ", index));
-        internal_dump_data(&spdm_response.digest[digest_size * index],
-                           digest_size);
+        libspdm_internal_dump_data(&spdm_response.digest[digest_size * index],
+                                   digest_size);
         DEBUG((DEBUG_INFO, "\n"));
     }
 
-    result = spdm_verify_peer_digests(
+    result = libspdm_verify_peer_digests(
         spdm_context, spdm_response.digest, digest_count);
     if (!result) {
         spdm_context->error_state =
@@ -185,7 +185,7 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
 return_status libspdm_get_digest(void *context, uint8_t *slot_mask,
                                  void *total_digest_buffer)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 

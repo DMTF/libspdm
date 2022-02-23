@@ -17,7 +17,7 @@ static void test_spdm_common_context_data_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data = (void *)&opaque_data;
     void *return_data = NULL;
     uintn data_return_size = 0;
@@ -50,7 +50,7 @@ static void test_spdm_common_context_data_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data = (void *)&opaque_data;
     void *return_data = NULL;
     void *current_return_data = NULL;
@@ -101,7 +101,7 @@ static void test_spdm_common_context_data_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data = NULL;
     void *return_data = NULL;
     void *current_return_data = NULL;
@@ -154,7 +154,7 @@ static void test_spdm_common_context_data_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data = (void *)&opaque_data;
     void *return_data = NULL;
     uintn data_return_size = 0;
@@ -188,10 +188,10 @@ static void test_spdm_common_context_data_case4(void **state)
  * Test 5: There is no root cert.
  * Expected Behavior: Return true result.
  **/
-void test_spdm_verify_peer_cert_chain_buffer_case5(void **state)
+void test_libspdm_verify_peer_cert_chain_buffer_case5(void **state)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
     void *hash;
@@ -229,8 +229,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case5(void **state)
         spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] = 0;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = NULL;
     }
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
 
     free(data);
@@ -243,10 +243,10 @@ void test_spdm_verify_peer_cert_chain_buffer_case5(void **state)
  * there is one match root cert;                     return false
  * there is one mismatch root cert;                  return true, and the return trust_anchor is root cert.
  **/
-void test_spdm_verify_peer_cert_chain_buffer_case6(void **state)
+void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
     void *hash;
@@ -303,15 +303,15 @@ void test_spdm_verify_peer_cert_chain_buffer_case6(void **state)
     /*case: match root cert case*/
     spdm_context->local_context.peer_root_cert_provision_size[0] =root_cert_size_test;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert_test;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, false);
 
     /*case: mismatch root cert case*/
     spdm_context->local_context.peer_root_cert_provision_size[0] =root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
     assert_ptr_equal (trust_anchor, root_cert);
 
@@ -327,10 +327,10 @@ void test_spdm_verify_peer_cert_chain_buffer_case6(void **state)
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
  **/
-void test_spdm_verify_peer_cert_chain_buffer_case7(void **state)
+void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
     void *hash;
@@ -391,8 +391,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case7(void **state)
             root_cert_size_test;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = root_cert_test;
     }
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, false);
 
     /*case: there is no match root cert in the end*/
@@ -400,8 +400,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case7(void **state)
                                                               1] =root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT / 2 -
                                                          1] = root_cert;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
     assert_ptr_equal (trust_anchor, root_cert);
 
@@ -410,8 +410,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case7(void **state)
                                                               4] =root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT /
                                                          4] = root_cert;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
     assert_ptr_equal (trust_anchor, root_cert);
 
@@ -428,10 +428,10 @@ void test_spdm_verify_peer_cert_chain_buffer_case7(void **state)
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
  **/
-void test_spdm_verify_peer_cert_chain_buffer_case8(void **state)
+void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
     void *hash;
@@ -485,8 +485,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case8(void **state)
             root_cert_size_test;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = root_cert_test;
     }
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, false);
 
     /*case: there is no match root cert in the end*/
@@ -494,8 +494,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case8(void **state)
                                                               1] =root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT -
                                                          1] = root_cert;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
     assert_ptr_equal (trust_anchor, root_cert);
 
@@ -509,8 +509,8 @@ void test_spdm_verify_peer_cert_chain_buffer_case8(void **state)
                                                               2] =root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT /
                                                          2] = root_cert;
-    result = spdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                &trust_anchor_size);
+    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
+                                                   &trust_anchor_size);
     assert_int_equal (result, true);
     assert_ptr_equal (trust_anchor, root_cert);
 
@@ -529,7 +529,7 @@ static void test_libspdm_set_data_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     void *data;
     uintn data_size;
@@ -590,10 +590,10 @@ int spdm_common_context_data_test_main(void)
         cmocka_unit_test(test_spdm_common_context_data_case3),
         cmocka_unit_test(test_spdm_common_context_data_case4),
 
-        cmocka_unit_test(test_spdm_verify_peer_cert_chain_buffer_case5),
-        cmocka_unit_test(test_spdm_verify_peer_cert_chain_buffer_case6),
-        cmocka_unit_test(test_spdm_verify_peer_cert_chain_buffer_case7),
-        cmocka_unit_test(test_spdm_verify_peer_cert_chain_buffer_case8),
+        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case5),
+        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case6),
+        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case7),
+        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case8),
 
         cmocka_unit_test(test_libspdm_set_data_case9),
     };

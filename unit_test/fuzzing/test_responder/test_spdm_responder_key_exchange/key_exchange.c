@@ -34,7 +34,7 @@ typedef struct {
 void test_spdm_responder_key_exchange_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -77,11 +77,12 @@ void test_spdm_responder_key_exchange_case1(void **State)
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
-    opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
     ptr += sizeof(uint16_t);
-    spdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
-                                                  ptr);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
+                                                     ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
@@ -95,7 +96,7 @@ void test_spdm_responder_key_exchange_case2(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
     uintn m_spdm_key_exchange_request_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
@@ -135,11 +136,12 @@ void test_spdm_responder_key_exchange_case2(void **State)
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
-    opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
     ptr += sizeof(uint16_t);
-    spdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
-                                                  ptr);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
+                                                     ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
@@ -153,7 +155,7 @@ void test_spdm_responder_key_exchange_case3(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
     uintn m_spdm_key_exchange_request_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
@@ -194,7 +196,7 @@ void test_spdm_responder_key_exchange_case3(void **State)
 void test_spdm_responder_key_exchange_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -243,11 +245,12 @@ void test_spdm_responder_key_exchange_case4(void **State)
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
-    opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
     ptr += sizeof(uint16_t);
-    spdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
-                                                  ptr);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
+                                                     ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
@@ -259,7 +262,7 @@ void test_spdm_responder_key_exchange_case4(void **State)
 void test_spdm_responder_key_exchange_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -306,11 +309,12 @@ void test_spdm_responder_key_exchange_case5(void **State)
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
-    opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
     ptr += sizeof(uint16_t);
-    spdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
-                                                  ptr);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
+                                                     ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
@@ -324,7 +328,7 @@ void test_spdm_responder_key_exchange_case6(void **State)
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
     uintn m_spdm_key_exchange_request_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
@@ -363,11 +367,12 @@ void test_spdm_responder_key_exchange_case6(void **State)
     libspdm_dhe_generate_key(m_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
     ptr += dhe_key_size;
     libspdm_dhe_free(m_use_dhe_algo, dhe_context);
-    opaque_key_exchange_req_size = spdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
     ptr += sizeof(uint16_t);
-    spdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
-                                                  ptr);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
+                                                     ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 

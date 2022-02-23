@@ -471,7 +471,7 @@ return_status spdm_get_response_encapsulated_response_ack(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
+spdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
                                   uintn *encap_request_size,
                                   void *encap_request);
 
@@ -490,7 +490,7 @@ spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 return_status spdm_process_encap_response_digest(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
@@ -509,7 +509,7 @@ return_status spdm_process_encap_response_digest(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
+spdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
                                        uintn *encap_request_size,
                                        void *encap_request);
 
@@ -526,7 +526,7 @@ spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_certificate(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**
@@ -542,7 +542,7 @@ return_status spdm_process_encap_response_certificate(
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
+return_status spdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
                                                uintn *encap_request_size,
                                                void *encap_request);
 
@@ -559,7 +559,7 @@ return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_challenge_auth(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**
@@ -576,7 +576,7 @@ return_status spdm_process_encap_response_challenge_auth(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
+spdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
                                   uintn *encap_request_size,
                                   void *encap_request);
 
@@ -593,7 +593,7 @@ spdm_get_encap_request_key_update(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_key_update(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**
@@ -612,7 +612,7 @@ spdm_get_response_func_via_request_code(uint8_t request_code);
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE response.
  **/
-void spdm_init_mut_auth_encap_state(spdm_context_t *spdm_context,
+void spdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
                                     uint8_t mut_auth_requested);
 
 /**
@@ -620,7 +620,7 @@ void spdm_init_mut_auth_encap_state(spdm_context_t *spdm_context,
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void spdm_init_basic_mut_auth_encap_state(spdm_context_t *spdm_context);
+void spdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context);
 
 /**
  * This function handles the encap error response.
@@ -631,7 +631,7 @@ void spdm_init_basic_mut_auth_encap_state(spdm_context_t *spdm_context);
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status spdm_handle_encap_error_response_main(
-    spdm_context_t *spdm_context, uint8_t error_code);
+    libspdm_context_t *spdm_context, uint8_t error_code);
 
 /**
  * Set session_state to an SPDM secured message context and trigger callback.
@@ -640,7 +640,7 @@ return_status spdm_handle_encap_error_response_main(
  * @param  session_id                    Indicate the SPDM session ID.
  * @param  session_state                 Indicate the SPDM session state.
  */
-void spdm_set_session_state(spdm_context_t *spdm_context,
+void spdm_set_session_state(libspdm_context_t *spdm_context,
                             uint32_t session_id,
                             libspdm_session_state_t session_state);
 
@@ -650,7 +650,7 @@ void spdm_set_session_state(spdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  */
-void spdm_set_connection_state(spdm_context_t *spdm_context,
+void spdm_set_connection_state(libspdm_context_t *spdm_context,
                                libspdm_connection_state_t connection_state);
 
 #endif

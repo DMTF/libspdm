@@ -34,8 +34,8 @@ return_status spdm_get_response_psk_finish(void *context,
     bool result;
     uint32_t hmac_size;
     spdm_psk_finish_response_t *spdm_response;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     const spdm_psk_finish_request_t *spdm_request;
     return_status status;
@@ -44,7 +44,7 @@ return_status spdm_get_response_psk_finish(void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -55,7 +55,7 @@ return_status spdm_get_response_psk_finish(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
@@ -101,8 +101,8 @@ return_status spdm_get_response_psk_finish(void *context,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  spdm_request->header.request_response_code);
 
     status = libspdm_append_message_f(spdm_context, session_info, false, request,
                                       request_size - hmac_size);
@@ -122,7 +122,7 @@ return_status spdm_get_response_psk_finish(void *context,
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
 
-    result = spdm_verify_psk_finish_req_hmac(
+    result = libspdm_verify_psk_finish_req_hmac(
         spdm_context, session_info,
         (uint8_t *)request + sizeof(spdm_psk_finish_request_t),
         hmac_size);

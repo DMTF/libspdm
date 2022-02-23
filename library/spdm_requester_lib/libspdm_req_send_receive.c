@@ -26,7 +26,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
                                    bool is_app_message,
                                    uintn request_size, const void *request)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
@@ -36,7 +36,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 
     DEBUG((DEBUG_INFO, "spdm_send_spdm_request[%x] (0x%x): \n",
            (session_id != NULL) ? *session_id : 0x0, request_size));
-    internal_dump_hex(request, request_size);
+    libspdm_internal_dump_hex(request, request_size);
 
     message_size = sizeof(message);
     status = spdm_context->transport_encode_message(
@@ -81,7 +81,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                                        uintn *response_size,
                                        void *response)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn message_size;
@@ -156,7 +156,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                "spdm_receive_spdm_response[%x] status - %p\n",
                (session_id != NULL) ? *session_id : 0x0, status));
     } else {
-        internal_dump_hex(response, *response_size);
+        libspdm_internal_dump_hex(response, *response_size);
     }
     return status;
 
@@ -183,11 +183,11 @@ error:
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status spdm_send_spdm_request(spdm_context_t *spdm_context,
+return_status spdm_send_spdm_request(libspdm_context_t *spdm_context,
                                      const uint32_t *session_id,
                                      uintn request_size, const void *request)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
@@ -196,7 +196,7 @@ return_status spdm_send_spdm_request(spdm_context_t *spdm_context,
     }
 
     if ((session_id != NULL) &&
-        spdm_is_capabilities_flag_supported(
+        libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -233,16 +233,16 @@ return_status spdm_send_spdm_request(spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status spdm_receive_spdm_response(spdm_context_t *spdm_context,
+return_status spdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                          const uint32_t *session_id,
                                          uintn *response_size,
                                          void *response)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     if ((session_id != NULL) &&
-        spdm_is_capabilities_flag_supported(
+        libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {

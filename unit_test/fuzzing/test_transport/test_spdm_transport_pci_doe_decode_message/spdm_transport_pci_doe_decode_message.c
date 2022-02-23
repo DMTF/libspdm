@@ -17,7 +17,7 @@ uintn get_max_buffer_size(void)
 void test_spdm_transport_pci_doe_decode_message(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn transport_message_size;
     uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     bool is_app_message;

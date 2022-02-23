@@ -18,11 +18,11 @@ uintn get_max_buffer_size(void)
 void test_libspdm_encode_secured_message(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn secured_message_size;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     bool is_requester;
     uint32_t session_id;
     spdm_secured_message_context_t *secured_message_context;
@@ -41,7 +41,7 @@ void test_libspdm_encode_secured_message(void **State)
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, false);
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
     secured_message_context = session_info->secured_message_context;
     secured_message_context->session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
     secured_message_context->session_state = LIBSPDM_SESSION_STATE_HANDSHAKING;

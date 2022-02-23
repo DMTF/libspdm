@@ -91,7 +91,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
         uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         temp_buf_size = sizeof(spdm_heartbeat_response_t);
@@ -124,7 +124,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
         uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         temp_buf_size = sizeof(spdm_heartbeat_response_t);
@@ -154,7 +154,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     case 0x4: {
         spdm_error_response_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -181,7 +181,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     case 0x5: {
         spdm_error_response_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -210,7 +210,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
         if (sub_index1 == 0) {
             spdm_error_response_t spdm_response;
             uint32_t session_id;
-            spdm_session_info_t *session_info;
+            libspdm_session_info_t *session_info;
 
             session_id = 0xFFFFFFFF;
             spdm_response.header.spdm_version =
@@ -238,7 +238,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
             uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
-            spdm_session_info_t *session_info;
+            libspdm_session_info_t *session_info;
 
             session_id = 0xFFFFFFFF;
             temp_buf_size = sizeof(spdm_heartbeat_response_t);
@@ -271,7 +271,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     case 0x7: {
         spdm_error_response_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -298,7 +298,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     case 0x8: {
         spdm_error_response_data_response_not_ready_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -333,7 +333,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
             spdm_error_response_data_response_not_ready_t
                 spdm_response;
             uint32_t session_id;
-            spdm_session_info_t *session_info;
+            libspdm_session_info_t *session_info;
 
             session_id = 0xFFFFFFFF;
             spdm_response.header.spdm_version =
@@ -367,7 +367,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
             uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
             uintn temp_buf_size;
             uint32_t session_id;
-            spdm_session_info_t *session_info;
+            libspdm_session_info_t *session_info;
 
             session_id = 0xFFFFFFFF;
             temp_buf_size = sizeof(spdm_heartbeat_response_t);
@@ -403,7 +403,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
 
         spdm_error_response_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t      *session_info;
+        libspdm_session_info_t      *session_info;
 
         session_id = 0xFFFFFFFF;
 
@@ -439,7 +439,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
         uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         uintn temp_buf_size;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         temp_buf_size = sizeof(spdm_heartbeat_response_t);
@@ -470,7 +470,7 @@ return_status spdm_requester_heartbeat_test_receive_message(
     case 0xC: {
         spdm_error_response_t spdm_response;
         uint32_t session_id;
-        spdm_session_info_t *session_info;
+        libspdm_session_info_t *session_info;
 
         session_id = 0xFFFFFFFF;
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -503,13 +503,13 @@ void test_spdm_requester_heartbeat_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -558,7 +558,7 @@ void test_spdm_requester_heartbeat_case1(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -572,13 +572,13 @@ void test_spdm_requester_heartbeat_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -627,7 +627,7 @@ void test_spdm_requester_heartbeat_case2(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -664,13 +664,13 @@ void test_spdm_requester_heartbeat_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -719,7 +719,7 @@ void test_spdm_requester_heartbeat_case3(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -756,13 +756,13 @@ void test_spdm_requester_heartbeat_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -811,7 +811,7 @@ void test_spdm_requester_heartbeat_case4(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -848,13 +848,13 @@ void test_spdm_requester_heartbeat_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -903,7 +903,7 @@ void test_spdm_requester_heartbeat_case5(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -940,13 +940,13 @@ void test_spdm_requester_heartbeat_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -995,7 +995,7 @@ void test_spdm_requester_heartbeat_case6(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1032,13 +1032,13 @@ void test_spdm_requester_heartbeat_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1087,7 +1087,7 @@ void test_spdm_requester_heartbeat_case7(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1126,13 +1126,13 @@ void test_spdm_requester_heartbeat_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1181,7 +1181,7 @@ void test_spdm_requester_heartbeat_case8(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1218,13 +1218,13 @@ void test_spdm_requester_heartbeat_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1273,7 +1273,7 @@ void test_spdm_requester_heartbeat_case9(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1309,13 +1309,13 @@ void test_spdm_requester_heartbeat_case9(void **state)
 void test_spdm_requester_heartbeat_case10(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
-    spdm_context_t  *spdm_context;
+    libspdm_context_t  *spdm_context;
     uint32_t session_id;
     void                 *data;
     uintn data_size;
     void                 *hash;
     uintn hash_size;
-    spdm_session_info_t    *session_info;
+    libspdm_session_info_t    *session_info;
     uint16_t error_code;
 
     spdm_test_context = *state;
@@ -1356,7 +1356,7 @@ void test_spdm_requester_heartbeat_case10(void **state) {
 
         session_id = 0xFFFFFFFF;
         session_info = &spdm_context->session_info[0];
-        spdm_session_info_init (spdm_context, session_info, session_id, true);
+        libspdm_session_info_init (spdm_context, session_info, session_id, true);
         libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                    LIBSPDM_SESSION_STATE_ESTABLISHED);
         set_mem (m_dummy_key_buffer,
@@ -1403,13 +1403,13 @@ void test_spdm_requester_heartbeat_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1458,7 +1458,7 @@ void test_spdm_requester_heartbeat_case11(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1518,13 +1518,13 @@ void test_spdm_requester_heartbeat_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1573,7 +1573,7 @@ void test_spdm_requester_heartbeat_case12(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);

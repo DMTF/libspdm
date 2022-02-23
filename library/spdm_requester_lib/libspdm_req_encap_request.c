@@ -38,7 +38,7 @@ void libspdm_register_get_encap_response_func(void *context,
                                               const libspdm_get_encap_response_func
                                               get_encap_response_func)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
     spdm_context->get_encap_response_func = (uintn)get_encap_response_func;
@@ -84,7 +84,7 @@ SpdmGetEncapResponseFuncViaRequestCode(uint8_t request_response_code)
  * @retval RETURN_SUCCESS               The SPDM response is processed successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
-return_status SpdmProcessEncapsulatedRequest(spdm_context_t *spdm_context,
+return_status SpdmProcessEncapsulatedRequest(libspdm_context_t *spdm_context,
                                              uintn encap_request_size,
                                              void *encap_request,
                                              uintn *encap_response_size,
@@ -142,7 +142,7 @@ return_status SpdmProcessEncapsulatedRequest(spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
+return_status spdm_encapsulated_request(libspdm_context_t *spdm_context,
                                         const uint32_t *session_id,
                                         uint8_t mut_auth_requested,
                                         uint8_t *req_slot_id_param)
@@ -159,7 +159,7 @@ return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
     spdm_encapsulated_request_response_t *spdm_encapsulated_request_response;
     spdm_encapsulated_response_ack_response_t
     *spdm_encapsulated_response_ack_response;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t request_id;
     void *encapsulated_request;
     uintn encapsulated_request_size;
@@ -171,7 +171,7 @@ return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
     spdm_get_digest_request_t get_digests;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
@@ -213,7 +213,7 @@ return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-        get_digests.header.spdm_version = spdm_get_connection_version (spdm_context);
+        get_digests.header.spdm_version = libspdm_get_connection_version (spdm_context);
         get_digests.header.request_response_code = SPDM_GET_DIGESTS;
         get_digests.header.param1 = 0;
         get_digests.header.param2 = 0;
@@ -228,15 +228,15 @@ return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
         spdm_context->crypto_request = true;
         spdm_get_encapsulated_request_request = (void *)request;
         spdm_get_encapsulated_request_request->header.spdm_version =
-            spdm_get_connection_version (spdm_context);
+            libspdm_get_connection_version (spdm_context);
         spdm_get_encapsulated_request_request->header
         .request_response_code = SPDM_GET_ENCAPSULATED_REQUEST;
         spdm_get_encapsulated_request_request->header.param1 = 0;
         spdm_get_encapsulated_request_request->header.param2 = 0;
         spdm_request_size =
             sizeof(spdm_get_encapsulated_request_request_t);
-        spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                   spdm_get_encapsulated_request_request->header.request_response_code);
+        libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                      spdm_get_encapsulated_request_request->header.request_response_code);
         status = spdm_send_spdm_request(
             spdm_context, session_id, spdm_request_size,
             spdm_get_encapsulated_request_request);
@@ -284,7 +284,7 @@ return_status spdm_encapsulated_request(spdm_context_t *spdm_context,
         spdm_context->crypto_request = true;
         spdm_deliver_encapsulated_response_request = (void *)request;
         spdm_deliver_encapsulated_response_request->header.spdm_version =
-            spdm_get_connection_version (spdm_context);
+            libspdm_get_connection_version (spdm_context);
         spdm_deliver_encapsulated_response_request->header
         .request_response_code =
             SPDM_DELIVER_ENCAPSULATED_RESPONSE;

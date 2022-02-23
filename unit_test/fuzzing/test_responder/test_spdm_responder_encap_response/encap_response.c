@@ -24,7 +24,7 @@ spdm_test_context_t m_spdm_response_encapsulated_request_test_context = {
 void test_spdm_get_response_encapsulated_request_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn data_size;
     void *data;
@@ -35,7 +35,8 @@ void test_spdm_get_response_encapsulated_request_case1(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
     spdm_context->encap_context.current_request_op_code = 0;
     spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
 
@@ -64,7 +65,7 @@ void test_spdm_get_response_encapsulated_request_case1(void **State)
 void test_spdm_get_response_encapsulated_request_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -96,7 +97,7 @@ void test_spdm_get_response_encapsulated_request_case2(void **State)
 void test_spdm_get_response_encapsulated_request_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -128,7 +129,7 @@ void test_spdm_get_response_encapsulated_request_case3(void **State)
 void test_spdm_get_response_encapsulated_request_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -160,7 +161,7 @@ void test_spdm_get_response_encapsulated_request_case4(void **State)
 void test_spdm_get_response_encapsulated_request_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn response_size;
     spdm_test_context = *State;
@@ -169,7 +170,8 @@ void test_spdm_get_response_encapsulated_request_case5(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
     spdm_context->encap_context.current_request_op_code = 0;
 
     response_size = sizeof(response);
@@ -181,7 +183,7 @@ void test_spdm_get_response_encapsulated_request_case5(void **State)
 void test_spdm_spdm_get_response_encapsulated_response_ack_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn data_size;
     void *data;
@@ -192,7 +194,8 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case1(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
 
     spdm_context->encap_context.current_request_op_code = 0;
     spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
@@ -219,7 +222,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case1(void **State)
 void test_spdm_spdm_get_response_encapsulated_response_ack_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -228,7 +231,8 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case2(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
     spdm_context->encap_context.current_request_op_code = 0;
 
     response_size = sizeof(response);
@@ -241,7 +245,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case2(void **State)
 void test_spdm_spdm_get_response_encapsulated_response_ack_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn data_size;
     void *data;
     uintn response_size;
@@ -255,7 +259,8 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case3(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
     spdm_context->encap_context.current_request_op_code = SPDM_GET_DIGESTS;
     spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -286,7 +291,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case3(void **State)
 void test_spdm_spdm_get_response_encapsulated_response_ack_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn response_size;
     spdm_test_context = *State;
@@ -295,7 +300,8 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case4(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
 
     response_size = sizeof(response);
     spdm_get_response_encapsulated_response_ack(spdm_context, spdm_test_context->test_buffer_size,
@@ -306,7 +312,7 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case4(void **State)
 void test_spdm_spdm_get_response_encapsulated_response_ack_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn response_size;
     spdm_test_context = *State;
@@ -315,7 +321,8 @@ void test_spdm_spdm_get_response_encapsulated_response_ack_case5(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->encap_context.request_op_code_count = MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
 
     response_size = sizeof(response);
     spdm_get_response_encapsulated_response_ack(spdm_context, spdm_test_context->test_buffer_size,

@@ -21,8 +21,8 @@
  * @retval true  measurement signature is created.
  * @retval false measurement signature is not created.
  **/
-bool spdm_create_measurement_signature(spdm_context_t *spdm_context,
-                                       spdm_session_info_t *session_info,
+bool spdm_create_measurement_signature(libspdm_context_t *spdm_context,
+                                       libspdm_session_info_t *session_info,
                                        void *response_message,
                                        uintn response_message_size)
 {
@@ -65,7 +65,7 @@ bool spdm_create_measurement_signature(spdm_context_t *spdm_context,
         return false;
     }
 
-    result = spdm_generate_measurement_signature(spdm_context, session_info, ptr);
+    result = libspdm_generate_measurement_signature(spdm_context, session_info, ptr);
 
     return result;
 }
@@ -76,7 +76,7 @@ bool spdm_create_measurement_signature(spdm_context_t *spdm_context,
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
-bool spdm_create_measurement_opaque(spdm_context_t *spdm_context,
+bool spdm_create_measurement_opaque(libspdm_context_t *spdm_context,
                                     void *response_message,
                                     uintn response_message_size)
 {
@@ -142,21 +142,21 @@ return_status spdm_get_response_measurements(void *context,
     uintn measurements_sig_size;
     uintn measurements_no_sig_size;
 
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t slot_id_param;
     uint8_t measurements_index;
     uint8_t *measurements;
     uint8_t measurements_count;
     uintn measurements_size;
     bool ret;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t content_changed;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -168,7 +168,7 @@ return_status spdm_get_response_measurements(void *context,
             response_size, response);
     }
     /* check local context here, because meas_cap is reserved for requester.*/
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         return libspdm_generate_error_response(
@@ -246,7 +246,7 @@ return_status spdm_get_response_measurements(void *context,
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
         0) {
-        if (!spdm_is_capabilities_flag_supported(
+        if (!libspdm_is_capabilities_flag_supported(
                 spdm_context, false, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG)) {
             return libspdm_generate_error_response(
@@ -431,8 +431,8 @@ return_status spdm_get_response_measurements(void *context,
         }
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  spdm_request->header.request_response_code);
 
     status = libspdm_append_message_m(
         spdm_context, session_info, spdm_request,

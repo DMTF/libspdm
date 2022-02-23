@@ -31,14 +31,14 @@ return_status spdm_get_response_heartbeat(void *context,
 {
     spdm_heartbeat_response_t *spdm_response;
     const spdm_heartbeat_request_t *spdm_request;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -49,7 +49,7 @@ return_status spdm_get_response_heartbeat(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
@@ -90,8 +90,8 @@ return_status spdm_get_response_heartbeat(void *context,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  spdm_request->header.request_response_code);
 
     ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));
     *response_size = sizeof(spdm_heartbeat_response_t);

@@ -30,14 +30,14 @@ return_status spdm_get_response_respond_if_ready(void *context,
                                                  void *response)
 {
     const spdm_message_header_t *spdm_request;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_get_spdm_response_func get_response_func;
     return_status status;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);

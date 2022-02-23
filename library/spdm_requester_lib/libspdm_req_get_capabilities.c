@@ -97,7 +97,7 @@ bool spdm_check_response_flag_compability(uint32_t capabilities_flag,
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_capabilities(spdm_context_t *spdm_context)
+return_status try_spdm_get_capabilities(libspdm_context_t *spdm_context)
 {
     return_status status;
     spdm_get_capabilities_request_t spdm_request;
@@ -105,15 +105,15 @@ return_status try_spdm_get_capabilities(spdm_context_t *spdm_context)
     spdm_capabilities_response_t spdm_response;
     uintn spdm_response_size;
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_GET_CAPABILITIES);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_GET_CAPABILITIES);
     if (spdm_context->connection_info.connection_state !=
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
         return RETURN_UNSUPPORTED;
     }
 
     zero_mem(&spdm_request, sizeof(spdm_request));
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request_size = sizeof(spdm_request);
     } else if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
@@ -230,7 +230,7 @@ return_status try_spdm_get_capabilities(spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_capabilities(spdm_context_t *spdm_context)
+return_status spdm_get_capabilities(libspdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;

@@ -39,9 +39,9 @@ return_status spdm_get_response_psk_exchange(void *context,
     uintn measurement_summary_hash_size;
     uint32_t hmac_size;
     uint8_t *ptr;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uintn total_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     return_status status;
@@ -54,7 +54,7 @@ return_status spdm_get_response_psk_exchange(void *context,
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -67,7 +67,7 @@ return_status spdm_get_response_psk_exchange(void *context,
     }
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
@@ -84,7 +84,7 @@ return_status spdm_get_response_psk_exchange(void *context,
 
     {
         /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
@@ -124,7 +124,7 @@ return_status spdm_get_response_psk_exchange(void *context,
         }
     }
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
@@ -137,7 +137,7 @@ return_status spdm_get_response_psk_exchange(void *context,
                 0, response_size, response);
         }
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         spdm_request->header.param1 > 0) {
@@ -152,7 +152,7 @@ return_status spdm_get_response_psk_exchange(void *context,
                                                response_size, response);
     }
 
-    measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
+    measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param1);
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -177,7 +177,7 @@ return_status spdm_get_response_psk_exchange(void *context,
 
     ptr = (uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
           spdm_request->psk_hint_length + spdm_request->context_length;
-    status = spdm_process_opaque_data_supported_version_data(
+    status = libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_request->opaque_length, ptr);
     if (RETURN_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
@@ -186,8 +186,8 @@ return_status spdm_get_response_psk_exchange(void *context,
     }
 
     opaque_psk_exchange_rsp_size =
-        spdm_get_opaque_data_version_selection_data_size(spdm_context);
-    if (spdm_is_capabilities_flag_supported(
+        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
@@ -208,7 +208,7 @@ return_status spdm_get_response_psk_exchange(void *context,
     spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
 
     req_session_id = spdm_request->req_session_id;
-    rsp_session_id = spdm_allocate_rsp_session_id(spdm_context);
+    rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
     if (rsp_session_id == (INVALID_SESSION_ID & 0xFFFF)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
@@ -222,8 +222,8 @@ return_status spdm_get_response_psk_exchange(void *context,
             response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     spdm_response->rsp_session_id = rsp_session_id;
     spdm_response->reserved = 0;
@@ -233,7 +233,7 @@ return_status spdm_get_response_psk_exchange(void *context,
 
     ptr = (void *)(spdm_response + 1);
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
         result = libspdm_generate_measurement_summary_hash(
@@ -270,7 +270,7 @@ return_status spdm_get_response_psk_exchange(void *context,
         ptr += context_length;
     }
 
-    status = spdm_build_opaque_data_version_selection_data(
+    status = libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_psk_exchange_rsp_size, ptr);
     ASSERT_RETURN_ERROR(status);
     ptr += opaque_psk_exchange_rsp_size;
@@ -312,8 +312,8 @@ return_status spdm_get_response_psk_exchange(void *context,
                                                response_size, response);
     }
 
-    result = spdm_generate_psk_exchange_rsp_hmac(spdm_context, session_info,
-                                                 ptr);
+    result = libspdm_generate_psk_exchange_rsp_hmac(spdm_context, session_info,
+                                                    ptr);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(
@@ -335,7 +335,7 @@ return_status spdm_get_response_psk_exchange(void *context,
     spdm_set_session_state(spdm_context, session_id,
                            LIBSPDM_SESSION_STATE_HANDSHAKING);
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to receive PSK_FINISH, enter application phase directly.*/

@@ -24,13 +24,13 @@ void test_spdm_responder_heartbeat_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -80,7 +80,7 @@ void test_spdm_responder_heartbeat_case1(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -102,13 +102,13 @@ void test_spdm_responder_heartbeat_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -158,7 +158,7 @@ void test_spdm_responder_heartbeat_case2(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -183,13 +183,13 @@ void test_spdm_responder_heartbeat_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -240,7 +240,7 @@ void test_spdm_responder_heartbeat_case3(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -266,13 +266,13 @@ void test_spdm_responder_heartbeat_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -323,7 +323,7 @@ void test_spdm_responder_heartbeat_case4(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -350,13 +350,13 @@ void test_spdm_responder_heartbeat_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
     spdm_error_data_response_not_ready_t *error_data;
 
@@ -408,7 +408,7 @@ void test_spdm_responder_heartbeat_case5(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -440,13 +440,13 @@ void test_spdm_responder_heartbeat_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -497,7 +497,7 @@ void test_spdm_responder_heartbeat_case6(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -522,13 +522,13 @@ void test_spdm_responder_heartbeat_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
     uintn data_size1;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
 
     spdm_test_context = *state;
@@ -578,7 +578,7 @@ void test_spdm_responder_heartbeat_case7(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);

@@ -36,20 +36,20 @@ return_status spdm_get_encap_response_digest(void *context,
     uintn index;
     uint32_t hash_size;
     uint8_t *digest;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     bool result;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH,
             SPDM_GET_DIGESTS, response_size, response);
     }
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return libspdm_generate_encap_error_response(
@@ -63,8 +63,8 @@ return_status spdm_get_encap_response_digest(void *context,
             response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -92,8 +92,8 @@ return_status spdm_get_encap_response_digest(void *context,
                 0, response_size, response);
         }
         spdm_response->header.param2 |= (1 << index);
-        result = spdm_generate_cert_chain_hash(spdm_context, index,
-                                               &digest[hash_size * index]);
+        result = libspdm_generate_cert_chain_hash(spdm_context, index,
+                                                  &digest[hash_size * index]);
         if (!result) {
             return libspdm_generate_encap_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,

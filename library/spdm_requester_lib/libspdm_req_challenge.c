@@ -67,15 +67,15 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     void *opaque;
     void *signature;
     uintn signature_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
 
     ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
     spdm_context = context;
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_CHALLENGE);
-    if (!spdm_is_capabilities_flag_supported(
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_CHALLENGE);
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         return RETURN_UNSUPPORTED;
@@ -92,7 +92,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_CHALLENGE;
     spdm_request.header.param1 = slot_id;
     spdm_request.header.param2 = measurement_hash_type;
@@ -105,7 +105,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
                  requester_nonce_in, SPDM_NONCE_SIZE);
     }
     DEBUG((DEBUG_INFO, "ClientNonce - "));
-    internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
+    libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
         copy_mem(requester_nonce, SPDM_NONCE_SIZE,
@@ -170,7 +170,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
         }
     }
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
-        if (!spdm_is_capabilities_flag_supported(
+        if (!libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
@@ -181,7 +181,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
         spdm_context->connection_info.algorithm.base_hash_algo);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
+    measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, true, measurement_hash_type);
 
     if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
@@ -196,10 +196,10 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     cert_chain_hash = ptr;
     ptr += hash_size;
     DEBUG((DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
-    internal_dump_data(cert_chain_hash, hash_size);
+    libspdm_internal_dump_data(cert_chain_hash, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
-    result = spdm_verify_certificate_chain_hash(spdm_context,
-                                                cert_chain_hash, hash_size);
+    result = libspdm_verify_certificate_chain_hash(spdm_context,
+                                                   cert_chain_hash, hash_size);
     if (!result) {
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
@@ -208,7 +208,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
 
     nonce = ptr;
     DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-    internal_dump_data(nonce, SPDM_NONCE_SIZE);
+    libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
     if (responder_nonce != NULL) {
@@ -219,8 +219,8 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     ptr += measurement_summary_hash_size;
     DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
-    internal_dump_data(measurement_summary_hash,
-                       measurement_summary_hash_size);
+    libspdm_internal_dump_data(measurement_summary_hash,
+                               measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
@@ -256,12 +256,12 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
     opaque = ptr;
     ptr += opaque_length;
     DEBUG((DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-    internal_dump_hex(opaque, opaque_length);
+    libspdm_internal_dump_hex(opaque, opaque_length);
 
     signature = ptr;
     DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
-    internal_dump_hex(signature, signature_size);
-    result = spdm_verify_challenge_auth_signature(
+    libspdm_internal_dump_hex(signature, signature_size);
+    result = libspdm_verify_challenge_auth_signature(
         spdm_context, true, signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
@@ -324,7 +324,7 @@ return_status libspdm_challenge(void *context, uint8_t slot_id,
                                 void *measurement_hash,
                                 uint8_t *slot_mask)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 
@@ -373,7 +373,7 @@ return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
                                    void *requester_nonce,
                                    void *responder_nonce)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 

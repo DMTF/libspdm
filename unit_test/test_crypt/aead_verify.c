@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-void internal_dump_data(const uint8_t *data, uintn size);
+void libspdm_internal_dump_data(const uint8_t *data, uintn size);
 
 /* AES-GCM test data from NIST public test vectors */
 

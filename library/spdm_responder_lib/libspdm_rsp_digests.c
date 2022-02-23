@@ -36,14 +36,14 @@ return_status spdm_get_response_digests(void *context, uintn request_size,
     bool no_local_cert_chain;
     uint32_t hash_size;
     uint8_t *digest;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     bool result;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -54,7 +54,7 @@ return_status spdm_get_response_digests(void *context, uintn request_size,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return libspdm_generate_error_response(
@@ -74,8 +74,8 @@ return_status spdm_get_response_digests(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
@@ -116,8 +116,8 @@ return_status spdm_get_response_digests(void *context, uintn request_size,
                 0, response_size, response);
         }
         spdm_response->header.param2 |= (1 << index);
-        result = spdm_generate_cert_chain_hash(spdm_context, index,
-                                               &digest[hash_size * index]);
+        result = libspdm_generate_cert_chain_hash(spdm_context, index,
+                                                  &digest[hash_size * index]);
         if (!result) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,

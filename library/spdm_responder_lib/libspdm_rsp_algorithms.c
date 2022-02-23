@@ -228,7 +228,7 @@ return_status spdm_get_response_algorithms(void *context,
     spdm_algorithms_response_mine_t *spdm_response;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     uintn index;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     uint32_t algo_size;
     uint8_t fixed_alg_size;
@@ -248,7 +248,7 @@ return_status spdm_get_response_algorithms(void *context,
                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
              (spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -349,8 +349,8 @@ return_status spdm_get_response_algorithms(void *context,
     }
     spdm_request_size = request_size;
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     ASSERT(*response_size >= sizeof(spdm_algorithms_response_mine_t));
     *response_size = sizeof(spdm_algorithms_response_mine_t);
@@ -496,7 +496,7 @@ return_status spdm_get_response_algorithms(void *context,
     spdm_context->connection_info.algorithm.base_hash_algo =
         spdm_response->base_hash_sel;
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
@@ -521,7 +521,7 @@ return_status spdm_get_response_algorithms(void *context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         algo_size = libspdm_get_asym_signature_size(
@@ -549,7 +549,7 @@ return_status spdm_get_response_algorithms(void *context,
             spdm_context->connection_info.algorithm.other_params_support = 0;
         }
 
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
@@ -563,11 +563,11 @@ return_status spdm_get_response_algorithms(void *context,
                     response_size, response);
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP) ||
-            spdm_is_capabilities_flag_supported(
+            libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
@@ -581,7 +581,7 @@ return_status spdm_get_response_algorithms(void *context,
                     response_size, response);
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
@@ -595,11 +595,11 @@ return_status spdm_get_response_algorithms(void *context,
                     response_size, response);
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ||
-            spdm_is_capabilities_flag_supported(
+            libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {

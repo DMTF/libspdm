@@ -22,7 +22,7 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
+spdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
                                   uintn *encap_request_size,
                                   void *encap_request)
 {
@@ -31,7 +31,7 @@ spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return RETURN_DEVICE_ERROR;
@@ -42,10 +42,10 @@ spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
-    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
@@ -81,7 +81,7 @@ spdm_get_encap_request_get_digest(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_digest(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     bool result;
@@ -99,7 +99,7 @@ return_status spdm_process_encap_response_digest(
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+    if (spdm_response->header.spdm_version != libspdm_get_connection_version (spdm_context)) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -146,12 +146,12 @@ return_status spdm_process_encap_response_digest(
     digest = (void *)(spdm_response + 1);
     for (index = 0; index < digest_count; index++) {
         DEBUG((DEBUG_INFO, "digest (0x%x) - ", index));
-        internal_dump_data(&digest[digest_size * index], digest_size);
+        libspdm_internal_dump_data(&digest[digest_size * index], digest_size);
         DEBUG((DEBUG_INFO, "\n"));
     }
 
-    result = spdm_verify_peer_digests(spdm_context, digest,
-                                      digest_count);
+    result = libspdm_verify_peer_digests(spdm_context, digest,
+                                         digest_count);
     if (!result) {
         return RETURN_SECURITY_VIOLATION;
     }

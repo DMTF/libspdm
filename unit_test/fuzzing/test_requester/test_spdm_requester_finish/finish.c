@@ -62,14 +62,14 @@ uintn m_spdm_finish_request1_size = sizeof(m_spdm_finish_request1);
 void test_spdm_send_receive_finish_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
@@ -98,7 +98,7 @@ void test_spdm_send_receive_finish_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, false);
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
     hash_size = libspdm_get_hash_size(m_use_hash_algo);
     set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     spdm_secured_message_set_response_finished_key(session_info->secured_message_context,

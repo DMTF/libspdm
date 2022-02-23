@@ -9,10 +9,10 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context,
+static void spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                     uint32_t *session_id)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -36,7 +36,7 @@ static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -108,10 +108,10 @@ spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
 void test_spdm_process_encap_response_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     bool need_continue;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     spdm_secured_message_context_t *secured_message_context;
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
@@ -141,12 +141,12 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_update_request_t *spdm_request;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn encap_request_size;
     void *data;
     uintn data_size;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -177,7 +177,7 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
@@ -189,12 +189,12 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_update_request_t *spdm_request;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn encap_request_size;
     void *data;
     uintn data_size;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -227,7 +227,7 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
