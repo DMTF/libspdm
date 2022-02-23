@@ -21,7 +21,7 @@
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
+return_status spdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
                                                uintn *encap_request_size,
                                                void *encap_request)
 {
@@ -30,7 +30,7 @@ return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0)) {
         return RETURN_DEVICE_ERROR;
@@ -41,7 +41,7 @@ return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 =
@@ -50,11 +50,11 @@ return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
     DEBUG((DEBUG_INFO, "Encap ClientNonce - "));
-    internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
+    libspdm_internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
 
     /* Cache data*/
@@ -87,7 +87,7 @@ return_status spdm_get_encap_request_challenge(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_challenge_auth(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     bool result;
@@ -115,7 +115,7 @@ return_status spdm_process_encap_response_challenge_auth(
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+    if (spdm_response->header.spdm_version != libspdm_get_connection_version (spdm_context)) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -169,10 +169,10 @@ return_status spdm_process_encap_response_challenge_auth(
     cert_chain_hash = ptr;
     ptr += hash_size;
     DEBUG((DEBUG_INFO, "Encap cert_chain_hash (0x%x) - ", hash_size));
-    internal_dump_data(cert_chain_hash, hash_size);
+    libspdm_internal_dump_data(cert_chain_hash, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
-    result = spdm_verify_certificate_chain_hash(spdm_context,
-                                                cert_chain_hash, hash_size);
+    result = libspdm_verify_certificate_chain_hash(spdm_context,
+                                                   cert_chain_hash, hash_size);
     if (!result) {
         spdm_context->encap_context.error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
@@ -181,7 +181,7 @@ return_status spdm_process_encap_response_challenge_auth(
 
     nonce = ptr;
     DEBUG((DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
-    internal_dump_data(nonce, SPDM_NONCE_SIZE);
+    libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
     DEBUG((DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
 
@@ -189,8 +189,8 @@ return_status spdm_process_encap_response_challenge_auth(
     ptr += measurement_summary_hash_size;
     DEBUG((DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
-    internal_dump_data(measurement_summary_hash,
-                       measurement_summary_hash_size);
+    libspdm_internal_dump_data(measurement_summary_hash,
+                               measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
@@ -218,12 +218,12 @@ return_status spdm_process_encap_response_challenge_auth(
     opaque = ptr;
     ptr += opaque_length;
     DEBUG((DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
-    internal_dump_hex(opaque, opaque_length);
+    libspdm_internal_dump_hex(opaque, opaque_length);
 
     signature = ptr;
     DEBUG((DEBUG_INFO, "Encap signature (0x%x):\n", signature_size));
-    internal_dump_hex(signature, signature_size);
-    result = spdm_verify_challenge_auth_signature(
+    libspdm_internal_dump_hex(signature, signature_size);
+    result = libspdm_verify_challenge_auth_signature(
         spdm_context, false, signature, signature_size);
     if (!result) {
         spdm_context->encap_context.error_state =

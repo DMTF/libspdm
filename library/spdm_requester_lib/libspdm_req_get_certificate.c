@@ -54,21 +54,21 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
     spdm_get_certificate_request_t spdm_request;
     spdm_certificate_response_max_t spdm_response;
     uintn spdm_response_size;
-    large_managed_buffer_t certificate_chain_buffer;
-    spdm_context_t *spdm_context;
+    libspdm_large_managed_buffer_t certificate_chain_buffer;
+    libspdm_context_t *spdm_context;
     uint16_t total_responder_cert_chain_buffer_length;
     uintn cert_chain_capacity;
 
     ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
     spdm_context = context;
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return RETURN_UNSUPPORTED;
     }
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_GET_CERTIFICATE);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_GET_CERTIFICATE);
     if ((spdm_context->connection_info.connection_state !=
          LIBSPDM_CONNECTION_STATE_NEGOTIATED) &&
         (spdm_context->connection_info.connection_state !=
@@ -78,20 +78,20 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
         return RETURN_UNSUPPORTED;
     }
 
-    init_managed_buffer(&certificate_chain_buffer,
-                        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&certificate_chain_buffer,
+                                LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
     length = MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
     do {
         spdm_request.header.spdm_version =
-            spdm_get_connection_version (spdm_context);
+            libspdm_get_connection_version (spdm_context);
         spdm_request.header.request_response_code =
             SPDM_GET_CERTIFICATE;
         spdm_request.header.param1 = slot_id;
         spdm_request.header.param2 = 0;
-        spdm_request.offset = (uint16_t)get_managed_buffer_size(
+        spdm_request.offset = (uint16_t)libspdm_get_managed_buffer_size(
             &certificate_chain_buffer);
         if (spdm_request.offset == 0) {
             spdm_request.length = length;
@@ -189,12 +189,12 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
 
         DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
                spdm_request.offset, spdm_response.portion_length));
-        internal_dump_hex(spdm_response.cert_chain,
-                          spdm_response.portion_length);
+        libspdm_internal_dump_hex(spdm_response.cert_chain,
+                                  spdm_response.portion_length);
 
-        status = append_managed_buffer(&certificate_chain_buffer,
-                                       spdm_response.cert_chain,
-                                       spdm_response.portion_length);
+        status = libspdm_append_managed_buffer(&certificate_chain_buffer,
+                                               spdm_response.cert_chain,
+                                               spdm_response.portion_length);
         if (RETURN_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
             goto done;
@@ -206,8 +206,8 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         status = spdm_context->local_context.verify_peer_spdm_cert_chain (
-            spdm_context, slot_id, get_managed_buffer_size(&certificate_chain_buffer),
-            get_managed_buffer(&certificate_chain_buffer),
+            spdm_context, slot_id, libspdm_get_managed_buffer_size(&certificate_chain_buffer),
+            libspdm_get_managed_buffer(&certificate_chain_buffer),
             trust_anchor, trust_anchor_size);
         if (RETURN_ERROR(status)) {
             spdm_context->error_state =
@@ -216,9 +216,9 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
             goto done;
         }
     } else {
-        result = spdm_verify_peer_cert_chain_buffer(
-            spdm_context, get_managed_buffer(&certificate_chain_buffer),
-            get_managed_buffer_size(&certificate_chain_buffer),
+        result = libspdm_verify_peer_cert_chain_buffer(
+            spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
+            libspdm_get_managed_buffer_size(&certificate_chain_buffer),
             trust_anchor, trust_anchor_size);
         if (!result) {
             spdm_context->error_state =
@@ -230,16 +230,16 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
-        get_managed_buffer_size(&certificate_chain_buffer);
+        libspdm_get_managed_buffer_size(&certificate_chain_buffer);
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
              sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             get_managed_buffer(&certificate_chain_buffer),
-             get_managed_buffer_size(&certificate_chain_buffer));
+             libspdm_get_managed_buffer(&certificate_chain_buffer),
+             libspdm_get_managed_buffer_size(&certificate_chain_buffer));
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        get_managed_buffer(&certificate_chain_buffer),
-        get_managed_buffer_size(&certificate_chain_buffer),
+        libspdm_get_managed_buffer(&certificate_chain_buffer),
+        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
         spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
     if (!result) {
         spdm_context->error_state =
@@ -254,8 +254,8 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
     result = libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
-        get_managed_buffer(&certificate_chain_buffer),
-        get_managed_buffer_size(&certificate_chain_buffer),
+        libspdm_get_managed_buffer(&certificate_chain_buffer),
+        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
     if (!result) {
         spdm_context->error_state =
@@ -269,19 +269,19 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
 
     if (cert_chain_size != NULL) {
         if (*cert_chain_size <
-            get_managed_buffer_size(&certificate_chain_buffer)) {
-            *cert_chain_size = get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(&certificate_chain_buffer)) {
+            *cert_chain_size = libspdm_get_managed_buffer_size(
                 &certificate_chain_buffer);
             return RETURN_BUFFER_TOO_SMALL;
         }
         cert_chain_capacity = *cert_chain_size;
         *cert_chain_size =
-            get_managed_buffer_size(&certificate_chain_buffer);
+            libspdm_get_managed_buffer_size(&certificate_chain_buffer);
         if (cert_chain != NULL) {
             copy_mem(cert_chain,
                      cert_chain_capacity,
-                     get_managed_buffer(&certificate_chain_buffer),
-                     get_managed_buffer_size(&certificate_chain_buffer));
+                     libspdm_get_managed_buffer(&certificate_chain_buffer),
+                     libspdm_get_managed_buffer_size(&certificate_chain_buffer));
         }
     }
 
@@ -380,7 +380,7 @@ return_status libspdm_get_certificate_choose_length(void *context,
                                                     uintn *cert_chain_size,
                                                     void *cert_chain)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 
@@ -429,7 +429,7 @@ return_status libspdm_get_certificate_choose_length_ex(void *context,
                                                        void **trust_anchor,
                                                        uintn *trust_anchor_size)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 

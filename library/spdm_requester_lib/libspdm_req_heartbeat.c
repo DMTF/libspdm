@@ -32,12 +32,12 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
     spdm_heartbeat_request_t spdm_request;
     spdm_heartbeat_response_mine_t spdm_response;
     uintn spdm_response_size;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     spdm_context = context;
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
@@ -60,7 +60,7 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
         return RETURN_UNSUPPORTED;
     }
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_HEARTBEAT;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
@@ -70,8 +70,8 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
         return status;
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               SPDM_HEARTBEAT);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  SPDM_HEARTBEAT);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -109,7 +109,7 @@ return_status libspdm_heartbeat(void *context, uint32_t session_id)
 {
     uintn retry;
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
     spdm_context->crypto_request = true;

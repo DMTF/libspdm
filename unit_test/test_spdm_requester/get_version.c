@@ -401,7 +401,7 @@ void test_spdm_requester_get_version_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -419,7 +419,7 @@ void test_spdm_requester_get_version_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -437,7 +437,7 @@ void test_spdm_requester_get_version_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -455,7 +455,7 @@ void test_spdm_requester_get_version_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -473,7 +473,7 @@ void test_spdm_requester_get_version_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -492,7 +492,7 @@ void test_spdm_requester_get_version_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -513,7 +513,7 @@ void test_spdm_requester_get_version_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -535,7 +535,7 @@ void test_spdm_requester_get_version_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -556,7 +556,7 @@ void test_spdm_requester_get_version_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -577,7 +577,7 @@ void test_spdm_requester_get_version_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -596,7 +596,7 @@ void test_spdm_requester_get_version_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -615,7 +615,7 @@ void test_spdm_requester_get_version_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -635,7 +635,7 @@ void test_spdm_requester_get_version_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -656,7 +656,7 @@ void test_spdm_requester_get_version_case13(void **state)
 void test_spdm_requester_get_version_case14(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
-    spdm_context_t  *spdm_context;
+    libspdm_context_t  *spdm_context;
     uint16_t error_code;
 
     spdm_test_context = *state;
@@ -692,7 +692,7 @@ void test_spdm_requester_get_version_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;

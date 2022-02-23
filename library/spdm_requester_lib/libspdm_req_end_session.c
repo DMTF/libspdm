@@ -25,7 +25,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
+return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
                                                 uint32_t session_id,
                                                 uint8_t end_session_attributes)
 {
@@ -34,7 +34,7 @@ return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
     uintn spdm_request_size;
     spdm_end_session_response_mine_t spdm_response;
     uintn spdm_response_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     if (spdm_context->connection_info.connection_state <
@@ -55,13 +55,13 @@ return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP)) {
         end_session_attributes = 0;
     }
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_END_SESSION;
     spdm_request.header.param1 = end_session_attributes;
     spdm_request.header.param2 = 0;
@@ -73,8 +73,8 @@ return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
         return status;
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               SPDM_END_SESSION);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  SPDM_END_SESSION);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -117,7 +117,7 @@ return_status try_spdm_send_receive_end_session(spdm_context_t *spdm_context,
     return RETURN_SUCCESS;
 }
 
-return_status spdm_send_receive_end_session(spdm_context_t *spdm_context,
+return_status spdm_send_receive_end_session(libspdm_context_t *spdm_context,
                                             uint32_t session_id,
                                             uint8_t end_session_attributes)
 {

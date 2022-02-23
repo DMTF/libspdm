@@ -33,7 +33,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
+return_status try_spdm_send_receive_finish(libspdm_context_t *spdm_context,
                                            uint32_t session_id,
                                            uint8_t req_slot_id_param)
 {
@@ -44,13 +44,13 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
     uintn hmac_size;
     spdm_finish_response_mine_t spdm_response;
     uintn spdm_response_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t *ptr;
     bool result;
     uint8_t th2_hash_data[64];
     libspdm_session_state_t session_state;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
@@ -94,7 +94,7 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_FINISH;
     if (session_info->mut_auth_requested) {
         spdm_request.header.param1 =
@@ -137,8 +137,8 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
         goto error;
     }
     if (session_info->mut_auth_requested) {
-        result = spdm_generate_finish_req_signature(spdm_context,
-                                                    session_info, ptr);
+        result = libspdm_generate_finish_req_signature(spdm_context,
+                                                       session_info, ptr);
         if (!result) {
             status = RETURN_SECURITY_VIOLATION;
             goto error;
@@ -152,7 +152,7 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
         ptr += signature_size;
     }
 
-    result = spdm_generate_finish_req_hmac(spdm_context, session_info, ptr);
+    result = libspdm_generate_finish_req_hmac(spdm_context, session_info, ptr);
     if (!result) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -170,8 +170,8 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
         goto error;
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               SPDM_FINISH);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  SPDM_FINISH);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -210,7 +210,7 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
         goto error;
     }
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -229,15 +229,15 @@ return_status try_spdm_send_receive_finish(spdm_context_t *spdm_context,
         goto error;
     }
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
-        internal_dump_hex(spdm_response.verify_data, hmac_size);
-        result = spdm_verify_finish_rsp_hmac(spdm_context, session_info,
-                                             spdm_response.verify_data,
-                                             hmac_size);
+        libspdm_internal_dump_hex(spdm_response.verify_data, hmac_size);
+        result = libspdm_verify_finish_rsp_hmac(spdm_context, session_info,
+                                                spdm_response.verify_data,
+                                                hmac_size);
         if (!result) {
             status = RETURN_SECURITY_VIOLATION;
             goto error;
@@ -281,7 +281,7 @@ error:
     return status;
 }
 
-return_status spdm_send_receive_finish(spdm_context_t *spdm_context,
+return_status spdm_send_receive_finish(libspdm_context_t *spdm_context,
                                        uint32_t session_id,
                                        uint8_t req_slot_id_param)
 {

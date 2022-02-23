@@ -60,7 +60,7 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 return_status try_spdm_send_receive_psk_exchange(
-    spdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t session_policy,
     uint32_t *session_id, uint8_t *heartbeat_period,
     void *measurement_hash,
@@ -84,7 +84,7 @@ return_status try_spdm_send_receive_psk_exchange(
     uint8_t *verify_data;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uintn opaque_psk_exchange_req_size;
     uint8_t th1_hash_data[64];
     uint8_t th2_hash_data[64];
@@ -92,14 +92,14 @@ return_status try_spdm_send_receive_psk_exchange(
 
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
         return RETURN_UNSUPPORTED;
     }
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_PSK_EXCHANGE);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_PSK_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return RETURN_UNSUPPORTED;
@@ -107,7 +107,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     {
         /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
@@ -135,7 +135,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_PSK_EXCHANGE;
     spdm_request.header.param1 = measurement_hash_type;
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
@@ -152,10 +152,10 @@ return_status try_spdm_send_receive_psk_exchange(
         spdm_request.context_length = (uint16_t)requester_context_in_size;
     }
     opaque_psk_exchange_req_size =
-        spdm_get_opaque_data_supported_version_data_size(spdm_context);
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     spdm_request.opaque_length = (uint16_t)opaque_psk_exchange_req_size;
 
-    req_session_id = spdm_allocate_req_session_id(spdm_context);
+    req_session_id = libspdm_allocate_req_session_id(spdm_context);
     spdm_request.req_session_id = req_session_id;
 
     ptr = spdm_request.psk_hint;
@@ -163,7 +163,7 @@ return_status try_spdm_send_receive_psk_exchange(
              spdm_context->local_context.psk_hint,
              spdm_context->local_context.psk_hint_size);
     DEBUG((DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request.psk_hint_length));
-    internal_dump_data(ptr, spdm_request.psk_hint_length);
+    libspdm_internal_dump_data(ptr, spdm_request.psk_hint_length);
     DEBUG((DEBUG_INFO, "\n"));
     ptr += spdm_request.psk_hint_length;
 
@@ -177,7 +177,7 @@ return_status try_spdm_send_receive_psk_exchange(
     }
     DEBUG((DEBUG_INFO, "ClientContextData (0x%x) - ",
            spdm_request.context_length));
-    internal_dump_data(ptr, spdm_request.context_length);
+    libspdm_internal_dump_data(ptr, spdm_request.context_length);
     DEBUG((DEBUG_INFO, "\n"));
     if (requester_context != NULL) {
         if (*requester_context_size > spdm_request.context_length) {
@@ -188,7 +188,7 @@ return_status try_spdm_send_receive_psk_exchange(
     }
     ptr += spdm_request.context_length;
 
-    status = spdm_build_opaque_data_supported_version_data(
+    status = libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
     ASSERT_RETURN_ERROR(status);
     ptr += opaque_psk_exchange_req_size;
@@ -233,7 +233,7 @@ return_status try_spdm_send_receive_psk_exchange(
         return RETURN_DEVICE_ERROR;
     }
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
@@ -251,7 +251,7 @@ return_status try_spdm_send_receive_psk_exchange(
         return RETURN_DEVICE_ERROR;
     }
 
-    measurement_summary_hash_size = spdm_get_measurement_summary_hash_size(
+    measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, true, measurement_hash_type);
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -266,7 +266,7 @@ return_status try_spdm_send_receive_psk_exchange(
 
     ptr = (uint8_t *)&spdm_response + sizeof(spdm_psk_exchange_response_t) +
           measurement_summary_hash_size + spdm_response.context_length;
-    status = spdm_process_opaque_data_version_selection_data(
+    status = libspdm_process_opaque_data_version_selection_data(
         spdm_context, spdm_response.opaque_length, ptr);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
@@ -282,8 +282,8 @@ return_status try_spdm_send_receive_psk_exchange(
     measurement_summary_hash = ptr;
     DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
            measurement_summary_hash_size));
-    internal_dump_data(measurement_summary_hash,
-                       measurement_summary_hash_size);
+    libspdm_internal_dump_data(measurement_summary_hash,
+                               measurement_summary_hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
@@ -294,7 +294,7 @@ return_status try_spdm_send_receive_psk_exchange(
     }
     DEBUG((DEBUG_INFO, "ServerContextData (0x%x) - ",
            spdm_response.context_length));
-    internal_dump_data(ptr, spdm_response.context_length);
+    libspdm_internal_dump_data(ptr, spdm_response.context_length);
     DEBUG((DEBUG_INFO, "\n"));
     if (responder_context != NULL) {
         if (*responder_context_size > spdm_response.context_length) {
@@ -342,9 +342,9 @@ return_status try_spdm_send_receive_psk_exchange(
 
     verify_data = ptr;
     DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
-    internal_dump_hex(verify_data, hmac_size);
-    result = spdm_verify_psk_exchange_rsp_hmac(spdm_context, session_info,
-                                               verify_data, hmac_size);
+    libspdm_internal_dump_hex(verify_data, hmac_size);
+    result = libspdm_verify_psk_exchange_rsp_hmac(spdm_context, session_info,
+                                                  verify_data, hmac_size);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         spdm_context->error_state =
@@ -370,7 +370,7 @@ return_status try_spdm_send_receive_psk_exchange(
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to send PSK_FINISH, enter application phase directly.*/
@@ -411,7 +411,7 @@ return_status try_spdm_send_receive_psk_exchange(
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange(spdm_context_t *spdm_context,
+return_status spdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
                                              uint8_t measurement_hash_type,
                                              uint8_t session_policy,
                                              uint32_t *session_id,
@@ -460,7 +460,7 @@ return_status spdm_send_receive_psk_exchange(spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange_ex(spdm_context_t *spdm_context,
+return_status spdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
                                                 uint8_t measurement_hash_type,
                                                 uint8_t session_policy,
                                                 uint32_t *session_id,

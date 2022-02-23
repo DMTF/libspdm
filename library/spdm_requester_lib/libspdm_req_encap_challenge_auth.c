@@ -38,7 +38,7 @@ return_status spdm_get_encap_response_challenge_auth(
     uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
     uintn total_size;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
     return_status status;
     uintn response_capacity;
@@ -46,13 +46,13 @@ return_status spdm_get_encap_response_challenge_auth(
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH,
             SPDM_CHALLENGE, response_size, response);
     }
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0)) {
         return libspdm_generate_encap_error_response(
@@ -75,8 +75,8 @@ return_status spdm_get_encap_response_challenge_auth(
             response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     signature_size = libspdm_get_req_asym_signature_size(
         spdm_context->connection_info.algorithm.req_base_asym_alg);
@@ -109,7 +109,7 @@ return_status spdm_get_encap_response_challenge_auth(
     }
 
     ptr = (void *)(spdm_response + 1);
-    result = spdm_generate_cert_chain_hash(spdm_context, slot_id, ptr);
+    result = libspdm_generate_cert_chain_hash(spdm_context, slot_id, ptr);
     if (!result) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -154,7 +154,7 @@ return_status spdm_get_encap_response_challenge_auth(
             response_size, response);
     }
     result =
-        spdm_generate_challenge_auth_signature(spdm_context, true, ptr);
+        libspdm_generate_challenge_auth_signature(spdm_context, true, ptr);
     if (!result) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,

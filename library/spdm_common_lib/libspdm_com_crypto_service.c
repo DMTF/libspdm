@@ -20,7 +20,7 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
                                         void **cert_chain_buffer,
                                         uintn *cert_chain_buffer_size)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -59,7 +59,7 @@ bool libspdm_get_peer_cert_chain_data(void *context,
                                       void **cert_chain_data,
                                       uintn *cert_chain_data_size)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     bool result;
     uintn hash_size;
 
@@ -95,7 +95,7 @@ bool libspdm_get_local_cert_chain_buffer(void *context,
                                          void **cert_chain_buffer,
                                          uintn *cert_chain_buffer_size)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
     if (spdm_context->connection_info.local_used_cert_chain_buffer_size !=
@@ -124,7 +124,7 @@ bool libspdm_get_local_cert_chain_data(void *context,
                                        void **cert_chain_data,
                                        uintn *cert_chain_data_size)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     bool result;
     uintn hash_size;
 
@@ -157,52 +157,52 @@ bool libspdm_get_local_cert_chain_data(void *context,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-bool spdm_calculate_m1m2(void *context, bool is_mut,
-                         uintn *m1m2_buffer_size,
-                         void *m1m2_buffer)
+bool libspdm_calculate_m1m2(void *context, bool is_mut,
+                            uintn *m1m2_buffer_size,
+                            void *m1m2_buffer)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    large_managed_buffer_t m1m2;
+    libspdm_large_managed_buffer_t m1m2;
     uintn m1m2_buffer_capacity;
 
     spdm_context = context;
 
-    init_managed_buffer(&m1m2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&m1m2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (is_mut) {
         DEBUG((DEBUG_INFO, "message_mut_b data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_b),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_b));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &m1m2,
-            get_managed_buffer(
+            libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_b),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_b));
         if (RETURN_ERROR(status)) {
             return false;
         }
 
         DEBUG((DEBUG_INFO, "message_mut_c data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_c),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_c));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &m1m2,
-            get_managed_buffer(
+            libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_c),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_c));
         if (RETURN_ERROR(status)) {
             return false;
@@ -212,53 +212,53 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
         DEBUG_CODE(
             if (!libspdm_hash_all(
                     spdm_context->connection_info.algorithm.base_hash_algo,
-                    get_managed_buffer(&m1m2),
-                    get_managed_buffer_size(&m1m2), hash_data)) {
+                    libspdm_get_managed_buffer(&m1m2),
+                    libspdm_get_managed_buffer_size(&m1m2), hash_data)) {
             return false;
         }
             DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
-            internal_dump_data(hash_data, hash_size);
+            libspdm_internal_dump_data(hash_data, hash_size);
             DEBUG((DEBUG_INFO, "\n"));
             );
 
     } else {
         DEBUG((DEBUG_INFO, "message_a data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_context->transcript.message_a),
-            get_managed_buffer_size(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &m1m2,
-            get_managed_buffer(&spdm_context->transcript.message_a),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
         if (RETURN_ERROR(status)) {
             return false;
         }
 
         DEBUG((DEBUG_INFO, "message_b data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_context->transcript.message_b),
-            get_managed_buffer_size(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_b),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_b));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &m1m2,
-            get_managed_buffer(&spdm_context->transcript.message_b),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_b),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_b));
         if (RETURN_ERROR(status)) {
             return false;
         }
 
         DEBUG((DEBUG_INFO, "message_c data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_context->transcript.message_c),
-            get_managed_buffer_size(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_c),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_c));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &m1m2,
-            get_managed_buffer(&spdm_context->transcript.message_c),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_c),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_c));
         if (RETURN_ERROR(status)) {
             return false;
@@ -268,19 +268,19 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
         DEBUG_CODE(
             if (!libspdm_hash_all(
                     spdm_context->connection_info.algorithm.base_hash_algo,
-                    get_managed_buffer(&m1m2),
-                    get_managed_buffer_size(&m1m2), hash_data)) {
+                    libspdm_get_managed_buffer(&m1m2),
+                    libspdm_get_managed_buffer_size(&m1m2), hash_data)) {
             return false;
         }
             DEBUG((DEBUG_INFO, "m1m2 hash - "));
-            internal_dump_data(hash_data, hash_size);
+            libspdm_internal_dump_data(hash_data, hash_size);
             DEBUG((DEBUG_INFO, "\n"));
             );
     }
     m1m2_buffer_capacity = *m1m2_buffer_size;
-    *m1m2_buffer_size = get_managed_buffer_size(&m1m2);
+    *m1m2_buffer_size = libspdm_get_managed_buffer_size(&m1m2);
     copy_mem(m1m2_buffer, m1m2_buffer_capacity,
-             get_managed_buffer(&m1m2), *m1m2_buffer_size);
+             libspdm_get_managed_buffer(&m1m2), *m1m2_buffer_size);
 
     return true;
 }
@@ -295,11 +295,11 @@ bool spdm_calculate_m1m2(void *context, bool is_mut,
  *
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
-bool spdm_calculate_m1m2_hash(void *context, bool is_mut,
-                              uintn *m1m2_hash_size,
-                              void *m1m2_hash)
+bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
+                                 uintn *m1m2_hash_size,
+                                 void *m1m2_hash)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t hash_size;
     bool result;
 
@@ -315,7 +315,7 @@ bool spdm_calculate_m1m2_hash(void *context, bool is_mut,
             return false;
         }
         DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
-        internal_dump_data(m1m2_hash, hash_size);
+        libspdm_internal_dump_data(m1m2_hash, hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
     } else {
@@ -325,7 +325,7 @@ bool spdm_calculate_m1m2_hash(void *context, bool is_mut,
             return false;
         }
         DEBUG((DEBUG_INFO, "m1m2 hash - "));
-        internal_dump_data(m1m2_hash, hash_size);
+        libspdm_internal_dump_data(m1m2_hash, hash_size);
         DEBUG((DEBUG_INFO, "\n"));
     }
 
@@ -348,21 +348,21 @@ bool spdm_calculate_m1m2_hash(void *context, bool is_mut,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool spdm_calculate_l1l2(void *context, void *session_info,
-                         uintn *l1l2_buffer_size, void *l1l2_buffer)
+bool libspdm_calculate_l1l2(void *context, void *session_info,
+                            uintn *l1l2_buffer_size, void *l1l2_buffer)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
-    spdm_session_info_t *spdm_session_info;
+    libspdm_session_info_t *spdm_session_info;
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    large_managed_buffer_t l1l2;
+    libspdm_large_managed_buffer_t l1l2;
     uintn l1l2_buffer_capacity;
 
     spdm_context = context;
     spdm_session_info = session_info;
 
-    init_managed_buffer(&l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
@@ -373,14 +373,14 @@ bool spdm_calculate_l1l2(void *context, void *session_info,
         /* Need append VCA since 1.2 script*/
 
         DEBUG((DEBUG_INFO, "message_a data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_context->transcript.message_a),
-            get_managed_buffer_size(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
-        status = append_managed_buffer(
+        status = libspdm_append_managed_buffer(
             &l1l2,
-            get_managed_buffer(&spdm_context->transcript.message_a),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
         if (RETURN_ERROR(status)) {
             return false;
@@ -389,23 +389,23 @@ bool spdm_calculate_l1l2(void *context, void *session_info,
 
     if (spdm_session_info == NULL) {
         DEBUG((DEBUG_INFO, "message_m data :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_context->transcript.message_m),
-            get_managed_buffer_size(&spdm_context->transcript.message_m));
-        status = append_managed_buffer(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_m),
+            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_m));
+        status = libspdm_append_managed_buffer(
             &l1l2,
-            get_managed_buffer(&spdm_context->transcript.message_m),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_m),
+            libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_m));
     } else {
         DEBUG((DEBUG_INFO, "use message_m in session :\n"));
-        internal_dump_hex(
-            get_managed_buffer(&spdm_session_info->session_transcript.message_m),
-            get_managed_buffer_size(&spdm_session_info->session_transcript.message_m));
-        status = append_managed_buffer(
+        libspdm_internal_dump_hex(
+            libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_m),
+            libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_m));
+        status = libspdm_append_managed_buffer(
             &l1l2,
-            get_managed_buffer(&spdm_session_info->session_transcript.message_m),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_m),
+            libspdm_get_managed_buffer_size(
                 &spdm_session_info->session_transcript.message_m));
     }
     if (RETURN_ERROR(status)) {
@@ -413,25 +413,25 @@ bool spdm_calculate_l1l2(void *context, void *session_info,
     }
 
     DEBUG((DEBUG_INFO, "message_m data :\n"));
-    internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
+    libspdm_internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
 
     /* Debug code only - calculate and print value of l1l2 hash*/
     DEBUG_CODE(
         if (!libspdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
-                get_managed_buffer(&l1l2),
-                get_managed_buffer_size(&l1l2), hash_data)) {
+                libspdm_get_managed_buffer(&l1l2),
+                libspdm_get_managed_buffer_size(&l1l2), hash_data)) {
         return false;
     }
         DEBUG((DEBUG_INFO, "l1l2 hash - "));
-        internal_dump_data(hash_data, hash_size);
+        libspdm_internal_dump_data(hash_data, hash_size);
         DEBUG((DEBUG_INFO, "\n"));
         );
 
     l1l2_buffer_capacity = *l1l2_buffer_size;
-    *l1l2_buffer_size = get_managed_buffer_size(&l1l2);
+    *l1l2_buffer_size = libspdm_get_managed_buffer_size(&l1l2);
     copy_mem(l1l2_buffer, l1l2_buffer_capacity,
-             get_managed_buffer(&l1l2), *l1l2_buffer_size);
+             libspdm_get_managed_buffer(&l1l2), *l1l2_buffer_size);
 
     return true;
 }
@@ -448,11 +448,11 @@ bool spdm_calculate_l1l2(void *context, void *session_info,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool spdm_calculate_l1l2_hash(void *context, void *session_info,
-                              uintn *l1l2_hash_size, void *l1l2_hash)
+bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
+                                 uintn *l1l2_hash_size, void *l1l2_hash)
 {
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *spdm_session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *spdm_session_info;
     bool result;
 
     uint32_t hash_size;
@@ -476,7 +476,7 @@ bool spdm_calculate_l1l2_hash(void *context, void *session_info,
         return false;
     }
     DEBUG((DEBUG_INFO, "l1l2 hash - "));
-    internal_dump_data(l1l2_hash, hash_size);
+    libspdm_internal_dump_data(l1l2_hash, hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
     *l1l2_hash_size = hash_size;
@@ -495,8 +495,8 @@ bool spdm_calculate_l1l2_hash(void *context, void *session_info,
  * @retval true  certificate chain hash is generated.
  * @retval false certificate chain hash is not generated.
  **/
-bool spdm_generate_cert_chain_hash(spdm_context_t *spdm_context,
-                                   uintn slot_id, uint8_t *hash)
+bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
+                                      uintn slot_id, uint8_t *hash)
 {
     ASSERT(slot_id < spdm_context->local_context.slot_count);
     return libspdm_hash_all(
@@ -517,8 +517,8 @@ bool spdm_generate_cert_chain_hash(spdm_context_t *spdm_context,
  * @retval true  digest verification pass.
  * @retval false digest verification fail.
  **/
-bool spdm_verify_peer_digests(spdm_context_t *spdm_context,
-                              void *digest, uintn digest_count)
+bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
+                                 void *digest, uintn digest_count)
 {
     uintn hash_size;
     uint8_t *hash_buffer;
@@ -576,11 +576,11 @@ bool spdm_verify_peer_digests(spdm_context_t *spdm_context,
  * @retval true  Peer certificate chain buffer verification passed.
  * @retval false Peer certificate chain buffer verification failed.
  **/
-bool spdm_verify_peer_cert_chain_buffer(spdm_context_t *spdm_context,
-                                        const void *cert_chain_buffer,
-                                        uintn cert_chain_buffer_size,
-                                        void **trust_anchor,
-                                        uintn *trust_anchor_size)
+bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
+                                           const void *cert_chain_buffer,
+                                           uintn cert_chain_buffer_size,
+                                           void **trust_anchor,
+                                           uintn *trust_anchor_size)
 {
     uint8_t *cert_chain_data;
     uintn cert_chain_data_size;
@@ -710,9 +710,9 @@ bool spdm_verify_peer_cert_chain_buffer(spdm_context_t *spdm_context,
  * @retval true  challenge signature is generated.
  * @retval false challenge signature is not generated.
  **/
-bool spdm_generate_challenge_auth_signature(spdm_context_t *spdm_context,
-                                            bool is_requester,
-                                            uint8_t *signature)
+bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
+                                               bool is_requester,
+                                               uint8_t *signature)
 {
     bool result;
     uintn signature_size;
@@ -726,12 +726,12 @@ bool spdm_generate_challenge_auth_signature(spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     m1m2_buffer_size = sizeof(m1m2_buffer);
-    result = spdm_calculate_m1m2(spdm_context, is_requester,
-                                 &m1m2_buffer_size, &m1m2_buffer);
+    result = libspdm_calculate_m1m2(spdm_context, is_requester,
+                                    &m1m2_buffer_size, &m1m2_buffer);
 #else
     m1m2_hash_size = sizeof(m1m2_hash);
-    result = spdm_calculate_m1m2_hash(spdm_context, is_requester,
-                                      &m1m2_hash_size, &m1m2_hash);
+    result = libspdm_calculate_m1m2_hash(spdm_context, is_requester,
+                                         &m1m2_hash_size, &m1m2_hash);
 #endif
     if (!result) {
         return false;
@@ -791,9 +791,9 @@ bool spdm_generate_challenge_auth_signature(spdm_context_t *spdm_context,
  * @retval true  hash verification pass.
  * @retval false hash verification fail.
  **/
-bool spdm_verify_certificate_chain_hash(spdm_context_t *spdm_context,
-                                        const void *certificate_chain_hash,
-                                        uintn certificate_chain_hash_size)
+bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
+                                           const void *certificate_chain_hash,
+                                           uintn certificate_chain_hash_size)
 {
     uintn hash_size;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -897,10 +897,10 @@ bool spdm_verify_certificate_chain_hash(spdm_context_t *spdm_context,
  * @retval true  signature verification pass.
  * @retval false signature verification fail.
  **/
-bool spdm_verify_challenge_auth_signature(spdm_context_t *spdm_context,
-                                          bool is_requester,
-                                          const void *sign_data,
-                                          uintn sign_data_size)
+bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
+                                             bool is_requester,
+                                             const void *sign_data,
+                                             uintn sign_data_size)
 {
     bool result;
     uint8_t *cert_buffer;
@@ -918,12 +918,12 @@ bool spdm_verify_challenge_auth_signature(spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     m1m2_buffer_size = sizeof(m1m2_buffer);
-    result = spdm_calculate_m1m2(spdm_context, !is_requester,
-                                 &m1m2_buffer_size, &m1m2_buffer);
+    result = libspdm_calculate_m1m2(spdm_context, !is_requester,
+                                    &m1m2_buffer_size, &m1m2_buffer);
 #else
     m1m2_hash_size = sizeof(m1m2_hash);
-    result = spdm_calculate_m1m2_hash(spdm_context, !is_requester,
-                                      &m1m2_hash_size, &m1m2_hash);
+    result = libspdm_calculate_m1m2_hash(spdm_context, !is_requester,
+                                         &m1m2_hash_size, &m1m2_hash);
 #endif
     if (!result) {
         return false;
@@ -1094,11 +1094,11 @@ bool spdm_verify_challenge_auth_signature(spdm_context_t *spdm_context,
  * @return measurement summary hash size according to type.
  **/
 uint32_t
-spdm_get_measurement_summary_hash_size(spdm_context_t *spdm_context,
-                                       bool is_requester,
-                                       uint8_t measurement_summary_hash_type)
+libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
+                                          bool is_requester,
+                                          uint8_t measurement_summary_hash_type)
 {
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, is_requester, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         return 0;
@@ -1132,9 +1132,9 @@ spdm_get_measurement_summary_hash_size(spdm_context_t *spdm_context,
  * @retval true  measurement signature is generated.
  * @retval false measurement signature is not generated.
  **/
-bool spdm_generate_measurement_signature(spdm_context_t *spdm_context,
-                                         spdm_session_info_t *session_info,
-                                         uint8_t *signature)
+bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *signature)
 {
     uintn signature_size;
     bool result;
@@ -1148,12 +1148,12 @@ bool spdm_generate_measurement_signature(spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     l1l2_buffer_size = sizeof(l1l2_buffer);
-    result = spdm_calculate_l1l2(spdm_context, session_info, &l1l2_buffer_size,
-                                 l1l2_buffer);
+    result = libspdm_calculate_l1l2(spdm_context, session_info, &l1l2_buffer_size,
+                                    l1l2_buffer);
 #else
     l1l2_hash_size = sizeof(l1l2_hash);
-    result = spdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
-                                      l1l2_hash);
+    result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
+                                         l1l2_hash);
 #endif
     if (!result) {
         return false;
@@ -1190,10 +1190,10 @@ bool spdm_generate_measurement_signature(spdm_context_t *spdm_context,
  * @retval true  signature verification pass.
  * @retval false signature verification fail.
  **/
-bool spdm_verify_measurement_signature(spdm_context_t *spdm_context,
-                                       spdm_session_info_t *session_info,
-                                       const void *sign_data,
-                                       uintn sign_data_size)
+bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
+                                          libspdm_session_info_t *session_info,
+                                          const void *sign_data,
+                                          uintn sign_data_size)
 {
     bool result;
     uint8_t *cert_buffer;
@@ -1211,12 +1211,12 @@ bool spdm_verify_measurement_signature(spdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     l1l2_buffer_size = sizeof(l1l2_buffer);
-    result = spdm_calculate_l1l2(spdm_context, session_info, &l1l2_buffer_size,
-                                 l1l2_buffer);
+    result = libspdm_calculate_l1l2(spdm_context, session_info, &l1l2_buffer_size,
+                                    l1l2_buffer);
 #else
     l1l2_hash_size = sizeof(l1l2_hash);
-    result = spdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
-                                      l1l2_hash);
+    result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
+                                         l1l2_hash);
 #endif
     if (!result) {
         return false;

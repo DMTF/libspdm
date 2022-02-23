@@ -68,9 +68,9 @@ spdm_key_update_request_t m_spdm_key_update_request10 = {
 uintn m_spdm_key_update_request10_size = sizeof(m_spdm_key_update_request10);
 
 static void spdm_set_standard_key_update_test_state(
-    spdm_context_t *spdm_context, uint32_t *session_id)
+    libspdm_context_t *spdm_context, uint32_t *session_id)
 {
-    spdm_session_info_t    *session_info;
+    libspdm_session_info_t    *session_info;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
@@ -103,7 +103,7 @@ static void spdm_set_standard_key_update_test_state(
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -183,9 +183,9 @@ void test_spdm_responder_key_update_case1(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -252,9 +252,9 @@ void test_spdm_responder_key_update_case2(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -315,9 +315,9 @@ void test_spdm_responder_key_update_case3(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -382,9 +382,9 @@ void test_spdm_responder_key_update_case4(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -451,9 +451,9 @@ void test_spdm_responder_key_update_case5(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -527,9 +527,9 @@ void test_spdm_responder_key_update_case6(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -588,9 +588,9 @@ void test_spdm_responder_key_update_case7(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -678,9 +678,9 @@ void test_spdm_responder_key_update_case8(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -748,9 +748,9 @@ void test_spdm_responder_key_update_case9(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -817,9 +817,9 @@ void test_spdm_responder_key_update_case10(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -889,9 +889,9 @@ void test_spdm_responder_key_update_case11(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -953,9 +953,9 @@ void test_spdm_responder_key_update_case12(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1041,9 +1041,9 @@ void test_spdm_responder_key_update_case13(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1128,9 +1128,9 @@ void test_spdm_responder_key_update_case14(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1230,9 +1230,9 @@ void test_spdm_responder_key_update_case15(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1331,9 +1331,9 @@ void test_spdm_responder_key_update_case16(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1397,9 +1397,9 @@ void test_spdm_responder_key_update_case17(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1484,9 +1484,9 @@ void test_spdm_responder_key_update_case18(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1586,9 +1586,9 @@ void test_spdm_responder_key_update_case19(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1659,9 +1659,9 @@ void test_spdm_responder_key_update_case20(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1761,9 +1761,9 @@ void test_spdm_responder_key_update_case21(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1850,9 +1850,9 @@ void test_spdm_responder_key_update_case22(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -1949,9 +1949,9 @@ void test_spdm_responder_key_update_case23(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -2036,9 +2036,9 @@ void test_spdm_responder_key_update_case24(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -2135,9 +2135,9 @@ void test_spdm_responder_key_update_case25(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
@@ -2204,9 +2204,9 @@ void test_spdm_responder_key_update_case26(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
-    spdm_context_t                 *spdm_context;
+    libspdm_context_t                 *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t            *session_info;
+    libspdm_session_info_t            *session_info;
     spdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;

@@ -40,12 +40,12 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
     spdm_key_update_request_t spdm_request;
     spdm_key_update_response_mine_t spdm_response;
     uintn spdm_response_size;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     spdm_context = context;
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
@@ -68,14 +68,14 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
         return RETURN_UNSUPPORTED;
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               SPDM_KEY_UPDATE);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  SPDM_KEY_UPDATE);
 
     if(!(*key_updated)) {
 
         /* Update key*/
 
-        spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+        spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
         spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
             spdm_request.header.param1 =
@@ -211,7 +211,7 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
 
     /* Verify key*/
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_KEY_UPDATE;
     spdm_request.header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
@@ -268,7 +268,7 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
 return_status libspdm_key_update(void *context, uint32_t session_id,
                                  bool single_direction)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
     bool key_updated;

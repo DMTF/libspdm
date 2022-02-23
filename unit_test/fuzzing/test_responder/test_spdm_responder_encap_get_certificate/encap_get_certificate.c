@@ -28,7 +28,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
     uintn spdm_response_size;
     bool need_continue;
 
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
 
@@ -49,7 +49,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert,
                                   &root_cert_size);
-    internal_dump_hex(root_cert, root_cert_size);
+    libspdm_internal_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     spdm_context->local_context.peer_cert_chain_provision = NULL;
@@ -69,7 +69,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
 void test_spdm_get_encap_request_get_certificate_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn encap_request_size;
     void *data;
     uintn data_size;

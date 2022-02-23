@@ -99,7 +99,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 void test_spdm_requester_get_measurement_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
@@ -163,7 +163,7 @@ void test_spdm_requester_get_measurement_case1(void **State)
 void test_spdm_requester_get_measurement_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
@@ -222,8 +222,8 @@ void test_spdm_requester_get_measurement_case2(void **State)
 void test_spdm_requester_get_measurement_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
     uint32_t session_id;
@@ -258,7 +258,7 @@ void test_spdm_requester_get_measurement_case3(void **State)
     session_id = 0xFFFFFFFF;
     test_message_header = TEST_MESSAGE_TYPE_SECURED_TEST;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -301,7 +301,7 @@ void test_spdm_requester_get_measurement_case3(void **State)
 void test_spdm_requester_get_measurement_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t number_of_block;
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];

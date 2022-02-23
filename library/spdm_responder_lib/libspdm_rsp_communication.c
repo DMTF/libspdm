@@ -42,7 +42,7 @@ return_status libspdm_process_message(void *context, uint32_t **session_id,
                                       uintn *response_size)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     bool is_app_message;
     uint32_t tmp_session_id;
     uint32_t *session_id_ptr;
@@ -88,7 +88,7 @@ return_status libspdm_process_message(void *context, uint32_t **session_id,
 return_status libspdm_responder_dispatch_message(void *context)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t *request;
     uintn request_size;
     uint8_t *response;

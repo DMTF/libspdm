@@ -22,7 +22,7 @@ return_status libspdm_init_connection(void *context,
                                       bool get_version_only)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
 
@@ -74,10 +74,10 @@ return_status libspdm_start_session(void *context, bool use_psk,
                                     void *measurement_hash)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
@@ -154,7 +154,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
         }
 
         /* send PSK_FINISH only if Responder supports context.*/
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = spdm_send_receive_psk_finish(spdm_context,
@@ -219,10 +219,10 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
                                        uintn *responder_random_size)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t req_slot_id_param;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
@@ -306,7 +306,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
         }
 
         /* send PSK_FINISH only if Responder supports context.*/
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = spdm_send_receive_psk_finish(spdm_context,
@@ -341,7 +341,7 @@ return_status libspdm_stop_session(void *context, uint32_t session_id,
                                    uint8_t end_session_attributes)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
 
@@ -386,7 +386,7 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
                                         uintn *response_size)
 {
     return_status status;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_error_response_t *spdm_response;
 
     spdm_context = context;

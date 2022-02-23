@@ -17,7 +17,7 @@
  * @retval True                         The received SPDM version is valid.
  * @retval False                        The received SPDM version is invalid.
  **/
-bool spdm_check_request_version_compability(spdm_context_t *spdm_context, uint8_t version)
+bool spdm_check_request_version_compability(libspdm_context_t *spdm_context, uint8_t version)
 {
     uint8_t local_ver;
     uintn index;
@@ -25,7 +25,7 @@ bool spdm_check_request_version_compability(spdm_context_t *spdm_context, uint8_
     for (index = 0;
          index < spdm_context->local_context.version.spdm_version_count;
          index++) {
-        local_ver = spdm_get_version_from_version_number(
+        local_ver = libspdm_get_version_from_version_number(
             spdm_context->local_context.version.spdm_version[index]);
         if (local_ver == version) {
             spdm_context->connection_info.version = version << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -150,7 +150,7 @@ return_status spdm_get_response_capabilities(void *context,
 {
     const spdm_get_capabilities_request_t *spdm_request;
     spdm_capabilities_response_t *spdm_response;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
 
     spdm_context = context;
@@ -205,8 +205,8 @@ return_status spdm_get_response_capabilities(void *context,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     ASSERT(*response_size >= sizeof(spdm_capabilities_response_t));
     *response_size = sizeof(spdm_capabilities_response_t);

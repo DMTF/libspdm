@@ -31,7 +31,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
+return_status try_spdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                                uint32_t session_id)
 {
     return_status status;
@@ -40,12 +40,12 @@ return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
     uintn hmac_size;
     spdm_psk_finish_response_max_t spdm_response;
     uintn spdm_response_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     libspdm_session_state_t session_state;
     bool result;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
@@ -75,7 +75,7 @@ return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_PSK_FINISH;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
@@ -91,8 +91,8 @@ return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
         goto error;
     }
 
-    result = spdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
-                                                 spdm_request.verify_data);
+    result = libspdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
+                                                    spdm_request.verify_data);
     if (!result) {
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -113,8 +113,8 @@ return_status try_spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
         goto error;
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                               SPDM_PSK_FINISH);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+                                                  SPDM_PSK_FINISH);
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
@@ -189,7 +189,7 @@ error:
     return status;
 }
 
-return_status spdm_send_receive_psk_finish(spdm_context_t *spdm_context,
+return_status spdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                            uint32_t session_id)
 {
     uintn retry;

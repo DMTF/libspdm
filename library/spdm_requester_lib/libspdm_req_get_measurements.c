@@ -78,18 +78,18 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
     void *opaque;
     void *signature;
     uintn signature_size;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     spdm_context = context;
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         return RETURN_UNSUPPORTED;
     }
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_GET_MEASUREMENTS);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_GET_MEASUREMENTS);
     if (session_id == NULL) {
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
@@ -124,7 +124,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG) &&
         (request_attribute != 0)) {
@@ -139,7 +139,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         signature_size = 0;
     }
 
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_GET_MEASUREMENTS;
     spdm_request.header.param1 = request_attribute;
     spdm_request.header.param2 = measurement_operation;
@@ -161,7 +161,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
                      requester_nonce_in, SPDM_NONCE_SIZE);
         }
         DEBUG((DEBUG_INFO, "ClientNonce - "));
-        internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
+        libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
         DEBUG((DEBUG_INFO, "\n"));
         spdm_request.slot_id_param = slot_id_param;
 
@@ -276,7 +276,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         ptr = measurement_record_data + measurement_record_data_length;
         nonce = ptr;
         DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-        internal_dump_data(nonce, SPDM_NONCE_SIZE);
+        libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
         DEBUG((DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
@@ -319,13 +319,13 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         opaque = ptr;
         ptr += opaque_length;
         DEBUG((DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-        internal_dump_hex(opaque, opaque_length);
+        libspdm_internal_dump_hex(opaque, opaque_length);
 
         signature = ptr;
         DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
-        internal_dump_hex(signature, signature_size);
+        libspdm_internal_dump_hex(signature, signature_size);
 
-        result = spdm_verify_measurement_signature(
+        result = libspdm_verify_measurement_signature(
             spdm_context, session_info, signature, signature_size);
         if (!result) {
             spdm_context->error_state =
@@ -345,7 +345,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
 
         nonce = ptr;
         DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-        internal_dump_data(nonce, SPDM_NONCE_SIZE);
+        libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
         DEBUG((DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
@@ -507,7 +507,7 @@ return_status libspdm_get_measurement(void *context, const uint32_t *session_id,
                                       uint32_t *measurement_record_length,
                                       void *measurement_record)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 
@@ -564,7 +564,7 @@ return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_
                                          const void *requester_nonce_in,
                                          void *requester_nonce,
                                          void *responder_nonce) {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn retry;
     return_status status;
 

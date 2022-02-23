@@ -53,7 +53,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
+return_status try_spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     return_status status;
     spdm_negotiate_algorithms_request_mine_t spdm_request;
@@ -65,8 +65,8 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
     uint8_t fixed_alg_size;
     uint8_t ext_alg_count;
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               SPDM_NEGOTIATE_ALGORITHMS);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  SPDM_NEGOTIATE_ALGORITHMS);
 
     if (spdm_context->connection_info.connection_state !=
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
@@ -74,7 +74,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
     }
 
     zero_mem(&spdm_request, sizeof(spdm_request));
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request.length = sizeof(spdm_request);
         spdm_request.header.param1 =
@@ -237,7 +237,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
     spdm_context->connection_info.algorithm.base_hash_algo =
         spdm_response.base_hash_sel;
 
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
@@ -260,7 +260,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
          spdm_context->local_context.algorithm.base_hash_algo) == 0) {
         return RETURN_SECURITY_VIOLATION;
     }
-    if (spdm_is_capabilities_flag_supported(
+    if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         algo_size = libspdm_get_asym_signature_size(
@@ -312,7 +312,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
                          sizeof(uint32_t) * ext_alg_count);
         }
 
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
@@ -327,11 +327,11 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
                 return RETURN_SECURITY_VIOLATION;
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP) ||
-            spdm_is_capabilities_flag_supported(
+            libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
@@ -346,7 +346,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
                 return RETURN_SECURITY_VIOLATION;
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
@@ -361,11 +361,11 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
                 return RETURN_SECURITY_VIOLATION;
             }
         }
-        if (spdm_is_capabilities_flag_supported(
+        if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ||
-            spdm_is_capabilities_flag_supported(
+            libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
@@ -406,7 +406,7 @@ return_status try_spdm_negotiate_algorithms(spdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_negotiate_algorithms(spdm_context_t *spdm_context)
+return_status spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;

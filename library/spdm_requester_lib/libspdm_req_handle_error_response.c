@@ -21,7 +21,7 @@
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_requester_respond_if_ready(spdm_context_t *spdm_context,
+return_status spdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
                                               const uint32_t *session_id,
                                               uintn *response_size,
                                               void *response,
@@ -35,7 +35,7 @@ return_status spdm_requester_respond_if_ready(spdm_context_t *spdm_context,
     spdm_response = response;
 
     spdm_context->crypto_request = true;
-    spdm_request.header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request.header.request_response_code = SPDM_RESPOND_IF_READY;
     spdm_request.header.param1 = spdm_context->error_data.request_code;
     spdm_request.header.param2 = spdm_context->error_data.token;
@@ -80,7 +80,7 @@ return_status spdm_requester_respond_if_ready(spdm_context_t *spdm_context,
 return_status spdm_handle_simple_error_response(void *context,
                                                 uint8_t error_code)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
 
@@ -119,7 +119,7 @@ return_status spdm_handle_simple_error_response(void *context,
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_handle_response_not_ready(spdm_context_t *spdm_context,
+return_status spdm_handle_response_not_ready(libspdm_context_t *spdm_context,
                                              const uint32_t *session_id,
                                              uintn *response_size,
                                              void *response,
@@ -186,7 +186,7 @@ return_status spdm_handle_response_not_ready(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
 return_status spdm_handle_error_response_main(
-    spdm_context_t *spdm_context, const uint32_t *session_id,
+    libspdm_context_t *spdm_context, const uint32_t *session_id,
     uintn *response_size, void *response,
     uint8_t original_request_code, uint8_t expected_response_code,
     uintn expected_response_size)

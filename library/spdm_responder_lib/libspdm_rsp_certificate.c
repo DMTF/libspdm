@@ -36,14 +36,14 @@ return_status spdm_get_response_certificate(void *context,
     uint16_t length;
     uintn remainder_length;
     uint8_t slot_id;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
     uintn response_capacity;
 
     spdm_context = context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != spdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -64,7 +64,7 @@ return_status spdm_get_response_certificate(void *context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
     }
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return libspdm_generate_error_response(
@@ -106,8 +106,8 @@ return_status spdm_get_response_certificate(void *context,
                                                response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
     if ((uintn)(offset + length) >
         spdm_context->local_context

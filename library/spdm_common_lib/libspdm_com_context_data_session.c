@@ -12,9 +12,9 @@
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The SPDM session ID.
  **/
-void spdm_session_info_init(spdm_context_t *spdm_context,
-                            spdm_session_info_t *session_info,
-                            uint32_t session_id, bool use_psk)
+void libspdm_session_info_init(libspdm_context_t *spdm_context,
+                               libspdm_session_info_t *session_info,
+                               uint32_t session_id, bool use_psk)
 {
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
@@ -41,7 +41,7 @@ void spdm_session_info_init(spdm_context_t *spdm_context,
     }
 
     zero_mem(session_info,
-             OFFSET_OF(spdm_session_info_t, secured_message_context));
+             OFFSET_OF(libspdm_session_info_t, secured_message_context));
     libspdm_secured_message_init_context(
         session_info->secured_message_context);
     session_info->session_id = session_id;
@@ -86,8 +86,8 @@ void spdm_session_info_init(spdm_context_t *spdm_context,
 void *libspdm_get_session_info_via_session_id(const void *context,
                                               uint32_t session_id)
 {
-    const spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    const libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uintn index;
 
     if (session_id == INVALID_SESSION_ID) {
@@ -99,7 +99,7 @@ void *libspdm_get_session_info_via_session_id(const void *context,
 
     spdm_context = context;
 
-    session_info = (spdm_session_info_t *)spdm_context->session_info;
+    session_info = (libspdm_session_info_t *)spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             return &session_info[index];
@@ -122,7 +122,7 @@ void *libspdm_get_session_info_via_session_id(const void *context,
 void *libspdm_get_secured_message_context_via_session_id(const void *spdm_context,
                                                          uint32_t session_id)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -143,7 +143,7 @@ void *libspdm_get_secured_message_context_via_session_id(const void *spdm_contex
 void *
 libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     session_info = spdm_session_info;
     if (session_info == NULL) {
@@ -164,8 +164,8 @@ libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
 void *libspdm_assign_session_id(void *context, uint32_t session_id,
                                 bool use_psk)
 {
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uintn index;
 
     spdm_context = context;
@@ -190,9 +190,9 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id,
 
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == INVALID_SESSION_ID) {
-            spdm_session_info_init(spdm_context,
-                                   &session_info[index], session_id,
-                                   use_psk);
+            libspdm_session_info_init(spdm_context,
+                                      &session_info[index], session_id,
+                                      use_psk);
             spdm_context->latest_session_id = session_id;
             return &session_info[index];
         }
@@ -209,10 +209,10 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id,
  *
  * @return half of session ID for a requester.
  **/
-uint16_t spdm_allocate_req_session_id(spdm_context_t *spdm_context)
+uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
 {
     uint16_t req_session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uintn index;
 
     session_info = spdm_context->session_info;
@@ -224,7 +224,7 @@ uint16_t spdm_allocate_req_session_id(spdm_context_t *spdm_context)
         }
     }
 
-    DEBUG((DEBUG_ERROR, "spdm_allocate_req_session_id - MAX session_id\n"));
+    DEBUG((DEBUG_ERROR, "libspdm_allocate_req_session_id - MAX session_id\n"));
     return (INVALID_SESSION_ID & 0xFFFF0000) >> 16;
 }
 
@@ -235,10 +235,10 @@ uint16_t spdm_allocate_req_session_id(spdm_context_t *spdm_context)
  *
  * @return half of session ID for a responder.
  **/
-uint16_t spdm_allocate_rsp_session_id(const spdm_context_t *spdm_context)
+uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context)
 {
     uint16_t rsp_session_id;
-    const spdm_session_info_t *session_info;
+    const libspdm_session_info_t *session_info;
     uintn index;
 
     session_info = spdm_context->session_info;
@@ -250,7 +250,7 @@ uint16_t spdm_allocate_rsp_session_id(const spdm_context_t *spdm_context)
         }
     }
 
-    DEBUG((DEBUG_ERROR, "spdm_allocate_rsp_session_id - MAX session_id\n"));
+    DEBUG((DEBUG_ERROR, "libspdm_allocate_rsp_session_id - MAX session_id\n"));
     return (INVALID_SESSION_ID & 0xFFFF);
 }
 
@@ -262,8 +262,8 @@ uint16_t spdm_allocate_rsp_session_id(const spdm_context_t *spdm_context)
  **/
 void libspdm_free_session_id(void *context, uint32_t session_id)
 {
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uintn index;
 
     spdm_context = context;
@@ -278,9 +278,9 @@ void libspdm_free_session_id(void *context, uint32_t session_id)
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
-            spdm_session_info_init(spdm_context,
-                                   &session_info[index],
-                                   INVALID_SESSION_ID, false);
+            libspdm_session_info_init(spdm_context,
+                                      &session_info[index],
+                                      INVALID_SESSION_ID, false);
             return;
         }
     }

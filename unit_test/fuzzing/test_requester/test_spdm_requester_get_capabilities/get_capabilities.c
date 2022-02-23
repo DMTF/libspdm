@@ -37,7 +37,7 @@ return_status spdm_device_receive_message(void *spdm_context,
 void test_spdm_requester_get_capabilities(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;

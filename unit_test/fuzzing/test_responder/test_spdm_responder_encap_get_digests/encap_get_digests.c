@@ -24,7 +24,7 @@ spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
 void test_spdm_responder_encap_get_digests_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     bool need_continue;
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -47,7 +47,7 @@ void test_spdm_get_encap_request_get_digest_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_get_digest_request_t *spdm_request;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn encap_request_size;
     void *data;
     uintn data_size;

@@ -9,14 +9,14 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context,
+static void spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                     uint32_t *session_id)
 {
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -47,7 +47,7 @@ static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context
 #endif
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -120,7 +120,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 {
     static uint8_t sub_index = 0;
     spdm_key_update_response_t spdm_response;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
     uint8_t test_message_header_size;
     uint8_t spdm_response_size;
@@ -157,8 +157,8 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 void test_spdm_requester_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
-    spdm_session_info_t *session_info;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     uint32_t session_id;
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
@@ -189,9 +189,9 @@ void test_spdm_requester_key_update_case1(void **State)
 void test_spdm_requester_key_update_case2(void **state)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 

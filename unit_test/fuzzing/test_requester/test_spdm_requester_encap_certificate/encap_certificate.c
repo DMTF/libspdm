@@ -19,7 +19,7 @@ uintn get_max_buffer_size(void)
 void test_spdm_requester_encap_certificate(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn request_size;
     uintn response_size;
     uint8_t test_message_header_size;

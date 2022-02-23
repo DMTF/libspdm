@@ -24,7 +24,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_version(spdm_context_t *spdm_context,
+return_status try_spdm_get_version(libspdm_context_t *spdm_context,
                                    uint8_t *version_number_entry_count,
                                    spdm_version_number_t *version_number_entry)
 {
@@ -49,8 +49,8 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
 
     libspdm_reset_context(spdm_context);
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request.header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request.header.request_response_code);
 
     status = spdm_send_spdm_request(spdm_context, NULL,
                                     sizeof(spdm_request), &spdm_request);
@@ -117,13 +117,13 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
         return RETURN_SECURITY_VIOLATION;
     }
 
-    /* spdm_negotiate_connection_version will change the spdm_response.
+    /* libspdm_negotiate_connection_version will change the spdm_response.
      * It must be done after append_message_a.*/
-    result = spdm_negotiate_connection_version(&common_version,
-                                               spdm_context->local_context.version.spdm_version,
-                                               spdm_context->local_context.version.spdm_version_count,
-                                               spdm_response.version_number_entry,
-                                               spdm_response.version_number_entry_count);
+    result = libspdm_negotiate_connection_version(&common_version,
+                                                  spdm_context->local_context.version.spdm_version,
+                                                  spdm_context->local_context.version.spdm_version_count,
+                                                  spdm_response.version_number_entry,
+                                                  spdm_response.version_number_entry_count);
     if (result == false) {
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
@@ -145,7 +145,7 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
                      spdm_response.version_number_entry_count * sizeof(spdm_version_number_t),
                      spdm_response.version_number_entry,
                      spdm_response.version_number_entry_count * sizeof(spdm_version_number_t));
-            spdm_version_number_sort (version_number_entry, *version_number_entry_count);
+            libspdm_version_number_sort (version_number_entry, *version_number_entry_count);
         }
     }
 
@@ -164,7 +164,7 @@ return_status try_spdm_get_version(spdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_version(spdm_context_t *spdm_context,
+return_status spdm_get_version(libspdm_context_t *spdm_context,
                                uint8_t *version_number_entry_count,
                                spdm_version_number_t *version_number_entry)
 {

@@ -9,10 +9,10 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context,
+static void spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                     uint32_t *session_id)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -36,7 +36,7 @@ static void spdm_set_standard_key_update_test_state(spdm_context_t *spdm_context
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = *session_id;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, *session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
@@ -103,9 +103,9 @@ uintn get_max_buffer_size(void)
 void test_spdm_requester_encap_key_update(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     spdm_secured_message_context_t *secured_message_context;
     uintn request_size;
     uintn response_size;

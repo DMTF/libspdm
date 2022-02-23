@@ -94,7 +94,7 @@ spdm_get_response_func_via_request_code(uint8_t request_code)
  * @return GET_SPDM_RESPONSE function according to the last request.
  **/
 spdm_get_spdm_response_func
-spdm_get_response_func_via_last_request(spdm_context_t *spdm_context)
+spdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
 {
     spdm_message_header_t *spdm_request;
 
@@ -123,9 +123,9 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
                                       bool *is_app_message,
                                       uintn request_size, const void *request)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     uint32_t *message_session_id;
 
     spdm_context = context;
@@ -187,8 +187,8 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
     DEBUG((DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
            (message_session_id != NULL) ? *message_session_id : 0,
            spdm_context->last_spdm_request_size));
-    internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
-                      spdm_context->last_spdm_request_size);
+    libspdm_internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
+                              spdm_context->last_spdm_request_size);
 
     return RETURN_SUCCESS;
 }
@@ -200,7 +200,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
  * @param  session_id                    The session_id of a session.
  * @param  session_state                 The state of a session.
  **/
-void spdm_trigger_session_state_callback(spdm_context_t *spdm_context,
+void spdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
                                          uint32_t session_id,
                                          libspdm_session_state_t session_state)
 {
@@ -222,11 +222,11 @@ void spdm_trigger_session_state_callback(spdm_context_t *spdm_context,
  * @param  session_id                    Indicate the SPDM session ID.
  * @param  session_state                 Indicate the SPDM session state.
  */
-void spdm_set_session_state(spdm_context_t *spdm_context,
+void spdm_set_session_state(libspdm_context_t *spdm_context,
                             uint32_t session_id,
                             libspdm_session_state_t session_state)
 {
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     libspdm_session_state_t old_session_state;
 
     session_info =
@@ -252,7 +252,7 @@ void spdm_set_session_state(spdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  **/
-void spdm_trigger_connection_state_callback(spdm_context_t *spdm_context,
+void spdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
                                             const libspdm_connection_state_t
                                             connection_state)
 {
@@ -274,7 +274,7 @@ void spdm_trigger_connection_state_callback(spdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  */
-void spdm_set_connection_state(spdm_context_t *spdm_context,
+void spdm_set_connection_state(libspdm_context_t *spdm_context,
                                libspdm_connection_state_t connection_state)
 {
     if (spdm_context->connection_info.connection_state !=
@@ -309,12 +309,12 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
                                      uintn *response_size,
                                      void *response)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint8_t my_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn my_response_size;
     return_status status;
     spdm_get_spdm_response_func get_response_func;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     spdm_message_header_t *spdm_request;
     spdm_message_header_t *spdm_response;
     bool result;
@@ -365,7 +365,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
                (session_id != NULL) ? *session_id : 0,
                my_response_size));
-        internal_dump_hex(my_response, my_response_size);
+        libspdm_internal_dump_hex(my_response, my_response_size);
 
         status = spdm_context->transport_encode_message(
             spdm_context, session_id, false, false,
@@ -466,7 +466,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
 
     DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
            (session_id != NULL) ? *session_id : 0, my_response_size));
-    internal_dump_hex(my_response, my_response_size);
+    libspdm_internal_dump_hex(my_response, my_response_size);
 
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,
@@ -480,7 +480,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     if (session_id != NULL) {
         switch (spdm_response->request_response_code) {
         case SPDM_FINISH_RSP:
-            if (!spdm_is_capabilities_flag_supported(
+            if (!libspdm_is_capabilities_flag_supported(
                     spdm_context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -513,7 +513,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     } else {
         switch (spdm_response->request_response_code) {
         case SPDM_FINISH_RSP:
-            if (spdm_is_capabilities_flag_supported(
+            if (libspdm_is_capabilities_flag_supported(
                     spdm_context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
@@ -544,7 +544,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
 void libspdm_register_get_response_func(
     void *context, libspdm_get_response_func get_response_func)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
 
     spdm_context = context;
     spdm_context->get_response_func = (uintn)get_response_func;
@@ -567,7 +567,7 @@ return_status libspdm_register_session_state_callback_func(
     void *context,
     libspdm_session_state_callback_func spdm_session_state_callback)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn index;
 
     spdm_context = context;
@@ -598,7 +598,7 @@ return_status libspdm_register_connection_state_callback_func(
     void *context,
     libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn index;
 
     spdm_context = context;

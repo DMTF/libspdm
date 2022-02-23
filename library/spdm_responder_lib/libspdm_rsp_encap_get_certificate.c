@@ -22,7 +22,7 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
+spdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
                                        uintn *encap_request_size,
                                        void *encap_request)
 {
@@ -31,7 +31,7 @@ spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
-    if (!spdm_is_capabilities_flag_supported(
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return RETURN_DEVICE_ERROR;
@@ -42,18 +42,18 @@ spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
 
     spdm_request = encap_request;
 
-    spdm_request->header.spdm_version = spdm_get_connection_version (spdm_context);
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 = 0;
-    spdm_request->offset = (uint16_t)get_managed_buffer_size(
+    spdm_request->offset = (uint16_t)libspdm_get_managed_buffer_size(
         &spdm_context->encap_context.certificate_chain_buffer);
     spdm_request->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
            spdm_request->offset, spdm_request->length));
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
 
     /* Cache data*/
@@ -86,7 +86,7 @@ spdm_get_encap_request_get_certificate(spdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status spdm_process_encap_response_certificate(
-    spdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     const spdm_certificate_response_t *spdm_response;
@@ -104,7 +104,7 @@ return_status spdm_process_encap_response_certificate(
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response->header.spdm_version != spdm_get_connection_version (spdm_context)) {
+    if (spdm_response->header.spdm_version != libspdm_get_connection_version (spdm_context)) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -125,7 +125,7 @@ return_status spdm_process_encap_response_certificate(
         (spdm_response->portion_length == 0)) {
         return RETURN_DEVICE_ERROR;
     }
-    request_offset = (uint16_t)get_managed_buffer_size(
+    request_offset = (uint16_t)libspdm_get_managed_buffer_size(
         &spdm_context->encap_context.certificate_chain_buffer);
     if (request_offset == 0) {
         spdm_context->encap_context.cert_chain_total_len = spdm_response->portion_length +
@@ -154,13 +154,13 @@ return_status spdm_process_encap_response_certificate(
     }
 
     DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
-           get_managed_buffer_size(
+           libspdm_get_managed_buffer_size(
                &spdm_context->encap_context.certificate_chain_buffer),
            spdm_response->portion_length));
-    internal_dump_hex((void *)(spdm_response + 1),
-                      spdm_response->portion_length);
+    libspdm_internal_dump_hex((void *)(spdm_response + 1),
+                              spdm_response->portion_length);
 
-    status = append_managed_buffer(
+    status = libspdm_append_managed_buffer(
         &spdm_context->encap_context.certificate_chain_buffer,
         (void *)(spdm_response + 1), spdm_response->portion_length);
     if (RETURN_ERROR(status)) {
@@ -177,9 +177,9 @@ return_status spdm_process_encap_response_certificate(
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         status = spdm_context->local_context.verify_peer_spdm_cert_chain (
             spdm_context, spdm_context->encap_context.req_slot_id,
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->encap_context.certificate_chain_buffer),
-            get_managed_buffer(
+            libspdm_get_managed_buffer(
                 &spdm_context->encap_context.certificate_chain_buffer),
             NULL, NULL);
         if (RETURN_ERROR(status)) {
@@ -188,11 +188,11 @@ return_status spdm_process_encap_response_certificate(
             return RETURN_SECURITY_VIOLATION;
         }
     } else {
-        result = spdm_verify_peer_cert_chain_buffer(
+        result = libspdm_verify_peer_cert_chain_buffer(
             spdm_context,
-            get_managed_buffer(
+            libspdm_get_managed_buffer(
                 &spdm_context->encap_context.certificate_chain_buffer),
-            get_managed_buffer_size(
+            libspdm_get_managed_buffer_size(
                 &spdm_context->encap_context.certificate_chain_buffer),
             NULL, NULL);
         if (!result) {
@@ -204,20 +204,20 @@ return_status spdm_process_encap_response_certificate(
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
-        get_managed_buffer_size(
+        libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer);
     copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
              sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             get_managed_buffer(
+             libspdm_get_managed_buffer(
                  &spdm_context->encap_context.certificate_chain_buffer),
-             get_managed_buffer_size(
+             libspdm_get_managed_buffer_size(
                  &spdm_context->encap_context.certificate_chain_buffer));
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        get_managed_buffer(
+        libspdm_get_managed_buffer(
             &spdm_context->encap_context.certificate_chain_buffer),
-        get_managed_buffer_size(
+        libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer),
         spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
     if (!result) {
@@ -231,9 +231,9 @@ return_status spdm_process_encap_response_certificate(
     result = libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
-        get_managed_buffer(
+        libspdm_get_managed_buffer(
             &spdm_context->encap_context.certificate_chain_buffer),
-        get_managed_buffer_size(
+        libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer),
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
     if (!result) {

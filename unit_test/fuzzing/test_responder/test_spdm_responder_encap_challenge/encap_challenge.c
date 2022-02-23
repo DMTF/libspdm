@@ -27,7 +27,7 @@ static uint8_t m_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 void test_spdm_responder_encap_challenge_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     spdm_challenge_auth_response_t *spdm_response;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *ptr;
@@ -96,9 +96,9 @@ void test_spdm_responder_encap_challenge_case1(void **State)
                sizeof(m_local_buffer) - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
                spdm_response, (uintn)ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-    internal_dump_hex(m_local_buffer, m_local_buffer_size);
+    libspdm_internal_dump_hex(m_local_buffer, m_local_buffer_size);
     libspdm_hash_all(m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
-    internal_dump_hex(m_local_buffer, m_local_buffer_size);
+    libspdm_internal_dump_hex(m_local_buffer, m_local_buffer_size);
     sig_size = libspdm_get_asym_signature_size(m_use_asym_algo);
 
     ptr += sig_size;
@@ -115,7 +115,7 @@ void test_spdm_responder_encap_challenge_case1(void **State)
 void test_spdm_get_encap_request_challenge_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uintn encap_request_size;
     void *data;
     uintn data_size;

@@ -39,7 +39,7 @@ return_status spdm_get_response_version(void *context, uintn request_size,
 {
     const spdm_get_version_request_t *spdm_request;
     spdm_version_response_mine_t *spdm_response;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     return_status status;
 
     spdm_context = context;
@@ -73,8 +73,8 @@ return_status spdm_get_response_version(void *context, uintn request_size,
             response_size, response);
     }
 
-    spdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                               spdm_request->header.request_response_code);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+                                                  spdm_request->header.request_response_code);
 
 
     /* Cache*/

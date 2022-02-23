@@ -50,7 +50,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
                                           void *response, uint64_t timeout)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
     spdm_end_session_response_t spdm_response;
     uintn spdm_response_size;
     uint32_t session_id;
@@ -81,13 +81,13 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 void test_spdm_requester_end_session(void **State)
 {
     spdm_test_context_t *spdm_test_context;
-    spdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
     uintn data_size;
     void *hash;
     uintn hash_size;
-    spdm_session_info_t *session_info;
+    libspdm_session_info_t *session_info;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -128,7 +128,7 @@ void test_spdm_requester_end_session(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    spdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
 
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
