@@ -35,9 +35,9 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 
     spdm_test_context = get_spdm_test_context();
     test_message_header_size = 1;
-    copy_mem_s((uint8_t *)temp_buf, sizeof(temp_buf),
-               (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-               spdm_test_context->test_buffer_size);
+    copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
+             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+             spdm_test_context->test_buffer_size);
     read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
                                             NULL, NULL);
     ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] =
@@ -63,8 +63,8 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
      * ptr += libspdm_get_hash_size (m_use_hash_algo);*/
     *(uint16_t *)ptr = 0;
     ptr += sizeof(uint16_t);
-    copy_mem_s(&m_local_buffer[m_local_buffer_size], sizeof(m_local_buffer),
-               spdm_response, (uintn)ptr - (uintn)spdm_response);
+    copy_mem(&m_local_buffer[m_local_buffer_size], sizeof(m_local_buffer),
+             spdm_response, (uintn)ptr - (uintn)spdm_response);
     m_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
     libspdm_internal_dump_hex(m_local_buffer, m_local_buffer_size);
     libspdm_hash_all(m_use_hash_algo, m_local_buffer, m_local_buffer_size, hash_data);
@@ -88,7 +88,7 @@ return_status spdm_device_send_message(void *spdm_context, uintn request_size,
 
     ptr = (uint8_t *)request;
     m_local_buffer_size = 0;
-    copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+    copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
     m_local_buffer_size += (request_size - 1);
 
     return RETURN_SUCCESS;
@@ -122,9 +122,9 @@ void test_spdm_requester_challenge_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -164,9 +164,9 @@ void test_spdm_requester_challenge_ex_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));

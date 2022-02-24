@@ -43,11 +43,11 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     portion_length = FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     spdm_test_context = get_spdm_test_context();
 
-    copy_mem_s(response, *response_size, &spdm_transport_header, 1);
-    copy_mem_s((uint8_t *)response + 1, *response_size - 1,
-               (uint8_t *)spdm_test_context->test_buffer + TEST_MESSAGE_TYPE_SPDM +
-               FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-               FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    copy_mem(response, *response_size, &spdm_transport_header, 1);
+    copy_mem((uint8_t *)response + 1, *response_size - 1,
+             (uint8_t *)spdm_test_context->test_buffer + TEST_MESSAGE_TYPE_SPDM +
+             FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+             FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     *response_size = portion_length + 1;
     calling_index++;
 

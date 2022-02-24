@@ -21,9 +21,9 @@ void spdm_secured_message_set_response_data_encryption_key(void *spdm_secured_me
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->aead_key_size);
-    copy_mem_s(secured_message_context->application_secret.response_data_encryption_key,
-               sizeof(secured_message_context->application_secret.response_data_encryption_key),
-               key, secured_message_context->aead_key_size);
+    copy_mem(secured_message_context->application_secret.response_data_encryption_key,
+             sizeof(secured_message_context->application_secret.response_data_encryption_key),
+             key, secured_message_context->aead_key_size);
 }
 
 void spdm_secured_message_set_response_data_salt(void *spdm_secured_message_context,
@@ -33,9 +33,9 @@ void spdm_secured_message_set_response_data_salt(void *spdm_secured_message_cont
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(salt_size == secured_message_context->aead_iv_size);
-    copy_mem_s(secured_message_context->application_secret.response_data_salt,
-               sizeof(secured_message_context->application_secret.response_data_salt),
-               salt, secured_message_context->aead_iv_size);
+    copy_mem(secured_message_context->application_secret.response_data_salt,
+             sizeof(secured_message_context->application_secret.response_data_salt),
+             salt, secured_message_context->aead_iv_size);
 }
 
 uintn get_max_buffer_size(void)
@@ -62,9 +62,9 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     session_id = 0xFFFFFFFF;
     test_message_header_size = 1;
 
-    copy_mem_s(&spdm_response, sizeof(spdm_response),
-               (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-               spdm_test_context->test_buffer_size);
+    copy_mem(&spdm_response, sizeof(spdm_response),
+             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+             spdm_test_context->test_buffer_size);
 
     spdm_transport_test_encode_message(spdm_context, &session_id, false, false,
                                        spdm_test_context->test_buffer_size, &spdm_response,
@@ -118,13 +118,13 @@ void test_spdm_requester_heartbeat_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
