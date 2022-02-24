@@ -26,8 +26,8 @@
 uint8_t test_get_sequence_number(uint64_t sequence_number,
                                  uint8_t *sequence_number_buffer)
 {
-    copy_mem_s(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
-               &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
+    copy_mem(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
+             &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
     return TEST_SEQUENCE_NUMBER_COUNT;
 }
 
@@ -94,9 +94,9 @@ return_status test_encode_message(const uint32_t *session_id, uintn message_size
     } else {
         test_message_header->message_type = TEST_MESSAGE_TYPE_SPDM;
     }
-    copy_mem_s((uint8_t *)transport_message + sizeof(test_message_header_t),
-               init_transport_message_size - sizeof(test_message_header_t),
-               message, message_size);
+    copy_mem((uint8_t *)transport_message + sizeof(test_message_header_t),
+             init_transport_message_size - sizeof(test_message_header_t),
+             message, message_size);
     zero_mem((uint8_t *)transport_message + sizeof(test_message_header_t) +
              message_size,
              *transport_message_size - sizeof(test_message_header_t) -
@@ -170,9 +170,9 @@ return_status test_decode_message(uint32_t **session_id,
 
         if (*message_size + alignment - 1 >=
             transport_message_size - sizeof(test_message_header_t)) {
-            copy_mem_s(message, init_message_size,
-                       (uint8_t *)transport_message + sizeof(test_message_header_t),
-                       *message_size);
+            copy_mem(message, init_message_size,
+                     (uint8_t *)transport_message + sizeof(test_message_header_t),
+                     *message_size);
             return RETURN_SUCCESS;
         }
         *message_size =
@@ -182,8 +182,8 @@ return_status test_decode_message(uint32_t **session_id,
         return RETURN_BUFFER_TOO_SMALL;
     }
     *message_size = transport_message_size - sizeof(test_message_header_t);
-    copy_mem_s(message, init_message_size,
-               (uint8_t *)transport_message + sizeof(test_message_header_t),
-               *message_size);
+    copy_mem(message, init_message_size,
+             (uint8_t *)transport_message + sizeof(test_message_header_t),
+             *message_size);
     return RETURN_SUCCESS;
 }
