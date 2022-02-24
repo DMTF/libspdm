@@ -36,7 +36,7 @@ return_status spdm_device_receive_message(void *spdm_context,
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_get_diges(void **State)
+void libspdm_test_requester_get_diges(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -83,7 +83,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Successful response*/
-    test_spdm_requester_get_diges(&State);
+    libspdm_test_requester_get_diges(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

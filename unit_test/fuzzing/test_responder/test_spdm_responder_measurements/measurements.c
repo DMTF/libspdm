@@ -18,7 +18,7 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_responder_measurements_case1(void **State)
+void libspdm_test_responder_measurements_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -40,11 +40,11 @@ void test_spdm_responder_measurements_case1(void **State)
     spdm_context->local_context.opaque_measurement_rsp = NULL;
 
     response_size = sizeof(response);
-    spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_measurements_case2(void **State)
+void libspdm_test_responder_measurements_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_session_info_t *session_info;
@@ -85,11 +85,11 @@ void test_spdm_responder_measurements_case2(void **State)
 
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
-    spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_measurements_case3(void **State)
+void libspdm_test_responder_measurements_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -123,12 +123,12 @@ void test_spdm_responder_measurements_case3(void **State)
 
     response_size = sizeof(response);
 
-    spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_measurements_case4(void **State)
+void libspdm_test_responder_measurements_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_session_info_t *session_info;
@@ -181,8 +181,8 @@ void test_spdm_responder_measurements_case4(void **State)
 
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
-    spdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer, &response_size, response);
     free(data);
 }
 
@@ -202,23 +202,23 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Success Case*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_measurements_case1(&State);
+    libspdm_test_responder_measurements_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /*last_spdm_request_session_id_valid: true*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_measurements_case2(&State);
+    libspdm_test_responder_measurements_case2(&State);
     spdm_unit_test_group_teardown(&State);
 
     /*Select version based on GET_VERSION/VERSION support*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_measurements_case3(&State);
+    libspdm_test_responder_measurements_case3(&State);
     spdm_unit_test_group_teardown(&State);
 
     /*Select version based on GET_VERSION/VERSION support
      * last_spdm_request_session_id_valid: true*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_measurements_case4(&State);
+    libspdm_test_responder_measurements_case4(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

@@ -13,7 +13,7 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_responder_capabilities_case1(void **State)
+void libspdm_test_responder_capabilities_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -27,13 +27,13 @@ void test_spdm_responder_capabilities_case1(void **State)
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
-    spdm_get_response_capabilities(spdm_context,
-                                   spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer,
-                                   &response_size, response);
+    libspdm_get_response_capabilities(spdm_context,
+                                      spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer,
+                                      &response_size, response);
 }
 
-void test_spdm_responder_capabilities_case2(void **State)
+void libspdm_test_responder_capabilities_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -48,13 +48,13 @@ void test_spdm_responder_capabilities_case2(void **State)
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
-    spdm_get_response_capabilities(spdm_context,
-                                   spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer,
-                                   &response_size, response);
+    libspdm_get_response_capabilities(spdm_context,
+                                      spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer,
+                                      &response_size, response);
 }
 
-void test_spdm_responder_capabilities_case3(void **State)
+void libspdm_test_responder_capabilities_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -69,13 +69,13 @@ void test_spdm_responder_capabilities_case3(void **State)
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     response_size = sizeof(response);
-    spdm_get_response_capabilities(spdm_context,
-                                   spdm_test_context->test_buffer_size,
-                                   spdm_test_context->test_buffer,
-                                   &response_size, response);
+    libspdm_get_response_capabilities(spdm_context,
+                                      spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer,
+                                      &response_size, response);
 }
 
-spdm_test_context_t test_spdm_responder_context = {
+spdm_test_context_t libspdm_test_responder_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
@@ -83,19 +83,19 @@ spdm_test_context_t test_spdm_responder_context = {
 void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
-    setup_spdm_test_context(&test_spdm_responder_context);
+    setup_spdm_test_context(&libspdm_test_responder_context);
 
-    test_spdm_responder_context.test_buffer = (void *)test_buffer;
-    test_spdm_responder_context.test_buffer_size = test_buffer_size;
+    libspdm_test_responder_context.test_buffer = (void *)test_buffer;
+    libspdm_test_responder_context.test_buffer_size = test_buffer_size;
 
     spdm_unit_test_group_setup(&State);
 
     /* Success Case */
-    test_spdm_responder_capabilities_case1(&State);
+    libspdm_test_responder_capabilities_case1(&State);
     /* connection_state Check*/
-    test_spdm_responder_capabilities_case2(&State);
+    libspdm_test_responder_capabilities_case2(&State);
     /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
-    test_spdm_responder_capabilities_case3(&State);
+    libspdm_test_responder_capabilities_case3(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

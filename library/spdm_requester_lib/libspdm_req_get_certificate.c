@@ -101,18 +101,18 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
         DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                spdm_request.offset, spdm_request.length));
 
-        status = spdm_send_spdm_request(spdm_context, NULL,
-                                        sizeof(spdm_request),
-                                        &spdm_request);
+        status = libspdm_send_spdm_request(spdm_context, NULL,
+                                           sizeof(spdm_request),
+                                           &spdm_request);
         if (RETURN_ERROR(status)) {
             goto done;
         }
 
         spdm_response_size = sizeof(spdm_response);
         zero_mem(&spdm_response, sizeof(spdm_response));
-        status = spdm_receive_spdm_response(spdm_context, NULL,
-                                            &spdm_response_size,
-                                            &spdm_response);
+        status = libspdm_receive_spdm_response(spdm_context, NULL,
+                                               &spdm_response_size,
+                                               &spdm_response);
         if (RETURN_ERROR(status)) {
             goto done;
         }
@@ -124,7 +124,7 @@ return_status try_spdm_get_certificate(void *context, uint8_t slot_id,
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_response.header.request_response_code == SPDM_ERROR) {
-            status = spdm_handle_error_response_main(
+            status = libspdm_handle_error_response_main(
                 spdm_context, NULL,
                 &spdm_response_size,
                 &spdm_response, SPDM_GET_CERTIFICATE,

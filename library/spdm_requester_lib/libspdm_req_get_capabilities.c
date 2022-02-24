@@ -97,7 +97,7 @@ bool spdm_check_response_flag_compability(uint32_t capabilities_flag,
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_capabilities(libspdm_context_t *spdm_context)
+return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 {
     return_status status;
     spdm_get_capabilities_request_t spdm_request;
@@ -131,15 +131,15 @@ return_status try_spdm_get_capabilities(libspdm_context_t *spdm_context)
     spdm_request.flags = spdm_context->local_context.capability.flags;
     spdm_request.data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
     spdm_request.max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
-    status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                                    &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
+                                       &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -151,7 +151,7 @@ return_status try_spdm_get_capabilities(libspdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_simple_error_response(
+        status = libspdm_handle_simple_error_response(
             spdm_context, spdm_response.header.param1);
         if (RETURN_ERROR(status)) {
             return status;
@@ -230,7 +230,7 @@ return_status try_spdm_get_capabilities(libspdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_capabilities(libspdm_context_t *spdm_context)
+return_status libspdm_get_capabilities(libspdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;
@@ -238,7 +238,7 @@ return_status spdm_get_capabilities(libspdm_context_t *spdm_context)
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_capabilities(spdm_context);
+        status = libspdm_try_get_capabilities(spdm_context);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

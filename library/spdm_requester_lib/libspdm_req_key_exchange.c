@@ -55,7 +55,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_key_exchange(
+return_status libspdm_try_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -171,8 +171,8 @@ return_status try_spdm_send_receive_key_exchange(
     ptr += opaque_key_exchange_req_size;
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
-    status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                                    &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
+                                       &spdm_request);
     if (RETURN_ERROR(status)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
@@ -182,7 +182,7 @@ return_status try_spdm_send_receive_key_exchange(
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         libspdm_secured_message_dhe_free(
@@ -203,7 +203,7 @@ return_status try_spdm_send_receive_key_exchange(
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_error_response_main(
+        status = libspdm_handle_error_response_main(
             spdm_context, NULL, &spdm_response_size,
             &spdm_response, SPDM_KEY_EXCHANGE,
             SPDM_KEY_EXCHANGE_RSP,
@@ -510,7 +510,7 @@ return_status try_spdm_send_receive_key_exchange(
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_key_exchange(
+return_status libspdm_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -522,7 +522,7 @@ return_status spdm_send_receive_key_exchange(
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_send_receive_key_exchange(
+        status = libspdm_try_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, NULL, NULL, NULL);
@@ -552,7 +552,7 @@ return_status spdm_send_receive_key_exchange(
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_key_exchange_ex(
+return_status libspdm_send_receive_key_exchange_ex(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -567,7 +567,7 @@ return_status spdm_send_receive_key_exchange_ex(
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_send_receive_key_exchange(
+        status = libspdm_try_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, requester_random_in,

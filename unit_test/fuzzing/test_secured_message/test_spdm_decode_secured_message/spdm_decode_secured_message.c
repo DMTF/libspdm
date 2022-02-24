@@ -25,7 +25,7 @@ void test_libspdm_decode_secured_message(void **State)
     libspdm_session_info_t *session_info;
     bool is_requester;
     uint32_t session_id;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;

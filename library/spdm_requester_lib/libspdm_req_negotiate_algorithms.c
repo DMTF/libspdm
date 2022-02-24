@@ -25,7 +25,7 @@ typedef struct {
     uint8_t ext_hash_count;
     uint16_t reserved3;
     spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
-} spdm_negotiate_algorithms_request_mine_t;
+} libspdm_negotiate_algorithms_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
@@ -53,10 +53,10 @@ typedef struct {
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
+return_status libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     return_status status;
-    spdm_negotiate_algorithms_request_mine_t spdm_request;
+    libspdm_negotiate_algorithms_request_mine_t spdm_request;
     spdm_algorithms_response_max_t spdm_response;
     uintn spdm_response_size;
     uint32_t algo_size;
@@ -119,15 +119,15 @@ return_status try_spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
     spdm_request.struct_table[3].alg_supported =
         spdm_context->local_context.algorithm.key_schedule;
 
-    status = spdm_send_spdm_request(spdm_context, NULL, spdm_request.length,
-                                    &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request.length,
+                                       &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -139,7 +139,7 @@ return_status try_spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_simple_error_response(
+        status = libspdm_handle_simple_error_response(
             spdm_context, spdm_response.header.param1);
         if (RETURN_ERROR(status)) {
             return status;
@@ -406,7 +406,7 @@ return_status try_spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
+return_status libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     uintn retry;
     return_status status;
@@ -414,7 +414,7 @@ return_status spdm_negotiate_algorithms(libspdm_context_t *spdm_context)
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_negotiate_algorithms(spdm_context);
+        status = libspdm_try_negotiate_algorithms(spdm_context);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

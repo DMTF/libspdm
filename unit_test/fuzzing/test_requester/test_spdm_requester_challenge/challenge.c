@@ -94,7 +94,7 @@ return_status spdm_device_send_message(void *spdm_context, uintn request_size,
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_challenge_case1(void **State)
+void libspdm_test_requester_challenge_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -133,7 +133,7 @@ void test_spdm_requester_challenge_case1(void **State)
     free(data);
 }
 
-void test_spdm_requester_challenge_ex_case1(void **State)
+void libspdm_test_requester_challenge_ex_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -193,11 +193,11 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_challenge_case1(&State);
+    libspdm_test_requester_challenge_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_challenge_ex_case1(&State);
+    libspdm_test_requester_challenge_ex_case1(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

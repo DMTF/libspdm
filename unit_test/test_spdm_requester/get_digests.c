@@ -643,7 +643,7 @@ return_status spdm_requester_get_digests_test_receive_message(
  * Test 1: a failure occurs during the sending of the request message
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case1(void **state)
+void libspdm_test_requester_get_digests_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -683,7 +683,7 @@ void test_spdm_requester_get_digests_case1(void **state)
  * Test 2: a request message is successfully sent and a response message is successfully received
  * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is received
  **/
-void test_spdm_requester_get_digests_case2(void **state)
+void libspdm_test_requester_get_digests_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -734,7 +734,7 @@ void test_spdm_requester_get_digests_case2(void **state)
  * GET_CAPABILITIES-CAPABILITIES and NEGOTIATE_ALGORITHMS-ALGORITHMS of the protocol were not previously completed
  * Expected Behavior: requester returns the status RETURN_UNSUPPORTED, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case3(void **state)
+void libspdm_test_requester_get_digests_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -774,7 +774,7 @@ void test_spdm_requester_get_digests_case3(void **state)
  * Test 4: a request message is successfully sent and an ERROR response message with error code = InvalidRequest is received
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case4(void **state)
+void libspdm_test_requester_get_digests_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -814,7 +814,7 @@ void test_spdm_requester_get_digests_case4(void **state)
  * Test 5: request messages are successfully sent and ERROR response messages with error code = Busy are received in all attempts
  * Expected Behavior: requester returns the status RETURN_NO_RESPONSE, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case5(void **state)
+void libspdm_test_requester_get_digests_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -855,7 +855,7 @@ void test_spdm_requester_get_digests_case5(void **state)
  * first attempt followed by a successful response
  * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is received
  **/
-void test_spdm_requester_get_digests_case6(void **state)
+void libspdm_test_requester_get_digests_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -901,7 +901,7 @@ void test_spdm_requester_get_digests_case6(void **state)
  * (Meaning Responder is requesting Requester to reissue GET_VERSION to resynchronize) is received
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case7(void **state)
+void libspdm_test_requester_get_digests_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -944,7 +944,7 @@ void test_spdm_requester_get_digests_case7(void **state)
  * are received in all attempts
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR
  **/
-void test_spdm_requester_get_digests_case8(void **state)
+void libspdm_test_requester_get_digests_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -982,7 +982,7 @@ void test_spdm_requester_get_digests_case8(void **state)
  * is received in the first attempt followed by a successful response to RESPOND_IF_READY
  * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is received
  **/
-void test_spdm_requester_get_digests_case9(void **state)
+void libspdm_test_requester_get_digests_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1028,7 +1028,7 @@ void test_spdm_requester_get_digests_case9(void **state)
  * CERTIFICATE response messages
  * Expected Behavior: requester returns the status RETURN_UNSUPPORTED, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case10(void **state)
+void libspdm_test_requester_get_digests_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1067,7 +1067,7 @@ void test_spdm_requester_get_digests_case10(void **state)
  * Test 11: a request message is successfully sent but a failure occurs during the receiving of the response message
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case11(void **state)
+void libspdm_test_requester_get_digests_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1109,7 +1109,7 @@ void test_spdm_requester_get_digests_case11(void **state)
  * meaning it is an invalid response message
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
  **/
-void test_spdm_requester_get_digests_case12(void **state)
+void libspdm_test_requester_get_digests_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1150,7 +1150,7 @@ void test_spdm_requester_get_digests_case12(void **state)
  * Test 13: a request message is successfully sent but the request_response_code from the response message is different than the code of SPDM_DIGESTS
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case13(void **state)
+void libspdm_test_requester_get_digests_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1191,7 +1191,7 @@ void test_spdm_requester_get_digests_case13(void **state)
  * Test 14: a request message is successfully sent but the number of digests in the response message is equal to zero
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received
  **/
-void test_spdm_requester_get_digests_case14(void **state)
+void libspdm_test_requester_get_digests_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1232,7 +1232,7 @@ void test_spdm_requester_get_digests_case14(void **state)
  * Test 15: a request message is successfully sent but it cannot be appended to the internal cache since the internal cache is full
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR
  **/
-void test_spdm_requester_get_digests_case15(void **state)
+void libspdm_test_requester_get_digests_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1273,7 +1273,7 @@ void test_spdm_requester_get_digests_case15(void **state)
  * Test 16: a request message is successfully sent but the response message cannot be appended to the internal cache since the internal cache is full
  * Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION
  **/
-void test_spdm_requester_get_digests_case16(void **state)
+void libspdm_test_requester_get_digests_case16(void **state)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     return_status status;
@@ -1318,7 +1318,7 @@ void test_spdm_requester_get_digests_case16(void **state)
  * Test 17: a request message is successfully sent but the single digest received in the response message is invalid
  * Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
  **/
-void test_spdm_requester_get_digests_case17(void **state)
+void libspdm_test_requester_get_digests_case17(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1358,7 +1358,7 @@ void test_spdm_requester_get_digests_case17(void **state)
  * the number of bits set in param2 - Slot mask
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
  **/
-void test_spdm_requester_get_digests_case18(void **state)
+void libspdm_test_requester_get_digests_case18(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1399,7 +1399,7 @@ void test_spdm_requester_get_digests_case18(void **state)
  * Test 19: a request message is successfully sent but several digests (except the first) received in the response message are invalid
  * Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
  **/
-void test_spdm_requester_get_digests_case19(void **state)
+void libspdm_test_requester_get_digests_case19(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1439,7 +1439,7 @@ void test_spdm_requester_get_digests_case19(void **state)
  * meaning it is an invalid response message.
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
  **/
-void test_spdm_requester_get_digests_case20(void **state)
+void libspdm_test_requester_get_digests_case20(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1481,7 +1481,7 @@ void test_spdm_requester_get_digests_case20(void **state)
  * meaning it is an invalid response message.
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
  **/
-void test_spdm_requester_get_digests_case21(void **state)
+void libspdm_test_requester_get_digests_case21(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1526,7 +1526,7 @@ void test_spdm_requester_get_digests_case21(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_digests_case22(void **state) {
+void libspdm_test_requester_get_digests_case22(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1583,51 +1583,51 @@ int spdm_requester_get_digests_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_digests_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case1),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case1),
         /* Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case2),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case3),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case4),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case5),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case6),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case7),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case8),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case9),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case9),
         /* capability flags check failed*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case10),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case10),
         /* ReceiveResponse failed*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case11),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case11),
         /* size of response < spdm_message_header_t
-        * cmocka_unit_test(test_spdm_requester_get_digests_case12),
+        * cmocka_unit_test(libspdm_test_requester_get_digests_case12),
         * request_response_code wrong in response*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case13),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case13),
         /* Zero digests received*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case14),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case14),
         /* Internal cache full (request message)
          * If request text is appending when reponse successfully instead of request,
          * case15 will useless and will cause a bug
-         * cmocka_unit_test(test_spdm_requester_get_digests_case15),
+         * cmocka_unit_test(libspdm_test_requester_get_digests_case15),
          * Internal cache full (response message)*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case16),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case16),
         /* Invalid digest*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case17),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case17),
         /* Slot mask != number of digests*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case18),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case18),
         /* Several invalid digests
-         * cmocka_unit_test(test_spdm_requester_get_digests_case19),
+         * cmocka_unit_test(libspdm_test_requester_get_digests_case19),
          * size of response < spdm_digest_response_t
-         * cmocka_unit_test(test_spdm_requester_get_digests_case20),
+         * cmocka_unit_test(libspdm_test_requester_get_digests_case20),
          * size of response > Max size of SPDM DIGESTS response
-         * cmocka_unit_test(test_spdm_requester_get_digests_case21),
+         * cmocka_unit_test(libspdm_test_requester_get_digests_case21),
          * Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_get_digests_case22),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case22),
     };
 
     setup_spdm_test_context(&m_spdm_requester_get_digests_test_context);

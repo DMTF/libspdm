@@ -142,11 +142,11 @@ bool spdm_check_request_flag_compability(uint32_t capabilities_flag,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_capabilities(void *context,
-                                             uintn request_size,
-                                             const void *request,
-                                             uintn *response_size,
-                                             void *response)
+return_status libspdm_get_response_capabilities(void *context,
+                                                uintn request_size,
+                                                const void *request,
+                                                uintn *response_size,
+                                                void *response)
 {
     const spdm_get_capabilities_request_t *spdm_request;
     spdm_capabilities_response_t *spdm_response;
@@ -157,7 +157,7 @@ return_status spdm_get_response_capabilities(void *context,
     spdm_request = request;
 
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -267,8 +267,8 @@ return_status spdm_get_response_capabilities(void *context,
         spdm_context->connection_info.capability.data_transfer_size = 0;
         spdm_context->connection_info.capability.max_spdm_msg_size = 0;
     }
-    spdm_set_connection_state(spdm_context,
-                              LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES);
+    libspdm_set_connection_state(spdm_context,
+                                 LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES);
 
     return RETURN_SUCCESS;
 }

@@ -25,7 +25,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_encap_response_challenge_auth(
+return_status libspdm_get_encap_response_challenge_auth(
     void *context, uintn request_size, void *request,
     uintn *response_size, void *response)
 {

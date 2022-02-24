@@ -24,7 +24,7 @@ spdm_test_context_t m_spdm_responder_finish_test_context = {
 void spdm_secured_message_set_request_finished_key(void *spdm_secured_message_context,
                                                    const void *key, uintn key_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
@@ -40,7 +40,7 @@ typedef struct {
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } spdm_finish_request_mine_t;
 
-void test_spdm_responder_finish_case1(void **State)
+void libspdm_test_responder_finish_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -120,12 +120,12 @@ void test_spdm_responder_finish_case1(void **State)
                      ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, m_spdm_finish_request1_size, &m_spdm_finish_request1,
-                             &response_size, response);
+    libspdm_get_response_finish(&spdm_context, m_spdm_finish_request1_size, &m_spdm_finish_request1,
+                                &response_size, response);
     free(data1);
 }
 
-void test_spdm_responder_finish_case2(void **State)
+void libspdm_test_responder_finish_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -137,11 +137,11 @@ void test_spdm_responder_finish_case2(void **State)
     spdm_context.response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_finish_case3(void **State)
+void libspdm_test_responder_finish_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -155,11 +155,11 @@ void test_spdm_responder_finish_case3(void **State)
     spdm_context.local_context.capability.flags = 0;
 
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_finish_case4(void **State)
+void libspdm_test_responder_finish_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -173,11 +173,11 @@ void test_spdm_responder_finish_case4(void **State)
     spdm_context.connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context.local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_finish_case5(void **State)
+void libspdm_test_responder_finish_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -193,11 +193,11 @@ void test_spdm_responder_finish_case5(void **State)
     spdm_context.local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
 
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_finish_case6(void **State)
+void libspdm_test_responder_finish_case6(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -218,11 +218,11 @@ void test_spdm_responder_finish_case6(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context.last_spdm_request_session_id_valid = !false;
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
-void test_spdm_responder_finish_case7(void **State)
+void libspdm_test_responder_finish_case7(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -275,12 +275,12 @@ void test_spdm_responder_finish_case7(void **State)
                                                   m_dummy_buffer, hash_size);
 
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
-                             spdm_test_context->test_buffer, &response_size, response);
+    libspdm_get_response_finish(&spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
     free(data1);
 }
 
-void test_spdm_responder_finish_case8(void **State)
+void libspdm_test_responder_finish_case8(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -386,8 +386,8 @@ void test_spdm_responder_finish_case8(void **State)
     m_spdm_finish_request_size =
         sizeof(spdm_finish_request_t) + req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
-    spdm_get_response_finish(&spdm_context, m_spdm_finish_request_size, &m_spdm_finish_request,
-                             &response_size, response);
+    libspdm_get_response_finish(&spdm_context, m_spdm_finish_request_size, &m_spdm_finish_request,
+                                &response_size, response);
     free(data1);
     free(data2);
 }
@@ -404,21 +404,21 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_finish_case1(&State);
+    libspdm_test_responder_finish_case1(&State);
     /*response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
-    test_spdm_responder_finish_case2(&State);
+    libspdm_test_responder_finish_case2(&State);
     /*not supported capabilities_flag */
-    test_spdm_responder_finish_case3(&State);
+    libspdm_test_responder_finish_case3(&State);
     /* connection_state Check */
-    test_spdm_responder_finish_case4(&State);
+    libspdm_test_responder_finish_case4(&State);
     /* No handshake in clear, then it must be in a session.*/
-    test_spdm_responder_finish_case5(&State);
+    libspdm_test_responder_finish_case5(&State);
     /* handshake in clear, then it must not be in a session.*/
-    test_spdm_responder_finish_case6(&State);
+    libspdm_test_responder_finish_case6(&State);
     /* secured_message_context:= LIBSPDM_SESSION_STATE_NOT_STARTED */
-    test_spdm_responder_finish_case7(&State);
+    libspdm_test_responder_finish_case7(&State);
     /* Success Case */
-    test_spdm_responder_finish_case8(&State);
+    libspdm_test_responder_finish_case8(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

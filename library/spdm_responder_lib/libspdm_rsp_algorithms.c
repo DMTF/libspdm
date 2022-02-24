@@ -217,11 +217,11 @@ uint32_t spdm_prioritize_algorithm(const uint32_t *priority_table,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_algorithms(void *context,
-                                           uintn request_size,
-                                           const void *request,
-                                           uintn *response_size,
-                                           void *response)
+return_status libspdm_get_response_algorithms(void *context,
+                                              uintn request_size,
+                                              const void *request,
+                                              uintn *response_size,
+                                              void *response)
 {
     const spdm_negotiate_algorithms_request_t *spdm_request;
     uintn spdm_request_size;
@@ -254,7 +254,7 @@ return_status spdm_get_response_algorithms(void *context,
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -639,8 +639,8 @@ return_status spdm_get_response_algorithms(void *context,
                                                response_size, response);
     }
 
-    spdm_set_connection_state(spdm_context,
-                              LIBSPDM_CONNECTION_STATE_NEGOTIATED);
+    libspdm_set_connection_state(spdm_context,
+                                 LIBSPDM_CONNECTION_STATE_NEGOTIATED);
 
     return RETURN_SUCCESS;
 }

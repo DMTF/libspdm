@@ -67,7 +67,7 @@ static void spdm_set_standard_key_update_test_state(
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
@@ -159,7 +159,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
@@ -199,7 +199,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -242,7 +242,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -285,7 +285,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -328,7 +328,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -374,7 +374,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -426,7 +426,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
@@ -466,7 +466,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -511,7 +511,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -555,7 +555,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
@@ -592,7 +592,7 @@ return_status spdm_requester_key_update_test_send_message(
 
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
         status = spdm_transport_test_decode_message(spdm_context,
@@ -632,7 +632,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -675,7 +675,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -718,7 +718,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -764,7 +764,7 @@ return_status spdm_requester_key_update_test_send_message(
 
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
             status = spdm_transport_test_decode_message(spdm_context,
@@ -836,7 +836,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -877,7 +877,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -907,7 +907,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -935,7 +935,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -969,7 +969,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
@@ -988,7 +988,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
@@ -1007,7 +1007,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1038,7 +1038,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -1071,7 +1071,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -1112,7 +1112,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
@@ -1131,7 +1131,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
@@ -1150,7 +1150,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1191,7 +1191,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1245,7 +1245,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1287,7 +1287,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1328,7 +1328,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1369,7 +1369,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1411,7 +1411,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1453,7 +1453,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -1490,7 +1490,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1508,7 +1508,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1546,7 +1546,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1564,7 +1564,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1602,7 +1602,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1621,7 +1621,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1641,7 +1641,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1679,7 +1679,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1697,7 +1697,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1735,7 +1735,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1758,7 +1758,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1796,7 +1796,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1819,7 +1819,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1839,7 +1839,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
-            ((spdm_secured_message_context_t
+            ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         }
@@ -1883,7 +1883,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                    response_size, response);
                 /* WALKAROUND: If just use single context to encode
                  * message and then decode message */
-                ((spdm_secured_message_context_t
+                ((libspdm_secured_message_context_t
                   *)(session_info->secured_message_context))
                 ->application_secret.response_data_sequence_number--;
             }
@@ -1902,7 +1902,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                                    response_size, response);
                 /* WALKAROUND: If just use single context to encode
                  * message and then decode message */
-                ((spdm_secured_message_context_t
+                ((libspdm_secured_message_context_t
                   *)(session_info->secured_message_context))
                 ->application_secret.response_data_sequence_number--;
 
@@ -1964,7 +1964,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -2006,7 +2006,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -2048,7 +2048,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -2092,7 +2092,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
 
@@ -2105,7 +2105,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
@@ -2176,7 +2176,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
@@ -2251,7 +2251,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2367,7 +2367,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
@@ -2438,7 +2438,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
@@ -2515,7 +2515,7 @@ return_status spdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2641,7 +2641,7 @@ return_status spdm_requester_key_update_test_receive_message(
 
         spdm_error_response_t spdm_response;
 
-        spdm_secured_message_context_t *secured_message_context;
+        libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
@@ -2751,7 +2751,7 @@ return_status spdm_requester_key_update_test_receive_message(
                                            &spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -2768,7 +2768,7 @@ return_status spdm_requester_key_update_test_receive_message(
  * returns a device error.
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_key_update_case1(void **state)
+void libspdm_test_requester_key_update_case1(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -2807,7 +2807,7 @@ void test_spdm_requester_key_update_case1(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void test_spdm_requester_key_update_case2(void **state)
+void libspdm_test_requester_key_update_case2(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -2835,7 +2835,7 @@ void test_spdm_requester_key_update_case2(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -2845,15 +2845,15 @@ void test_spdm_requester_key_update_case2(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -2862,7 +2862,7 @@ void test_spdm_requester_key_update_case2(void **state)
  * GET_CAPABILITIES and NEGOTIATE_ALGORITHMS had not been exchanged.
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
  **/
-void test_spdm_requester_key_update_case3(void **state)
+void libspdm_test_requester_key_update_case3(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -2905,7 +2905,7 @@ void test_spdm_requester_key_update_case3(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case4(void **state)
+void libspdm_test_requester_key_update_case4(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -2938,15 +2938,15 @@ void test_spdm_requester_key_update_case4(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -2956,7 +2956,7 @@ void test_spdm_requester_key_update_case4(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case5(void **state)
+void libspdm_test_requester_key_update_case5(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -2989,15 +2989,15 @@ void test_spdm_requester_key_update_case5(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3009,7 +3009,7 @@ void test_spdm_requester_key_update_case5(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void test_spdm_requester_key_update_case6(void **state)
+void libspdm_test_requester_key_update_case6(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3037,7 +3037,7 @@ void test_spdm_requester_key_update_case6(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3047,15 +3047,15 @@ void test_spdm_requester_key_update_case6(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3066,7 +3066,7 @@ void test_spdm_requester_key_update_case6(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void test_spdm_requester_key_update_case7(void **state)
+void libspdm_test_requester_key_update_case7(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3108,7 +3108,7 @@ void test_spdm_requester_key_update_case7(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case8(void **state)
+void libspdm_test_requester_key_update_case8(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3141,15 +3141,15 @@ void test_spdm_requester_key_update_case8(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3161,7 +3161,7 @@ void test_spdm_requester_key_update_case8(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void test_spdm_requester_key_update_case9(void **state)
+void libspdm_test_requester_key_update_case9(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3189,7 +3189,7 @@ void test_spdm_requester_key_update_case9(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3199,15 +3199,15 @@ void test_spdm_requester_key_update_case9(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3221,7 +3221,7 @@ void test_spdm_requester_key_update_case9(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case10(void **state)
+void libspdm_test_requester_key_update_case10(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3262,15 +3262,15 @@ void test_spdm_requester_key_update_case10(void **state)
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
-                            m_req_secret_buffer, ((spdm_secured_message_context_t
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.response_data_secret,
-                            m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
 
         error_code++;
@@ -3289,7 +3289,7 @@ void test_spdm_requester_key_update_case10(void **state)
     }
 }
 
-void test_spdm_requester_key_update_case11(void **state)
+void libspdm_test_requester_key_update_case11(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3317,7 +3317,7 @@ void test_spdm_requester_key_update_case11(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3339,15 +3339,15 @@ void test_spdm_requester_key_update_case11(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
@@ -3365,7 +3365,7 @@ void test_spdm_requester_key_update_case11(void **state)
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED,
  * and no keys are updated.
  **/
-void test_spdm_requester_key_update_case12(void **state)
+void libspdm_test_requester_key_update_case12(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3404,15 +3404,15 @@ void test_spdm_requester_key_update_case12(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3422,7 +3422,7 @@ void test_spdm_requester_key_update_case12(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR,
  * no keys are updated.
  **/
-void test_spdm_requester_key_update_case13(void **state)
+void libspdm_test_requester_key_update_case13(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3455,15 +3455,15 @@ void test_spdm_requester_key_update_case13(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3474,7 +3474,7 @@ void test_spdm_requester_key_update_case13(void **state)
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED,
  * and no keys are updated.
  **/
-void test_spdm_requester_key_update_case14(void **state)
+void libspdm_test_requester_key_update_case14(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3512,15 +3512,15 @@ void test_spdm_requester_key_update_case14(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3531,7 +3531,7 @@ void test_spdm_requester_key_update_case14(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case15(void **state)
+void libspdm_test_requester_key_update_case15(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3564,15 +3564,15 @@ void test_spdm_requester_key_update_case15(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3583,7 +3583,7 @@ void test_spdm_requester_key_update_case15(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case16(void **state)
+void libspdm_test_requester_key_update_case16(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3616,15 +3616,15 @@ void test_spdm_requester_key_update_case16(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3634,7 +3634,7 @@ void test_spdm_requester_key_update_case16(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case17(void **state)
+void libspdm_test_requester_key_update_case17(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3662,7 +3662,7 @@ void test_spdm_requester_key_update_case17(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3672,15 +3672,15 @@ void test_spdm_requester_key_update_case17(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3691,7 +3691,7 @@ void test_spdm_requester_key_update_case17(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case18(void **state)
+void libspdm_test_requester_key_update_case18(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3719,7 +3719,7 @@ void test_spdm_requester_key_update_case18(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3729,15 +3729,15 @@ void test_spdm_requester_key_update_case18(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3749,7 +3749,7 @@ void test_spdm_requester_key_update_case18(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case19(void **state)
+void libspdm_test_requester_key_update_case19(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3777,7 +3777,7 @@ void test_spdm_requester_key_update_case19(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3787,15 +3787,15 @@ void test_spdm_requester_key_update_case19(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3806,7 +3806,7 @@ void test_spdm_requester_key_update_case19(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void test_spdm_requester_key_update_case20(void **state)
+void libspdm_test_requester_key_update_case20(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3848,7 +3848,7 @@ void test_spdm_requester_key_update_case20(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case21(void **state)
+void libspdm_test_requester_key_update_case21(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3876,7 +3876,7 @@ void test_spdm_requester_key_update_case21(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3886,15 +3886,15 @@ void test_spdm_requester_key_update_case21(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3905,7 +3905,7 @@ void test_spdm_requester_key_update_case21(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case22(void **state)
+void libspdm_test_requester_key_update_case22(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -3933,7 +3933,7 @@ void test_spdm_requester_key_update_case22(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -3943,15 +3943,15 @@ void test_spdm_requester_key_update_case22(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -3965,7 +3965,7 @@ void test_spdm_requester_key_update_case22(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case23(void **state)
+void libspdm_test_requester_key_update_case23(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4000,7 +4000,7 @@ void test_spdm_requester_key_update_case23(void **state)
             m_req_secret_buffer, (uint8_t)(0xEE));
 
         /*request side updated*/
-        spdm_compute_secret_update(((spdm_secured_message_context_t
+        spdm_compute_secret_update(((libspdm_secured_message_context_t
                                      *)(session_info->secured_message_context))->hash_size,
                                    m_req_secret_buffer, m_req_secret_buffer,
                                    sizeof(m_req_secret_buffer));
@@ -4011,15 +4011,15 @@ void test_spdm_requester_key_update_case23(void **state)
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
-                            m_req_secret_buffer, ((spdm_secured_message_context_t
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.response_data_secret,
-                            m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
 
         error_code++;
@@ -4044,7 +4044,7 @@ void test_spdm_requester_key_update_case23(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case24(void **state)
+void libspdm_test_requester_key_update_case24(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4072,7 +4072,7 @@ void test_spdm_requester_key_update_case24(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -4082,15 +4082,15 @@ void test_spdm_requester_key_update_case24(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4101,7 +4101,7 @@ void test_spdm_requester_key_update_case24(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case25(void **state)
+void libspdm_test_requester_key_update_case25(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4129,7 +4129,7 @@ void test_spdm_requester_key_update_case25(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -4139,15 +4139,15 @@ void test_spdm_requester_key_update_case25(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4158,7 +4158,7 @@ void test_spdm_requester_key_update_case25(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void test_spdm_requester_key_update_case26(void **state)
+void libspdm_test_requester_key_update_case26(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4186,7 +4186,7 @@ void test_spdm_requester_key_update_case26(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
@@ -4196,15 +4196,15 @@ void test_spdm_requester_key_update_case26(void **state)
         spdm_context, session_id, true);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4214,7 +4214,7 @@ void test_spdm_requester_key_update_case26(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void test_spdm_requester_key_update_case27(void **state)
+void libspdm_test_requester_key_update_case27(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4242,12 +4242,12 @@ void test_spdm_requester_key_update_case27(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
     /*response side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_rsp_secret_buffer, m_rsp_secret_buffer,
                                sizeof(m_rsp_secret_buffer));
@@ -4256,15 +4256,15 @@ void test_spdm_requester_key_update_case27(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4274,7 +4274,7 @@ void test_spdm_requester_key_update_case27(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case28(void **state)
+void libspdm_test_requester_key_update_case28(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4285,7 +4285,7 @@ void test_spdm_requester_key_update_case28(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4322,15 +4322,15 @@ void test_spdm_requester_key_update_case28(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_DEVICE_ERROR);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4341,7 +4341,7 @@ void test_spdm_requester_key_update_case28(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case29(void **state)
+void libspdm_test_requester_key_update_case29(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4352,7 +4352,7 @@ void test_spdm_requester_key_update_case29(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4389,15 +4389,15 @@ void test_spdm_requester_key_update_case29(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_NO_RESPONSE);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4409,7 +4409,7 @@ void test_spdm_requester_key_update_case29(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void test_spdm_requester_key_update_case30(void **state)
+void libspdm_test_requester_key_update_case30(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4420,7 +4420,7 @@ void test_spdm_requester_key_update_case30(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4452,12 +4452,12 @@ void test_spdm_requester_key_update_case30(void **state)
                                   ->application_secret.response_data_sequence_number;
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
     /*response side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_rsp_secret_buffer, m_rsp_secret_buffer,
                                sizeof(m_rsp_secret_buffer));
@@ -4466,15 +4466,15 @@ void test_spdm_requester_key_update_case30(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4485,7 +4485,7 @@ void test_spdm_requester_key_update_case30(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void test_spdm_requester_key_update_case31(void **state)
+void libspdm_test_requester_key_update_case31(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4496,7 +4496,7 @@ void test_spdm_requester_key_update_case31(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4542,7 +4542,7 @@ void test_spdm_requester_key_update_case31(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case32(void **state)
+void libspdm_test_requester_key_update_case32(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4553,7 +4553,7 @@ void test_spdm_requester_key_update_case32(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4590,15 +4590,15 @@ void test_spdm_requester_key_update_case32(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_UNSUPPORTED);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4610,7 +4610,7 @@ void test_spdm_requester_key_update_case32(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void test_spdm_requester_key_update_case33(void **state)
+void libspdm_test_requester_key_update_case33(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4621,7 +4621,7 @@ void test_spdm_requester_key_update_case33(void **state)
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4653,12 +4653,12 @@ void test_spdm_requester_key_update_case33(void **state)
                                   ->application_secret.response_data_sequence_number;
 
     /*request side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_req_secret_buffer, m_req_secret_buffer,
                                sizeof(m_req_secret_buffer));
     /*response side updated*/
-    spdm_compute_secret_update(((spdm_secured_message_context_t
+    spdm_compute_secret_update(((libspdm_secured_message_context_t
                                  *)(session_info->secured_message_context))->hash_size,
                                m_rsp_secret_buffer, m_rsp_secret_buffer,
                                sizeof(m_rsp_secret_buffer));
@@ -4667,15 +4667,15 @@ void test_spdm_requester_key_update_case33(void **state)
         spdm_context, session_id, false);
 
     assert_int_equal(status, RETURN_SUCCESS);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((spdm_secured_message_context_t
+                        m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((spdm_secured_message_context_t
+    assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                *)(session_info->secured_message_context))->hash_size);
 }
 
@@ -4689,7 +4689,7 @@ void test_spdm_requester_key_update_case33(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void test_spdm_requester_key_update_case34(void **state)
+void libspdm_test_requester_key_update_case34(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4701,7 +4701,7 @@ void test_spdm_requester_key_update_case34(void **state)
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4745,15 +4745,15 @@ void test_spdm_requester_key_update_case34(void **state)
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
-                            m_req_secret_buffer, ((spdm_secured_message_context_t
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
-        assert_memory_equal(((spdm_secured_message_context_t
+        assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.response_data_secret,
-                            m_rsp_secret_buffer, ((spdm_secured_message_context_t
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t
                                                    *)(session_info->secured_message_context))->hash_size);
 
         error_code++;
@@ -4776,7 +4776,7 @@ void test_spdm_requester_key_update_case34(void **state)
  * Test 35: the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
  * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
  **/
-void test_spdm_requester_key_update_case35(void **state)
+void libspdm_test_requester_key_update_case35(void **state)
 {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
@@ -4821,74 +4821,74 @@ int spdm_requester_key_update_test_main(void)
 {
     const struct CMUnitTest spdm_requester_key_update_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_key_update_case1),
+        cmocka_unit_test(libspdm_test_requester_key_update_case1),
         /* update single key
          * Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case2),
+        cmocka_unit_test(libspdm_test_requester_key_update_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_key_update_case3),
+        cmocka_unit_test(libspdm_test_requester_key_update_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_key_update_case4),
+        cmocka_unit_test(libspdm_test_requester_key_update_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case5),
+        cmocka_unit_test(libspdm_test_requester_key_update_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case6),
+        cmocka_unit_test(libspdm_test_requester_key_update_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_key_update_case7),
+        cmocka_unit_test(libspdm_test_requester_key_update_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case8),
+        cmocka_unit_test(libspdm_test_requester_key_update_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case9),
+        cmocka_unit_test(libspdm_test_requester_key_update_case9),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_key_update_case10),
+        cmocka_unit_test(libspdm_test_requester_key_update_case10),
         /* Buffer reset*/
-        cmocka_unit_test(test_spdm_requester_key_update_case11),
+        cmocka_unit_test(libspdm_test_requester_key_update_case11),
         /* No correct setup*/
-        cmocka_unit_test(test_spdm_requester_key_update_case12),
-        cmocka_unit_test(test_spdm_requester_key_update_case13),
-        cmocka_unit_test(test_spdm_requester_key_update_case14),
+        cmocka_unit_test(libspdm_test_requester_key_update_case12),
+        cmocka_unit_test(libspdm_test_requester_key_update_case13),
+        cmocka_unit_test(libspdm_test_requester_key_update_case14),
         /* Wrong parameters*/
-        cmocka_unit_test(test_spdm_requester_key_update_case15),
-        cmocka_unit_test(test_spdm_requester_key_update_case16),
+        cmocka_unit_test(libspdm_test_requester_key_update_case15),
+        cmocka_unit_test(libspdm_test_requester_key_update_case16),
         /* verify key
          * Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_key_update_case17),
+        cmocka_unit_test(libspdm_test_requester_key_update_case17),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case18),
+        cmocka_unit_test(libspdm_test_requester_key_update_case18),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case19),
+        cmocka_unit_test(libspdm_test_requester_key_update_case19),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_key_update_case20),
+        cmocka_unit_test(libspdm_test_requester_key_update_case20),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case21),
+        cmocka_unit_test(libspdm_test_requester_key_update_case21),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case22),
+        cmocka_unit_test(libspdm_test_requester_key_update_case22),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_key_update_case23),
+        cmocka_unit_test(libspdm_test_requester_key_update_case23),
         /* No correct setup*/
-        cmocka_unit_test(test_spdm_requester_key_update_case24),
+        cmocka_unit_test(libspdm_test_requester_key_update_case24),
         /* Wrong parameters*/
-        cmocka_unit_test(test_spdm_requester_key_update_case25),
-        cmocka_unit_test(test_spdm_requester_key_update_case26),
+        cmocka_unit_test(libspdm_test_requester_key_update_case25),
+        cmocka_unit_test(libspdm_test_requester_key_update_case26),
         /* update all keys
          * Sucessful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case27),
+        cmocka_unit_test(libspdm_test_requester_key_update_case27),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_key_update_case28),
+        cmocka_unit_test(libspdm_test_requester_key_update_case28),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case29),
+        cmocka_unit_test(libspdm_test_requester_key_update_case29),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case30),
+        cmocka_unit_test(libspdm_test_requester_key_update_case30),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_key_update_case31),
+        cmocka_unit_test(libspdm_test_requester_key_update_case31),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_key_update_case32),
+        cmocka_unit_test(libspdm_test_requester_key_update_case32),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_key_update_case33),
+        cmocka_unit_test(libspdm_test_requester_key_update_case33),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_key_update_case34),
+        cmocka_unit_test(libspdm_test_requester_key_update_case34),
         /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
-        cmocka_unit_test(test_spdm_requester_key_update_case35),
+        cmocka_unit_test(libspdm_test_requester_key_update_case35),
     };
 
     setup_spdm_test_context(&m_spdm_requester_key_update_test_context);

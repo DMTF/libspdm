@@ -76,7 +76,7 @@ static void spdm_compute_secret_update(uintn hash_size, const uint8_t *in_secret
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill, uint8_t *m_req_secret_buffer,
     uint8_t req_secret_fill)
 {
@@ -147,14 +147,14 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
                                        response);
     /* WALKAROUND: If just use single context to encode
      *     message and then decode message */
-    ((spdm_secured_message_context_t *)(session_info->secured_message_context))
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number--;
 
     sub_index++;
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_key_update_case1(void **State)
+void libspdm_test_requester_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -179,14 +179,14 @@ void test_spdm_requester_key_update_case1(void **State)
 
     /*request side updated*/
     spdm_compute_secret_update(
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_req_secret_buffer, m_req_secret_buffer, sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
     libspdm_key_update(spdm_context, session_id, true);
 }
 
-void test_spdm_requester_key_update_case2(void **state)
+void libspdm_test_requester_key_update_case2(void **state)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -210,11 +210,11 @@ void test_spdm_requester_key_update_case2(void **state)
 
     /*request side updated*/
     spdm_compute_secret_update(
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_req_secret_buffer, m_req_secret_buffer, sizeof(m_req_secret_buffer));
     /*response side updated*/
     spdm_compute_secret_update(
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_rsp_secret_buffer, m_rsp_secret_buffer, sizeof(m_rsp_secret_buffer));
 
     libspdm_key_update(spdm_context, session_id, false);
@@ -238,11 +238,11 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response. update single key */
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_key_update_case1(&State);
+    libspdm_test_requester_key_update_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Sucessful response  update all keys*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_key_update_case2(&State);
+    libspdm_test_requester_key_update_case2(&State);
     spdm_unit_test_group_teardown(&State);
 }

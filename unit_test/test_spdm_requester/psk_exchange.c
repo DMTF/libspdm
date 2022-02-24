@@ -937,7 +937,7 @@ return_status spdm_requester_psk_exchange_test_receive_message(
     }
 }
 
-void test_spdm_requester_psk_exchange_case1(void **state)
+void libspdm_test_requester_psk_exchange_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -989,7 +989,7 @@ void test_spdm_requester_psk_exchange_case1(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -997,7 +997,7 @@ void test_spdm_requester_psk_exchange_case1(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case2(void **state)
+void libspdm_test_requester_psk_exchange_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1052,7 +1052,7 @@ void test_spdm_requester_psk_exchange_case2(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1065,7 +1065,7 @@ void test_spdm_requester_psk_exchange_case2(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case3(void **state)
+void libspdm_test_requester_psk_exchange_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1117,7 +1117,7 @@ void test_spdm_requester_psk_exchange_case3(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1125,7 +1125,7 @@ void test_spdm_requester_psk_exchange_case3(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case4(void **state)
+void libspdm_test_requester_psk_exchange_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1177,7 +1177,7 @@ void test_spdm_requester_psk_exchange_case4(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1185,7 +1185,7 @@ void test_spdm_requester_psk_exchange_case4(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case5(void **state)
+void libspdm_test_requester_psk_exchange_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1237,7 +1237,7 @@ void test_spdm_requester_psk_exchange_case5(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1245,7 +1245,7 @@ void test_spdm_requester_psk_exchange_case5(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case6(void **state)
+void libspdm_test_requester_psk_exchange_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1297,7 +1297,7 @@ void test_spdm_requester_psk_exchange_case6(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1310,7 +1310,7 @@ void test_spdm_requester_psk_exchange_case6(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case7(void **state)
+void libspdm_test_requester_psk_exchange_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1362,7 +1362,7 @@ void test_spdm_requester_psk_exchange_case7(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1372,7 +1372,7 @@ void test_spdm_requester_psk_exchange_case7(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case8(void **state)
+void libspdm_test_requester_psk_exchange_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1424,7 +1424,7 @@ void test_spdm_requester_psk_exchange_case8(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1432,7 +1432,7 @@ void test_spdm_requester_psk_exchange_case8(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case9(void **state)
+void libspdm_test_requester_psk_exchange_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1484,7 +1484,7 @@ void test_spdm_requester_psk_exchange_case9(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1497,7 +1497,7 @@ void test_spdm_requester_psk_exchange_case9(void **state)
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case10(void **state) {
+void libspdm_test_requester_psk_exchange_case10(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1542,10 +1542,11 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
 
         heartbeat_period = 0;
         zero_mem(measurement_hash, sizeof(measurement_hash));
-        status = spdm_send_receive_psk_exchange (spdm_context,
-                                                 SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                                                 0,
-                                                 &session_id, &heartbeat_period, measurement_hash);
+        status = libspdm_send_receive_psk_exchange (spdm_context,
+                                                    SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                    0,
+                                                    &session_id, &heartbeat_period,
+                                                    measurement_hash);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
@@ -1564,7 +1565,7 @@ void test_spdm_requester_psk_exchange_case10(void **state) {
     free(data);
 }
 
-void test_spdm_requester_psk_exchange_case11(void **state)
+void libspdm_test_requester_psk_exchange_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1628,7 +1629,7 @@ void test_spdm_requester_psk_exchange_case11(void **state)
 
     heartbeat_period = 0;
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = spdm_send_receive_psk_exchange(
+    status = libspdm_send_receive_psk_exchange(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
@@ -1660,25 +1661,25 @@ int spdm_requester_psk_exchange_test_main(void)
 {
     const struct CMUnitTest spdm_requester_psk_exchange_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case1),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case1),
         /* Successful response*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case2),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case3),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case4),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case5),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case6),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case7),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case8),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case9),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case9),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_psk_exchange_case10),
+        cmocka_unit_test(libspdm_test_requester_psk_exchange_case10),
     };
 
     setup_spdm_test_context(&m_spdm_requester_psk_exchange_test_context);

@@ -21,7 +21,7 @@ spdm_test_context_t m_spdm_responder_certificate_test_context = {
     false,
 };
 
-void test_spdm_responder_certificate_case1(void **State)
+void libspdm_test_responder_certificate_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -50,14 +50,14 @@ void test_spdm_responder_certificate_case1(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    spdm_get_response_certificate(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_certificate(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_certificate_case2(void **State)
+void libspdm_test_responder_certificate_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -87,14 +87,14 @@ void test_spdm_responder_certificate_case2(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    spdm_get_response_certificate(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_certificate(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_certificate_case3(void **State)
+void libspdm_test_responder_certificate_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -111,13 +111,13 @@ void test_spdm_responder_certificate_case3(void **State)
         m_use_hash_algo;
 
     response_size = sizeof(response);
-    spdm_get_response_certificate(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_certificate(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
 }
 
-void test_spdm_responder_certificate_case4(void **State)
+void libspdm_test_responder_certificate_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -132,13 +132,13 @@ void test_spdm_responder_certificate_case4(void **State)
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     response_size = sizeof(response);
-    spdm_get_response_certificate(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_certificate(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
 }
 
-void test_spdm_responder_certificate_case5(void **State)
+void libspdm_test_responder_certificate_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -168,10 +168,10 @@ void test_spdm_responder_certificate_case5(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    spdm_get_response_certificate(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_certificate(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
     free(data);
 }
 
@@ -188,15 +188,15 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case */
-    test_spdm_responder_certificate_case1(&State);
+    libspdm_test_responder_certificate_case1(&State);
     /* connection_state Check */
-    test_spdm_responder_certificate_case2(&State);
+    libspdm_test_responder_certificate_case2(&State);
     /* response_state: LIBSPDM_RESPONSE_STATE_BUSY */
-    test_spdm_responder_certificate_case3(&State);
+    libspdm_test_responder_certificate_case3(&State);
     /* response_state: LIBSPDM_RESPONSE_STATE_NORMAL */
-    test_spdm_responder_certificate_case4(&State);
+    libspdm_test_responder_certificate_case4(&State);
     /* capability.flags: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP */
-    test_spdm_responder_certificate_case5(&State);
+    libspdm_test_responder_certificate_case5(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

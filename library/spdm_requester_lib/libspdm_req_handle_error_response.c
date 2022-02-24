@@ -39,16 +39,16 @@ return_status spdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
     spdm_request.header.request_response_code = SPDM_RESPOND_IF_READY;
     spdm_request.header.param1 = spdm_context->error_data.request_code;
     spdm_request.header.param2 = spdm_context->error_data.token;
-    status = spdm_send_spdm_request(spdm_context, session_id,
-                                    sizeof(spdm_request), &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, session_id,
+                                       sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     *response_size = expected_response_size;
     zero_mem(response, expected_response_size);
-    status = spdm_receive_spdm_response(spdm_context, session_id,
-                                        response_size, response);
+    status = libspdm_receive_spdm_response(spdm_context, session_id,
+                                           response_size, response);
     if (RETURN_ERROR(status)) {
         return status;
     }
@@ -77,8 +77,8 @@ return_status spdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
  * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
  * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
  **/
-return_status spdm_handle_simple_error_response(void *context,
-                                                uint8_t error_code)
+return_status libspdm_handle_simple_error_response(void *context,
+                                                   uint8_t error_code)
 {
     libspdm_context_t *spdm_context;
 
@@ -86,7 +86,7 @@ return_status spdm_handle_simple_error_response(void *context,
 
 
     /* NOT_READY is treated as error here.
-     * Use spdm_handle_error_response_main to handle NOT_READY message in long latency command.*/
+     * Use libspdm_handle_error_response_main to handle NOT_READY message in long latency command.*/
 
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return RETURN_DEVICE_ERROR;
@@ -185,7 +185,7 @@ return_status spdm_handle_response_not_ready(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
-return_status spdm_handle_error_response_main(
+return_status libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
     uintn *response_size, void *response,
     uint8_t original_request_code, uint8_t expected_response_code,
@@ -207,7 +207,7 @@ return_status spdm_handle_error_response_main(
                                               expected_response_code,
                                               expected_response_size);
     } else {
-        return spdm_handle_simple_error_response(spdm_context,
-                                                 spdm_response->param1);
+        return libspdm_handle_simple_error_response(spdm_context,
+                                                    spdm_response->param1);
     }
 }

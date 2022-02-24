@@ -44,7 +44,7 @@ static void spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_cont
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill, uint8_t *m_req_secret_buffer,
     uint8_t req_secret_fill)
 {
@@ -105,14 +105,14 @@ spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
     false,
 };
 
-void test_spdm_process_encap_response_key_update_case1(void **State)
+void test_libspdm_process_encap_response_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     bool need_continue;
     libspdm_session_info_t *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
@@ -133,11 +133,11 @@ void test_spdm_process_encap_response_key_update_case1(void **State)
 
     libspdm_init_key_update_encap_state(spdm_context);
 
-    spdm_process_encap_response_key_update(spdm_context, spdm_test_context->test_buffer_size,
-                                           spdm_test_context->test_buffer, &need_continue);
+    libspdm_process_encap_response_key_update(spdm_context, spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer, &need_continue);
 }
 
-void test_spdm_get_encap_request_key_update_case1(void **State)
+void test_libspdm_get_encap_request_key_update_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_update_request_t *spdm_request;
@@ -180,12 +180,12 @@ void test_spdm_get_encap_request_key_update_case1(void **State)
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
-    spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
     free(data);
 }
 
-void test_spdm_get_encap_request_key_update_case2(void **State)
+void test_libspdm_get_encap_request_key_update_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_update_request_t *spdm_request;
@@ -230,7 +230,7 @@ void test_spdm_get_encap_request_key_update_case2(void **State)
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
-    spdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_key_update(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
     free(data);
 }
@@ -246,16 +246,16 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_process_encap_response_key_update_case1(&State);
+    test_libspdm_process_encap_response_key_update_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_get_encap_request_key_update_case1(&State);
+    test_libspdm_get_encap_request_key_update_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* request_response_code: SPDM_KEY_UPDATE */
     spdm_unit_test_group_setup(&State);
-    test_spdm_get_encap_request_key_update_case2(&State);
+    test_libspdm_get_encap_request_key_update_case2(&State);
     spdm_unit_test_group_teardown(&State);
 }

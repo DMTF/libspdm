@@ -31,7 +31,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_negotiate_algorithms_case1(void **State)
+void libspdm_test_requester_negotiate_algorithms_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -45,10 +45,10 @@ void test_spdm_requester_negotiate_algorithms_case1(void **State)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    spdm_negotiate_algorithms(spdm_context);
+    libspdm_negotiate_algorithms(spdm_context);
 }
 
-void test_spdm_requester_negotiate_algorithms_case2(void **State)
+void libspdm_test_requester_negotiate_algorithms_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -62,10 +62,10 @@ void test_spdm_requester_negotiate_algorithms_case2(void **State)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    spdm_negotiate_algorithms(spdm_context);
+    libspdm_negotiate_algorithms(spdm_context);
 }
 
-void test_spdm_requester_negotiate_algorithms_case3(void **State)
+void libspdm_test_requester_negotiate_algorithms_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -99,10 +99,10 @@ void test_spdm_requester_negotiate_algorithms_case3(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    spdm_negotiate_algorithms(spdm_context);
+    libspdm_negotiate_algorithms(spdm_context);
 }
 
-spdm_test_context_t test_spdm_requester_context = {
+spdm_test_context_t libspdm_test_requester_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     true,
     spdm_device_send_message,
@@ -113,22 +113,22 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&test_spdm_requester_context);
+    setup_spdm_test_context(&libspdm_test_requester_context);
 
-    test_spdm_requester_context.test_buffer = (void *)test_buffer;
-    test_spdm_requester_context.test_buffer_size = test_buffer_size;
+    libspdm_test_requester_context.test_buffer = (void *)test_buffer;
+    libspdm_test_requester_context.test_buffer_size = test_buffer_size;
 
     /* Successful V1.0 response*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_negotiate_algorithms_case1(&State);
+    libspdm_test_requester_negotiate_algorithms_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Successful V1.1 response*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_negotiate_algorithms_case2(&State);
+    libspdm_test_requester_negotiate_algorithms_case2(&State);
     spdm_unit_test_group_teardown(&State);
 
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_negotiate_algorithms_case3(&State);
+    libspdm_test_requester_negotiate_algorithms_case3(&State);
     spdm_unit_test_group_teardown(&State);
 }

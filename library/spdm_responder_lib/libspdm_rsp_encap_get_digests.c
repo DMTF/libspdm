@@ -22,9 +22,9 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status
-spdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                  uintn *encap_request_size,
-                                  void *encap_request)
+libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
+                                     uintn *encap_request_size,
+                                     void *encap_request)
 {
     spdm_get_digest_request_t *spdm_request;
     return_status status;
@@ -80,7 +80,7 @@ spdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_process_encap_response_digest(
+return_status libspdm_process_encap_response_digest(
     libspdm_context_t *spdm_context, uintn encap_response_size,
     const void *encap_response, bool *need_continue)
 {
@@ -103,7 +103,7 @@ return_status spdm_process_encap_response_digest(
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_encap_error_response_main(
+        status = libspdm_handle_encap_error_response_main(
             spdm_context,
             spdm_response->header.param1);
         if (RETURN_ERROR(status)) {

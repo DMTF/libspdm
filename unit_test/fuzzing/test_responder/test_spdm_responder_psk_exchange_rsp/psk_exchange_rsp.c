@@ -32,7 +32,7 @@ typedef struct {
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_psk_exchange_request_mine_t;
 
-void test_spdm_responder_psk_exchange_case1(void **State)
+void libspdm_test_responder_psk_exchange_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -90,12 +90,12 @@ void test_spdm_responder_psk_exchange_case1(void **State)
     ptr += opaque_psk_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
-                                   &m_spdm_psk_exchange_request, &response_size, response);
+    libspdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
+                                      &m_spdm_psk_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_psk_exchange_case2(void **State)
+void libspdm_test_responder_psk_exchange_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -151,12 +151,12 @@ void test_spdm_responder_psk_exchange_case2(void **State)
     ptr += opaque_psk_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
-                                   &m_spdm_psk_exchange_request, &response_size, response);
+    libspdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
+                                      &m_spdm_psk_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_psk_exchange_case3(void **State)
+void libspdm_test_responder_psk_exchange_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -213,12 +213,12 @@ void test_spdm_responder_psk_exchange_case3(void **State)
     ptr += opaque_psk_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
-                                   &m_spdm_psk_exchange_request, &response_size, response);
+    libspdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
+                                      &m_spdm_psk_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_psk_exchange_case4(void **State)
+void libspdm_test_responder_psk_exchange_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -280,12 +280,12 @@ void test_spdm_responder_psk_exchange_case4(void **State)
     ptr += opaque_psk_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
-                                   &m_spdm_psk_exchange_request, &response_size, response);
+    libspdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
+                                      &m_spdm_psk_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_psk_exchange_case5(void **State)
+void libspdm_test_responder_psk_exchange_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t spdm_context;
@@ -348,8 +348,8 @@ void test_spdm_responder_psk_exchange_case5(void **State)
     ptr += opaque_psk_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
-                                   &m_spdm_psk_exchange_request, &response_size, response);
+    libspdm_get_response_psk_exchange(&spdm_context, m_spdm_psk_exchange_request_size,
+                                      &m_spdm_psk_exchange_request, &response_size, response);
     free(data);
 }
 
@@ -365,14 +365,14 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_psk_exchange_case1(&State);
-    test_spdm_responder_psk_exchange_case2(&State);
+    libspdm_test_responder_psk_exchange_case1(&State);
+    libspdm_test_responder_psk_exchange_case2(&State);
     /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-    test_spdm_responder_psk_exchange_case3(&State);
+    libspdm_test_responder_psk_exchange_case3(&State);
     /* capability.flags: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT */
-    test_spdm_responder_psk_exchange_case4(&State);
+    libspdm_test_responder_psk_exchange_case4(&State);
     /* capability.flags: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP */
-    test_spdm_responder_psk_exchange_case5(&State);
+    libspdm_test_responder_psk_exchange_case5(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

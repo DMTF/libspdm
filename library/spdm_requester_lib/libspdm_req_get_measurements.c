@@ -176,15 +176,15 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
             zero_mem (requester_nonce, SPDM_NONCE_SIZE);
         }
     }
-    status = spdm_send_spdm_request(spdm_context, session_id,
-                                    spdm_request_size, &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, session_id,
+                                       spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -196,7 +196,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_error_response_main(
+        status = libspdm_handle_error_response_main(
             spdm_context, session_id,
             &spdm_response_size, &spdm_response,
             SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,

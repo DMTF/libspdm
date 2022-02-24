@@ -25,11 +25,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_psk_exchange(void *context,
-                                             uintn request_size,
-                                             const void *request,
-                                             uintn *response_size,
-                                             void *response)
+return_status libspdm_get_response_psk_exchange(void *context,
+                                                uintn request_size,
+                                                const void *request,
+                                                uintn *response_size,
+                                                void *response)
 {
     const spdm_psk_exchange_request_t *spdm_request;
     spdm_psk_exchange_response_t *spdm_response;
@@ -60,7 +60,7 @@ return_status spdm_get_response_psk_exchange(void *context,
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -131,7 +131,7 @@ return_status spdm_get_response_psk_exchange(void *context,
         if (spdm_context->encap_context.error_state !=
             LIBSPDM_STATUS_SUCCESS) {
             DEBUG((DEBUG_INFO,
-                   "spdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
+                   "libspdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -332,8 +332,8 @@ return_status spdm_get_response_psk_exchange(void *context,
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         session_info->session_policy = spdm_request->header.param2;
     }
-    spdm_set_session_state(spdm_context, session_id,
-                           LIBSPDM_SESSION_STATE_HANDSHAKING);
+    libspdm_set_session_state(spdm_context, session_id,
+                              LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
@@ -357,8 +357,8 @@ return_status spdm_get_response_psk_exchange(void *context,
                 0, response_size, response);
         }
 
-        spdm_set_session_state(spdm_context, session_id,
-                               LIBSPDM_SESSION_STATE_ESTABLISHED);
+        libspdm_set_session_state(spdm_context, session_id,
+                                  LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
     return RETURN_SUCCESS;

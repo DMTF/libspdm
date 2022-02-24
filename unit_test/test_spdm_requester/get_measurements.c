@@ -390,7 +390,7 @@ return_status spdm_requester_get_measurements_test_send_message(
             spdm_context, &session_id, &is_app_message,
             false, request_size, (uint8_t *)request,
             &app_message_size, app_message);
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
         copy_mem(m_local_buffer, sizeof(m_local_buffer),
@@ -2563,7 +2563,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
-        ((spdm_secured_message_context_t
+        ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
@@ -2577,7 +2577,7 @@ return_status spdm_requester_get_measurements_test_receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case1(void **state)
+void libspdm_test_requester_get_measurements_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2651,7 +2651,7 @@ void test_spdm_requester_get_measurements_case1(void **state)
  * Test 2: Successful response to get a measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case2(void **state)
+void libspdm_test_requester_get_measurements_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2725,7 +2725,7 @@ void test_spdm_requester_get_measurements_case2(void **state)
  * Test 3: Error case, attempt to get measurements before GET_DIGESTS, GET_CAPABILITIES, and NEGOTIATE_ALGORITHMS
  * Expected Behavior: get a RETURN_UNSUPPORTED return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case3(void **state)
+void libspdm_test_requester_get_measurements_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2798,7 +2798,7 @@ void test_spdm_requester_get_measurements_case3(void **state)
  * Test 4: Error case, always get an error response with code SPDM_ERROR_CODE_INVALID_REQUEST
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case4(void **state)
+void libspdm_test_requester_get_measurements_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2871,7 +2871,7 @@ void test_spdm_requester_get_measurements_case4(void **state)
  * Test 5: Error case, always get an error response with code SPDM_ERROR_CODE_BUSY
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case5(void **state)
+void libspdm_test_requester_get_measurements_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2944,7 +2944,7 @@ void test_spdm_requester_get_measurements_case5(void **state)
  * Test 6: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_BUSY on first attempt
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case6(void **state)
+void libspdm_test_requester_get_measurements_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3017,7 +3017,7 @@ void test_spdm_requester_get_measurements_case6(void **state)
  * Test 7: Error case, get an error response with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case7(void **state)
+void libspdm_test_requester_get_measurements_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3092,7 +3092,7 @@ void test_spdm_requester_get_measurements_case7(void **state)
  * Test 8: Error case, always get an error response with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case8(void **state)
+void libspdm_test_requester_get_measurements_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3162,7 +3162,7 @@ void test_spdm_requester_get_measurements_case8(void **state)
  * Test 9: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_RESPONSE_NOT_READY on first attempt
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case9(void **state)
+void libspdm_test_requester_get_measurements_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3235,7 +3235,7 @@ void test_spdm_requester_get_measurements_case9(void **state)
  * Test 10: Successful response to get total number of measurements, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct number_of_blocks, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case10(void **state)
+void libspdm_test_requester_get_measurements_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3308,7 +3308,7 @@ void test_spdm_requester_get_measurements_case10(void **state)
  * Test 11: Successful response to get a measurement block, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case11(void **state)
+void libspdm_test_requester_get_measurements_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3386,7 +3386,7 @@ void test_spdm_requester_get_measurements_case11(void **state)
  * Test 12: Error case, signature is invalid (all bytes are 0)
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION return code
  **/
-void test_spdm_requester_get_measurements_case12(void **state)
+void libspdm_test_requester_get_measurements_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3460,7 +3460,7 @@ void test_spdm_requester_get_measurements_case12(void **state)
  * Test 13: Error case, signature is invalid (random)
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION return code
  **/
-void test_spdm_requester_get_measurements_case13(void **state)
+void libspdm_test_requester_get_measurements_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3534,7 +3534,7 @@ void test_spdm_requester_get_measurements_case13(void **state)
  * Test 14: Error case, request a signed response, but response is malformed (signature absent)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void test_spdm_requester_get_measurements_case14(void **state)
+void libspdm_test_requester_get_measurements_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3608,7 +3608,7 @@ void test_spdm_requester_get_measurements_case14(void **state)
  * Test 15: Error case, response with wrong response code
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void test_spdm_requester_get_measurements_case15(void **state)
+void libspdm_test_requester_get_measurements_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3682,7 +3682,7 @@ void test_spdm_requester_get_measurements_case15(void **state)
  * Test 16: SlotID verificaton, the response's SlotID should match the request
  * Expected Behavior: get a RETURN_SUCCESS return code if the fields match, RETURN_DEVICE_ERROR otherwise. Either way, transcript.message_m should be empty
  **/
-void test_spdm_requester_get_measurements_case16(void **state)
+void libspdm_test_requester_get_measurements_case16(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3773,7 +3773,7 @@ void test_spdm_requester_get_measurements_case16(void **state)
  * Test 17: Error case, response to get total number of measurements, but response number_of_blocks and/or measurement_record_length are non 0
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void test_spdm_requester_get_measurements_case17(void **state)
+void libspdm_test_requester_get_measurements_case17(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3849,7 +3849,7 @@ void test_spdm_requester_get_measurements_case17(void **state)
  * Test 18: Successful response to get a measurement block, without signature. Measurement block is the largest possible.
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case18(void **state)
+void libspdm_test_requester_get_measurements_case18(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3925,7 +3925,7 @@ void test_spdm_requester_get_measurements_case18(void **state)
  * Test 19: Error case, measurement_specification field in response has 2 bits set (bit 0 is one of them)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-void test_spdm_requester_get_measurements_case19(void **state)
+void libspdm_test_requester_get_measurements_case19(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -3998,7 +3998,7 @@ void test_spdm_requester_get_measurements_case19(void **state)
  * Test 20: Error case, measurement_specification field in response has 2 bits set (bit 0 is not one of them)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-void test_spdm_requester_get_measurements_case20(void **state)
+void libspdm_test_requester_get_measurements_case20(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4071,7 +4071,7 @@ void test_spdm_requester_get_measurements_case20(void **state)
  * Test 21: Error case, measurement_specification field in response does not "match the selected measurement specification in the ALGORITHMS message"
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-void test_spdm_requester_get_measurements_case21(void **state)
+void libspdm_test_requester_get_measurements_case21(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4144,7 +4144,7 @@ void test_spdm_requester_get_measurements_case21(void **state)
  * Test 22: request a large number of unsigned measurements before requesting a signature
  * Expected Behavior: RETURN_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
  **/
-void test_spdm_requester_get_measurements_case22(void **state)
+void libspdm_test_requester_get_measurements_case22(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4241,7 +4241,7 @@ void test_spdm_requester_get_measurements_case22(void **state)
  * Test 23: Successful response to get a measurement block, without signature. response contains opaque data
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case23(void **state)
+void libspdm_test_requester_get_measurements_case23(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4321,7 +4321,7 @@ void test_spdm_requester_get_measurements_case23(void **state)
  * Test 24: Error case, reponse contains opaque data larger than the maximum allowed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case24(void **state)
+void libspdm_test_requester_get_measurements_case24(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4395,7 +4395,7 @@ void test_spdm_requester_get_measurements_case24(void **state)
  * Test 25: Successful response to get a measurement block, with signature. response contains opaque data
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case25(void **state)
+void libspdm_test_requester_get_measurements_case25(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4469,7 +4469,7 @@ void test_spdm_requester_get_measurements_case25(void **state)
  * Test 26: Error case, request with signature, but response opaque data is S bytes shorter than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case26(void **state)
+void libspdm_test_requester_get_measurements_case26(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4544,7 +4544,7 @@ void test_spdm_requester_get_measurements_case26(void **state)
  * Test 27: Error case, request with signature, but response opaque data is (S+1) bytes shorter than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case27(void **state)
+void libspdm_test_requester_get_measurements_case27(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4619,7 +4619,7 @@ void test_spdm_requester_get_measurements_case27(void **state)
  * Test 28: Error case, request with signature, but response opaque data is 1 byte longer than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case28(void **state)
+void libspdm_test_requester_get_measurements_case28(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4697,7 +4697,7 @@ void test_spdm_requester_get_measurements_case28(void **state)
  * Test 29: request measurement without signature, but response opaque data is 1 byte longer than informed
  * Expected Behavior: extra byte should just be ignored. Get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case29(void **state)
+void libspdm_test_requester_get_measurements_case29(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4778,7 +4778,7 @@ void test_spdm_requester_get_measurements_case29(void **state)
  * Test 30: request measurement without signature, response opaque data contains MAXUINT16 bytes, but informed opaque data size is valid
  * Expected Behavior: extra bytes should just be ignored. Get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case30(void **state)
+void libspdm_test_requester_get_measurements_case30(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4857,7 +4857,7 @@ void test_spdm_requester_get_measurements_case30(void **state)
  * Test 31: Error case, reponse contains opaque data larger than the maximum allowed. MAXUINT16 is used
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case31(void **state)
+void libspdm_test_requester_get_measurements_case31(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -4936,7 +4936,7 @@ void test_spdm_requester_get_measurements_case31(void **state)
  * Test 32: Successful response to get all measurement blocks, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-void test_spdm_requester_get_measurements_case32(void **state)
+void libspdm_test_requester_get_measurements_case32(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -5019,7 +5019,7 @@ void test_spdm_requester_get_measurements_case32(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_measurements_case33(void **state) {
+void libspdm_test_requester_get_measurements_case33(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -5099,7 +5099,7 @@ void test_spdm_requester_get_measurements_case33(void **state) {
  * Test 34: Successful response to get a session based measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
  **/
-void test_spdm_requester_get_measurements_case34(void **state)
+void libspdm_test_requester_get_measurements_case34(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -5207,73 +5207,73 @@ int spdm_requester_get_measurements_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_measurements_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case1),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case1),
         /* Successful response to get measurement with signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case2),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case3),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case4),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case5),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case6),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case7),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case8),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case9),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case9),
         /* Successful response to get total measurement number without signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case10),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case10),
         /* Successful response to get one measurement without signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case11),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case11),
         /* error: request signature, but response contains null signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case12),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case12),
         /* error: request signature, but response contains wrong non-null signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case13),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case13),
         /* error: request signature, but response does not contain signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case14),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case14),
         /* error: wrong response code*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case15),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case15),
         /* error: SlotID mismatch*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case16),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case16),
         /* error: get total measurement number (no signature), but there is a measurement block*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case17),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case17),
         /* Large measurement block
-         * cmocka_unit_test(test_spdm_requester_get_measurements_case18),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
+         * cmocka_unit_test(libspdm_test_requester_get_measurements_case18),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
          * error: measurement_specification has 2 bits set (bit 0 is one of them)*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case19),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case19),
         /* error: measurement_specification has 2 bits set (bit 0 is not one of them)*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case20),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case20),
         /* error: measurement_specification does not "match the selected measurement specification in the ALGORITHMS message"*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case21),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case21),
         /* request a large number of measurement blocks before requesting a signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case22),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case22),
         /* Successful response to get one measurement with opaque data without signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case23),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case23),
         /* error: get one measurement with opaque data larger than 1024, without signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case24),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case24),
         /* Successful response to get one measurement with opaque data with signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case25),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case25),
         /* error: response to get one measurement with opaque data with signature, opaque data is S bytes shorter than announced*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case26),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case26),
         /* error: response to get one measurement with opaque data with signature, opaque data is S+1 bytes shorter than announced*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case27),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case27),
         /* error: response to get one measurement with opaque data with signature, opaque data is 1 byte longer than announced*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case28),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case28),
         /* response to get one measurement with opaque data without signature, opaque data is 1 byte longer than announced*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case29),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case29),
         /* response to get one measurement with opaque data without signature, opaque data has MAX_UINT16, but opaque data size is valid
-         * cmocka_unit_test(test_spdm_requester_get_measurements_case30),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
+         * cmocka_unit_test(libspdm_test_requester_get_measurements_case30),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
          * error: get one measurement with opaque data too large, without signature
-         * cmocka_unit_test(test_spdm_requester_get_measurements_case31),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
+         * cmocka_unit_test(libspdm_test_requester_get_measurements_case31),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
          * Successful response to get all measurements without signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case32),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case32),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case33),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case33),
         /* Successful response to get a session based measurement with signature*/
-        cmocka_unit_test(test_spdm_requester_get_measurements_case34),
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case34),
     };
 
     setup_spdm_test_context(

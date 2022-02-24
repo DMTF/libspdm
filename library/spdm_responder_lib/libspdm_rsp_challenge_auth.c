@@ -26,11 +26,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_challenge_auth(void *context,
-                                               uintn request_size,
-                                               const void *request,
-                                               uintn *response_size,
-                                               void *response)
+return_status libspdm_get_response_challenge_auth(void *context,
+                                                  uintn request_size,
+                                                  const void *request,
+                                                  uintn *response_size,
+                                                  void *response)
 {
     const spdm_challenge_request_t *spdm_request;
     spdm_challenge_auth_response_t *spdm_response;
@@ -55,7 +55,7 @@ return_status spdm_get_response_challenge_auth(void *context,
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -147,7 +147,7 @@ return_status spdm_get_response_challenge_auth(void *context,
             }
         }
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
-            spdm_init_basic_mut_auth_encap_state(context);
+            libspdm_init_basic_mut_auth_encap_state(context);
         }
     }
 
@@ -240,8 +240,8 @@ return_status spdm_get_response_challenge_auth(void *context,
     ptr += signature_size;
 
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) == 0) {
-        spdm_set_connection_state(spdm_context,
-                                  LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
+        libspdm_set_connection_state(spdm_context,
+                                     LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
     }
 
     return RETURN_SUCCESS;

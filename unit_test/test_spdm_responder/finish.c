@@ -40,7 +40,7 @@ uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 void spdm_secured_message_set_request_finished_key(
     void *spdm_secured_message_context, const void *key, uintn key_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
@@ -57,7 +57,7 @@ void spdm_secured_message_set_request_finished_key(
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void test_spdm_responder_finish_case1(void **state)
+void libspdm_test_responder_finish_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -150,10 +150,10 @@ void test_spdm_responder_finish_case1(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_finish_response_t) + hmac_size);
@@ -168,7 +168,7 @@ void test_spdm_responder_finish_case1(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_finish_case2(void **state)
+void libspdm_test_responder_finish_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -258,10 +258,10 @@ void test_spdm_responder_finish_case2(void **state)
                      libspdm_get_managed_buffer_size(&th_curr), request_finished_key,
                      hash_size, ptr);
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request2_size,
-                                      &m_spdm_finish_request2,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request2_size,
+                                         &m_spdm_finish_request2,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -279,7 +279,7 @@ void test_spdm_responder_finish_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state.
  **/
-void test_spdm_responder_finish_case3(void **state)
+void libspdm_test_responder_finish_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -373,10 +373,10 @@ void test_spdm_responder_finish_case3(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -395,7 +395,7 @@ void test_spdm_responder_finish_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state.
  **/
-void test_spdm_responder_finish_case4(void **state)
+void libspdm_test_responder_finish_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -489,10 +489,10 @@ void test_spdm_responder_finish_case4(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -512,7 +512,7 @@ void test_spdm_responder_finish_case4(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the ResponseNotReady state.
  **/
-void test_spdm_responder_finish_case5(void **state)
+void libspdm_test_responder_finish_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -607,10 +607,10 @@ void test_spdm_responder_finish_case5(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_error_response_t) +
@@ -637,7 +637,7 @@ void test_spdm_responder_finish_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest.
  **/
-void test_spdm_responder_finish_case6(void **state)
+void libspdm_test_responder_finish_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -731,10 +731,10 @@ void test_spdm_responder_finish_case6(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -746,7 +746,7 @@ void test_spdm_responder_finish_case6(void **state)
     free(data1);
 }
 
-void test_spdm_responder_finish_case7(void **state)
+void libspdm_test_responder_finish_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -852,10 +852,10 @@ void test_spdm_responder_finish_case7(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_finish_response_t) + hmac_size);
@@ -880,7 +880,7 @@ void test_spdm_responder_finish_case7(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void test_spdm_responder_finish_case8(void **state)
+void libspdm_test_responder_finish_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1022,10 +1022,10 @@ void test_spdm_responder_finish_case8(void **state)
     m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
                                   req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request3_size,
-                                      &m_spdm_finish_request3,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request3_size,
+                                         &m_spdm_finish_request3,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_finish_response_t) + hmac_size);
@@ -1042,7 +1042,7 @@ void test_spdm_responder_finish_case8(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void test_spdm_responder_finish_case9(void **state)
+void libspdm_test_responder_finish_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1136,10 +1136,10 @@ void test_spdm_responder_finish_case9(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1158,7 +1158,7 @@ void test_spdm_responder_finish_case9(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void test_spdm_responder_finish_case10(void **state)
+void libspdm_test_responder_finish_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1251,10 +1251,10 @@ void test_spdm_responder_finish_case10(void **state)
                      hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1272,7 +1272,7 @@ void test_spdm_responder_finish_case10(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void test_spdm_responder_finish_case11(void **state)
+void libspdm_test_responder_finish_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1347,10 +1347,10 @@ void test_spdm_responder_finish_case11(void **state)
     set_mem(ptr, hmac_size, (uint8_t)(0x00)); /*all-zero MAC*/
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1368,7 +1368,7 @@ void test_spdm_responder_finish_case11(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void test_spdm_responder_finish_case12(void **state)
+void libspdm_test_responder_finish_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1449,10 +1449,10 @@ void test_spdm_responder_finish_case12(void **state)
                      request_finished_key, hash_size, ptr);
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1470,7 +1470,7 @@ void test_spdm_responder_finish_case12(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_finish_case13(void **state)
+void libspdm_test_responder_finish_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1565,10 +1565,10 @@ void test_spdm_responder_finish_case13(void **state)
              ptr + hmac_size, hmac_size); /* 2x HMAC size*/
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + 2*hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1586,7 +1586,7 @@ void test_spdm_responder_finish_case13(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_finish_case14(void **state)
+void libspdm_test_responder_finish_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1680,10 +1680,10 @@ void test_spdm_responder_finish_case14(void **state)
     set_mem(ptr + hmac_size/2, hmac_size/2, (uint8_t) 0x00); /* half HMAC size*/
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + hmac_size/2;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request1_size,
-                                      &m_spdm_finish_request1,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request1_size,
+                                         &m_spdm_finish_request1,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1701,7 +1701,7 @@ void test_spdm_responder_finish_case14(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void test_spdm_responder_finish_case15(void **state)
+void libspdm_test_responder_finish_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1832,10 +1832,10 @@ void test_spdm_responder_finish_case15(void **state)
     m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
                                   req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request3_size,
-                                      &m_spdm_finish_request3,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request3_size,
+                                         &m_spdm_finish_request3,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1854,7 +1854,7 @@ void test_spdm_responder_finish_case15(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void test_spdm_responder_finish_case16(void **state)
+void libspdm_test_responder_finish_case16(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1985,10 +1985,10 @@ void test_spdm_responder_finish_case16(void **state)
     m_spdm_finish_request3_size = sizeof(spdm_finish_request_t) +
                                   req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
-    status = spdm_get_response_finish(spdm_context,
-                                      m_spdm_finish_request3_size,
-                                      &m_spdm_finish_request3,
-                                      &response_size, response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_spdm_finish_request3_size,
+                                         &m_spdm_finish_request3,
+                                         &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -2010,34 +2010,34 @@ int spdm_responder_finish_test_main(void)
 {
     const struct CMUnitTest spdm_responder_finish_tests[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_finish_case1),
+        cmocka_unit_test(libspdm_test_responder_finish_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_finish_case2),
+        cmocka_unit_test(libspdm_test_responder_finish_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_finish_case3),
+        cmocka_unit_test(libspdm_test_responder_finish_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_finish_case4),
+        cmocka_unit_test(libspdm_test_responder_finish_case4),
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_finish_case5),
+        cmocka_unit_test(libspdm_test_responder_finish_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_finish_case6),
+        cmocka_unit_test(libspdm_test_responder_finish_case6),
         /* Buffer reset*/
-        cmocka_unit_test(test_spdm_responder_finish_case7),
+        cmocka_unit_test(libspdm_test_responder_finish_case7),
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_finish_case8),
+        cmocka_unit_test(libspdm_test_responder_finish_case8),
         /* Unsupported KEY_EX capabilities*/
-        cmocka_unit_test(test_spdm_responder_finish_case9),
+        cmocka_unit_test(libspdm_test_responder_finish_case9),
         /* Uninitialized session*/
-        cmocka_unit_test(test_spdm_responder_finish_case10),
+        cmocka_unit_test(libspdm_test_responder_finish_case10),
         /* Incorrect MAC*/
-        cmocka_unit_test(test_spdm_responder_finish_case11),
-        cmocka_unit_test(test_spdm_responder_finish_case12),
+        cmocka_unit_test(libspdm_test_responder_finish_case11),
+        cmocka_unit_test(libspdm_test_responder_finish_case12),
         /* Incorrect MAC size*/
-        cmocka_unit_test(test_spdm_responder_finish_case13),
-        cmocka_unit_test(test_spdm_responder_finish_case14),
+        cmocka_unit_test(libspdm_test_responder_finish_case13),
+        cmocka_unit_test(libspdm_test_responder_finish_case14),
         /* Incorrect signature*/
-        cmocka_unit_test(test_spdm_responder_finish_case15),
-        cmocka_unit_test(test_spdm_responder_finish_case16),
+        cmocka_unit_test(libspdm_test_responder_finish_case15),
+        cmocka_unit_test(libspdm_test_responder_finish_case16),
     };
 
     setup_spdm_test_context(&m_spdm_responder_finish_test_context);

@@ -19,7 +19,7 @@ spdm_test_context_t m_spdm_responder_heartbeat_test_context = {
     false,
 };
 
-void test_spdm_responder_heartbeat(void **State)
+void libspdm_test_responder_heartbeat(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -81,10 +81,10 @@ void test_spdm_responder_heartbeat(void **State)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    spdm_get_response_heartbeat(spdm_context,
-                                spdm_test_context->test_buffer_size,
-                                spdm_test_context->test_buffer,
-                                &response_size, response);
+    libspdm_get_response_heartbeat(spdm_context,
+                                   spdm_test_context->test_buffer_size,
+                                   spdm_test_context->test_buffer,
+                                   &response_size, response);
     free(data1);
 }
 
@@ -101,7 +101,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_heartbeat(&State);
+    libspdm_test_responder_heartbeat(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

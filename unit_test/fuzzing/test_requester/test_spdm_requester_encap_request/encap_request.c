@@ -83,7 +83,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
         return RETURN_DEVICE_ERROR;
     }
     /* WALKAROUND: If just use single context to encode message and then decode message */
-    ((spdm_secured_message_context_t *)(session_info->secured_message_context))
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number--;
 
     sub_index++;
@@ -97,7 +97,7 @@ spdm_test_context_t m_spdm_requester_encap_request_test_context = {
     spdm_device_receive_message,
 };
 
-void test_spdm_requester_encap_request(void **State)
+void libspdm_test_requester_encap_request(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -143,7 +143,7 @@ void test_spdm_requester_encap_request(void **State)
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
-    libspdm_register_get_encap_response_func(spdm_context,spdm_get_encap_response_digest);
+    libspdm_register_get_encap_response_func(spdm_context,libspdm_get_encap_response_digest);
     libspdm_send_receive_encap_request(spdm_context, &session_id);
 }
 
@@ -158,7 +158,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response */
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_encap_request(&State);
+    libspdm_test_requester_encap_request(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else
