@@ -30,9 +30,9 @@ void spdm_secured_message_set_response_handshake_encryption_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->aead_key_size);
-    copy_mem_s(secured_message_context->handshake_secret.response_handshake_encryption_key,
-               sizeof(secured_message_context->handshake_secret.response_handshake_encryption_key),
-               key, secured_message_context->aead_key_size);
+    copy_mem(secured_message_context->handshake_secret.response_handshake_encryption_key,
+             sizeof(secured_message_context->handshake_secret.response_handshake_encryption_key),
+             key, secured_message_context->aead_key_size);
 }
 
 void spdm_secured_message_set_response_handshake_salt(
@@ -43,9 +43,9 @@ void spdm_secured_message_set_response_handshake_salt(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(salt_size == secured_message_context->aead_iv_size);
-    copy_mem_s(secured_message_context->handshake_secret.response_handshake_salt,
-               sizeof(secured_message_context->handshake_secret.response_handshake_salt),
-               salt, secured_message_context->aead_iv_size);
+    copy_mem(secured_message_context->handshake_secret.response_handshake_salt,
+             sizeof(secured_message_context->handshake_secret.response_handshake_salt),
+             salt, secured_message_context->aead_iv_size);
 }
 
 return_status spdm_requester_psk_finish_test_send_message(void *spdm_context,
@@ -667,13 +667,13 @@ void test_spdm_requester_psk_finish_case1(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -742,13 +742,13 @@ void test_spdm_requester_psk_finish_case2(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -844,13 +844,13 @@ void test_spdm_requester_psk_finish_case3(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -942,13 +942,13 @@ void test_spdm_requester_psk_finish_case4(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1041,13 +1041,13 @@ void test_spdm_requester_psk_finish_case5(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1141,13 +1141,13 @@ void test_spdm_requester_psk_finish_case6(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1244,13 +1244,13 @@ void test_spdm_requester_psk_finish_case7(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1344,13 +1344,13 @@ void test_spdm_requester_psk_finish_case8(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1444,13 +1444,13 @@ void test_spdm_requester_psk_finish_case9(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1535,13 +1535,13 @@ void test_spdm_requester_psk_finish_case10(void **state) {
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem (m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
@@ -1641,13 +1641,13 @@ void test_spdm_requester_psk_finish_case11(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1765,13 +1765,13 @@ void test_spdm_requester_psk_finish_case12(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1864,13 +1864,13 @@ void test_spdm_requester_psk_finish_case13(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -1964,13 +1964,13 @@ void test_spdm_requester_psk_finish_case14(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
@@ -2061,13 +2061,13 @@ void test_spdm_requester_psk_finish_case15(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
