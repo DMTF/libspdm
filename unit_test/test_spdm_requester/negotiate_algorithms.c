@@ -1037,7 +1037,7 @@ return_status spdm_requester_negotiate_algorithm_test_receive_message(
     }
 }
 
-void test_spdm_requester_negotiate_algorithms_case1(void **state)
+void libspdm_test_requester_negotiate_algorithms_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1056,14 +1056,14 @@ void test_spdm_requester_negotiate_algorithms_case1(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case2(void **state)
+void libspdm_test_requester_negotiate_algorithms_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1082,7 +1082,7 @@ void test_spdm_requester_negotiate_algorithms_case2(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size,
@@ -1091,7 +1091,7 @@ void test_spdm_requester_negotiate_algorithms_case2(void **state)
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case3(void **state)
+void libspdm_test_requester_negotiate_algorithms_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1110,14 +1110,14 @@ void test_spdm_requester_negotiate_algorithms_case3(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_UNSUPPORTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case4(void **state)
+void libspdm_test_requester_negotiate_algorithms_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1136,14 +1136,14 @@ void test_spdm_requester_negotiate_algorithms_case4(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case5(void **state)
+void libspdm_test_requester_negotiate_algorithms_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1162,14 +1162,14 @@ void test_spdm_requester_negotiate_algorithms_case5(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_NO_RESPONSE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case6(void **state)
+void libspdm_test_requester_negotiate_algorithms_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1188,7 +1188,7 @@ void test_spdm_requester_negotiate_algorithms_case6(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size,
@@ -1197,7 +1197,7 @@ void test_spdm_requester_negotiate_algorithms_case6(void **state)
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case7(void **state)
+void libspdm_test_requester_negotiate_algorithms_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1216,7 +1216,7 @@ void test_spdm_requester_negotiate_algorithms_case7(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
@@ -1225,7 +1225,7 @@ void test_spdm_requester_negotiate_algorithms_case7(void **state)
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case8(void **state)
+void libspdm_test_requester_negotiate_algorithms_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1244,11 +1244,11 @@ void test_spdm_requester_negotiate_algorithms_case8(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case9(void **state)
+void libspdm_test_requester_negotiate_algorithms_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1267,14 +1267,14 @@ void test_spdm_requester_negotiate_algorithms_case9(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 /* #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
     /*  assert_int_equal (spdm_context->transcript.message_a.buffer_size, sizeof(spdm_negotiate_algorithms_request_t) + sizeof(spdm_algorithms_response_t));*/
 /* #endif*/
 }
 
-void test_spdm_requester_negotiate_algorithms_case10(void **state)
+void libspdm_test_requester_negotiate_algorithms_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1298,14 +1298,14 @@ void test_spdm_requester_negotiate_algorithms_case10(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
     assert_int_equal(
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         0);
 }
 
-void test_spdm_requester_negotiate_algorithms_case11(void **state)
+void libspdm_test_requester_negotiate_algorithms_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1331,13 +1331,13 @@ void test_spdm_requester_negotiate_algorithms_case11(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
     assert_int_equal(spdm_context->connection_info.algorithm.base_asym_algo,
                      0);
 }
 
-void test_spdm_requester_negotiate_algorithms_case12(void **state)
+void libspdm_test_requester_negotiate_algorithms_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1359,13 +1359,13 @@ void test_spdm_requester_negotiate_algorithms_case12(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo = 0;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms(spdm_context);
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
     assert_int_equal(spdm_context->connection_info.algorithm.base_hash_algo,
                      0);
 }
 
-void test_spdm_requester_negotiate_algorithms_case13(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case13(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1381,11 +1381,11 @@ void test_spdm_requester_negotiate_algorithms_case13(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case14(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case14(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1401,11 +1401,11 @@ void test_spdm_requester_negotiate_algorithms_case14(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case15(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case15(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1421,11 +1421,11 @@ void test_spdm_requester_negotiate_algorithms_case15(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case16(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case16(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1441,11 +1441,11 @@ void test_spdm_requester_negotiate_algorithms_case16(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case17(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case17(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1461,11 +1461,11 @@ void test_spdm_requester_negotiate_algorithms_case17(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case18(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case18(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1481,11 +1481,11 @@ void test_spdm_requester_negotiate_algorithms_case18(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case19(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case19(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1501,11 +1501,11 @@ void test_spdm_requester_negotiate_algorithms_case19(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case20(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case20(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1521,11 +1521,11 @@ void test_spdm_requester_negotiate_algorithms_case20(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case21(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case21(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1541,11 +1541,11 @@ void test_spdm_requester_negotiate_algorithms_case21(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case22(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case22(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1561,11 +1561,11 @@ void test_spdm_requester_negotiate_algorithms_case22(void **state) {
     spdm_context->local_context.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_a(spdm_context);
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_negotiate_algorithms_case23(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case23(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1605,7 +1605,7 @@ void test_spdm_requester_negotiate_algorithms_case23(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal (spdm_context->transcript.message_a.buffer_size,
@@ -1615,7 +1615,7 @@ void test_spdm_requester_negotiate_algorithms_case23(void **state) {
 #endif
 }
 
-void test_spdm_requester_negotiate_algorithms_case24(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case24(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1655,11 +1655,11 @@ void test_spdm_requester_negotiate_algorithms_case24(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case25(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case25(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1699,11 +1699,11 @@ void test_spdm_requester_negotiate_algorithms_case25(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case26(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case26(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1743,11 +1743,11 @@ void test_spdm_requester_negotiate_algorithms_case26(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case27(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case27(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1787,11 +1787,11 @@ void test_spdm_requester_negotiate_algorithms_case27(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case28(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case28(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1831,11 +1831,11 @@ void test_spdm_requester_negotiate_algorithms_case28(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case29(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case29(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1875,11 +1875,11 @@ void test_spdm_requester_negotiate_algorithms_case29(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case30(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case30(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1919,11 +1919,11 @@ void test_spdm_requester_negotiate_algorithms_case30(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
-void test_spdm_requester_negotiate_algorithms_case31(void **state) {
+void libspdm_test_requester_negotiate_algorithms_case31(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1963,7 +1963,7 @@ void test_spdm_requester_negotiate_algorithms_case31(void **state) {
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    status = spdm_negotiate_algorithms (spdm_context);
+    status = libspdm_negotiate_algorithms (spdm_context);
     assert_int_equal (status, RETURN_SECURITY_VIOLATION);
 }
 
@@ -1979,80 +1979,80 @@ int spdm_requester_negotiate_algorithms_test_main(void)
     const struct CMUnitTest spdm_requester_negotiate_algorithms_tests[] = {
         /* SendRequest failed*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case1),
+            libspdm_test_requester_negotiate_algorithms_case1),
         /* Successful response*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case2),
+            libspdm_test_requester_negotiate_algorithms_case2),
         /* connection_state check failed*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case3),
+            libspdm_test_requester_negotiate_algorithms_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case4),
+            libspdm_test_requester_negotiate_algorithms_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case5),
+            libspdm_test_requester_negotiate_algorithms_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case6),
+            libspdm_test_requester_negotiate_algorithms_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case7),
+            libspdm_test_requester_negotiate_algorithms_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case8),
+            libspdm_test_requester_negotiate_algorithms_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case9),
+            libspdm_test_requester_negotiate_algorithms_case9),
         /* When spdm_response.measurement_hash_algo is 0*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case10),
+            libspdm_test_requester_negotiate_algorithms_case10),
         /* When spdm_response.base_asym_sel is 0*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case11),
+            libspdm_test_requester_negotiate_algorithms_case11),
         /* When spdm_response.base_hash_sel is 0*/
         cmocka_unit_test(
-            test_spdm_requester_negotiate_algorithms_case12),
+            libspdm_test_requester_negotiate_algorithms_case12),
         /* When spdm_response has a size of header and SPDM_ALGORITHMS code*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case13),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case13),
         /* When spdm_response has a size greater than header and smaller than algorithm and SPDM_ALGORITHMS code*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case14),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case14),
         /* When spdm_response has ext_asym_sel_count > 1*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case15),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case15),
         /* When spdm_response has ExtAsymHashCount > 1*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case16),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case16),
         /* When spdm_response returns an unlisted measurement_hash_algo
-         * cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case17),
+         * cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case17),
          * When spdm_response returns an unlisted base_asym_sel*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case17),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case17),
         /* When spdm_response returns an unlisted base_hash_sel*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case18),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case18),
         /* When spdm_response returns multiple measurement_hash_algo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case19),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case19),
         /* When spdm_response returns multiple base_asym_sel*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case20),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case20),
         /* When spdm_response returns multiple base_hash_sel*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case21),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case21),
         /* Request and response mismatch version*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case22),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case22),
         /* Successful V1.1 response*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case23),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case23),
         /* When spdm_response returns an unlisted DheAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case24),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case24),
         /* When spdm_response returns an unlisted AEADAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case25),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case25),
         /* When spdm_response returns an unlisted ReqAsymAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case26),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case26),
         /* When spdm_response returns an unlisted key_schedule*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case27),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case27),
         /* When spdm_response returns multiple DheAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case28),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case28),
         /* When spdm_response returns multiple AEADAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case29),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case29),
         /* When spdm_response returns multiple ReqAsymAlgo*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case30),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case30),
         /* When spdm_response returns multiple key_schedule*/
-        cmocka_unit_test(test_spdm_requester_negotiate_algorithms_case31),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case31),
     };
 
     setup_spdm_test_context(

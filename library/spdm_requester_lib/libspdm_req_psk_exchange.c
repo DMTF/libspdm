@@ -59,7 +59,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_psk_exchange(
+return_status libspdm_try_send_receive_psk_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t session_policy,
     uint32_t *session_id, uint8_t *heartbeat_period,
@@ -194,15 +194,15 @@ return_status try_spdm_send_receive_psk_exchange(
     ptr += opaque_psk_exchange_req_size;
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
-    status = spdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                                    &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
+                                       &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -214,7 +214,7 @@ return_status try_spdm_send_receive_psk_exchange(
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_error_response_main(
+        status = libspdm_handle_error_response_main(
             spdm_context, NULL, &spdm_response_size,
             &spdm_response, SPDM_PSK_EXCHANGE,
             SPDM_PSK_EXCHANGE_RSP,
@@ -411,12 +411,12 @@ return_status try_spdm_send_receive_psk_exchange(
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
-                                             uint8_t measurement_hash_type,
-                                             uint8_t session_policy,
-                                             uint32_t *session_id,
-                                             uint8_t *heartbeat_period,
-                                             void *measurement_hash)
+return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
+                                                uint8_t measurement_hash_type,
+                                                uint8_t session_policy,
+                                                uint32_t *session_id,
+                                                uint8_t *heartbeat_period,
+                                                void *measurement_hash)
 {
     uintn retry;
     return_status status;
@@ -424,7 +424,7 @@ return_status spdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_send_receive_psk_exchange(
+        status = libspdm_try_send_receive_psk_exchange(
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             NULL, 0, NULL, NULL, NULL, NULL);
@@ -460,18 +460,18 @@ return_status spdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
-                                                uint8_t measurement_hash_type,
-                                                uint8_t session_policy,
-                                                uint32_t *session_id,
-                                                uint8_t *heartbeat_period,
-                                                void *measurement_hash,
-                                                const void *requester_context_in,
-                                                uintn requester_context_in_size,
-                                                void *requester_context,
-                                                uintn *requester_context_size,
-                                                void *responder_context,
-                                                uintn *responder_context_size)
+return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
+                                                   uint8_t measurement_hash_type,
+                                                   uint8_t session_policy,
+                                                   uint32_t *session_id,
+                                                   uint8_t *heartbeat_period,
+                                                   void *measurement_hash,
+                                                   const void *requester_context_in,
+                                                   uintn requester_context_in_size,
+                                                   void *requester_context,
+                                                   uintn *requester_context_size,
+                                                   void *responder_context,
+                                                   uintn *responder_context_size)
 {
     uintn retry;
     return_status status;
@@ -479,7 +479,7 @@ return_status spdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_send_receive_psk_exchange(
+        status = libspdm_try_send_receive_psk_exchange(
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             requester_context_in, requester_context_in_size,

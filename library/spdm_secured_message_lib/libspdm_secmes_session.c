@@ -95,7 +95,7 @@ return_status libspdm_bin_concat(const char *label, uintn label_size,
  * @retval RETURN_SUCCESS  SPDM AEAD key and IV for a session is generated.
  **/
 return_status spdm_generate_aead_key_and_iv(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
 {
     return_status status;
@@ -155,7 +155,7 @@ return_status spdm_generate_aead_key_and_iv(
  * @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
  **/
 return_status spdm_generate_finished_key(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *handshake_secret, uint8_t *finished_key)
 {
     return_status status;
@@ -205,7 +205,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     uintn bin_str1_size;
     uint8_t bin_str2[128];
     uintn bin_str2_size;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
 
@@ -388,7 +388,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     uintn bin_str4_size;
     uint8_t bin_str8[128];
     uintn bin_str8_size;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
 
@@ -575,7 +575,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
     uintn hash_size;
     uint8_t bin_str9[128];
     uintn bin_str9_size;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
 
@@ -728,14 +728,14 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
  **/
 void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
 
     zero_mem(secured_message_context->master_secret.handshake_secret,
              LIBSPDM_MAX_HASH_SIZE);
     zero_mem(&(secured_message_context->handshake_secret),
-             sizeof(spdm_session_info_struct_handshake_secret_t));
+             sizeof(libspdm_session_info_struct_handshake_secret_t));
 
     secured_message_context->requester_backup_valid = false;
     secured_message_context->responder_backup_valid = false;
@@ -755,7 +755,7 @@ libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                                          libspdm_key_update_action_t action,
                                          bool use_new_key)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
 
@@ -867,7 +867,7 @@ void *
 libspdm_hmac_new_with_request_finished_key(
     void *spdm_secured_message_context)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_new(secured_message_context->base_hash_algo);
@@ -882,7 +882,7 @@ libspdm_hmac_new_with_request_finished_key(
 void libspdm_hmac_free_with_request_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     libspdm_hmac_free(secured_message_context->base_hash_algo, hmac_ctx);
@@ -901,7 +901,7 @@ void libspdm_hmac_free_with_request_finished_key(
 bool libspdm_hmac_init_with_request_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_init(
@@ -924,7 +924,7 @@ bool libspdm_hmac_duplicate_with_request_finished_key(
     void *spdm_secured_message_context,
     const void *hmac_ctx, void *new_hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_duplicate(
@@ -948,7 +948,7 @@ bool libspdm_hmac_update_with_request_finished_key(
     void *hmac_ctx, const void *data,
     uintn data_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_update(
@@ -970,7 +970,7 @@ bool libspdm_hmac_final_with_request_finished_key(
     void *spdm_secured_message_context,
     void *hmac_ctx,  uint8_t *hmac_value)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_final(
@@ -994,7 +994,7 @@ libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
                                            const void *data, uintn data_size,
                                            uint8_t *hmac_value)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_all(
@@ -1014,7 +1014,7 @@ void *
 libspdm_hmac_new_with_response_finished_key(
     void *spdm_secured_message_context)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_new(secured_message_context->base_hash_algo);
@@ -1029,7 +1029,7 @@ libspdm_hmac_new_with_response_finished_key(
 void libspdm_hmac_free_with_response_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     libspdm_hmac_free(secured_message_context->base_hash_algo, hmac_ctx);
@@ -1048,7 +1048,7 @@ void libspdm_hmac_free_with_response_finished_key(
 bool libspdm_hmac_init_with_response_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_init(
@@ -1071,7 +1071,7 @@ bool libspdm_hmac_duplicate_with_response_finished_key(
     void *spdm_secured_message_context,
     const void *hmac_ctx, void *new_hmac_ctx)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_duplicate(
@@ -1095,7 +1095,7 @@ bool libspdm_hmac_update_with_response_finished_key(
     void *hmac_ctx, const void *data,
     uintn data_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_update(
@@ -1117,7 +1117,7 @@ bool libspdm_hmac_final_with_response_finished_key(
     void *spdm_secured_message_context,
     void *hmac_ctx,  uint8_t *hmac_value)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_final(
@@ -1140,7 +1140,7 @@ bool libspdm_hmac_all_with_response_finished_key(
     void *spdm_secured_message_context, const void *data,
     uintn data_size, uint8_t *hmac_value)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     return libspdm_hmac_all(

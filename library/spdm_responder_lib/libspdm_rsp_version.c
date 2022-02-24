@@ -32,10 +32,10 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_version(void *context, uintn request_size,
-                                        const void *request,
-                                        uintn *response_size,
-                                        void *response)
+return_status libspdm_get_response_version(void *context, uintn request_size,
+                                           const void *request,
+                                           uintn *response_size,
+                                           void *response)
 {
     const spdm_get_version_request_t *spdm_request;
     spdm_version_response_mine_t *spdm_response;
@@ -57,8 +57,8 @@ return_status spdm_get_response_version(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    spdm_set_connection_state(spdm_context,
-                              LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+    libspdm_set_connection_state(spdm_context,
+                                 LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 
     if ((spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) ||
         (spdm_context->response_state ==
@@ -67,7 +67,7 @@ return_status spdm_get_response_version(void *context, uintn request_size,
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -123,8 +123,8 @@ return_status spdm_get_response_version(void *context, uintn request_size,
                                                response_size, response);
     }
 
-    spdm_set_connection_state(spdm_context,
-                              LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
+    libspdm_set_connection_state(spdm_context,
+                                 LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 
     return RETURN_SUCCESS;
 }

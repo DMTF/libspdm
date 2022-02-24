@@ -21,7 +21,7 @@ spdm_test_context_t m_spdm_responder_encap_get_certificate_test_context = {
     false,
 };
 
-void test_spdm_responder_encap_get_certificate_case1(void **State)
+void libspdm_test_responder_encap_get_certificate_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_certificate_response_t *spdm_response;
@@ -61,12 +61,12 @@ void test_spdm_responder_encap_get_certificate_case1(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.slot_count = 1;
 
-    spdm_process_encap_response_certificate(spdm_context, spdm_response_size, spdm_response,
-                                            &need_continue);
+    libspdm_process_encap_response_certificate(spdm_context, spdm_response_size, spdm_response,
+                                               &need_continue);
     free(data);
 }
 
-void test_spdm_get_encap_request_get_certificate_case2(void **State)
+void test_libspdm_get_encap_request_get_certificate_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -97,7 +97,7 @@ void test_spdm_get_encap_request_get_certificate_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
 
-    spdm_get_encap_request_get_certificate(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_get_certificate(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
     free(data);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -117,12 +117,12 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_encap_get_certificate_case1(&State);
+    libspdm_test_responder_encap_get_certificate_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_get_encap_request_get_certificate_case2(&State);
+    test_libspdm_get_encap_request_get_certificate_case2(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

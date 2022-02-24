@@ -1469,7 +1469,7 @@ return_status spdm_requester_get_certificate_test_receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_requester_get_certificate_case1(void **state)
+void libspdm_test_requester_get_certificate_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1526,7 +1526,7 @@ void test_spdm_requester_get_certificate_case1(void **state)
  * Test 2: Normal case, request a certificate chain
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case2(void **state)
+void libspdm_test_requester_get_certificate_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1600,7 +1600,7 @@ void test_spdm_requester_get_certificate_case2(void **state)
  * Test 3: simulate wrong connection_state when sending GET_CERTIFICATE (missing SPDM_GET_DIGESTS_RECEIVE_FLAG and SPDM_GET_CAPABILITIES_RECEIVE_FLAG)
  * Expected Behavior: get a RETURN_UNSUPPORTED, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_requester_get_certificate_case3(void **state)
+void libspdm_test_requester_get_certificate_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1657,7 +1657,7 @@ void test_spdm_requester_get_certificate_case3(void **state)
  * Test 4: force responder to send an ERROR message with code SPDM_ERROR_CODE_INVALID_REQUEST
  * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_requester_get_certificate_case4(void **state)
+void libspdm_test_requester_get_certificate_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1714,7 +1714,7 @@ void test_spdm_requester_get_certificate_case4(void **state)
  * Test 5: force responder to send an ERROR message with code SPDM_ERROR_CODE_BUSY
  * Expected Behavior: get a RETURN_NO_RESPONSE, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_requester_get_certificate_case5(void **state)
+void libspdm_test_requester_get_certificate_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1771,7 +1771,7 @@ void test_spdm_requester_get_certificate_case5(void **state)
  * Test 6: force responder to first send an ERROR message with code SPDM_ERROR_CODE_BUSY, but functions normally afterwards
  * Expected Behavior: receives the correct number of CERTIFICATE messages
  **/
-void test_spdm_requester_get_certificate_case6(void **state)
+void libspdm_test_requester_get_certificate_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1835,7 +1835,7 @@ void test_spdm_requester_get_certificate_case6(void **state)
  * Test 7: force responder to send an ERROR message with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_requester_get_certificate_case7(void **state)
+void libspdm_test_requester_get_certificate_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1894,7 +1894,7 @@ void test_spdm_requester_get_certificate_case7(void **state)
  * Test 8: force responder to send an ERROR message with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
  * Expected Behavior: get a RETURN_NO_RESPONSE
  **/
-void test_spdm_requester_get_certificate_case8(void **state)
+void libspdm_test_requester_get_certificate_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1948,7 +1948,7 @@ void test_spdm_requester_get_certificate_case8(void **state)
  * Test 9: force responder to first send an ERROR message with code SPDM_ERROR_CODE_RESPONSE_NOT_READY, but functions normally afterwards
  * Expected Behavior: receives the correct number of CERTIFICATE messages
  **/
-void test_spdm_requester_get_certificate_case9(void **state)
+void libspdm_test_requester_get_certificate_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2013,7 +2013,7 @@ void test_spdm_requester_get_certificate_case9(void **state)
  * Test 10: Normal case, request a certificate chain. Validates certificate by using a prelaoded chain instead of root hash
  * Expected Behavior: receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case10(void **state)
+void libspdm_test_requester_get_certificate_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2078,7 +2078,7 @@ void test_spdm_requester_get_certificate_case10(void **state)
  * Test 11: Normal procedure, but the retrieved certificate chain has an invalid signature
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case11(void **state)
+void libspdm_test_requester_get_certificate_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2147,7 +2147,7 @@ void test_spdm_requester_get_certificate_case11(void **state)
  * Test 12: Normal procedure, but the retrieved root certificate does not match
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case12(void **state)
+void libspdm_test_requester_get_certificate_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2220,7 +2220,7 @@ void test_spdm_requester_get_certificate_case12(void **state)
  * Test 13: Gets a short certificate chain (fits in 1 message)
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case13(void **state)
+void libspdm_test_requester_get_certificate_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2289,7 +2289,7 @@ void test_spdm_requester_get_certificate_case13(void **state)
  * Test 14: request a whole certificate chain byte by byte
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case14(void **state)
+void libspdm_test_requester_get_certificate_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2364,7 +2364,7 @@ void test_spdm_requester_get_certificate_case14(void **state)
  * Test 15: request a long certificate chain
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case15(void **state)
+void libspdm_test_requester_get_certificate_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2441,7 +2441,7 @@ void test_spdm_requester_get_certificate_case15(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_certificate_case16(void **state) {
+void libspdm_test_requester_get_certificate_case16(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2508,7 +2508,7 @@ void test_spdm_requester_get_certificate_case16(void **state) {
  * Test 17: Normal case, get a certificate chain start not with root cert. Validates certificate by using a prelaoded chain.
  * Expected Behavior: receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case17(void **state)
+void libspdm_test_requester_get_certificate_case17(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2562,7 +2562,7 @@ void test_spdm_requester_get_certificate_case17(void **state)
  * Test 18: Fail case, get a certificate chain start not with root cert and with wrong signature. Validates certificate by using a prelaoded chain.
  * Expected Behavior: receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case18(void **state)
+void libspdm_test_requester_get_certificate_case18(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2616,7 +2616,7 @@ void test_spdm_requester_get_certificate_case18(void **state)
  * Test 19: Normal procedure, but one certificate in the retrieved certificate chain past its expiration date.
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
  **/
-void test_spdm_requester_get_certificate_case19(void **state)
+void libspdm_test_requester_get_certificate_case19(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2686,7 +2686,7 @@ void test_spdm_requester_get_certificate_case19(void **state)
  * Test 20: Fail case, request a certificate chain, responder return portion_length is 0.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_certificate_case20(void **state)
+void libspdm_test_requester_get_certificate_case20(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2744,7 +2744,7 @@ void test_spdm_requester_get_certificate_case20(void **state)
  * Test 21: Fail case, request a certificate chain, responder return portion_length > spdm_request.length.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_certificate_case21(void **state)
+void libspdm_test_requester_get_certificate_case21(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2804,7 +2804,7 @@ void test_spdm_requester_get_certificate_case21(void **state)
  * total_responder_cert_chain_buffer_length.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_certificate_case22(void **state)
+void libspdm_test_requester_get_certificate_case22(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -2869,50 +2869,50 @@ int spdm_requester_get_certificate_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_certificate_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case1),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case1),
         /* Successful response: check root certificate hash*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case2),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case3),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case4),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case5),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case6),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case7),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case8),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case9),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case9),
         /* Successful response: check certificate chain*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case10),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case10),
         /* Invalid certificate signature*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case11),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case11),
         /* Fail certificate chain check*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case12),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case12),
         /* Sucessful response: get a certificate chain that fits in one single message*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case13),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case13),
         /* Sucessful response: get certificate chain byte by byte*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case14),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case14),
         /* Sucessful response: get a long certificate chain*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case15),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case15),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case16),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case16),
         /* Sucessful response: get a certificate chain not start with root cert.*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case17),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case17),
         /* Fail response: get a certificate chain not start with root cert but with wrong signature.*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case18),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case18),
         /* Fail response: one certificate in the retrieved certificate chain past its expiration date.*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case19),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case19),
         /* Fail response: responder return portion_length is 0.*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case20),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case20),
         /* Fail response: responder return portion_length > spdm_request.length*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case21),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case21),
         /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
          * total_responder_cert_chain_buffer_length.*/
-        cmocka_unit_test(test_spdm_requester_get_certificate_case22),
+        cmocka_unit_test(libspdm_test_requester_get_certificate_case22),
     };
 
     setup_spdm_test_context(&m_spdm_requester_get_certificate_test_context);

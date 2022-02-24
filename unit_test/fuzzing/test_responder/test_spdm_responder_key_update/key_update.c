@@ -56,7 +56,7 @@ spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
@@ -124,13 +124,13 @@ spdm_test_context_t m_spdm_responder_key_update_test_context = {
     false,
 };
 
-void test_spdm_responder_key_update(void **State)
+void libspdm_test_responder_key_update(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
@@ -153,10 +153,10 @@ void test_spdm_responder_key_update(void **State)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    spdm_get_response_key_update(spdm_context,
-                                 spdm_test_context->test_buffer_size,
-                                 spdm_test_context->test_buffer,
-                                 &response_size, response);
+    libspdm_get_response_key_update(spdm_context,
+                                    spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer,
+                                    &response_size, response);
 }
 
 void run_test_harness(const void *test_buffer, uintn test_buffer_size)
@@ -172,7 +172,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_key_update(&State);
+    libspdm_test_responder_key_update(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

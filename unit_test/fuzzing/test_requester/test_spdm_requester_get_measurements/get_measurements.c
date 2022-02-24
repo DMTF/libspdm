@@ -96,7 +96,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_get_measurement_case1(void **State)
+void libspdm_test_requester_get_measurement_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -160,7 +160,7 @@ void test_spdm_requester_get_measurement_case1(void **State)
 #endif
 }
 
-void test_spdm_requester_get_measurement_case2(void **State)
+void libspdm_test_requester_get_measurement_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -219,7 +219,7 @@ void test_spdm_requester_get_measurement_case2(void **State)
 #endif
 }
 
-void test_spdm_requester_get_measurement_case3(void **State)
+void libspdm_test_requester_get_measurement_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -298,7 +298,7 @@ void test_spdm_requester_get_measurement_case3(void **State)
 #endif
 }
 
-void test_spdm_requester_get_measurement_case4(void **State)
+void libspdm_test_requester_get_measurement_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -376,22 +376,22 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response to get measurement with signature*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_get_measurement_case1(&State);
+    libspdm_test_requester_get_measurement_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Successful response to get measurement with signature*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_get_measurement_case2(&State);
+    libspdm_test_requester_get_measurement_case2(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Successful response to get a session based measurement with signature*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_get_measurement_case3(&State);
+    libspdm_test_requester_get_measurement_case3(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Successful response to get all measurements without signature*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_get_measurement_case4(&State);
+    libspdm_test_requester_get_measurement_case4(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

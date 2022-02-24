@@ -34,7 +34,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 
     spdm_context = context;
 
-    DEBUG((DEBUG_INFO, "spdm_send_spdm_request[%x] (0x%x): \n",
+    DEBUG((DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
            (session_id != NULL) ? *session_id : 0x0, request_size));
     libspdm_internal_dump_hex(request, request_size);
 
@@ -53,7 +53,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
     status = spdm_context->send_message(spdm_context, message_size, message,
                                         timeout);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO, "spdm_send_spdm_request[%x] status - %p\n",
+        DEBUG((DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
                (session_id != NULL) ? *session_id : 0x0, status));
     }
 
@@ -106,7 +106,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                                            message, timeout);
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO,
-               "spdm_receive_spdm_response[%x] status - %p\n",
+               "libspdm_receive_spdm_response[%x] status - %p\n",
                (session_id != NULL) ? *session_id : 0x0, status));
         return status;
     }
@@ -120,13 +120,13 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
     if (session_id != NULL) {
         if (message_session_id == NULL) {
             DEBUG((DEBUG_INFO,
-                   "spdm_receive_spdm_response[%x] GetSessionId - NULL\n",
+                   "libspdm_receive_spdm_response[%x] GetSessionId - NULL\n",
                    (session_id != NULL) ? *session_id : 0x0));
             goto error;
         }
         if (*message_session_id != *session_id) {
             DEBUG((DEBUG_INFO,
-                   "spdm_receive_spdm_response[%x] GetSessionId - %x\n",
+                   "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
                    (session_id != NULL) ? *session_id : 0x0,
                    *message_session_id));
             goto error;
@@ -134,7 +134,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
     } else {
         if (message_session_id != NULL) {
             DEBUG((DEBUG_INFO,
-                   "spdm_receive_spdm_response[%x] GetSessionId - %x\n",
+                   "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
                    (session_id != NULL) ? *session_id : 0x0,
                    *message_session_id));
             goto error;
@@ -144,16 +144,16 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
     if ((is_app_message && !is_message_app_message) ||
         (!is_app_message && is_message_app_message)) {
         DEBUG((DEBUG_INFO,
-               "spdm_receive_spdm_response[%x] app_message mismatch\n",
+               "libspdm_receive_spdm_response[%x] app_message mismatch\n",
                (session_id != NULL) ? *session_id : 0x0));
         goto error;
     }
 
-    DEBUG((DEBUG_INFO, "spdm_receive_spdm_response[%x] (0x%x): \n",
+    DEBUG((DEBUG_INFO, "libspdm_receive_spdm_response[%x] (0x%x): \n",
            (session_id != NULL) ? *session_id : 0x0, *response_size));
     if (RETURN_ERROR(status)) {
         DEBUG((DEBUG_INFO,
-               "spdm_receive_spdm_response[%x] status - %p\n",
+               "libspdm_receive_spdm_response[%x] status - %p\n",
                (session_id != NULL) ? *session_id : 0x0, status));
     } else {
         libspdm_internal_dump_hex(response, *response_size);
@@ -183,9 +183,9 @@ error:
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status spdm_send_spdm_request(libspdm_context_t *spdm_context,
-                                     const uint32_t *session_id,
-                                     uintn request_size, const void *request)
+return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
+                                        const uint32_t *session_id,
+                                        uintn request_size, const void *request)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -233,10 +233,10 @@ return_status spdm_send_spdm_request(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status spdm_receive_spdm_response(libspdm_context_t *spdm_context,
-                                         const uint32_t *session_id,
-                                         uintn *response_size,
-                                         void *response)
+return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
+                                            const uint32_t *session_id,
+                                            uintn *response_size,
+                                            void *response)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;

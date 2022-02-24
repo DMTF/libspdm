@@ -22,7 +22,7 @@ spdm_test_context_t m_spdm_responder_if_ready_test_context = {
     false,
 };
 
-void test_spdm_responder_respond_if_ready(void **State)
+void libspdm_test_responder_respond_if_ready(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -70,10 +70,10 @@ void test_spdm_responder_respond_if_ready(void **State)
     spdm_context->error_data.token = MY_TEST_TOKEN;
 
     response_size = sizeof(response);
-    spdm_get_response_respond_if_ready(spdm_context,
-                                       spdm_test_context->test_buffer_size,
-                                       spdm_test_context->test_buffer,
-                                       &response_size, response);
+    libspdm_get_response_respond_if_ready(spdm_context,
+                                          spdm_test_context->test_buffer_size,
+                                          spdm_test_context->test_buffer,
+                                          &response_size, response);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     #else
     free(spdm_context->transcript.digest_context_m1m2);
@@ -93,7 +93,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_respond_if_ready(&State);
+    libspdm_test_responder_respond_if_ready(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

@@ -71,7 +71,7 @@ spdm_key_exchange_request_mine_t m_spdm_key_exchange_request7 = {
 };
 uintn m_spdm_key_exchange_request7_size = sizeof(m_spdm_key_exchange_request7);
 
-void test_spdm_responder_key_exchange_case1(void **state)
+void libspdm_test_responder_key_exchange_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -137,7 +137,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -152,7 +152,7 @@ void test_spdm_responder_key_exchange_case1(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case2(void **state)
+void libspdm_test_responder_key_exchange_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -218,7 +218,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request2_size,
         &m_spdm_key_exchange_request2, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -232,7 +232,7 @@ void test_spdm_responder_key_exchange_case2(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case3(void **state)
+void libspdm_test_responder_key_exchange_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -299,7 +299,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -314,7 +314,7 @@ void test_spdm_responder_key_exchange_case3(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case4(void **state)
+void libspdm_test_responder_key_exchange_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -381,7 +381,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -397,7 +397,7 @@ void test_spdm_responder_key_exchange_case4(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case5(void **state)
+void libspdm_test_responder_key_exchange_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -465,7 +465,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -486,7 +486,7 @@ void test_spdm_responder_key_exchange_case5(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case6(void **state)
+void libspdm_test_responder_key_exchange_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -553,7 +553,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -567,7 +567,7 @@ void test_spdm_responder_key_exchange_case6(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case7(void **state)
+void libspdm_test_responder_key_exchange_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -645,7 +645,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -667,7 +667,7 @@ void test_spdm_responder_key_exchange_case7(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case8(void **state)
+void libspdm_test_responder_key_exchange_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -743,7 +743,7 @@ void test_spdm_responder_key_exchange_case8(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request3_size,
         &m_spdm_key_exchange_request3, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -776,7 +776,7 @@ void test_spdm_responder_key_exchange_case8(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case9(void **state)
+void libspdm_test_responder_key_exchange_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -852,7 +852,7 @@ void test_spdm_responder_key_exchange_case9(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request4_size,
         &m_spdm_key_exchange_request4, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -885,7 +885,7 @@ void test_spdm_responder_key_exchange_case9(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case10(void **state)
+void libspdm_test_responder_key_exchange_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -959,7 +959,7 @@ void test_spdm_responder_key_exchange_case10(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request5_size,
         &m_spdm_key_exchange_request5, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -972,7 +972,7 @@ void test_spdm_responder_key_exchange_case10(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case11(void **state)
+void libspdm_test_responder_key_exchange_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1050,7 +1050,7 @@ void test_spdm_responder_key_exchange_case11(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request3_size,
         &m_spdm_key_exchange_request3, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1063,7 +1063,7 @@ void test_spdm_responder_key_exchange_case11(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case12(void **state)
+void libspdm_test_responder_key_exchange_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1135,7 +1135,7 @@ void test_spdm_responder_key_exchange_case12(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request6_size,
         &m_spdm_key_exchange_request6, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1148,7 +1148,7 @@ void test_spdm_responder_key_exchange_case12(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case13(void **state)
+void libspdm_test_responder_key_exchange_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1221,7 +1221,7 @@ void test_spdm_responder_key_exchange_case13(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request7_size,
         &m_spdm_key_exchange_request7, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1234,7 +1234,7 @@ void test_spdm_responder_key_exchange_case13(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case14(void **state)
+void libspdm_test_responder_key_exchange_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1307,7 +1307,7 @@ void test_spdm_responder_key_exchange_case14(void **state)
         spdm_context, &opaque_key_exchange_req_size, ptr);
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request7_size,
         &m_spdm_key_exchange_request7, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1322,7 +1322,7 @@ void test_spdm_responder_key_exchange_case14(void **state)
     free(data1);
 }
 
-void test_spdm_responder_key_exchange_case15(void **state)
+void libspdm_test_responder_key_exchange_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1406,7 +1406,7 @@ void test_spdm_responder_key_exchange_case15(void **state)
     opaque_key_exchange_rsp_size =
         libspdm_get_opaque_data_version_selection_data_size(spdm_context);
 
-    status = spdm_get_response_key_exchange(
+    status = libspdm_get_response_key_exchange(
         spdm_context, m_spdm_key_exchange_request1_size,
         &m_spdm_key_exchange_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1439,35 +1439,35 @@ int spdm_responder_key_exchange_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_exchange_tests[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case1),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case2),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case3),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case4),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case4),
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case5),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case6),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case6),
         /* Buffer reset*/
-        cmocka_unit_test(test_spdm_responder_key_exchange_case7),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case7),
         /* TCB measurement hash requested */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case8),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case8),
         /* All measurement hash requested */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case9),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case9),
         /* Reserved value in Measurement summary. Error + Invalid */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case10),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case10),
         /* TCB measurement hash requested, measurement flag not set */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case11),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case11),
         /* Request Slot id 1, no slot id 1 present */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case12),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case12),
         /* Request previously provisioned certificate, no certificate provisioned */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case13),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case13),
         /* Request previously provisioned certificate, certificate in slot 0 */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case14),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case14),
         /* HANDSHAKE_IN_THE_CLEAR set for requester and responder */
-        cmocka_unit_test(test_spdm_responder_key_exchange_case15),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case15),
     };
 
     setup_spdm_test_context(&m_spdm_responder_key_exchange_test_context);

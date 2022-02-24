@@ -13,7 +13,7 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_responder_version(void **State)
+void libspdm_test_responder_version(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -24,10 +24,10 @@ void test_spdm_responder_version(void **State)
     spdm_context = spdm_test_context->spdm_context;
 
     response_size = sizeof(response);
-    spdm_get_response_version(spdm_context,
-                              spdm_test_context->test_buffer_size,
-                              spdm_test_context->test_buffer,
-                              &response_size, response);
+    libspdm_get_response_version(spdm_context,
+                                 spdm_test_context->test_buffer_size,
+                                 spdm_test_context->test_buffer,
+                                 &response_size, response);
 }
 
 spdm_test_context_t m_spdm_responder_version_test_context = {
@@ -48,7 +48,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_version(&State);
+    libspdm_test_responder_version(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

@@ -22,10 +22,10 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_responder_handle_response_state(void *context,
-                                                   uint8_t request_code,
-                                                   uintn *response_size,
-                                                   void *response)
+return_status libspdm_responder_handle_response_state(void *context,
+                                                      uint8_t request_code,
+                                                      uintn *response_size,
+                                                      void *response)
 {
     libspdm_context_t *spdm_context;
     return_status status;
@@ -44,8 +44,8 @@ return_status spdm_responder_handle_response_state(void *context,
             return status;
         }
         /* NOTE: Need to let SPDM_VERSION reset the State*/
-        spdm_set_connection_state(spdm_context,
-                                  LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+        libspdm_set_connection_state(spdm_context,
+                                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
         return RETURN_SUCCESS;
     case LIBSPDM_RESPONSE_STATE_NOT_READY:
         /*do not update ErrorData if a previous request has not been completed*/

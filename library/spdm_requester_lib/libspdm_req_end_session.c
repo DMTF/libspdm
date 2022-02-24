@@ -25,9 +25,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
-                                                uint32_t session_id,
-                                                uint8_t end_session_attributes)
+return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_context,
+                                                   uint32_t session_id,
+                                                   uint8_t end_session_attributes)
 {
     return_status status;
     spdm_end_session_request_t spdm_request;
@@ -67,8 +67,8 @@ return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
     spdm_request.header.param2 = 0;
 
     spdm_request_size = sizeof(spdm_end_session_request_t);
-    status = spdm_send_spdm_request(spdm_context, &session_id,
-                                    spdm_request_size, &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, &session_id,
+                                       spdm_request_size, &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
@@ -78,7 +78,7 @@ return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -90,7 +90,7 @@ return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_error_response_main(
+        status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,
             sizeof(spdm_end_session_response_mine_t));
@@ -117,9 +117,9 @@ return_status try_spdm_send_receive_end_session(libspdm_context_t *spdm_context,
     return RETURN_SUCCESS;
 }
 
-return_status spdm_send_receive_end_session(libspdm_context_t *spdm_context,
-                                            uint32_t session_id,
-                                            uint8_t end_session_attributes)
+return_status libspdm_send_receive_end_session(libspdm_context_t *spdm_context,
+                                               uint32_t session_id,
+                                               uint8_t end_session_attributes)
 {
     uintn retry;
     return_status status;
@@ -127,7 +127,7 @@ return_status spdm_send_receive_end_session(libspdm_context_t *spdm_context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_send_receive_end_session(
+        status = libspdm_try_send_receive_end_session(
             spdm_context, session_id, end_session_attributes);
         if (RETURN_NO_RESPONSE != status) {
             return status;

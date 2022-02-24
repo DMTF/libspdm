@@ -34,7 +34,7 @@ return_status spdm_device_receive_message(void *spdm_context,
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_get_capabilities(void **State)
+void libspdm_test_requester_get_capabilities(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -42,10 +42,10 @@ void test_spdm_requester_get_capabilities(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
-    spdm_get_capabilities(spdm_context);
+    libspdm_get_capabilities(spdm_context);
 }
 
-spdm_test_context_t test_spdm_requester_context = {
+spdm_test_context_t libspdm_test_requester_context = {
     SPDM_TEST_CONTEXT_SIGNATURE,
     true,
     spdm_device_send_message,
@@ -56,15 +56,15 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&test_spdm_requester_context);
+    setup_spdm_test_context(&libspdm_test_requester_context);
 
-    test_spdm_requester_context.test_buffer = (void *)test_buffer;
-    test_spdm_requester_context.test_buffer_size = test_buffer_size;
+    libspdm_test_requester_context.test_buffer = (void *)test_buffer;
+    libspdm_test_requester_context.test_buffer_size = test_buffer_size;
 
     spdm_unit_test_group_setup(&State);
 
     /* Successful response*/
-    test_spdm_requester_get_capabilities(&State);
+    libspdm_test_requester_get_capabilities(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

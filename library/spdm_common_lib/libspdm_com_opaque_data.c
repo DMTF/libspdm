@@ -403,11 +403,13 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
          spdm_context->local_context.secured_message_version.spdm_version_count;
          secured_message_version_index++) {
 
-        if (libspdm_get_version_from_version_number(opaque_element_version_section->selected_version)
+        if (libspdm_get_version_from_version_number(opaque_element_version_section->
+                                                    selected_version)
             ==
             libspdm_get_version_from_version_number(spdm_context->local_context.
                                                     secured_message_version
-                                                    .spdm_version[secured_message_version_index])) {
+                                                    .spdm_version[secured_message_version_index]))
+        {
             return RETURN_SUCCESS;
         }
     }

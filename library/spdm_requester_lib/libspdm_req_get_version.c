@@ -24,9 +24,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status try_spdm_get_version(libspdm_context_t *spdm_context,
-                                   uint8_t *version_number_entry_count,
-                                   spdm_version_number_t *version_number_entry)
+return_status libspdm_try_get_version(libspdm_context_t *spdm_context,
+                                      uint8_t *version_number_entry_count,
+                                      spdm_version_number_t *version_number_entry)
 {
     return_status status;
     bool result;
@@ -52,15 +52,15 @@ return_status try_spdm_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request.header.request_response_code);
 
-    status = spdm_send_spdm_request(spdm_context, NULL,
-                                    sizeof(spdm_request), &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL,
+                                       sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -72,7 +72,7 @@ return_status try_spdm_get_version(libspdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_simple_error_response(
+        status = libspdm_handle_simple_error_response(
             spdm_context, spdm_response.header.param1);
         if (RETURN_ERROR(status)) {
             return status;
@@ -164,9 +164,9 @@ return_status try_spdm_get_version(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_get_version(libspdm_context_t *spdm_context,
-                               uint8_t *version_number_entry_count,
-                               spdm_version_number_t *version_number_entry)
+return_status libspdm_get_version(libspdm_context_t *spdm_context,
+                                  uint8_t *version_number_entry_count,
+                                  spdm_version_number_t *version_number_entry)
 {
     uintn retry;
     return_status status;
@@ -174,8 +174,8 @@ return_status spdm_get_version(libspdm_context_t *spdm_context,
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_version(spdm_context,
-                                      version_number_entry_count, version_number_entry);
+        status = libspdm_try_get_version(spdm_context,
+                                         version_number_entry_count, version_number_entry);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

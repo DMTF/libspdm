@@ -14,7 +14,7 @@
 void spdm_secured_message_set_response_finished_key(void *spdm_secured_message_context,
                                                     const void *key, uintn key_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
@@ -59,7 +59,7 @@ spdm_finish_request_mine_t m_spdm_finish_request1 = {
 };
 uintn m_spdm_finish_request1_size = sizeof(m_spdm_finish_request1);
 
-void test_spdm_send_receive_finish_case1(void **State)
+void test_libspdm_send_receive_finish_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -116,7 +116,7 @@ void test_spdm_send_receive_finish_case1(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 
     req_slot_id_param = 0;
-    spdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
+    libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
 
     free(data);
 }
@@ -139,7 +139,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_send_receive_finish_case1(&State);
+    test_libspdm_send_receive_finish_case1(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

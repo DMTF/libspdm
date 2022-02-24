@@ -87,7 +87,7 @@ bool libspdm_secured_message_dhe_compute_key(
     const uint8_t *peer_public, uintn peer_public_size,
     void *spdm_secured_message_context)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
     uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
     uintn final_key_size;
     bool ret;

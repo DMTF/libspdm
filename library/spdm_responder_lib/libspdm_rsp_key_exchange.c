@@ -25,11 +25,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_key_exchange(void *context,
-                                             uintn request_size,
-                                             const void *request,
-                                             uintn *response_size,
-                                             void *response)
+return_status libspdm_get_response_key_exchange(void *context,
+                                                uintn request_size,
+                                                const void *request,
+                                                uintn *response_size,
+                                                void *response)
 {
     const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
@@ -61,7 +61,7 @@ return_status spdm_get_response_key_exchange(void *context,
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -88,7 +88,7 @@ return_status spdm_get_response_key_exchange(void *context,
         if (spdm_context->encap_context.error_state !=
             LIBSPDM_STATUS_SUCCESS) {
             DEBUG((DEBUG_INFO,
-                   "spdm_get_response_key_exchange fail due to Mutual Auth fail\n"));
+                   "libspdm_get_response_key_exchange fail due to Mutual Auth fail\n"));
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -216,7 +216,7 @@ return_status spdm_get_response_key_exchange(void *context,
             spdm_context->local_context.mut_auth_requested;
     }
     if (spdm_response->mut_auth_requested != 0) {
-        spdm_init_mut_auth_encap_state(
+        libspdm_init_mut_auth_encap_state(
             context, spdm_response->mut_auth_requested);
         spdm_response->req_slot_id_param =
             (spdm_context->encap_context.req_slot_id & 0xF);
@@ -389,8 +389,8 @@ return_status spdm_get_response_key_exchange(void *context,
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         session_info->session_policy = spdm_request->session_policy;
     }
-    spdm_set_session_state(spdm_context, session_id,
-                           LIBSPDM_SESSION_STATE_HANDSHAKING);
+    libspdm_set_session_state(spdm_context, session_id,
+                              LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     return RETURN_SUCCESS;
 }

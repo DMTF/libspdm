@@ -28,7 +28,7 @@ return_status libspdm_encode_secured_message(
     void *secured_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
     uintn total_secured_message_size;
     uintn plain_text_size;
     uintn cipher_text_size;
@@ -318,7 +318,7 @@ return_status libspdm_decode_secured_message(
     void *app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
     uintn plain_text_size;
     uintn cipher_text_size;
     uintn aead_tag_size;

@@ -13,7 +13,7 @@ typedef struct {
     uint8_t dhe_secret[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
     uint8_t master_secret[LIBSPDM_MAX_HASH_SIZE];
-} spdm_session_info_struct_master_secret_t;
+} libspdm_session_info_struct_master_secret_t;
 
 typedef struct {
     uint8_t request_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
@@ -27,7 +27,7 @@ typedef struct {
     uint8_t response_handshake_encryption_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
     uint8_t response_handshake_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t response_handshake_sequence_number;
-} spdm_session_info_struct_handshake_secret_t;
+} libspdm_session_info_struct_handshake_secret_t;
 
 typedef struct {
     uint8_t request_data_secret[LIBSPDM_MAX_HASH_SIZE];
@@ -38,7 +38,7 @@ typedef struct {
     uint8_t response_data_encryption_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
     uint8_t response_data_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t response_data_sequence_number;
-} spdm_session_info_struct_application_secret_t;
+} libspdm_session_info_struct_application_secret_t;
 
 typedef struct {
     libspdm_session_type_t session_type;
@@ -56,10 +56,10 @@ typedef struct {
     bool use_psk;
     bool finished_key_ready;
     libspdm_session_state_t session_state;
-    spdm_session_info_struct_master_secret_t master_secret;
-    spdm_session_info_struct_handshake_secret_t handshake_secret;
-    spdm_session_info_struct_application_secret_t application_secret;
-    spdm_session_info_struct_application_secret_t application_secret_backup;
+    libspdm_session_info_struct_master_secret_t master_secret;
+    libspdm_session_info_struct_handshake_secret_t handshake_secret;
+    libspdm_session_info_struct_application_secret_t application_secret;
+    libspdm_session_info_struct_application_secret_t application_secret_backup;
     bool requester_backup_valid;
     bool responder_backup_valid;
     uintn psk_hint_size;
@@ -68,6 +68,6 @@ typedef struct {
     /* Cache the error in libspdm_decode_secured_message. It is handled in libspdm_build_response.*/
 
     libspdm_error_struct_t last_spdm_error;
-} spdm_secured_message_context_t;
+} libspdm_secured_message_context_t;
 
 #endif

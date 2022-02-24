@@ -112,7 +112,7 @@ static void spdm_set_standard_key_update_test_state(
 }
 
 static void spdm_set_standard_key_update_test_secrets(
-    spdm_secured_message_context_t *secured_message_context,
+    libspdm_secured_message_context_t *secured_message_context,
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
@@ -179,14 +179,14 @@ static void spdm_compute_secret_update(uintn hash_size,
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void test_spdm_responder_key_update_case1(void **state)
+void libspdm_test_responder_key_update_case1(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -219,10 +219,10 @@ void test_spdm_responder_key_update_case1(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -248,14 +248,14 @@ void test_spdm_responder_key_update_case1(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_spdm_responder_key_update_case2(void **state)
+void libspdm_test_responder_key_update_case2(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -284,10 +284,10 @@ void test_spdm_responder_key_update_case2(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request2_size,
-                                          &m_spdm_key_update_request2,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request2_size,
+                                             &m_spdm_key_update_request2,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -311,14 +311,14 @@ void test_spdm_responder_key_update_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state. No keys are updated.
  **/
-void test_spdm_responder_key_update_case3(void **state)
+void libspdm_test_responder_key_update_case3(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -350,10 +350,10 @@ void test_spdm_responder_key_update_case3(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -378,14 +378,14 @@ void test_spdm_responder_key_update_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state. No keys are updated.
  **/
-void test_spdm_responder_key_update_case4(void **state)
+void libspdm_test_responder_key_update_case4(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -417,10 +417,10 @@ void test_spdm_responder_key_update_case4(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -447,14 +447,14 @@ void test_spdm_responder_key_update_case4(void **state)
  * ERROR message indicating the ResponseNotReady state. No keys are
  * updated.
  **/
-void test_spdm_responder_key_update_case5(void **state)
+void libspdm_test_responder_key_update_case5(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -487,10 +487,10 @@ void test_spdm_responder_key_update_case5(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
@@ -523,14 +523,14 @@ void test_spdm_responder_key_update_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest. No keys are updated.
  **/
-void test_spdm_responder_key_update_case6(void **state)
+void libspdm_test_responder_key_update_case6(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -563,10 +563,10 @@ void test_spdm_responder_key_update_case6(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -584,14 +584,14 @@ void test_spdm_responder_key_update_case6(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
-void test_spdm_responder_key_update_case7(void **state)
+void libspdm_test_responder_key_update_case7(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -638,10 +638,10 @@ void test_spdm_responder_key_update_case7(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -674,14 +674,14 @@ void test_spdm_responder_key_update_case7(void **state)
  * produces an ERROR message indicating the UnsupportedRequest. No keys are
  * updated.
  **/
-void test_spdm_responder_key_update_case8(void **state)
+void libspdm_test_responder_key_update_case8(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -716,10 +716,10 @@ void test_spdm_responder_key_update_case8(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -744,14 +744,14 @@ void test_spdm_responder_key_update_case8(void **state)
  * Expected behavior: the responder refuses the KEY_UPDATE message and produces
  * an ERROR message indicating the UnsupportedRequest. No keys are updated.
  **/
-void test_spdm_responder_key_update_case9(void **state)
+void libspdm_test_responder_key_update_case9(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -785,10 +785,10 @@ void test_spdm_responder_key_update_case9(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -813,14 +813,14 @@ void test_spdm_responder_key_update_case9(void **state)
  * KEY_UPDATE_ACK response message, and both the request data key and the
  * response data key are updated.
  **/
-void test_spdm_responder_key_update_case10(void **state)
+void libspdm_test_responder_key_update_case10(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -856,10 +856,10 @@ void test_spdm_responder_key_update_case10(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request3_size,
-                                          &m_spdm_key_update_request3,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request3_size,
+                                             &m_spdm_key_update_request3,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -885,14 +885,14 @@ void test_spdm_responder_key_update_case10(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_spdm_responder_key_update_case11(void **state)
+void libspdm_test_responder_key_update_case11(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -921,10 +921,10 @@ void test_spdm_responder_key_update_case11(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request4_size,
-                                          &m_spdm_key_update_request4,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request4_size,
+                                             &m_spdm_key_update_request4,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -949,14 +949,14 @@ void test_spdm_responder_key_update_case11(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void test_spdm_responder_key_update_case12(void **state)
+void libspdm_test_responder_key_update_case12(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1007,10 +1007,10 @@ void test_spdm_responder_key_update_case12(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request5_size,
-                                          &m_spdm_key_update_request5,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request5_size,
+                                             &m_spdm_key_update_request5,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1037,14 +1037,14 @@ void test_spdm_responder_key_update_case12(void **state)
  * produces an ERROR message indicating the InvalidRequest. The request
  * data key is not rolled back to before the UpdateKey.
  **/
-void test_spdm_responder_key_update_case13(void **state)
+void libspdm_test_responder_key_update_case13(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1095,10 +1095,10 @@ void test_spdm_responder_key_update_case13(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request6_size,
-                                          &m_spdm_key_update_request6,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request6_size,
+                                             &m_spdm_key_update_request6,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1124,14 +1124,14 @@ void test_spdm_responder_key_update_case13(void **state)
  * KEY_UPDATE_ACK response message, and both the request data key and the
  * response data key are updated.
  **/
-void test_spdm_responder_key_update_case14(void **state)
+void libspdm_test_responder_key_update_case14(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1195,10 +1195,10 @@ void test_spdm_responder_key_update_case14(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request5_size,
-                                          &m_spdm_key_update_request5,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request5_size,
+                                             &m_spdm_key_update_request5,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1226,14 +1226,14 @@ void test_spdm_responder_key_update_case14(void **state)
  * request data key nor the response data key are rolled back to before
  * the UpdateAllKeys.
  **/
-void test_spdm_responder_key_update_case15(void **state)
+void libspdm_test_responder_key_update_case15(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1297,10 +1297,10 @@ void test_spdm_responder_key_update_case15(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request6_size,
-                                          &m_spdm_key_update_request6,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request6_size,
+                                             &m_spdm_key_update_request6,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1327,14 +1327,14 @@ void test_spdm_responder_key_update_case15(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void test_spdm_responder_key_update_case16(void **state)
+void libspdm_test_responder_key_update_case16(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1365,10 +1365,10 @@ void test_spdm_responder_key_update_case16(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request5_size,
-                                          &m_spdm_key_update_request5,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request5_size,
+                                             &m_spdm_key_update_request5,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1393,14 +1393,14 @@ void test_spdm_responder_key_update_case16(void **state)
  * KEY_UPDATE_ACK response message. The request data key is kept updated, as
  * from the original request.
  **/
-void test_spdm_responder_key_update_case17(void **state)
+void libspdm_test_responder_key_update_case17(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1451,10 +1451,10 @@ void test_spdm_responder_key_update_case17(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1480,14 +1480,14 @@ void test_spdm_responder_key_update_case17(void **state)
  * KEY_UPDATE_ACK response message. Both the request data key and the response
  * data key are kept updated, as from the original request.
  **/
-void test_spdm_responder_key_update_case18(void **state)
+void libspdm_test_responder_key_update_case18(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1551,10 +1551,10 @@ void test_spdm_responder_key_update_case18(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request3_size,
-                                          &m_spdm_key_update_request3,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request3_size,
+                                             &m_spdm_key_update_request3,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1582,14 +1582,14 @@ void test_spdm_responder_key_update_case18(void **state)
  * KEY_UPDATE_ACK response message. The request data key is kept updated, as
  * from the original request.
  **/
-void test_spdm_responder_key_update_case19(void **state)
+void libspdm_test_responder_key_update_case19(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1624,10 +1624,10 @@ void test_spdm_responder_key_update_case19(void **state)
     /*no keys updated (already activated)*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request5_size,
-                                          &m_spdm_key_update_request5,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request5_size,
+                                             &m_spdm_key_update_request5,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1655,14 +1655,14 @@ void test_spdm_responder_key_update_case19(void **state)
  * KEY_UPDATE_ACK response message. Both the request data key and the
  * response data key are kept updated, as from the original request.
  **/
-void test_spdm_responder_key_update_case20(void **state)
+void libspdm_test_responder_key_update_case20(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1726,10 +1726,10 @@ void test_spdm_responder_key_update_case20(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request5_size,
-                                          &m_spdm_key_update_request5,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request5_size,
+                                             &m_spdm_key_update_request5,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
@@ -1757,14 +1757,14 @@ void test_spdm_responder_key_update_case20(void **state)
  * produces an ERROR message indicating the InvalidRequest. Only the request
  * data key is kept updated, as from the original request.
  **/
-void test_spdm_responder_key_update_case21(void **state)
+void libspdm_test_responder_key_update_case21(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1815,10 +1815,10 @@ void test_spdm_responder_key_update_case21(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request3_size,
-                                          &m_spdm_key_update_request3,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request3_size,
+                                             &m_spdm_key_update_request3,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1846,14 +1846,14 @@ void test_spdm_responder_key_update_case21(void **state)
  * data key and the response data key are kept updated, as from the original
  * request.
  **/
-void test_spdm_responder_key_update_case22(void **state)
+void libspdm_test_responder_key_update_case22(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1917,10 +1917,10 @@ void test_spdm_responder_key_update_case22(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request1_size,
-                                          &m_spdm_key_update_request1,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request1_size,
+                                             &m_spdm_key_update_request1,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1945,14 +1945,14 @@ void test_spdm_responder_key_update_case22(void **state)
  * produces an ERROR message indicating the InvalidRequest. The request
  * data key is kept updated, as from the original request.
  **/
-void test_spdm_responder_key_update_case23(void **state)
+void libspdm_test_responder_key_update_case23(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -2003,10 +2003,10 @@ void test_spdm_responder_key_update_case23(void **state)
     /*response side *not* updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request7_size,
-                                          &m_spdm_key_update_request7,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request7_size,
+                                             &m_spdm_key_update_request7,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -2032,14 +2032,14 @@ void test_spdm_responder_key_update_case23(void **state)
  * data key and the response data key are kept updated, as from the original
  * request.
  **/
-void test_spdm_responder_key_update_case24(void **state)
+void libspdm_test_responder_key_update_case24(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -2103,10 +2103,10 @@ void test_spdm_responder_key_update_case24(void **state)
                                secured_message_context->hash_size);
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request8_size,
-                                          &m_spdm_key_update_request8,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request8_size,
+                                             &m_spdm_key_update_request8,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -2131,14 +2131,14 @@ void test_spdm_responder_key_update_case24(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated, as they were previously activated by the last VerifyNewKey.
  **/
-void test_spdm_responder_key_update_case25(void **state)
+void libspdm_test_responder_key_update_case25(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -2173,10 +2173,10 @@ void test_spdm_responder_key_update_case25(void **state)
     /*no keys updated (already activated)*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request9_size,
-                                          &m_spdm_key_update_request9,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request9_size,
+                                             &m_spdm_key_update_request9,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -2200,14 +2200,14 @@ void test_spdm_responder_key_update_case25(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_spdm_responder_key_update_case26(void **state)
+void libspdm_test_responder_key_update_case26(void **state)
 {
     return_status status;
     spdm_test_context_t            *spdm_test_context;
     libspdm_context_t                 *spdm_context;
     uint32_t session_id;
     libspdm_session_info_t            *session_info;
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -2236,10 +2236,10 @@ void test_spdm_responder_key_update_case26(void **state)
     /*no keys are updated*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_key_update(spdm_context,
-                                          m_spdm_key_update_request10_size,
-                                          &m_spdm_key_update_request10,
-                                          &response_size, response);
+    status = libspdm_get_response_key_update(spdm_context,
+                                             m_spdm_key_update_request10_size,
+                                             &m_spdm_key_update_request10,
+                                             &response_size, response);
 
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -2266,54 +2266,54 @@ int spdm_responder_key_update_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
         /* Success Case -- UpdateKey*/
-        cmocka_unit_test(test_spdm_responder_key_update_case1),
+        cmocka_unit_test(libspdm_test_responder_key_update_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_key_update_case2),
+        cmocka_unit_test(libspdm_test_responder_key_update_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_key_update_case3),
+        cmocka_unit_test(libspdm_test_responder_key_update_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_key_update_case4),
+        cmocka_unit_test(libspdm_test_responder_key_update_case4),
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_key_update_case5),
+        cmocka_unit_test(libspdm_test_responder_key_update_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_key_update_case6),
+        cmocka_unit_test(libspdm_test_responder_key_update_case6),
         /* Buffer reset*/
-        cmocka_unit_test(test_spdm_responder_key_update_case7),
+        cmocka_unit_test(libspdm_test_responder_key_update_case7),
         /* Unsupported KEY_UPD capabilities*/
-        cmocka_unit_test(test_spdm_responder_key_update_case8),
+        cmocka_unit_test(libspdm_test_responder_key_update_case8),
         /* Uninitialized session*/
-        cmocka_unit_test(test_spdm_responder_key_update_case9),
+        cmocka_unit_test(libspdm_test_responder_key_update_case9),
         /* Success Case -- UpdateAllKeys*/
-        cmocka_unit_test(test_spdm_responder_key_update_case10),
+        cmocka_unit_test(libspdm_test_responder_key_update_case10),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_key_update_case11),
+        cmocka_unit_test(libspdm_test_responder_key_update_case11),
         /* Success Case -- VerifyNewKey (from UpdateKey)*/
-        cmocka_unit_test(test_spdm_responder_key_update_case12),
+        cmocka_unit_test(libspdm_test_responder_key_update_case12),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_key_update_case13),
+        cmocka_unit_test(libspdm_test_responder_key_update_case13),
         /* Success Case -- VerifyNewKey (from UpdateAllKeys)*/
-        cmocka_unit_test(test_spdm_responder_key_update_case14),
+        cmocka_unit_test(libspdm_test_responder_key_update_case14),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_key_update_case15),
+        cmocka_unit_test(libspdm_test_responder_key_update_case15),
         /* Uninitialized key update*/
-        cmocka_unit_test(test_spdm_responder_key_update_case16),
+        cmocka_unit_test(libspdm_test_responder_key_update_case16),
         /* Retry -- UpdateKey*/
-        cmocka_unit_test(test_spdm_responder_key_update_case17),
+        cmocka_unit_test(libspdm_test_responder_key_update_case17),
         /* Retry -- UpdateAllKeys*/
-        cmocka_unit_test(test_spdm_responder_key_update_case18),
+        cmocka_unit_test(libspdm_test_responder_key_update_case18),
         /* Retry -- VerifyNewKey (from UpdateKey)*/
-        cmocka_unit_test(test_spdm_responder_key_update_case19),
+        cmocka_unit_test(libspdm_test_responder_key_update_case19),
         /* Retry -- VerifyNewKey (from UpdateAllKeys)*/
-        cmocka_unit_test(test_spdm_responder_key_update_case20),
+        cmocka_unit_test(libspdm_test_responder_key_update_case20),
         /* VerifyNewKey expected*/
-        cmocka_unit_test(test_spdm_responder_key_update_case21),
-        cmocka_unit_test(test_spdm_responder_key_update_case22),
+        cmocka_unit_test(libspdm_test_responder_key_update_case21),
+        cmocka_unit_test(libspdm_test_responder_key_update_case22),
         /* Retry -- wrong token*/
-        cmocka_unit_test(test_spdm_responder_key_update_case23),
-        cmocka_unit_test(test_spdm_responder_key_update_case24),
-        cmocka_unit_test(test_spdm_responder_key_update_case25),
+        cmocka_unit_test(libspdm_test_responder_key_update_case23),
+        cmocka_unit_test(libspdm_test_responder_key_update_case24),
+        cmocka_unit_test(libspdm_test_responder_key_update_case25),
         /* Invalid operation*/
-        cmocka_unit_test(test_spdm_responder_key_update_case26),
+        cmocka_unit_test(libspdm_test_responder_key_update_case26),
     };
 
     setup_spdm_test_context(&m_spdm_responder_key_update_test_context);

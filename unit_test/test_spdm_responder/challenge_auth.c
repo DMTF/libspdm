@@ -53,7 +53,7 @@ uint8_t m_opaque_challenge_auth_rsp[9] = "openspdm";
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case1(void **state)
+void libspdm_test_responder_challenge_auth_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -100,7 +100,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -126,7 +126,7 @@ void test_spdm_responder_challenge_auth_case1(void **state)
  * Expected behavior: the responder refuses the CHALLENGE message and produces an
  * ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_challenge_auth_case2(void **state)
+void libspdm_test_responder_challenge_auth_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -169,7 +169,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request2.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request2_size,
         &m_spdm_challenge_request2, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -189,7 +189,7 @@ void test_spdm_responder_challenge_auth_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the Busy state.
  **/
-void test_spdm_responder_challenge_auth_case3(void **state)
+void libspdm_test_responder_challenge_auth_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -233,7 +233,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -254,7 +254,7 @@ void test_spdm_responder_challenge_auth_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the NeedResynch state.
  **/
-void test_spdm_responder_challenge_auth_case4(void **state)
+void libspdm_test_responder_challenge_auth_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -298,7 +298,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -320,7 +320,7 @@ void test_spdm_responder_challenge_auth_case4(void **state)
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the ResponseNotReady state.
  **/
-void test_spdm_responder_challenge_auth_case5(void **state)
+void libspdm_test_responder_challenge_auth_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -365,7 +365,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -393,7 +393,7 @@ void test_spdm_responder_challenge_auth_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an ERROR message
  * indicating the UnexpectedRequest.
  **/
-void test_spdm_responder_challenge_auth_case6(void **state)
+void libspdm_test_responder_challenge_auth_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -437,7 +437,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth(
+    status = libspdm_get_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -457,7 +457,7 @@ void test_spdm_responder_challenge_auth_case6(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case7(void **state) {
+void libspdm_test_responder_challenge_auth_case7(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -490,9 +490,9 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size,
-                                               &m_spdm_challenge_request1, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size,
+                                                  &m_spdm_challenge_request1, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -508,7 +508,7 @@ void test_spdm_responder_challenge_auth_case7(void **state) {
  * Expected behavior: the responder rejects the request, and produces an ERROR message
  * indicating the UnexpectedRequest.
  **/
-void test_spdm_responder_challenge_auth_case8(void **state) {
+void libspdm_test_responder_challenge_auth_case8(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -541,9 +541,9 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size,
-                                               &m_spdm_challenge_request3, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size,
+                                                  &m_spdm_challenge_request3, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -559,7 +559,7 @@ void test_spdm_responder_challenge_auth_case8(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case9(void **state) {
+void libspdm_test_responder_challenge_auth_case9(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -592,9 +592,9 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request4_size,
-                                               &m_spdm_challenge_request4, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request4_size,
+                                                  &m_spdm_challenge_request4, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (
@@ -612,7 +612,7 @@ void test_spdm_responder_challenge_auth_case9(void **state) {
  * Expected behavior: the responder rejects the request, and produces an ERROR message
  * indicating the UnexpectedRequest.
  **/
-void test_spdm_responder_challenge_auth_case10(void **state) {
+void libspdm_test_responder_challenge_auth_case10(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -645,9 +645,9 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size,
-                                               &m_spdm_challenge_request3, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request3_size,
+                                                  &m_spdm_challenge_request3, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -663,7 +663,7 @@ void test_spdm_responder_challenge_auth_case10(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case11(void **state) {
+void libspdm_test_responder_challenge_auth_case11(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -697,9 +697,9 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size,
-                                               &m_spdm_challenge_request1, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request1_size,
+                                                  &m_spdm_challenge_request1, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 8 + libspdm_get_asym_signature_size (
@@ -717,7 +717,7 @@ void test_spdm_responder_challenge_auth_case11(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case12(void **state) {
+void libspdm_test_responder_challenge_auth_case12(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -751,9 +751,9 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request5_size,
-                                               &m_spdm_challenge_request5, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request5_size,
+                                                  &m_spdm_challenge_request5, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_use_hash_algo) + SPDM_NONCE_SIZE +
@@ -772,7 +772,7 @@ void test_spdm_responder_challenge_auth_case12(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
-void test_spdm_responder_challenge_auth_case13(void **state) {
+void libspdm_test_responder_challenge_auth_case13(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -806,9 +806,9 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size,
-                                               &m_spdm_challenge_request6, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size,
+                                                  &m_spdm_challenge_request6, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_use_hash_algo) + SPDM_NONCE_SIZE +
@@ -828,7 +828,7 @@ void test_spdm_responder_challenge_auth_case13(void **state) {
  * Expected behavior: the responder refuses the CHALLENGE message and produces an
  * ERROR message indicating the UnsupportedRequest.
  **/
-void test_spdm_responder_challenge_auth_case14(void **state) {
+void libspdm_test_responder_challenge_auth_case14(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -862,9 +862,9 @@ void test_spdm_responder_challenge_auth_case14(void **state) {
 
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
-    status = spdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size,
-                                               &m_spdm_challenge_request6, &response_size,
-                                               response);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_spdm_challenge_request6_size,
+                                                  &m_spdm_challenge_request6, &response_size,
+                                                  response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -883,25 +883,25 @@ int spdm_responder_challenge_auth_test_main(void)
 {
     const struct CMUnitTest spdm_responder_challenge_auth_tests[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case1),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case2),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case2),
         /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case3),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case4),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case4),
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case5),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case6),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case7),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case8),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case9),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case10),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case11),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case12),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case13),
-        cmocka_unit_test(test_spdm_responder_challenge_auth_case14),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case6),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case7),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case8),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case9),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case10),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case11),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case12),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case13),
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case14),
     };
 
     setup_spdm_test_context(&m_spdm_responder_challenge_auth_test_context);

@@ -17,7 +17,7 @@ static void
 spdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message_context,
                                                       const void *key, uintn key_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     copy_mem_s(secured_message_context->application_secret.response_data_encryption_key,
@@ -28,7 +28,7 @@ spdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message
 static void spdm_secured_message_set_response_data_salt(void *spdm_secured_message_context,
                                                         const void *salt, uintn salt_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     copy_mem_s(secured_message_context->application_secret.response_data_salt,
@@ -72,13 +72,13 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
         return RETURN_DEVICE_ERROR;
     }
     /* WALKAROUND: If just use single context to encode message and then decode message */
-    ((spdm_secured_message_context_t *)(session_info->secured_message_context))
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number--;
 
     return RETURN_SUCCESS;
 }
 
-void test_spdm_requester_end_session(void **State)
+void libspdm_test_requester_end_session(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -134,22 +134,22 @@ void test_spdm_requester_end_session(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     set_mem(
         m_dummy_key_buffer,
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_encryption_key(
         session_info->secured_message_context, m_dummy_key_buffer,
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     set_mem(
         m_dummy_salt_buffer,
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
     spdm_secured_message_set_response_data_salt(
         session_info->secured_message_context, m_dummy_salt_buffer,
-        ((spdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
-    ((spdm_secured_message_context_t *)(session_info->secured_message_context))
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number = 0;
 
-    spdm_send_receive_end_session(spdm_context, session_id, 0);
+    libspdm_send_receive_end_session(spdm_context, session_id, 0);
     free(data);
 }
 
@@ -171,6 +171,6 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_end_session(&State);
+    libspdm_test_requester_end_session(&State);
     spdm_unit_test_group_teardown(&State);
 }

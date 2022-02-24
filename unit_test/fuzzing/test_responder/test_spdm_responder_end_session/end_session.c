@@ -22,7 +22,7 @@ spdm_test_context_t m_spdm_responder_end_session_test_context = {
     false,
 };
 
-void test_spdm_responder_end_session(void **State)
+void libspdm_test_responder_end_session(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -83,10 +83,10 @@ void test_spdm_responder_end_session(void **State)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    spdm_get_response_end_session(spdm_context,
-                                  spdm_test_context->test_buffer_size,
-                                  spdm_test_context->test_buffer,
-                                  &response_size, response);
+    libspdm_get_response_end_session(spdm_context,
+                                     spdm_test_context->test_buffer_size,
+                                     spdm_test_context->test_buffer,
+                                     &response_size, response);
     free(data);
 }
 
@@ -103,7 +103,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     spdm_unit_test_group_setup(&State);
 
     /* Success Case*/
-    test_spdm_responder_end_session(&State);
+    libspdm_test_responder_end_session(&State);
 
     spdm_unit_test_group_teardown(&State);
 }

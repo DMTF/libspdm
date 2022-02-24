@@ -64,8 +64,8 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
     spdm_request.header.request_response_code = SPDM_HEARTBEAT;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
-    status = spdm_send_spdm_request(spdm_context, &session_id,
-                                    sizeof(spdm_request), &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, &session_id,
+                                       sizeof(spdm_request), &spdm_request);
     if (RETURN_ERROR(status)) {
         return status;
     }
@@ -75,7 +75,7 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
 
     spdm_response_size = sizeof(spdm_response);
     zero_mem(&spdm_response, sizeof(spdm_response));
-    status = spdm_receive_spdm_response(
+    status = libspdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
         return status;
@@ -87,7 +87,7 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = spdm_handle_error_response_main(
+        status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_HEARTBEAT, SPDM_HEARTBEAT_ACK,
             sizeof(spdm_heartbeat_response_mine_t));

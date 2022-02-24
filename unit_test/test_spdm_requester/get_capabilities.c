@@ -752,7 +752,7 @@ return_status spdm_requester_get_capabilities_test_receive_message(
     }
 }
 
-void test_spdm_requester_get_capabilities_case1(void **state)
+void libspdm_test_requester_get_capabilities_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -768,11 +768,11 @@ void test_spdm_requester_get_capabilities_case1(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case2(void **state)
+void libspdm_test_requester_get_capabilities_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -792,7 +792,7 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -803,7 +803,7 @@ void test_spdm_requester_get_capabilities_case2(void **state)
 #endif
 }
 
-void test_spdm_requester_get_capabilities_case3(void **state)
+void libspdm_test_requester_get_capabilities_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -819,11 +819,11 @@ void test_spdm_requester_get_capabilities_case3(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_UNSUPPORTED);
 }
 
-void test_spdm_requester_get_capabilities_case4(void **state)
+void libspdm_test_requester_get_capabilities_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -839,11 +839,11 @@ void test_spdm_requester_get_capabilities_case4(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case5(void **state)
+void libspdm_test_requester_get_capabilities_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -859,11 +859,11 @@ void test_spdm_requester_get_capabilities_case5(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_NO_RESPONSE);
 }
 
-void test_spdm_requester_get_capabilities_case6(void **state)
+void libspdm_test_requester_get_capabilities_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -879,7 +879,7 @@ void test_spdm_requester_get_capabilities_case6(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -887,7 +887,7 @@ void test_spdm_requester_get_capabilities_case6(void **state)
                      DEFAULT_CAPABILITY_FLAG);
 }
 
-void test_spdm_requester_get_capabilities_case7(void **state)
+void libspdm_test_requester_get_capabilities_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -903,13 +903,13 @@ void test_spdm_requester_get_capabilities_case7(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
-void test_spdm_requester_get_capabilities_case8(void **state)
+void libspdm_test_requester_get_capabilities_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -925,11 +925,11 @@ void test_spdm_requester_get_capabilities_case8(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case9(void **state)
+void libspdm_test_requester_get_capabilities_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -945,13 +945,13 @@ void test_spdm_requester_get_capabilities_case9(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*  assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      *  assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_FLAG);*/
 }
 
-void test_spdm_requester_get_capabilities_case10(void **state)
+void libspdm_test_requester_get_capabilities_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -967,7 +967,7 @@ void test_spdm_requester_get_capabilities_case10(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -979,7 +979,7 @@ void test_spdm_requester_get_capabilities_case10(void **state)
                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP));
 }
 
-void test_spdm_requester_get_capabilities_case11(void **state)
+void libspdm_test_requester_get_capabilities_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -995,7 +995,7 @@ void test_spdm_requester_get_capabilities_case11(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -1008,7 +1008,7 @@ void test_spdm_requester_get_capabilities_case11(void **state)
           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP));
 }
 
-void test_spdm_requester_get_capabilities_case12(void **state)
+void libspdm_test_requester_get_capabilities_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1024,7 +1024,7 @@ void test_spdm_requester_get_capabilities_case12(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -1032,7 +1032,7 @@ void test_spdm_requester_get_capabilities_case12(void **state)
                      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
 }
 
-void test_spdm_requester_get_capabilities_case13(void **state)
+void libspdm_test_requester_get_capabilities_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1048,11 +1048,11 @@ void test_spdm_requester_get_capabilities_case13(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case14(void **state)
+void libspdm_test_requester_get_capabilities_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1068,11 +1068,11 @@ void test_spdm_requester_get_capabilities_case14(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case15(void **state)
+void libspdm_test_requester_get_capabilities_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1088,11 +1088,11 @@ void test_spdm_requester_get_capabilities_case15(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case16(void **state)
+void libspdm_test_requester_get_capabilities_case16(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1109,7 +1109,7 @@ void test_spdm_requester_get_capabilities_case16(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent,
                      0);
@@ -1117,7 +1117,7 @@ void test_spdm_requester_get_capabilities_case16(void **state)
                      DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11);
 }
 
-void test_spdm_requester_get_capabilities_case17(void **state)
+void libspdm_test_requester_get_capabilities_case17(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1134,13 +1134,13 @@ void test_spdm_requester_get_capabilities_case17(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case18(void **state)
+void libspdm_test_requester_get_capabilities_case18(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1157,13 +1157,13 @@ void test_spdm_requester_get_capabilities_case18(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case19(void **state)
+void libspdm_test_requester_get_capabilities_case19(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1181,13 +1181,13 @@ void test_spdm_requester_get_capabilities_case19(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case20(void **state)
+void libspdm_test_requester_get_capabilities_case20(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1205,13 +1205,13 @@ void test_spdm_requester_get_capabilities_case20(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case21(void **state)
+void libspdm_test_requester_get_capabilities_case21(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1229,13 +1229,13 @@ void test_spdm_requester_get_capabilities_case21(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case22(void **state)
+void libspdm_test_requester_get_capabilities_case22(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1253,13 +1253,13 @@ void test_spdm_requester_get_capabilities_case22(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case23(void **state)
+void libspdm_test_requester_get_capabilities_case23(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1277,13 +1277,13 @@ void test_spdm_requester_get_capabilities_case23(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case24(void **state)
+void libspdm_test_requester_get_capabilities_case24(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1301,13 +1301,13 @@ void test_spdm_requester_get_capabilities_case24(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case25(void **state)
+void libspdm_test_requester_get_capabilities_case25(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1325,13 +1325,13 @@ void test_spdm_requester_get_capabilities_case25(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 & (0xFFFFFFFF^(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)));*/
 }
 
-void test_spdm_requester_get_capabilities_case26(void **state)
+void libspdm_test_requester_get_capabilities_case26(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1349,13 +1349,13 @@ void test_spdm_requester_get_capabilities_case26(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);
      * assert_int_equal (spdm_context->connection_info.capability.flags, DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP);*/
 }
 
-void test_spdm_requester_get_capabilities_case27(void **state)
+void libspdm_test_requester_get_capabilities_case27(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1373,11 +1373,11 @@ void test_spdm_requester_get_capabilities_case27(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case28(void **state)
+void libspdm_test_requester_get_capabilities_case28(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1395,11 +1395,11 @@ void test_spdm_requester_get_capabilities_case28(void **state)
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags =
         DEFAULT_CAPABILITY_FLAG_VERSION_11;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
-void test_spdm_requester_get_capabilities_case29(void **state) {
+void libspdm_test_requester_get_capabilities_case29(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1418,7 +1418,7 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
         spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
         libspdm_reset_message_a(spdm_context);
 
-        status = spdm_get_capabilities (spdm_context);
+        status = libspdm_get_capabilities (spdm_context);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
@@ -1435,7 +1435,7 @@ void test_spdm_requester_get_capabilities_case29(void **state) {
     }
 }
 
-void test_spdm_requester_get_capabilities_case30(void **state)
+void libspdm_test_requester_get_capabilities_case30(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1451,11 +1451,11 @@ void test_spdm_requester_get_capabilities_case30(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_TIMEOUT);
 }
 
-void test_spdm_requester_get_capabilities_case31(void **state)
+void libspdm_test_requester_get_capabilities_case31(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1471,7 +1471,7 @@ void test_spdm_requester_get_capabilities_case31(void **state)
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = DEFAULT_CAPABILITY_FLAG;
-    status = spdm_get_capabilities(spdm_context);
+    status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, RETURN_TIMEOUT);
 }
 
@@ -1486,70 +1486,70 @@ int spdm_requester_get_capabilities_test_main(void)
 {
     const struct CMUnitTest m_spdm_requester_get_capabilities_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case1),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case1),
         /* Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case2),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case3),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case4),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case5),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case6),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case7),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY
          * CORRECTION for both case 8 and 9: A RESPONSE_NOT_READY is an invalid response for GET_CAPABILITIES
          * file spdm_requester_libHandleErrorResponse.c was corrected to reflect the documentation and now returns a RETURN_DEVICE_ERROR.*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case8),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case9),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case9),
         /* All flags set in response*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case10),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case10),
         /* All flags cleared in response*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case11),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case11),
         /* meas_fresh_cap set, others cleared in response. This behaviour is undefined in the protocol*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case12),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case12),
         /* Receives just header*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case13),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case13),
         /* Receives a message 1 byte bigger than the capabilites response message*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case14),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case14),
         /* Receives a message 1 byte smaller than the capabilites response message*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case15),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case15),
         /* from this point forward, tests are performed with version 1.1
          * Requester sends all flags set and receives successful response with all flags set*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case16),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case16),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap set, and key_ex_cap and psk_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case17),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case17),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap set and mac_cap cleared, and key_ex_cap and psk_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case18),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case18),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap cleared and mac_cap set, and key_ex_cap and psk_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case19),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case19),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap cleared and mac_cap cleared, and key_ex_cap and psk_cap set*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case20),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case20),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap cleared, and key_ex_cap set and psk_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case21),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case21),
         /* Requester sends all flags set and receives successful response with flags encrypt_cap and mac_cap cleared, and key_ex_cap cleared and psk_cap set*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case22),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case22),
         /* Requester sends all flags set and receives successful response with flags mut_auth_cap set, and encap_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case23),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case23),
         /* Requester sends all flags set and receives successful response with flags handshake_in_the_clear_cap set, and key_ex_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case24),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case24),
         /* Requester sends all flags set and receives successful response with flags handshake_in_the_clear_cap set, and encrypt_cap and mac_cap cleared*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case25),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case25),
         /* Requester sends all flags set and receives successful response with flags pub_key_id_cap set, and cert_cap set*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case26),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case26),
         /* Requester sends all flags set and receives response with get_capabilities request code (wrong response code)*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case27),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case27),
         /* Requester sends all flags set and receives response with 0xFF as version code (wrong version code)*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case28),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case28),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case29),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case29),
         /* SendRequest timeout */
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case30),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case30),
         /* ReceiveResponse timeout */
-        cmocka_unit_test(test_spdm_requester_get_capabilities_case31),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case31),
 
     };
 

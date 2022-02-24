@@ -21,7 +21,7 @@ spdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
     false,
 };
 
-void test_spdm_responder_encap_get_digests_case1(void **State)
+void libspdm_test_responder_encap_get_digests_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -39,11 +39,11 @@ void test_spdm_responder_encap_get_digests_case1(void **State)
     set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
-    spdm_process_encap_response_digest(spdm_context, spdm_test_context->test_buffer_size,
-                                       spdm_test_context->test_buffer, &need_continue);
+    libspdm_process_encap_response_digest(spdm_context, spdm_test_context->test_buffer_size,
+                                          spdm_test_context->test_buffer, &need_continue);
 }
 
-void test_spdm_get_encap_request_get_digest_case2(void **State)
+void test_libspdm_get_encap_request_get_digest_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_get_digest_request_t *spdm_request;
@@ -74,7 +74,7 @@ void test_spdm_get_encap_request_get_digest_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
 
-    spdm_get_encap_request_get_digest(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_get_digest(spdm_context, &encap_request_size, spdm_request);
     free(spdm_request);
     free(data);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -94,12 +94,12 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_encap_get_digests_case1(&State);
+    libspdm_test_responder_encap_get_digests_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Success Case */
     spdm_unit_test_group_setup(&State);
-    test_spdm_get_encap_request_get_digest_case2(&State);
+    test_libspdm_get_encap_request_get_digest_case2(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

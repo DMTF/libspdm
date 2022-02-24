@@ -16,7 +16,7 @@ uintn get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_requester_encap_certificate(void **State)
+void libspdm_test_requester_encap_certificate(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -49,10 +49,10 @@ void test_spdm_requester_encap_certificate(void **State)
     }
 
     response_size = sizeof(response);
-    spdm_get_encap_response_certificate(spdm_context, request_size,
-                                        (uint8_t *)spdm_test_context->test_buffer +
-                                        test_message_header_size,
-                                        &response_size, response);
+    libspdm_get_encap_response_certificate(spdm_context, request_size,
+                                           (uint8_t *)spdm_test_context->test_buffer +
+                                           test_message_header_size,
+                                           &response_size, response);
     free(data);
 }
 
@@ -72,7 +72,7 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Successful response */
     spdm_unit_test_group_setup(&State);
-    test_spdm_requester_encap_certificate(&State);
+    libspdm_test_requester_encap_certificate(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

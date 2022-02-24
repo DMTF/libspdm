@@ -24,11 +24,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_psk_finish(void *context,
-                                           uintn request_size,
-                                           const void *request,
-                                           uintn *response_size,
-                                           void *response)
+return_status libspdm_get_response_psk_finish(void *context,
+                                              uintn request_size,
+                                              const void *request,
+                                              uintn *response_size,
+                                              void *response)
 {
     uint32_t session_id;
     bool result;
@@ -50,7 +50,7 @@ return_status spdm_get_response_psk_finish(void *context,
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);

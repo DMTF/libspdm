@@ -270,7 +270,7 @@ static uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static void spdm_secured_message_set_request_finished_key(
     void *spdm_secured_message_context, const void *key, uintn key_size)
 {
-    spdm_secured_message_context_t *secured_message_context;
+    libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
@@ -287,7 +287,7 @@ static void spdm_secured_message_set_request_finished_key(
  * Expected behavior: the responder accepts the request and produces a valid DIGESTS
  * response message.
  **/
-void test_spdm_responder_respond_if_ready_case1(void **state) {
+void libspdm_test_responder_respond_if_ready_case1(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -329,9 +329,11 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
 
     /*check DIGESTS response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size,
-                                                &m_spdm_respond_if_ready_request1, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request1_size,
+                                                   &m_spdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size,
                       sizeof(spdm_digest_response_t) +
@@ -351,7 +353,7 @@ void test_spdm_responder_respond_if_ready_case1(void **state) {
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-void test_spdm_responder_respond_if_ready_case2(void **state) {
+void libspdm_test_responder_respond_if_ready_case2(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -396,9 +398,11 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
 
     /*check CERTIFICATE response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request2_size,
-                                                &m_spdm_respond_if_ready_request2, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request2_size,
+                                                   &m_spdm_respond_if_ready_request2,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size,
                       sizeof(spdm_certificate_response_t) + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
@@ -420,7 +424,7 @@ void test_spdm_responder_respond_if_ready_case2(void **state) {
  * response message.
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-void test_spdm_responder_respond_if_ready_case3(void **state) {
+void libspdm_test_responder_respond_if_ready_case3(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -470,9 +474,11 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
     /*check CHALLENGE response*/
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_challenge_request.nonce);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request3_size,
-                                                &m_spdm_respond_if_ready_request3, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request3_size,
+                                                   &m_spdm_respond_if_ready_request3,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (
@@ -494,7 +500,7 @@ void test_spdm_responder_respond_if_ready_case3(void **state) {
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-void test_spdm_responder_respond_if_ready_case4(void **state) {
+void libspdm_test_responder_respond_if_ready_case4(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -538,9 +544,11 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
     /*check MEASUREMENT response*/
     response_size = sizeof(response);
     libspdm_get_random_number (SPDM_NONCE_SIZE, m_spdm_get_measurements_request.nonce);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request4_size,
-                                                &m_spdm_respond_if_ready_request4, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request4_size,
+                                                   &m_spdm_respond_if_ready_request4,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size,
                       sizeof(spdm_measurements_response_t) + sizeof(uint16_t) + SPDM_NONCE_SIZE);
@@ -559,7 +567,7 @@ void test_spdm_responder_respond_if_ready_case4(void **state) {
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-void test_spdm_responder_respond_if_ready_case5(void **state) {
+void libspdm_test_responder_respond_if_ready_case5(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -633,9 +641,11 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
 
     /*check KEY_EXCHANGE_RSP response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request5_size,
-                                                &m_spdm_respond_if_ready_request5, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request5_size,
+                                                   &m_spdm_respond_if_ready_request5,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_key_exchange_response_t) + dhe_key_size + 2 + libspdm_get_opaque_data_version_selection_data_size(
                           spdm_context) + libspdm_get_asym_signature_size (m_use_asym_algo) +
@@ -660,7 +670,7 @@ void test_spdm_responder_respond_if_ready_case5(void **state) {
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-void test_spdm_responder_respond_if_ready_case6(void **state) {
+void libspdm_test_responder_respond_if_ready_case6(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -757,9 +767,11 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
 
     /*check FINISH_RSP response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request6_size,
-                                                &m_spdm_respond_if_ready_request6, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request6_size,
+                                                   &m_spdm_respond_if_ready_request6,
+                                                   &response_size,
+                                                   response);
     /* status = SpdmGetResponseFinish (spdm_context, mSpdmFinishRequest1_size, &mSpdmFinishRequest1, &response_size, response);*/
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_finish_response_t) + hmac_size);
@@ -778,7 +790,7 @@ void test_spdm_responder_respond_if_ready_case6(void **state) {
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-void test_spdm_responder_respond_if_ready_case7(void **state) {
+void libspdm_test_responder_respond_if_ready_case7(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -854,9 +866,11 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
 
     /*check PSK_EXCHANGE_RSP response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request7_size,
-                                                &m_spdm_respond_if_ready_request7, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request7_size,
+                                                   &m_spdm_respond_if_ready_request7,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_psk_exchange_response_t) + LIBSPDM_PSK_CONTEXT_LENGTH + libspdm_get_opaque_data_version_selection_data_size(
                           spdm_context) + libspdm_get_hash_size (m_use_hash_algo));
@@ -878,7 +892,7 @@ void test_spdm_responder_respond_if_ready_case7(void **state) {
  * response message.
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-void test_spdm_responder_respond_if_ready_case8(void **state) {
+void libspdm_test_responder_respond_if_ready_case8(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -974,9 +988,11 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
 
     /*check FINISH_PSK_RSP response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request8_size,
-                                                &m_spdm_respond_if_ready_request8, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request8_size,
+                                                   &m_spdm_respond_if_ready_request8,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_psk_finish_response_t));
     spdm_response = (void *)response;
@@ -994,7 +1010,7 @@ void test_spdm_responder_respond_if_ready_case8(void **state) {
  * Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
  * ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_respond_if_ready_case9(void **state) {
+void libspdm_test_responder_respond_if_ready_case9(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1031,9 +1047,11 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request9_size,
-                                                &m_spdm_respond_if_ready_request9, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request9_size,
+                                                   &m_spdm_respond_if_ready_request9,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1051,7 +1069,7 @@ void test_spdm_responder_respond_if_ready_case9(void **state) {
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the Busy state.
  **/
-void test_spdm_responder_respond_if_ready_case10(void **state) {
+void libspdm_test_responder_respond_if_ready_case10(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1088,9 +1106,11 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size,
-                                                &m_spdm_respond_if_ready_request1, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request1_size,
+                                                   &m_spdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1109,7 +1129,7 @@ void test_spdm_responder_respond_if_ready_case10(void **state) {
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the NeedResynch state.
  **/
-void test_spdm_responder_respond_if_ready_case11(void **state) {
+void libspdm_test_responder_respond_if_ready_case11(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1146,9 +1166,11 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size,
-                                                &m_spdm_respond_if_ready_request1, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request1_size,
+                                                   &m_spdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1168,7 +1190,7 @@ void test_spdm_responder_respond_if_ready_case11(void **state) {
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the ResponseNotReady state, with the same token as the request.
  **/
-void test_spdm_responder_respond_if_ready_case12(void **state) {
+void libspdm_test_responder_respond_if_ready_case12(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1206,9 +1228,11 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context, m_spdm_respond_if_ready_request1_size,
-                                                &m_spdm_respond_if_ready_request1, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request1_size,
+                                                   &m_spdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size,
                       sizeof(spdm_error_response_t) + sizeof(spdm_error_data_response_not_ready_t));
@@ -1232,7 +1256,7 @@ void test_spdm_responder_respond_if_ready_case12(void **state) {
  * Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
  * ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_respond_if_ready_case13(void **state) {
+void libspdm_test_responder_respond_if_ready_case13(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1269,10 +1293,11 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context,
-                                                m_spdm_respond_if_ready_request10_size,
-                                                &m_spdm_respond_if_ready_request10, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request10_size,
+                                                   &m_spdm_respond_if_ready_request10,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1289,7 +1314,7 @@ void test_spdm_responder_respond_if_ready_case13(void **state) {
  * Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
  * ERROR message indicating the InvalidRequest.
  **/
-void test_spdm_responder_respond_if_ready_case14(void **state) {
+void libspdm_test_responder_respond_if_ready_case14(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1326,10 +1351,11 @@ void test_spdm_responder_respond_if_ready_case14(void **state) {
 
     /*check ERROR response*/
     response_size = sizeof(response);
-    status = spdm_get_response_respond_if_ready(spdm_context,
-                                                m_spdm_respond_if_ready_request11_size,
-                                                &m_spdm_respond_if_ready_request11, &response_size,
-                                                response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_spdm_respond_if_ready_request11_size,
+                                                   &m_spdm_respond_if_ready_request11,
+                                                   &response_size,
+                                                   response);
     assert_int_equal (status, RETURN_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -1348,35 +1374,35 @@ int spdm_responder_respond_if_ready_test_main(void) {
     const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
         /* Success Case*/
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case1),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case2),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case1),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case2),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case3),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case3),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case4),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case4),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case5),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case6),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case5),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case6),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case7),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case8),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case7),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case8),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case9),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case10),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case11),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case12),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case13),
-        cmocka_unit_test(test_spdm_responder_respond_if_ready_case14),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case9),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case10),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case11),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case12),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case13),
+        cmocka_unit_test(libspdm_test_responder_respond_if_ready_case14),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     };

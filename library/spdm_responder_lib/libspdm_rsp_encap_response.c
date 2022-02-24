@@ -47,20 +47,20 @@ typedef struct {
 
 spdm_encap_response_struct_t m_encap_response_struct[] = {
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-    { SPDM_GET_DIGESTS, spdm_get_encap_request_get_digest,
-      spdm_process_encap_response_digest },
+    { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
+      libspdm_process_encap_response_digest },
 
-    { SPDM_GET_CERTIFICATE, spdm_get_encap_request_get_certificate,
-      spdm_process_encap_response_certificate },
+    { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
+      libspdm_process_encap_response_certificate },
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-    { SPDM_CHALLENGE, spdm_get_encap_request_challenge,
-      spdm_process_encap_response_challenge_auth },
+    { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
+      libspdm_process_encap_response_challenge_auth },
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
-    { SPDM_KEY_UPDATE, spdm_get_encap_request_key_update,
-      spdm_process_encap_response_key_update },
+    { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
+      libspdm_process_encap_response_key_update },
 };
 
 spdm_encap_response_struct_t *
@@ -182,8 +182,8 @@ return_status spdm_process_encapsulated_response(
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENG response.
  **/
-void spdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
-                                    uint8_t mut_auth_requested)
+void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
+                                       uint8_t mut_auth_requested)
 {
     spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
@@ -240,7 +240,7 @@ void spdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void spdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
+void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 {
     spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
@@ -337,7 +337,7 @@ void libspdm_init_key_update_encap_state(void *context)
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_encapsulated_request(
+return_status libspdm_get_response_encapsulated_request(
     void *context, uintn request_size, const void *request,
     uintn *response_size, void *response)
 {
@@ -368,7 +368,7 @@ return_status spdm_get_response_encapsulated_request(
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
         }
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -432,7 +432,7 @@ return_status spdm_get_response_encapsulated_request(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status spdm_get_response_encapsulated_response_ack(
+return_status libspdm_get_response_encapsulated_response_ack(
     void *context, uintn request_size, const void *request,
     uintn *response_size, void *response)
 {
@@ -468,7 +468,7 @@ return_status spdm_get_response_encapsulated_response_ack(
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
         }
-        return spdm_responder_handle_response_state(
+        return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
             response_size, response);
@@ -564,7 +564,7 @@ return_status spdm_get_response_encapsulated_response_ack(
  *
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_handle_encap_error_response_main(
+return_status libspdm_handle_encap_error_response_main(
     libspdm_context_t *spdm_context, uint8_t error_code)
 {
 

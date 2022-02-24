@@ -20,7 +20,7 @@ uintn m_spdm_heartbeat_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 static uint8_t m_local_psk_hint[32];
 
-void test_spdm_responder_heartbeat_case1(void **state)
+void libspdm_test_responder_heartbeat_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -86,10 +86,10 @@ void test_spdm_responder_heartbeat_case1(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_heartbeat_response_t));
     spdm_response = (void *)response;
@@ -98,7 +98,7 @@ void test_spdm_responder_heartbeat_case1(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case2(void **state)
+void libspdm_test_responder_heartbeat_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -164,10 +164,10 @@ void test_spdm_responder_heartbeat_case2(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request2_size,
-                                         &m_spdm_heartbeat_request2,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request2_size,
+                                            &m_spdm_heartbeat_request2,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -179,7 +179,7 @@ void test_spdm_responder_heartbeat_case2(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case3(void **state)
+void libspdm_test_responder_heartbeat_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -246,10 +246,10 @@ void test_spdm_responder_heartbeat_case3(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -262,7 +262,7 @@ void test_spdm_responder_heartbeat_case3(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case4(void **state)
+void libspdm_test_responder_heartbeat_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -329,10 +329,10 @@ void test_spdm_responder_heartbeat_case4(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -346,7 +346,7 @@ void test_spdm_responder_heartbeat_case4(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case5(void **state)
+void libspdm_test_responder_heartbeat_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -414,10 +414,10 @@ void test_spdm_responder_heartbeat_case5(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_error_response_t) +
@@ -436,7 +436,7 @@ void test_spdm_responder_heartbeat_case5(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case6(void **state)
+void libspdm_test_responder_heartbeat_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -503,10 +503,10 @@ void test_spdm_responder_heartbeat_case6(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     response_size = sizeof(response);
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
@@ -518,7 +518,7 @@ void test_spdm_responder_heartbeat_case6(void **state)
     free(data1);
 }
 
-void test_spdm_responder_heartbeat_case7(void **state)
+void libspdm_test_responder_heartbeat_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -596,10 +596,10 @@ void test_spdm_responder_heartbeat_case7(void **state)
     spdm_context->transcript.message_mut_c.buffer_size =
         spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
-    status = spdm_get_response_heartbeat(spdm_context,
-                                         m_spdm_heartbeat_request1_size,
-                                         &m_spdm_heartbeat_request1,
-                                         &response_size, response);
+    status = libspdm_get_response_heartbeat(spdm_context,
+                                            m_spdm_heartbeat_request1_size,
+                                            &m_spdm_heartbeat_request1,
+                                            &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_heartbeat_response_t));
     spdm_response = (void *)response;
@@ -625,19 +625,19 @@ int spdm_responder_heartbeat_test_main(void)
 {
     const struct CMUnitTest spdm_responder_heartbeat_tests[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case1),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case2),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case3),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case4),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case4),
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case5),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case6),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case6),
         /* Buffer reset*/
-        cmocka_unit_test(test_spdm_responder_heartbeat_case7),
+        cmocka_unit_test(libspdm_test_responder_heartbeat_case7),
     };
 
     setup_spdm_test_context(&m_spdm_responder_heartbeat_test_context);

@@ -397,7 +397,7 @@ return_status spdm_requester_get_version_test_receive_message(
  * Test 1: when no VERSION message is received, and the client returns a device error.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case1(void **state)
+void libspdm_test_requester_get_version_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -407,7 +407,7 @@ void test_spdm_requester_get_version_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -415,7 +415,7 @@ void test_spdm_requester_get_version_case1(void **state)
  * Test 2: receiving a correct VERSION message with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of RETURN_SUCCESS.
  **/
-void test_spdm_requester_get_version_case2(void **state)
+void libspdm_test_requester_get_version_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -425,7 +425,7 @@ void test_spdm_requester_get_version_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -433,7 +433,7 @@ void test_spdm_requester_get_version_case2(void **state)
  * Test 3: receiving a correct VERSION message header, but with 0 versions available.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case3(void **state)
+void libspdm_test_requester_get_version_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -443,7 +443,7 @@ void test_spdm_requester_get_version_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -451,7 +451,7 @@ void test_spdm_requester_get_version_case3(void **state)
  * Test 4: receiving an InvalidRequest ERROR message from the responder.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case4(void **state)
+void libspdm_test_requester_get_version_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -461,7 +461,7 @@ void test_spdm_requester_get_version_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -469,7 +469,7 @@ void test_spdm_requester_get_version_case4(void **state)
  * Test 5: receiving an Busy ERROR message correct VERSION message from the responder.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case5(void **state)
+void libspdm_test_requester_get_version_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -479,7 +479,7 @@ void test_spdm_requester_get_version_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_NO_RESPONSE);
 }
 
@@ -488,7 +488,7 @@ void test_spdm_requester_get_version_case5(void **state)
  * a correct VERSION message with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of RETURN_SUCCESS.
  **/
-void test_spdm_requester_get_version_case6(void **state)
+void libspdm_test_requester_get_version_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -498,7 +498,7 @@ void test_spdm_requester_get_version_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -509,7 +509,7 @@ void test_spdm_requester_get_version_case6(void **state)
  * Note: As from 1.1.c, this is an unexpected behavior, as the responder should not
  * respond a GET_VERSION message with a RequestResynch. It should expect a GET_VERSION.
  **/
-void test_spdm_requester_get_version_case7(void **state)
+void libspdm_test_requester_get_version_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -519,7 +519,7 @@ void test_spdm_requester_get_version_case7(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
@@ -531,7 +531,7 @@ void test_spdm_requester_get_version_case7(void **state)
  * Note: As from 1.0.0, this is an unexpected behavior, as the responder should not
  * respond a GET_VERSION message with a ResponseNotReady.
  **/
-void test_spdm_requester_get_version_case8(void **state)
+void libspdm_test_requester_get_version_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -541,7 +541,7 @@ void test_spdm_requester_get_version_case8(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -552,7 +552,7 @@ void test_spdm_requester_get_version_case8(void **state)
  * Note: The responder should not
  * respond a GET_VERSION message with a ResponseNotReady.
  **/
-void test_spdm_requester_get_version_case9(void **state)
+void libspdm_test_requester_get_version_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -562,7 +562,7 @@ void test_spdm_requester_get_version_case9(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -573,7 +573,7 @@ void test_spdm_requester_get_version_case9(void **state)
  * Expected behavior: client returns a status of RETURN_SUCCESS, but truncate the message
  * to consider only the two first versions, as indicated in the message.
  **/
-void test_spdm_requester_get_version_case10(void **state)
+void libspdm_test_requester_get_version_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -583,7 +583,7 @@ void test_spdm_requester_get_version_case10(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
 }
 
@@ -592,7 +592,7 @@ void test_spdm_requester_get_version_case10(void **state)
  * the requester do not have compatible versions with the responder.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case11(void **state)
+void libspdm_test_requester_get_version_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -602,7 +602,7 @@ void test_spdm_requester_get_version_case11(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -611,7 +611,7 @@ void test_spdm_requester_get_version_case11(void **state)
  * 1.0-version format, with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case12(void **state)
+void libspdm_test_requester_get_version_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -621,7 +621,7 @@ void test_spdm_requester_get_version_case12(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -631,7 +631,7 @@ void test_spdm_requester_get_version_case12(void **state)
  * VERSION message, with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case13(void **state)
+void libspdm_test_requester_get_version_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -641,7 +641,7 @@ void test_spdm_requester_get_version_case13(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
 
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
 }
 
@@ -653,7 +653,7 @@ void test_spdm_requester_get_version_case13(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_requester_get_version_case14(void **state) {
+void libspdm_test_requester_get_version_case14(void **state) {
     return_status status;
     spdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -666,7 +666,7 @@ void test_spdm_requester_get_version_case14(void **state) {
     error_code = SPDM_ERROR_CODE_RESERVED_00;
     while(error_code <= 0xff) {
         /* no additional state control is necessary as a new GET_VERSION resets the state*/
-        status = spdm_get_version (spdm_context, NULL, NULL);
+        status = libspdm_get_version (spdm_context, NULL, NULL);
         ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
         error_code++;
@@ -688,7 +688,7 @@ void test_spdm_requester_get_version_case14(void **state) {
  * Responder list:4.2, 5.2, 1.2, 1.1, 1.0
  * Expected behavior: client returns a status of RETURN_SUCCESS and right negotiated version 1.1.
  **/
-void test_spdm_requester_get_version_case15(void **state)
+void libspdm_test_requester_get_version_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -703,7 +703,7 @@ void test_spdm_requester_get_version_case15(void **state)
     spdm_context->local_context.version.spdm_version[2] = 0x09 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[3] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[4] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    status = spdm_get_version(spdm_context, NULL, NULL);
+    status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
@@ -719,31 +719,31 @@ spdm_test_context_t mSpdmRequesterGetVersionTestContext = {
 int spdm_requester_get_version_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_version_tests[] = {
-        cmocka_unit_test(test_spdm_requester_get_version_case1),
-        cmocka_unit_test(test_spdm_requester_get_version_case2),
-        cmocka_unit_test(test_spdm_requester_get_version_case3),
+        cmocka_unit_test(libspdm_test_requester_get_version_case1),
+        cmocka_unit_test(libspdm_test_requester_get_version_case2),
+        cmocka_unit_test(libspdm_test_requester_get_version_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_requester_get_version_case4),
+        cmocka_unit_test(libspdm_test_requester_get_version_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(test_spdm_requester_get_version_case5),
+        cmocka_unit_test(libspdm_test_requester_get_version_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_version_case6),
+        cmocka_unit_test(libspdm_test_requester_get_version_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(test_spdm_requester_get_version_case7),
+        cmocka_unit_test(libspdm_test_requester_get_version_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(test_spdm_requester_get_version_case8),
+        cmocka_unit_test(libspdm_test_requester_get_version_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_version_case9),
+        cmocka_unit_test(libspdm_test_requester_get_version_case9),
         /* Successful response*/
-        cmocka_unit_test(test_spdm_requester_get_version_case10),
+        cmocka_unit_test(libspdm_test_requester_get_version_case10),
         /* Successful response + device error*/
-        cmocka_unit_test(test_spdm_requester_get_version_case11),
-        cmocka_unit_test(test_spdm_requester_get_version_case12),
-        cmocka_unit_test(test_spdm_requester_get_version_case13),
+        cmocka_unit_test(libspdm_test_requester_get_version_case11),
+        cmocka_unit_test(libspdm_test_requester_get_version_case12),
+        cmocka_unit_test(libspdm_test_requester_get_version_case13),
         /* Unexpected errors*/
-        cmocka_unit_test(test_spdm_requester_get_version_case14),
+        cmocka_unit_test(libspdm_test_requester_get_version_case14),
         /* Successful response for unordered version set*/
-        cmocka_unit_test(test_spdm_requester_get_version_case15),
+        cmocka_unit_test(libspdm_test_requester_get_version_case15),
     };
 
     setup_spdm_test_context(&mSpdmRequesterGetVersionTestContext);

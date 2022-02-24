@@ -31,7 +31,7 @@ typedef struct {
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } spdm_key_exchange_request_mine_t;
 
-void test_spdm_responder_key_exchange_case1(void **State)
+void libspdm_test_responder_key_exchange_case1(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -86,12 +86,12 @@ void test_spdm_responder_key_exchange_case1(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_key_exchange_case2(void **State)
+void libspdm_test_responder_key_exchange_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -145,12 +145,12 @@ void test_spdm_responder_key_exchange_case2(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_key_exchange_case3(void **State)
+void libspdm_test_responder_key_exchange_case3(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -188,12 +188,12 @@ void test_spdm_responder_key_exchange_case3(void **State)
 
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_key_exchange_case4(void **State)
+void libspdm_test_responder_key_exchange_case4(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -254,12 +254,12 @@ void test_spdm_responder_key_exchange_case4(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_key_exchange_case5(void **State)
+void libspdm_test_responder_key_exchange_case5(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -318,12 +318,12 @@ void test_spdm_responder_key_exchange_case5(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
-void test_spdm_responder_key_exchange_case6(void **State)
+void libspdm_test_responder_key_exchange_case6(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     spdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
@@ -376,8 +376,8 @@ void test_spdm_responder_key_exchange_case6(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    spdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                   &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
+                                      &m_spdm_key_exchange_request, &response_size, response);
     free(data);
 }
 
@@ -392,32 +392,32 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
 
     /* Success Case*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case1(&State);
+    libspdm_test_responder_key_exchange_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* capability.flags: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case2(&State);
+    libspdm_test_responder_key_exchange_case2(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* response_state: SPDM_RESPONSE_STATE_BUSY*/
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case3(&State);
+    libspdm_test_responder_key_exchange_case3(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* return response mut_auth_requested  */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case4(&State);
+    libspdm_test_responder_key_exchange_case4(&State);
     spdm_unit_test_group_teardown(&State);
 
     /*capability.flags: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case5(&State);
+    libspdm_test_responder_key_exchange_case5(&State);
     spdm_unit_test_group_teardown(&State);
 
     /* Buffer reset */
     spdm_unit_test_group_setup(&State);
-    test_spdm_responder_key_exchange_case6(&State);
+    libspdm_test_responder_key_exchange_case6(&State);
     spdm_unit_test_group_teardown(&State);
 }
 #else

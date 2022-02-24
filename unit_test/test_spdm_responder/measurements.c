@@ -102,7 +102,7 @@ static uint8_t m_local_psk_hint[32];
  * Test 1: Successful response to get a number of measurements without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case1(void **state)
+void libspdm_test_responder_measurements_case1(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -135,7 +135,7 @@ void test_spdm_responder_measurements_case1(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request1.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request1_size,
         &m_spdm_get_measurements_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -159,7 +159,7 @@ void test_spdm_responder_measurements_case1(void **state)
  * Test 2: Error case, Bad request size (LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) to get measurement number without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case2(void **state)
+void libspdm_test_responder_measurements_case2(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -192,7 +192,7 @@ void test_spdm_responder_measurements_case2(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request2.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request2_size,
         &m_spdm_get_measurements_request2, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -212,7 +212,7 @@ void test_spdm_responder_measurements_case2(void **state)
  * Test 3: Force response_state = SPDM_RESPONSE_STATE_BUSY when asked GET_MEASUREMENTS
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_BUSY
  **/
-void test_spdm_responder_measurements_case3(void **state)
+void libspdm_test_responder_measurements_case3(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -246,7 +246,7 @@ void test_spdm_responder_measurements_case3(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request1.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request1_size,
         &m_spdm_get_measurements_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -267,7 +267,7 @@ void test_spdm_responder_measurements_case3(void **state)
  * Test 4: Force response_state = SPDM_RESPONSE_STATE_NEED_RESYNC when asked GET_MEASUREMENTS
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  **/
-void test_spdm_responder_measurements_case4(void **state)
+void libspdm_test_responder_measurements_case4(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -301,7 +301,7 @@ void test_spdm_responder_measurements_case4(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request1.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request1_size,
         &m_spdm_get_measurements_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -323,7 +323,7 @@ void test_spdm_responder_measurements_case4(void **state)
  * Test 5: Force response_state = SPDM_RESPONSE_STATE_NOT_READY when asked GET_MEASUREMENTS
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
  **/
-void test_spdm_responder_measurements_case5(void **state)
+void libspdm_test_responder_measurements_case5(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -358,7 +358,7 @@ void test_spdm_responder_measurements_case5(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request1.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request1_size,
         &m_spdm_get_measurements_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -386,7 +386,7 @@ void test_spdm_responder_measurements_case5(void **state)
  *        (missing SPDM_GET_DIGESTS_RECEIVE_FLAG, SPDM_GET_CAPABILITIES_RECEIVE_FLAG and SPDM_NEGOTIATE_ALGORITHMS_RECEIVE_FLAG)
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNEXPECTED_REQUEST
  **/
-void test_spdm_responder_measurements_case6(void **state)
+void libspdm_test_responder_measurements_case6(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -420,7 +420,7 @@ void test_spdm_responder_measurements_case6(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request1.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request1_size,
         &m_spdm_get_measurements_request1, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -440,7 +440,7 @@ void test_spdm_responder_measurements_case6(void **state)
  * Test 7: Successful response to get a number of measurements with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case7(void **state)
+void libspdm_test_responder_measurements_case7(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -476,7 +476,7 @@ void test_spdm_responder_measurements_case7(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request5.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request5_size,
         &m_spdm_get_measurements_request5, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -496,7 +496,7 @@ void test_spdm_responder_measurements_case7(void **state)
  * Test 8: Successful response to get one measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case8(void **state)
+void libspdm_test_responder_measurements_case8(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -531,7 +531,7 @@ void test_spdm_responder_measurements_case8(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request3.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request3_size,
         &m_spdm_get_measurements_request3, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -553,7 +553,7 @@ void test_spdm_responder_measurements_case8(void **state)
  * Test 9: Error case, Bad request size (sizeof(spdm_message_header_t)x) to get measurement number with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case9(void **state)
+void libspdm_test_responder_measurements_case9(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -586,7 +586,7 @@ void test_spdm_responder_measurements_case9(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request4.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request4_size,
         &m_spdm_get_measurements_request4, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -606,7 +606,7 @@ void test_spdm_responder_measurements_case9(void **state)
  * Test 10: Successful response to get one measurement without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case10(void **state)
+void libspdm_test_responder_measurements_case10(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -639,7 +639,7 @@ void test_spdm_responder_measurements_case10(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request6.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request6_size,
         &m_spdm_get_measurements_request6, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -667,7 +667,7 @@ void test_spdm_responder_measurements_case10(void **state)
  * Test 11: Successful response to get all measurements with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case11(void **state)
+void libspdm_test_responder_measurements_case11(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -703,7 +703,7 @@ void test_spdm_responder_measurements_case11(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request8.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request8_size,
         &m_spdm_get_measurements_request8, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -734,7 +734,7 @@ void test_spdm_responder_measurements_case11(void **state)
  * Test 12: Successful response to get all measurements without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case12(void **state)
+void libspdm_test_responder_measurements_case12(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -767,7 +767,7 @@ void test_spdm_responder_measurements_case12(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request7.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request7_size,
         &m_spdm_get_measurements_request7, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -811,7 +811,7 @@ void test_spdm_responder_measurements_case12(void **state)
  * Test 13: Error case, even though signature was not required, there is nonce and/or slotID
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case13(void **state)
+void libspdm_test_responder_measurements_case13(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -858,7 +858,7 @@ void test_spdm_responder_measurements_case13(void **state)
     for (int i = 0; i < sizeof(TestMsgSizes) / sizeof(TestMsgSizes[0]);
          i++) {
         response_size = sizeof(response);
-        status = spdm_get_response_measurements(
+        status = libspdm_get_response_measurements(
             spdm_context, TestMsgSizes[i],
             &m_spdm_get_measurements_request9, &response_size,
             response);
@@ -881,7 +881,7 @@ void test_spdm_responder_measurements_case13(void **state)
  * Test 14: Error case, signature was required, but there is no nonce and/or slotID
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case14(void **state)
+void libspdm_test_responder_measurements_case14(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -928,7 +928,7 @@ void test_spdm_responder_measurements_case14(void **state)
     for (int i = 0; i < sizeof(TestMsgSizes) / sizeof(TestMsgSizes[0]);
          i++) {
         response_size = sizeof(response);
-        status = spdm_get_response_measurements(
+        status = libspdm_get_response_measurements(
             spdm_context, TestMsgSizes[i],
             &m_spdm_get_measurements_request10, &response_size,
             response);
@@ -951,7 +951,7 @@ void test_spdm_responder_measurements_case14(void **state)
  * Test 15: Error case, meas_cap = 01b, but signature was requested (request message includes nonce and slotID)
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case15(void **state)
+void libspdm_test_responder_measurements_case15(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -986,7 +986,7 @@ void test_spdm_responder_measurements_case15(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request10.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request10_size,
         &m_spdm_get_measurements_request10, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1006,7 +1006,7 @@ void test_spdm_responder_measurements_case15(void **state)
  * Test 16: Error case, meas_cap = 01b, but signature was requested (request message does not include nonce and slotID)
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case16(void **state)
+void libspdm_test_responder_measurements_case16(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1039,7 +1039,7 @@ void test_spdm_responder_measurements_case16(void **state)
     /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_use_asym_algo);*/
 
     response_size = sizeof(response);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request9_size,
         &m_spdm_get_measurements_request10, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1059,7 +1059,7 @@ void test_spdm_responder_measurements_case16(void **state)
  * Test 17: Error case, meas_cap = 00
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case17(void **state)
+void libspdm_test_responder_measurements_case17(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1093,7 +1093,7 @@ void test_spdm_responder_measurements_case17(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request9.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request9_size,
         &m_spdm_get_measurements_request9, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1115,7 +1115,7 @@ void test_spdm_responder_measurements_case17(void **state)
  * Test 18: Successful response to get one measurement with signature, SlotId different from default
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
-void test_spdm_responder_measurements_case18(void **state)
+void libspdm_test_responder_measurements_case18(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1162,7 +1162,7 @@ void test_spdm_responder_measurements_case18(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request11.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request11_size,
         &m_spdm_get_measurements_request11, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1189,7 +1189,7 @@ void test_spdm_responder_measurements_case18(void **state)
  * Test 19: Error case, invalid SlotId parameter (SlotId >= SPDM_MAX_SLOT_COUNT)
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case19(void **state)
+void libspdm_test_responder_measurements_case19(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1223,7 +1223,7 @@ void test_spdm_responder_measurements_case19(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request12.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request12_size,
         &m_spdm_get_measurements_request12, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1243,7 +1243,7 @@ void test_spdm_responder_measurements_case19(void **state)
  * Test 19: Error case, invalid SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case20(void **state)
+void libspdm_test_responder_measurements_case20(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1277,7 +1277,7 @@ void test_spdm_responder_measurements_case20(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request11.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request11_size,
         &m_spdm_get_measurements_request11, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1297,7 +1297,7 @@ void test_spdm_responder_measurements_case20(void **state)
  * Test 21: Error case, request a measurement index not found
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
-void test_spdm_responder_measurements_case21(void **state)
+void libspdm_test_responder_measurements_case21(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1329,7 +1329,7 @@ void test_spdm_responder_measurements_case21(void **state)
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_spdm_get_measurements_request13.nonce);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request13_size,
         &m_spdm_get_measurements_request13, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1350,7 +1350,7 @@ void test_spdm_responder_measurements_case21(void **state)
  * Expected Behavior: while transcript.message_m is not full, get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  *                    if transcript.message_m has no more room, an error response is expected
  **/
-void test_spdm_responder_measurements_case22(void **state)
+void libspdm_test_responder_measurements_case22(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1386,7 +1386,7 @@ void test_spdm_responder_measurements_case22(void **state)
         libspdm_get_random_number(SPDM_NONCE_SIZE,
                                   m_spdm_get_measurements_request6.nonce);
         response_size = sizeof(response);
-        status = spdm_get_response_measurements(
+        status = libspdm_get_response_measurements(
             spdm_context, m_spdm_get_measurements_request6_size,
             &m_spdm_get_measurements_request6, &response_size,
             response);
@@ -1433,7 +1433,7 @@ void test_spdm_responder_measurements_case22(void **state)
  * Test 23: Successful response to get a session based measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
  **/
-void test_spdm_responder_measurements_case23(void **state)
+void libspdm_test_responder_measurements_case23(void **state)
 {
     return_status status;
     spdm_test_context_t *spdm_test_context;
@@ -1487,7 +1487,7 @@ void test_spdm_responder_measurements_case23(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
-    status = spdm_get_response_measurements(
+    status = libspdm_get_response_measurements(
         spdm_context, m_spdm_get_measurements_request5_size,
         &m_spdm_get_measurements_request5, &response_size, response);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1515,51 +1515,51 @@ int spdm_responder_measurements_test_main(void)
 
     const struct CMUnitTest spdm_responder_measurements_tests[] = {
         /* Success Case to get measurement number without signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case1),
+        cmocka_unit_test(libspdm_test_responder_measurements_case1),
         /* Bad request size to get measurement number without signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case2),
+        cmocka_unit_test(libspdm_test_responder_measurements_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(test_spdm_responder_measurements_case3),
+        cmocka_unit_test(libspdm_test_responder_measurements_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(test_spdm_responder_measurements_case4),
+        cmocka_unit_test(libspdm_test_responder_measurements_case4),
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(test_spdm_responder_measurements_case5),
+        cmocka_unit_test(libspdm_test_responder_measurements_case5),
         /* connection_state Check*/
-        cmocka_unit_test(test_spdm_responder_measurements_case6),
+        cmocka_unit_test(libspdm_test_responder_measurements_case6),
         /* Success Case to get measurement number with signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case7),
+        cmocka_unit_test(libspdm_test_responder_measurements_case7),
         /* Success Case to get one measurement with signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case8),
+        cmocka_unit_test(libspdm_test_responder_measurements_case8),
         /* Bad request size to get one measurement with signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case9),
+        cmocka_unit_test(libspdm_test_responder_measurements_case9),
         /* Success Case to get one measurement without signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case10),
+        cmocka_unit_test(libspdm_test_responder_measurements_case10),
         /* Success Case to get all measurements with signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case11),
+        cmocka_unit_test(libspdm_test_responder_measurements_case11),
         /* Success Case to get all measurements without signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case12),
+        cmocka_unit_test(libspdm_test_responder_measurements_case12),
         /* Error Case: no sig required, but there is nonce and/or slotID (special case of Test Case 2)*/
-        cmocka_unit_test(test_spdm_responder_measurements_case13),
+        cmocka_unit_test(libspdm_test_responder_measurements_case13),
         /* Error Case: sig required, but no nonce and/or SlotID*/
-        cmocka_unit_test(test_spdm_responder_measurements_case14),
+        cmocka_unit_test(libspdm_test_responder_measurements_case14),
         /* Error Case: sig required, but meas_cap = 01b (including nonce and SlotId on request)*/
-        cmocka_unit_test(test_spdm_responder_measurements_case15),
+        cmocka_unit_test(libspdm_test_responder_measurements_case15),
         /* Error Case: sig required, but meas_cap = 01b (not including nonce and SlotId on request)*/
-        cmocka_unit_test(test_spdm_responder_measurements_case16),
+        cmocka_unit_test(libspdm_test_responder_measurements_case16),
         /* Error Case: meas_cap = 00b*/
-        cmocka_unit_test(test_spdm_responder_measurements_case17),
+        cmocka_unit_test(libspdm_test_responder_measurements_case17),
         /* Success Case: SlotId different from default*/
-        cmocka_unit_test(test_spdm_responder_measurements_case18),
+        cmocka_unit_test(libspdm_test_responder_measurements_case18),
         /* Bad SlotId parameter (>= SPDM_MAX_SLOT_COUNT)*/
-        cmocka_unit_test(test_spdm_responder_measurements_case19),
+        cmocka_unit_test(libspdm_test_responder_measurements_case19),
         /* Bad SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)*/
-        cmocka_unit_test(test_spdm_responder_measurements_case20),
+        cmocka_unit_test(libspdm_test_responder_measurements_case20),
         /* Error Case: request a measurement out of bounds*/
-        cmocka_unit_test(test_spdm_responder_measurements_case21),
+        cmocka_unit_test(libspdm_test_responder_measurements_case21),
         /* Large number of requests before requiring a signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case22),
+        cmocka_unit_test(libspdm_test_responder_measurements_case22),
         /* Successful response to get a session based measurement with signature*/
-        cmocka_unit_test(test_spdm_responder_measurements_case23),
+        cmocka_unit_test(libspdm_test_responder_measurements_case23),
     };
 
     setup_spdm_test_context(&m_spdm_responder_measurements_test_context);
