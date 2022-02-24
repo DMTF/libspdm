@@ -219,18 +219,6 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
         break;
     }
     case 0x02: {
-        spdm_error_response_t spdm_response;
-        spdm_test_context = get_spdm_test_context();
-        test_message_header_size = 1;
-        copy_mem_s(&spdm_response, sizeof(spdm_response),
-                   (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-                   spdm_test_context->test_buffer_size);
-        spdm_transport_test_encode_message(spdm_context, NULL, false, false,
-                                           spdm_test_context->test_buffer_size, &spdm_response,
-                                           response_size, response);
-        break;
-    }
-    case 0x03: {
         spdm_test_context = get_spdm_test_context();
         copy_mem_s(response, *response_size,
                    spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
@@ -287,52 +275,7 @@ void test_spdm_requester_key_exchange_case1(void **State)
     free(data);
 }
 
-void test_spdm_requester_key_exchange_case2(void **state)
-{
-    spdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    uint32_t session_id;
-    uint8_t heartbeat_period;
-    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t slot_id_param;
-    void *data;
-    uintn data_size;
-    void *hash;
-    uintn hash_size;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    test_case_id = 0x02;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
-                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
-                                            &hash, &hash_size);
-    libspdm_reset_message_a(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
-        data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
-#endif
-
-    heartbeat_period = 0;
-    zero_mem(measurement_hash, sizeof(measurement_hash));
-    spdm_send_receive_key_exchange(spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                                   0, 0, &session_id, &heartbeat_period, &slot_id_param,
-                                   measurement_hash);
-    free(data);
-}
-
-void test_spdm_requester_key_exchange_case3(void **State)
+void test_spdm_requester_key_exchange_case2(void **State)
 {
     spdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -346,7 +289,7 @@ void test_spdm_requester_key_exchange_case3(void **State)
     uintn hash_size;
 
     spdm_test_context = *State;
-    test_case_id = 0x03;
+    test_case_id = 0x02;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -452,13 +395,8 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     test_spdm_requester_key_exchange_case1(&State);
     spdm_unit_test_group_teardown(&State);
 
-    /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
     spdm_unit_test_group_setup(&State);
     test_spdm_requester_key_exchange_case2(&State);
-    spdm_unit_test_group_teardown(&State);
-
-    spdm_unit_test_group_setup(&State);
-    test_spdm_requester_key_exchange_case3(&State);
     spdm_unit_test_group_teardown(&State);
 
     spdm_unit_test_group_setup(&State);
