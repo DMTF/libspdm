@@ -22,9 +22,9 @@ void spdm_secured_message_set_response_finished_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem_s(secured_message_context->handshake_secret.response_finished_key,
-               sizeof(secured_message_context->handshake_secret.response_finished_key),
-               key, secured_message_context->hash_size);
+    copy_mem(secured_message_context->handshake_secret.response_finished_key,
+             sizeof(secured_message_context->handshake_secret.response_finished_key),
+             key, secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
@@ -43,44 +43,44 @@ return_status spdm_requester_finish_test_send_message(void *spdm_context,
         return RETURN_DEVICE_ERROR;
     case 0x2:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x3:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x4:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x5:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x6:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x7:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x8:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x9: {
         static uintn sub_index = 0;
         if (sub_index == 0) {
             m_local_buffer_size = 0;
-            copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+            copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
             m_local_buffer_size += (request_size - 1);
             sub_index++;
         }
@@ -88,62 +88,62 @@ return_status spdm_requester_finish_test_send_message(void *spdm_context,
         return RETURN_SUCCESS;
     case 0xA:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0xB:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0xC:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0xD:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0xE:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0xF:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x10:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x11:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x12:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x13:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x14:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x15:
         m_local_buffer_size = 0;
-        copy_mem_s(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
+        copy_mem(m_local_buffer, sizeof(m_local_buffer), &ptr[1], request_size - 1);
         m_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     default:
@@ -199,10 +199,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -268,10 +268,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -387,10 +387,10 @@ return_status spdm_requester_finish_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             ptr = (void *)(spdm_response + 1);
-            copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                       sizeof(m_local_buffer)
-                       - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                       spdm_response, sizeof(spdm_finish_response_t));
+            copy_mem(&m_local_buffer[m_local_buffer_size],
+                     sizeof(m_local_buffer)
+                     - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                     spdm_response, sizeof(spdm_finish_response_t));
             m_local_buffer_size += sizeof(spdm_finish_response_t);
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
@@ -522,10 +522,10 @@ return_status spdm_requester_finish_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             ptr = (void *)(spdm_response + 1);
-            copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                       sizeof(m_local_buffer)
-                       - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                       spdm_response, sizeof(spdm_finish_response_t));
+            copy_mem(&m_local_buffer[m_local_buffer_size],
+                     sizeof(m_local_buffer)
+                     - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                     spdm_response, sizeof(spdm_finish_response_t));
             m_local_buffer_size += sizeof(spdm_finish_response_t);
             read_responder_public_certificate_chain(
                 m_use_hash_algo, m_use_asym_algo, &data,
@@ -626,10 +626,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -695,10 +695,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -764,10 +764,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -834,10 +834,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -903,10 +903,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -976,10 +976,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -1148,10 +1148,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -1179,8 +1179,8 @@ return_status spdm_requester_finish_test_receive_message(
         libspdm_hmac_all(m_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                          libspdm_get_managed_buffer_size(&th_curr),
                          response_finished_key, hash_size, ptr);
-        copy_mem_s(ptr, sizeof(temp_buf) - (ptr - temp_buf),
-                   ptr + hmac_size, hmac_size); /* 2x HMAC size*/
+        copy_mem(ptr, sizeof(temp_buf) - (ptr - temp_buf),
+                 ptr + hmac_size, hmac_size); /* 2x HMAC size*/
         ptr += 2*hmac_size;
         free(data);
 
@@ -1233,10 +1233,10 @@ return_status spdm_requester_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         ptr = (void *)(spdm_response + 1);
-        copy_mem_s(&m_local_buffer[m_local_buffer_size],
-                   sizeof(m_local_buffer)
-                   - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
-                   spdm_response, sizeof(spdm_finish_response_t));
+        copy_mem(&m_local_buffer[m_local_buffer_size],
+                 sizeof(m_local_buffer)
+                 - (&m_local_buffer[m_local_buffer_size] - m_local_buffer),
+                 spdm_response, sizeof(spdm_finish_response_t));
         m_local_buffer_size += sizeof(spdm_finish_response_t);
         read_responder_public_certificate_chain(m_use_hash_algo,
                                                 m_use_asym_algo, &data,
@@ -1348,9 +1348,9 @@ void test_spdm_requester_finish_case1(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1442,9 +1442,9 @@ void test_spdm_requester_finish_case2(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1539,9 +1539,9 @@ void test_spdm_requester_finish_case3(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1632,9 +1632,9 @@ void test_spdm_requester_finish_case4(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1726,9 +1726,9 @@ void test_spdm_requester_finish_case5(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1820,9 +1820,9 @@ void test_spdm_requester_finish_case6(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1918,9 +1918,9 @@ void test_spdm_requester_finish_case7(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2013,9 +2013,9 @@ void test_spdm_requester_finish_case8(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2107,9 +2107,9 @@ void test_spdm_requester_finish_case9(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2194,9 +2194,9 @@ void test_spdm_requester_finish_case10(void **state) {
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2303,9 +2303,9 @@ void test_spdm_requester_finish_case11(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2423,9 +2423,9 @@ void test_spdm_requester_finish_case12(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2518,9 +2518,9 @@ void test_spdm_requester_finish_case13(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2611,9 +2611,9 @@ void test_spdm_requester_finish_case14(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2705,9 +2705,9 @@ void test_spdm_requester_finish_case15(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2801,9 +2801,9 @@ void test_spdm_requester_finish_case16(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2910,9 +2910,9 @@ void test_spdm_requester_finish_case17(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -3015,9 +3015,9 @@ void test_spdm_requester_finish_case18(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -3121,9 +3121,9 @@ void test_spdm_requester_finish_case19(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -3227,9 +3227,9 @@ void test_spdm_requester_finish_case20(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -3329,9 +3329,9 @@ void test_spdm_requester_finish_case21(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
