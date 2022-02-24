@@ -677,12 +677,12 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                  uintn cert_size,
-                                                  uint8_t *basic_constraints,
-                                                  uintn *basic_constraints_size)
+return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                          uintn cert_size,
+                                                          uint8_t *basic_constraints,
+                                                          uintn *basic_constraints_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 

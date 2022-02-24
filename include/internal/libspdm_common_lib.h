@@ -631,6 +631,7 @@ bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
  * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
  * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ * @param  is_requester                   Indicates if it is a requester message.
  *
  * @retval true  Peer certificate chain buffer verification passed.
  * @retval false Peer certificate chain buffer verification failed.
@@ -639,7 +640,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                                            const void *cert_chain_buffer,
                                            uintn cert_chain_buffer_size,
                                            void **trust_anchor,
-                                           uintn *trust_anchor_size);
+                                           uintn *trust_anchor_size,
+                                           bool is_requester);
 
 /**
  * This function generates the challenge signature based upon m1m2 for authentication.

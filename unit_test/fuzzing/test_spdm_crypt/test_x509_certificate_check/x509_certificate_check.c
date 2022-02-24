@@ -23,7 +23,8 @@ void libspdm_test_x509_certificate_check(void **State)
         (uint8_t *)spdm_test_context->test_buffer,
         spdm_test_context->test_buffer_size,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+        true);
 }
 
 libspdm_test_context_t m_spdm_x509_certificate_check_test_context = {
