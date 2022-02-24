@@ -219,7 +219,7 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
         result = libspdm_verify_peer_cert_chain_buffer(
             spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
             libspdm_get_managed_buffer_size(&certificate_chain_buffer),
-            trust_anchor, trust_anchor_size);
+            trust_anchor, trust_anchor_size, true);
         if (!result) {
             spdm_context->error_state =
                 LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;

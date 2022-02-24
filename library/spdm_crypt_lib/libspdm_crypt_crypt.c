@@ -17,37 +17,59 @@
 #endif
 
 /*leaf cert basic_constraints CA: false*/
-static uint8_t libspdm_basic_constraints[] = {0x30, 0x00};
+#define LIBSPDM_BASIC_CONSTRAINTS_STRING {0x30, 0x00}
+static const uint8_t m_libspdm_basic_constraints[] = LIBSPDM_BASIC_CONSTRAINTS_STRING;
+
+/**
+ * leaf cert spdm extension len
+ * len > 2 * (spdm id-DMTF-spdm size + 2)
+ **/
+
+#ifndef SPDM_EXTENDSION_LEN
+#define SPDM_EXTENDSION_LEN 30
+#endif
+
+/* SPDM defined OID*/
+#define OID_SPDM_EXTENSION \
+    {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x06}
+
+static uint8_t m_oid_spdm_extension[] = OID_SPDM_EXTENSION;
+
+#define LIBSPDM_HARDWARE_IDENTITY_OID  \
+    {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x02}
+
+static uint8_t m_libspdm_hardware_identity_oid[] =
+    LIBSPDM_HARDWARE_IDENTITY_OID;
+
 
 /*SHAxxxRSA OID: https://oidref.com/1.2.840.113549.1.1 */
-#define SIGN_ALGO_SHA256RSA_OID {                 \
-        0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x0B  \
-}
-#define SIGN_ALGO_SHA384RSA_OID {                 \
-        0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x0C  \
-}
-#define SIGN_ALGO_SHA512RSA_OID {                 \
-        0x2A,0x86,0x48,0x86,0xF7,0x0D,0x01,0x01,0x0D  \
-}
+
+#define SIGN_ALGO_SHA256RSA_OID  \
+    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B}
+
+#define SIGN_ALGO_SHA384RSA_OID  \
+    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0C}
+
+#define SIGN_ALGO_SHA512RSA_OID  \
+    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0D}
 
 /*SHAxxxECC OID: https://oidref.com/1.2.840.10045.4.3 */
-#define SIGN_ALGO_SHA256ECC_OID {           \
-        0x2A,0x86,0x48,0xCE,0x3D,0x04,0x03,0x02 \
-}
-#define SIGN_ALGO_SHA384ECC_OID {           \
-        0x2A,0x86,0x48,0xCE,0x3D,0x04,0x03,0x03 \
-}
-#define SIGN_ALGO_SHA512ECC_OID {           \
-        0x2A,0x86,0x48,0xCE,0x3D,0x04,0x03,0x04 \
-}
+#define SIGN_ALGO_SHA256ECC_OID  \
+    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x02}
+
+#define SIGN_ALGO_SHA384ECC_OID  \
+    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x03}
+
+#define SIGN_ALGO_SHA512ECC_OID  \
+    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x04}
 
 /**
  * EDxxx OID: https://datatracker.ietf.org/doc/html/rfc8420
  * ED448 OID: 1.3.101.113
  * ED25519 OID: 1.3.101.112
  **/
-#define SIGN_ALGO_ED25519_OID {0x2B,0x65,0x70}
-#define SIGN_ALGO_ED448_OID {0x2B,0x65,0x71}
+#define SIGN_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
+#define SIGN_ALGO_ED448_OID   {0x2B, 0x65, 0x71}
 
 /**
  * This function returns the SPDM hash algorithm size.
@@ -3952,7 +3974,7 @@ uint32_t libspdm_get_signature_algo_OID_len(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
         return 3;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
 }
@@ -3982,18 +4004,18 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
         switch (base_hash_algo) {
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256: {
-            uint8_t signature_algo_oid_sha256RSA[] = SIGN_ALGO_SHA256RSA_OID;
-            copy_mem(oid,signature_algo_oid_sha256RSA,oid_len);
+            uint8_t signature_algo_oid_sha256rsa[] = SIGN_ALGO_SHA256RSA_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha256rsa, oid_len);
             break;
         }
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384: {
-            uint8_t signature_algo_oid_sha384RSA[] = SIGN_ALGO_SHA384RSA_OID;
-            copy_mem(oid,signature_algo_oid_sha384RSA,oid_len);
+            uint8_t signature_algo_oid_sha384rsa[] = SIGN_ALGO_SHA384RSA_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha384rsa, oid_len);
             break;
         }
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512: {
-            uint8_t signature_algo_oid_sha512RSA[] = SIGN_ALGO_SHA512RSA_OID;
-            copy_mem(oid,signature_algo_oid_sha512RSA,oid_len);
+            uint8_t signature_algo_oid_sha512rsa[] = SIGN_ALGO_SHA512RSA_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha512rsa, oid_len);
             break;
         }
         /*rsa sha3 oid  TBD*/
@@ -4003,7 +4025,7 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
 
         default:
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return false;
         }
         break;
@@ -4013,18 +4035,18 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
         switch (base_hash_algo) {
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256: {
-            uint8_t signature_algo_oid_sha256ECC[] = SIGN_ALGO_SHA256ECC_OID;
-            copy_mem(oid,signature_algo_oid_sha256ECC,oid_len);
+            uint8_t signature_algo_oid_sha256ecc[] = SIGN_ALGO_SHA256ECC_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha256ecc, oid_len);
             break;
         }
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384: {
-            uint8_t signature_algo_oid_sha384ECC[] = SIGN_ALGO_SHA384ECC_OID;
-            copy_mem(oid,signature_algo_oid_sha384ECC,oid_len);
+            uint8_t signature_algo_oid_sha384ecc[] = SIGN_ALGO_SHA384ECC_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha384ecc, oid_len);
             break;
         }
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512: {
-            uint8_t signature_algo_oid_sha512ECC[] = SIGN_ALGO_SHA512ECC_OID;
-            copy_mem(oid,signature_algo_oid_sha512ECC,oid_len);
+            uint8_t signature_algo_oid_sha512ecc[] = SIGN_ALGO_SHA512ECC_OID;
+            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha512ecc, oid_len);
             break;
         }
         /*ecc sha3 oid  TBD*/
@@ -4034,7 +4056,7 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
         case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
 
         default:
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return false;
         }
         break;
@@ -4045,17 +4067,17 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
 
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
         uint8_t signature_algo_oid_ed25519[] = SIGN_ALGO_ED25519_OID;
-        copy_mem(oid,signature_algo_oid_ed25519,oid_len);
+        libspdm_copy_mem(oid, oid_len, signature_algo_oid_ed25519, oid_len);
         break;
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448: {
         uint8_t signature_algo_oid_ed448[] = SIGN_ALGO_ED448_OID;
-        copy_mem(oid,signature_algo_oid_ed448,oid_len);
+        libspdm_copy_mem(oid, oid_len, signature_algo_oid_ed448, oid_len);
         break;
     }
 
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
 
@@ -4103,12 +4125,12 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size
     }
 
     /*get signature algo OID from cert*/
-    ret = x509_get_signature_algorithm(cert, cert_size,
-                                       cert_signature_algo_oid, &oid_len);
+    ret = libspdm_x509_get_signature_algorithm(cert, cert_size,
+                                               cert_signature_algo_oid, &oid_len);
     if (ret != RETURN_SUCCESS ||
         oid_len != libspdm_get_signature_algo_OID_len(base_asym_algo)||
-        const_compare_mem(cert_signature_algo_oid,
-                          libspdm_signature_algo_oid, oid_len)) {
+        libspdm_const_compare_mem(cert_signature_algo_oid,
+                                  libspdm_signature_algo_oid, oid_len)) {
         status = false;
         return status;
     }
@@ -4137,16 +4159,16 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, uintn cert_
 
     len = BASIC_CONSTRAINTS_LEN;
 
-    ret = x509_get_extended_basic_constraints(cert, cert_size,
-                                              cert_basic_constraints, &len);
+    ret = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
+                                                      cert_basic_constraints, &len);
 
     if (ret == RETURN_NOT_FOUND) {
         /* basic constraints is not present in cert */
         status = true;
         return status;
     } else if (ret != RETURN_SUCCESS || len != BASIC_CONSTRAINTS_LEN ||
-               const_compare_mem(cert_basic_constraints,
-                                 libspdm_basic_constraints, len)) {
+               libspdm_const_compare_mem(cert_basic_constraints,
+                                         m_libspdm_basic_constraints, len)) {
         status = false;
         return status;
     }
@@ -4156,19 +4178,82 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, uintn cert_
 }
 
 /**
+ * Verify leaf cert extend spdm OID
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ *
+ * @retval  true   verify pass
+ * @retval  false  verify fail,two case: 1. return is not RETURN_SUCCESS or RETURN_NOT_FOUND;
+ *                                       2. m_libspdm_hardware_identity_oid is found in AliasCert model;
+ **/
+bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, uintn cert_size,
+                                           bool is_device_cert_model)
+{
+    bool status;
+    return_status ret;
+    bool find_sucessful;
+    uint8_t spdm_extension[SPDM_EXTENDSION_LEN];
+    uintn index;
+    uintn len;
+
+    len = SPDM_EXTENDSION_LEN;
+
+    if (cert == NULL || cert_size == 0) {
+        return false;
+    }
+
+    ret = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
+                                          (uint8_t *)m_oid_spdm_extension,
+                                          sizeof(m_oid_spdm_extension),
+                                          spdm_extension,
+                                          &len);
+
+    if(ret == RETURN_NOT_FOUND) {
+        status = true;
+        return status;
+    } else if(ret != RETURN_SUCCESS) {
+        status = false;
+        return status;
+    }
+
+    /*find the spdm hardware identity OID*/
+    find_sucessful = false;
+    for(index = 0; index <= len - sizeof(m_libspdm_hardware_identity_oid); index++) {
+        if (!libspdm_const_compare_mem(spdm_extension + index, m_libspdm_hardware_identity_oid,
+                                       sizeof(m_libspdm_hardware_identity_oid))) {
+            find_sucessful = true;
+            break;
+        }
+    }
+
+    if ((find_sucessful) && (!is_device_cert_model)) {
+        /* Hardware_identity_OID is found in alias cert model */
+        status = false;
+        return status;
+    } else {
+        status = true;
+        return status;
+    }
+}
+
+/**
  * Certificate Check for SPDM leaf cert.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
  *
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
 bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
                                     uint32_t base_asym_algo,
-                                    uint32_t base_hash_algo)
+                                    uint32_t base_hash_algo,
+                                    bool is_device_cert_model)
 {
     uint8_t end_cert_from[64];
     uintn end_cert_from_len;
@@ -4299,15 +4384,8 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
         goto cleanup;
     }
 
-    /* 8. extended_key_usage*/
+    /* 8. key_usage*/
     value = 0;
-    ret = libspdm_x509_get_extended_key_usage(cert, cert_size, NULL, &value);
-    if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
-        status = false;
-        goto cleanup;
-    }
-
-    /* 9. key_usage*/
     status = libspdm_x509_get_key_usage(cert, cert_size, &value);
     if (!status) {
         goto cleanup;
@@ -4319,10 +4397,23 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
         goto cleanup;
     }
 
-    /* 10. verify basic constraints*/
-    status =
-        libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    /* 9. verify SPDM extension OID*/
+    status = libspdm_verify_leaf_cert_eku_spdm_OID(cert, cert_size, is_device_cert_model);
     if (!status) {
+        goto cleanup;
+    }
+
+    /* 10. verify basic constraints*/
+    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    if (!status) {
+        goto cleanup;
+    }
+
+    /* 11. extended_key_usage*/
+    value = 0;
+    ret = libspdm_x509_get_extended_key_usage(cert, cert_size, NULL, &value);
+    if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
+        status = false;
         goto cleanup;
     }
 
@@ -4558,12 +4649,15 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
  * @param  cert_chain_data_size      size in bytes of the certificate chain data.
  * @param  base_hash_algo            SPDM base_hash_algo
  * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
  *
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_data_size,
-                                    uint32_t base_asym_algo, uint32_t base_hash_algo)
+                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                    bool is_device_cert_model)
 {
     uint8_t *root_cert_buffer;
     uintn root_cert_buffer_size;
@@ -4601,7 +4695,8 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_d
     }
 
     if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                        base_asym_algo, base_hash_algo)) {
+                                        base_asym_algo, base_hash_algo,
+                                        is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
         return false;
@@ -4616,14 +4711,17 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_d
  * @param  base_hash_algo                 SPDM base_hash_algo
  * @param  base_asym_algo                 SPDM base_asym_algo
  * @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
+ * @param  cert_chain_buffer_size         size in bytes of the certificate chain buffer.
+ * @param  is_device_cert_model           If true, the cert chain is DeviceCert model;
+ *                                        If false, the cert chain is AliasCert model;
  *
  * @retval true  certificate chain buffer integrity verification pass.
  * @retval false certificate chain buffer integrity verification fail.
  **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
-                                             uintn cert_chain_buffer_size)
+                                             uintn cert_chain_buffer_size,
+                                             bool is_device_cert_model)
 {
     uint8_t *cert_chain_data;
     uintn cert_chain_data_size;
@@ -4700,7 +4798,8 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
     }
 
     if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                        base_asym_algo, base_hash_algo)) {
+                                        base_asym_algo, base_hash_algo,
+                                        is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
         return false;

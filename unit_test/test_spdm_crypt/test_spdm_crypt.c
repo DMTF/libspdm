@@ -176,7 +176,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
     assert_true(status);
     free(file_buffer);
 
@@ -185,7 +186,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                                            true);
     assert_true(status);
     free(file_buffer);
 
@@ -194,7 +196,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
+                                            true);
     assert_true(status);
     free(file_buffer);
 
@@ -203,7 +206,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
     assert_true(status);
     free(file_buffer);
 
@@ -212,7 +216,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                                            true);
     assert_true(status);
     free(file_buffer);
 
@@ -221,7 +226,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
                                             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
-                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512);
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
+                                            true);
     assert_true(status);
     free(file_buffer);
 }

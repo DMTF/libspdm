@@ -19,10 +19,15 @@
 
 /* OID*/
 
-static uint8_t m_libspdm_oid_common_name[] = { 0x55, 0x04, 0x03 };
-static uint8_t m_libspdm_oid_organization_name[] = { 0x55, 0x04, 0x0A };
-static uint8_t m_libspdm_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
-static const uint8_t m_libspdm_oid_basic_constraints[] = { 0x55, 0x1D, 0x13 };
+#define OID_COMMON_NAME       { 0x55, 0x04, 0x03 }
+#define OID_ORGANIZATION_NAME { 0x55, 0x04, 0x0A }
+#define OID_EXT_KEY_USAGE     { 0x55, 0x1D, 0x25 }
+#define OID_BASIC_CONSTRAINTS { 0x55, 0x1D, 0x13 }
+
+static const uint8_t m_libspdm_oid_common_name[] = OID_COMMON_NAME;
+static const uint8_t m_libspdm_oid_organization_name[] = OID_ORGANIZATION_NAME;
+static const uint8_t m_libspdm_oid_ext_key_usage[] = OID_EXT_KEY_USAGE;
+static const uint8_t m_libspdm_oid_basic_constraints[] = OID_BASIC_CONSTRAINTS;
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -1387,10 +1392,10 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                  uintn cert_size,
-                                                  uint8_t *basic_constraints,
-                                                  uintn *basic_constraints_size)
+return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                          uintn cert_size,
+                                                          uint8_t *basic_constraints,
+                                                          uintn *basic_constraints_size)
 {
     return_status status;
 
@@ -1398,11 +1403,11 @@ return_status x509_get_extended_basic_constraints(const uint8_t *cert,
         return RETURN_INVALID_PARAMETER;
     }
 
-    status = x509_get_extension_data((uint8_t *)cert, cert_size,
-                                     (uint8_t *)m_libspdm_oid_basic_constraints,
-                                     sizeof(m_libspdm_oid_basic_constraints),
-                                     basic_constraints,
-                                     basic_constraints_size);
+    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
+                                             (uint8_t *)m_libspdm_oid_basic_constraints,
+                                             sizeof(m_libspdm_oid_basic_constraints),
+                                             basic_constraints,
+                                             basic_constraints_size);
     return status;
 }
 

@@ -1207,12 +1207,15 @@ bool libspdm_get_random_number(uintn size, uint8_t *rand);
  * @param[in]  cert_size        The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
  *
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
 bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
-                                    uint32_t base_asym_algo, uint32_t base_hash_algo);
+                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                    bool is_device_cert_model);
 
 /**
  * Return certificate is root cert or not.
@@ -1298,12 +1301,15 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
  * @param  cert_chain_data_size      size in bytes of the certificate chain data.
  * @param  base_hash_algo            SPDM base_hash_algo
  * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
  *
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_data_size,
-                                    uint32_t base_asym_algo, uint32_t base_hash_algo);
+                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                    bool is_device_cert_model);
 
 /**
  * This function verifies the integrity of certificate chain buffer including spdm_cert_chain_t header.
@@ -1311,14 +1317,17 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_d
  * @param  base_hash_algo                 SPDM base_hash_algo
  * @param  base_asym_algo                 SPDM base_asym_algo
  * @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
+ * @param  cert_chain_buffer_size         size in bytes of the certificate chain buffer.
+ * @param  is_device_cert_model           If true, the cert chain is DeviceCert model;
+ *                                        If false, the cert chain is AliasCert model;
  *
  * @retval true  certificate chain buffer integrity verification pass.
  * @retval false certificate chain buffer integrity verification fail.
  **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
-                                             uintn cert_chain_buffer_size);
+                                             uintn cert_chain_buffer_size,
+                                             bool is_device_cert_model);
 
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
