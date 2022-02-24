@@ -49,8 +49,8 @@ return_status validate_crypt_prng(void)
             return RETURN_ABORTED;
         }
 
-        copy_mem_s(m_previous_random_buffer, sizeof(m_previous_random_buffer),
-                   m_random_buffer, RANDOM_NUMBER_SIZE);
+        copy_mem(m_previous_random_buffer, sizeof(m_previous_random_buffer),
+                 m_random_buffer, RANDOM_NUMBER_SIZE);
     }
 
     my_print("[Pass]\n");
