@@ -44,9 +44,9 @@ void spdm_secured_message_set_request_finished_key(
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem_s(secured_message_context->handshake_secret.request_finished_key,
-               sizeof(secured_message_context->handshake_secret.request_finished_key),
-               key, secured_message_context->hash_size);
+    copy_mem(secured_message_context->handshake_secret.request_finished_key,
+             sizeof(secured_message_context->handshake_secret.request_finished_key),
+             key, secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
@@ -949,9 +949,9 @@ void test_spdm_responder_finish_case8(void **state)
     spdm_context->local_context.peer_cert_chain_provision_size =
         data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data2, data_size2);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data2, data_size2);
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size2;
 #else
@@ -1561,8 +1561,8 @@ void test_spdm_responder_finish_case13(void **state)
     libspdm_hmac_all(m_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                      libspdm_get_managed_buffer_size(&th_curr), request_finished_key,
                      hash_size, ptr);
-    copy_mem_s(ptr, sizeof(m_spdm_finish_request1.signature),
-               ptr + hmac_size, hmac_size); /* 2x HMAC size*/
+    copy_mem(ptr, sizeof(m_spdm_finish_request1.signature),
+             ptr + hmac_size, hmac_size); /* 2x HMAC size*/
     m_spdm_finish_request1_size = sizeof(spdm_finish_request_t) + 2*hmac_size;
     response_size = sizeof(response);
     status = spdm_get_response_finish(spdm_context,
@@ -1770,9 +1770,9 @@ void test_spdm_responder_finish_case15(void **state)
     spdm_context->local_context.peer_cert_chain_provision_size =
         data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data2, data_size2);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data2, data_size2);
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size2;
 #endif
@@ -1924,9 +1924,9 @@ void test_spdm_responder_finish_case16(void **state)
     spdm_context->local_context.peer_cert_chain_provision_size =
         data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data2, data_size2);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data2, data_size2);
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size2;
 #endif
