@@ -69,8 +69,8 @@ void test_spdm_responder_measurements_case2(void **State)
     spdm_context->local_context.opaque_measurement_rsp = NULL;
 
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
@@ -165,8 +165,8 @@ void test_spdm_responder_measurements_case4(void **State)
     }
 
     zero_mem(m_local_psk_hint, 32);
-    copy_mem_s(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-               TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 

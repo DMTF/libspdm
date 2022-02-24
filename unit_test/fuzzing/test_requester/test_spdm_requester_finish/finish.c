@@ -18,9 +18,9 @@ void spdm_secured_message_set_response_finished_key(void *spdm_secured_message_c
 
     secured_message_context = spdm_secured_message_context;
     ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem_s(secured_message_context->handshake_secret.response_finished_key,
-               sizeof(secured_message_context->handshake_secret.response_finished_key),
-               key, secured_message_context->hash_size);
+    copy_mem(secured_message_context->handshake_secret.response_finished_key,
+             sizeof(secured_message_context->handshake_secret.response_finished_key),
+             key, secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
@@ -42,8 +42,8 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 
     spdm_test_context = get_spdm_test_context();
 
-    copy_mem_s(response, *response_size,
-               spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
+    copy_mem(response, *response_size,
+             spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
     *response_size = spdm_test_context->test_buffer_size;
     return RETURN_SUCCESS;
 }
@@ -91,9 +91,9 @@ void test_spdm_send_receive_finish_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
 
     session_id = 0xFFFFFFFF;

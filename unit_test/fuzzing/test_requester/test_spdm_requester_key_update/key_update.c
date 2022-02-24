@@ -41,9 +41,9 @@ static void spdm_set_standard_key_update_test_state(libspdm_context_t *spdm_cont
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem_s(spdm_context->connection_info.peer_used_cert_chain_buffer,
-               sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-               data, data_size);
+    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+             data, data_size);
 #endif
     *session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -62,12 +62,12 @@ static void spdm_compute_secret_update(uintn hash_size, const uint8_t *in_secret
     uint16_t length;
 
     length = (uint16_t)hash_size;
-    copy_mem_s(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    copy_mem_s(m_bin_str9 + sizeof(uint16_t), sizeof(m_bin_str9) - sizeof(uint16_t),
-               SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem_s(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-               sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-               SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
+    copy_mem(m_bin_str9 + sizeof(uint16_t), sizeof(m_bin_str9) - sizeof(uint16_t),
+             SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+             sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+             SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
     m_bin_str9_size =
         sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 + sizeof(SPDM_BIN_STR_9_LABEL) - 1;
 
@@ -83,12 +83,12 @@ static void spdm_set_standard_key_update_test_secrets(
     set_mem(m_rsp_secret_buffer, secured_message_context->hash_size, rsp_secret_fill);
     set_mem(m_req_secret_buffer, secured_message_context->hash_size, req_secret_fill);
 
-    copy_mem_s(secured_message_context->application_secret.response_data_secret,
-               sizeof(secured_message_context->application_secret.response_data_secret),
-               m_rsp_secret_buffer, secured_message_context->aead_key_size);
-    copy_mem_s(secured_message_context->application_secret.request_data_secret,
-               sizeof(secured_message_context->application_secret.request_data_secret),
-               m_req_secret_buffer, secured_message_context->aead_key_size);
+    copy_mem(secured_message_context->application_secret.response_data_secret,
+             sizeof(secured_message_context->application_secret.response_data_secret),
+             m_rsp_secret_buffer, secured_message_context->aead_key_size);
+    copy_mem(secured_message_context->application_secret.request_data_secret,
+             sizeof(secured_message_context->application_secret.request_data_secret),
+             m_req_secret_buffer, secured_message_context->aead_key_size);
 
     set_mem(secured_message_context->application_secret.response_data_encryption_key,
             secured_message_context->aead_key_size, (uint8_t)(0xFF));
@@ -135,10 +135,10 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
     spdm_test_context_t *spdm_test_context;
     spdm_test_context = get_spdm_test_context();
     spdm_response_size = sizeof(spdm_key_update_response_t);
-    copy_mem_s(&spdm_response, sizeof(spdm_response),
-               (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-               spdm_response_size * sub_index,
-               sizeof(spdm_key_update_response_t));
+    copy_mem(&spdm_response, sizeof(spdm_response),
+             (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
+             spdm_response_size * sub_index,
+             sizeof(spdm_key_update_response_t));
     if (sub_index != 0) {
         sub_index = 0;
     }
