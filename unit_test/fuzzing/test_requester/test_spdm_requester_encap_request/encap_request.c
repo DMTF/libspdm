@@ -145,6 +145,7 @@ void libspdm_test_requester_encap_request(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_register_get_encap_response_func(spdm_context,libspdm_get_encap_response_digest);
     libspdm_send_receive_encap_request(spdm_context, &session_id);
+    free(data);
 }
 
 void run_test_harness(const void *test_buffer, uintn test_buffer_size)
