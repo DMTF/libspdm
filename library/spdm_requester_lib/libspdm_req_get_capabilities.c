@@ -17,8 +17,8 @@
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-bool spdm_check_response_flag_compability(uint32_t capabilities_flag,
-                                          uint8_t version)
+bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
+                                             uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
@@ -182,7 +182,7 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
                              sizeof(spdm_response.max_spdm_msg_size);
     }
 
-    if (!spdm_check_response_flag_compability(
+    if (!libspdm_check_response_flag_compability(
             spdm_response.flags, spdm_response.header.spdm_version)) {
         return RETURN_DEVICE_ERROR;
     }

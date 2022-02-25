@@ -42,7 +42,7 @@ typedef struct {
     uint32_t ext_asym_sel;
     uint32_t ext_hash_sel;
     spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
-} spdm_algorithms_response_max_t;
+} libspdm_algorithms_response_max_t;
 #pragma pack()
 
 /**
@@ -57,7 +57,7 @@ return_status libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     return_status status;
     libspdm_negotiate_algorithms_request_mine_t spdm_request;
-    spdm_algorithms_response_max_t spdm_response;
+    libspdm_algorithms_response_max_t spdm_response;
     uintn spdm_response_size;
     uint32_t algo_size;
     uintn index;

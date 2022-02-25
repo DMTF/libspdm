@@ -94,7 +94,7 @@ return_status libspdm_bin_concat(const char *label, uintn label_size,
  *
  * @retval RETURN_SUCCESS  SPDM AEAD key and IV for a session is generated.
  **/
-return_status spdm_generate_aead_key_and_iv(
+return_status libspdm_generate_aead_key_and_iv(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
 {
@@ -154,7 +154,7 @@ return_status spdm_generate_aead_key_and_iv(
  *
  * @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
  **/
-return_status spdm_generate_finished_key(
+return_status libspdm_generate_finished_key(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *handshake_secret, uint8_t *finished_key)
 {
@@ -312,7 +312,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    status = spdm_generate_finished_key(
+    status = libspdm_generate_finished_key(
         secured_message_context,
         secured_message_context->handshake_secret
         .request_handshake_secret,
@@ -321,7 +321,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         return status;
     }
 
-    status = spdm_generate_finished_key(
+    status = libspdm_generate_finished_key(
         secured_message_context,
         secured_message_context->handshake_secret
         .response_handshake_secret,
@@ -330,20 +330,20 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         return status;
     }
 
-    status = spdm_generate_aead_key_and_iv(secured_message_context,
-                                           secured_message_context->handshake_secret
-                                           .request_handshake_secret,
-                                           secured_message_context->handshake_secret
-                                           .request_handshake_encryption_key,
-                                           secured_message_context->handshake_secret
-                                           .request_handshake_salt);
+    status = libspdm_generate_aead_key_and_iv(secured_message_context,
+                                              secured_message_context->handshake_secret
+                                              .request_handshake_secret,
+                                              secured_message_context->handshake_secret
+                                              .request_handshake_encryption_key,
+                                              secured_message_context->handshake_secret
+                                              .request_handshake_salt);
     if (RETURN_ERROR(status)) {
         return status;
     }
     secured_message_context->handshake_secret
     .request_handshake_sequence_number = 0;
 
-    status = spdm_generate_aead_key_and_iv(
+    status = libspdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->handshake_secret
         .response_handshake_secret,
@@ -531,7 +531,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         hash_size);
     DEBUG((DEBUG_INFO, "\n"));
 
-    status = spdm_generate_aead_key_and_iv(
+    status = libspdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->application_secret.request_data_secret,
         secured_message_context->application_secret
@@ -543,7 +543,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     secured_message_context->application_secret
     .request_data_sequence_number = 0;
 
-    status = spdm_generate_aead_key_and_iv(
+    status = libspdm_generate_aead_key_and_iv(
         secured_message_context,
         secured_message_context->application_secret.response_data_secret,
         secured_message_context->application_secret
@@ -638,7 +638,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                    hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
-        status = spdm_generate_aead_key_and_iv(
+        status = libspdm_generate_aead_key_and_iv(
             secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
@@ -699,7 +699,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                    hash_size);
         DEBUG((DEBUG_INFO, "\n"));
 
-        status = spdm_generate_aead_key_and_iv(
+        status = libspdm_generate_aead_key_and_iv(
             secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,

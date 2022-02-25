@@ -308,9 +308,9 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
  * @retval RETURN_SUCCESS  SessionKeys are imported.
  */
 return_status
-spdm_secured_message_import_session_keys(void *spdm_secured_message_context,
-                                         const void *SessionKeys,
-                                         uintn SessionKeysSize)
+libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
+                                            const void *SessionKeys,
+                                            uintn SessionKeysSize)
 {
     libspdm_secured_message_context_t *secured_message_context;
     uintn struct_size;

@@ -26,10 +26,10 @@ typedef struct {
     uint8_t ext_hash_sel_count;
     uint16_t reserved3;
     spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
-} spdm_algorithms_response_mine_t;
+} libspdm_algorithms_response_mine_t;
 #pragma pack()
 
-uint32_t m_hash_priority_table[] = {
+uint32_t m_libspdm_hash_priority_table[] = {
 #if LIBSPDM_SHA512_SUPPORT == 1
     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
 #endif
@@ -53,7 +53,7 @@ uint32_t m_hash_priority_table[] = {
 #endif
 };
 
-uint32_t m_asym_priority_table[] = {
+uint32_t m_libspdm_asym_priority_table[] = {
 #if LIBSPDM_ECDSA_SUPPORT == 1
     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
@@ -80,7 +80,7 @@ uint32_t m_asym_priority_table[] = {
 #endif
 };
 
-uint32_t m_req_asym_priority_table[] = {
+uint32_t m_libspdm_req_asym_priority_table[] = {
 #if LIBSPDM_ECDSA_SUPPORT == 1
     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
@@ -107,7 +107,7 @@ uint32_t m_req_asym_priority_table[] = {
 #endif
 };
 
-uint32_t m_dhe_priority_table[] = {
+uint32_t m_libspdm_dhe_priority_table[] = {
 #if LIBSPDM_ECDHE_SUPPORT == 1
     SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1,
     SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1,
@@ -123,7 +123,7 @@ uint32_t m_dhe_priority_table[] = {
 #endif
 };
 
-uint32_t m_aead_priority_table[] = {
+uint32_t m_libspdm_aead_priority_table[] = {
 #if LIBSPDM_AEAD_GCM_SUPPORT == 1
     SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM,
     SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM,
@@ -136,11 +136,11 @@ uint32_t m_aead_priority_table[] = {
 #endif
 };
 
-uint32_t m_key_schedule_priority_table[] = {
+uint32_t m_libspdm_key_schedule_priority_table[] = {
     SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH,
 };
 
-uint32_t m_measurement_hash_priority_table[] = {
+uint32_t m_libspdm_measurement_hash_priority_table[] = {
 #if LIBSPDM_SHA512_SUPPORT == 1
     SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512,
 #endif
@@ -165,11 +165,11 @@ uint32_t m_measurement_hash_priority_table[] = {
     SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY,
 };
 
-uint32_t m_measurement_spec_priority_table[] = {
+uint32_t m_libspdm_measurement_spec_priority_table[] = {
     SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
 
-uint32_t m_other_params_support_priority_table[] = {
+uint32_t m_libspdm_other_params_support_priority_table[] = {
     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
 };
 
@@ -183,9 +183,9 @@ uint32_t m_other_params_support_priority_table[] = {
  *
  * @return final preferred supported algorithm
  **/
-uint32_t spdm_prioritize_algorithm(const uint32_t *priority_table,
-                                   uintn priority_table_count,
-                                   uint32_t local_algo, uint32_t peer_algo)
+uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
+                                      uintn priority_table_count,
+                                      uint32_t local_algo, uint32_t peer_algo)
 {
     uint32_t common_algo;
     uintn index;
@@ -225,7 +225,7 @@ return_status libspdm_get_response_algorithms(void *context,
 {
     const spdm_negotiate_algorithms_request_t *spdm_request;
     uintn spdm_request_size;
-    spdm_algorithms_response_mine_t *spdm_response;
+    libspdm_algorithms_response_mine_t *spdm_response;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     uintn index;
     libspdm_context_t *spdm_context;
@@ -352,8 +352,8 @@ return_status libspdm_get_response_algorithms(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(spdm_algorithms_response_mine_t));
-    *response_size = sizeof(spdm_algorithms_response_mine_t);
+    ASSERT(*response_size >= sizeof(libspdm_algorithms_response_mine_t));
+    *response_size = sizeof(libspdm_algorithms_response_mine_t);
     zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -364,7 +364,7 @@ return_status libspdm_get_response_algorithms(void *context,
     } else {
         spdm_response->header.param1 = 0;
         *response_size =
-            sizeof(spdm_algorithms_response_mine_t) -
+            sizeof(libspdm_algorithms_response_mine_t) -
             sizeof(spdm_negotiate_algorithms_common_struct_table_t) *
             4;
     }
@@ -425,64 +425,64 @@ return_status libspdm_get_response_algorithms(void *context,
     }
 
     spdm_response->measurement_specification_sel =
-        (uint8_t)spdm_prioritize_algorithm(
-            m_measurement_spec_priority_table,
-            ARRAY_SIZE(m_measurement_spec_priority_table),
+        (uint8_t)libspdm_prioritize_algorithm(
+            m_libspdm_measurement_spec_priority_table,
+            ARRAY_SIZE(m_libspdm_measurement_spec_priority_table),
             spdm_context->local_context.algorithm.measurement_spec,
             spdm_context->connection_info.algorithm
             .measurement_spec);
-    spdm_response->measurement_hash_algo = spdm_prioritize_algorithm(
-        m_measurement_hash_priority_table,
-        ARRAY_SIZE(m_measurement_hash_priority_table),
+    spdm_response->measurement_hash_algo = libspdm_prioritize_algorithm(
+        m_libspdm_measurement_hash_priority_table,
+        ARRAY_SIZE(m_libspdm_measurement_hash_priority_table),
         spdm_context->local_context.algorithm.measurement_hash_algo,
         spdm_context->connection_info.algorithm.measurement_hash_algo);
-    spdm_response->base_asym_sel = spdm_prioritize_algorithm(
-        m_asym_priority_table, ARRAY_SIZE(m_asym_priority_table),
+    spdm_response->base_asym_sel = libspdm_prioritize_algorithm(
+        m_libspdm_asym_priority_table, ARRAY_SIZE(m_libspdm_asym_priority_table),
         spdm_context->local_context.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_asym_algo);
-    spdm_response->base_hash_sel = spdm_prioritize_algorithm(
-        m_hash_priority_table, ARRAY_SIZE(m_hash_priority_table),
+    spdm_response->base_hash_sel = libspdm_prioritize_algorithm(
+        m_libspdm_hash_priority_table, ARRAY_SIZE(m_libspdm_hash_priority_table),
         spdm_context->local_context.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_response->struct_table[0].alg_type =
         SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
     spdm_response->struct_table[0].alg_count = 0x20;
     spdm_response->struct_table[0].alg_supported =
-        (uint16_t)spdm_prioritize_algorithm(
-            m_dhe_priority_table, ARRAY_SIZE(m_dhe_priority_table),
+        (uint16_t)libspdm_prioritize_algorithm(
+            m_libspdm_dhe_priority_table, ARRAY_SIZE(m_libspdm_dhe_priority_table),
             spdm_context->local_context.algorithm.dhe_named_group,
             spdm_context->connection_info.algorithm.dhe_named_group);
     spdm_response->struct_table[1].alg_type =
         SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
     spdm_response->struct_table[1].alg_count = 0x20;
     spdm_response->struct_table[1]
-    .alg_supported = (uint16_t)spdm_prioritize_algorithm(
-        m_aead_priority_table, ARRAY_SIZE(m_aead_priority_table),
+    .alg_supported = (uint16_t)libspdm_prioritize_algorithm(
+        m_libspdm_aead_priority_table, ARRAY_SIZE(m_libspdm_aead_priority_table),
         spdm_context->local_context.algorithm.aead_cipher_suite,
         spdm_context->connection_info.algorithm.aead_cipher_suite);
     spdm_response->struct_table[2].alg_type =
         SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
     spdm_response->struct_table[2].alg_count = 0x20;
     spdm_response->struct_table[2]
-    .alg_supported = (uint16_t)spdm_prioritize_algorithm(
-        m_req_asym_priority_table,
-        ARRAY_SIZE(m_req_asym_priority_table),
+    .alg_supported = (uint16_t)libspdm_prioritize_algorithm(
+        m_libspdm_req_asym_priority_table,
+        ARRAY_SIZE(m_libspdm_req_asym_priority_table),
         spdm_context->local_context.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_base_asym_alg);
     spdm_response->struct_table[3].alg_type =
         SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
     spdm_response->struct_table[3].alg_count = 0x20;
     spdm_response->struct_table[3].alg_supported =
-        (uint16_t)spdm_prioritize_algorithm(
-            m_key_schedule_priority_table,
-            ARRAY_SIZE(m_key_schedule_priority_table),
+        (uint16_t)libspdm_prioritize_algorithm(
+            m_libspdm_key_schedule_priority_table,
+            ARRAY_SIZE(m_libspdm_key_schedule_priority_table),
             spdm_context->local_context.algorithm.key_schedule,
             spdm_context->connection_info.algorithm.key_schedule);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response->other_params_support =
-            (uint8_t)spdm_prioritize_algorithm(
-                m_other_params_support_priority_table,
-                ARRAY_SIZE(m_other_params_support_priority_table),
+            (uint8_t)libspdm_prioritize_algorithm(
+                m_libspdm_other_params_support_priority_table,
+                ARRAY_SIZE(m_libspdm_other_params_support_priority_table),
                 spdm_context->local_context.algorithm.other_params_support,
                 spdm_context->connection_info.algorithm.other_params_support);
     }

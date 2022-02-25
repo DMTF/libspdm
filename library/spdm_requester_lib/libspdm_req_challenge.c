@@ -16,7 +16,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
-} spdm_challenge_auth_response_max_t;
+} libspdm_challenge_auth_response_max_t;
 
 #pragma pack()
 
@@ -44,18 +44,18 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_challenge(void *context, uint8_t slot_id,
-                                 uint8_t measurement_hash_type,
-                                 void *measurement_hash,
-                                 uint8_t *slot_mask,
-                                 const void *requester_nonce_in,
-                                 void *requester_nonce,
-                                 void *responder_nonce)
+return_status libspdm_try_challenge(void *context, uint8_t slot_id,
+                                    uint8_t measurement_hash_type,
+                                    void *measurement_hash,
+                                    uint8_t *slot_mask,
+                                    const void *requester_nonce_in,
+                                    void *requester_nonce,
+                                    void *responder_nonce)
 {
     return_status status;
     bool result;
     spdm_challenge_request_t spdm_request;
-    spdm_challenge_auth_response_max_t spdm_response;
+    libspdm_challenge_auth_response_max_t spdm_response;
     uintn spdm_response_size;
     uint8_t *ptr;
     void *cert_chain_hash;
@@ -136,7 +136,7 @@ return_status try_spdm_challenge(void *context, uint8_t slot_id,
             spdm_context, NULL,
             &spdm_response_size,
             &spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
-            sizeof(spdm_challenge_auth_response_max_t));
+            sizeof(libspdm_challenge_auth_response_max_t));
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -332,9 +332,9 @@ return_status libspdm_challenge(void *context, uint8_t slot_id,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_challenge(spdm_context, slot_id,
-                                    measurement_hash_type,
-                                    measurement_hash, slot_mask, NULL, NULL, NULL);
+        status = libspdm_try_challenge(spdm_context, slot_id,
+                                       measurement_hash_type,
+                                       measurement_hash, slot_mask, NULL, NULL, NULL);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }
@@ -381,12 +381,12 @@ return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_challenge(spdm_context, slot_id,
-                                    measurement_hash_type,
-                                    measurement_hash,
-                                    slot_mask,
-                                    requester_nonce_in,
-                                    requester_nonce, responder_nonce);
+        status = libspdm_try_challenge(spdm_context, slot_id,
+                                       measurement_hash_type,
+                                       measurement_hash,
+                                       slot_mask,
+                                       requester_nonce_in,
+                                       requester_nonce, responder_nonce);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

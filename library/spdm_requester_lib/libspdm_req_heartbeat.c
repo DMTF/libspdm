@@ -11,7 +11,7 @@
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
-} spdm_heartbeat_response_mine_t;
+} libspdm_heartbeat_response_mine_t;
 
 #pragma pack()
 
@@ -26,11 +26,11 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_heartbeat(void *context, uint32_t session_id)
+return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
 {
     return_status status;
     spdm_heartbeat_request_t spdm_request;
-    spdm_heartbeat_response_mine_t spdm_response;
+    libspdm_heartbeat_response_mine_t spdm_response;
     uintn spdm_response_size;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -90,7 +90,7 @@ return_status try_spdm_heartbeat(void *context, uint32_t session_id)
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_HEARTBEAT, SPDM_HEARTBEAT_ACK,
-            sizeof(spdm_heartbeat_response_mine_t));
+            sizeof(libspdm_heartbeat_response_mine_t));
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -115,7 +115,7 @@ return_status libspdm_heartbeat(void *context, uint32_t session_id)
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_heartbeat(spdm_context, session_id);
+        status = libspdm_try_heartbeat(spdm_context, session_id);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

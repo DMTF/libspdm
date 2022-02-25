@@ -11,7 +11,7 @@
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
-} spdm_key_update_response_mine_t;
+} libspdm_key_update_response_mine_t;
 
 #pragma pack()
 
@@ -32,13 +32,13 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_key_update(void *context, uint32_t session_id,
-                                  bool single_direction, bool *key_updated)
+return_status libspdm_try_key_update(void *context, uint32_t session_id,
+                                     bool single_direction, bool *key_updated)
 {
     return_status status;
     return_status temp_status;
     spdm_key_update_request_t spdm_request;
-    spdm_key_update_response_mine_t spdm_response;
+    libspdm_key_update_response_mine_t spdm_response;
     uintn spdm_response_size;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -138,7 +138,7 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
                 spdm_context, &session_id,
                 &spdm_response_size, &spdm_response,
                 SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
-                sizeof(spdm_key_update_response_mine_t));
+                sizeof(libspdm_key_update_response_mine_t));
             if (RETURN_ERROR(status)) {
                 if (!single_direction) {
                     DEBUG((DEBUG_INFO,
@@ -246,7 +246,7 @@ return_status try_spdm_key_update(void *context, uint32_t session_id,
             spdm_context, &session_id,
             &spdm_response_size, &spdm_response,
             SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
-            sizeof(spdm_key_update_response_mine_t));
+            sizeof(libspdm_key_update_response_mine_t));
         if (RETURN_ERROR(status)) {
             DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
             return status;
@@ -278,8 +278,8 @@ return_status libspdm_key_update(void *context, uint32_t session_id,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_key_update(context, session_id,
-                                     single_direction, &key_updated);
+        status = libspdm_try_key_update(context, session_id,
+                                        single_direction, &key_updated);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }

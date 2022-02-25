@@ -9,9 +9,9 @@
 typedef struct {
     uint8_t request_response_code;
     libspdm_get_encap_response_func get_encap_response_func;
-} spdm_get_encap_response_struct_t;
+} libspdm_get_encap_response_struct_t;
 
-spdm_get_encap_response_struct_t m_spdm_get_encap_response_struct[] = {
+libspdm_get_encap_response_struct_t m_libspdm_get_encap_response_struct[] = {
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
@@ -54,18 +54,18 @@ void libspdm_register_get_encap_response_func(void *context,
  * @return GET_ENCAP_RESPONSE function according to the request code.
  **/
 libspdm_get_encap_response_func
-SpdmGetEncapResponseFuncViaRequestCode(uint8_t request_response_code)
+libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 {
     uintn index;
 
     for (index = 0;
-         index < sizeof(m_spdm_get_encap_response_struct) /
-         sizeof(m_spdm_get_encap_response_struct[0]);
+         index < sizeof(m_libspdm_get_encap_response_struct) /
+         sizeof(m_libspdm_get_encap_response_struct[0]);
          index++) {
         if (request_response_code ==
-            m_spdm_get_encap_response_struct[index]
+            m_libspdm_get_encap_response_struct[index]
             .request_response_code) {
-            return m_spdm_get_encap_response_struct[index]
+            return m_libspdm_get_encap_response_struct[index]
                    .get_encap_response_func;
         }
     }
@@ -84,11 +84,11 @@ SpdmGetEncapResponseFuncViaRequestCode(uint8_t request_response_code)
  * @retval RETURN_SUCCESS               The SPDM response is processed successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
-return_status SpdmProcessEncapsulatedRequest(libspdm_context_t *spdm_context,
-                                             uintn encap_request_size,
-                                             void *encap_request,
-                                             uintn *encap_response_size,
-                                             void *encap_response)
+return_status libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
+                                                   uintn encap_request_size,
+                                                   void *encap_request,
+                                                   uintn *encap_response_size,
+                                                   void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
     return_status status;
@@ -102,7 +102,7 @@ return_status SpdmProcessEncapsulatedRequest(libspdm_context_t *spdm_context,
             encap_response_size, encap_response);
     }
 
-    get_encap_response_func = SpdmGetEncapResponseFuncViaRequestCode(
+    get_encap_response_func = libspdm_get_encap_response_func_via_request_code(
         spdm_requester->request_response_code);
     if (get_encap_response_func == NULL) {
         get_encap_response_func =
@@ -298,7 +298,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             sizeof(request) -
             sizeof(spdm_deliver_encapsulated_response_request_t);
 
-        status = SpdmProcessEncapsulatedRequest(
+        status = libspdm_process_encapsulated_request(
             spdm_context, encapsulated_request_size,
             encapsulated_request, &encapsulated_response_size,
             encapsulated_response);

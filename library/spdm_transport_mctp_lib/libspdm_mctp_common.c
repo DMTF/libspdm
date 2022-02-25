@@ -21,10 +21,10 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status mctp_encode_message(const uint32_t *session_id, uintn message_size,
-                                  const void *message,
-                                  uintn *transport_message_size,
-                                  void *transport_message);
+return_status libspdm_mctp_encode_message(const uint32_t *session_id, uintn message_size,
+                                          const void *message,
+                                          uintn *transport_message_size,
+                                          void *transport_message);
 
 /**
  * Decode a transport message to a normal message or secured message.
@@ -39,11 +39,11 @@ return_status mctp_encode_message(const uint32_t *session_id, uintn message_size
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status mctp_decode_message(uint32_t **session_id,
-                                  uintn transport_message_size,
-                                  const void *transport_message,
-                                  uintn *message_size,
-                                  void *message);
+return_status libspdm_mctp_decode_message(uint32_t **session_id,
+                                          uintn transport_message_size,
+                                          const void *transport_message,
+                                          uintn *message_size,
+                                          void *message);
 
 /**
  * Encode a normal message or secured message to a transport message.
@@ -59,7 +59,7 @@ return_status mctp_decode_message(uint32_t **session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-typedef return_status (*transport_encode_message_func)(
+typedef return_status (*libspdm_mctp_encode_message_func)(
     const uint32_t *session_id, uintn message_size, const void *message,
     uintn *transport_message_size, void *transport_message);
 
@@ -76,7 +76,7 @@ typedef return_status (*transport_encode_message_func)(
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-typedef return_status (*transport_decode_message_func)(
+typedef return_status (*libspdm_mctp_decode_message_func)(
     uint32_t **session_id, uintn transport_message_size,
     const void *transport_message, uintn *message_size,
     void *message);
@@ -112,7 +112,7 @@ return_status libspdm_transport_mctp_encode_message(
     uintn *transport_message_size, void *transport_message)
 {
     return_status status;
-    transport_encode_message_func transport_encode_message;
+    libspdm_mctp_encode_message_func transport_encode_message;
     uint8_t app_message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *app_message;
     uintn app_message_size;
@@ -132,7 +132,7 @@ return_status libspdm_transport_mctp_encode_message(
         return RETURN_UNSUPPORTED;
     }
 
-    transport_encode_message = mctp_encode_message;
+    transport_encode_message = libspdm_mctp_encode_message;
     if (session_id != NULL) {
         secured_message_context =
             libspdm_get_secured_message_context_via_session_id(
@@ -228,7 +228,7 @@ return_status libspdm_transport_mctp_decode_message(
     uintn *message_size, void *message)
 {
     return_status status;
-    transport_decode_message_func transport_decode_message;
+    libspdm_mctp_decode_message_func transport_decode_message;
     uint32_t *secured_message_session_id;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
@@ -253,7 +253,7 @@ return_status libspdm_transport_mctp_decode_message(
         return RETURN_UNSUPPORTED;
     }
 
-    transport_decode_message = mctp_decode_message;
+    transport_decode_message = libspdm_mctp_decode_message;
 
     secured_message_session_id = NULL;
     /* Detect received message*/

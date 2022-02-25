@@ -11,7 +11,7 @@
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
-} spdm_end_session_response_mine_t;
+} libspdm_end_session_response_mine_t;
 
 #pragma pack()
 
@@ -32,7 +32,7 @@ return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_conte
     return_status status;
     spdm_end_session_request_t spdm_request;
     uintn spdm_request_size;
-    spdm_end_session_response_mine_t spdm_response;
+    libspdm_end_session_response_mine_t spdm_response;
     uintn spdm_response_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -93,7 +93,7 @@ return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_conte
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,
-            sizeof(spdm_end_session_response_mine_t));
+            sizeof(libspdm_end_session_response_mine_t));
         if (RETURN_ERROR(status)) {
             return status;
         }

@@ -21,12 +21,12 @@
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
-                                              const uint32_t *session_id,
-                                              uintn *response_size,
-                                              void *response,
-                                              uint8_t expected_response_code,
-                                              uintn expected_response_size)
+return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
+                                                 const uint32_t *session_id,
+                                                 uintn *response_size,
+                                                 void *response,
+                                                 uint8_t expected_response_code,
+                                                 uintn expected_response_size)
 {
     return_status status;
     spdm_response_if_ready_request_t spdm_request;
@@ -119,13 +119,13 @@ return_status libspdm_handle_simple_error_response(void *context,
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status spdm_handle_response_not_ready(libspdm_context_t *spdm_context,
-                                             const uint32_t *session_id,
-                                             uintn *response_size,
-                                             void *response,
-                                             uint8_t original_request_code,
-                                             uint8_t expected_response_code,
-                                             uintn expected_response_size)
+return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
+                                                const uint32_t *session_id,
+                                                uintn *response_size,
+                                                void *response,
+                                                uint8_t original_request_code,
+                                                uint8_t expected_response_code,
+                                                uintn expected_response_size)
 {
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;
@@ -151,10 +151,10 @@ return_status spdm_handle_response_not_ready(libspdm_context_t *spdm_context,
     spdm_context->error_data.rd_tm = extend_error_data->rd_tm;
 
     libspdm_sleep((2 << extend_error_data->rd_exponent)/1000);
-    return spdm_requester_respond_if_ready(spdm_context, session_id,
-                                           response_size, response,
-                                           expected_response_code,
-                                           expected_response_size);
+    return libspdm_requester_respond_if_ready(spdm_context, session_id,
+                                              response_size, response,
+                                              expected_response_code,
+                                              expected_response_size);
 }
 
 /**
@@ -201,11 +201,11 @@ return_status libspdm_handle_error_response_main(
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     } else if(spdm_response->param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
-        return spdm_handle_response_not_ready(spdm_context, session_id,
-                                              response_size, response,
-                                              original_request_code,
-                                              expected_response_code,
-                                              expected_response_size);
+        return libspdm_handle_response_not_ready(spdm_context, session_id,
+                                                 response_size, response,
+                                                 original_request_code,
+                                                 expected_response_code,
+                                                 expected_response_size);
     } else {
         return libspdm_handle_simple_error_response(spdm_context,
                                                     spdm_response->param1);

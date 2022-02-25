@@ -12,7 +12,7 @@ typedef struct {
     uint8_t reserved;
     uint8_t version_number_entry_count;
     spdm_version_number_t version_number_entry[SPDM_MAX_VERSION_COUNT];
-} spdm_version_response_mine_t;
+} libspdm_version_response_mine_t;
 #pragma pack()
 
 /**
@@ -38,7 +38,7 @@ return_status libspdm_get_response_version(void *context, uintn request_size,
                                            void *response)
 {
     const spdm_get_version_request_t *spdm_request;
-    spdm_version_response_mine_t *spdm_response;
+    libspdm_version_response_mine_t *spdm_response;
     libspdm_context_t *spdm_context;
     return_status status;
 
@@ -91,7 +91,7 @@ return_status libspdm_get_response_version(void *context, uintn request_size,
     }
 
     libspdm_reset_context(spdm_context);
-    ASSERT(*response_size >= sizeof(spdm_version_response_mine_t));
+    ASSERT(*response_size >= sizeof(libspdm_version_response_mine_t));
     *response_size =
         sizeof(spdm_version_response_t) +
         spdm_context->local_context.version.spdm_version_count *

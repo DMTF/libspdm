@@ -11,7 +11,7 @@
 typedef struct {
     spdm_message_header_t header;
     uint8_t digest[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
-} spdm_digests_response_max_t;
+} libspdm_digests_response_max_t;
 
 #pragma pack()
 
@@ -34,13 +34,13 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
-                                  void *total_digest_buffer)
+return_status libspdm_try_get_digest(void *context, uint8_t *slot_mask,
+                                     void *total_digest_buffer)
 {
     bool result;
     return_status status;
     spdm_get_digest_request_t spdm_request;
-    spdm_digests_response_max_t spdm_response;
+    libspdm_digests_response_max_t spdm_response;
     uintn spdm_response_size;
     uintn digest_size;
     uintn digest_count;
@@ -89,7 +89,7 @@ return_status try_spdm_get_digest(void *context, uint8_t *slot_mask,
             spdm_context, NULL,
             &spdm_response_size,
             &spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
-            sizeof(spdm_digests_response_max_t));
+            sizeof(libspdm_digests_response_max_t));
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -193,8 +193,8 @@ return_status libspdm_get_digest(void *context, uint8_t *slot_mask,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_digest(spdm_context, slot_mask,
-                                     total_digest_buffer);
+        status = libspdm_try_get_digest(spdm_context, slot_mask,
+                                        total_digest_buffer);
         if (RETURN_NO_RESPONSE != status) {
             return status;
         }
