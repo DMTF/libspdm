@@ -51,9 +51,6 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int copy_mem_s(void *restrict dst_buf, uintn dst_len,
-               const void *restrict src_buf, uintn src_len);
-
 int copy_mem(void *restrict dst_buf, uintn dst_len,
              const void *restrict src_buf, uintn src_len);
 
