@@ -12,12 +12,12 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
-} spdm_finish_request_mine_t;
+} libspdm_finish_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
-} spdm_finish_response_mine_t;
+} libspdm_finish_response_mine_t;
 
 #pragma pack()
 
@@ -38,11 +38,11 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
                                               uint8_t req_slot_id_param)
 {
     return_status status;
-    spdm_finish_request_mine_t spdm_request;
+    libspdm_finish_request_mine_t spdm_request;
     uintn spdm_request_size;
     uintn signature_size;
     uintn hmac_size;
-    spdm_finish_response_mine_t spdm_response;
+    libspdm_finish_response_mine_t spdm_response;
     uintn spdm_response_size;
     libspdm_session_info_t *session_info;
     uint8_t *ptr;
@@ -200,7 +200,7 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
             spdm_context, &session_id,
             &spdm_response_size, &spdm_response,
             SPDM_FINISH, SPDM_FINISH_RSP,
-            sizeof(spdm_finish_response_mine_t));
+            sizeof(libspdm_finish_response_mine_t));
         if (RETURN_ERROR(status)) {
             goto error;
         }

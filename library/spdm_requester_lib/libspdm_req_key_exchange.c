@@ -19,7 +19,7 @@ typedef struct {
     uint8_t exchange_data[LIBSPDM_MAX_DHE_KEY_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-} spdm_key_exchange_request_mine_t;
+} libspdm_key_exchange_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
@@ -33,7 +33,7 @@ typedef struct {
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
-} spdm_key_exchange_response_max_t;
+} libspdm_key_exchange_response_max_t;
 
 #pragma pack()
 
@@ -66,9 +66,9 @@ return_status libspdm_try_send_receive_key_exchange(
 {
     bool result;
     return_status status;
-    spdm_key_exchange_request_mine_t spdm_request;
+    libspdm_key_exchange_request_mine_t spdm_request;
     uintn spdm_request_size;
-    spdm_key_exchange_response_max_t spdm_response;
+    libspdm_key_exchange_response_max_t spdm_response;
     uintn spdm_response_size;
     uintn dhe_key_size;
     uint32_t measurement_summary_hash_size;
@@ -207,7 +207,7 @@ return_status libspdm_try_send_receive_key_exchange(
             spdm_context, NULL, &spdm_response_size,
             &spdm_response, SPDM_KEY_EXCHANGE,
             SPDM_KEY_EXCHANGE_RSP,
-            sizeof(spdm_key_exchange_response_max_t));
+            sizeof(libspdm_key_exchange_response_max_t));
         if (RETURN_ERROR(status)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm

@@ -10,9 +10,9 @@
 typedef struct {
     uint8_t request_response_code;
     libspdm_get_spdm_response_func get_response_func;
-} spdm_get_response_struct_t;
+} libspdm_get_response_struct_t;
 
-spdm_get_response_struct_t mSpdmGetResponseStruct[] = {
+libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
     { SPDM_GET_VERSION, libspdm_get_response_version },
     { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
     { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
@@ -75,12 +75,12 @@ libspdm_get_response_func_via_request_code(uint8_t request_code)
     uintn index;
 
     ASSERT(request_code != SPDM_RESPOND_IF_READY);
-    for (index = 0; index < sizeof(mSpdmGetResponseStruct) /
-         sizeof(mSpdmGetResponseStruct[0]);
+    for (index = 0; index < sizeof(m_libspdm_get_response_struct) /
+         sizeof(m_libspdm_get_response_struct[0]);
          index++) {
         if (request_code ==
-            mSpdmGetResponseStruct[index].request_response_code) {
-            return mSpdmGetResponseStruct[index].get_response_func;
+            m_libspdm_get_response_struct[index].request_response_code) {
+            return m_libspdm_get_response_struct[index].get_response_func;
         }
     }
     return NULL;
@@ -94,7 +94,7 @@ libspdm_get_response_func_via_request_code(uint8_t request_code)
  * @return GET_SPDM_RESPONSE function according to the last request.
  **/
 libspdm_get_spdm_response_func
-spdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
+libspdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
 {
     spdm_message_header_t *spdm_request;
 
@@ -200,9 +200,9 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
  * @param  session_id                    The session_id of a session.
  * @param  session_state                 The state of a session.
  **/
-void spdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
-                                         uint32_t session_id,
-                                         libspdm_session_state_t session_state)
+void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
+                                            uint32_t session_id,
+                                            libspdm_session_state_t session_state)
 {
     uintn index;
 
@@ -241,7 +241,7 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
     if (old_session_state != session_state) {
         libspdm_secured_message_set_session_state(
             session_info->secured_message_context, session_state);
-        spdm_trigger_session_state_callback(
+        libspdm_trigger_session_state_callback(
             spdm_context, session_info->session_id, session_state);
     }
 }
@@ -252,9 +252,9 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  **/
-void spdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
-                                            const libspdm_connection_state_t
-                                            connection_state)
+void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
+                                               const libspdm_connection_state_t
+                                               connection_state)
 {
     uintn index;
 
@@ -281,8 +281,8 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
         connection_state) {
         spdm_context->connection_info.connection_state =
             connection_state;
-        spdm_trigger_connection_state_callback(spdm_context,
-                                               connection_state);
+        libspdm_trigger_connection_state_callback(spdm_context,
+                                                  connection_state);
     }
 }
 
@@ -413,7 +413,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     get_response_func = NULL;
     if (!is_app_message) {
         get_response_func =
-            spdm_get_response_func_via_last_request(spdm_context);
+            libspdm_get_response_func_via_last_request(spdm_context);
         if (get_response_func != NULL) {
             status = get_response_func(
                 spdm_context,

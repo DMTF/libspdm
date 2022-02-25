@@ -17,7 +17,7 @@
  * @retval True                         The received SPDM version is valid.
  * @retval False                        The received SPDM version is invalid.
  **/
-bool spdm_check_request_version_compability(libspdm_context_t *spdm_context, uint8_t version)
+bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context, uint8_t version)
 {
     uint8_t local_ver;
     uintn index;
@@ -46,8 +46,8 @@ bool spdm_check_request_version_compability(libspdm_context_t *spdm_context, uin
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-bool spdm_check_request_flag_compability(uint32_t capabilities_flag,
-                                         uint8_t version)
+bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
+                                            uint8_t version)
 {
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
     /*uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;*/
@@ -169,7 +169,7 @@ return_status libspdm_get_response_capabilities(void *context,
                                                0, response_size, response);
     }
 
-    if (!spdm_check_request_version_compability(
+    if (!libspdm_check_request_version_compability(
             spdm_context, spdm_request->header.spdm_version)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
@@ -198,7 +198,7 @@ return_status libspdm_get_response_capabilities(void *context,
         }
     }
 
-    if (!spdm_check_request_flag_compability(
+    if (!libspdm_check_request_flag_compability(
             spdm_request->flags, spdm_request->header.spdm_version)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

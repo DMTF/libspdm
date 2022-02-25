@@ -59,10 +59,10 @@ uint32_t libspdm_pci_doe_get_max_random_number_count(void)
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status pci_doe_encode_message(const uint32_t *session_id,
-                                     uintn message_size, const void *message,
-                                     uintn *transport_message_size,
-                                     void *transport_message)
+return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
+                                             uintn message_size, const void *message,
+                                             uintn *transport_message_size,
+                                             void *transport_message)
 {
     uintn aligned_message_size;
     uintn alignment;
@@ -128,11 +128,11 @@ return_status pci_doe_encode_message(const uint32_t *session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status pci_doe_decode_message(uint32_t **session_id,
-                                     uintn transport_message_size,
-                                     const void *transport_message,
-                                     uintn *message_size,
-                                     void *message)
+return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
+                                             uintn transport_message_size,
+                                             const void *transport_message,
+                                             uintn *message_size,
+                                             void *message)
 {
     uintn alignment;
     const pci_doe_data_object_header_t *pci_doe_header;

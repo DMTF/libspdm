@@ -13,12 +13,12 @@
 typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
-} spdm_psk_finish_request_mine_t;
+} libspdm_psk_finish_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
-} spdm_psk_finish_response_max_t;
+} libspdm_psk_finish_response_max_t;
 
 #pragma pack()
 
@@ -35,10 +35,10 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
                                                   uint32_t session_id)
 {
     return_status status;
-    spdm_psk_finish_request_mine_t spdm_request;
+    libspdm_psk_finish_request_mine_t spdm_request;
     uintn spdm_request_size;
     uintn hmac_size;
-    spdm_psk_finish_response_max_t spdm_response;
+    libspdm_psk_finish_response_max_t spdm_response;
     uintn spdm_response_size;
     libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
@@ -140,7 +140,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
             spdm_context, &session_id,
             &spdm_response_size, &spdm_response,
             SPDM_PSK_FINISH, SPDM_PSK_FINISH_RSP,
-            sizeof(spdm_psk_finish_response_max_t));
+            sizeof(libspdm_psk_finish_response_max_t));
         if (RETURN_ERROR(status)) {
             goto error;
         }

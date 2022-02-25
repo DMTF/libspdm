@@ -19,7 +19,7 @@ typedef struct {
     uint8_t psk_hint[LIBSPDM_PSK_MAX_HINT_LENGTH];
     uint8_t context[LIBSPDM_PSK_CONTEXT_LENGTH];
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-} spdm_psk_exchange_request_mine_t;
+} libspdm_psk_exchange_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
@@ -31,7 +31,7 @@ typedef struct {
     uint8_t context[LIBSPDM_PSK_CONTEXT_LENGTH];
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
-} spdm_psk_exchange_response_max_t;
+} libspdm_psk_exchange_response_max_t;
 
 #pragma pack()
 
@@ -73,9 +73,9 @@ return_status libspdm_try_send_receive_psk_exchange(
 {
     bool result;
     return_status status;
-    spdm_psk_exchange_request_mine_t spdm_request;
+    libspdm_psk_exchange_request_mine_t spdm_request;
     uintn spdm_request_size;
-    spdm_psk_exchange_response_max_t spdm_response;
+    libspdm_psk_exchange_response_max_t spdm_response;
     uintn spdm_response_size;
     uint32_t measurement_summary_hash_size;
     uint32_t hmac_size;
@@ -218,7 +218,7 @@ return_status libspdm_try_send_receive_psk_exchange(
             spdm_context, NULL, &spdm_response_size,
             &spdm_response, SPDM_PSK_EXCHANGE,
             SPDM_PSK_EXCHANGE_RSP,
-            sizeof(spdm_psk_exchange_response_max_t));
+            sizeof(libspdm_psk_exchange_response_max_t));
         if (RETURN_ERROR(status)) {
             return status;
         }

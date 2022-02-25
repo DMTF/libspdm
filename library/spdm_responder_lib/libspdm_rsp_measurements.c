@@ -21,10 +21,10 @@
  * @retval true  measurement signature is created.
  * @retval false measurement signature is not created.
  **/
-bool spdm_create_measurement_signature(libspdm_context_t *spdm_context,
-                                       libspdm_session_info_t *session_info,
-                                       void *response_message,
-                                       uintn response_message_size)
+bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
+                                          libspdm_session_info_t *session_info,
+                                          void *response_message,
+                                          uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_sig_size;
@@ -76,9 +76,9 @@ bool spdm_create_measurement_signature(libspdm_context_t *spdm_context,
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
-bool spdm_create_measurement_opaque(libspdm_context_t *spdm_context,
-                                    void *response_message,
-                                    uintn response_message_size)
+bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
+                                       void *response_message,
+                                       uintn response_message_size)
 {
     uint8_t *ptr;
     uintn measurment_no_sig_size;
@@ -425,8 +425,8 @@ return_status libspdm_get_response_measurements(void *context,
             }
         }
     } else {
-        if(!spdm_create_measurement_opaque(spdm_context, spdm_response,
-                                           spdm_response_size)) {
+        if(!libspdm_create_measurement_opaque(spdm_context, spdm_response,
+                                              spdm_response_size)) {
             return RETURN_DEVICE_ERROR;
         }
     }
@@ -447,7 +447,7 @@ return_status libspdm_get_response_measurements(void *context,
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) !=
         0) {
 
-        ret = spdm_create_measurement_signature(
+        ret = libspdm_create_measurement_signature(
             spdm_context, session_info, spdm_response,
             spdm_response_size);
         if (!ret) {

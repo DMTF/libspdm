@@ -18,7 +18,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
-} spdm_measurements_response_max_t;
+} libspdm_measurements_response_max_t;
 #pragma pack()
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
@@ -49,23 +49,23 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status try_spdm_get_measurement(void *context, const uint32_t *session_id,
-                                       uint8_t request_attribute,
-                                       uint8_t measurement_operation,
-                                       uint8_t slot_id_param,
-                                       uint8_t *content_changed,
-                                       uint8_t *number_of_blocks,
-                                       uint32_t *measurement_record_length,
-                                       void *measurement_record,
-                                       const void *requester_nonce_in,
-                                       void *requester_nonce,
-                                       void *responder_nonce)
+return_status libspdm_try_get_measurement(void *context, const uint32_t *session_id,
+                                          uint8_t request_attribute,
+                                          uint8_t measurement_operation,
+                                          uint8_t slot_id_param,
+                                          uint8_t *content_changed,
+                                          uint8_t *number_of_blocks,
+                                          uint32_t *measurement_record_length,
+                                          void *measurement_record,
+                                          const void *requester_nonce_in,
+                                          void *requester_nonce,
+                                          void *responder_nonce)
 {
     bool result;
     return_status status;
     spdm_get_measurements_request_t spdm_request;
     uintn spdm_request_size;
-    spdm_measurements_response_max_t spdm_response;
+    libspdm_measurements_response_max_t spdm_response;
     uintn spdm_response_size;
     uint32_t measurement_record_data_length;
     uint8_t *measurement_record_data;
@@ -200,7 +200,7 @@ return_status try_spdm_get_measurement(void *context, const uint32_t *session_id
             spdm_context, session_id,
             &spdm_response_size, &spdm_response,
             SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
-            sizeof(spdm_measurements_response_max_t));
+            sizeof(libspdm_measurements_response_max_t));
         if (RETURN_ERROR(status)) {
             return status;
         }
@@ -515,7 +515,7 @@ return_status libspdm_get_measurement(void *context, const uint32_t *session_id,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_measurement(
+        status = libspdm_try_get_measurement(
             spdm_context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record, NULL, NULL, NULL);
@@ -572,7 +572,7 @@ return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = try_spdm_get_measurement(
+        status = libspdm_try_get_measurement(
             spdm_context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
