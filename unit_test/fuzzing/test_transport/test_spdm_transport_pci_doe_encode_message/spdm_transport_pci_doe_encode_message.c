@@ -10,14 +10,14 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_transport_pci_doe_encode_message(void **State)
+void libspdm_test_transport_pci_doe_encode_message(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn transport_message_size;
     uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -37,19 +37,19 @@ void test_spdm_transport_pci_doe_encode_message(void **State)
                                              transport_message);
 }
 
-spdm_test_context_t m_spdm_transport_pci_doe_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_libspdm_transport_pci_doe_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
     uintn record_header_max_size;
     uintn aead_tag_max_size;
     uintn buffer_size;
 
-    setup_spdm_test_context(&m_spdm_transport_pci_doe_test_context);
+    libspdm_setup_test_context(&m_libspdm_transport_pci_doe_test_context);
 
     /* limit the encoding buffer to avoid assert, because the input buffer is controlled by the the libspdm consumer. */
     record_header_max_size = sizeof(pci_doe_data_object_header_t) +
@@ -66,12 +66,12 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
                       aead_tag_max_size;
     }
 
-    m_spdm_transport_pci_doe_test_context.test_buffer = test_buffer;
-    m_spdm_transport_pci_doe_test_context.test_buffer_size = buffer_size;
+    m_libspdm_transport_pci_doe_test_context.test_buffer = test_buffer;
+    m_libspdm_transport_pci_doe_test_context.test_buffer_size = buffer_size;
 
-    spdm_unit_test_group_setup(&State);
+    libspdm_unit_test_group_setup(&State);
 
-    test_spdm_transport_pci_doe_encode_message(&State);
+    libspdm_test_transport_pci_doe_encode_message(&State);
 
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_teardown(&State);
 }

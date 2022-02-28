@@ -10,14 +10,14 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_libspdm_encode_secured_message(void **State)
+void libspdm_test_encode_secured_message(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn secured_message_size;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -30,10 +30,10 @@ void test_libspdm_encode_secured_message(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     is_requester = spdm_test_context->is_requester;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group = m_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite = m_use_aead_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_secured_message_callbacks.version = SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
     spdm_secured_message_callbacks.get_sequence_number = libspdm_mctp_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
@@ -57,19 +57,19 @@ void test_libspdm_encode_secured_message(void **State)
                                    &spdm_secured_message_callbacks);
 }
 
-spdm_test_context_t m_spdm_transport_mctp_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_libspdm_transport_mctp_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
     uintn record_header_max_size;
     uintn aead_tag_max_size;
     uintn buffer_size;
 
-    setup_spdm_test_context(&m_spdm_transport_mctp_test_context);
+    libspdm_setup_test_context(&m_libspdm_transport_mctp_test_context);
 
     /* limit the encoding buffer to avoid assert, because the input buffer is controlled by the the libspdm consumer. */
     record_header_max_size = sizeof(spdm_secured_message_a_data_header1_t) +
@@ -85,12 +85,12 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
                       aead_tag_max_size;
     }
 
-    m_spdm_transport_mctp_test_context.test_buffer = test_buffer;
-    m_spdm_transport_mctp_test_context.test_buffer_size = buffer_size;
+    m_libspdm_transport_mctp_test_context.test_buffer = test_buffer;
+    m_libspdm_transport_mctp_test_context.test_buffer_size = buffer_size;
 
-    spdm_unit_test_group_setup(&State);
+    libspdm_unit_test_group_setup(&State);
 
-    test_libspdm_encode_secured_message(&State);
+    libspdm_test_encode_secured_message(&State);
 
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_teardown(&State);
 }

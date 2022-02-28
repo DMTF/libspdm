@@ -8,14 +8,14 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-void test_spdm_x509_certificate_check(void **State)
+void libspdm_test_x509_certificate_check(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
 
     spdm_test_context = *State;
 
@@ -24,23 +24,23 @@ void test_spdm_x509_certificate_check(void **State)
         spdm_test_context->test_buffer_size);
 }
 
-spdm_test_context_t m_spdm_x509_certificate_check_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_spdm_x509_certificate_check_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&m_spdm_x509_certificate_check_test_context);
+    libspdm_setup_test_context(&m_spdm_x509_certificate_check_test_context);
 
     m_spdm_x509_certificate_check_test_context.test_buffer = test_buffer;
     m_spdm_x509_certificate_check_test_context.test_buffer_size =
         test_buffer_size;
 
     /* Success Case*/
-    spdm_unit_test_group_setup(&State);
-    test_spdm_x509_certificate_check(&State);
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_x509_certificate_check(&State);
+    libspdm_unit_test_group_teardown(&State);
 }

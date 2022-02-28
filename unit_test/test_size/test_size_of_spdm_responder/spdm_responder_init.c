@@ -6,18 +6,18 @@
 
 #include "spdm_responder.h"
 
-return_status SpdmResponderSendMessage(const void *spdm_context,
-                                       uintn message_size, const void *message,
-                                       uint64_t timeout)
+return_status libspdm_responder_send_message(const void *spdm_context,
+                                             uintn message_size, const void *message,
+                                             uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;
 }
 
-return_status SpdmResponderReceiveMessage(const void *spdm_context,
-                                          uintn *message_size,
-                                          void *message,
-                                          uint64_t timeout)
+return_status libspdm_responder_receive_message(const void *spdm_context,
+                                                uintn *message_size,
+                                                void *message,
+                                                uint64_t timeout)
 {
     /* Dummy*/
     return RETURN_SUCCESS;
@@ -39,8 +39,8 @@ void *spdm_server_init(void)
         return NULL;
     }
     libspdm_init_context(spdm_context);
-    libspdm_register_device_io_func(spdm_context, SpdmResponderSendMessage,
-                                    SpdmResponderReceiveMessage);
+    libspdm_register_device_io_func(spdm_context, libspdm_responder_send_message,
+                                    libspdm_responder_receive_message);
     libspdm_register_transport_layer_func(spdm_context,
                                           libspdm_transport_mctp_encode_message,
                                           libspdm_transport_mctp_decode_message);

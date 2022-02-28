@@ -12,7 +12,7 @@
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_libspdm_internal_dump_hex_str(const uint8_t *data, uintn size)
+void libspdm_internal_dump_hex_str(const uint8_t *data, uintn size)
 {
     uintn index;
     for (index = 0; index < size; index++) {

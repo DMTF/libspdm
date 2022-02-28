@@ -26,25 +26,25 @@
 #include "internal/libspdm_common_lib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-extern uint8_t m_use_measurement_spec;
-extern uint32_t m_use_measurement_hash_algo;
-extern uint32_t m_use_hash_algo;
-extern uint32_t m_use_asym_algo;
-extern uint16_t m_use_req_asym_algo;
-extern uint16_t m_use_dhe_algo;
-extern uint16_t m_use_aead_algo;
-extern uint16_t m_use_key_schedule_algo;
-extern uint8_t m_use_TCB_hash_value[LIBSPDM_MAX_HASH_SIZE];
+extern uint8_t m_libspdm_use_measurement_spec;
+extern uint32_t m_libspdm_use_measurement_hash_algo;
+extern uint32_t m_libspdm_use_hash_algo;
+extern uint32_t m_libspdm_use_asym_algo;
+extern uint16_t m_libspdm_use_req_asym_algo;
+extern uint16_t m_libspdm_use_dhe_algo;
+extern uint16_t m_libspdm_use_aead_algo;
+extern uint16_t m_libspdm_use_key_schedule_algo;
+extern uint8_t m_libspdm_use_tcb_hash_value[LIBSPDM_MAX_HASH_SIZE];
 
 
 /* SPDM reserved error code
  * They are for unit test only.
  * Please double check if they are still reserved when a new SPDM spec is published.*/
 
-#define SPDM_ERROR_CODE_RESERVED_00             0x00
-#define SPDM_ERROR_CODE_RESERVED_0D             0x0D
-#define SPDM_ERROR_CODE_RESERVED_3F             0x3F
-#define SPDM_ERROR_CODE_RESERVED_FD             0xFD
+#define LIBSPDM_ERROR_CODE_RESERVED_00             0x00
+#define LIBSPDM_ERROR_CODE_RESERVED_0D             0x0D
+#define LIBSPDM_ERROR_CODE_RESERVED_3F             0x3F
+#define LIBSPDM_ERROR_CODE_RESERVED_FD             0xFD
 
 #define ASSERT_INT_EQUAL_CASE(value, expected, case) { \
         if(value != expected) { \
@@ -53,7 +53,7 @@ extern uint8_t m_use_TCB_hash_value[LIBSPDM_MAX_HASH_SIZE];
         assert_int_equal(value, expected); \
 };
 
-#define SPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
+#define LIBSPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
 
 typedef struct {
     uint32_t signature;
@@ -62,28 +62,23 @@ typedef struct {
     libspdm_device_receive_message_func receive_message;
     void *spdm_context;
     uint32_t case_id;
-} spdm_test_context_t;
+} libspdm_test_context_t;
 
-#define SPDM_TEST_CONTEXT_FROM_SPDM_PROTOCOL(a)                                \
-    BASE_CR(a, spdm_test_context_t, SpdmProtocol)
-#define SPDM_TEST_CONTEXT_FROM_SPDM_CONTEXT(a)                                 \
-    BASE_CR(a, spdm_test_context_t, spdm_context)
+int libspdm_unit_test_group_setup(void **state);
 
-int spdm_unit_test_group_setup(void **state);
+int libspdm_unit_test_group_teardown(void **state);
 
-int spdm_unit_test_group_teardown(void **state);
+void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context);
 
-void setup_spdm_test_context(spdm_test_context_t *spdm_test_context);
+libspdm_test_context_t *libspdm_get_test_context(void);
 
-spdm_test_context_t *get_spdm_test_context(void);
+void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size);
 
-void dump_hex_str(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size);
 
-void dump_data(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_hex(const uint8_t *buffer, uintn buffer_size);
 
-void dump_hex(const uint8_t *buffer, uintn buffer_size);
-
-bool read_input_file(const char *file_name, void **file_data,
-                     uintn *file_size);
+bool libspdm_read_input_file(const char *file_name, void **file_data,
+                             uintn *file_size);
 
 #endif

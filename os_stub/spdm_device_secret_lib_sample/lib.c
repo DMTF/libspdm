@@ -64,7 +64,7 @@ bool read_responder_private_certificate(uint32_t base_asym_algo,
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, data, size);
+    res = libspdm_read_input_file(file, data, size);
     return res;
 }
 
@@ -109,7 +109,7 @@ bool read_requester_private_certificate(uint16_t req_base_asym_alg,
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, data, size);
+    res = libspdm_read_input_file(file, data, size);
     return res;
 }
 
@@ -844,7 +844,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
         return false;
     }
     printf("[PSK]: ");
-    dump_hex_str(psk, psk_size);
+    libspdm_dump_hex_str(psk, psk_size);
     printf("\n");
 
     hash_size = libspdm_get_hash_size(base_hash_algo);

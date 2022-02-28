@@ -14,7 +14,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_libspdm_internal_dump_hex_str(const uint8_t *data, uintn size);
+void libspdm_internal_dump_hex_str(const uint8_t *data, uintn size);
 
 /**
  * This function dump raw data.
@@ -223,7 +223,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         /* No handshake_secret generation for PSK.*/
     } else {
         DEBUG((DEBUG_INFO, "[DHE Secret]: "));
-        libspdm_libspdm_internal_dump_hex_str(
+        libspdm_internal_dump_hex_str(
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size);
         DEBUG((DEBUG_INFO, "\n"));

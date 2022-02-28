@@ -54,8 +54,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     copy_mem(file_name_buffer, sizeof(file_name_buffer), Path, len);
     copy_mem(file_name_buffer + len - 1, sizeof(file_name_buffer) - (len - 1),
              "/inter.cert.der", sizeof("/inter.cert.der"));
-    status = read_input_file(file_name_buffer, (void **)&test_cert,
-                             &test_cert_len);
+    status = libspdm_read_input_file(file_name_buffer, (void **)&test_cert,
+                                     &test_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -64,8 +64,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     copy_mem(file_name_buffer, sizeof(file_name_buffer), Path, len);
     copy_mem(file_name_buffer + len - 1, sizeof(file_name_buffer) - (len - 1),
              "/ca.cert.der", sizeof("/ca.cert.der"));
-    status = read_input_file(file_name_buffer, (void **)&test_ca_cert,
-                             &test_ca_cert_len);
+    status = libspdm_read_input_file(file_name_buffer, (void **)&test_ca_cert,
+                                     &test_ca_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -74,8 +74,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     copy_mem(file_name_buffer, sizeof(file_name_buffer), Path, len);
     copy_mem(file_name_buffer + len - 1, sizeof(file_name_buffer) - (len - 1),
              "/bundle_requester.certchain.der", sizeof("/bundle_requester.certchain.der"));
-    status = read_input_file(file_name_buffer, (void **)&test_bundle_cert,
-                             &test_bundle_cert_len);
+    status = libspdm_read_input_file(file_name_buffer, (void **)&test_bundle_cert,
+                                     &test_bundle_cert_len);
     if (!status) {
         goto cleanup;
     }
@@ -84,8 +84,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
     copy_mem(file_name_buffer, sizeof(file_name_buffer), Path, len);
     copy_mem(file_name_buffer + len - 1, sizeof(file_name_buffer) - (len - 1),
              "/end_requester.cert.der", sizeof("/end_requester.cert.der"));
-    status = read_input_file(file_name_buffer, (void **)&test_end_cert,
-                             &test_end_cert_len);
+    status = libspdm_read_input_file(file_name_buffer, (void **)&test_end_cert,
+                                     &test_end_cert_len);
     if (!status) {
         goto cleanup;
     }

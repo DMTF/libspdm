@@ -14,8 +14,8 @@ static uint8_t m_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 static void
-spdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message_context,
-                                                      const void *key, uintn key_size)
+libspdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message_context,
+                                                         const void *key, uintn key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -25,8 +25,8 @@ spdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message
              key, secured_message_context->aead_key_size);
 }
 
-static void spdm_secured_message_set_response_data_salt(void *spdm_secured_message_context,
-                                                        const void *salt, uintn salt_size)
+static void libspdm_secured_message_set_response_data_salt(void *spdm_secured_message_context,
+                                                           const void *salt, uintn salt_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -35,21 +35,21 @@ static void spdm_secured_message_set_response_data_salt(void *spdm_secured_messa
              sizeof(secured_message_context->application_secret.response_data_salt),
              salt, secured_message_context->aead_iv_size);
 }
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status spdm_device_send_message(void *spdm_context, uintn request_size,
-                                       const void *request, uint64_t timeout)
+return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+                                          const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status spdm_device_receive_message(void *spdm_context, uintn *response_size,
-                                          void *response, uint64_t timeout)
+return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+                                             void *response, uint64_t timeout)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_session_info_t *session_info;
     spdm_end_session_response_t spdm_response;
     uintn spdm_response_size;
@@ -58,14 +58,15 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 
     session_id = 0xFFFFFFFF;
     test_message_header_size = 1;
-    spdm_test_context = get_spdm_test_context();
+    spdm_test_context = libspdm_get_test_context();
     spdm_response_size = spdm_test_context->test_buffer_size - test_message_header_size;
     copy_mem(&spdm_response, sizeof(spdm_response),
              (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
              spdm_response_size);
 
-    spdm_transport_test_encode_message(spdm_context, &session_id, false, false, spdm_response_size,
-                                       &spdm_response, response_size, response);
+    libspdm_transport_test_encode_message(spdm_context, &session_id, false, false,
+                                          spdm_response_size,
+                                          &spdm_response, response_size, response);
 
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
@@ -80,7 +81,7 @@ return_status spdm_device_receive_message(void *spdm_context, uintn *response_si
 
 void libspdm_test_requester_end_session(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
@@ -101,17 +102,18 @@ void libspdm_test_requester_end_session(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
+                                            &data_size,
                                             &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
-        m_use_hash_algo;
+        m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
-        m_use_asym_algo;
+        m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group =
-        m_use_dhe_algo;
+        m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_use_aead_algo;
+        m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
@@ -136,14 +138,14 @@ void libspdm_test_requester_end_session(void **State)
         m_dummy_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
-    spdm_secured_message_set_response_data_encryption_key(
+    libspdm_secured_message_set_response_data_encryption_key(
         session_info->secured_message_context, m_dummy_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     set_mem(
         m_dummy_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
-    spdm_secured_message_set_response_data_salt(
+    libspdm_secured_message_set_response_data_salt(
         session_info->secured_message_context, m_dummy_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
@@ -153,24 +155,24 @@ void libspdm_test_requester_end_session(void **State)
     free(data);
 }
 
-spdm_test_context_t m_spdm_requester_end_session_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_libspdm_requester_end_session_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
-    spdm_device_send_message,
-    spdm_device_receive_message,
+    libspdm_device_send_message,
+    libspdm_device_receive_message,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&m_spdm_requester_end_session_test_context);
+    libspdm_setup_test_context(&m_libspdm_requester_end_session_test_context);
 
-    m_spdm_requester_end_session_test_context.test_buffer = test_buffer;
-    m_spdm_requester_end_session_test_context.test_buffer_size = test_buffer_size;
+    m_libspdm_requester_end_session_test_context.test_buffer = test_buffer;
+    m_libspdm_requester_end_session_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response*/
-    spdm_unit_test_group_setup(&State);
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_end_session(&State);
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_teardown(&State);
 }

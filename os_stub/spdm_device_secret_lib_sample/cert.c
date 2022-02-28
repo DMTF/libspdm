@@ -85,7 +85,7 @@ bool read_responder_root_public_certificate(uint32_t base_hash_algo,
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }
@@ -190,7 +190,7 @@ bool read_requester_root_public_certificate(uint32_t base_hash_algo,
 
     digest_size = libspdm_get_hash_size(base_hash_algo);
 
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }
@@ -289,7 +289,7 @@ bool read_responder_public_certificate_chain(
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }
@@ -409,7 +409,7 @@ bool read_requester_public_certificate_chain(
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }
@@ -505,7 +505,7 @@ bool read_responder_root_public_certificate_by_size(
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }
@@ -585,7 +585,7 @@ bool read_responder_public_certificate_chain_by_size(
         ASSERT(false);
         return false;
     }
-    res = read_input_file(file, &file_data, &file_size);
+    res = libspdm_read_input_file(file, &file_data, &file_size);
     if (!res) {
         return res;
     }

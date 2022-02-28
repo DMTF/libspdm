@@ -11,14 +11,14 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 void libspdm_test_requester_encap_challenge(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn request_size;
     uintn response_size;
@@ -36,16 +36,18 @@ void libspdm_test_requester_encap_challenge(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
     spdm_context->connection_info.capability.flags = 0;
 
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo = m_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec = m_use_measurement_spec;
-    spdm_context->connection_info.algorithm.measurement_hash_algo = m_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
 
     spdm_context->connection_info.algorithm.req_base_asym_alg = 0x00000001;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    read_responder_public_certificate_chain(m_use_hash_algo, m_use_asym_algo, &data, &data_size,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
+                                            &data_size,
                                             NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -67,32 +69,32 @@ void libspdm_test_requester_encap_challenge(void **State)
     libspdm_reset_message_mut_c(spdm_context);
 }
 
-spdm_test_context_t m_spdm_requester_encap_challenge_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_libspdm_requester_encap_challenge_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
 
-    setup_spdm_test_context(&m_spdm_requester_encap_challenge_test_context);
+    libspdm_setup_test_context(&m_libspdm_requester_encap_challenge_test_context);
 
-    m_spdm_requester_encap_challenge_test_context.test_buffer = test_buffer;
-    m_spdm_requester_encap_challenge_test_context.test_buffer_size = test_buffer_size;
+    m_libspdm_requester_encap_challenge_test_context.test_buffer = test_buffer;
+    m_libspdm_requester_encap_challenge_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response */
-    spdm_unit_test_group_setup(&State);
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_encap_challenge(&State);
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
