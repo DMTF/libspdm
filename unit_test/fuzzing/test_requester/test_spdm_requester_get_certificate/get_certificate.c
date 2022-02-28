@@ -56,6 +56,7 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
 
 void libspdm_test_requester_get_certificate_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn cert_chain_size;
@@ -91,13 +92,17 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     cert_chain_size = sizeof(cert_chain);
     zero_mem(cert_chain, sizeof(cert_chain));
 
-    libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    libspdm_reset_message_b(spdm_context);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_b(spdm_context);
+    }
 }
 
 void libspdm_test_requester_get_certificate_case2(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn cert_chain_size;
@@ -134,13 +139,17 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     cert_chain_size = sizeof(cert_chain);
     zero_mem(cert_chain, sizeof(cert_chain));
 
-    libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    libspdm_reset_message_b(spdm_context);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_b(spdm_context);
+    }
 }
 
 void libspdm_test_requester_get_certificate_ex_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn cert_chain_size;
@@ -176,9 +185,12 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
 
     cert_chain_size = sizeof(cert_chain);
     zero_mem(cert_chain, sizeof(cert_chain));
-    libspdm_get_certificate_ex(spdm_context, 0, &cert_chain_size, cert_chain, NULL, NULL);
+    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    libspdm_reset_message_b(spdm_context);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_b(spdm_context);
+    }
 }
 
 libspdm_test_context_t m_libspdm_requester_get_certificate_test_context = {

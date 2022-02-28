@@ -93,6 +93,7 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
 
 void libspdm_test_requester_psk_finish_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -163,9 +164,13 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
     libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
-    libspdm_send_receive_psk_finish(spdm_context, session_id);
+    status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
-    libspdm_reset_message_k(spdm_context, session_info);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_f(spdm_context, session_info);
+        libspdm_reset_message_k(spdm_context, session_info);
+    }
 }
 
 libspdm_test_context_t m_libspdm_requester_psk_finish_test_context = {

@@ -38,6 +38,7 @@ return_status libspdm_device_receive_message(void *spdm_context,
 
 void libspdm_test_requester_get_diges(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t slot_mask;
@@ -60,7 +61,11 @@ void libspdm_test_requester_get_diges(void **State)
             (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
     zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_b(spdm_context);
+    }
 }
 
 libspdm_test_context_t m_libspdm_requester_get_diges_test_context = {
