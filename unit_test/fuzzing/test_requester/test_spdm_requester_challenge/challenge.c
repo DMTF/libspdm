@@ -102,6 +102,7 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
 
 void libspdm_test_requester_challenge_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -147,13 +148,23 @@ void libspdm_test_requester_challenge_case1(void **State)
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                      measurement_hash, NULL);
+    status = libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
     free(data);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_c(spdm_context);
+    }
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void libspdm_test_requester_challenge_ex_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -202,10 +213,20 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
 #endif
 
     zero_mem(measurement_hash, sizeof(measurement_hash));
-    libspdm_challenge_ex(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                         measurement_hash, NULL, requester_nonce_in, requester_nonce,
-                         responder_nonce);
+    status = libspdm_challenge_ex(spdm_context, 0,
+                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                  measurement_hash, NULL, requester_nonce_in, requester_nonce,
+                                  responder_nonce);
     free(data);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_c(spdm_context);
+    }
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 libspdm_test_context_t m_libspdm_requester_challenge_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,

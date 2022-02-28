@@ -294,6 +294,11 @@ void libspdm_test_requester_key_exchange_case1(void **State)
                                       0, 0, &session_id, &heartbeat_period, &slot_id_param,
                                       measurement_hash);
     free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void libspdm_test_requester_key_exchange_case2(void **State)
@@ -358,6 +363,11 @@ void libspdm_test_requester_key_exchange_case2(void **State)
                                       0, 0, &session_id, &heartbeat_period, &slot_id_param,
                                       measurement_hash);
     free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 void libspdm_test_requester_key_exchange_ex_case1(void **State)
@@ -421,6 +431,11 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
                                          measurement_hash, requester_random_in, requester_random,
                                          responder_random);
     free(data);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 libspdm_test_context_t m_libspdm_requester_key_exchange_test_context = {

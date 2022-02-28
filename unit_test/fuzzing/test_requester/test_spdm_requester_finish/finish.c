@@ -61,6 +61,7 @@ uintn m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
 
 void libspdm_test_send_receive_finish_case1(void **State)
 {
+    return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -129,9 +130,19 @@ void libspdm_test_send_receive_finish_case1(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 
     req_slot_id_param = 0;
-    libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
+    status = libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
 
     free(data);
+    if (RETURN_NO_RESPONSE != status)
+    {
+        libspdm_reset_message_f(spdm_context, session_info);
+        libspdm_reset_message_k(spdm_context, session_info);
+    }
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
 }
 
 libspdm_test_context_t m_libspdm_requester_finish_test_context = {
