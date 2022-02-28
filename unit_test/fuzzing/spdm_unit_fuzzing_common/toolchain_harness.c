@@ -19,10 +19,10 @@ uint8_t req_or_res = 0;
 #include <klee/klee.h>
 #endif
 
-uintn AlignmentSize(uintn size, uint8_t req_or_res)
+uintn libspdm_alignment_size(uintn size, uint8_t req_or_res)
 {
     uintn alignment;
-    alignment = TEST_ALIGNMENT;
+    alignment = LIBSPDM_TEST_ALIGNMENT;
 
     if (((size) & (alignment - 1)) == 3)
         size += 1;
@@ -34,8 +34,8 @@ uintn AlignmentSize(uintn size, uint8_t req_or_res)
     return size;
 }
 
-bool init_test_buffer(const char *file_name, uintn max_buffer_size,
-                      void **test_buffer, uintn *buffer_size)
+bool libspdm_init_test_buffer(const char *file_name, uintn max_buffer_size,
+                              void **test_buffer, uintn *buffer_size)
 {
     void *buffer;
     FILE *file;
@@ -74,9 +74,9 @@ bool init_test_buffer(const char *file_name, uintn max_buffer_size,
     rewind(file);
 
     file_size = file_size > max_buffer_size ? max_buffer_size : file_size;
-    return_status = judge_requster_name(file_name);
+    return_status = libspdm_judge_requster_name(file_name);
     if (return_status == 1) {
-        *(uint8_t *)buffer = TEST_MESSAGE_TYPE_SPDM;
+        *(uint8_t *)buffer = LIBSPDM_TEST_MESSAGE_TYPE_SPDM;
         BytesRead = fread((char *)buffer + 1, 1, file_size, file);
     } else {
         BytesRead = fread((char *)buffer, 1, file_size, file);
@@ -88,7 +88,7 @@ bool init_test_buffer(const char *file_name, uintn max_buffer_size,
     }
     fclose(file);
 
-    file_size = AlignmentSize(file_size, return_status);
+    file_size = libspdm_alignment_size(file_size, return_status);
 
     if (buffer_size != NULL) {
         *buffer_size = file_size;
@@ -97,7 +97,7 @@ bool init_test_buffer(const char *file_name, uintn max_buffer_size,
     return true;
 }
 
-uint8_t judge_requster_name(const char *file_name)
+uint8_t libspdm_judge_requster_name(const char *file_name)
 {
     char *file_p;
     char *requester_name_p;
@@ -144,7 +144,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     uintn max_buffer_size;
 
     /* 1. Initialize test_buffer*/
-    max_buffer_size = get_max_buffer_size();
+    max_buffer_size = libspdm_get_max_buffer_size();
     test_buffer = allocate_zero_pool(max_buffer_size);
     if (test_buffer == NULL) {
         return 0;
@@ -154,15 +154,15 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
 
     if (req_or_res == 1) {
-        *(uint8_t *)test_buffer = TEST_MESSAGE_TYPE_SPDM;
+        *(uint8_t *)test_buffer = LIBSPDM_TEST_MESSAGE_TYPE_SPDM;
         copy_mem((uint8_t *)test_buffer + 1, max_buffer_size - 1, data, size);
     }
     else{
         copy_mem(test_buffer, max_buffer_size, data, size);
     }
-    size = AlignmentSize(size, req_or_res);
+    size = libspdm_alignment_size(size, req_or_res);
     /* 2. Run test*/
-    run_test_harness(test_buffer, size);
+    libspdm_run_test_harness(test_buffer, size);
     /* 3. Clean up*/
     free(test_buffer);
     return 0;
@@ -175,7 +175,7 @@ int LLVMFuzzerInitialize(int *argc, char ***argv)
     }
     else{
         file_name = (*argv)[1];
-        req_or_res = judge_requster_name(file_name);
+        req_or_res = libspdm_judge_requster_name(file_name);
     }
     return 0;
 }
@@ -195,14 +195,14 @@ int main(int argc, char **argv)
     file_name = argv[1];
 
     /* 1. Initialize test_buffer*/
-    res = init_test_buffer(file_name, get_max_buffer_size(), &test_buffer,
-                           &test_buffer_size);
+    res = libspdm_init_test_buffer(file_name, libspdm_get_max_buffer_size(), &test_buffer,
+                                   &test_buffer_size);
     if (!res) {
         printf("error - fail to init test buffer\n");
         return 0;
     }
     /* 2. Run test*/
-    run_test_harness(test_buffer, test_buffer_size);
+    libspdm_run_test_harness(test_buffer, test_buffer_size);
     /* 3. Clean up*/
     free(test_buffer);
     return 0;

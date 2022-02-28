@@ -6,7 +6,7 @@
 
 #include "spdm_unit_test.h"
 
-void dump_hex_str(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -15,7 +15,7 @@ void dump_hex_str(const uint8_t *buffer, uintn buffer_size)
     }
 }
 
-void dump_data(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -24,7 +24,7 @@ void dump_data(const uint8_t *buffer, uintn buffer_size)
     }
 }
 
-void dump_hex(const uint8_t *data, uintn size)
+void libspdm_dump_hex(const uint8_t *data, uintn size)
 {
     uintn index;
     uintn count;
@@ -36,19 +36,19 @@ void dump_hex(const uint8_t *data, uintn size)
     left = size % COLUME_SIZE;
     for (index = 0; index < count; index++) {
         printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
+        libspdm_dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
         printf("\n");
     }
 
     if (left != 0) {
         printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        dump_data(data + index * COLUME_SIZE, left);
+        libspdm_dump_data(data + index * COLUME_SIZE, left);
         printf("\n");
     }
 }
 
-bool read_input_file(const char *file_name, void **file_data,
-                     uintn *file_size)
+bool libspdm_read_input_file(const char *file_name, void **file_data,
+                             uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;
@@ -83,8 +83,8 @@ bool read_input_file(const char *file_name, void **file_data,
     return true;
 }
 
-bool write_output_file(const char *file_name, const void *file_data,
-                       uintn file_size)
+bool libspdm_write_output_file(const char *file_name, const void *file_data,
+                               uintn file_size)
 {
     FILE *fp_out;
 

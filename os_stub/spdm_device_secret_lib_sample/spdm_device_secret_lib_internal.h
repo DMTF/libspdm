@@ -65,9 +65,9 @@ bool read_responder_root_public_certificate_by_size(
 
 /* External*/
 
-bool read_input_file(const char *file_name, void **file_data,
-                     uintn *file_size);
+bool libspdm_read_input_file(const char *file_name, void **file_data,
+                             uintn *file_size);
 
-void dump_hex_str(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size);
 
 #endif

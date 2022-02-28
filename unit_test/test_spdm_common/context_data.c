@@ -7,18 +7,18 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
-static uint32_t opaque_data = 0xDEADBEEF;
+static uint32_t libspdm_opaque_data = 0xDEADBEEF;
 
 /**
  * Test 1: Basic test - tests happy path of setting and getting opaque data from
  * context successfully.
  **/
-static void test_spdm_common_context_data_case1(void **state)
+static void libspdm_test_common_context_data_case1(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    void *data = (void *)&opaque_data;
+    void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
     uintn data_return_size = 0;
 
@@ -39,19 +39,19 @@ static void test_spdm_common_context_data_case1(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
-    assert_int_equal(opaque_data, 0xDEADBEEF);
+    assert_int_equal(libspdm_opaque_data, 0xDEADBEEF);
 }
 
 /**
  * Test 2: Test failure paths of setting opaque data in context. libspdm_set_data
  * should fail when an invalid size is passed.
  **/
-static void test_spdm_common_context_data_case2(void **state)
+static void libspdm_test_common_context_data_case2(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    void *data = (void *)&opaque_data;
+    void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
     void *current_return_data = NULL;
     uintn data_return_size = 0;
@@ -72,7 +72,7 @@ static void test_spdm_common_context_data_case2(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* Ensure nothing has changed between subsequent calls to get data */
-    assert_ptr_equal(current_return_data, &opaque_data);
+    assert_ptr_equal(current_return_data, &libspdm_opaque_data);
 
     /*
      * Set data with invalid size, it should fail. Read back to ensure that
@@ -90,17 +90,17 @@ static void test_spdm_common_context_data_case2(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
-    assert_int_equal(opaque_data, 0xDEADBEEF);
+    assert_int_equal(libspdm_opaque_data, 0xDEADBEEF);
 }
 
 /**
  * Test 3: Test failure paths of setting opaque data in context. libspdm_set_data
  * should fail when data contains NULL value.
  **/
-static void test_spdm_common_context_data_case3(void **state)
+static void libspdm_test_common_context_data_case3(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data = NULL;
     void *return_data = NULL;
@@ -123,7 +123,7 @@ static void test_spdm_common_context_data_case3(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* Ensure nothing has changed between subsequent calls to get data */
-    assert_ptr_equal(current_return_data, &opaque_data);
+    assert_ptr_equal(current_return_data, &libspdm_opaque_data);
 
 
     /*
@@ -142,7 +142,7 @@ static void test_spdm_common_context_data_case3(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
-    assert_int_equal(opaque_data, 0xDEADBEEF);
+    assert_int_equal(libspdm_opaque_data, 0xDEADBEEF);
 
 }
 
@@ -150,12 +150,12 @@ static void test_spdm_common_context_data_case3(void **state)
  * Test 4: Test failure paths of getting opaque data in context. libspdm_get_data
  * should fail when the size of buffer to get is too small.
  **/
-static void test_spdm_common_context_data_case4(void **state)
+static void libspdm_test_common_context_data_case4(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    void *data = (void *)&opaque_data;
+    void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
     uintn data_return_size = 0;
 
@@ -181,16 +181,16 @@ static void test_spdm_common_context_data_case4(void **state)
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
-    assert_int_equal(opaque_data, 0xDEADBEEF);
+    assert_int_equal(libspdm_opaque_data, 0xDEADBEEF);
 }
 
 /**
  * Test 5: There is no root cert.
  * Expected Behavior: Return true result.
  **/
-void test_libspdm_verify_peer_cert_chain_buffer_case5(void **state)
+void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
@@ -213,8 +213,8 @@ void test_libspdm_verify_peer_cert_chain_buffer_case5(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo, &data,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo, &data,
                                             &data_size, &hash, &hash_size);
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
@@ -222,7 +222,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case5(void **state)
 
     spdm_context->local_context.peer_cert_chain_provision = NULL;
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     /*clear root cert array*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
@@ -243,9 +243,9 @@ void test_libspdm_verify_peer_cert_chain_buffer_case5(void **state)
  * there is one match root cert;                     return false
  * there is one mismatch root cert;                  return true, and the return trust_anchor is root cert.
  **/
-void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
+void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
@@ -260,7 +260,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
     uintn hash_size_test;
     uint8_t *root_cert_test;
     uintn root_cert_size_test;
-    uint32_t m_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+    uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
     uintn trust_anchor_size;
@@ -276,15 +276,15 @@ void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo, &data,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo, &data,
                                             &data_size, &hash, &hash_size);
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
     /* Loading Other test Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo_test, &data_test,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo_test, &data_test,
                                             &data_size_test, &hash_test, &hash_size_test);
     x509_get_cert_from_cert_chain((uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
                                   data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
@@ -292,7 +292,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
 
     spdm_context->local_context.peer_cert_chain_provision = NULL;
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     /*clear root cert array*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
@@ -327,9 +327,9 @@ void test_libspdm_verify_peer_cert_chain_buffer_case6(void **state)
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
  **/
-void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
+void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
@@ -344,7 +344,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
     uintn hash_size_test;
     uint8_t *root_cert_test;
     uintn root_cert_size_test;
-    uint32_t m_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+    uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
     uintn trust_anchor_size;
@@ -360,15 +360,15 @@ void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo, &data,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo, &data,
                                             &data_size, &hash, &hash_size);
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
     /* Loading Other test Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo_test, &data_test,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo_test, &data_test,
                                             &data_size_test, &hash_test, &hash_size_test);
     x509_get_cert_from_cert_chain((uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
                                   data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
@@ -376,7 +376,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
 
     spdm_context->local_context.peer_cert_chain_provision = NULL;
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     /*clear root cert array*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
@@ -428,9 +428,9 @@ void test_libspdm_verify_peer_cert_chain_buffer_case7(void **state)
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
  **/
-void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
+void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
     uintn data_size;
@@ -445,7 +445,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
     uintn hash_size_test;
     uint8_t *root_cert_test;
     uintn root_cert_size_test;
-    uint32_t m_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+    uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
     uintn trust_anchor_size;
@@ -461,15 +461,15 @@ void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo, &data,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo, &data,
                                             &data_size, &hash, &hash_size);
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
     /* Loading Other test Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo_test, &data_test,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo_test, &data_test,
                                             &data_size_test, &hash_test, &hash_size_test);
     x509_get_cert_from_cert_chain((uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
                                   data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
@@ -477,7 +477,7 @@ void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
 
     spdm_context->local_context.peer_cert_chain_provision = NULL;
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     /*case: there is no match root cert*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
@@ -525,10 +525,10 @@ void test_libspdm_verify_peer_cert_chain_buffer_case8(void **state)
  * there is null root cert;                          return RETURN_SUCCESS, and the root cert is set successfully.
  * there is full root cert;                          return RETURN_OUT_OF_RESOURCES.
  **/
-static void test_libspdm_set_data_case9(void **state)
+static void libspdm_test_set_data_case9(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
     void *data;
@@ -545,8 +545,8 @@ static void test_libspdm_set_data_case9(void **state)
     spdm_test_context->case_id = 0x9;
 
     /* Loading Root certificate and saving its hash*/
-    read_responder_public_certificate_chain(m_use_hash_algo,
-                                            m_use_asym_algo, &data,
+    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                            m_libspdm_use_asym_algo, &data,
                                             &data_size, &hash, &hash_size);
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
@@ -575,32 +575,32 @@ static void test_libspdm_set_data_case9(void **state)
     free(data);
 }
 
-static spdm_test_context_t m_spdm_common_context_data_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
     NULL,
     NULL,
 };
 
-int spdm_common_context_data_test_main(void)
+int libspdm_common_context_data_test_main(void)
 {
     const struct CMUnitTest spdm_common_context_data_tests[] = {
-        cmocka_unit_test(test_spdm_common_context_data_case1),
-        cmocka_unit_test(test_spdm_common_context_data_case2),
-        cmocka_unit_test(test_spdm_common_context_data_case3),
-        cmocka_unit_test(test_spdm_common_context_data_case4),
+        cmocka_unit_test(libspdm_test_common_context_data_case1),
+        cmocka_unit_test(libspdm_test_common_context_data_case2),
+        cmocka_unit_test(libspdm_test_common_context_data_case3),
+        cmocka_unit_test(libspdm_test_common_context_data_case4),
 
-        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case5),
-        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case6),
-        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case7),
-        cmocka_unit_test(test_libspdm_verify_peer_cert_chain_buffer_case8),
+        cmocka_unit_test(libspdm_test_verify_peer_cert_chain_buffer_case5),
+        cmocka_unit_test(libspdm_test_verify_peer_cert_chain_buffer_case6),
+        cmocka_unit_test(libspdm_test_verify_peer_cert_chain_buffer_case7),
+        cmocka_unit_test(libspdm_test_verify_peer_cert_chain_buffer_case8),
 
-        cmocka_unit_test(test_libspdm_set_data_case9),
+        cmocka_unit_test(libspdm_test_set_data_case9),
     };
 
-    setup_spdm_test_context(&m_spdm_common_context_data_test_context);
+    libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
 
     return cmocka_run_group_tests(spdm_common_context_data_tests,
-                                  spdm_unit_test_group_setup,
-                                  spdm_unit_test_group_teardown);
+                                  libspdm_unit_test_group_setup,
+                                  libspdm_unit_test_group_teardown);
 }

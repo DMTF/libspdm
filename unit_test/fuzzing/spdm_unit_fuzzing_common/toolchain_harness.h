@@ -12,18 +12,18 @@
 #include <string.h>
 #include <assert.h>
 
-#define TEST_ALIGNMENT 4
-#define TEST_MESSAGE_TYPE_SPDM 0x01
-#define TEST_MESSAGE_TYPE_SECURED_TEST 0x02
+#define LIBSPDM_TEST_ALIGNMENT 4
+#define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01
+#define LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST 0x02
 #define LIBSPDM_MAX_BUFFER_SIZE 64
 #define NULL ((void *)0)
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size);
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size);
 
-uintn get_max_buffer_size(void);
+uintn libspdm_get_max_buffer_size(void);
 
-uint8_t judge_requster_name(const char *file_name);
+uint8_t libspdm_judge_requster_name(const char *file_name);
 
-uintn AlignmentSize(uintn size, uint8_t req_or_res);
+uintn libspdm_alignment_size(uintn size, uint8_t req_or_res);
 
 #endif

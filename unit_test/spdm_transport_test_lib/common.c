@@ -21,10 +21,10 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status test_encode_message(const uint32_t *session_id, uintn message_size,
-                                  const void *message,
-                                  uintn *transport_message_size,
-                                  void *transport_message);
+return_status libspdm_test_encode_message(const uint32_t *session_id, uintn message_size,
+                                          const void *message,
+                                          uintn *transport_message_size,
+                                          void *transport_message);
 
 /**
  * Decode a transport message to a normal message or secured message.
@@ -39,11 +39,11 @@ return_status test_encode_message(const uint32_t *session_id, uintn message_size
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status test_decode_message(uint32_t **session_id,
-                                  uintn transport_message_size,
-                                  const void *transport_message,
-                                  uintn *message_size,
-                                  void *message);
+return_status libspdm_test_decode_message(uint32_t **session_id,
+                                          uintn transport_message_size,
+                                          const void *transport_message,
+                                          uintn *message_size,
+                                          void *message);
 
 /**
  * Encode a normal message or secured message to a transport message.
@@ -59,7 +59,7 @@ return_status test_decode_message(uint32_t **session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-typedef return_status (*transport_encode_message_func)(
+typedef return_status (*libspdm_test_encode_message_func)(
     const uint32_t *session_id, uintn message_size, const void *message,
     uintn *transport_message_size, void *transport_message);
 
@@ -76,7 +76,7 @@ typedef return_status (*transport_encode_message_func)(
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-typedef return_status (*transport_decode_message_func)(
+typedef return_status (*libspdm_test_decode_message_func)(
     uint32_t **session_id, uintn transport_message_size,
     const void *transport_message, uintn *message_size,
     void *message);
@@ -106,13 +106,13 @@ typedef return_status (*transport_decode_message_func)(
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status spdm_transport_test_encode_message(
+return_status libspdm_transport_test_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, uintn message_size, const void *message,
     uintn *transport_message_size, void *transport_message)
 {
     return_status status;
-    transport_encode_message_func transport_encode_message;
+    libspdm_test_encode_message_func transport_encode_message;
     uint8_t app_message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *app_message;
     uintn app_message_size;
@@ -124,15 +124,15 @@ return_status spdm_transport_test_encode_message(
     spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
     spdm_secured_message_callbacks.get_sequence_number =
-        test_get_sequence_number;
+        libspdm_test_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
-        test_get_max_random_number_count;
+        libspdm_test_get_max_random_number_count;
 
     if (is_app_message && (session_id == NULL)) {
         return RETURN_UNSUPPORTED;
     }
 
-    transport_encode_message = test_encode_message;
+    transport_encode_message = libspdm_test_encode_message;
     if (session_id != NULL) {
         secured_message_context =
             libspdm_get_secured_message_context_via_session_id(
@@ -221,14 +221,14 @@ return_status spdm_transport_test_encode_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
-return_status spdm_transport_test_decode_message(
+return_status libspdm_transport_test_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
     uintn transport_message_size, const void *transport_message,
     uintn *message_size, void *message)
 {
     return_status status;
-    transport_decode_message_func transport_decode_message;
+    libspdm_test_decode_message_func transport_decode_message;
     uint32_t *secured_message_session_id;
     uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn secured_message_size;
@@ -247,15 +247,15 @@ return_status spdm_transport_test_decode_message(
     spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
     spdm_secured_message_callbacks.get_sequence_number =
-        test_get_sequence_number;
+        libspdm_test_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
-        test_get_max_random_number_count;
+        libspdm_test_get_max_random_number_count;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
         return RETURN_UNSUPPORTED;
     }
 
-    transport_decode_message = test_decode_message;
+    transport_decode_message = libspdm_test_decode_message;
 
     secured_message_session_id = NULL;
     /* Detect received message*/

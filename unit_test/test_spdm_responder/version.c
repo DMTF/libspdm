@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#define DEFAULT_SPDM_VERSION_ENTRY_COUNT SPDM_MAX_VERSION_COUNT
+#define LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT SPDM_MAX_VERSION_COUNT
 
 #pragma pack(1)
 typedef struct {
@@ -15,7 +15,7 @@ typedef struct {
     uint8_t reserved;
     uint8_t version_number_entry_count;
     spdm_version_number_t version_number_entry[LIBSPDM_MAX_VERSION_COUNT];
-} spdm_version_response_mine_t;
+} libspdm_version_response_mine_t;
 #pragma pack()
 
 spdm_get_version_request_t m_libspdm_get_version_request1 = {
@@ -58,7 +58,7 @@ uintn m_libspdm_get_version_request4_size = sizeof(m_libspdm_get_version_request
 void libspdm_test_responder_version_case1(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -76,7 +76,7 @@ void libspdm_test_responder_version_case1(void **state)
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_version_response_t) +
-                     DEFAULT_SPDM_VERSION_ENTRY_COUNT *
+                     LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -92,7 +92,7 @@ void libspdm_test_responder_version_case1(void **state)
 void libspdm_test_responder_version_case2(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -126,7 +126,7 @@ void libspdm_test_responder_version_case2(void **state)
 void libspdm_test_responder_version_case3(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -162,7 +162,7 @@ void libspdm_test_responder_version_case3(void **state)
 void libspdm_test_responder_version_case4(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -181,7 +181,7 @@ void libspdm_test_responder_version_case4(void **state)
     assert_int_equal(status, RETURN_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_version_response_t) +
-                     DEFAULT_SPDM_VERSION_ENTRY_COUNT *
+                     LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -199,7 +199,7 @@ void libspdm_test_responder_version_case4(void **state)
 void libspdm_test_responder_version_case5(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -243,7 +243,7 @@ void libspdm_test_responder_version_case5(void **state)
 void libspdm_test_responder_version_case6(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -278,7 +278,7 @@ void libspdm_test_responder_version_case6(void **state)
 void libspdm_test_responder_version_case7(void **state)
 {
     return_status status;
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -303,12 +303,12 @@ void libspdm_test_responder_version_case7(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-spdm_test_context_t m_spdm_responder_version_test_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t m_libspdm_responder_version_test_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-int spdm_responder_version_test_main(void)
+int libspdm_responder_version_test_main(void)
 {
     const struct CMUnitTest spdm_responder_version_tests[] = {
         cmocka_unit_test(libspdm_test_responder_version_case1),
@@ -324,9 +324,9 @@ int spdm_responder_version_test_main(void)
         cmocka_unit_test(libspdm_test_responder_version_case6),
     };
 
-    setup_spdm_test_context(&m_spdm_responder_version_test_context);
+    libspdm_setup_test_context(&m_libspdm_responder_version_test_context);
 
     return cmocka_run_group_tests(spdm_responder_version_tests,
-                                  spdm_unit_test_group_setup,
-                                  spdm_unit_test_group_teardown);
+                                  libspdm_unit_test_group_setup,
+                                  libspdm_unit_test_group_teardown);
 }

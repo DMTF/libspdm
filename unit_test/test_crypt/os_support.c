@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 
-bool read_input_file(const char *file_name, void **file_data,
-                     uintn *file_size)
+bool libspdm_read_input_file(const char *file_name, void **file_data,
+                             uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;

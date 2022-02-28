@@ -9,12 +9,12 @@
 
 #include "library/spdm_common_lib.h"
 
-#define TEST_MESSAGE_TYPE_SPDM 0x01
-#define TEST_MESSAGE_TYPE_SECURED_TEST 0x02
+#define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01
+#define LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST 0x02
 
 typedef struct {
     uint8_t message_type;
-} test_message_header_t;
+} libspdm_test_message_header_t;
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
@@ -41,7 +41,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status spdm_transport_test_encode_message(
+return_status libspdm_transport_test_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, uintn message_size, const void *message,
     uintn *transport_message_size, void *transport_message);
@@ -72,7 +72,7 @@ return_status spdm_transport_test_encode_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
-return_status spdm_transport_test_decode_message(
+return_status libspdm_transport_test_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
     uintn transport_message_size, const void *transport_message,
@@ -91,8 +91,8 @@ return_status spdm_transport_test_decode_message(
  *        It shall be no greater than 8.
  *        0 means no sequence number is required.
  **/
-uint8_t test_get_sequence_number(uint64_t sequence_number,
-                                 uint8_t *sequence_number_buffer);
+uint8_t libspdm_test_get_sequence_number(uint64_t sequence_number,
+                                         uint8_t *sequence_number_buffer);
 
 /**
  * Return max random number count in an SPDM secure message.
@@ -102,6 +102,6 @@ uint8_t test_get_sequence_number(uint64_t sequence_number,
  * @return Max random number count in an SPDM secured message.
  *        0 means no randum number is required.
  **/
-uint32_t test_get_max_random_number_count(void);
+uint32_t libspdm_test_get_max_random_number_count(void);
 
 #endif

@@ -8,14 +8,14 @@
 #include "toolchain_harness.h"
 #include "internal/libspdm_responder_lib.h"
 
-uintn get_max_buffer_size(void)
+uintn libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 void libspdm_test_responder_capabilities_case1(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -35,7 +35,7 @@ void libspdm_test_responder_capabilities_case1(void **State)
 
 void libspdm_test_responder_capabilities_case2(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -56,7 +56,7 @@ void libspdm_test_responder_capabilities_case2(void **State)
 
 void libspdm_test_responder_capabilities_case3(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -75,20 +75,20 @@ void libspdm_test_responder_capabilities_case3(void **State)
                                       &response_size, response);
 }
 
-spdm_test_context_t libspdm_test_responder_context = {
-    SPDM_TEST_CONTEXT_SIGNATURE,
+libspdm_test_context_t libspdm_test_responder_context = {
+    LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
 };
 
-void run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
 {
     void *State;
-    setup_spdm_test_context(&libspdm_test_responder_context);
+    libspdm_setup_test_context(&libspdm_test_responder_context);
 
     libspdm_test_responder_context.test_buffer = (void *)test_buffer;
     libspdm_test_responder_context.test_buffer_size = test_buffer_size;
 
-    spdm_unit_test_group_setup(&State);
+    libspdm_unit_test_group_setup(&State);
 
     /* Success Case */
     libspdm_test_responder_capabilities_case1(&State);
@@ -97,5 +97,5 @@ void run_test_harness(const void *test_buffer, uintn test_buffer_size)
     /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
     libspdm_test_responder_capabilities_case3(&State);
 
-    spdm_unit_test_group_teardown(&State);
+    libspdm_unit_test_group_teardown(&State);
 }

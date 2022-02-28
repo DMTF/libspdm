@@ -6,24 +6,24 @@
 
 #include "spdm_unit_fuzzing.h"
 
-spdm_test_context_t *m_spdm_test_context;
+libspdm_test_context_t *m_libspdm_test_context;
 
-spdm_test_context_t *get_spdm_test_context(void)
+libspdm_test_context_t *libspdm_get_test_context(void)
 {
-    return m_spdm_test_context;
+    return m_libspdm_test_context;
 }
 
-void setup_spdm_test_context(spdm_test_context_t *spdm_test_context)
+void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context)
 {
-    m_spdm_test_context = spdm_test_context;
+    m_libspdm_test_context = spdm_test_context;
 }
 
-uintn spdm_unit_test_group_setup(void **State)
+uintn libspdm_unit_test_group_setup(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
     void *spdm_context;
 
-    spdm_test_context = m_spdm_test_context;
+    spdm_test_context = m_libspdm_test_context;
     spdm_test_context->spdm_context =
         (void *)malloc(libspdm_get_context_size());
     if (spdm_test_context->spdm_context == NULL) {
@@ -36,16 +36,16 @@ uintn spdm_unit_test_group_setup(void **State)
                                     spdm_test_context->send_message,
                                     spdm_test_context->receive_message);
     libspdm_register_transport_layer_func(spdm_context,
-                                          spdm_transport_test_encode_message,
-                                          spdm_transport_test_decode_message);
+                                          libspdm_transport_test_encode_message,
+                                          libspdm_transport_test_decode_message);
 
     *State = spdm_test_context;
     return 0;
 }
 
-uintn spdm_unit_test_group_teardown(void **State)
+uintn libspdm_unit_test_group_teardown(void **State)
 {
-    spdm_test_context_t *spdm_test_context;
+    libspdm_test_context_t *spdm_test_context;
 
     spdm_test_context = *State;
     free(spdm_test_context->spdm_context);
@@ -53,8 +53,8 @@ uintn spdm_unit_test_group_teardown(void **State)
     return 0;
 }
 
-bool read_input_file(const char *file_name, void **file_data,
-                     uintn *file_size)
+bool libspdm_read_input_file(const char *file_name, void **file_data,
+                             uintn *file_size)
 {
     FILE *fp_in;
     uintn temp_result;
@@ -89,7 +89,7 @@ bool read_input_file(const char *file_name, void **file_data,
     return true;
 }
 
-void dump_hex_str(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -98,7 +98,7 @@ void dump_hex_str(const uint8_t *buffer, uintn buffer_size)
     }
 }
 
-void dump_data(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size)
 {
     uintn index;
 
@@ -107,7 +107,7 @@ void dump_data(const uint8_t *buffer, uintn buffer_size)
     }
 }
 
-void dump_hex(const uint8_t *data, uintn size)
+void libspdm_dump_hex(const uint8_t *data, uintn size)
 {
     uintn index;
     uintn count;
@@ -119,13 +119,13 @@ void dump_hex(const uint8_t *data, uintn size)
     left = size % COLUME_SIZE;
     for (index = 0; index < count; index++) {
         printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
+        libspdm_dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
         printf("\n");
     }
 
     if (left != 0) {
         printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        dump_data(data + index * COLUME_SIZE, left);
+        libspdm_dump_data(data + index * COLUME_SIZE, left);
         printf("\n");
     }
 }
