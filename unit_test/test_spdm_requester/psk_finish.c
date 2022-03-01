@@ -29,7 +29,7 @@ void libspdm_secured_message_set_response_handshake_encryption_key(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(key_size == secured_message_context->aead_key_size);
+    LIBSPDM_ASSERT(key_size == secured_message_context->aead_key_size);
     copy_mem(secured_message_context->handshake_secret.response_handshake_encryption_key,
              sizeof(secured_message_context->handshake_secret.response_handshake_encryption_key),
              key, secured_message_context->aead_key_size);
@@ -42,7 +42,7 @@ void libspdm_secured_message_set_response_handshake_salt(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(salt_size == secured_message_context->aead_iv_size);
+    LIBSPDM_ASSERT(salt_size == secured_message_context->aead_iv_size);
     copy_mem(secured_message_context->handshake_secret.response_handshake_salt,
              sizeof(secured_message_context->handshake_secret.response_handshake_salt),
              salt, secured_message_context->aead_iv_size);
@@ -1577,9 +1577,9 @@ void libspdm_test_requester_psk_finish_case10(void **state) {
 
         status = libspdm_send_receive_psk_finish (spdm_context, session_id);
         if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         } else {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
         }
 
         error_code++;

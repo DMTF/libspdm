@@ -25,7 +25,7 @@
  **/
 void *ec_new_by_nid(uintn nid)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -37,7 +37,7 @@ void *ec_new_by_nid(uintn nid)
  **/
 void ec_free(void *ec_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -72,7 +72,7 @@ void ec_free(void *ec_context)
 bool ec_generate_key(void *ec_context, uint8_t *public,
                      uintn *public_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -110,7 +110,7 @@ bool ec_compute_key(void *ec_context, const uint8_t *peer_public,
                     uintn peer_public_size, uint8_t *key,
                     uintn *key_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -147,7 +147,7 @@ bool ecdsa_sign(void *ec_context, uintn hash_nid,
                 const uint8_t *message_hash, uintn hash_size,
                 uint8_t *signature, uintn *sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -178,6 +178,6 @@ bool ecdsa_verify(void *ec_context, uintn hash_nid,
                   const uint8_t *message_hash, uintn hash_size,
                   const uint8_t *signature, uintn sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

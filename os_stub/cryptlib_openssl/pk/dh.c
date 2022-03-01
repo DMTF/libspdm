@@ -240,7 +240,7 @@ bool dh_generate_key(void *dh_context, uint8_t *public_key,
         if (size <= 0) {
             return false;
         }
-        ASSERT((uintn)size <= final_pub_key_size);
+        LIBSPDM_ASSERT((uintn)size <= final_pub_key_size);
 
         if (public_key != NULL) {
             zero_mem(public_key, *public_key_size);

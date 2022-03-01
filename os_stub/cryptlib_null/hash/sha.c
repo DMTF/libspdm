@@ -19,7 +19,7 @@
  **/
 void *sha256_new(void)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -31,7 +31,7 @@ void *sha256_new(void)
  **/
 void sha256_free(void *sha256_ctx)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -48,7 +48,7 @@ void sha256_free(void *sha256_ctx)
  **/
 bool sha256_init(void *sha256_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -68,7 +68,7 @@ bool sha256_init(void *sha256_context)
 bool sha256_duplicate(const void *sha256_context,
                       void *new_sha256_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -93,7 +93,7 @@ bool sha256_duplicate(const void *sha256_context,
 bool sha256_update(void *sha256_context, const void *data,
                    uintn data_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -119,7 +119,7 @@ bool sha256_update(void *sha256_context, const void *data,
  **/
 bool sha256_final(void *sha256_context, uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -144,7 +144,7 @@ bool sha256_final(void *sha256_context, uint8_t *hash_value)
 bool sha256_hash_all(const void *data, uintn data_size,
                      uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -157,7 +157,7 @@ bool sha256_hash_all(const void *data, uintn data_size,
  **/
 void *sha384_new(void)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -169,7 +169,7 @@ void *sha384_new(void)
  **/
 void sha384_free(void *sha384_ctx)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -186,7 +186,7 @@ void sha384_free(void *sha384_ctx)
  **/
 bool sha384_init(void *sha384_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -208,7 +208,7 @@ bool sha384_init(void *sha384_context)
 bool sha384_duplicate(const void *sha384_context,
                       void *new_sha384_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -233,7 +233,7 @@ bool sha384_duplicate(const void *sha384_context,
 bool sha384_update(void *sha384_context, const void *data,
                    uintn data_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -259,7 +259,7 @@ bool sha384_update(void *sha384_context, const void *data,
  **/
 bool sha384_final(void *sha384_context, uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -284,7 +284,7 @@ bool sha384_final(void *sha384_context, uint8_t *hash_value)
 bool sha384_hash_all(const void *data, uintn data_size,
                      uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -297,7 +297,7 @@ bool sha384_hash_all(const void *data, uintn data_size,
  **/
 void *sha512_new(void)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -309,7 +309,7 @@ void *sha512_new(void)
  **/
 void sha512_free(void *sha512_ctx)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -326,7 +326,7 @@ void sha512_free(void *sha512_ctx)
  **/
 bool sha512_init(void *sha512_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -348,7 +348,7 @@ bool sha512_init(void *sha512_context)
 bool sha512_duplicate(const void *sha512_context,
                       void *new_sha512_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -373,7 +373,7 @@ bool sha512_duplicate(const void *sha512_context,
 bool sha512_update(void *sha512_context, const void *data,
                    uintn data_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -399,7 +399,7 @@ bool sha512_update(void *sha512_context, const void *data,
  **/
 bool sha512_final(void *sha512_context, uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -424,6 +424,6 @@ bool sha512_final(void *sha512_context, uint8_t *hash_value)
 bool sha512_hash_all(const void *data, uintn data_size,
                      uint8_t *hash_value)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

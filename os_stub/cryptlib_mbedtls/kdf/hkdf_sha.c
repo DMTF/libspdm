@@ -46,7 +46,7 @@ bool hkdf_md_extract_and_expand(const mbedtls_md_type_t md_type,
     }
 
     md = mbedtls_md_info_from_type(md_type);
-    ASSERT(md != NULL);
+    LIBSPDM_ASSERT(md != NULL);
 
     ret = mbedtls_hkdf(md, salt, (uint32_t)salt_size, key, (uint32_t)key_size,
                        info, (uint32_t)info_size, out, (uint32_t)out_size);
@@ -106,7 +106,7 @@ bool hkdf_md_extract(const mbedtls_md_type_t md_type, const uint8_t *key,
     }
 
     md = mbedtls_md_info_from_type(md_type);
-    ASSERT(md != NULL);
+    LIBSPDM_ASSERT(md != NULL);
 
     ret = mbedtls_hkdf_extract(md, salt, (uint32_t)salt_size, key,
                                (uint32_t)key_size, prk_out);
@@ -156,7 +156,7 @@ bool hkdf_md_expand(const mbedtls_md_type_t md_type, const uint8_t *prk,
         md_size = SHA512_DIGEST_SIZE;
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     if (prk_size != md_size) {
@@ -164,7 +164,7 @@ bool hkdf_md_expand(const mbedtls_md_type_t md_type, const uint8_t *prk,
     }
 
     md = mbedtls_md_info_from_type(md_type);
-    ASSERT(md != NULL);
+    LIBSPDM_ASSERT(md != NULL);
 
     ret = mbedtls_hkdf_expand(md, prk, (uint32_t)prk_size, info,
                               (uint32_t)info_size, out, (uint32_t)out_size);

@@ -24,7 +24,7 @@
  **/
 void *dh_new_by_nid(uintn nid)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -38,7 +38,7 @@ void *dh_new_by_nid(uintn nid)
  **/
 void dh_free(void *dh_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -66,7 +66,7 @@ void dh_free(void *dh_context)
 bool dh_generate_parameter(void *dh_context, uintn generator,
                            uintn prime_length, uint8_t *prime)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -94,7 +94,7 @@ bool dh_generate_parameter(void *dh_context, uintn generator,
 bool dh_set_parameter(void *dh_context, uintn generator,
                       uintn prime_length, const uint8_t *prime)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -123,7 +123,7 @@ bool dh_set_parameter(void *dh_context, uintn generator,
 bool dh_generate_key(void *dh_context, uint8_t *public_key,
                      uintn *public_key_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -155,6 +155,6 @@ bool dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
                     uintn peer_public_key_size, uint8_t *key,
                     uintn *key_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

@@ -60,21 +60,21 @@ int copy_mem(void *restrict dst_buf, uintn dst_len,
     /* Check for case where "dst" or "dst_len" may be invalid.
      * Do not zero "dst" in this case. */
     if (dst == NULL || dst_len > (SIZE_MAX >> 1)) {
-        ASSERT(0);
+        LIBSPDM_ASSERT(0);
         return -1;
     }
 
     /* Gaurd against invalid source. Zero "dst" in this case. */
     if (src == NULL) {
         zero_mem(dst_buf, dst_len);
-        ASSERT(0);
+        LIBSPDM_ASSERT(0);
         return -1;
     }
 
     /* Guard against overlap case. Zero "dst" in these cases. */
     if ((src < dst && src + src_len > dst) || (dst < src && dst + src_len > src)) {
         zero_mem(dst_buf, dst_len);
-        ASSERT(0);
+        LIBSPDM_ASSERT(0);
         return -1;
     }
 
@@ -83,7 +83,7 @@ int copy_mem(void *restrict dst_buf, uintn dst_len,
         src_len > (SIZE_MAX >> 1)) {
 
         zero_mem(dst_buf, dst_len);
-        ASSERT(0);
+        LIBSPDM_ASSERT(0);
         return -1;
     }
 

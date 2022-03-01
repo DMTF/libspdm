@@ -10,7 +10,7 @@ uintn ascii_str_len(const char *string)
 {
     uintn length;
 
-    ASSERT(string != NULL);
+    LIBSPDM_ASSERT(string != NULL);
     if (string == NULL) {
         return 0;
     }
@@ -23,7 +23,7 @@ uintn ascii_str_len(const char *string)
 
 void my_print(const char *message)
 {
-    debug_print(DEBUG_INFO, "%s", message);
+    libspdm_debug_print(LIBSPDM_DEBUG_INFO, "%s", message);
 }
 
 /**

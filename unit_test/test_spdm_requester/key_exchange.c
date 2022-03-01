@@ -435,8 +435,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
@@ -595,8 +595,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
@@ -807,8 +807,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                      spdm_response, (uintn)ptr - (uintn)spdm_response);
             m_libspdm_local_buffer_size +=
                 ((uintn)ptr - (uintn)spdm_response);
-            DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-                   m_libspdm_local_buffer_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                           m_libspdm_local_buffer_size));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             libspdm_init_managed_buffer(&th_curr,
                                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
@@ -1044,8 +1044,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                      spdm_response, (uintn)ptr - (uintn)spdm_response);
             m_libspdm_local_buffer_size +=
                 ((uintn)ptr - (uintn)spdm_response);
-            DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-                   m_libspdm_local_buffer_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                           m_libspdm_local_buffer_size));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             libspdm_init_managed_buffer(&th_curr,
                                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
@@ -1246,8 +1246,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
@@ -1415,8 +1415,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -1584,8 +1584,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
@@ -1754,8 +1754,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -1915,8 +1915,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2076,8 +2076,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2246,8 +2246,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2408,8 +2408,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2561,8 +2561,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2695,8 +2695,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -2856,8 +2856,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;
@@ -3017,8 +3017,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3179,8 +3179,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3341,8 +3341,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3503,8 +3503,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3666,8 +3666,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3829,8 +3829,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -3992,8 +3992,8 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer =  (uint8_t *)data;
@@ -4761,7 +4761,7 @@ void libspdm_test_requester_key_exchange_case10(void **state) {
                                                     0, 0, &session_id, &heartbeat_period,
                                                     &slot_id_param, measurement_hash);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/

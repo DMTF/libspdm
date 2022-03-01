@@ -36,7 +36,7 @@ static void libspdm_secured_message_set_request_finished_key(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(key_size == secured_message_context->hash_size);
+    LIBSPDM_ASSERT(key_size == secured_message_context->hash_size);
     copy_mem(secured_message_context->handshake_secret.request_finished_key,
              sizeof(secured_message_context->handshake_secret.request_finished_key),
              key, secured_message_context->hash_size);

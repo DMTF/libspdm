@@ -30,7 +30,7 @@ void libspdm_secured_message_set_response_handshake_encryption_key(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(key_size == secured_message_context->aead_key_size);
+    LIBSPDM_ASSERT(key_size == secured_message_context->aead_key_size);
     copy_mem(secured_message_context->handshake_secret.response_handshake_encryption_key,
              sizeof(secured_message_context->handshake_secret.response_handshake_encryption_key),
              key, secured_message_context->aead_key_size);
@@ -42,7 +42,7 @@ void libspdm_secured_message_set_response_handshake_salt(void *spdm_secured_mess
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(salt_size == secured_message_context->aead_iv_size);
+    LIBSPDM_ASSERT(salt_size == secured_message_context->aead_iv_size);
     copy_mem(secured_message_context->handshake_secret.response_handshake_salt,
              sizeof(secured_message_context->handshake_secret.response_handshake_salt),
              salt, secured_message_context->aead_iv_size);

@@ -229,7 +229,7 @@ return_status libspdm_get_response_finish(void *context, uintn request_size,
         hmac_size = 0;
     }
 
-    ASSERT(*response_size >= sizeof(spdm_finish_response_t) + hmac_size);
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_finish_response_t) + hmac_size);
     *response_size = sizeof(spdm_finish_response_t) + hmac_size;
     zero_mem(response, *response_size);
     spdm_response = response;
@@ -272,7 +272,7 @@ return_status libspdm_get_response_finish(void *context, uintn request_size,
         }
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, false,
                                         th2_hash_data);
     if (RETURN_ERROR(status)) {

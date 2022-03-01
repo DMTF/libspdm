@@ -91,16 +91,16 @@ return_status libspdm_start_session(void *context, bool use_psk,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
+                           status));
             return status;
         }
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
 
@@ -115,17 +115,17 @@ return_status libspdm_start_session(void *context, bool use_psk,
                 spdm_context, session_id,
                 session_info->mut_auth_requested,
                 &req_slot_id_param);
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_encapsulated_request - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_encapsulated_request - %p\n",
+                           status));
             if (RETURN_ERROR(status)) {
                 return status;
             }
             break;
         default:
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
-                   session_info->mut_auth_requested));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
             return RETURN_UNSUPPORTED;
         }
 
@@ -134,11 +134,11 @@ return_status libspdm_start_session(void *context, bool use_psk,
         }
         status = libspdm_send_receive_finish(spdm_context, *session_id,
                                              req_slot_id_param);
-        DEBUG((DEBUG_INFO,
-               "libspdm_start_session - libspdm_send_receive_finish - %p\n",
-               status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_start_session - libspdm_send_receive_finish - %p\n",
+                       status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
@@ -147,9 +147,9 @@ return_status libspdm_start_session(void *context, bool use_psk,
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
+                           status));
             return status;
         }
 
@@ -159,9 +159,9 @@ return_status libspdm_start_session(void *context, bool use_psk,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = libspdm_send_receive_psk_finish(spdm_context,
                                                      *session_id);
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_psk_finish - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_psk_finish - %p\n",
+                           status));
         }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
@@ -231,25 +231,28 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
 
     if (!use_psk) {
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        ASSERT (requester_random_in_size == 0 || requester_random_in_size == SPDM_RANDOM_DATA_SIZE);
-        ASSERT (requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
-        ASSERT (responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
+        LIBSPDM_ASSERT (
+            requester_random_in_size == 0 || requester_random_in_size == SPDM_RANDOM_DATA_SIZE);
+        LIBSPDM_ASSERT (
+            requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
+        LIBSPDM_ASSERT (
+            responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
         status = libspdm_send_receive_key_exchange_ex(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
+                           status));
             return status;
         }
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
 
@@ -264,17 +267,17 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
                 spdm_context, session_id,
                 session_info->mut_auth_requested,
                 &req_slot_id_param);
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_encapsulated_request - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_encapsulated_request - %p\n",
+                           status));
             if (RETURN_ERROR(status)) {
                 return status;
             }
             break;
         default:
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
-                   session_info->mut_auth_requested));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
             return RETURN_UNSUPPORTED;
         }
 
@@ -283,11 +286,11 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
         }
         status = libspdm_send_receive_finish(spdm_context, *session_id,
                                              req_slot_id_param);
-        DEBUG((DEBUG_INFO,
-               "libspdm_start_session - libspdm_send_receive_finish - %p\n",
-               status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_start_session - libspdm_send_receive_finish - %p\n",
+                       status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
@@ -299,9 +302,9 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             requester_random, requester_random_size,
             responder_random, responder_random_size);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
+                           status));
             return status;
         }
 
@@ -311,12 +314,12 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
             status = libspdm_send_receive_psk_finish(spdm_context,
                                                      *session_id);
-            DEBUG((DEBUG_INFO,
-                   "libspdm_start_session - libspdm_send_receive_psk_finish - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - libspdm_send_receive_psk_finish - %p\n",
+                           status));
         }
     #else /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return RETURN_UNSUPPORTED;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
@@ -347,7 +350,7 @@ return_status libspdm_stop_session(void *context, uint32_t session_id,
 
     status = libspdm_send_receive_end_session(spdm_context, session_id,
                                               end_session_attributes);
-    DEBUG((DEBUG_INFO, "libspdm_stop_session - %p\n", status));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_stop_session - %p\n", status));
 
     return status;
 }

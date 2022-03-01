@@ -37,7 +37,7 @@ libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
 
-    ASSERT(*encap_request_size >= sizeof(spdm_get_certificate_request_t));
+    LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_get_certificate_request_t));
     *encap_request_size = sizeof(spdm_get_certificate_request_t);
 
     spdm_request = encap_request;
@@ -49,8 +49,8 @@ libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
     spdm_request->offset = (uint16_t)libspdm_get_managed_buffer_size(
         &spdm_context->encap_context.certificate_chain_buffer);
     spdm_request->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-    DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
-           spdm_request->offset, spdm_request->length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
+                   spdm_request->offset, spdm_request->length));
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
@@ -153,10 +153,10 @@ return_status libspdm_process_encap_response_certificate(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
-           libspdm_get_managed_buffer_size(
-               &spdm_context->encap_context.certificate_chain_buffer),
-           spdm_response->portion_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
+                   libspdm_get_managed_buffer_size(
+                       &spdm_context->encap_context.certificate_chain_buffer),
+                   spdm_response->portion_length));
     libspdm_internal_dump_hex((void *)(spdm_response + 1),
                               spdm_response->portion_length);
 

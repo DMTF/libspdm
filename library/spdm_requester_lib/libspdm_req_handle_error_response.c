@@ -138,9 +138,9 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
     spdm_response = response;
     extend_error_data =
         (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
-    ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
-    ASSERT(spdm_response->header.param1 ==
-           SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    LIBSPDM_ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
+    LIBSPDM_ASSERT(spdm_response->header.param1 ==
+                   SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     if (extend_error_data->request_code != original_request_code) {
         return RETURN_DEVICE_ERROR;
     }
@@ -194,7 +194,7 @@ return_status libspdm_handle_error_response_main(
     spdm_message_header_t *spdm_response;
 
     spdm_response = response;
-    ASSERT(spdm_response->request_response_code == SPDM_ERROR);
+    LIBSPDM_ASSERT(spdm_response->request_response_code == SPDM_ERROR);
 
     if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
         (session_id != NULL)) {

@@ -240,13 +240,13 @@ return_status libspdm_get_response_algorithms(void *context,
 
     ext_alg_total_count = 0;
 
-    ASSERT(!(((spdm_context->local_context.capability.flags &
-               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
-             (spdm_context->local_context.algorithm.measurement_spec == 0)));
+    LIBSPDM_ASSERT(!(((spdm_context->local_context.capability.flags &
+                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
+                     (spdm_context->local_context.algorithm.measurement_spec == 0)));
 
-    ASSERT(!(((spdm_context->local_context.capability.flags &
-               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
-             (spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
+    LIBSPDM_ASSERT(!(((spdm_context->local_context.capability.flags &
+                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
+                     (spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
@@ -352,7 +352,7 @@ return_status libspdm_get_response_algorithms(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(libspdm_algorithms_response_mine_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(libspdm_algorithms_response_mine_t));
     *response_size = sizeof(libspdm_algorithms_response_mine_t);
     zero_mem(response, *response_size);
     spdm_response = response;

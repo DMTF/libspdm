@@ -271,7 +271,7 @@ bool sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
         ret_val = false;
         goto done;
     }
-    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public_key != NULL) {
         zero_mem(public_key, *public_key_size);
@@ -430,7 +430,7 @@ bool sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
         ret_val = false;
         goto done;
     }
-    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public != NULL) {
         zero_mem(public, *public_size);
@@ -586,13 +586,13 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
 
     half_size = (uint8_t)(sig_size / 2);
 
-    ASSERT(der_signature[0] == 0x30);
-    ASSERT((uintn)(der_signature[1] + 2) == der_sig_size);
-    ASSERT(der_signature[2] == 0x02);
+    LIBSPDM_ASSERT(der_signature[0] == 0x30);
+    LIBSPDM_ASSERT((uintn)(der_signature[1] + 2) == der_sig_size);
+    LIBSPDM_ASSERT(der_signature[2] == 0x02);
     der_r_size = der_signature[3];
-    ASSERT(der_signature[4 + der_r_size] == 0x02);
+    LIBSPDM_ASSERT(der_signature[4 + der_r_size] == 0x02);
     der_s_size = der_signature[5 + der_r_size];
-    ASSERT(der_sig_size == (uintn)(der_r_size + der_s_size + 6));
+    LIBSPDM_ASSERT(der_sig_size == (uintn)(der_r_size + der_s_size + 6));
 
     if (der_signature[4] != 0) {
         r_size = der_r_size;
@@ -608,7 +608,7 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
         s_size = der_s_size - 1;
         bn_s = &der_signature[7 + der_r_size];
     }
-    ASSERT(r_size <= half_size && s_size <= half_size);
+    LIBSPDM_ASSERT(r_size <= half_size && s_size <= half_size);
     zero_mem(signature, sig_size);
     copy_mem(&signature[0 + half_size - r_size],
              sig_size - (0 + half_size - r_size),
@@ -663,7 +663,7 @@ static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
         der_s_size = s_size + 1;
     }
     der_sig_size = der_r_size + der_s_size + 6;
-    ASSERT(der_sig_size <= *der_sig_size_in_out);
+    LIBSPDM_ASSERT(der_sig_size <= *der_sig_size_in_out);
     *der_sig_size_in_out = der_sig_size;
     zero_mem(der_signature, der_sig_size);
     der_signature[0] = 0x30;

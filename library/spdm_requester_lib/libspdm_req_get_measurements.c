@@ -104,7 +104,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
         session_state = libspdm_secured_message_get_session_state(
@@ -160,9 +160,9 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
             copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
                      requester_nonce_in, SPDM_NONCE_SIZE);
         }
-        DEBUG((DEBUG_INFO, "ClientNonce - "));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
         libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         spdm_request.slot_id_param = slot_id_param;
 
         if (requester_nonce != NULL) {
@@ -251,8 +251,8 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
             sizeof(spdm_response.measurement_record)) {
             return RETURN_DEVICE_ERROR;
         }
-        DEBUG((DEBUG_INFO, "measurement_record_length - 0x%06x\n",
-               measurement_record_data_length));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_record_length - 0x%06x\n",
+                       measurement_record_data_length));
     }
 
     measurement_record_data = spdm_response.measurement_record;
@@ -275,9 +275,9 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         }
         ptr = measurement_record_data + measurement_record_data_length;
         nonce = ptr;
-        DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
         libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
             copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
@@ -318,11 +318,11 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
 
         opaque = ptr;
         ptr += opaque_length;
-        DEBUG((DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
         libspdm_internal_dump_hex(opaque, opaque_length);
 
         signature = ptr;
-        DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
         libspdm_internal_dump_hex(signature, signature_size);
 
         result = libspdm_verify_measurement_signature(
@@ -344,9 +344,9 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         ptr = measurement_record_data + measurement_record_data_length;
 
         nonce = ptr;
-        DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
         libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
             copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);

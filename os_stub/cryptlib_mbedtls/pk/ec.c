@@ -191,7 +191,7 @@ bool ec_get_pub_key(void *ec_context, uint8_t *public_key,
 
     x_size = mbedtls_mpi_size(&ctx->Q.X);
     y_size = mbedtls_mpi_size(&ctx->Q.Y);
-    ASSERT(x_size <= half_size && y_size <= half_size);
+    LIBSPDM_ASSERT(x_size <= half_size && y_size <= half_size);
 
     ret = mbedtls_mpi_write_binary(
         &ctx->Q.X, &public_key[0 + half_size - x_size], x_size);
@@ -301,7 +301,7 @@ bool ec_generate_key(void *ec_context, uint8_t *public,
 
     x_size = mbedtls_mpi_size(&ctx->Q.X);
     y_size = mbedtls_mpi_size(&ctx->Q.Y);
-    ASSERT(x_size <= half_size && y_size <= half_size);
+    LIBSPDM_ASSERT(x_size <= half_size && y_size <= half_size);
 
     ret = mbedtls_mpi_write_binary(&ctx->Q.X,
                                    &public[0 + half_size - x_size], x_size);
@@ -519,7 +519,7 @@ bool ecdsa_sign(void *ec_context, uintn hash_nid,
 
     r_size = mbedtls_mpi_size(&bn_r);
     s_size = mbedtls_mpi_size(&bn_s);
-    ASSERT(r_size <= half_size && s_size <= half_size);
+    LIBSPDM_ASSERT(r_size <= half_size && s_size <= half_size);
 
     ret = mbedtls_mpi_write_binary(
         &bn_r, &signature[0 + half_size - r_size], r_size);

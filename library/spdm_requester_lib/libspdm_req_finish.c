@@ -67,7 +67,7 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         status = RETURN_UNSUPPORTED;
         goto error;
     }
@@ -233,7 +233,7 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-        DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
         libspdm_internal_dump_hex(spdm_response.verify_data, hmac_size);
         result = libspdm_verify_finish_rsp_hmac(spdm_context, session_info,
                                                 spdm_response.verify_data,
@@ -254,7 +254,7 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
         }
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, true,
                                         th2_hash_data);
     if (RETURN_ERROR(status)) {

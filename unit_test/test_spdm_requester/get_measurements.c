@@ -383,8 +383,8 @@ return_status libspdm_requester_get_measurements_test_send_message(
         message_size = libspdm_test_get_measurement_request_size(
             spdm_context, (uint8_t *)request + header_size,
             request_size - header_size);
-        DEBUG((DEBUG_INFO, "Request (0x%x):\n",
-               request_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%x):\n",
+                       request_size));
         libspdm_dump_hex(request, request_size);
         libspdm_transport_test_decode_message(
             spdm_context, &session_id, &is_app_message,
@@ -478,13 +478,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -566,13 +566,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -705,13 +705,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                      spdm_response, (uintn)ptr - (uintn)spdm_response);
             m_libspdm_local_buffer_size +=
                 ((uintn)ptr - (uintn)spdm_response);
-            DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-                   m_libspdm_local_buffer_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                           m_libspdm_local_buffer_size));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                              m_libspdm_local_buffer_size, hash_data);
-            DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-                   libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                           libspdm_get_hash_size(m_libspdm_use_hash_algo)));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -860,13 +860,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                      spdm_response, (uintn)ptr - (uintn)spdm_response);
             m_libspdm_local_buffer_size +=
                 ((uintn)ptr - (uintn)spdm_response);
-            DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-                   m_libspdm_local_buffer_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                           m_libspdm_local_buffer_size));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                              m_libspdm_local_buffer_size, hash_data);
-            DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-                   libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                           libspdm_get_hash_size(m_libspdm_use_hash_algo)));
             libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -1106,13 +1106,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_get_random_number(sig_size, ptr);
@@ -1243,13 +1243,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -1331,13 +1331,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -1875,13 +1875,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -1973,13 +1973,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2070,13 +2070,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2165,13 +2165,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2538,13 +2538,13 @@ return_status libspdm_requester_get_measurements_test_receive_message(
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -5078,10 +5078,11 @@ void libspdm_test_requester_get_measurements_case33(void **state) {
                                           &number_of_block, &measurement_record_length,
                                           measurement_record);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/
-        ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_m.buffer_size, 0,
+                                       error_code);
 #endif
 
         error_code++;

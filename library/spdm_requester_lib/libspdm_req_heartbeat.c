@@ -51,7 +51,7 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return RETURN_UNSUPPORTED;
     }
     session_state = libspdm_secured_message_get_session_state(

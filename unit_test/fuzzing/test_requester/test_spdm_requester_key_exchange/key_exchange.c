@@ -172,7 +172,8 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                  spdm_response,
                  (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n", m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         cert_buffer = (uint8_t *)data;

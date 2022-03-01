@@ -62,7 +62,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         status = RETURN_UNSUPPORTED;
         goto error;
     }
@@ -161,7 +161,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
         goto error;
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
     status = libspdm_calculate_th2_hash(spdm_context, session_info, true,
                                         th2_hash_data);
     if (RETURN_ERROR(status)) {

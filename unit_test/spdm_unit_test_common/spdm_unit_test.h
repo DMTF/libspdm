@@ -46,7 +46,7 @@ extern uint8_t m_libspdm_use_tcb_hash_value[LIBSPDM_MAX_HASH_SIZE];
 #define LIBSPDM_ERROR_CODE_RESERVED_3F             0x3F
 #define LIBSPDM_ERROR_CODE_RESERVED_FD             0xFD
 
-#define ASSERT_INT_EQUAL_CASE(value, expected, case) { \
+#define LIBSPDM_ASSERT_INT_EQUAL_CASE(value, expected, case) { \
         if(value != expected) { \
             fprintf(stderr, "[ERRCODE:%02x] ", case); \
         } \

@@ -73,8 +73,8 @@ return_status libspdm_test_encode_message(const uint32_t *session_id, uintn mess
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
 
-    ASSERT(*transport_message_size >=
-           aligned_message_size + sizeof(libspdm_test_message_header_t));
+    LIBSPDM_ASSERT(*transport_message_size >=
+                   aligned_message_size + sizeof(libspdm_test_message_header_t));
     if (*transport_message_size <
         aligned_message_size + sizeof(libspdm_test_message_header_t)) {
         *transport_message_size =
@@ -87,7 +87,7 @@ return_status libspdm_test_encode_message(const uint32_t *session_id, uintn mess
     if (session_id != NULL) {
         test_message_header->message_type =
             LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
-        ASSERT(*session_id == *(uint32_t *)(message));
+        LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
         if (*session_id != *(uint32_t *)(message)) {
             return RETURN_UNSUPPORTED;
         }
@@ -129,7 +129,7 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
     init_message_size = *message_size;
     alignment = LIBSPDM_TEST_ALIGNMENT;
 
-    ASSERT(transport_message_size > sizeof(libspdm_test_message_header_t));
+    LIBSPDM_ASSERT(transport_message_size > sizeof(libspdm_test_message_header_t));
     if (transport_message_size <= sizeof(libspdm_test_message_header_t)) {
         return RETURN_UNSUPPORTED;
     }
@@ -138,7 +138,7 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
 
     switch (test_message_header->message_type) {
     case LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST:
-        ASSERT(session_id != NULL);
+        LIBSPDM_ASSERT(session_id != NULL);
         if (session_id == NULL) {
             return RETURN_UNSUPPORTED;
         }
@@ -158,8 +158,8 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
         return RETURN_UNSUPPORTED;
     }
 
-    ASSERT(((transport_message_size - sizeof(libspdm_test_message_header_t)) &
-            (alignment - 1)) == 0);
+    LIBSPDM_ASSERT(((transport_message_size - sizeof(libspdm_test_message_header_t)) &
+                    (alignment - 1)) == 0);
 
     if (*message_size <
         transport_message_size - sizeof(libspdm_test_message_header_t)) {
@@ -177,8 +177,8 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
         }
         *message_size =
             transport_message_size - sizeof(libspdm_test_message_header_t);
-        ASSERT(*message_size >=
-               transport_message_size - sizeof(libspdm_test_message_header_t));
+        LIBSPDM_ASSERT(*message_size >=
+                       transport_message_size - sizeof(libspdm_test_message_header_t));
         return RETURN_BUFFER_TOO_SMALL;
     }
     *message_size = transport_message_size - sizeof(libspdm_test_message_header_t);

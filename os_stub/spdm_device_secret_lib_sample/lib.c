@@ -61,7 +61,7 @@ bool read_responder_private_certificate(uint32_t base_asym_algo,
         file = "ed448/end_responder.key";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, data, size);
@@ -106,7 +106,7 @@ bool read_requester_private_certificate(uint16_t req_base_asym_alg,
         file = "ed448/end_requester.key";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, data, size);
@@ -363,8 +363,8 @@ return_status libspdm_measurement_collection(
     bool use_bit_stream;
     uintn measurement_block_size;
 
-    ASSERT(measurement_specification ==
-           SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF);
+    LIBSPDM_ASSERT(measurement_specification ==
+                   SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF);
 
     if (measurement_specification !=
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
@@ -372,7 +372,7 @@ return_status libspdm_measurement_collection(
     }
 
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
-    ASSERT(hash_size != 0);
+    LIBSPDM_ASSERT(hash_size != 0);
 
     use_bit_stream = false;
     if ((measurement_hash_algo == SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) ||
@@ -410,7 +410,7 @@ return_status libspdm_measurement_collection(
         total_size_needed +=
             (sizeof(spdm_measurement_block_dmtf_t) + sizeof(spdm_measurements_device_mode_t));
 
-        ASSERT(total_size_needed <= *measurements_size);
+        LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
         if (total_size_needed > *measurements_size) {
             return RETURN_BUFFER_TOO_SMALL;
         }
@@ -458,7 +458,7 @@ return_status libspdm_measurement_collection(
                     sizeof(spdm_measurement_block_dmtf_t) +
                     MEASUREMENT_RAW_DATA_SIZE;
             }
-            ASSERT(total_size_needed <= *measurements_size);
+            LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
                 return RETURN_BUFFER_TOO_SMALL;
             }
@@ -478,7 +478,7 @@ return_status libspdm_measurement_collection(
             total_size_needed =
                 sizeof(spdm_measurement_block_dmtf_t) +
                 sizeof(spdm_measurements_secure_version_number_t);
-            ASSERT(total_size_needed <= *measurements_size);
+            LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
                 return RETURN_BUFFER_TOO_SMALL;
             }
@@ -496,7 +496,7 @@ return_status libspdm_measurement_collection(
             total_size_needed =
                 sizeof(spdm_measurement_block_dmtf_t) +
                 MEASUREMENT_MANIFEST_SIZE;
-            ASSERT(total_size_needed <= *measurements_size);
+            LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
                 return RETURN_BUFFER_TOO_SMALL;
             }
@@ -513,7 +513,7 @@ return_status libspdm_measurement_collection(
             total_size_needed =
                 sizeof(spdm_measurement_block_dmtf_t) +
                 sizeof(spdm_measurements_device_mode_t);
-            ASSERT(total_size_needed <= *measurements_size);
+            LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
                 return RETURN_BUFFER_TOO_SMALL;
             }
@@ -607,8 +607,8 @@ bool libspdm_generate_measurement_summary_hash(
             return false;
         }
 
-        ASSERT(device_measurement_count <=
-               LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
+        LIBSPDM_ASSERT(device_measurement_count <=
+                       LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
 
         /* double confirm that MeasurmentData internal size is correct*/
         measurment_data_size = 0;
@@ -619,13 +619,13 @@ bool libspdm_generate_measurement_summary_hash(
                 cached_measurment_block
                 ->measurement_block_common_header
                 .measurement_size;
-            ASSERT(cached_measurment_block
-                   ->measurement_block_common_header
-                   .measurement_size ==
-                   sizeof(spdm_measurement_block_dmtf_header_t) +
-                   cached_measurment_block
-                   ->measurement_block_dmtf_header
-                   .dmtf_spec_measurement_value_size);
+            LIBSPDM_ASSERT(cached_measurment_block
+                           ->measurement_block_common_header
+                           .measurement_size ==
+                           sizeof(spdm_measurement_block_dmtf_header_t) +
+                           cached_measurment_block
+                           ->measurement_block_dmtf_header
+                           .dmtf_spec_measurement_value_size);
             measurment_data_size +=
                 cached_measurment_block
                 ->measurement_block_common_header
@@ -635,8 +635,8 @@ bool libspdm_generate_measurement_summary_hash(
                          measurment_block_size);
         }
 
-        ASSERT(measurment_data_size <=
-               LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE);
+        LIBSPDM_ASSERT(measurment_data_size <=
+                       LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE);
 
         /* get required data and hash them*/
         cached_measurment_block = (void *)device_measurement;

@@ -78,10 +78,10 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
 
     switch (data_type) {
     case LIBSPDM_DATA_SPDM_VERSION:
-        ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
+        LIBSPDM_ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             /* Only have one connected version */
-            ASSERT (data_size == sizeof(spdm_version_number_t));
+            LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));
             copy_mem(&(spdm_context->connection_info.version),
                      sizeof(spdm_context->connection_info.version),
                      data,
@@ -99,10 +99,10 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
-        ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
+        LIBSPDM_ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             /* Only have one connected version */
-            ASSERT (data_size == sizeof(spdm_version_number_t));
+            LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));
             copy_mem(&(spdm_context->connection_info.secured_message_version),
                      sizeof(spdm_context->connection_info.secured_message_version),
                      data,
@@ -128,23 +128,24 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
 
     #if !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-        ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
+        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-        ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
+        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
     #if !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-        ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
+        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
     #if !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
+        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ==
+                       0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-        ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
+        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
@@ -173,7 +174,7 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
             return RETURN_INVALID_PARAMETER;
         }
         /* Only allow set smaller value*/
-        ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        LIBSPDM_ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         spdm_context->local_context.capability.data_transfer_size =
             *(uint32_t *)data;
         break;
@@ -182,7 +183,7 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
             return RETURN_INVALID_PARAMETER;
         }
         /* Only allow set smaller value. Need different value for CHUNK - TBD*/
-        ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        LIBSPDM_ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
         spdm_context->local_context.capability.max_spdm_msg_size =
             *(uint32_t *)data;
         break;
@@ -1621,7 +1622,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
         finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
-        ASSERT (finished_key_ready);
+        LIBSPDM_ASSERT (finished_key_ready);
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
 
@@ -1691,14 +1692,14 @@ return_status libspdm_append_message_f(void *context, void *session_info,
             /* It is first time call, backup current message_k context
              * this backup will be used in reset_message_f.*/
 
-            ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
+            LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
             spdm_session_info->session_transcript.digest_context_th_backup = libspdm_hash_new (
                 spdm_context->connection_info.algorithm.base_hash_algo);
             libspdm_hash_duplicate (spdm_context->connection_info.algorithm.base_hash_algo,
                                     spdm_session_info->session_transcript.digest_context_th,
                                     spdm_session_info->session_transcript.digest_context_th_backup);
 
-            ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
+            LIBSPDM_ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
             spdm_session_info->session_transcript.hmac_rsp_context_th_backup =
                 libspdm_hmac_new_with_response_finished_key (
                     secured_message_context);
@@ -1706,7 +1707,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
                                                                spdm_session_info->session_transcript.hmac_rsp_context_th,
                                                                spdm_session_info->session_transcript.hmac_rsp_context_th_backup);
 
-            ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
+            LIBSPDM_ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
             spdm_session_info->session_transcript.hmac_req_context_th_backup =
                 libspdm_hmac_new_with_request_finished_key (
                     secured_message_context);
@@ -1718,7 +1719,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
 
         /* prepare digest_context_th*/
 
-        ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
+        LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
                 libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1733,7 +1734,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
 
         /* prepare hmac_rsp_context_th*/
 
-        ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
+        LIBSPDM_ASSERT (spdm_session_info->session_transcript.hmac_rsp_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
                 libspdm_hmac_update_with_response_finished_key (secured_message_context,
@@ -1748,7 +1749,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
 
         /* prepare hmac_req_context_th*/
 
-        ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
+        LIBSPDM_ASSERT (spdm_session_info->session_transcript.hmac_req_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
                 libspdm_hmac_update_with_request_finished_key (secured_message_context,

@@ -139,10 +139,10 @@ return_status libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     }
 
     for (index = 0; index < digest_count; index++) {
-        DEBUG((DEBUG_INFO, "digest (0x%x) - ", index));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
         libspdm_internal_dump_data(&spdm_response.digest[digest_size * index],
                                    digest_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     result = libspdm_verify_peer_digests(

@@ -9,11 +9,11 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-/* #define TEST_DEBUG*/
-#ifdef TEST_DEBUG
-#define TEST_DEBUG_PRINT(format, ...) printf(format, ## __VA_ARGS__)
+/* #define TEST_LIBSPDM_DEBUG*/
+#ifdef TEST_LIBSPDM_DEBUG
+#define TEST_LIBSPDM_DEBUG_PRINT(format, ...) printf(format, ## __VA_ARGS__)
 #else
-#define TEST_DEBUG_PRINT(...)
+#define TEST_LIBSPDM_DEBUG_PRINT(...)
 #endif
 
 spdm_get_certificate_request_t m_libspdm_get_certificate_request1 = {
@@ -406,7 +406,7 @@ void libspdm_test_responder_certificate_case7(void **state)
     m_libspdm_get_certificate_request3.offset = 0;
 
     for (int i = 0; i < sizeof(test_lenghts) / sizeof(test_lenghts[0]); i++) {
-        TEST_DEBUG_PRINT("i:%d test_lenghts[i]:%u\n", i, test_lenghts[i]);
+        TEST_LIBSPDM_DEBUG_PRINT("i:%d test_lenghts[i]:%u\n", i, test_lenghts[i]);
         m_libspdm_get_certificate_request3.length = test_lenghts[i];
         /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN (implementation specific?)*/
         expected_chunk_size = MIN(m_libspdm_get_certificate_request3.length,
@@ -492,7 +492,7 @@ void libspdm_test_responder_certificate_case8(void **state)
     test_offsets[2] = (uint16_t)(test_offsets[2] + data_size);
 
     for (int i = 0; i < sizeof(test_offsets) / sizeof(test_offsets[0]); i++) {
-        TEST_DEBUG_PRINT("i:%d test_offsets[i]:%u\n", i, test_offsets[i]);
+        TEST_LIBSPDM_DEBUG_PRINT("i:%d test_offsets[i]:%u\n", i, test_offsets[i]);
         m_libspdm_get_certificate_request3.offset = test_offsets[i];
 
         /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
@@ -597,13 +597,13 @@ void libspdm_test_responder_certificate_case9(void **state)
     test_sizes[2] += (uint16_t)(test_sizes[2] + data_size);
 
     for (int i = 0; i < sizeof(test_sizes) / sizeof(test_sizes[0]); i++) {
-        TEST_DEBUG_PRINT("i:%d test_sizes[i]=length:%u\n", i,
-                         test_sizes[i]);
+        TEST_LIBSPDM_DEBUG_PRINT("i:%d test_sizes[i]=length:%u\n", i,
+                                 test_sizes[i]);
         m_libspdm_get_certificate_request3.length = test_sizes[i];
         for (int j = 0; j < sizeof(test_sizes) / sizeof(test_sizes[0]);
              j++) {
-            TEST_DEBUG_PRINT("\tj:%d test_sizes[j]=offset:%u\n", j,
-                             test_sizes[j]);
+            TEST_LIBSPDM_DEBUG_PRINT("\tj:%d test_sizes[j]=offset:%u\n", j,
+                                     test_sizes[j]);
             m_libspdm_get_certificate_request3.offset = test_sizes[j];
 
             /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
@@ -714,12 +714,12 @@ void libspdm_test_responder_certificate_case10(void **state)
 
         m_libspdm_get_certificate_request3.offset =
             (uint16_t)(MIN(data_size - 1, MAX_UINT16));
-        TEST_DEBUG_PRINT("data_size: %u\n", data_size);
-        TEST_DEBUG_PRINT("m_libspdm_get_certificate_request3.offset: %u\n",
-                         m_libspdm_get_certificate_request3.offset);
-        TEST_DEBUG_PRINT("m_libspdm_get_certificate_request3.length: %u\n",
-                         m_libspdm_get_certificate_request3.length);
-        TEST_DEBUG_PRINT(
+        TEST_LIBSPDM_DEBUG_PRINT("data_size: %u\n", data_size);
+        TEST_LIBSPDM_DEBUG_PRINT("m_libspdm_get_certificate_request3.offset: %u\n",
+                                 m_libspdm_get_certificate_request3.offset);
+        TEST_LIBSPDM_DEBUG_PRINT("m_libspdm_get_certificate_request3.length: %u\n",
+                                 m_libspdm_get_certificate_request3.length);
+        TEST_LIBSPDM_DEBUG_PRINT(
             "offset + length: %u\n",
             m_libspdm_get_certificate_request3.offset +
             m_libspdm_get_certificate_request3.length);
@@ -745,8 +745,8 @@ void libspdm_test_responder_certificate_case10(void **state)
             data_size - m_libspdm_get_certificate_request3.offset -
             expected_chunk_size);
 
-        TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
-        TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
+        TEST_LIBSPDM_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
+        TEST_LIBSPDM_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
         if (expected_remainder > MAX_UINT16 ||
             expected_chunk_size > MAX_UINT16) {
@@ -771,7 +771,7 @@ void libspdm_test_responder_certificate_case10(void **state)
                              expected_remainder);
         }
 
-        TEST_DEBUG_PRINT("\n");
+        TEST_LIBSPDM_DEBUG_PRINT("\n");
 
         spdm_context->local_context.local_cert_chain_provision[0] =
             NULL;
@@ -828,12 +828,12 @@ void libspdm_test_responder_certificate_case11(void **state)
             data_size;
         spdm_context->local_context.slot_count = 1;
 
-        TEST_DEBUG_PRINT("data_size: %u\n", data_size);
-        TEST_DEBUG_PRINT("m_libspdm_get_certificate_request3.offset: %u\n",
-                         m_libspdm_get_certificate_request3.offset);
-        TEST_DEBUG_PRINT("m_libspdm_get_certificate_request3.length: %u\n",
-                         m_libspdm_get_certificate_request3.length);
-        TEST_DEBUG_PRINT(
+        TEST_LIBSPDM_DEBUG_PRINT("data_size: %u\n", data_size);
+        TEST_LIBSPDM_DEBUG_PRINT("m_libspdm_get_certificate_request3.offset: %u\n",
+                                 m_libspdm_get_certificate_request3.offset);
+        TEST_LIBSPDM_DEBUG_PRINT("m_libspdm_get_certificate_request3.length: %u\n",
+                                 m_libspdm_get_certificate_request3.length);
+        TEST_LIBSPDM_DEBUG_PRINT(
             "offset + length: %u\n",
             m_libspdm_get_certificate_request3.offset +
             m_libspdm_get_certificate_request3.length);
@@ -858,8 +858,8 @@ void libspdm_test_responder_certificate_case11(void **state)
                              m_libspdm_get_certificate_request3.offset -
                              expected_chunk_size;
 
-        TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
-        TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
+        TEST_LIBSPDM_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
+        TEST_LIBSPDM_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
         if (expected_remainder > MAX_UINT16 ||
             expected_chunk_size > MAX_UINT16) {
@@ -884,7 +884,7 @@ void libspdm_test_responder_certificate_case11(void **state)
                              expected_remainder);
         }
 
-        TEST_DEBUG_PRINT("\n");
+        TEST_LIBSPDM_DEBUG_PRINT("\n");
 
         free(data);
     }
@@ -938,7 +938,7 @@ void libspdm_test_responder_certificate_case12(void **state)
 
     spdm_response = NULL;
     for (uintn offset = 0; offset < data_size; offset++) {
-        TEST_DEBUG_PRINT("offset:%u \n", offset);
+        TEST_LIBSPDM_DEBUG_PRINT("offset:%u \n", offset);
         m_libspdm_get_certificate_request3.offset = (uint16_t)offset;
 
         response_size = sizeof(response);

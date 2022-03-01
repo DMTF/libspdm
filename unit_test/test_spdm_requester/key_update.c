@@ -494,7 +494,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x17: {
         static uintn sub_index = 0;
 
-        DEBUG((DEBUG_INFO, "send message: %d\n", sub_index));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "send message: %d\n", sub_index));
 
         if(sub_index%2 == 0) {
             return_status status;
@@ -533,7 +533,7 @@ return_status libspdm_requester_key_update_test_send_message(
             m_libspdm_last_token = ((spdm_key_update_request_t
                                      *) decoded_message)->header.param2;
 
-            DEBUG((DEBUG_INFO, "last token: %x\n", m_libspdm_last_token));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "last token: %x\n", m_libspdm_last_token));
         }
 
         sub_index++;
@@ -3272,7 +3272,7 @@ void libspdm_test_requester_key_update_case10(void **state)
             spdm_context, session_id, true);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
@@ -4021,7 +4021,7 @@ void libspdm_test_requester_key_update_case23(void **state)
             spdm_context, session_id, true);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
@@ -4755,7 +4755,7 @@ void libspdm_test_requester_key_update_case34(void **state)
             spdm_context, session_id, false);
 
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,

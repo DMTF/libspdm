@@ -91,7 +91,7 @@ return_status libspdm_get_response_version(void *context, uintn request_size,
     }
 
     libspdm_reset_context(spdm_context);
-    ASSERT(*response_size >= sizeof(libspdm_version_response_mine_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(libspdm_version_response_mine_t));
     *response_size =
         sizeof(spdm_version_response_t) +
         spdm_context->local_context.version.spdm_version_count *

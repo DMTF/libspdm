@@ -17,33 +17,33 @@
 
 /* Define the maximum debug and assert message length that this library supports*/
 
-#define MAX_DEBUG_MESSAGE_LENGTH 0x100
+#define LIBSPDM_MAX_DEBUG_MESSAGE_LENGTH 0x100
 
-#define DEBUG_ASSERT_NATIVE 0
-#define DEBUG_ASSERT_DEADLOOP 1
-#define DEBUG_ASSERT_BREAKPOINT 2
+#define LIBSPDM_DEBUG_LIBSPDM_ASSERT_NATIVE 0
+#define LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP 1
+#define LIBSPDM_DEBUG_LIBSPDM_ASSERT_BREAKPOINT 2
 
-#ifndef DEBUG_ASSERT_CONFIG
-#define DEBUG_ASSERT_CONFIG DEBUG_ASSERT_DEADLOOP
+#ifndef LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG
+#define LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP
 #endif
 
-#ifndef DEBUG_LEVEL_CONFIG
-#define DEBUG_LEVEL_CONFIG (DEBUG_INFO | DEBUG_ERROR)
+#ifndef LIBSPDM_DEBUG_LEVEL_CONFIG
+#define LIBSPDM_DEBUG_LEVEL_CONFIG (LIBSPDM_DEBUG_INFO | LIBSPDM_DEBUG_INFO)
 #endif
 
-void debug_assert(const char *file_name, uintn line_number,
-                  const char *description)
+void libspdm_debug_assert(const char *file_name, uintn line_number,
+                          const char *description)
 {
-    printf("ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
+    printf("LIBSPDM_ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
            description);
 
-#if (DEBUG_ASSERT_CONFIG == DEBUG_ASSERT_DEADLOOP)
+#if (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP)
     {
         volatile intn ___i = 1;
         while (___i)
             ;
     }
-#elif (DEBUG_ASSERT_CONFIG == DEBUG_ASSERT_BREAKPOINT)
+#elif (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_BREAKPOINT)
 #if defined(_MSC_EXTENSIONS)
     __debugbreak();
 #endif
@@ -55,12 +55,12 @@ void debug_assert(const char *file_name, uintn line_number,
     assert(false);
 }
 
-void debug_print(uintn error_level, const char *format, ...)
+void libspdm_debug_print(uintn error_level, const char *format, ...)
 {
-    char buffer[MAX_DEBUG_MESSAGE_LENGTH];
+    char buffer[LIBSPDM_MAX_DEBUG_MESSAGE_LENGTH];
     va_list marker;
 
-    if ((error_level & DEBUG_LEVEL_CONFIG) == 0) {
+    if ((error_level & LIBSPDM_DEBUG_LEVEL_CONFIG) == 0) {
         return;
     }
 

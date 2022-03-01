@@ -18,7 +18,7 @@ void libspdm_secured_message_set_response_data_encryption_key(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(key_size == secured_message_context->aead_key_size);
+    LIBSPDM_ASSERT(key_size == secured_message_context->aead_key_size);
     copy_mem(secured_message_context->application_secret.response_data_encryption_key,
              sizeof(secured_message_context->application_secret.response_data_encryption_key),
              key, secured_message_context->aead_key_size);
@@ -31,7 +31,7 @@ void libspdm_secured_message_set_response_data_salt(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(salt_size == secured_message_context->aead_iv_size);
+    LIBSPDM_ASSERT(salt_size == secured_message_context->aead_iv_size);
     copy_mem(secured_message_context->application_secret.response_data_salt,
              sizeof(secured_message_context->application_secret.response_data_salt),
              salt, secured_message_context->aead_iv_size);
@@ -1381,9 +1381,9 @@ void libspdm_test_requester_heartbeat_case10(void **state) {
         status = libspdm_heartbeat (spdm_context, session_id);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         } else {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
         }
 
         error_code++;

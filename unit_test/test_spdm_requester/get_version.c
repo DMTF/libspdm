@@ -667,7 +667,7 @@ void libspdm_test_requester_get_version_case14(void **state) {
     while(error_code <= 0xff) {
         /* no additional state control is necessary as a new GET_VERSION resets the state*/
         status = libspdm_get_version (spdm_context, NULL, NULL);
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/

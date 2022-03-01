@@ -14,7 +14,7 @@
 /**
  * Generates a 64-bit random number.
  *
- * if rand is NULL, then ASSERT().
+ * if rand is NULL, then LIBSPDM_ASSERT().
  *
  * @param[out] rand_data     buffer pointer to store the 64-bit random value.
  *

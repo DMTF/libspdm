@@ -9,6 +9,6 @@
 
 int rand()
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return 1;
 }

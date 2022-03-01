@@ -31,7 +31,7 @@ return_status libspdm_generate_encap_error_response(const void *context,
 {
     spdm_error_response_t *spdm_response;
 
-    ASSERT(*response_size >= sizeof(spdm_error_response_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_error_response_t));
     *response_size = sizeof(spdm_error_response_t);
     spdm_response = response;
 
@@ -68,8 +68,8 @@ return_status libspdm_generate_encap_extended_error_response(
     uintn *response_size, void *response)
 {
     spdm_error_response_t *spdm_response;
-    ASSERT(*response_size >=
-           sizeof(spdm_error_response_t) + extended_error_data_size);
+    LIBSPDM_ASSERT(*response_size >=
+                   sizeof(spdm_error_response_t) + extended_error_data_size);
 
     spdm_response = response;
     spdm_response->header.spdm_version = libspdm_get_connection_version (context);

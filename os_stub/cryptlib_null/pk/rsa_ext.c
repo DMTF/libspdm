@@ -47,7 +47,7 @@
 bool rsa_get_key(void *rsa_context, const rsa_key_tag_t key_tag,
                  uint8_t *big_number, uintn *bn_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -76,7 +76,7 @@ bool rsa_generate_key(void *rsa_context, uintn modulus_length,
                       const uint8_t *public_exponent,
                       uintn public_exponent_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -101,7 +101,7 @@ bool rsa_generate_key(void *rsa_context, uintn modulus_length,
  **/
 bool rsa_check_key(void *rsa_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -138,7 +138,7 @@ bool rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
                              uintn hash_size, uint8_t *signature,
                              uintn *sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -175,6 +175,6 @@ bool rsa_pss_sign(void *rsa_context, uintn hash_nid,
                   const uint8_t *message_hash, uintn hash_size,
                   uint8_t *signature, uintn *sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

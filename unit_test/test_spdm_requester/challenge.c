@@ -160,13 +160,13 @@ return_status libspdm_requester_challenge_test_receive_message(
                  (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
                  spdm_response, (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
-        DEBUG((DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-               m_libspdm_local_buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+                       m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
-        DEBUG((DEBUG_INFO, "HashDataSize (0x%x):\n",
-               libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
@@ -2500,10 +2500,11 @@ void libspdm_test_requester_challenge_case20(void **state) {
                                     SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                     measurement_hash, NULL);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);*/
-        ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_c.buffer_size, 0, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_c.buffer_size, 0,
+                                       error_code);
 #endif
 
         error_code++;

@@ -82,7 +82,7 @@ bool read_responder_root_public_certificate(uint32_t base_hash_algo,
         file = "ed448/ca.cert.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, &file_data, &file_size);
@@ -184,7 +184,7 @@ bool read_requester_root_public_certificate(uint32_t base_hash_algo,
         file = "ed448/ca.cert.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
 
@@ -286,7 +286,7 @@ bool read_responder_public_certificate_chain(
         file = "ed448/bundle_responder.certchain.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, &file_data, &file_size);
@@ -406,7 +406,7 @@ bool read_requester_public_certificate_chain(
         file = "ed448/bundle_requester.certchain.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, &file_data, &file_size);
@@ -502,7 +502,7 @@ bool read_responder_root_public_certificate_by_size(
         file = "long_chains/LongerMAXUINT16_ca.cert.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, &file_data, &file_size);
@@ -582,7 +582,7 @@ bool read_responder_public_certificate_chain_by_size(
         file = "long_chains/LongerMAXUINT16_bundle_responder.certchain.der";
         break;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return false;
     }
     res = libspdm_read_input_file(file, &file_data, &file_size);

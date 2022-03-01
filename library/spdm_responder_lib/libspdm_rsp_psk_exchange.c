@@ -130,8 +130,8 @@ return_status libspdm_get_response_psk_exchange(void *context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         if (spdm_context->encap_context.error_state !=
             LIBSPDM_STATUS_SUCCESS) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -198,7 +198,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
                  measurement_summary_hash_size + context_length +
                  opaque_psk_exchange_rsp_size + hmac_size;
 
-    ASSERT(*response_size >= total_size);
+    LIBSPDM_ASSERT(*response_size >= total_size);
     *response_size = total_size;
     zero_mem(response, *response_size);
     spdm_response = response;
@@ -272,7 +272,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
 
     status = libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_psk_exchange_rsp_size, ptr);
-    ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_psk_exchange_rsp_size;
 
 
@@ -293,8 +293,8 @@ return_status libspdm_get_response_psk_exchange(void *context,
                                                response_size, response);
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
-           session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
+                   session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, false,
                                         th1_hash_data);
     if (RETURN_ERROR(status)) {
@@ -340,8 +340,8 @@ return_status libspdm_get_response_psk_exchange(void *context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to receive PSK_FINISH, enter application phase directly.*/
 
-        DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
-               session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
+                       session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             false, th2_hash_data);
         if (RETURN_ERROR(status)) {

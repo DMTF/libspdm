@@ -34,8 +34,8 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 
     spdm_context = context;
 
-    DEBUG((DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
-           (session_id != NULL) ? *session_id : 0x0, request_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
+                   (session_id != NULL) ? *session_id : 0x0, request_size));
     libspdm_internal_dump_hex(request, request_size);
 
     message_size = sizeof(message);
@@ -43,8 +43,8 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
         spdm_context, session_id, is_app_message, true, request_size,
         request, &message_size, message);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO, "transport_encode_message status - %p\n",
-               status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %p\n",
+                       status));
         return status;
     }
 
@@ -53,8 +53,8 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
     status = spdm_context->send_message(spdm_context, message_size, message,
                                         timeout);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
-               (session_id != NULL) ? *session_id : 0x0, status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
+                       (session_id != NULL) ? *session_id : 0x0, status));
     }
 
     return status;
@@ -91,7 +91,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
 
     spdm_context = context;
 
-    ASSERT(*response_size <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(*response_size <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     if (spdm_context->crypto_request) {
         timeout = spdm_context->local_context.capability.rtt +
@@ -105,9 +105,9 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
     status = spdm_context->receive_message(spdm_context, &message_size,
                                            message, timeout);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO,
-               "libspdm_receive_spdm_response[%x] status - %p\n",
-               (session_id != NULL) ? *session_id : 0x0, status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_receive_spdm_response[%x] status - %p\n",
+                       (session_id != NULL) ? *session_id : 0x0, status));
         return status;
     }
 
@@ -119,42 +119,42 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
 
     if (session_id != NULL) {
         if (message_session_id == NULL) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_receive_spdm_response[%x] GetSessionId - NULL\n",
-                   (session_id != NULL) ? *session_id : 0x0));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_receive_spdm_response[%x] GetSessionId - NULL\n",
+                           (session_id != NULL) ? *session_id : 0x0));
             goto error;
         }
         if (*message_session_id != *session_id) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
-                   (session_id != NULL) ? *session_id : 0x0,
-                   *message_session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
+                           (session_id != NULL) ? *session_id : 0x0,
+                           *message_session_id));
             goto error;
         }
     } else {
         if (message_session_id != NULL) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
-                   (session_id != NULL) ? *session_id : 0x0,
-                   *message_session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
+                           (session_id != NULL) ? *session_id : 0x0,
+                           *message_session_id));
             goto error;
         }
     }
 
     if ((is_app_message && !is_message_app_message) ||
         (!is_app_message && is_message_app_message)) {
-        DEBUG((DEBUG_INFO,
-               "libspdm_receive_spdm_response[%x] app_message mismatch\n",
-               (session_id != NULL) ? *session_id : 0x0));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_receive_spdm_response[%x] app_message mismatch\n",
+                       (session_id != NULL) ? *session_id : 0x0));
         goto error;
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_receive_spdm_response[%x] (0x%x): \n",
-           (session_id != NULL) ? *session_id : 0x0, *response_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_receive_spdm_response[%x] (0x%x): \n",
+                   (session_id != NULL) ? *session_id : 0x0, *response_size));
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO,
-               "libspdm_receive_spdm_response[%x] status - %p\n",
-               (session_id != NULL) ? *session_id : 0x0, status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_receive_spdm_response[%x] status - %p\n",
+                       (session_id != NULL) ? *session_id : 0x0, status));
     } else {
         libspdm_internal_dump_hex(response, *response_size);
     }
@@ -202,7 +202,7 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
-        ASSERT(session_info != NULL);
+        LIBSPDM_ASSERT(session_info != NULL);
         if (session_info == NULL) {
             return RETURN_DEVICE_ERROR;
         }
@@ -248,7 +248,7 @@ return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
-        ASSERT(session_info != NULL);
+        LIBSPDM_ASSERT(session_info != NULL);
         if (session_info == NULL) {
             return RETURN_DEVICE_ERROR;
         }
