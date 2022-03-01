@@ -6,11 +6,11 @@
 
 #include <base.h>
 
-void debug_assert(const char *file_name, uintn line_number,
-                  const char *description)
+void libspdm_debug_assert(const char *file_name, uintn line_number,
+                          const char *description)
 {
 }
 
-void debug_print(uintn error_level, const char *format, ...)
+void libspdm_debug_print(uintn error_level, const char *format, ...)
 {
 }

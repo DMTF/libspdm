@@ -21,7 +21,7 @@ void libspdm_secured_message_set_response_finished_key(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    ASSERT(key_size == secured_message_context->hash_size);
+    LIBSPDM_ASSERT(key_size == secured_message_context->hash_size);
     copy_mem(secured_message_context->handshake_secret.response_finished_key,
              sizeof(secured_message_context->handshake_secret.response_finished_key),
              key, secured_message_context->hash_size);
@@ -2239,9 +2239,9 @@ void libspdm_test_requester_finish_case10(void **state) {
         status = libspdm_send_receive_finish (spdm_context, session_id, req_slot_id_param);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
         } else {
-            ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
         }
 
         error_code++;

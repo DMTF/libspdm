@@ -74,7 +74,7 @@ libspdm_get_encap_struct_via_op_code(uint8_t request_op_code)
             return &m_libspdm_encap_response_struct[index];
         }
     }
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -82,8 +82,8 @@ void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
 {
     uint8_t index;
 
-    ASSERT(spdm_context->encap_context.request_op_code_count <=
-           LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT);
+    LIBSPDM_ASSERT(spdm_context->encap_context.request_op_code_count <=
+                   LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT);
     if (spdm_context->encap_context.current_request_op_code == 0) {
         spdm_context->encap_context.current_request_op_code =
             spdm_context->encap_context.request_op_code_sequence[0];
@@ -100,7 +100,7 @@ void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
             return;
         }
     }
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -130,11 +130,11 @@ return_status libspdm_process_encapsulated_response(
     if (spdm_context->encap_context.current_request_op_code != 0) {
         encap_response_struct = libspdm_get_encap_struct_via_op_code(
             spdm_context->encap_context.current_request_op_code);
-        ASSERT(encap_response_struct != NULL);
+        LIBSPDM_ASSERT(encap_response_struct != NULL);
         if (encap_response_struct == NULL) {
             return RETURN_UNSUPPORTED;
         }
-        ASSERT(encap_response_struct->process_encap_response != NULL);
+        LIBSPDM_ASSERT(encap_response_struct->process_encap_response != NULL);
         if (encap_response_struct->process_encap_response == NULL) {
             return RETURN_UNSUPPORTED;
         }
@@ -163,11 +163,11 @@ return_status libspdm_process_encapsulated_response(
     /* Process the next request*/
     encap_response_struct = libspdm_get_encap_struct_via_op_code(
         spdm_context->encap_context.current_request_op_code);
-    ASSERT(encap_response_struct != NULL);
+    LIBSPDM_ASSERT(encap_response_struct != NULL);
     if (encap_response_struct == NULL) {
         return RETURN_UNSUPPORTED;
     }
-    ASSERT(encap_response_struct->get_encap_request != NULL);
+    LIBSPDM_ASSERT(encap_response_struct->get_encap_request != NULL);
     if (encap_response_struct->get_encap_request == NULL) {
         return RETURN_UNSUPPORTED;
     }
@@ -383,7 +383,7 @@ return_status libspdm_get_response_encapsulated_request(
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size > sizeof(spdm_encapsulated_request_response_t));
+    LIBSPDM_ASSERT(*response_size > sizeof(spdm_encapsulated_request_response_t));
     zero_mem(response, *response_size);
 
     spdm_response = response;
@@ -501,7 +501,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
         ack_header_size = sizeof(spdm_message_header_t);
     }
 
-    ASSERT(*response_size > ack_header_size);
+    LIBSPDM_ASSERT(*response_size > ack_header_size);
     zero_mem(response, *response_size);
 
     spdm_response = response;

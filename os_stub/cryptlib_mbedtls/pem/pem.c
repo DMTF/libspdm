@@ -20,7 +20,7 @@ static uintn ascii_str_len(const char *string)
 {
     uintn length;
 
-    ASSERT(string != NULL);
+    LIBSPDM_ASSERT(string != NULL);
     if (string == NULL) {
         return 0;
     }

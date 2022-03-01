@@ -110,9 +110,9 @@ return_status libspdm_get_response_key_update(void *context,
                                                        response_size, response);
             }
 
-            DEBUG((DEBUG_INFO,
-                   "libspdm_create_update_session_data_key[%x] Requester\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_create_update_session_data_key[%x] Requester\n",
+                           session_id));
             status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
@@ -130,27 +130,27 @@ return_status libspdm_get_response_key_update(void *context,
                                                        response_size, response);
             }
 
-            DEBUG((DEBUG_INFO,
-                   "libspdm_create_update_session_data_key[%x] Requester\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_create_update_session_data_key[%x] Requester\n",
+                           session_id));
             status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
-            DEBUG((DEBUG_INFO,
-                   "libspdm_create_update_session_data_key[%x] Responder\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_create_update_session_data_key[%x] Responder\n",
+                           session_id));
             status = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             if (RETURN_ERROR(status)) {
                 return RETURN_UNSUPPORTED;
             }
-            DEBUG((DEBUG_INFO,
-                   "libspdm_activate_update_session_data_key[%x] Responder new\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_activate_update_session_data_key[%x] Responder new\n",
+                           session_id));
             status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
@@ -167,9 +167,9 @@ return_status libspdm_get_response_key_update(void *context,
                                                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                        response_size, response);
             }
-            DEBUG((DEBUG_INFO,
-                   "libspdm_activate_update_session_data_key[%x] Requester new\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_activate_update_session_data_key[%x] Requester new\n",
+                           session_id));
             status = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
@@ -178,7 +178,7 @@ return_status libspdm_get_response_key_update(void *context,
             }
             break;
         default:
-            DEBUG((DEBUG_INFO, "espurious case\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "espurious case\n"));
             return libspdm_generate_error_response(context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
@@ -191,7 +191,7 @@ return_status libspdm_get_response_key_update(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(spdm_key_update_response_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_update_response_t));
     *response_size = sizeof(spdm_key_update_response_t);
     zero_mem(response, *response_size);
     spdm_response = response;

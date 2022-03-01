@@ -176,7 +176,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (is_mut) {
-        DEBUG((DEBUG_INFO, "message_mut_b data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_b data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_b),
@@ -192,7 +192,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
 
-        DEBUG((DEBUG_INFO, "message_mut_c data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_c data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(
                 &spdm_context->transcript.message_mut_c),
@@ -209,20 +209,20 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         /* Debug code only - calculate and print value of m1m2 mut hash*/
-        DEBUG_CODE(
+        LIBSPDM_DEBUG_CODE(
             if (!libspdm_hash_all(
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     libspdm_get_managed_buffer(&m1m2),
                     libspdm_get_managed_buffer_size(&m1m2), hash_data)) {
             return false;
         }
-            DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 Mut hash - "));
             libspdm_internal_dump_data(hash_data, hash_size);
-            DEBUG((DEBUG_INFO, "\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
 
     } else {
-        DEBUG((DEBUG_INFO, "message_a data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(
@@ -236,7 +236,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
 
-        DEBUG((DEBUG_INFO, "message_b data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_b data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_b),
             libspdm_get_managed_buffer_size(
@@ -250,7 +250,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
 
-        DEBUG((DEBUG_INFO, "message_c data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_c data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_c),
             libspdm_get_managed_buffer_size(
@@ -265,16 +265,16 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         /* Debug code only - calculate and print value of m1m2 hash*/
-        DEBUG_CODE(
+        LIBSPDM_DEBUG_CODE(
             if (!libspdm_hash_all(
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     libspdm_get_managed_buffer(&m1m2),
                     libspdm_get_managed_buffer_size(&m1m2), hash_data)) {
             return false;
         }
-            DEBUG((DEBUG_INFO, "m1m2 hash - "));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 hash - "));
             libspdm_internal_dump_data(hash_data, hash_size);
-            DEBUG((DEBUG_INFO, "\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
     }
     m1m2_buffer_capacity = *m1m2_buffer_size;
@@ -314,9 +314,9 @@ bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
         if (!result) {
             return false;
         }
-        DEBUG((DEBUG_INFO, "m1m2 Mut hash - "));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 Mut hash - "));
         libspdm_internal_dump_data(m1m2_hash, hash_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     } else {
         result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -324,9 +324,9 @@ bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
         if (!result) {
             return false;
         }
-        DEBUG((DEBUG_INFO, "m1m2 hash - "));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 hash - "));
         libspdm_internal_dump_data(m1m2_hash, hash_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     *m1m2_hash_size = hash_size;
@@ -372,7 +372,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
 
         /* Need append VCA since 1.2 script*/
 
-        DEBUG((DEBUG_INFO, "message_a data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(
@@ -388,7 +388,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
     }
 
     if (spdm_session_info == NULL) {
-        DEBUG((DEBUG_INFO, "message_m data :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_m data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_m),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_m));
@@ -398,7 +398,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_m));
     } else {
-        DEBUG((DEBUG_INFO, "use message_m in session :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use message_m in session :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_m),
             libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_m));
@@ -412,20 +412,20 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
         return false;
     }
 
-    DEBUG((DEBUG_INFO, "message_m data :\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_m data :\n"));
     libspdm_internal_dump_hex(l1l2_buffer, *l1l2_buffer_size);
 
     /* Debug code only - calculate and print value of l1l2 hash*/
-    DEBUG_CODE(
+    LIBSPDM_DEBUG_CODE(
         if (!libspdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 libspdm_get_managed_buffer(&l1l2),
                 libspdm_get_managed_buffer_size(&l1l2), hash_data)) {
         return false;
     }
-        DEBUG((DEBUG_INFO, "l1l2 hash - "));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "l1l2 hash - "));
         libspdm_internal_dump_data(hash_data, hash_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         );
 
     l1l2_buffer_capacity = *l1l2_buffer_size;
@@ -467,7 +467,7 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
         result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
                                      spdm_context->transcript.digest_context_l1l2, l1l2_hash);
     } else {
-        DEBUG((DEBUG_INFO, "use message_m in session :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use message_m in session :\n"));
         result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
                                      spdm_session_info->session_transcript.digest_context_l1l2,
                                      l1l2_hash);
@@ -475,9 +475,9 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
     if (!result) {
         return false;
     }
-    DEBUG((DEBUG_INFO, "l1l2 hash - "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "l1l2 hash - "));
     libspdm_internal_dump_data(l1l2_hash, hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     *l1l2_hash_size = hash_size;
 
@@ -498,7 +498,7 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
 bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
                                       uintn slot_id, uint8_t *hash)
 {
-    ASSERT(slot_id < spdm_context->local_context.slot_count);
+    LIBSPDM_ASSERT(slot_id < spdm_context->local_context.slot_count);
     return libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->local_context.local_cert_chain_provision[slot_id],
@@ -542,24 +542,25 @@ bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
             cert_chain_buffer, cert_chain_buffer_size,
             cert_chain_buffer_hash);
         if (!result) {
-            DEBUG((DEBUG_INFO, "!!! verify_peer_digests - FAIL (hash calculation) !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_peer_digests - FAIL (hash calculation) !!!\n"));
             return false;
         }
 
         for (index = 0; index < digest_count; index++)
         {
             if (const_compare_mem(hash_buffer, cert_chain_buffer_hash, hash_size) == 0) {
-                DEBUG((DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
                 return true;
             }
             hash_buffer += hash_size;
         }
 
-        DEBUG((DEBUG_INFO,
-               "!!! verify_peer_digests - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_peer_digests - FAIL !!!\n"));
         return false;
     } else {
-        DEBUG((DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_digests - PASS !!!\n"));
     }
     return true;
 }
@@ -617,8 +618,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 root_cert, root_cert_size, root_cert_hash);
             if (!result) {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
                 return false;
             }
 
@@ -633,8 +634,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                 root_cert_size =
                     spdm_context->local_context.peer_root_cert_provision_size[root_cert_index];
             } else {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_peer_cert_chain_buffer - FAIL (all root cert hash mismatch) !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_peer_cert_chain_buffer - FAIL (all root cert hash mismatch) !!!\n"));
                 return false;
             }
         }
@@ -644,21 +645,21 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
             cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
             0, &received_root_cert, &received_root_cert_size);
         if (!result) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_peer_cert_chain_buffer - FAIL (cert retrieval fail) !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_peer_cert_chain_buffer - FAIL (cert retrieval fail) !!!\n"));
             return false;
         }
         if (libspdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
             if (const_compare_mem(received_root_cert, root_cert, root_cert_size) != 0) {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_peer_cert_chain_buffer - FAIL (root cert mismatch) !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_peer_cert_chain_buffer - FAIL (root cert mismatch) !!!\n"));
                 return false;
             }
         } else {
             if (!x509_verify_cert(received_root_cert, received_root_cert_size,
                                   root_cert, root_cert_size)) {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_peer_cert_chain_buffer - FAIL (received root cert verify failed)!!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_peer_cert_chain_buffer - FAIL (received root cert verify failed)!!!\n"));
                 return false;
             }
         }
@@ -672,14 +673,14 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
         /* Whether it contains the root certificate or not,
          * it should be equal to the one provisioned in trusted environment*/
         if (cert_chain_data_size != cert_chain_buffer_size) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
             return false;
         }
         if (const_compare_mem(cert_chain_buffer, cert_chain_data,
                               cert_chain_buffer_size) != 0) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_peer_cert_chain_buffer - FAIL !!!\n"));
             return false;
         }
         if (trust_anchor != NULL) {
@@ -695,7 +696,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
      * When there is no root_cert and cert_chain_data in local_context, the return is true too.
      * No provision means the caller wants to verify the trust anchor of the cert chain.
      */
-    DEBUG((DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
 
     return true;
 }
@@ -816,36 +817,36 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
                               cert_chain_buffer, cert_chain_buffer_size,
                               cert_chain_buffer_hash);
     if (!result) {
-        DEBUG((DEBUG_INFO,
-               "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
         return false;
     }
 
     if (hash_size != certificate_chain_hash_size) {
-        DEBUG((DEBUG_INFO,
-               "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
     if (const_compare_mem(certificate_chain_hash, cert_chain_buffer_hash,
                           certificate_chain_hash_size) != 0) {
-        DEBUG((DEBUG_INFO,
-               "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
 #else
     if (spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
         if (spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size !=
             certificate_chain_hash_size) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_certificate_chain_hash - FAIL !!!\n"));
             return false;
         }
 
         if (const_compare_mem(certificate_chain_hash,
                               spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
                               certificate_chain_hash_size) != 0) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_certificate_chain_hash - FAIL !!!\n"));
             return false;
         }
 
@@ -864,25 +865,25 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
                                   cert_chain_buffer, cert_chain_buffer_size,
                                   cert_chain_buffer_hash);
         if (!result) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
             return false;
         }
 
         if (hash_size != certificate_chain_hash_size) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_certificate_chain_hash - FAIL !!!\n"));
             return false;
         }
         if (const_compare_mem(certificate_chain_hash, cert_chain_buffer_hash,
                               certificate_chain_hash_size) != 0) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_certificate_chain_hash - FAIL !!!\n"));
             return false;
         }
     }
 #endif
-    DEBUG((DEBUG_INFO, "!!! verify_certificate_chain_hash - PASS !!!\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - PASS !!!\n"));
     return true;
 }
 
@@ -992,8 +993,8 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                 context, m1m2_hash, m1m2_hash_size, sign_data,
                 sign_data_size);
             if (!result) {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_challenge_signature - FAIL !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_challenge_signature - FAIL !!!\n"));
                 return false;
             }
             return true;
@@ -1010,8 +1011,8 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                 context, m1m2_hash, m1m2_hash_size, sign_data,
                 sign_data_size);
             if (!result) {
-                DEBUG((DEBUG_INFO,
-                       "!!! verify_challenge_signature - FAIL !!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_challenge_signature - FAIL !!!\n"));
                 return false;
             }
             return true;
@@ -1073,12 +1074,12 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     }
 #endif
     if (!result) {
-        DEBUG((DEBUG_INFO,
-               "!!! verify_challenge_signature - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_challenge_signature - FAIL !!!\n"));
         return false;
     }
 
-    DEBUG((DEBUG_INFO, "!!! verify_challenge_signature - PASS !!!\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_challenge_signature - PASS !!!\n"));
 
     return true;
 }
@@ -1260,12 +1261,12 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.peer_used_leaf_cert_public_key,
             l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
         if (!result) {
-            DEBUG((DEBUG_INFO,
-                   "!!! verify_measurement_signature - FAIL !!!\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! verify_measurement_signature - FAIL !!!\n"));
             return false;
         }
 
-        DEBUG((DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
         return true;
     }
 
@@ -1301,11 +1302,11 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                       context);
 #endif
     if (!result) {
-        DEBUG((DEBUG_INFO,
-               "!!! verify_measurement_signature - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! verify_measurement_signature - FAIL !!!\n"));
         return false;
     }
 
-    DEBUG((DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
     return true;
 }

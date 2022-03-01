@@ -93,9 +93,9 @@ return_status libspdm_get_response_digests(void *context, uintn request_size,
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    ASSERT(*response_size >=
-           sizeof(spdm_digest_response_t) +
-           hash_size * spdm_context->local_context.slot_count);
+    LIBSPDM_ASSERT(*response_size >=
+                   sizeof(spdm_digest_response_t) +
+                   hash_size * spdm_context->local_context.slot_count);
     *response_size = sizeof(spdm_digest_response_t) +
                      hash_size * spdm_context->local_context.slot_count;
     zero_mem(response, *response_size);

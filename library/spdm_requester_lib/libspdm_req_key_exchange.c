@@ -86,7 +86,7 @@ return_status libspdm_try_send_receive_key_exchange(
     uintn opaque_key_exchange_req_size;
     uint8_t th1_hash_data[64];
 
-    ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
@@ -120,10 +120,10 @@ return_status libspdm_try_send_receive_key_exchange(
         copy_mem(spdm_request.random_data, sizeof(spdm_request.random_data),
                  requester_random_in, SPDM_RANDOM_DATA_SIZE);
     }
-    DEBUG((DEBUG_INFO, "ClientRandomData (0x%x) - ",
-           SPDM_RANDOM_DATA_SIZE));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientRandomData (0x%x) - ",
+                   SPDM_RANDOM_DATA_SIZE));
     libspdm_internal_dump_data(spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_random != NULL) {
         copy_mem(requester_random, SPDM_RANDOM_DATA_SIZE,
                  spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
@@ -157,7 +157,7 @@ return_status libspdm_try_send_receive_key_exchange(
             dhe_context);
         return RETURN_DEVICE_ERROR;
     }
-    DEBUG((DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
     libspdm_internal_dump_hex(ptr, dhe_key_size);
     ptr += dhe_key_size;
 
@@ -167,7 +167,7 @@ return_status libspdm_try_send_receive_key_exchange(
     ptr += sizeof(uint16_t);
     status = libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
-    ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_key_exchange_req_size;
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
@@ -316,27 +316,27 @@ return_status libspdm_try_send_receive_key_exchange(
         return RETURN_DEVICE_ERROR;
     }
 
-    DEBUG((DEBUG_INFO, "ServerRandomData (0x%x) - ",
-           SPDM_RANDOM_DATA_SIZE));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerRandomData (0x%x) - ",
+                   SPDM_RANDOM_DATA_SIZE));
     libspdm_internal_dump_data(spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (responder_random != NULL) {
         copy_mem(responder_random, SPDM_RANDOM_DATA_SIZE,
                  spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
-    DEBUG((DEBUG_INFO, "ServerKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerKey (0x%x):\n", dhe_key_size));
     libspdm_internal_dump_hex(spdm_response.exchange_data, dhe_key_size);
 
     ptr = spdm_response.exchange_data;
     ptr += dhe_key_size;
 
     measurement_summary_hash = ptr;
-    DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
-           measurement_summary_hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
+                   measurement_summary_hash_size));
     libspdm_internal_dump_data(measurement_summary_hash,
                                measurement_summary_hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
 
@@ -401,7 +401,7 @@ return_status libspdm_try_send_receive_key_exchange(
     }
 
     signature = ptr;
-    DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
     libspdm_internal_dump_hex(signature, signature_size);
     ptr += signature_size;
     result = libspdm_verify_key_exchange_rsp_signature(
@@ -440,8 +440,8 @@ return_status libspdm_try_send_receive_key_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
-           *session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
+                   *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, true,
                                         th1_hash_data);
     if (RETURN_ERROR(status)) {
@@ -460,7 +460,7 @@ return_status libspdm_try_send_receive_key_exchange(
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         verify_data = ptr;
-        DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
         libspdm_internal_dump_hex(verify_data, hmac_size);
         result = libspdm_verify_key_exchange_rsp_hmac(
             spdm_context, session_info, verify_data, hmac_size);

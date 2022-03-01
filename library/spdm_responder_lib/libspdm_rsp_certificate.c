@@ -121,7 +121,7 @@ return_status libspdm_get_response_certificate(void *context,
                        .local_cert_chain_provision_size[slot_id] -
                        (length + offset);
 
-    ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);
     response_capacity = *response_size;
     *response_size = sizeof(spdm_certificate_response_t) + length;
     zero_mem(response, *response_size);

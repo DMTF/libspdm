@@ -54,7 +54,7 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
         return RETURN_UNSUPPORTED;
     }
 
-    ASSERT(*encap_request_size >= sizeof(spdm_key_update_request_t));
+    LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_key_update_request_t));
     *encap_request_size = sizeof(spdm_key_update_request_t);
 
     spdm_request = encap_request;
@@ -84,18 +84,18 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
         }
 
         /* Create new key*/
-        DEBUG((DEBUG_INFO,
-               "libspdm_create_update_session_data_key[%x] Responder\n",
-               session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_create_update_session_data_key[%x] Responder\n",
+                       session_id));
         status = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
         if (RETURN_ERROR(status)) {
             return status;
         }
-        DEBUG((DEBUG_INFO,
-               "libspdm_activate_update_session_data_key[%x] Responder new\n",
-               session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_activate_update_session_data_key[%x] Responder new\n",
+                       session_id));
         status = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
@@ -175,22 +175,22 @@ return_status libspdm_process_encap_response_key_update(
         (spdm_response->header.param2 != spdm_request->header.param2)) {
         if (spdm_request->header.param1 !=
             SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-            DEBUG((DEBUG_INFO, "libspdm_key_update[%x] failed\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] failed\n",
+                           session_id));
         } else {
-            DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] failed\n",
-                   session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] failed\n",
+                           session_id));
         }
         return RETURN_DEVICE_ERROR;
     }
 
     if (spdm_request->header.param1 !=
         SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-        DEBUG((DEBUG_INFO, "libspdm_key_update[%x] success\n",
-               session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] success\n",
+                       session_id));
         *need_continue = true;
     } else {
-        DEBUG((DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
         *need_continue = false;
     }
 

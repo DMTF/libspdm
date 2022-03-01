@@ -19,12 +19,12 @@
 #define __DEBUG_LIB_H__
 
 
-/* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of debug_print()*/
+/* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of libspdm_debug_print()*/
 
-#define DEBUG_INFO 0x00000040 /* Informational debug messages*/
+#define LIBSPDM_DEBUG_INFO 0x00000040 /* Informational debug messages*/
 /* Detailed debug messages that may significantly impact boot performance*/
-#define DEBUG_VERBOSE 0x00400000
-#define DEBUG_ERROR 0x80000000 /* Error*/
+#define LIBSPDM_DEBUG_VERBOSE 0x00400000
+#define LIBSPDM_DEBUG_ERROR 0x80000000 /* Error*/
 
 /**
  * Prints a debug message to the debug output device if the specified error level is enabled.
@@ -41,7 +41,7 @@
  *                    based on the format string specified by format.
  *
  **/
-void debug_print(uintn error_level, const char *format, ...);
+void libspdm_debug_print(uintn error_level, const char *format, ...);
 
 /**
  * Prints an assert message containing a filename, line number, and description.
@@ -53,8 +53,8 @@ void debug_print(uintn error_level, const char *format, ...);
  * DEBUG_PROPERTY_ASSERT_DEADLOOP_ENABLED bit of PcdDebugProperyMask is set then
  * CpuDeadLoop() is called.  If neither of these bits are set, then this function
  * returns immediately after the message is printed to the debug output device.
- * debug_assert() must actively prevent recursion.  If debug_assert() is called while
- * processing another debug_assert(), then debug_assert() must return immediately.
+ * libspdm_debug_assert() must actively prevent recursion.  If libspdm_debug_assert() is called while
+ * processing another libspdm_debug_assert(), then libspdm_debug_assert() must return immediately.
  *
  * If file_name is NULL, then a <file_name> string of "(NULL) Filename" is printed.
  * If description is NULL, then a <description> string of "(NULL) description" is printed.
@@ -64,24 +64,24 @@ void debug_print(uintn error_level, const char *format, ...);
  * @param  description  The pointer to the description of the assert condition.
  *
  **/
-void debug_assert(const char *file_name, uintn line_number,
-                  const char *description);
+void libspdm_debug_assert(const char *file_name, uintn line_number,
+                          const char *description);
 
 /**
- * Internal worker macro that calls debug_assert().
+ * Internal worker macro that calls libspdm_debug_assert().
  *
- * This macro calls debug_assert(), passing in the filename, line number, and an
+ * This macro calls libspdm_debug_assert(), passing in the filename, line number, and an
  * expression that evaluated to false.
  *
  * @param  expression  Boolean expression that evaluated to false
  *
  **/
-#define _ASSERT(expression) debug_assert(__FILE__, __LINE__, #expression)
+#define _LIBSPDM_ASSERT(expression) libspdm_debug_assert(__FILE__, __LINE__, #expression)
 
 /**
- * Internal worker macro that calls debug_print().
+ * Internal worker macro that calls libspdm_debug_print().
  *
- * This macro calls debug_print() passing in the debug error level, a format
+ * This macro calls libspdm_debug_print() passing in the debug error level, a format
  * string, and a variable argument list.
  * __VA_ARGS__ is not supported by EBC compiler, Microsoft Visual Studio .NET 2003
  * and Microsoft Windows Server 2003 Driver Development Kit (Microsoft WINDDK) version 3790.1830.
@@ -91,42 +91,42 @@ void debug_assert(const char *file_name, uintn line_number,
  *
  **/
 
-#define _DEBUG_PRINT(PrintLevel, ...)                                          \
+#define _LIBSPDM_DEBUG_PRINT(PrintLevel, ...)                                          \
     do {                                                                   \
-        debug_print(PrintLevel, ## __VA_ARGS__);                        \
+        libspdm_debug_print(PrintLevel, ## __VA_ARGS__);                        \
     } while (false)
-#define _DEBUG(expression) _DEBUG_PRINT expression
+#define _LIBSPDM_DEBUG(expression) _LIBSPDM_DEBUG_PRINT expression
 
 /**
- * Macro that calls debug_assert() if an expression evaluates to false.
+ * Macro that calls libspdm_debug_assert() if an expression evaluates to false.
  *
  * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_ASSERT_ENABLED
  * bit of PcdDebugProperyMask is set, then this macro evaluates the Boolean
  * expression specified by expression.  If expression evaluates to false, then
- * debug_assert() is called passing in the source filename, source line number,
+ * libspdm_debug_assert() is called passing in the source filename, source line number,
  * and expression.
  *
  * @param  expression  Boolean expression.
  *
  **/
 #if !defined(MDEPKG_NDEBUG)
-#define ASSERT(expression)                                                     \
+#define LIBSPDM_ASSERT(expression)                                                     \
     do {                                                                   \
         if (!(expression)) {                                           \
-            _ASSERT(expression);                                   \
+            _LIBSPDM_ASSERT(expression);                                   \
             ANALYZER_UNREACHABLE();                                \
         }                                                              \
     } while (false)
 #else
-#define ASSERT(expression)
+#define LIBSPDM_ASSERT(expression)
 #endif
 
 /**
- * Macro that calls debug_print().
+ * Macro that calls libspdm_debug_print().
  *
  * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_PRINT_ENABLED
  * bit of PcdDebugProperyMask is set, then this macro passes expression to
- * debug_print().
+ * libspdm_debug_print().
  *
  * @param  expression  expression containing an error level, a format string,
  *                    and a variable argument list based on the format string.
@@ -134,38 +134,38 @@ void debug_assert(const char *file_name, uintn line_number,
  *
  **/
 #if !defined(MDEPKG_NDEBUG)
-#define DEBUG(expression)                                                      \
+#define LIBSPDM_DEBUG(expression)                                                      \
     do {                                                                   \
-        _DEBUG(expression);                                            \
+        _LIBSPDM_DEBUG(expression);                                            \
     } while (false)
 #else
-#define DEBUG(expression)
+#define LIBSPDM_DEBUG(expression)
 #endif
 
 /**
- * Macro that calls debug_assert() if a return_status evaluates to an error code.
+ * Macro that calls libspdm_debug_assert() if a return_status evaluates to an error code.
  *
  * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_ASSERT_ENABLED
  * bit of PcdDebugProperyMask is set, then this macro evaluates the
  * return_status value specified by status_parameter.  If status_parameter is an
- * error code, then debug_assert() is called passing in the source filename,
+ * error code, then libspdm_debug_assert() is called passing in the source filename,
  * source line number, and status_parameter.
  *
  * @param  status_parameter  return_status value to evaluate.
  *
  **/
 #if !defined(MDEPKG_NDEBUG)
-#define ASSERT_RETURN_ERROR(status_parameter)                                  \
+#define LIBSPDM_ASSERT_RETURN_ERROR(status_parameter)                                  \
     do {                                                                   \
         if (RETURN_ERROR(status_parameter)) {                          \
-            DEBUG((DEBUG_ERROR,                                    \
-                   "\nASSERT_RETURN_ERROR (status = %p)\n",        \
-                   status_parameter));                             \
-            _ASSERT(!RETURN_ERROR(status_parameter));              \
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,                                    \
+                           "\nLIBSPDM_ASSERT_RETURN_ERROR (status = %p)\n",        \
+                           status_parameter));                             \
+            _LIBSPDM_ASSERT(!RETURN_ERROR(status_parameter));              \
         }                                                              \
     } while (false)
 #else
-#define ASSERT_RETURN_ERROR(status_parameter)
+#define LIBSPDM_ASSERT_RETURN_ERROR(status_parameter)
 #endif
 
 /**
@@ -173,11 +173,11 @@ void debug_assert(const char *file_name, uintn line_number,
  *
  * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
  * then this macro marks the beginning of source code that is included in a module.
- * Otherwise, the source lines between DEBUG_CODE_BEGIN() and DEBUG_CODE_END()
+ * Otherwise, the source lines between LIBSPDM_LIBSPDM_DEBUG_CODE_BEGIN() and LIBSPDM_LIBSPDM_DEBUG_CODE_END()
  * are not included in a module.
  *
  **/
-#define DEBUG_CODE_BEGIN()                                                     \
+#define LIBSPDM_DEBUG_CODE_BEGIN()                                                     \
     do {                                                                   \
         uint8_t __debug_code_local
 
@@ -186,11 +186,11 @@ void debug_assert(const char *file_name, uintn line_number,
  *
  * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
  * then this macro marks the end of source code that is included in a module.
- * Otherwise, the source lines between DEBUG_CODE_BEGIN() and DEBUG_CODE_END()
+ * Otherwise, the source lines between LIBSPDM_LIBSPDM_DEBUG_CODE_BEGIN() and LIBSPDM_LIBSPDM_DEBUG_CODE_END()
  * are not included in a module.
  *
  **/
-#define DEBUG_CODE_END()                                                       \
+#define LIBSPDM_DEBUG_CODE_END()                                                       \
     __debug_code_local = 0;                                                \
     __debug_code_local++;                                                  \
     }                                                                      \
@@ -206,11 +206,11 @@ void debug_assert(const char *file_name, uintn line_number,
  **/
 
 #if !defined(MDEPKG_NDEBUG)
-#define DEBUG_CODE(expression)                                                 \
-    DEBUG_CODE_BEGIN();                                                    \
-    expression DEBUG_CODE_END()
+#define LIBSPDM_DEBUG_CODE(expression)                                                 \
+    LIBSPDM_DEBUG_CODE_BEGIN();                                                    \
+    expression LIBSPDM_DEBUG_CODE_END()
 #else
-#define DEBUG_CODE(expression)
+#define LIBSPDM_DEBUG_CODE(expression)
 #endif
 
 #endif

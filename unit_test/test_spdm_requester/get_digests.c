@@ -1554,9 +1554,10 @@ void libspdm_test_requester_get_digests_case22(void **state) {
         status = libspdm_get_digest (spdm_context, &slot_mask, &total_digest_buffer);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);
          * assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0,
+                                       error_code);
 #endif
 
         error_code++;

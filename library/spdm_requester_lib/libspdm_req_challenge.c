@@ -70,7 +70,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
 
-    ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
     spdm_context = context;
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -104,9 +104,9 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
                  requester_nonce_in, SPDM_NONCE_SIZE);
     }
-    DEBUG((DEBUG_INFO, "ClientNonce - "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
     libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
         copy_mem(requester_nonce, SPDM_NONCE_SIZE,
                  spdm_request.nonce, SPDM_NONCE_SIZE);
@@ -195,9 +195,9 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     cert_chain_hash = ptr;
     ptr += hash_size;
-    DEBUG((DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
     libspdm_internal_dump_data(cert_chain_hash, hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     result = libspdm_verify_certificate_chain_hash(spdm_context,
                                                    cert_chain_hash, hash_size);
     if (!result) {
@@ -207,9 +207,9 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     }
 
     nonce = ptr;
-    DEBUG((DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
     libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
     if (responder_nonce != NULL) {
         copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
@@ -217,11 +217,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     measurement_summary_hash = ptr;
     ptr += measurement_summary_hash_size;
-    DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
-           measurement_summary_hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
+                   measurement_summary_hash_size));
     libspdm_internal_dump_data(measurement_summary_hash,
                                measurement_summary_hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
@@ -255,11 +255,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     opaque = ptr;
     ptr += opaque_length;
-    DEBUG((DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
     libspdm_internal_dump_hex(opaque, opaque_length);
 
     signature = ptr;
-    DEBUG((DEBUG_INFO, "signature (0x%x):\n", signature_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
     libspdm_internal_dump_hex(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(
         spdm_context, true, signature, signature_size);
@@ -281,11 +281,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     }
 
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
-        DEBUG((DEBUG_INFO, "BasicMutAuth :\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));
         status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-        DEBUG((DEBUG_INFO,
-               "libspdm_challenge - libspdm_encapsulated_request - %p\n",
-               status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_challenge - libspdm_encapsulated_request - %p\n",
+                       status));
         if (RETURN_ERROR(status)) {
             libspdm_reset_message_c(spdm_context);
             spdm_context->error_state =

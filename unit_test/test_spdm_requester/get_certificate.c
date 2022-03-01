@@ -627,8 +627,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     cert_buffer, cert_buffer_size, -1,
                     &leaf_cert_buffer,
                     &leaf_cert_buffer_size)) {
-                DEBUG((DEBUG_INFO,
-                       "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
                 return RETURN_DEVICE_ERROR;
             }
             /* tamper certificate signature on purpose
@@ -1016,14 +1016,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             cert_buffer_size = m_libspdm_local_certificate_chain_size -
                                sizeof(spdm_cert_chain_t) -
                                hash_size - root_cert_size;
-            DEBUG((DEBUG_INFO,
-                   "root_cert_size %d \n",root_cert_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "root_cert_size %d \n",root_cert_size));
             if (!x509_get_cert_from_cert_chain(
                     cert_buffer, cert_buffer_size, -1,
                     &leaf_cert_buffer,
                     &leaf_cert_buffer_size)) {
-                DEBUG((DEBUG_INFO,
-                       "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
                 return RETURN_DEVICE_ERROR;
             }
         }
@@ -1126,14 +1126,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             cert_buffer_size = m_libspdm_local_certificate_chain_size -
                                sizeof(spdm_cert_chain_t) -
                                hash_size - root_cert_size;
-            DEBUG((DEBUG_INFO,
-                   "root_cert_size %d \n",root_cert_size));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "root_cert_size %d \n",root_cert_size));
             if (!x509_get_cert_from_cert_chain(
                     cert_buffer, cert_buffer_size, -1,
                     &leaf_cert_buffer,
                     &leaf_cert_buffer_size)) {
-                DEBUG((DEBUG_INFO,
-                       "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
                 return RETURN_DEVICE_ERROR;
             }
             /* tamper certificate signature on purpose
@@ -1558,7 +1558,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
-    DEBUG((DEBUG_INFO, "root cert data :\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(
         root_cert,
         root_cert_size);
@@ -2484,10 +2484,11 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
         zero_mem (cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
-        ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0,
+                                       error_code);
 #endif
 
         error_code++;
@@ -2716,7 +2717,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
-    DEBUG((DEBUG_INFO, "root cert data :\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(
         root_cert,
         root_cert_size);
@@ -2774,7 +2775,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
-    DEBUG((DEBUG_INFO, "root cert data :\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(
         root_cert,
         root_cert_size);
@@ -2834,7 +2835,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
     x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                   data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                   &root_cert, &root_cert_size);
-    DEBUG((DEBUG_INFO, "root cert data :\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(
         root_cert,
         root_cert_size);

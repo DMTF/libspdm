@@ -27,7 +27,7 @@
 bool x509_construct_certificate(const uint8_t *cert, uintn cert_size,
                                 uint8_t **single_x509_cert)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -49,7 +49,7 @@ bool x509_construct_certificate(const uint8_t *cert, uintn cert_size,
  **/
 bool x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -63,7 +63,7 @@ bool x509_construct_certificate_stack(uint8_t **x509_stack, ...)
  **/
 void x509_free(void *x509_cert)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -76,7 +76,7 @@ void x509_free(void *x509_cert)
  **/
 void x509_stack_free(void *x509_stack)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -93,7 +93,7 @@ void x509_stack_free(void *x509_stack)
 bool asn1_get_tag(uint8_t **ptr, const uint8_t *end, uintn *length,
                   uint32_t tag)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -118,7 +118,7 @@ bool x509_get_subject_name(const uint8_t *cert, uintn cert_size,
                            uint8_t *cert_subject,
                            uintn *subject_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -152,7 +152,7 @@ return_status x509_get_common_name(const uint8_t *cert, uintn cert_size,
                                    char *common_name,
                                    uintn *common_name_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -187,7 +187,7 @@ x509_get_organization_name(const uint8_t *cert, uintn cert_size,
                            char *name_buffer,
                            uintn *name_buffer_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -210,7 +210,7 @@ x509_get_organization_name(const uint8_t *cert, uintn cert_size,
 bool rsa_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
                                   void **rsa_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -233,7 +233,7 @@ bool rsa_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
 bool ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
                                  void **ec_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -256,7 +256,7 @@ bool ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
 bool ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
                                   void **ecd_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -279,7 +279,7 @@ bool ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
 bool sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
                                   void **sm2_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -302,7 +302,7 @@ bool sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
 bool x509_verify_cert(const uint8_t *cert, uintn cert_size,
                       const uint8_t *ca_cert, uintn ca_cert_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -327,7 +327,7 @@ bool x509_verify_cert(const uint8_t *cert, uintn cert_size,
 bool x509_verify_cert_chain(uint8_t *root_cert, uintn root_cert_length,
                             uint8_t *cert_chain, uintn cert_chain_length)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -354,7 +354,7 @@ bool x509_get_cert_from_cert_chain(uint8_t *cert_chain,
                                    const int32_t cert_index, uint8_t **cert,
                                    uintn *cert_length)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -377,7 +377,7 @@ bool x509_get_cert_from_cert_chain(uint8_t *cert_chain,
 bool x509_get_tbs_cert(const uint8_t *cert, uintn cert_size,
                        uint8_t **tbs_cert, uintn *tbs_cert_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -400,7 +400,7 @@ bool x509_get_tbs_cert(const uint8_t *cert, uintn cert_size,
 return_status x509_get_version(const uint8_t *cert, uintn cert_size,
                                uintn *version)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -431,7 +431,7 @@ return_status x509_get_serial_number(const uint8_t *cert, uintn cert_size,
                                      uint8_t *serial_number,
                                      uintn *serial_number_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -458,7 +458,7 @@ bool x509_get_issuer_name(const uint8_t *cert, uintn cert_size,
                           uint8_t *cert_issuer,
                           uintn *issuer_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -493,7 +493,7 @@ x509_get_issuer_common_name(const uint8_t *cert, uintn cert_size,
                             char *common_name,
                             uintn *common_name_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -528,7 +528,7 @@ x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
                                  char *name_buffer,
                                  uintn *name_buffer_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -554,7 +554,7 @@ return_status x509_get_signature_algorithm(const uint8_t *cert,
                                            uintn cert_size, uint8_t *oid,
                                            uintn *oid_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -583,7 +583,7 @@ return_status x509_get_extension_data(const uint8_t *cert, uintn cert_size,
                                       uint8_t *extension_data,
                                       uintn *extension_data_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -612,7 +612,7 @@ bool x509_get_validity(const uint8_t *cert, uintn cert_size,
                        uint8_t *from, uintn *from_size, uint8_t *to,
                        uintn *to_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -630,7 +630,7 @@ bool x509_get_validity(const uint8_t *cert, uintn cert_size,
 bool x509_get_key_usage(const uint8_t *cert, uintn cert_size,
                         uintn *usage)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -655,7 +655,7 @@ return_status x509_get_extended_key_usage(const uint8_t *cert,
                                           uintn cert_size, uint8_t *usage,
                                           uintn *usage_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -685,7 +685,7 @@ return_status x509_get_extended_key_usage(const uint8_t *cert,
 return_status x509_set_date_time(char *date_time_str, void *date_time,
                                  uintn *date_time_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
 }
 
@@ -707,6 +707,6 @@ return_status x509_set_date_time(char *date_time_str, void *date_time,
  **/
 intn x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return -3;
 }

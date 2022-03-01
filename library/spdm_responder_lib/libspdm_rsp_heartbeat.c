@@ -93,7 +93,7 @@ return_status libspdm_get_response_heartbeat(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_heartbeat_response_t));
     *response_size = sizeof(spdm_heartbeat_response_t);
     zero_mem(response, *response_size);
     spdm_response = response;

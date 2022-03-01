@@ -27,7 +27,7 @@
  **/
 void *rsa_new(void)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return NULL;
 }
 
@@ -39,7 +39,7 @@ void *rsa_new(void)
  **/
 void rsa_free(void *rsa_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 }
 
 /**
@@ -67,7 +67,7 @@ void rsa_free(void *rsa_context)
 bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
                  const uint8_t *big_number, uintn bn_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -96,7 +96,7 @@ bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
                                uintn hash_size, const uint8_t *signature,
                                uintn sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -126,6 +126,6 @@ bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
                     const uint8_t *message_hash, uintn hash_size,
                     const uint8_t *signature, uintn sig_size)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

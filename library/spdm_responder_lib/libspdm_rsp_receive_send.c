@@ -74,7 +74,7 @@ libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
     uintn index;
 
-    ASSERT(request_code != SPDM_RESPOND_IF_READY);
+    LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
     for (index = 0; index < sizeof(m_libspdm_get_response_struct) /
          sizeof(m_libspdm_get_response_struct[0]);
          index++) {
@@ -137,7 +137,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         return RETURN_INVALID_PARAMETER;
     }
 
-    DEBUG((DEBUG_INFO, "SpdmReceiveRequest[.] ...\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[.] ...\n"));
 
     message_session_id = NULL;
     spdm_context->last_spdm_request_session_id_valid = false;
@@ -148,7 +148,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         request_size, request, &spdm_context->last_spdm_request_size,
         spdm_context->last_spdm_request);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO, "transport_decode_message : %p\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
 
             /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
@@ -184,9 +184,9 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         spdm_context->last_spdm_request_session_id_valid = true;
     }
 
-    DEBUG((DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
-           (message_session_id != NULL) ? *message_session_id : 0,
-           spdm_context->last_spdm_request_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
+                   (message_session_id != NULL) ? *message_session_id : 0,
+                   spdm_context->last_spdm_request_size));
     libspdm_internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
                               spdm_context->last_spdm_request_size);
 
@@ -232,7 +232,7 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return;
     }
 
@@ -354,7 +354,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             status = RETURN_UNSUPPORTED;
             break;
         default:
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             status = RETURN_UNSUPPORTED;
         }
 
@@ -362,17 +362,17 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             return status;
         }
 
-        DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
-               (session_id != NULL) ? *session_id : 0,
-               my_response_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
+                       (session_id != NULL) ? *session_id : 0,
+                       my_response_size));
         libspdm_internal_dump_hex(my_response, my_response_size);
 
         status = spdm_context->transport_encode_message(
             spdm_context, session_id, false, false,
             my_response_size, my_response, response_size, response);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_INFO, "transport_encode_message : %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n",
+                           status));
             return status;
         }
 
@@ -385,7 +385,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
     }
@@ -400,8 +400,8 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         return RETURN_INVALID_PARAMETER;
     }
 
-    DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] ...\n",
-           (session_id != NULL) ? *session_id : 0));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] ...\n",
+                   (session_id != NULL) ? *session_id : 0));
 
     spdm_request = (void *)spdm_context->last_spdm_request;
     if (spdm_context->last_spdm_request_size == 0) {
@@ -464,15 +464,15 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         }
     }
 
-    DEBUG((DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
-           (session_id != NULL) ? *session_id : 0, my_response_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
+                   (session_id != NULL) ? *session_id : 0, my_response_size));
     libspdm_internal_dump_hex(my_response, my_response_size);
 
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,
         my_response_size, my_response, response_size, response);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_INFO, "transport_encode_message : %p\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n", status));
         return status;
     }
 
@@ -578,7 +578,7 @@ return_status libspdm_register_session_state_callback_func(
             return RETURN_SUCCESS;
         }
     }
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 
     return RETURN_ALREADY_STARTED;
 }
@@ -610,7 +610,7 @@ return_status libspdm_register_connection_state_callback_func(
             return RETURN_SUCCESS;
         }
     }
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
 
     return RETURN_ALREADY_STARTED;
 }

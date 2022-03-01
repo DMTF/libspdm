@@ -1420,7 +1420,7 @@ void libspdm_test_requester_get_capabilities_case29(void **state) {
 
         status = libspdm_get_capabilities (spdm_context);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/

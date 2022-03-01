@@ -59,7 +59,7 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
     uint16_t total_responder_cert_chain_buffer_length;
     uintn cert_chain_capacity;
 
-    ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -98,8 +98,8 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
         } else {
             spdm_request.length = MIN(length, spdm_response.remainder_length);
         }
-        DEBUG((DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
-               spdm_request.offset, spdm_request.length));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
+                       spdm_request.offset, spdm_request.length));
 
         status = libspdm_send_spdm_request(spdm_context, NULL,
                                            sizeof(spdm_request),
@@ -187,8 +187,8 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
             goto done;
         }
 
-        DEBUG((DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
-               spdm_request.offset, spdm_response.portion_length));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
+                       spdm_request.offset, spdm_response.portion_length));
         libspdm_internal_dump_hex(spdm_response.cert_chain,
                                   spdm_response.portion_length);
 

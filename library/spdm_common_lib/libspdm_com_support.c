@@ -16,7 +16,7 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, uintn size)
 {
     uintn index;
     for (index = 0; index < size; index++) {
-        DEBUG((DEBUG_INFO, "%02x", (uintn)data[index]));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x", (uintn)data[index]));
     }
 }
 
@@ -30,7 +30,7 @@ void libspdm_internal_dump_data(const uint8_t *data, uintn size)
 {
     uintn index;
     for (index = 0; index < size; index++) {
-        DEBUG((DEBUG_INFO, "%02x ", (uintn)data[index]));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x ", (uintn)data[index]));
     }
 }
 
@@ -51,15 +51,15 @@ void libspdm_internal_dump_hex(const uint8_t *data, uintn size)
     count = size / COLUME_SIZE;
     left = size % COLUME_SIZE;
     for (index = 0; index < count; index++) {
-        DEBUG((DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
         libspdm_internal_dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     if (left != 0) {
-        DEBUG((DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
         libspdm_internal_dump_data(data + index * COLUME_SIZE, left);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 }
 
@@ -112,27 +112,27 @@ return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
     if (buffer == NULL) {
         return RETURN_INVALID_PARAMETER;
     }
-    ASSERT(buffer != NULL);
-    ASSERT(buffer_size != 0);
-    ASSERT((managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
-    ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
+    LIBSPDM_ASSERT(buffer != NULL);
+    LIBSPDM_ASSERT(buffer_size != 0);
+    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
+    LIBSPDM_ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
     if (buffer_size >
         managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
-        /* Do not ASSERT here, because command processor will append message from external.*/
-        DEBUG((DEBUG_ERROR,
-               "libspdm_append_managed_buffer 0x%x fail, rest 0x%x only\n",
-               (uint32_t)buffer_size,
-               (uint32_t)(managed_buffer->max_buffer_size -
-                          managed_buffer->buffer_size)));
+        /* Do not LIBSPDM_ASSERT here, because command processor will append message from external.*/
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "libspdm_append_managed_buffer 0x%x fail, rest 0x%x only\n",
+                       (uint32_t)buffer_size,
+                       (uint32_t)(managed_buffer->max_buffer_size -
+                                  managed_buffer->buffer_size)));
         return RETURN_BUFFER_TOO_SMALL;
     }
-    ASSERT(buffer_size <=
-           managed_buffer->max_buffer_size - managed_buffer->buffer_size);
+    LIBSPDM_ASSERT(buffer_size <=
+                   managed_buffer->max_buffer_size - managed_buffer->buffer_size);
 
     copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
              buffer_size,
@@ -155,12 +155,12 @@ void libspdm_reset_managed_buffer(void *m_buffer)
 
     managed_buffer = m_buffer;
 
-    ASSERT((managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
+    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     managed_buffer->buffer_size = 0;
     zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
 }
@@ -178,12 +178,12 @@ uintn libspdm_get_managed_buffer_size(void *m_buffer)
 
     managed_buffer = m_buffer;
 
-    ASSERT((managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
+    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     return managed_buffer->buffer_size;
 }
 
@@ -200,12 +200,12 @@ void *libspdm_get_managed_buffer(void *m_buffer)
 
     managed_buffer = m_buffer;
 
-    ASSERT((managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-           (managed_buffer->max_buffer_size ==
-            LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
+    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+                   (managed_buffer->max_buffer_size ==
+                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     return (managed_buffer + 1);
 }
 
@@ -221,9 +221,9 @@ void libspdm_init_managed_buffer(void *m_buffer, uintn max_buffer_size)
 
     managed_buffer = m_buffer;
 
-    ASSERT((max_buffer_size == LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-           (max_buffer_size == LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-           (max_buffer_size == LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
+    LIBSPDM_ASSERT((max_buffer_size == LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
+                   (max_buffer_size == LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
+                   (max_buffer_size == LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
 
     managed_buffer->max_buffer_size = max_buffer_size;
     libspdm_reset_managed_buffer(m_buffer);

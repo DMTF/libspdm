@@ -30,10 +30,10 @@ static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
     ret = false;
 
     if (RandBuffer == NULL) {
-        DEBUG((DEBUG_ERROR,
-               "[OPENSSL_RAND_POOL] NULL RandBuffer. No random numbers are generated and your system is not secure\n"));
-        ASSERT(RandBuffer !=
-               NULL); /* Since we can't generate random numbers, we should assert. Otherwise we will just blow up later.*/
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "[OPENSSL_RAND_POOL] NULL RandBuffer. No random numbers are generated and your system is not secure\n"));
+        LIBSPDM_ASSERT(RandBuffer !=
+                       NULL); /* Since we can't generate random numbers, we should assert. Otherwise we will just blow up later.*/
         return ret;
     }
 

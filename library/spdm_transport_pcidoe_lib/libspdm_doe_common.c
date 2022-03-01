@@ -145,8 +145,8 @@ return_status libspdm_transport_pci_doe_encode_message(
             message_size, message, &secured_message_size,
             secured_message, &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_ERROR,
-                   "libspdm_encode_secured_message - %p\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                           "libspdm_encode_secured_message - %p\n", status));
             return status;
         }
 
@@ -155,8 +155,8 @@ return_status libspdm_transport_pci_doe_encode_message(
             session_id, secured_message_size, secured_message,
             transport_message_size, transport_message);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_ERROR, "transport_encode_message - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
+                           status));
             return RETURN_UNSUPPORTED;
         }
     } else {
@@ -165,8 +165,8 @@ return_status libspdm_transport_pci_doe_encode_message(
                                           transport_message_size,
                                           transport_message);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_ERROR, "transport_encode_message - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
+                           status));
             return RETURN_UNSUPPORTED;
         }
     }
@@ -240,7 +240,7 @@ return_status libspdm_transport_pci_doe_decode_message(
         &secured_message_session_id, transport_message_size,
         transport_message, &secured_message_size, secured_message);
     if (RETURN_ERROR(status)) {
-        DEBUG((DEBUG_ERROR, "transport_decode_message - %p\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n", status));
         return RETURN_UNSUPPORTED;
     }
 
@@ -265,8 +265,8 @@ return_status libspdm_transport_pci_doe_decode_message(
             message_size, message,
             &spdm_secured_message_callbacks);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_ERROR,
-                   "libspdm_decode_secured_message - %p\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                           "libspdm_decode_secured_message - %p\n", status));
             libspdm_secured_message_get_last_spdm_error_struct(
                 secured_message_context, &spdm_error);
             libspdm_set_last_spdm_error_struct(spdm_context,
@@ -281,11 +281,11 @@ return_status libspdm_transport_pci_doe_decode_message(
                                           transport_message,
                                           message_size, message);
         if (RETURN_ERROR(status)) {
-            DEBUG((DEBUG_ERROR, "transport_decode_message - %p\n",
-                   status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n",
+                           status));
             return RETURN_UNSUPPORTED;
         }
-        ASSERT(secured_message_session_id == NULL);
+        LIBSPDM_ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
         return RETURN_SUCCESS;
     }

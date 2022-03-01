@@ -87,8 +87,8 @@ return_status libspdm_get_response_key_exchange(void *context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         if (spdm_context->encap_context.error_state !=
             LIBSPDM_STATUS_SUCCESS) {
-            DEBUG((DEBUG_INFO,
-                   "libspdm_get_response_key_exchange fail due to Mutual Auth fail\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_get_response_key_exchange fail due to Mutual Auth fail\n"));
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -175,7 +175,7 @@ return_status libspdm_get_response_key_exchange(void *context,
                  measurement_summary_hash_size + sizeof(uint16_t) +
                  opaque_key_exchange_rsp_size + signature_size + hmac_size;
 
-    ASSERT(*response_size >= total_size);
+    LIBSPDM_ASSERT(*response_size >= total_size);
     *response_size = total_size;
     zero_mem(response, *response_size);
     spdm_response = response;
@@ -245,10 +245,10 @@ return_status libspdm_get_response_key_exchange(void *context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    DEBUG((DEBUG_INFO, "Calc SelfKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc SelfKey (0x%x):\n", dhe_key_size));
     libspdm_internal_dump_hex(ptr, dhe_key_size);
 
-    DEBUG((DEBUG_INFO, "Calc peer_key (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer_key (0x%x):\n", dhe_key_size));
     libspdm_internal_dump_hex((uint8_t *)request +
                               sizeof(spdm_key_exchange_request_t),
                               dhe_key_size);
@@ -298,7 +298,7 @@ return_status libspdm_get_response_key_exchange(void *context,
     ptr += sizeof(uint16_t);
     status = libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_key_exchange_rsp_size, ptr);
-    ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_key_exchange_rsp_size;
 
     spdm_context->connection_info.local_used_cert_chain_buffer =
@@ -340,8 +340,8 @@ return_status libspdm_get_response_key_exchange(void *context,
                                                response_size, response);
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
-           session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
+                   session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, false,
                                         th1_hash_data);
     if (RETURN_ERROR(status)) {

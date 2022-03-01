@@ -106,7 +106,7 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     /* X509 Certificate Chain Verification.*/
 
-    DEBUG((DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
     status = x509_verify_cert_chain((uint8_t *)test_ca_cert, test_ca_cert_len,
                                     (uint8_t *)test_bundle_cert,
                                     test_bundle_cert_len);
@@ -120,8 +120,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     /* X509 Get leaf certificate from cert_chain Verificate*/
 
-    DEBUG((DEBUG_INFO,
-           "- X509 Certificate Chain get leaf certificate Verification ... "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
                                            test_bundle_cert_len, -1,
                                            &leaf_cert, &leaf_cert_len);
@@ -143,8 +143,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     /* X509 Get leaf certificate from cert_chain Verificate*/
 
-    DEBUG((DEBUG_INFO,
-           "- X509 Certificate Chain get leaf certificate Verification ... "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
                                            test_bundle_cert_len, 2,
                                            &leaf_cert, &leaf_cert_len);
@@ -166,8 +166,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
 
     /* X509 Get root certificate from cert_chain Verificate*/
 
-    DEBUG((DEBUG_INFO,
-           "- X509 Certificate Chain get root certificate Verification ... "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate Chain get root certificate Verification ... "));
     status = x509_get_cert_from_cert_chain(test_bundle_cert,
                                            test_bundle_cert_len, 0,
                                            &leaf_cert, &leaf_cert_len);
@@ -216,9 +216,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
         my_print("\n  - Retrieving Common name - [Fail]");
         goto cleanup;
     } else {
-        DEBUG((DEBUG_INFO,
-               "\n  - Retrieving Common name = \"%s\" (size = %d)",
-               common_name, common_name_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "\n  - Retrieving Common name = \"%s\" (size = %d)",
+                       common_name, common_name_size));
         my_print(" - [PASS]");
     }
 
@@ -245,8 +245,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
         my_print("\n  - Retrieving version - [Fail]");
         goto cleanup;
     } else {
-        DEBUG((DEBUG_INFO, "\n  - Retrieving version = %d - ",
-               cert_version));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving version = %d - ",
+                       cert_version));
         my_print("[Pass]");
     }
 
@@ -261,8 +261,8 @@ return_status validate_crypt_x509(char *Path, uintn len)
         my_print("\n  - Retrieving serial_number - [Fail]");
         goto cleanup;
     } else {
-        DEBUG((DEBUG_INFO, "\n  - Retrieving serial_number = %d - ",
-               *((uint64_t *)asn1_buffer)));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving serial_number = %d - ",
+                       *((uint64_t *)asn1_buffer)));
         my_print("[Pass]");
     }
 
@@ -295,9 +295,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
         my_print("\n  - Retrieving Issuer Common name - [Fail]");
         goto cleanup;
     } else {
-        DEBUG((DEBUG_INFO,
-               "\n  - Retrieving Issuer Common name = \"%s\" (size = %d) - ",
-               common_name, common_name_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "\n  - Retrieving Issuer Common name = \"%s\" (size = %d) - ",
+                       common_name, common_name_size));
         my_print("[Pass]");
     }
 
@@ -328,9 +328,9 @@ return_status validate_crypt_x509(char *Path, uintn len)
         my_print("\n  - Retrieving  SubjectAltName otherName - [Fail]");
         goto cleanup;
     } else {
-        DEBUG((DEBUG_INFO,
-               "\n  - Retrieving  SubjectAltName (size = %d) ",
-               asn1_buffer_len));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "\n  - Retrieving  SubjectAltName (size = %d) ",
+                       asn1_buffer_len));
         my_print("- [Pass]");
     }
 

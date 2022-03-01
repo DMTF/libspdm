@@ -486,7 +486,7 @@ bool rsa_pss_sign(void *rsa_context, uintn hash_nid,
     if (size <= 0) {
         return false;
     } else {
-        ASSERT(*sig_size == (uintn)size);
+        LIBSPDM_ASSERT(*sig_size == (uintn)size);
         return true;
     }
 }

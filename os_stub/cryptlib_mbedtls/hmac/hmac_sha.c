@@ -71,7 +71,7 @@ bool hmac_md_set_key(const mbedtls_md_type_t md_type, void *hmac_md_ctx,
     mbedtls_md_init(hmac_md_ctx);
 
     md_info = mbedtls_md_info_from_type(md_type);
-    ASSERT(md_info != NULL);
+    LIBSPDM_ASSERT(md_info != NULL);
 
     ret = mbedtls_md_setup(hmac_md_ctx, md_info, 1);
     if (ret != 0) {
@@ -104,7 +104,7 @@ int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
     case MBEDTLS_MD_SHA512:
         return 128;
     default:
-        ASSERT(false);
+        LIBSPDM_ASSERT(false);
         return 0;
     }
 }
@@ -137,7 +137,7 @@ bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
     mbedtls_md_init(new_hmac_md_ctx);
 
     md_info = mbedtls_md_info_from_type(md_type);
-    ASSERT(md_info != NULL);
+    LIBSPDM_ASSERT(md_info != NULL);
 
     ret = mbedtls_md_setup(new_hmac_md_ctx, md_info, 1);
     if (ret != 0) {
@@ -262,7 +262,7 @@ bool hmac_md_all(const mbedtls_md_type_t md_type, const void *data,
     int32_t ret;
 
     md_info = mbedtls_md_info_from_type(md_type);
-    ASSERT(md_info != NULL);
+    LIBSPDM_ASSERT(md_info != NULL);
 
     ret = mbedtls_md_hmac(md_info, key, key_size, data, data_size,
                           hmac_value);

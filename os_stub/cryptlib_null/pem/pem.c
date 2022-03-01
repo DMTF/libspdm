@@ -32,7 +32,7 @@ bool rsa_get_private_key_from_pem(const uint8_t *pem_data,
                                   const char *password,
                                   void **rsa_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -57,7 +57,7 @@ bool ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size,
                                  const char *password,
                                  void **ec_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -83,7 +83,7 @@ bool ecd_get_private_key_from_pem(const uint8_t *pem_data,
                                   const char *password,
                                   void **ecd_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }
 
@@ -109,6 +109,6 @@ bool sm2_get_private_key_from_pem(const uint8_t *pem_data,
                                   const char *password,
                                   void **sm2_context)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return false;
 }

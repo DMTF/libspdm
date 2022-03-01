@@ -36,7 +36,7 @@ return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_contex
         return RETURN_DEVICE_ERROR;
     }
 
-    ASSERT(*encap_request_size >= sizeof(spdm_challenge_request_t));
+    LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_challenge_request_t));
     *encap_request_size = sizeof(spdm_challenge_request_t);
 
     spdm_request = encap_request;
@@ -49,9 +49,9 @@ return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_contex
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return RETURN_DEVICE_ERROR;
     }
-    DEBUG((DEBUG_INFO, "Encap ClientNonce - "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap ClientNonce - "));
     libspdm_internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
@@ -168,9 +168,9 @@ return_status libspdm_process_encap_response_challenge_auth(
 
     cert_chain_hash = ptr;
     ptr += hash_size;
-    DEBUG((DEBUG_INFO, "Encap cert_chain_hash (0x%x) - ", hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap cert_chain_hash (0x%x) - ", hash_size));
     libspdm_internal_dump_data(cert_chain_hash, hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     result = libspdm_verify_certificate_chain_hash(spdm_context,
                                                    cert_chain_hash, hash_size);
     if (!result) {
@@ -180,18 +180,18 @@ return_status libspdm_process_encap_response_challenge_auth(
     }
 
     nonce = ptr;
-    DEBUG((DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
     libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
 
     measurement_summary_hash = ptr;
     ptr += measurement_summary_hash_size;
-    DEBUG((DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
-           measurement_summary_hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
+                   measurement_summary_hash_size));
     libspdm_internal_dump_data(measurement_summary_hash,
                                measurement_summary_hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
@@ -217,11 +217,11 @@ return_status libspdm_process_encap_response_challenge_auth(
 
     opaque = ptr;
     ptr += opaque_length;
-    DEBUG((DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
     libspdm_internal_dump_hex(opaque, opaque_length);
 
     signature = ptr;
-    DEBUG((DEBUG_INFO, "Encap signature (0x%x):\n", signature_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%x):\n", signature_size));
     libspdm_internal_dump_hex(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(
         spdm_context, false, signature, signature_size);

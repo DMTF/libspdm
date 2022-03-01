@@ -476,7 +476,7 @@ bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
         free_pool(buffer);
         return false;
     }
-    ASSERT(sig_size == (uintn)size);
+    LIBSPDM_ASSERT(sig_size == (uintn)size);
 
     result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
                                         buffer, RSA_PSS_SALTLEN_DIGEST);

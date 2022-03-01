@@ -148,7 +148,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     if (requester_context_in == NULL) {
         spdm_request.context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     } else {
-        ASSERT (requester_context_in_size <= LIBSPDM_PSK_CONTEXT_LENGTH);
+        LIBSPDM_ASSERT (requester_context_in_size <= LIBSPDM_PSK_CONTEXT_LENGTH);
         spdm_request.context_length = (uint16_t)requester_context_in_size;
     }
     opaque_psk_exchange_req_size =
@@ -162,9 +162,9 @@ return_status libspdm_try_send_receive_psk_exchange(
     copy_mem(ptr, sizeof(spdm_request.psk_hint),
              spdm_context->local_context.psk_hint,
              spdm_context->local_context.psk_hint_size);
-    DEBUG((DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request.psk_hint_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request.psk_hint_length));
     libspdm_internal_dump_data(ptr, spdm_request.psk_hint_length);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += spdm_request.psk_hint_length;
 
     if (requester_context_in == NULL) {
@@ -175,10 +175,10 @@ return_status libspdm_try_send_receive_psk_exchange(
         copy_mem(ptr, sizeof(spdm_request.context),
                  requester_context_in, spdm_request.context_length);
     }
-    DEBUG((DEBUG_INFO, "ClientContextData (0x%x) - ",
-           spdm_request.context_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientContextData (0x%x) - ",
+                   spdm_request.context_length));
     libspdm_internal_dump_data(ptr, spdm_request.context_length);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_context != NULL) {
         if (*requester_context_size > spdm_request.context_length) {
             *requester_context_size = spdm_request.context_length;
@@ -190,7 +190,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     status = libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
-    ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_psk_exchange_req_size;
 
     spdm_request_size = (uintn)ptr - (uintn)&spdm_request;
@@ -280,11 +280,11 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     ptr = (uint8_t *)(spdm_response.measurement_summary_hash);
     measurement_summary_hash = ptr;
-    DEBUG((DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
-           measurement_summary_hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
+                   measurement_summary_hash_size));
     libspdm_internal_dump_data(measurement_summary_hash,
                                measurement_summary_hash_size);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
 
@@ -292,10 +292,10 @@ return_status libspdm_try_send_receive_psk_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
-    DEBUG((DEBUG_INFO, "ServerContextData (0x%x) - ",
-           spdm_response.context_length));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerContextData (0x%x) - ",
+                   spdm_response.context_length));
     libspdm_internal_dump_data(ptr, spdm_response.context_length);
-    DEBUG((DEBUG_INFO, "\n"));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (responder_context != NULL) {
         if (*responder_context_size > spdm_response.context_length) {
             *responder_context_size = spdm_response.context_length;
@@ -325,8 +325,8 @@ return_status libspdm_try_send_receive_psk_exchange(
         return RETURN_SECURITY_VIOLATION;
     }
 
-    DEBUG((DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
-           *session_id));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
+                   *session_id));
     status = libspdm_calculate_th1_hash(spdm_context, session_info, true,
                                         th1_hash_data);
     if (RETURN_ERROR(status)) {
@@ -341,7 +341,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     }
 
     verify_data = ptr;
-    DEBUG((DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
     libspdm_internal_dump_hex(verify_data, hmac_size);
     result = libspdm_verify_psk_exchange_rsp_hmac(spdm_context, session_info,
                                                   verify_data, hmac_size);
@@ -375,8 +375,8 @@ return_status libspdm_try_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         /* No need to send PSK_FINISH, enter application phase directly.*/
 
-        DEBUG((DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
-               session_id));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
+                       session_id));
         status = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             true, th2_hash_data);
         if (RETURN_ERROR(status)) {

@@ -107,7 +107,7 @@ return_status libspdm_get_encap_response_certificate(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);
     response_capacity = *response_size;
     *response_size = sizeof(spdm_certificate_response_t) + length;
     zero_mem(response, *response_size);

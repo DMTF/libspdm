@@ -114,7 +114,7 @@ return_status libspdm_get_response_challenge_auth(void *context,
         spdm_context->local_context.opaque_challenge_auth_rsp_size +
         signature_size;
 
-    ASSERT(*response_size >= total_size);
+    LIBSPDM_ASSERT(*response_size >= total_size);
     response_capacity = *response_size;
     *response_size = total_size;
     zero_mem(response, *response_size);

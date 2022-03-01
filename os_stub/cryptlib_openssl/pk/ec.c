@@ -250,7 +250,7 @@ bool ec_get_pub_key(void *ec_context, uint8_t *public_key,
         ret_val = false;
         goto done;
     }
-    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public_key != NULL) {
         zero_mem(public_key, *public_key_size);
@@ -402,7 +402,7 @@ bool ec_generate_key(void *ec_context, uint8_t *public,
         ret_val = false;
         goto done;
     }
-    ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public != NULL) {
         zero_mem(public, *public_size);
@@ -653,7 +653,7 @@ bool ecdsa_sign(void *ec_context, uintn hash_nid,
         ECDSA_SIG_free(ecdsa_sig);
         return false;
     }
-    ASSERT((uintn)r_size <= half_size && (uintn)s_size <= half_size);
+    LIBSPDM_ASSERT((uintn)r_size <= half_size && (uintn)s_size <= half_size);
 
     BN_bn2bin(bn_r, &signature[0 + half_size - r_size]);
     BN_bn2bin(bn_s, &signature[half_size + half_size - s_size]);

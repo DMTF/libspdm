@@ -6,8 +6,6 @@
 
 #include "test_crypt.h"
 
-void libspdm_internal_libspdm_dump_data(const uint8_t *data, uintn size);
-
 /* AES-GCM test data from NIST public test vectors */
 
 GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_gcm_key[] = {

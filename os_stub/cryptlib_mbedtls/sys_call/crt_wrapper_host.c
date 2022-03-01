@@ -15,13 +15,13 @@
 
 int my_printf(const char *fmt, ...)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return 0;
 }
 
 int my_snprintf(char *str, size_t size, const char *format, ...)
 {
-    ASSERT(false);
+    LIBSPDM_ASSERT(false);
     return 0;
 }
 

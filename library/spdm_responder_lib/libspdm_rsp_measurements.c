@@ -38,7 +38,7 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
         SPDM_NONCE_SIZE + sizeof(uint16_t) +
         spdm_context->local_context.opaque_measurement_rsp_size +
         signature_size;
-    ASSERT(response_message_size > measurment_sig_size);
+    LIBSPDM_ASSERT(response_message_size > measurment_sig_size);
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                    measurment_sig_size);
 
@@ -86,7 +86,7 @@ bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
     measurment_no_sig_size =
         SPDM_NONCE_SIZE + sizeof(uint16_t) +
         spdm_context->local_context.opaque_measurement_rsp_size;
-    ASSERT(response_message_size > measurment_no_sig_size);
+    LIBSPDM_ASSERT(response_message_size > measurment_no_sig_size);
     ptr = (void *)((uint8_t *)response_message + response_message_size -
                    measurment_no_sig_size);
 
@@ -325,13 +325,13 @@ return_status libspdm_get_response_measurements(void *context,
         }
     }
 
-    ASSERT(measurements_count <= LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
+    LIBSPDM_ASSERT(measurements_count <= LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
 
     switch (spdm_request->header.param2) {
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS:
 
         spdm_response_size += 0; /* Just to match code pattern in other case blocks*/
-        ASSERT(*response_size >= spdm_response_size);
+        LIBSPDM_ASSERT(*response_size >= spdm_response_size);
         *response_size = spdm_response_size;
         spdm_response = response;
 
@@ -345,7 +345,7 @@ return_status libspdm_get_response_measurements(void *context,
         break;
 
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS:
-        DEBUG_CODE_BEGIN();
+        LIBSPDM_DEBUG_CODE_BEGIN();
         uintn debug_measurements_record_size;
         uintn debug_measurements_block_size;
         spdm_measurement_block_dmtf_t *debug_measurement_block;
@@ -363,11 +363,11 @@ return_status libspdm_get_response_measurements(void *context,
                 (void *)((uintn)debug_measurement_block +
                          debug_measurements_block_size);
         }
-        ASSERT(debug_measurements_record_size == measurements_size);
-        DEBUG_CODE_END();
+        LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);
+        LIBSPDM_DEBUG_CODE_END();
 
         spdm_response_size += measurements_size;
-        ASSERT(*response_size >= spdm_response_size);
+        LIBSPDM_ASSERT(*response_size >= spdm_response_size);
         *response_size = spdm_response_size;
         spdm_response = response;
 
@@ -383,10 +383,10 @@ return_status libspdm_get_response_measurements(void *context,
 
     default:
 
-        ASSERT(measurements_count == 1);
+        LIBSPDM_ASSERT(measurements_count == 1);
 
         spdm_response_size += measurements_size;
-        ASSERT(*response_size >= spdm_response_size);
+        LIBSPDM_ASSERT(*response_size >= spdm_response_size);
         *response_size = spdm_response_size;
         spdm_response = response;
 

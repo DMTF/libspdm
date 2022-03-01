@@ -37,7 +37,7 @@ libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
 
-    ASSERT(*encap_request_size >= sizeof(spdm_get_digest_request_t));
+    LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_get_digest_request_t));
     *encap_request_size = sizeof(spdm_get_digest_request_t);
 
     spdm_request = encap_request;
@@ -145,9 +145,9 @@ return_status libspdm_process_encap_response_digest(
 
     digest = (void *)(spdm_response + 1);
     for (index = 0; index < digest_count; index++) {
-        DEBUG((DEBUG_INFO, "digest (0x%x) - ", index));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
         libspdm_internal_dump_data(&digest[digest_size * index], digest_size);
-        DEBUG((DEBUG_INFO, "\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     result = libspdm_verify_peer_digests(spdm_context, digest,

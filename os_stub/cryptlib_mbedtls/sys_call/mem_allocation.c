@@ -70,7 +70,7 @@ void my_free(void *ptr)
 
     if (ptr != NULL) {
         pool_hdr = (CRYPTMEM_HEAD *)ptr - 1;
-        ASSERT(pool_hdr->signature == CRYPTMEM_HEAD_SIGNATURE);
+        LIBSPDM_ASSERT(pool_hdr->signature == CRYPTMEM_HEAD_SIGNATURE);
         free_pool(pool_hdr);
     }
 }

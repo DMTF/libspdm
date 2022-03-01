@@ -31,7 +31,7 @@ return_status libspdm_generate_error_response(const void *context,
 {
     spdm_error_response_t *spdm_response;
 
-    ASSERT(*response_size >= sizeof(spdm_error_response_t));
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_error_response_t));
     *response_size = sizeof(spdm_error_response_t);
     spdm_response = response;
 
@@ -74,8 +74,8 @@ return_status libspdm_generate_extended_error_response(
     spdm_error_response_t *spdm_response;
     uintn response_capacity;
 
-    ASSERT(*response_size >=
-           sizeof(spdm_error_response_t) + extended_error_data_size);
+    LIBSPDM_ASSERT(*response_size >=
+                   sizeof(spdm_error_response_t) + extended_error_data_size);
     response_capacity = *response_size;
     *response_size =
         sizeof(spdm_error_response_t) + extended_error_data_size;

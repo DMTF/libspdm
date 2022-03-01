@@ -182,16 +182,16 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *session_id);
         if (session_info == NULL) {
-            ASSERT(false);
+            LIBSPDM_ASSERT(false);
             return RETURN_UNSUPPORTED;
         }
-        ASSERT((mut_auth_requested == 0) ||
-               (mut_auth_requested ==
-                SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
-               (mut_auth_requested ==
-                SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS));
+        LIBSPDM_ASSERT((mut_auth_requested == 0) ||
+                       (mut_auth_requested ==
+                        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
+                       (mut_auth_requested ==
+                        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS));
     } else {
-        ASSERT(mut_auth_requested == 0);
+        LIBSPDM_ASSERT(mut_auth_requested == 0);
     }
 
 
