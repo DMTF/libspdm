@@ -69,7 +69,7 @@ return_status libspdm_get_response_key_update(void *context,
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
         return libspdm_generate_error_response(context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
     session_id = spdm_context->last_spdm_request_session_id;
@@ -77,7 +77,7 @@ return_status libspdm_get_response_key_update(void *context,
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return libspdm_generate_error_response(context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
     session_state = libspdm_secured_message_get_session_state(
