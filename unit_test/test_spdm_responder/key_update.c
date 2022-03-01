@@ -796,7 +796,7 @@ void libspdm_test_responder_key_update_case9(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
