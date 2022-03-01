@@ -106,7 +106,7 @@ return_status libspdm_get_response_finish(void *context, uintn request_size,
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
     }
 

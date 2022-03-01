@@ -1060,7 +1060,7 @@ void libspdm_test_responder_psk_finish_case9(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
