@@ -82,20 +82,20 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             /* Only have one connected version */
             LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));
-            copy_mem(&(spdm_context->connection_info.version),
-                     sizeof(spdm_context->connection_info.version),
-                     data,
-                     sizeof(spdm_version_number_t));
+            libspdm_copy_mem(&(spdm_context->connection_info.version),
+                             sizeof(spdm_context->connection_info.version),
+                             data,
+                             sizeof(spdm_version_number_t));
         } else {
             spdm_context->local_context.version.spdm_version_count =
                 (uint8_t)(data_size /
                           sizeof(spdm_version_number_t));
-            copy_mem(spdm_context->local_context.version.spdm_version,
-                     sizeof(spdm_context->local_context.version.spdm_version),
-                     data,
-                     spdm_context->local_context.version
-                     .spdm_version_count *
-                     sizeof(spdm_version_number_t));
+            libspdm_copy_mem(spdm_context->local_context.version.spdm_version,
+                             sizeof(spdm_context->local_context.version.spdm_version),
+                             data,
+                             spdm_context->local_context.version
+                             .spdm_version_count *
+                             sizeof(spdm_version_number_t));
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
@@ -103,23 +103,23 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             /* Only have one connected version */
             LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));
-            copy_mem(&(spdm_context->connection_info.secured_message_version),
-                     sizeof(spdm_context->connection_info.secured_message_version),
-                     data,
-                     sizeof(spdm_version_number_t));
+            libspdm_copy_mem(&(spdm_context->connection_info.secured_message_version),
+                             sizeof(spdm_context->connection_info.secured_message_version),
+                             data,
+                             sizeof(spdm_version_number_t));
         } else {
             spdm_context->local_context.secured_message_version
             .spdm_version_count = (uint8_t)(
                 data_size / sizeof(spdm_version_number_t));
-            copy_mem(spdm_context->local_context
-                     .secured_message_version.spdm_version,
-                     sizeof(spdm_context->local_context
-                            .secured_message_version.spdm_version),
-                     data,
-                     spdm_context->local_context
-                     .secured_message_version
-                     .spdm_version_count *
-                     sizeof(spdm_version_number_t));
+            libspdm_copy_mem(spdm_context->local_context
+                             .secured_message_version.spdm_version,
+                             sizeof(spdm_context->local_context
+                                    .secured_message_version.spdm_version),
+                             data,
+                             spdm_context->local_context
+                             .secured_message_version
+                             .spdm_version_count *
+                             sizeof(spdm_version_number_t));
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_FLAGS:
@@ -362,9 +362,9 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         spdm_context->connection_info.peer_used_cert_chain_buffer_size =
             data_size;
-        copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                 sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-                 data, data_size);
+        libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                         sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                         data, data_size);
 #else
         status = libspdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -722,7 +722,7 @@ return_status libspdm_get_data(void *context, libspdm_data_type_t data_type,
         *data_size = target_data_size;
         return RETURN_BUFFER_TOO_SMALL;
     }
-    copy_mem(data, *data_size, target_data, target_data_size);
+    libspdm_copy_mem(data, *data_size, target_data, target_data_size);
     *data_size = target_data_size;
 
     return RETURN_SUCCESS;
@@ -1434,10 +1434,10 @@ return_status libspdm_append_message_k(void *context, void *session_info,
                     if(spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
                         hash_size =
                             spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
-                        copy_mem(cert_chain_buffer_hash,
-                                 sizeof(cert_chain_buffer_hash),
-                                 spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
-                                 hash_size);
+                        libspdm_copy_mem(cert_chain_buffer_hash,
+                                         sizeof(cert_chain_buffer_hash),
+                                         spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                                         hash_size);
                         result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
@@ -1663,10 +1663,10 @@ return_status libspdm_append_message_f(void *context, void *session_info,
                     if (spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
                         hash_size =
                             spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
-                        copy_mem(mut_cert_chain_buffer_hash,
-                                 sizeof(mut_cert_chain_buffer_hash),
-                                 spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
-                                 hash_size);
+                        libspdm_copy_mem(mut_cert_chain_buffer_hash,
+                                         sizeof(mut_cert_chain_buffer_hash),
+                                         spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                                         hash_size);
                         result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
@@ -1913,8 +1913,8 @@ void libspdm_get_last_spdm_error_struct(void *context,
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    copy_mem(last_spdm_error, sizeof(libspdm_error_struct_t),
-             &spdm_context->last_spdm_error,sizeof(libspdm_error_struct_t));
+    libspdm_copy_mem(last_spdm_error, sizeof(libspdm_error_struct_t),
+                     &spdm_context->last_spdm_error,sizeof(libspdm_error_struct_t));
 }
 
 /**
@@ -1929,8 +1929,8 @@ void libspdm_set_last_spdm_error_struct(void *context,
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    copy_mem(&spdm_context->last_spdm_error, sizeof(spdm_context->last_spdm_error),
-             last_spdm_error, sizeof(libspdm_error_struct_t));
+    libspdm_copy_mem(&spdm_context->last_spdm_error, sizeof(spdm_context->last_spdm_error),
+                     last_spdm_error, sizeof(libspdm_error_struct_t));
 }
 
 /**
@@ -1951,7 +1951,7 @@ return_status libspdm_init_context(void *context)
     uintn index;
 
     spdm_context = context;
-    zero_mem(spdm_context, sizeof(libspdm_context_t));
+    libspdm_zero_mem(spdm_context, sizeof(libspdm_context_t));
     spdm_context->version = libspdm_context_struct_version;
     spdm_context->transcript.message_a.max_buffer_size =
         sizeof(spdm_context->transcript.message_a.buffer);
@@ -2031,11 +2031,12 @@ void libspdm_reset_context(void *context)
 
     spdm_context = context;
     /*Clear all info about last connection*/
-    zero_mem(&spdm_context->connection_info.version, sizeof(spdm_version_number_t));
-    zero_mem(&spdm_context->connection_info.capability, sizeof(libspdm_device_capability_t));
-    zero_mem(&spdm_context->connection_info.algorithm, sizeof(libspdm_device_algorithm_t));
-    zero_mem(&spdm_context->last_spdm_error, sizeof(libspdm_error_struct_t));
-    zero_mem(&spdm_context->encap_context, sizeof(libspdm_encap_context_t));
+    libspdm_zero_mem(&spdm_context->connection_info.version, sizeof(spdm_version_number_t));
+    libspdm_zero_mem(&spdm_context->connection_info.capability,
+                     sizeof(libspdm_device_capability_t));
+    libspdm_zero_mem(&spdm_context->connection_info.algorithm, sizeof(libspdm_device_algorithm_t));
+    libspdm_zero_mem(&spdm_context->last_spdm_error, sizeof(libspdm_error_struct_t));
+    libspdm_zero_mem(&spdm_context->encap_context, sizeof(libspdm_encap_context_t));
     spdm_context->connection_info.local_used_cert_chain_buffer_size = 0;
     spdm_context->connection_info.local_used_cert_chain_buffer = NULL;
     spdm_context->cache_spdm_request_size = 0;

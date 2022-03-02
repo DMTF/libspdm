@@ -26,8 +26,8 @@
 uint8_t libspdm_test_get_sequence_number(uint64_t sequence_number,
                                          uint8_t *sequence_number_buffer)
 {
-    copy_mem(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
-             &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
+    libspdm_copy_mem(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
+                     &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
     return TEST_SEQUENCE_NUMBER_COUNT;
 }
 
@@ -94,13 +94,13 @@ return_status libspdm_test_encode_message(const uint32_t *session_id, uintn mess
     } else {
         test_message_header->message_type = LIBSPDM_TEST_MESSAGE_TYPE_SPDM;
     }
-    copy_mem((uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
-             init_transport_message_size - sizeof(libspdm_test_message_header_t),
-             message, message_size);
-    zero_mem((uint8_t *)transport_message + sizeof(libspdm_test_message_header_t) +
-             message_size,
-             *transport_message_size - sizeof(libspdm_test_message_header_t) -
-             message_size);
+    libspdm_copy_mem((uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
+                     init_transport_message_size - sizeof(libspdm_test_message_header_t),
+                     message, message_size);
+    libspdm_zero_mem((uint8_t *)transport_message + sizeof(libspdm_test_message_header_t) +
+                     message_size,
+                     *transport_message_size - sizeof(libspdm_test_message_header_t) -
+                     message_size);
     return RETURN_SUCCESS;
 }
 
@@ -170,9 +170,9 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
 
         if (*message_size + alignment - 1 >=
             transport_message_size - sizeof(libspdm_test_message_header_t)) {
-            copy_mem(message, init_message_size,
-                     (uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
-                     *message_size);
+            libspdm_copy_mem(message, init_message_size,
+                             (uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
+                             *message_size);
             return RETURN_SUCCESS;
         }
         *message_size =
@@ -182,8 +182,8 @@ return_status libspdm_test_decode_message(uint32_t **session_id,
         return RETURN_BUFFER_TOO_SMALL;
     }
     *message_size = transport_message_size - sizeof(libspdm_test_message_header_t);
-    copy_mem(message, init_message_size,
-             (uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
-             *message_size);
+    libspdm_copy_mem(message, init_message_size,
+                     (uint8_t *)transport_message + sizeof(libspdm_test_message_header_t),
+                     *message_size);
     return RETURN_SUCCESS;
 }

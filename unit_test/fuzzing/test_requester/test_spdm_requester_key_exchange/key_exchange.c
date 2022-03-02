@@ -72,8 +72,8 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
     m_libspdm_local_buffer_size = 0;
     message_size = libspdm_test_get_key_exchange_request_size(
         spdm_context, (uint8_t *)request + header_size, request_size - header_size);
-    copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-             (uint8_t *)request + header_size, message_size);
+    libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                     (uint8_t *)request + header_size, message_size);
     m_libspdm_local_buffer_size += message_size;
     return RETURN_SUCCESS;
 }
@@ -119,9 +119,9 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
         spdm_test_context = libspdm_get_test_context();
         test_message_header_size = 1;
         temp_buff_size = sizeof(spdm_psk_finish_response_t);
-        copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-                 spdm_test_context->test_buffer_size);
+        libspdm_copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+                         spdm_test_context->test_buffer_size);
 
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -155,7 +155,7 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                                 dhe_key_size, final_key, &final_key_size);
         libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
-        /* zero_mem (ptr, hash_size);
+        /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
@@ -167,11 +167,12 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                                                         m_libspdm_use_asym_algo,
                                                         &data, &data_size,
                                                         NULL, NULL);
-        copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-                 sizeof(m_libspdm_local_buffer) -
-                 (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
-                 spdm_response,
-                 (uintn)ptr - (uintn)spdm_response);
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) -
+                         (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
+                          m_libspdm_local_buffer),
+                         spdm_response,
+                         (uintn)ptr - (uintn)spdm_response);
         m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
                        m_libspdm_local_buffer_size));
@@ -192,10 +193,11 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                 SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false,
                 libspdm_get_managed_buffer(&th_curr), libspdm_get_managed_buffer_size(
                 &th_curr), ptr, &signature_size);
-        copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-                 sizeof(m_libspdm_local_buffer) -
-                 (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
-                 ptr, signature_size);
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) -
+                         (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
+                          m_libspdm_local_buffer),
+                         ptr, signature_size);
         m_libspdm_local_buffer_size += signature_size;
         libspdm_append_managed_buffer(&th_curr, ptr, signature_size);
         ptr += signature_size;
@@ -229,8 +231,8 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
     }
     case 0x02: {
         spdm_test_context = libspdm_get_test_context();
-        copy_mem(response, *response_size,
-                 spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
+        libspdm_copy_mem(response, *response_size,
+                         spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
         *response_size = spdm_test_context->test_buffer_size;
         break;
     }
@@ -272,9 +274,9 @@ void libspdm_test_requester_key_exchange_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -290,7 +292,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
 #endif
 
     heartbeat_period = 0;
-    zero_mem(measurement_hash, sizeof(measurement_hash));
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     libspdm_send_receive_key_exchange(spdm_context,
                                       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
@@ -342,9 +344,9 @@ void libspdm_test_requester_key_exchange_case2(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -360,7 +362,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
 #endif
 
     heartbeat_period = 0;
-    zero_mem(measurement_hash, sizeof(measurement_hash));
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     libspdm_send_receive_key_exchange(spdm_context,
                                       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
@@ -411,9 +413,9 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -429,7 +431,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
 #endif
 
     heartbeat_period = 0;
-    zero_mem(measurement_hash, sizeof(measurement_hash));
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     libspdm_send_receive_key_exchange_ex(spdm_context,
                                          SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
                                          &session_id, &heartbeat_period, &slot_id_param,

@@ -200,7 +200,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
 
     LIBSPDM_ASSERT(*response_size >= total_size);
     *response_size = total_size;
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

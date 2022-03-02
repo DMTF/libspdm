@@ -104,7 +104,7 @@ return_status libspdm_validate_crypt_ecx(void)
         goto Exit;
     }
 
-    if (const_compare_mem(key1, key2, key1_length) != 0) {
+    if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ecx_free(ecx1);
         libspdm_ecx_free(ecx2);
@@ -191,7 +191,7 @@ return_status libspdm_validate_crypt_ecx(void)
         goto Exit;
     }
 
-    if (const_compare_mem(key1, key2, key1_length) != 0) {
+    if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ecx_free(ecx1);
         libspdm_ecx_free(ecx2);

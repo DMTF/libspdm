@@ -42,14 +42,14 @@ intn PasswordCallback(char *buf, const intn size, const intn flag, const void *k
 {
     intn key_length;
 
-    zero_mem((void *)buf, (uintn)size);
+    libspdm_zero_mem((void *)buf, (uintn)size);
     if (key != NULL) {
 
         /* Duplicate key phrase directly.*/
 
         key_length = (intn)ascii_str_len((char *)key);
         key_length = (key_length > size) ? size : key_length;
-        copy_mem(buf, size, key, (uintn)key_length);
+        libspdm_copy_mem(buf, size, key, (uintn)key_length);
         return key_length;
     } else {
         return 0;

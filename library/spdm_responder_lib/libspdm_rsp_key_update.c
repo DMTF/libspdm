@@ -185,15 +185,15 @@ return_status libspdm_get_response_key_update(void *context,
         }
     }
 
-    copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
-             spdm_request, request_size);
+    libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
+                     spdm_request, request_size);
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_update_response_t));
     *response_size = sizeof(spdm_key_update_response_t);
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

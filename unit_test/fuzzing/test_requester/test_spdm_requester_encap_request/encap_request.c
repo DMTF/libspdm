@@ -48,30 +48,30 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
         temp_buf_size = 16;
         test_message_size = 16;
 
-        copy_mem((uint8_t *)temp_buf,
-                 sizeof(temp_buf),
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                 test_message_size * sub_index,
-                 temp_buf_size);
+        libspdm_copy_mem((uint8_t *)temp_buf,
+                         sizeof(temp_buf),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
+                         test_message_size * sub_index,
+                         temp_buf_size);
         break;
     case 5:
         temp_buf_size = 44;
         test_message_size = 16;
 
-        copy_mem((uint8_t *)temp_buf,
-                 sizeof(temp_buf),
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                 temp_buf_size * sub_index,
-                 temp_buf_size);
+        libspdm_copy_mem((uint8_t *)temp_buf,
+                         sizeof(temp_buf),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
+                         temp_buf_size * sub_index,
+                         temp_buf_size);
         break;
     case 6:
         temp_buf_size = 8;
         test_message_size = 16;
-        copy_mem((uint8_t *)temp_buf,
-                 sizeof(temp_buf),
-                 (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
-                 test_message_size * sub_index + 28,
-                 temp_buf_size);
+        libspdm_copy_mem((uint8_t *)temp_buf,
+                         sizeof(temp_buf),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size +
+                         test_message_size * sub_index + 28,
+                         temp_buf_size);
         sub_index = 0;
         break;
     }
@@ -135,9 +135,9 @@ void libspdm_test_requester_encap_request(void **State)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #endif
 
     session_id = 0xFFFFFFFF;

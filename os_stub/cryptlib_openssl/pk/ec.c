@@ -253,7 +253,7 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
     LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public_key != NULL) {
-        zero_mem(public_key, *public_key_size);
+        libspdm_zero_mem(public_key, *public_key_size);
         BN_bn2bin(bn_x, &public_key[0 + half_size - x_size]);
         BN_bn2bin(bn_y, &public_key[half_size + half_size - y_size]);
     }
@@ -405,7 +405,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
     LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public != NULL) {
-        zero_mem(public, *public_size);
+        libspdm_zero_mem(public, *public_size);
         BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
         BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
     }
@@ -613,7 +613,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
         return false;
     }
     *sig_size = half_size * 2;
-    zero_mem(signature, *sig_size);
+    libspdm_zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SHA256:

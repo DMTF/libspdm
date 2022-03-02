@@ -40,7 +40,7 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    set_mem(spdm_context->last_update_request, 4, 0x00);
+    libspdm_set_mem(spdm_context->last_update_request, 4, 0x00);
 }
 
 static void libspdm_set_standard_key_update_test_secrets(
@@ -48,25 +48,25 @@ static void libspdm_set_standard_key_update_test_secrets(
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill, uint8_t *m_req_secret_buffer,
     uint8_t req_secret_fill)
 {
-    set_mem(m_rsp_secret_buffer, secured_message_context->hash_size, rsp_secret_fill);
-    set_mem(m_req_secret_buffer, secured_message_context->hash_size, req_secret_fill);
+    libspdm_set_mem(m_rsp_secret_buffer, secured_message_context->hash_size, rsp_secret_fill);
+    libspdm_set_mem(m_req_secret_buffer, secured_message_context->hash_size, req_secret_fill);
 
-    copy_mem(secured_message_context->application_secret.response_data_secret,
-             sizeof(secured_message_context->application_secret.response_data_secret),
-             m_rsp_secret_buffer, secured_message_context->aead_key_size);
-    copy_mem(secured_message_context->application_secret.request_data_secret,
-             sizeof(secured_message_context->application_secret.request_data_secret),
-             m_req_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.response_data_secret,
+                     sizeof(secured_message_context->application_secret.response_data_secret),
+                     m_rsp_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.request_data_secret,
+                     sizeof(secured_message_context->application_secret.request_data_secret),
+                     m_req_secret_buffer, secured_message_context->aead_key_size);
 
-    set_mem(secured_message_context->application_secret.response_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xFF));
-    set_mem(secured_message_context->application_secret.response_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret.response_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret.response_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xFF));
 
-    set_mem(secured_message_context->application_secret.request_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xEE));
-    set_mem(secured_message_context->application_secret.request_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret.request_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret.request_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xEE));
 
     secured_message_context->application_secret.response_data_sequence_number = 0;
     secured_message_context->application_secret.request_data_sequence_number = 0;
@@ -80,13 +80,13 @@ static void libspdm_compute_secret_update(uintn hash_size, const uint8_t *in_sec
     uint16_t length;
 
     length = (uint16_t)hash_size;
-    copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    copy_mem(m_bin_str9 + sizeof(uint16_t),
-             sizeof(m_bin_str9) - sizeof(uint16_t),
-             SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-             sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-             SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    libspdm_copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t),
+                     sizeof(m_bin_str9) - sizeof(uint16_t),
+                     SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+                     sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+                     SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
     m_bin_str9_size =
         sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 + sizeof(SPDM_BIN_STR_9_LABEL) - 1;
     /*context is NULL for key update*/

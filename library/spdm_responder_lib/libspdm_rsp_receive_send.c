@@ -327,7 +327,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         /* Error in libspdm_process_request(), and we need send error message directly.*/
 
         my_response_size = sizeof(my_response);
-        zero_mem(my_response, sizeof(my_response));
+        libspdm_zero_mem(my_response, sizeof(my_response));
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
@@ -376,8 +376,8 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             return status;
         }
 
-        zero_mem(&spdm_context->last_spdm_error,
-                 sizeof(spdm_context->last_spdm_error));
+        libspdm_zero_mem(&spdm_context->last_spdm_error,
+                         sizeof(spdm_context->last_spdm_error));
         return RETURN_SUCCESS;
     }
 
@@ -409,7 +409,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     }
 
     my_response_size = sizeof(my_response);
-    zero_mem(my_response, sizeof(my_response));
+    libspdm_zero_mem(my_response, sizeof(my_response));
     get_response_func = NULL;
     if (!is_app_message) {
         get_response_func =

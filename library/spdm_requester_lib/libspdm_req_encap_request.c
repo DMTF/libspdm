@@ -246,7 +246,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 
         libspdm_encapsulated_request_response = (void *)response;
         spdm_response_size = sizeof(response);
-        zero_mem(&response, sizeof(response));
+        libspdm_zero_mem(&response, sizeof(response));
         status = libspdm_receive_spdm_response(
             spdm_context, session_id, &spdm_response_size,
             libspdm_encapsulated_request_response);
@@ -318,7 +318,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 
         spdm_encapsulated_response_ack_response = (void *)response;
         spdm_response_size = sizeof(response);
-        zero_mem(&response, sizeof(response));
+        libspdm_zero_mem(&response, sizeof(response));
         status = libspdm_receive_spdm_response(
             spdm_context, session_id, &spdm_response_size,
             spdm_encapsulated_response_ack_response);

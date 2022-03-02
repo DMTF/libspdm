@@ -229,8 +229,8 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, uintn cert_size,
             goto cleanup;
         }
         if (cert_subject != NULL) {
-            copy_mem(cert_subject, *subject_size,
-                     crt.subject_raw.p, crt.subject_raw.len);
+            libspdm_copy_mem(cert_subject, *subject_size,
+                             crt.subject_raw.p, crt.subject_raw.len);
         }
         *subject_size = crt.subject_raw.len;
         status = true;
@@ -256,7 +256,7 @@ libspdm_internal_x509_get_nid_name(mbedtls_x509_name *name, const uint8_t *oid,
             return RETURN_BUFFER_TOO_SMALL;
         }
         if (common_name != NULL) {
-            copy_mem(common_name, *common_name_size, data->val.p, data->val.len);
+            libspdm_copy_mem(common_name, *common_name_size, data->val.p, data->val.len);
             common_name[data->val.len] = '\0';
         }
         *common_name_size = data->val.len + 1;
@@ -579,9 +579,9 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, uintn cert_size,
         return false;
     }
 
-    copy_mem(&profile, sizeof(profile),
-             &mbedtls_x509_crt_profile_default,
-             sizeof(mbedtls_x509_crt_profile));
+    libspdm_copy_mem(&profile, sizeof(profile),
+                     &mbedtls_x509_crt_profile_default,
+                     sizeof(mbedtls_x509_crt_profile));
 
     mbedtls_x509_crt_init(&ca);
     mbedtls_x509_crt_init(&end);
@@ -873,7 +873,7 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, uintn cert_siz
             goto cleanup;
         }
         if (serial_number != NULL) {
-            copy_mem(serial_number, *serial_number_size, crt.serial.p, crt.serial.len);
+            libspdm_copy_mem(serial_number, *serial_number_size, crt.serial.p, crt.serial.len);
             serial_number[crt.serial.len] = '\0';
         }
         *serial_number_size = crt.serial.len + 1;
@@ -929,7 +929,7 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, uintn cert_size,
             goto cleanup;
         }
         if (cert_issuer != NULL) {
-            copy_mem(cert_issuer, *issuer_size, crt.issuer_raw.p, crt.issuer_raw.len);
+            libspdm_copy_mem(cert_issuer, *issuer_size, crt.issuer_raw.p, crt.issuer_raw.len);
         }
         *issuer_size = crt.issuer_raw.len;
         status = true;
@@ -1057,7 +1057,7 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem(oid, *oid_size, crt.sig_oid.p, crt.sig_oid.len);
+            libspdm_copy_mem(oid, *oid_size, crt.sig_oid.p, crt.sig_oid.len);
         }
         *oid_size = crt.sig_oid.len;
         status = RETURN_SUCCESS;
@@ -1119,7 +1119,7 @@ internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *o
             break;
         }
 
-        if (ret == 0 && const_compare_mem(ptr, oid, oid_size) == 0) {
+        if (ret == 0 && libspdm_const_compare_mem(ptr, oid, oid_size) == 0) {
             ptr += obj_len;
 
             ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
@@ -1212,7 +1212,7 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, uintn cert_si
             goto cleanup;
         }
         if (oid != NULL) {
-            copy_mem(extension_data, *extension_data_size, ptr, obj_len);
+            libspdm_copy_mem(extension_data, *extension_data_size, ptr, obj_len);
         }
         *extension_data_size = obj_len;
         status = RETURN_SUCCESS;
@@ -1272,7 +1272,7 @@ bool libspdm_x509_get_validity(const uint8_t *cert, uintn cert_size,
             goto done;
         }
         if (from != NULL) {
-            copy_mem(from, *from_size, &(crt.valid_from), f_size);
+            libspdm_copy_mem(from, *from_size, &(crt.valid_from), f_size);
         }
         *from_size = f_size;
 
@@ -1282,8 +1282,8 @@ bool libspdm_x509_get_validity(const uint8_t *cert, uintn cert_size,
             goto done;
         }
         if (to != NULL) {
-            copy_mem(to, *to_size, &(crt.valid_to),
-                     sizeof(mbedtls_x509_time));
+            libspdm_copy_mem(to, *to_size, &(crt.valid_to),
+                             sizeof(mbedtls_x509_time));
         }
         *to_size = t_size;
         status = true;
@@ -1478,7 +1478,7 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
         goto cleanup;
     }
     if (date_time != NULL) {
-        copy_mem(date_time, *date_time_size, &dt, sizeof(mbedtls_x509_time));
+        libspdm_copy_mem(date_time, *date_time_size, &dt, sizeof(mbedtls_x509_time));
     }
     *date_time_size = sizeof(mbedtls_x509_time);
     status = RETURN_SUCCESS;
@@ -1507,7 +1507,7 @@ intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_tim
     if (date_time1 == NULL || date_time2 == NULL) {
         return -2;
     }
-    if (const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
+    if (libspdm_const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
         0) {
         return 0;
     }

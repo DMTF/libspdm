@@ -47,7 +47,7 @@ void *spdm_client_init(void)
     has_rsp_pub_cert = false;
 
     data8 = 0;
-    zero_mem(&parameter, sizeof(parameter));
+    libspdm_zero_mem(&parameter, sizeof(parameter));
     parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
     libspdm_set_data(spdm_context, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT,
                      &parameter, &data8, sizeof(data8));

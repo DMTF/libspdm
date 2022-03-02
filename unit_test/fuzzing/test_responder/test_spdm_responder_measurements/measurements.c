@@ -70,9 +70,9 @@ void libspdm_test_responder_measurements_case2(void **State)
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
 
-    zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_local_psk_hint, 32);
+    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
@@ -172,9 +172,9 @@ void libspdm_test_responder_measurements_case4(void **State)
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
 
-    zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_local_psk_hint, 32);
+    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 

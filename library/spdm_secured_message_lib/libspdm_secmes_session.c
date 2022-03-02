@@ -64,21 +64,21 @@ return_status libspdm_bin_concat(const char *label, uintn label_size,
 
     *out_bin_size = final_size;
 
-    copy_mem(out_bin, *out_bin_size, &length, sizeof(uint16_t));
-    copy_mem(out_bin + sizeof(uint16_t),
-             *out_bin_size - sizeof(uint16_t),
-             SPDM_BIN_CONCAT_LABEL,
-             sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-             *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-             label,
-             label_size);
+    libspdm_copy_mem(out_bin, *out_bin_size, &length, sizeof(uint16_t));
+    libspdm_copy_mem(out_bin + sizeof(uint16_t),
+                     *out_bin_size - sizeof(uint16_t),
+                     SPDM_BIN_CONCAT_LABEL,
+                     sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+                     *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+                     label,
+                     label_size);
     if (context != NULL) {
-        copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
-                 1 + label_size,
-                 *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
-                                  1 + label_size),
-                 context, hash_size);
+        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
+                         1 + label_size,
+                         *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
+                                          1 + label_size),
+                         context, hash_size);
     }
 
     return RETURN_SUCCESS;
@@ -357,8 +357,8 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     secured_message_context->handshake_secret
     .response_handshake_sequence_number = 0;
 
-    zero_mem(secured_message_context->master_secret.dhe_secret,
-             LIBSPDM_MAX_DHE_KEY_SIZE);
+    libspdm_zero_mem(secured_message_context->master_secret.dhe_secret,
+                     LIBSPDM_MAX_DHE_KEY_SIZE);
 
     secured_message_context->finished_key_ready = true;
     return RETURN_SUCCESS;
@@ -593,27 +593,27 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
     libspdm_internal_dump_hex(bin_str9, bin_str9_size);
 
     if (action == LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) {
-        copy_mem(&secured_message_context->application_secret_backup
-                 .request_data_secret,
-                 sizeof(secured_message_context->application_secret_backup
-                        .request_data_secret),
-                 &secured_message_context->application_secret
-                 .request_data_secret,
-                 LIBSPDM_MAX_HASH_SIZE);
-        copy_mem(&secured_message_context->application_secret_backup
-                 .request_data_encryption_key,
-                 sizeof(secured_message_context->application_secret_backup
-                        .request_data_encryption_key),
-                 &secured_message_context->application_secret
-                 .request_data_encryption_key,
-                 LIBSPDM_MAX_AEAD_KEY_SIZE);
-        copy_mem(&secured_message_context->application_secret_backup
-                 .request_data_salt,
-                 sizeof(secured_message_context->application_secret_backup
-                        .request_data_salt),
-                 &secured_message_context->application_secret
-                 .request_data_salt,
-                 LIBSPDM_MAX_AEAD_IV_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .request_data_secret,
+                         sizeof(secured_message_context->application_secret_backup
+                                .request_data_secret),
+                         &secured_message_context->application_secret
+                         .request_data_secret,
+                         LIBSPDM_MAX_HASH_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .request_data_encryption_key,
+                         sizeof(secured_message_context->application_secret_backup
+                                .request_data_encryption_key),
+                         &secured_message_context->application_secret
+                         .request_data_encryption_key,
+                         LIBSPDM_MAX_AEAD_KEY_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .request_data_salt,
+                         sizeof(secured_message_context->application_secret_backup
+                                .request_data_salt),
+                         &secured_message_context->application_secret
+                         .request_data_salt,
+                         LIBSPDM_MAX_AEAD_IV_SIZE);
         secured_message_context->application_secret_backup
         .request_data_sequence_number =
             secured_message_context->application_secret
@@ -654,27 +654,27 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
 
         secured_message_context->requester_backup_valid = true;
     } else if (action == LIBSPDM_KEY_UPDATE_ACTION_RESPONDER) {
-        copy_mem(&secured_message_context->application_secret_backup
-                 .response_data_secret,
-                 sizeof(secured_message_context->application_secret_backup
-                        .response_data_secret),
-                 &secured_message_context->application_secret
-                 .response_data_secret,
-                 LIBSPDM_MAX_HASH_SIZE);
-        copy_mem(&secured_message_context->application_secret_backup
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret_backup
-                        .response_data_encryption_key),
-                 &secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 LIBSPDM_MAX_AEAD_KEY_SIZE);
-        copy_mem(&secured_message_context->application_secret_backup
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret_backup
-                        .response_data_salt),
-                 &secured_message_context->application_secret
-                 .response_data_salt,
-                 LIBSPDM_MAX_AEAD_IV_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .response_data_secret,
+                         sizeof(secured_message_context->application_secret_backup
+                                .response_data_secret),
+                         &secured_message_context->application_secret
+                         .response_data_secret,
+                         LIBSPDM_MAX_HASH_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret_backup
+                                .response_data_encryption_key),
+                         &secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         LIBSPDM_MAX_AEAD_KEY_SIZE);
+        libspdm_copy_mem(&secured_message_context->application_secret_backup
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret_backup
+                                .response_data_salt),
+                         &secured_message_context->application_secret
+                         .response_data_salt,
+                         LIBSPDM_MAX_AEAD_IV_SIZE);
         secured_message_context->application_secret_backup
         .response_data_sequence_number =
             secured_message_context->application_secret
@@ -732,10 +732,10 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
 
     secured_message_context = spdm_secured_message_context;
 
-    zero_mem(secured_message_context->master_secret.handshake_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    zero_mem(&(secured_message_context->handshake_secret),
-             sizeof(libspdm_session_info_struct_handshake_secret_t));
+    libspdm_zero_mem(secured_message_context->master_secret.handshake_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_zero_mem(&(secured_message_context->handshake_secret),
+                     sizeof(libspdm_session_info_struct_handshake_secret_t));
 
     secured_message_context->requester_backup_valid = false;
     secured_message_context->responder_backup_valid = false;
@@ -762,30 +762,30 @@ libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
     if (!use_new_key) {
         if ((action == LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) &&
             secured_message_context->requester_backup_valid) {
-            copy_mem(&secured_message_context->application_secret
-                     .request_data_secret,
-                     sizeof(secured_message_context->application_secret
-                            .request_data_secret),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .request_data_secret,
-                     LIBSPDM_MAX_HASH_SIZE);
-            copy_mem(&secured_message_context->application_secret
-                     .request_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .request_data_encryption_key),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .request_data_encryption_key,
-                     LIBSPDM_MAX_AEAD_KEY_SIZE);
-            copy_mem(&secured_message_context->application_secret
-                     .request_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .request_data_salt),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .request_data_salt,
-                     LIBSPDM_MAX_AEAD_IV_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .request_data_secret,
+                             sizeof(secured_message_context->application_secret
+                                    .request_data_secret),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .request_data_secret,
+                             LIBSPDM_MAX_HASH_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .request_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .request_data_encryption_key),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .request_data_encryption_key,
+                             LIBSPDM_MAX_AEAD_KEY_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .request_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .request_data_salt),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .request_data_salt,
+                             LIBSPDM_MAX_AEAD_IV_SIZE);
             secured_message_context->application_secret
             .request_data_sequence_number =
                 secured_message_context
@@ -793,30 +793,30 @@ libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                 .request_data_sequence_number;
         } else if ((action == LIBSPDM_KEY_UPDATE_ACTION_RESPONDER) &&
                    secured_message_context->responder_backup_valid) {
-            copy_mem(&secured_message_context->application_secret
-                     .response_data_secret,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_secret),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .response_data_secret,
-                     LIBSPDM_MAX_HASH_SIZE);
-            copy_mem(&secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .response_data_encryption_key,
-                     LIBSPDM_MAX_AEAD_KEY_SIZE);
-            copy_mem(&secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     &secured_message_context
-                     ->application_secret_backup
-                     .response_data_salt,
-                     LIBSPDM_MAX_AEAD_IV_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .response_data_secret,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_secret),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .response_data_secret,
+                             LIBSPDM_MAX_HASH_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .response_data_encryption_key,
+                             LIBSPDM_MAX_AEAD_KEY_SIZE);
+            libspdm_copy_mem(&secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             &secured_message_context
+                             ->application_secret_backup
+                             .response_data_salt,
+                             LIBSPDM_MAX_AEAD_IV_SIZE);
             secured_message_context->application_secret
             .response_data_sequence_number =
                 secured_message_context
@@ -826,28 +826,28 @@ libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
     }
 
     if (action == LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) {
-        zero_mem(&secured_message_context->application_secret_backup
-                 .request_data_secret,
-                 LIBSPDM_MAX_HASH_SIZE);
-        zero_mem(&secured_message_context->application_secret_backup
-                 .request_data_encryption_key,
-                 LIBSPDM_MAX_AEAD_KEY_SIZE);
-        zero_mem(&secured_message_context->application_secret_backup
-                 .request_data_salt,
-                 LIBSPDM_MAX_AEAD_IV_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .request_data_secret,
+                         LIBSPDM_MAX_HASH_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .request_data_encryption_key,
+                         LIBSPDM_MAX_AEAD_KEY_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .request_data_salt,
+                         LIBSPDM_MAX_AEAD_IV_SIZE);
         secured_message_context->application_secret_backup
         .request_data_sequence_number = 0;
         secured_message_context->requester_backup_valid = false;
     } else if (action == LIBSPDM_KEY_UPDATE_ACTION_RESPONDER) {
-        zero_mem(&secured_message_context->application_secret_backup
-                 .response_data_secret,
-                 LIBSPDM_MAX_HASH_SIZE);
-        zero_mem(&secured_message_context->application_secret_backup
-                 .response_data_encryption_key,
-                 LIBSPDM_MAX_AEAD_KEY_SIZE);
-        zero_mem(&secured_message_context->application_secret_backup
-                 .response_data_salt,
-                 LIBSPDM_MAX_AEAD_IV_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .response_data_secret,
+                         LIBSPDM_MAX_HASH_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .response_data_encryption_key,
+                         LIBSPDM_MAX_AEAD_KEY_SIZE);
+        libspdm_zero_mem(&secured_message_context->application_secret_backup
+                         .response_data_salt,
+                         LIBSPDM_MAX_AEAD_IV_SIZE);
         secured_message_context->application_secret_backup
         .response_data_sequence_number = 0;
         secured_message_context->responder_backup_valid = false;

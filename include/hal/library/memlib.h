@@ -51,8 +51,8 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int copy_mem(void *restrict dst_buf, uintn dst_len,
-             const void *restrict src_buf, uintn src_len);
+int libspdm_copy_mem(void *restrict dst_buf, uintn dst_len,
+                     const void *restrict src_buf, uintn src_len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
@@ -68,7 +68,7 @@ int copy_mem(void *restrict dst_buf, uintn dst_len,
  * @return buffer.
  *
  **/
-void *set_mem(void *buffer, uintn length, uint8_t value);
+void *libspdm_set_mem(void *buffer, uintn length, uint8_t value);
 
 /**
  * Fills a target buffer with zeros, and returns the target buffer.
@@ -84,7 +84,7 @@ void *set_mem(void *buffer, uintn length, uint8_t value);
  * @return buffer.
  *
  **/
-void *zero_mem(void *buffer, uintn length);
+void *libspdm_zero_mem(void *buffer, uintn length);
 
 /**
  * Compares the contents of two buffers in const time.
@@ -107,7 +107,7 @@ void *zero_mem(void *buffer, uintn length);
  * @retval Non-zero          There is mismatched between source_buffer and destination_buffer.
  *
  **/
-intn const_compare_mem(const void *destination_buffer,
-                       const void *source_buffer, uintn length);
+intn libspdm_const_compare_mem(const void *destination_buffer,
+                               const void *source_buffer, uintn length);
 
 #endif

@@ -139,7 +139,7 @@ bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
         return false;
     }
     *public_key_size = final_pub_key_size;
-    zero_mem(public_key, *public_key_size);
+    libspdm_zero_mem(public_key, *public_key_size);
     result = EVP_PKEY_get_raw_public_key(pkey, public_key, public_key_size);
     if (result == 0) {
         return false;
@@ -261,7 +261,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
         return false;
     }
     *sig_size = half_size * 2;
-    zero_mem(signature, *sig_size);
+    libspdm_zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_NULL:

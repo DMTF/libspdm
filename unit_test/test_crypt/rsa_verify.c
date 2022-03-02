@@ -148,7 +148,7 @@ return_status libspdm_validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(KeyBuffer, m_libspdm_rsa_n, key_size) != 0) {
+    if (libspdm_const_compare_mem(KeyBuffer, m_libspdm_rsa_n, key_size) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -189,7 +189,7 @@ return_status libspdm_validate_crypt_rsa(void)
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(KeyBuffer, m_libspdm_rsa_e, key_size) != 0) {
+    if (libspdm_const_compare_mem(KeyBuffer, m_libspdm_rsa_e, key_size) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -267,7 +267,7 @@ return_status libspdm_validate_crypt_rsa(void)
     }
 
     if (key_size != 3 ||
-        const_compare_mem(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
+        libspdm_const_compare_mem(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -354,7 +354,7 @@ return_status libspdm_validate_crypt_rsa(void)
 
     libspdm_my_print("hash Original message ... ");
     hash_size = LIBSPDM_SHA256_DIGEST_SIZE;
-    zero_mem(hash_value, hash_size);
+    libspdm_zero_mem(hash_value, hash_size);
     sha256_ctx = libspdm_sha256_new();
     if (sha256_ctx == NULL) {
         libspdm_my_print("[Fail]");

@@ -14,7 +14,7 @@ return_status do_session_via_spdm(void *spdm_context)
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
 
     heartbeat_period = 0;
-    zero_mem(measurement_hash, sizeof(measurement_hash));
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_start_session(
         spdm_context,
         false, /* KeyExchange*/

@@ -73,7 +73,7 @@ return_status libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
         return RETURN_UNSUPPORTED;
     }
 
-    zero_mem(&spdm_request, sizeof(spdm_request));
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request.length = sizeof(spdm_request);
@@ -126,7 +126,7 @@ return_status libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {

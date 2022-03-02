@@ -27,5 +27,5 @@ int my_snprintf(char *str, size_t size, const char *format, ...)
 
 void mbedtls_platform_zeroize(void *buf, size_t len)
 {
-    zero_mem(buf, len);
+    libspdm_zero_mem(buf, len);
 }

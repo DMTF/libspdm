@@ -59,7 +59,7 @@ return_status libspdm_try_get_version(libspdm_context_t *spdm_context,
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
@@ -128,10 +128,10 @@ return_status libspdm_try_get_version(libspdm_context_t *spdm_context,
         libspdm_reset_message_a(spdm_context);
         return RETURN_DEVICE_ERROR;
     } else {
-        copy_mem(&(spdm_context->connection_info.version),
-                 sizeof(spdm_context->connection_info.version),
-                 &(common_version),
-                 sizeof(spdm_version_number_t));
+        libspdm_copy_mem(&(spdm_context->connection_info.version),
+                         sizeof(spdm_context->connection_info.version),
+                         &(common_version),
+                         sizeof(spdm_version_number_t));
     }
 
     if (version_number_entry_count != NULL && version_number_entry != NULL) {
@@ -141,10 +141,11 @@ return_status libspdm_try_get_version(libspdm_context_t *spdm_context,
             return RETURN_BUFFER_TOO_SMALL;
         } else {
             *version_number_entry_count = spdm_response.version_number_entry_count;
-            copy_mem(version_number_entry,
-                     spdm_response.version_number_entry_count * sizeof(spdm_version_number_t),
-                     spdm_response.version_number_entry,
-                     spdm_response.version_number_entry_count * sizeof(spdm_version_number_t));
+            libspdm_copy_mem(version_number_entry,
+                             spdm_response.version_number_entry_count * sizeof(spdm_version_number_t),
+                             spdm_response.version_number_entry,
+                             spdm_response.version_number_entry_count *
+                             sizeof(spdm_version_number_t));
             libspdm_version_number_sort (version_number_entry, *version_number_entry_count);
         }
     }

@@ -65,9 +65,9 @@ void libspdm_test_responder_end_session(void **State)
     spdm_context->local_context.slot_count = 1;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    zero_mem(m_libspdm_local_psk_hint, 32);
-    copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
+    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;

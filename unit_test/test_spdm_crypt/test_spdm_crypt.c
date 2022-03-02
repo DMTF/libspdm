@@ -43,8 +43,8 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 
     common_name_size = 64;
     dmtf_oid_size = 64;
-    zero_mem(common_name, common_name_size);
-    zero_mem(dmtf_oid, dmtf_oid_size);
+    libspdm_zero_mem(common_name, common_name_size);
+    libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
     ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer1, sizeof(m_libspdm_subject_alt_name_buffer1),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
@@ -54,8 +54,8 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 
     common_name_size = 64;
     dmtf_oid_size = 64;
-    zero_mem(common_name, common_name_size);
-    zero_mem(dmtf_oid, dmtf_oid_size);
+    libspdm_zero_mem(common_name, common_name_size);
+    libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
     ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer2, sizeof(m_libspdm_subject_alt_name_buffer2),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
@@ -65,8 +65,8 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 
     common_name_size = 64;
     dmtf_oid_size = 64;
-    zero_mem(common_name, common_name_size);
-    zero_mem(dmtf_oid, dmtf_oid_size);
+    libspdm_zero_mem(common_name, common_name_size);
+    libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
     ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer3, sizeof(m_libspdm_subject_alt_name_buffer3),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);

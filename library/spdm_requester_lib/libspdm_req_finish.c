@@ -174,7 +174,7 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
                                                   SPDM_FINISH);
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {

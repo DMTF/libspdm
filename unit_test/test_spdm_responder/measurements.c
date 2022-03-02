@@ -1471,9 +1471,9 @@ void libspdm_test_responder_measurements_case23(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_libspdm_get_measurements_request5.nonce);
 
-    zero_mem(m_libspdm_local_psk_hint, 32);
-    copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
+    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
         sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;

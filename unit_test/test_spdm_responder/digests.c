@@ -55,8 +55,8 @@ void libspdm_test_responder_digests_case1(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -111,8 +111,8 @@ void libspdm_test_responder_digests_case2(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -160,8 +160,8 @@ void libspdm_test_responder_digests_case3(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -209,8 +209,8 @@ void libspdm_test_responder_digests_case4(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -260,8 +260,8 @@ void libspdm_test_responder_digests_case5(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -316,8 +316,8 @@ void libspdm_test_responder_digests_case6(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -364,8 +364,8 @@ void libspdm_test_responder_digests_case7(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
@@ -421,8 +421,8 @@ void libspdm_test_responder_digests_case8(void **state)
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

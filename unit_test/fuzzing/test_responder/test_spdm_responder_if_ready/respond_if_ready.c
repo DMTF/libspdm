@@ -52,18 +52,18 @@ void libspdm_test_responder_respond_if_ready(void **State)
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
     spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
-    copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
-             &m_spdm_get_digest_request,  m_spdm_get_digest_request_size);
+    libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
+                     &m_spdm_get_digest_request,  m_spdm_get_digest_request_size);
 
     spdm_context->cache_spdm_request_size =
         spdm_context->last_spdm_request_size;
-    copy_mem(spdm_context->cache_spdm_request, sizeof(spdm_context->cache_spdm_request),
-             spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
+    libspdm_copy_mem(spdm_context->cache_spdm_request, sizeof(spdm_context->cache_spdm_request),
+                     spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
     spdm_context->error_data.rd_exponent = 1;
     spdm_context->error_data.rd_tm = 1;
     spdm_context->error_data.request_code = SPDM_GET_DIGESTS;

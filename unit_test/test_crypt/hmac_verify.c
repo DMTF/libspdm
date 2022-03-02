@@ -52,7 +52,7 @@ return_status libspdm_validate_crypt_hmac(void)
 
     /* HMAC-SHA-256 digest Validation*/
 
-    zero_mem(digest, MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = libspdm_hmac_sha256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]");
@@ -85,7 +85,8 @@ return_status libspdm_validate_crypt_hmac(void)
     free_pool(hmac_ctx);
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(digest, m_libspdm_hmac_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) !=
+    if (libspdm_const_compare_mem(digest, m_libspdm_hmac_sha256_digest,
+                                  LIBSPDM_SHA256_DIGEST_SIZE) !=
         0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
@@ -97,7 +98,7 @@ return_status libspdm_validate_crypt_hmac(void)
 
     /* HMAC-SHA3-256 digest Validation*/
 
-    zero_mem(digest, MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = libspdm_hmac_sha3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");
@@ -134,7 +135,7 @@ return_status libspdm_validate_crypt_hmac(void)
 
     /* HMAC-SM3-256 digest Validation*/
 
-    zero_mem(digest, MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
     hmac_ctx = libspdm_hmac_sm3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");

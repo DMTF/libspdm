@@ -109,7 +109,7 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
         }
 
         spdm_response_size = sizeof(spdm_response);
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         status = libspdm_receive_spdm_response(spdm_context, NULL,
                                                &spdm_response_size,
                                                &spdm_response);
@@ -231,10 +231,10 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         libspdm_get_managed_buffer_size(&certificate_chain_buffer);
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             libspdm_get_managed_buffer(&certificate_chain_buffer),
-             libspdm_get_managed_buffer_size(&certificate_chain_buffer));
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     libspdm_get_managed_buffer(&certificate_chain_buffer),
+                     libspdm_get_managed_buffer_size(&certificate_chain_buffer));
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -278,10 +278,10 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
         *cert_chain_size =
             libspdm_get_managed_buffer_size(&certificate_chain_buffer);
         if (cert_chain != NULL) {
-            copy_mem(cert_chain,
-                     cert_chain_capacity,
-                     libspdm_get_managed_buffer(&certificate_chain_buffer),
-                     libspdm_get_managed_buffer_size(&certificate_chain_buffer));
+            libspdm_copy_mem(cert_chain,
+                             cert_chain_capacity,
+                             libspdm_get_managed_buffer(&certificate_chain_buffer),
+                             libspdm_get_managed_buffer_size(&certificate_chain_buffer));
         }
     }
 

@@ -274,7 +274,7 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
     LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public_key != NULL) {
-        zero_mem(public_key, *public_key_size);
+        libspdm_zero_mem(public_key, *public_key_size);
         BN_bn2bin(bn_x, &public_key[0 + half_size - x_size]);
         BN_bn2bin(bn_y, &public_key[half_size + half_size - y_size]);
     }
@@ -433,7 +433,7 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
     LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
     if (public != NULL) {
-        zero_mem(public, *public_size);
+        libspdm_zero_mem(public, *public_size);
         BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
         BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
     }
@@ -609,13 +609,13 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
         bn_s = &der_signature[7 + der_r_size];
     }
     LIBSPDM_ASSERT(r_size <= half_size && s_size <= half_size);
-    zero_mem(signature, sig_size);
-    copy_mem(&signature[0 + half_size - r_size],
-             sig_size - (0 + half_size - r_size),
-             bn_r, r_size);
-    copy_mem(&signature[half_size + half_size - s_size],
-             sig_size - (half_size + half_size - s_size),
-             bn_s, s_size);
+    libspdm_zero_mem(signature, sig_size);
+    libspdm_copy_mem(&signature[0 + half_size - r_size],
+                     sig_size - (0 + half_size - r_size),
+                     bn_r, r_size);
+    libspdm_copy_mem(&signature[half_size + half_size - s_size],
+                     sig_size - (half_size + half_size - s_size),
+                     bn_s, s_size);
 }
 
 static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
@@ -665,30 +665,30 @@ static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
     der_sig_size = der_r_size + der_s_size + 6;
     LIBSPDM_ASSERT(der_sig_size <= *der_sig_size_in_out);
     *der_sig_size_in_out = der_sig_size;
-    zero_mem(der_signature, der_sig_size);
+    libspdm_zero_mem(der_signature, der_sig_size);
     der_signature[0] = 0x30;
     der_signature[1] = (uint8_t)(der_sig_size - 2);
     der_signature[2] = 0x02;
     der_signature[3] = der_r_size;
     if (bn_r[0] < 0x80) {
-        copy_mem(&der_signature[4],
-                 der_sig_size - (&der_signature[4] - der_signature),
-                 bn_r, r_size);
+        libspdm_copy_mem(&der_signature[4],
+                         der_sig_size - (&der_signature[4] - der_signature),
+                         bn_r, r_size);
     } else {
-        copy_mem(&der_signature[5],
-                 der_sig_size - (&der_signature[5] - der_signature),
-                 bn_r, r_size);
+        libspdm_copy_mem(&der_signature[5],
+                         der_sig_size - (&der_signature[5] - der_signature),
+                         bn_r, r_size);
     }
     der_signature[4 + der_r_size] = 0x02;
     der_signature[5 + der_r_size] = der_s_size;
     if (bn_s[0] < 0x80) {
-        copy_mem(&der_signature[6 + der_r_size],
-                 der_sig_size - (&der_signature[6 + der_r_size] - der_signature),
-                 bn_s, s_size);
+        libspdm_copy_mem(&der_signature[6 + der_r_size],
+                         der_sig_size - (&der_signature[6 + der_r_size] - der_signature),
+                         bn_s, s_size);
     } else {
-        copy_mem(&der_signature[7 + der_r_size],
-                 der_sig_size - (&der_signature[7 + der_r_size] - der_signature),
-                 bn_s, s_size);
+        libspdm_copy_mem(&der_signature[7 + der_r_size],
+                         der_sig_size - (&der_signature[7 + der_r_size] - der_signature),
+                         bn_s, s_size);
     }
 }
 
@@ -756,7 +756,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
         return false;
     }
     *sig_size = half_size * 2;
-    zero_mem(signature, *sig_size);
+    libspdm_zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SM3_256:

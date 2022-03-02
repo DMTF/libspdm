@@ -97,7 +97,7 @@ return_status libspdm_validate_crypt_dh(void)
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
+    if (libspdm_const_compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);

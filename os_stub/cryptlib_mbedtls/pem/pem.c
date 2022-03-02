@@ -69,7 +69,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
         if (new_pem_data == NULL) {
             return false;
         }
-        copy_mem(new_pem_data, pem_size + 1, pem_data, pem_size);
+        libspdm_copy_mem(new_pem_data, pem_size + 1, pem_data, pem_size);
         new_pem_data[pem_size] = 0;
         pem_data = new_pem_data;
         pem_size += 1;
@@ -154,7 +154,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
         if (new_pem_data == NULL) {
             return false;
         }
-        copy_mem(new_pem_data, pem_size + 1, pem_data, pem_size);
+        libspdm_copy_mem(new_pem_data, pem_size + 1, pem_data, pem_size);
         new_pem_data[pem_size] = 0;
         pem_data = new_pem_data;
         pem_size += 1;

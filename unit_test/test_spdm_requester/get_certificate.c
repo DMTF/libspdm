@@ -67,9 +67,9 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
 
     libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
                      (uint8_t *)(cert_chain + 1));
-    copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
-             cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
-             file_data, file_size);
+    libspdm_copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+                     cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+                     file_data, file_size);
 
     *data = cert_chain;
     *size = cert_chain_size;
@@ -196,11 +196,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -261,11 +261,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -376,12 +376,12 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             spdm_response->header.param2 = 0;
             spdm_response->portion_length = portion_length;
             spdm_response->remainder_length = remainder_length;
-            copy_mem(spdm_response + 1,
-                     sizeof(temp_buf) - sizeof(*spdm_response),
-                     (uint8_t *)m_libspdm_local_certificate_chain +
-                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                     calling_index,
-                     portion_length);
+            libspdm_copy_mem(spdm_response + 1,
+                             sizeof(temp_buf) - sizeof(*spdm_response),
+                             (uint8_t *)m_libspdm_local_certificate_chain +
+                             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
+                             calling_index,
+                             portion_length);
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false, temp_buf_size,
@@ -505,12 +505,12 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             spdm_response->header.param2 = 0;
             spdm_response->portion_length = portion_length;
             spdm_response->remainder_length = remainder_length;
-            copy_mem(spdm_response + 1,
-                     sizeof(temp_buf) - sizeof(*spdm_response),
-                     (uint8_t *)m_libspdm_local_certificate_chain +
-                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                     calling_index,
-                     portion_length);
+            libspdm_copy_mem(spdm_response + 1,
+                             sizeof(temp_buf) - sizeof(*spdm_response),
+                             (uint8_t *)m_libspdm_local_certificate_chain +
+                             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
+                             calling_index,
+                             portion_length);
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false, temp_buf_size,
@@ -571,11 +571,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -661,11 +661,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -726,11 +726,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -791,11 +791,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -858,11 +858,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 get_cert_length * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         get_cert_length * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -923,11 +923,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -951,7 +951,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_error_response_t spdm_response;
 
         if(error_code <= 0xff) {
-            zero_mem (&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 = (uint8_t) error_code;
@@ -1027,14 +1027,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 return RETURN_DEVICE_ERROR;
             }
         }
-        copy_mem(cert_chain_without_root,
-                 sizeof(cert_chain_without_root),
-                 m_libspdm_local_certificate_chain,
-                 sizeof(spdm_cert_chain_t) + hash_size);
-        copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
-                 sizeof(cert_chain_without_root) - (sizeof(spdm_cert_chain_t) + hash_size),
-                 cert_buffer,
-                 cert_buffer_size);
+        libspdm_copy_mem(cert_chain_without_root,
+                         sizeof(cert_chain_without_root),
+                         m_libspdm_local_certificate_chain,
+                         sizeof(spdm_cert_chain_t) + hash_size);
+        libspdm_copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
+                         sizeof(cert_chain_without_root) - (sizeof(spdm_cert_chain_t) + hash_size),
+                         cert_buffer,
+                         cert_buffer_size);
         cert_chain_without_root_size = m_libspdm_local_certificate_chain_size - root_cert_size;
         count = (cert_chain_without_root_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1063,11 +1063,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         /* send certchain without root*/
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)cert_chain_without_root +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)cert_chain_without_root +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1140,14 +1140,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
              * arbitrarily change the last byte of the certificate signature*/
             cert_buffer[cert_buffer_size - 1]++;
         }
-        copy_mem(cert_chain_without_root,
-                 sizeof(cert_chain_without_root),
-                 m_libspdm_local_certificate_chain,
-                 sizeof(spdm_cert_chain_t) + hash_size);
-        copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
-                 sizeof(cert_chain_without_root) - (sizeof(spdm_cert_chain_t) + hash_size),
-                 cert_buffer,
-                 cert_buffer_size);
+        libspdm_copy_mem(cert_chain_without_root,
+                         sizeof(cert_chain_without_root),
+                         m_libspdm_local_certificate_chain,
+                         sizeof(spdm_cert_chain_t) + hash_size);
+        libspdm_copy_mem(cert_chain_without_root + sizeof(spdm_cert_chain_t) + hash_size,
+                         sizeof(cert_chain_without_root) - (sizeof(spdm_cert_chain_t) + hash_size),
+                         cert_buffer,
+                         cert_buffer_size);
         cert_chain_without_root_size = m_libspdm_local_certificate_chain_size - root_cert_size;
         count = (cert_chain_without_root_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1176,11 +1176,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         /* send certchain without root*/
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)cert_chain_without_root +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)cert_chain_without_root +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1241,11 +1241,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1306,11 +1306,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1371,11 +1371,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1438,11 +1438,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
-        copy_mem(spdm_response + 1,
-                 sizeof(temp_buf) - sizeof(*spdm_response),
-                 (uint8_t *)m_libspdm_local_certificate_chain +
-                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-                 portion_length);
+        libspdm_copy_mem(spdm_response + 1,
+                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uint8_t *)m_libspdm_local_certificate_chain +
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, temp_buf_size,
@@ -1512,7 +1512,7 @@ void libspdm_test_requester_get_certificate_case1(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1580,7 +1580,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
         spdm_context->transcript.message_m.max_buffer_size;
 #endif
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1643,7 +1643,7 @@ void libspdm_test_requester_get_certificate_case3(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -1700,7 +1700,7 @@ void libspdm_test_requester_get_certificate_case4(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1757,7 +1757,7 @@ void libspdm_test_requester_get_certificate_case5(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_NO_RESPONSE);
@@ -1816,7 +1816,7 @@ void libspdm_test_requester_get_certificate_case6(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -1878,7 +1878,7 @@ void libspdm_test_requester_get_certificate_case7(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1937,7 +1937,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -1994,7 +1994,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -2059,7 +2059,7 @@ void libspdm_test_requester_get_certificate_case10(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -2128,7 +2128,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -2201,7 +2201,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
 
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -2270,7 +2270,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -2342,7 +2342,7 @@ void libspdm_test_requester_get_certificate_case14(void **state)
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate_choose_length(
         spdm_context, 0, get_cert_length, &cert_chain_size, cert_chain);
     /* It may fail because the spdm does not support too many messages.
@@ -2414,7 +2414,7 @@ void libspdm_test_requester_get_certificate_case15(void **state)
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     /* It may fail because the spdm does not support too long message.
@@ -2482,7 +2482,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
         libspdm_reset_message_b(spdm_context);
 
         cert_chain_size = sizeof(cert_chain);
-        zero_mem (cert_chain, sizeof(cert_chain));
+        libspdm_zero_mem (cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
@@ -2554,7 +2554,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SUCCESS);
@@ -2608,7 +2608,7 @@ void libspdm_test_requester_get_certificate_case18(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -2671,7 +2671,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_SECURITY_VIOLATION);
@@ -2737,7 +2737,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);
@@ -2795,7 +2795,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_UNSUPPORTED);
@@ -2855,7 +2855,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
         m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, RETURN_DEVICE_ERROR);

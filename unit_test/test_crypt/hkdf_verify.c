@@ -56,7 +56,7 @@ return_status libspdm_validate_crypt_hkdf(void)
     /* HKDF-SHA-256 digest Validation*/
 
     libspdm_my_print("extract... ");
-    zero_mem(prk_out, sizeof(prk_out));
+    libspdm_zero_mem(prk_out, sizeof(prk_out));
     status = libspdm_hkdf_sha256_extract (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),
         m_libspdm_hkdf_sha256_salt, sizeof(m_libspdm_hkdf_sha256_salt),
@@ -68,13 +68,14 @@ return_status libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(prk_out, m_libspdm_hkdf_sha256_prk, sizeof(m_libspdm_hkdf_sha256_prk)) !=
+    if (libspdm_const_compare_mem(prk_out, m_libspdm_hkdf_sha256_prk,
+                                  sizeof(m_libspdm_hkdf_sha256_prk)) !=
         0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("expand... ");
     status = libspdm_hkdf_sha256_expand (
         m_libspdm_hkdf_sha256_prk, sizeof(m_libspdm_hkdf_sha256_prk),
@@ -87,13 +88,14 @@ return_status libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(out, m_libspdm_hkdf_sha256_okm, sizeof(m_libspdm_hkdf_sha256_okm)) !=
+    if (libspdm_const_compare_mem(out, m_libspdm_hkdf_sha256_okm,
+                                  sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("extract_and_expand... ");
     status = libspdm_hkdf_sha256_extract_and_expand (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),
@@ -107,7 +109,8 @@ return_status libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(out, m_libspdm_hkdf_sha256_okm, sizeof(m_libspdm_hkdf_sha256_okm)) !=
+    if (libspdm_const_compare_mem(out, m_libspdm_hkdf_sha256_okm,
+                                  sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
@@ -120,7 +123,7 @@ return_status libspdm_validate_crypt_hkdf(void)
     /* HKDF-SHA3-256 digest Validation*/
 
     libspdm_my_print("extract... ");
-    zero_mem(prk_out, sizeof(prk_out));
+    libspdm_zero_mem(prk_out, sizeof(prk_out));
     status = libspdm_hkdf_sha3_256_extract (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),
         m_libspdm_hkdf_sha256_salt, sizeof(m_libspdm_hkdf_sha256_salt),
@@ -131,7 +134,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         return RETURN_SUCCESS;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("expand... ");
     status = libspdm_hkdf_sha3_256_expand (
         m_libspdm_hkdf_sha256_prk, sizeof(m_libspdm_hkdf_sha256_prk),
@@ -143,7 +146,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         return RETURN_ABORTED;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("extract_and_expand... ");
     status = libspdm_hkdf_sha3_256_extract_and_expand (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),
@@ -163,7 +166,7 @@ return_status libspdm_validate_crypt_hkdf(void)
     /* HKDF-SM3-256 digest Validation*/
 
     libspdm_my_print("extract... ");
-    zero_mem(prk_out, sizeof(prk_out));
+    libspdm_zero_mem(prk_out, sizeof(prk_out));
     status = libspdm_hkdf_sm3_256_extract (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),
         m_libspdm_hkdf_sha256_salt, sizeof(m_libspdm_hkdf_sha256_salt),
@@ -174,7 +177,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         return RETURN_SUCCESS;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("expand... ");
     status = libspdm_hkdf_sm3_256_expand (
         m_libspdm_hkdf_sha256_prk, sizeof(m_libspdm_hkdf_sha256_prk),
@@ -186,7 +189,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         return RETURN_ABORTED;
     }
 
-    zero_mem(out, sizeof(out));
+    libspdm_zero_mem(out, sizeof(out));
     libspdm_my_print("extract_and_expand... ");
     status = libspdm_hkdf_sm3_256_extract_and_expand (
         m_libspdm_hkdf_sha256_ikm, sizeof(m_libspdm_hkdf_sha256_ikm),

@@ -108,7 +108,7 @@ static void libspdm_set_standard_key_update_test_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    set_mem(spdm_context->last_update_request, 4, 0x00);
+    libspdm_set_mem(spdm_context->last_update_request, 4, 0x00);
 }
 
 static void libspdm_set_standard_key_update_test_secrets(
@@ -116,32 +116,32 @@ static void libspdm_set_standard_key_update_test_secrets(
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
-    set_mem(m_rsp_secret_buffer, secured_message_context
-            ->hash_size, rsp_secret_fill);
-    set_mem(m_req_secret_buffer, secured_message_context
-            ->hash_size, req_secret_fill);
+    libspdm_set_mem(m_rsp_secret_buffer, secured_message_context
+                    ->hash_size, rsp_secret_fill);
+    libspdm_set_mem(m_req_secret_buffer, secured_message_context
+                    ->hash_size, req_secret_fill);
 
-    copy_mem(secured_message_context->application_secret.response_data_secret,
-             sizeof(secured_message_context->application_secret.response_data_secret),
-             m_rsp_secret_buffer, secured_message_context->aead_key_size);
-    copy_mem(secured_message_context->application_secret.request_data_secret,
-             sizeof(secured_message_context->application_secret.request_data_secret),
-             m_req_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.response_data_secret,
+                     sizeof(secured_message_context->application_secret.response_data_secret),
+                     m_rsp_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.request_data_secret,
+                     sizeof(secured_message_context->application_secret.request_data_secret),
+                     m_req_secret_buffer, secured_message_context->aead_key_size);
 
-    set_mem(secured_message_context->application_secret
-            .response_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xFF));
-    set_mem(secured_message_context->application_secret
-            .response_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .response_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .response_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xFF));
 
 
-    set_mem(secured_message_context->application_secret
-            .request_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xEE));
-    set_mem(secured_message_context->application_secret
-            .request_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .request_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .request_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xEE));
 
     secured_message_context->application_secret.
     response_data_sequence_number = 0;
@@ -158,13 +158,13 @@ static void libspdm_compute_secret_update(uintn hash_size,
     uint16_t length;
 
     length = (uint16_t) hash_size;
-    copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    copy_mem(m_bin_str9 + sizeof(uint16_t),
-             sizeof(m_bin_str9) - sizeof(uint16_t),
-             SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-             sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-             SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    libspdm_copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t),
+                     sizeof(m_bin_str9) - sizeof(uint16_t),
+                     SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+                     sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+                     SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
     m_bin_str9_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 +
                       sizeof(SPDM_BIN_STR_9_LABEL) - 1;
     /*context is NULL for key update*/
@@ -983,16 +983,16 @@ void libspdm_test_responder_key_update_case12(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request1,
-             m_libspdm_key_update_request1_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request1,
+                     m_libspdm_key_update_request1_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1071,16 +1071,16 @@ void libspdm_test_responder_key_update_case13(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request1,
-             m_libspdm_key_update_request1_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request1,
+                     m_libspdm_key_update_request1_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1158,20 +1158,20 @@ void libspdm_test_responder_key_update_case14(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateallKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request3,
-             m_libspdm_key_update_request3_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request3,
+                     m_libspdm_key_update_request3_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.response_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.response_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1260,20 +1260,20 @@ void libspdm_test_responder_key_update_case15(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateAllKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request3,
-             m_libspdm_key_update_request3_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request3,
+                     m_libspdm_key_update_request3_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.response_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.response_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1427,16 +1427,16 @@ void libspdm_test_responder_key_update_case17(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request1,
-             m_libspdm_key_update_request1_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request1,
+                     m_libspdm_key_update_request1_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1514,20 +1514,20 @@ void libspdm_test_responder_key_update_case18(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateAllKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request3,
-             m_libspdm_key_update_request3_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request3,
+                     m_libspdm_key_update_request3_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.response_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.response_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1616,10 +1616,10 @@ void libspdm_test_responder_key_update_case19(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: VerifyNewKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request5,
-             m_libspdm_key_update_request5_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request5,
+                     m_libspdm_key_update_request5_size);
 
     /*no keys updated (already activated)*/
 
@@ -1689,20 +1689,20 @@ void libspdm_test_responder_key_update_case20(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateAllKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request5,
-             m_libspdm_key_update_request5_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request5,
+                     m_libspdm_key_update_request5_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1791,16 +1791,16 @@ void libspdm_test_responder_key_update_case21(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request1,
-             m_libspdm_key_update_request1_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request1,
+                     m_libspdm_key_update_request1_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1880,20 +1880,20 @@ void libspdm_test_responder_key_update_case22(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateAllKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request3,
-             m_libspdm_key_update_request3_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request3,
+                     m_libspdm_key_update_request3_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.response_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.response_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -1979,16 +1979,16 @@ void libspdm_test_responder_key_update_case23(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request1,
-             m_libspdm_key_update_request1_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request1,
+                     m_libspdm_key_update_request1_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -2066,20 +2066,20 @@ void libspdm_test_responder_key_update_case24(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: UpdateAllKeys*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request3,
-             m_libspdm_key_update_request3_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request3,
+                     m_libspdm_key_update_request3_size);
 
     /*mocked major secret update*/
-    copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
-             sizeof(secured_message_context->application_secret_backup.request_data_secret),
-             &secured_message_context->application_secret.request_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
-    copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
-             sizeof(secured_message_context->application_secret_backup.response_data_secret),
-             &secured_message_context->application_secret.response_data_secret,
-             LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.request_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.request_data_secret),
+                     &secured_message_context->application_secret.request_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
+    libspdm_copy_mem(&secured_message_context->application_secret_backup.response_data_secret,
+                     sizeof(secured_message_context->application_secret_backup.response_data_secret),
+                     &secured_message_context->application_secret.response_data_secret,
+                     LIBSPDM_MAX_HASH_SIZE);
     libspdm_compute_secret_update(secured_message_context->hash_size,
                                   secured_message_context->application_secret
                                   .request_data_secret,
@@ -2165,10 +2165,10 @@ void libspdm_test_responder_key_update_case25(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*last request: VerifyNewKey*/
-    copy_mem(spdm_context->last_update_request,
-             sizeof(spdm_context->last_update_request),
-             &m_libspdm_key_update_request5,
-             m_libspdm_key_update_request5_size);
+    libspdm_copy_mem(spdm_context->last_update_request,
+                     sizeof(spdm_context->last_update_request),
+                     &m_libspdm_key_update_request5,
+                     m_libspdm_key_update_request5_size);
 
     /*no keys updated (already activated)*/
 

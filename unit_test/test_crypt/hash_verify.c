@@ -105,7 +105,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA256 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha256_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
@@ -139,19 +139,21 @@ return_status libspdm_validate_crypt_digest(void)
     libspdm_sha256_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(digest, m_libspdm_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha256_digest,
+                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
     libspdm_my_print("HashAll... ");
-    zero_mem(digest, LIBSPDM_SHA256_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_SHA256_DIGEST_SIZE);
     status = libspdm_sha256_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
-    if (const_compare_mem(digest, m_libspdm_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha256_digest,
+                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
@@ -163,7 +165,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA384 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha384_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
@@ -197,19 +199,21 @@ return_status libspdm_validate_crypt_digest(void)
     libspdm_sha384_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(digest, m_libspdm_sha384_digest, LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha384_digest,
+                                  LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
     libspdm_my_print("HashAll... ");
-    zero_mem(digest, LIBSPDM_SHA384_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_SHA384_DIGEST_SIZE);
     status = libspdm_sha384_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
-    if (const_compare_mem(digest, m_libspdm_sha384_digest, LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha384_digest,
+                                  LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
@@ -221,7 +225,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA512 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha512_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
@@ -255,19 +259,21 @@ return_status libspdm_validate_crypt_digest(void)
     libspdm_sha512_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (const_compare_mem(digest, m_libspdm_sha512_digest, LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha512_digest,
+                                  LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
     libspdm_my_print("HashAll... ");
-    zero_mem(digest, LIBSPDM_SHA512_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_SHA512_DIGEST_SIZE);
     status = libspdm_sha512_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
-    if (const_compare_mem(digest, m_libspdm_sha512_digest, LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
+    if (libspdm_const_compare_mem(digest, m_libspdm_sha512_digest,
+                                  LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
@@ -278,7 +284,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA3_256 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha3_256_new();
     if (hash_ctx != NULL) {
         libspdm_my_print("Init... ");
@@ -297,8 +303,8 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (const_compare_mem(digest, m_libspdm_sha3_256_digest,
-                              LIBSPDM_SHA3_256_DIGEST_SIZE) == 0) {
+        if (libspdm_const_compare_mem(digest, m_libspdm_sha3_256_digest,
+                                      LIBSPDM_SHA3_256_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -311,7 +317,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("HashAll... ");
-        zero_mem(digest, LIBSPDM_SHA3_256_DIGEST_SIZE);
+        libspdm_zero_mem(digest, LIBSPDM_SHA3_256_DIGEST_SIZE);
         status = libspdm_sha3_256_hash_all(m_libspdm_hash_data, data_size, digest);
     }
     if (status) {
@@ -324,7 +330,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA3_384 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha3_384_new();
     if (hash_ctx != NULL) {
         libspdm_my_print("Init... ");
@@ -343,8 +349,8 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (const_compare_mem(digest, m_libspdm_sha3_384_digest,
-                              LIBSPDM_SHA3_384_DIGEST_SIZE) == 0) {
+        if (libspdm_const_compare_mem(digest, m_libspdm_sha3_384_digest,
+                                      LIBSPDM_SHA3_384_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -357,7 +363,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("HashAll... ");
-        zero_mem(digest, LIBSPDM_SHA3_384_DIGEST_SIZE);
+        libspdm_zero_mem(digest, LIBSPDM_SHA3_384_DIGEST_SIZE);
         status = libspdm_sha3_384_hash_all(m_libspdm_hash_data, data_size, digest);
     }
     if (status) {
@@ -370,7 +376,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     /* SHA3_512 digest Validation*/
 
-    zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
     hash_ctx = libspdm_sha3_512_new();
     if (hash_ctx != NULL) {
         libspdm_my_print("Init... ");
@@ -389,8 +395,8 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (const_compare_mem(digest, m_libspdm_sha3_512_digest,
-                              LIBSPDM_SHA3_512_DIGEST_SIZE) == 0) {
+        if (libspdm_const_compare_mem(digest, m_libspdm_sha3_512_digest,
+                                      LIBSPDM_SHA3_512_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -403,7 +409,7 @@ return_status libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("HashAll... ");
-        zero_mem(digest, LIBSPDM_SHA3_512_DIGEST_SIZE);
+        libspdm_zero_mem(digest, LIBSPDM_SHA3_512_DIGEST_SIZE);
         status = libspdm_sha3_512_hash_all(m_libspdm_hash_data, data_size, digest);
     }
     if (status) {
@@ -417,11 +423,11 @@ return_status libspdm_validate_crypt_digest(void)
     /* SM3_256 digest Validation*/
 
     libspdm_my_print("HashAll... ");
-    zero_mem(digest, LIBSPDM_SM3_256_DIGEST_SIZE);
+    libspdm_zero_mem(digest, LIBSPDM_SM3_256_DIGEST_SIZE);
     status = libspdm_sm3_256_hash_all(m_libspdm_hash_data, data_size, digest);
     if (status) {
-        if (const_compare_mem(digest, m_libspdm_sm3_256_digest,
-                              LIBSPDM_SM3_256_DIGEST_SIZE) == 0) {
+        if (libspdm_const_compare_mem(digest, m_libspdm_sm3_256_digest,
+                                      LIBSPDM_SM3_256_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;

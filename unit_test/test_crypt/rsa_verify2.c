@@ -584,7 +584,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
     /* Get common_name from X509 Certificate subject*/
 
     /* common_name_size = 64;
-     * zero_mem (common_name, common_name_size);
+     * libspdm_zero_mem (common_name, common_name_size);
      * status = libspdm_x509_get_common_name (m_libspdm_test_cert, sizeof (m_libspdm_test_cert), common_name, &common_name_size);
      * if (RETURN_ERROR (status)) {
      *   libspdm_my_print ("\n  - Retrieving Common name - [Fail]");

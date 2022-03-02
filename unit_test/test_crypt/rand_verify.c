@@ -43,14 +43,14 @@ return_status libspdm_validate_crypt_prng(void)
             return RETURN_ABORTED;
         }
 
-        if (const_compare_mem(m_libspdm_previous_random_buffer, m_libspdm_random_buffer,
-                              LIBSPDM_RANDOM_NUMBER_SIZE) == 0) {
+        if (libspdm_const_compare_mem(m_libspdm_previous_random_buffer, m_libspdm_random_buffer,
+                                      LIBSPDM_RANDOM_NUMBER_SIZE) == 0) {
             libspdm_my_print("[Fail]");
             return RETURN_ABORTED;
         }
 
-        copy_mem(m_libspdm_previous_random_buffer, sizeof(m_libspdm_previous_random_buffer),
-                 m_libspdm_random_buffer, LIBSPDM_RANDOM_NUMBER_SIZE);
+        libspdm_copy_mem(m_libspdm_previous_random_buffer, sizeof(m_libspdm_previous_random_buffer),
+                         m_libspdm_random_buffer, LIBSPDM_RANDOM_NUMBER_SIZE);
     }
 
     libspdm_my_print("[Pass]\n");

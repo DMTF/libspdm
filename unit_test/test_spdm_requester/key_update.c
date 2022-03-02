@@ -51,9 +51,9 @@ static void libspdm_set_standard_key_update_test_state(
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #endif
 
     *session_id = 0xFFFFFFFF;
@@ -71,32 +71,32 @@ static void libspdm_set_standard_key_update_test_secrets(
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
-    set_mem(m_rsp_secret_buffer, secured_message_context
-            ->hash_size, rsp_secret_fill);
-    set_mem(m_req_secret_buffer, secured_message_context
-            ->hash_size, req_secret_fill);
+    libspdm_set_mem(m_rsp_secret_buffer, secured_message_context
+                    ->hash_size, rsp_secret_fill);
+    libspdm_set_mem(m_req_secret_buffer, secured_message_context
+                    ->hash_size, req_secret_fill);
 
-    copy_mem(secured_message_context->application_secret.response_data_secret,
-             sizeof(secured_message_context->application_secret.response_data_secret),
-             m_rsp_secret_buffer, secured_message_context->aead_key_size);
-    copy_mem(secured_message_context->application_secret.request_data_secret,
-             sizeof(secured_message_context->application_secret.request_data_secret),
-             m_req_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.response_data_secret,
+                     sizeof(secured_message_context->application_secret.response_data_secret),
+                     m_rsp_secret_buffer, secured_message_context->aead_key_size);
+    libspdm_copy_mem(secured_message_context->application_secret.request_data_secret,
+                     sizeof(secured_message_context->application_secret.request_data_secret),
+                     m_req_secret_buffer, secured_message_context->aead_key_size);
 
-    set_mem(secured_message_context->application_secret
-            .response_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xFF));
-    set_mem(secured_message_context->application_secret
-            .response_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .response_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xFF));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .response_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xFF));
 
 
-    set_mem(secured_message_context->application_secret
-            .request_data_encryption_key,
-            secured_message_context->aead_key_size, (uint8_t)(0xEE));
-    set_mem(secured_message_context->application_secret
-            .request_data_salt,
-            secured_message_context->aead_iv_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .request_data_encryption_key,
+                    secured_message_context->aead_key_size, (uint8_t)(0xEE));
+    libspdm_set_mem(secured_message_context->application_secret
+                    .request_data_salt,
+                    secured_message_context->aead_iv_size, (uint8_t)(0xEE));
 
     secured_message_context->application_secret.
     response_data_sequence_number = 0;
@@ -113,13 +113,13 @@ static void libspdm_compute_secret_update(uintn hash_size,
     uint16_t length;
 
     length = (uint16_t) hash_size;
-    copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    copy_mem(m_bin_str9 + sizeof(uint16_t),
-             sizeof(m_bin_str9) - sizeof(uint16_t),
-             SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-             sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-             SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
+    libspdm_copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t),
+                     sizeof(m_bin_str9) - sizeof(uint16_t),
+                     SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
+    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
+                     sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+                     SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
     m_bin_str9_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 +
                       sizeof(SPDM_BIN_STR_9_LABEL) - 1;
     /*context is NULL for key update*/
@@ -1190,7 +1190,7 @@ return_status libspdm_requester_key_update_test_receive_message(
             if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
                 error_code++;
             }
-            zero_mem (&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 = (uint8_t) error_code;
@@ -1901,7 +1901,7 @@ return_status libspdm_requester_key_update_test_receive_message(
             else {
                 spdm_error_response_t spdm_response;
 
-                zero_mem (&spdm_response, sizeof(spdm_response));
+                libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
                 spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
                 spdm_response.header.request_response_code = SPDM_ERROR;
                 spdm_response.header.param1 = (uint8_t) error_code;
@@ -2130,28 +2130,28 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         /*use previous key to send*/
-        copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                 secured_message_context
-                 ->application_secret.response_data_encryption_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                 secured_message_context
-                 ->application_secret.response_data_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                         secured_message_context
+                         ->application_secret.response_data_encryption_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                         secured_message_context
+                         ->application_secret.response_data_salt,
+                         secured_message_context->aead_iv_size);
         curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 m_libspdm_last_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 m_libspdm_last_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         m_libspdm_last_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         m_libspdm_last_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2165,18 +2165,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                               &spdm_response, response_size, response);
 
         /*restore new key*/
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 curr_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 curr_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         curr_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         curr_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
@@ -2201,28 +2201,28 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         /*use previous key to send*/
-        copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                 secured_message_context
-                 ->application_secret.response_data_encryption_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                 secured_message_context
-                 ->application_secret.response_data_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                         secured_message_context
+                         ->application_secret.response_data_encryption_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                         secured_message_context
+                         ->application_secret.response_data_salt,
+                         secured_message_context->aead_iv_size);
         curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 m_libspdm_last_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 m_libspdm_last_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         m_libspdm_last_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         m_libspdm_last_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2239,18 +2239,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                               &spdm_response, response_size, response);
 
         /*restore new key*/
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 curr_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 curr_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         curr_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         curr_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
@@ -2280,28 +2280,28 @@ return_status libspdm_requester_key_update_test_receive_message(
             uint64_t curr_rsp_sequence_number;
 
             /*use previous key to send*/
-            copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                     secured_message_context
-                     ->application_secret.response_data_encryption_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                     secured_message_context
-                     ->application_secret.response_data_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                             secured_message_context
+                             ->application_secret.response_data_encryption_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                             secured_message_context
+                             ->application_secret.response_data_salt,
+                             secured_message_context->aead_iv_size);
             curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     m_libspdm_last_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     m_libspdm_last_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             m_libspdm_last_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             m_libspdm_last_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2317,18 +2317,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                                   response_size, response);
 
             /*restore new key*/
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     curr_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     curr_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             curr_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             curr_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
@@ -2392,28 +2392,28 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         /*use previous key to send*/
-        copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                 secured_message_context
-                 ->application_secret.response_data_encryption_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                 secured_message_context
-                 ->application_secret.response_data_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                         secured_message_context
+                         ->application_secret.response_data_encryption_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                         secured_message_context
+                         ->application_secret.response_data_salt,
+                         secured_message_context->aead_iv_size);
         curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 m_libspdm_last_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 m_libspdm_last_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         m_libspdm_last_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         m_libspdm_last_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2427,18 +2427,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                               &spdm_response, response_size, response);
 
         /*restore new key*/
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 curr_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 curr_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         curr_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         curr_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
@@ -2463,28 +2463,28 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         /*use previous key to send*/
-        copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                 secured_message_context
-                 ->application_secret.response_data_encryption_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                 secured_message_context
-                 ->application_secret.response_data_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                         secured_message_context
+                         ->application_secret.response_data_encryption_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                         secured_message_context
+                         ->application_secret.response_data_salt,
+                         secured_message_context->aead_iv_size);
         curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 m_libspdm_last_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 m_libspdm_last_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         m_libspdm_last_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         m_libspdm_last_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2503,18 +2503,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                               &spdm_response, response_size, response);
 
         /*restore new key*/
-        copy_mem(secured_message_context->application_secret
-                 .response_data_encryption_key,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_encryption_key),
-                 curr_rsp_enc_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(secured_message_context->application_secret
-                 .response_data_salt,
-                 sizeof(secured_message_context->application_secret
-                        .response_data_salt),
-                 curr_rsp_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_encryption_key,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_encryption_key),
+                         curr_rsp_enc_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(secured_message_context->application_secret
+                         .response_data_salt,
+                         sizeof(secured_message_context->application_secret
+                                .response_data_salt),
+                         curr_rsp_salt,
+                         secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
@@ -2545,28 +2545,28 @@ return_status libspdm_requester_key_update_test_receive_message(
             uint64_t curr_rsp_sequence_number;
 
             /*use previous key to send*/
-            copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                     secured_message_context
-                     ->application_secret.response_data_encryption_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                     secured_message_context
-                     ->application_secret.response_data_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                             secured_message_context
+                             ->application_secret.response_data_encryption_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                             secured_message_context
+                             ->application_secret.response_data_salt,
+                             secured_message_context->aead_iv_size);
             curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     m_libspdm_last_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     m_libspdm_last_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             m_libspdm_last_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             m_libspdm_last_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
@@ -2588,18 +2588,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                                   response_size, response);
 
             /*restore new key*/
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     curr_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     curr_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             curr_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             curr_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
@@ -2671,32 +2671,32 @@ return_status libspdm_requester_key_update_test_receive_message(
                 error_code++;
             }
             /*use previous key to send*/
-            copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
-                     secured_message_context
-                     ->application_secret.response_data_encryption_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
-                     secured_message_context
-                     ->application_secret.response_data_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
+                             secured_message_context
+                             ->application_secret.response_data_encryption_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(curr_rsp_salt, sizeof(curr_rsp_salt),
+                             secured_message_context
+                             ->application_secret.response_data_salt,
+                             secured_message_context->aead_iv_size);
             curr_rsp_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     m_libspdm_last_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     m_libspdm_last_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             m_libspdm_last_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             m_libspdm_last_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            zero_mem (&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 = (uint8_t) error_code;
@@ -2708,18 +2708,18 @@ return_status libspdm_requester_key_update_test_receive_message(
                                                   response_size, response);
 
             /*restore new key*/
-            copy_mem(secured_message_context->application_secret
-                     .response_data_encryption_key,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_encryption_key),
-                     curr_rsp_enc_key,
-                     secured_message_context->aead_key_size);
-            copy_mem(secured_message_context->application_secret
-                     .response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
-                     curr_rsp_salt,
-                     secured_message_context->aead_iv_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_encryption_key,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_encryption_key),
+                             curr_rsp_enc_key,
+                             secured_message_context->aead_key_size);
+            libspdm_copy_mem(secured_message_context->application_secret
+                             .response_data_salt,
+                             sizeof(secured_message_context->application_secret
+                                    .response_data_salt),
+                             curr_rsp_salt,
+                             secured_message_context->aead_iv_size);
             secured_message_context->application_secret
             .response_data_sequence_number = curr_rsp_sequence_number;
         }
@@ -4316,14 +4316,14 @@ void libspdm_test_requester_key_update_case28(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4383,14 +4383,14 @@ void libspdm_test_requester_key_update_case29(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4451,14 +4451,14 @@ void libspdm_test_requester_key_update_case30(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4527,14 +4527,14 @@ void libspdm_test_requester_key_update_case31(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4584,14 +4584,14 @@ void libspdm_test_requester_key_update_case32(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4652,14 +4652,14 @@ void libspdm_test_requester_key_update_case33(void **state)
         m_req_secret_buffer, (uint8_t)(0xEE));
 
     /*store previous encryption state*/
-    copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-             secured_message_context
-             ->application_secret.response_data_encryption_key,
-             secured_message_context->aead_key_size);
-    copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-             secured_message_context
-             ->application_secret.response_data_salt,
-             secured_message_context->aead_iv_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                     secured_message_context
+                     ->application_secret.response_data_encryption_key,
+                     secured_message_context->aead_key_size);
+    libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                     secured_message_context
+                     ->application_secret.response_data_salt,
+                     secured_message_context->aead_iv_size);
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
@@ -4738,14 +4738,14 @@ void libspdm_test_requester_key_update_case34(void **state)
             m_req_secret_buffer, (uint8_t)(0xEE));
 
         /*store previous encryption state*/
-        copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
-                 secured_message_context
-                 ->application_secret.response_data_encryption_key,
-                 secured_message_context->aead_key_size);
-        copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
-                 secured_message_context
-                 ->application_secret.response_data_salt,
-                 secured_message_context->aead_iv_size);
+        libspdm_copy_mem(m_libspdm_last_rsp_enc_key, sizeof(m_libspdm_last_rsp_enc_key),
+                         secured_message_context
+                         ->application_secret.response_data_encryption_key,
+                         secured_message_context->aead_key_size);
+        libspdm_copy_mem(m_libspdm_last_rsp_salt, sizeof(m_libspdm_last_rsp_salt),
+                         secured_message_context
+                         ->application_secret.response_data_salt,
+                         secured_message_context->aead_iv_size);
         m_libspdm_last_rsp_sequence_number = secured_message_context
                                              ->application_secret.response_data_sequence_number;
 
