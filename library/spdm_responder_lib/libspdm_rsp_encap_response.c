@@ -43,9 +43,9 @@ typedef struct {
     uint8_t request_op_code;
     libspdm_get_encap_request_func get_encap_request;
     libspdm_process_encap_response_func process_encap_response;
-} libspdm_libspdm_encap_response_struct_t;
+} libspdm_encap_response_struct_t;
 
-libspdm_libspdm_encap_response_struct_t m_libspdm_encap_response_struct[] = {
+libspdm_encap_response_struct_t m_libspdm_encap_response_struct[] = {
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
       libspdm_process_encap_response_digest },
@@ -63,7 +63,7 @@ libspdm_libspdm_encap_response_struct_t m_libspdm_encap_response_struct[] = {
       libspdm_process_encap_response_key_update },
 };
 
-libspdm_libspdm_encap_response_struct_t *
+libspdm_encap_response_struct_t *
 libspdm_get_encap_struct_via_op_code(uint8_t request_op_code)
 {
     uintn index;
@@ -122,7 +122,7 @@ return_status libspdm_process_encapsulated_response(
 {
     return_status status;
     bool need_continue;
-    libspdm_libspdm_encap_response_struct_t *encap_response_struct;
+    libspdm_encap_response_struct_t *encap_response_struct;
 
     /* Process previous response*/
     need_continue = false;

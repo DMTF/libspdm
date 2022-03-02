@@ -44,9 +44,10 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
@@ -138,9 +139,10 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;

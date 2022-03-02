@@ -41,9 +41,9 @@ void libspdm_test_responder_certificate_case1(void **State)
 
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
@@ -78,9 +78,9 @@ void libspdm_test_responder_certificate_case2(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
@@ -159,9 +159,9 @@ void libspdm_test_responder_certificate_case5(void **State)
 
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;

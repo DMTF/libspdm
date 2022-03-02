@@ -640,7 +640,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
             }
         }
 
-        result = x509_get_cert_from_cert_chain(
+        result = libspdm_x509_get_cert_from_cert_chain(
             (uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
             cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
             0, &received_root_cert, &received_root_cert_size);
@@ -656,8 +656,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                 return false;
             }
         } else {
-            if (!x509_verify_cert(received_root_cert, received_root_cert_size,
-                                  root_cert, root_cert_size)) {
+            if (!libspdm_x509_verify_cert(received_root_cert, received_root_cert_size,
+                                          root_cert, root_cert_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! verify_peer_cert_chain_buffer - FAIL (received root cert verify failed)!!!\n"));
                 return false;
@@ -938,9 +938,9 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     }
 
     /* Get leaf cert from cert chain*/
-    result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                           cert_chain_data_size, -1,
-                                           &cert_buffer, &cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
     if (!result) {
         return false;
     }
@@ -1028,9 +1028,9 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
 
     /* Get leaf cert from cert chain*/
 
-    result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                           cert_chain_data_size, -1,
-                                           &cert_buffer, &cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
     if (!result) {
         return false;
     }
@@ -1231,9 +1231,9 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     }
 
     /* Get leaf cert from cert chain*/
-    result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                           cert_chain_data_size, -1,
-                                           &cert_buffer, &cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
     if (!result) {
         return false;
     }
@@ -1279,9 +1279,9 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
 
     /* Get leaf cert from cert chain*/
 
-    result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                           cert_chain_data_size, -1,
-                                           &cert_buffer, &cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
     if (!result) {
         return false;
     }

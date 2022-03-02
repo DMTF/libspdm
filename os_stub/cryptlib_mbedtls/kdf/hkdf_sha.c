@@ -90,13 +90,13 @@ bool hkdf_md_extract(const mbedtls_md_type_t md_type, const uint8_t *key,
     md_size = 0;
     switch (md_type) {
     case MBEDTLS_MD_SHA256:
-        md_size = SHA256_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA256_DIGEST_SIZE;
         break;
     case MBEDTLS_MD_SHA384:
-        md_size = SHA384_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA384_DIGEST_SIZE;
         break;
     case MBEDTLS_MD_SHA512:
-        md_size = SHA512_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA512_DIGEST_SIZE;
         break;
     default:
         return false;
@@ -147,13 +147,13 @@ bool hkdf_md_expand(const mbedtls_md_type_t md_type, const uint8_t *prk,
 
     switch (md_type) {
     case MBEDTLS_MD_SHA256:
-        md_size = SHA256_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA256_DIGEST_SIZE;
         break;
     case MBEDTLS_MD_SHA384:
-        md_size = SHA384_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA384_DIGEST_SIZE;
         break;
     case MBEDTLS_MD_SHA512:
-        md_size = SHA512_DIGEST_SIZE;
+        md_size = LIBSPDM_SHA512_DIGEST_SIZE;
         break;
     default:
         LIBSPDM_ASSERT(false);
@@ -191,10 +191,10 @@ bool hkdf_md_expand(const mbedtls_md_type_t md_type, const uint8_t *prk,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract_and_expand(const uint8_t *key, uintn key_size,
-                                    const uint8_t *salt, uintn salt_size,
-                                    const uint8_t *info, uintn info_size,
-                                    uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha256_extract_and_expand(const uint8_t *key, uintn key_size,
+                                            const uint8_t *salt, uintn salt_size,
+                                            const uint8_t *info, uintn info_size,
+                                            uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA256, key, key_size,
                                       salt, salt_size, info, info_size, out,
@@ -215,9 +215,9 @@ bool hkdf_sha256_extract_and_expand(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_extract(const uint8_t *key, uintn key_size,
-                         const uint8_t *salt, uintn salt_size,
-                         uint8_t *prk_out, uintn prk_out_size)
+bool libspdm_hkdf_sha256_extract(const uint8_t *key, uintn key_size,
+                                 const uint8_t *salt, uintn salt_size,
+                                 uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(MBEDTLS_MD_SHA256, key, key_size, salt,
                            salt_size, prk_out, prk_out_size);
@@ -237,9 +237,9 @@ bool hkdf_sha256_extract(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha256_expand(const uint8_t *prk, uintn prk_size,
-                        const uint8_t *info, uintn info_size,
-                        uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha256_expand(const uint8_t *prk, uintn prk_size,
+                                const uint8_t *info, uintn info_size,
+                                uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(MBEDTLS_MD_SHA256, prk, prk_size, info, info_size,
                           out, out_size);
@@ -261,10 +261,10 @@ bool hkdf_sha256_expand(const uint8_t *prk, uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract_and_expand(const uint8_t *key, uintn key_size,
-                                    const uint8_t *salt, uintn salt_size,
-                                    const uint8_t *info, uintn info_size,
-                                    uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha384_extract_and_expand(const uint8_t *key, uintn key_size,
+                                            const uint8_t *salt, uintn salt_size,
+                                            const uint8_t *info, uintn info_size,
+                                            uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA384, key, key_size,
                                       salt, salt_size, info, info_size, out,
@@ -285,9 +285,9 @@ bool hkdf_sha384_extract_and_expand(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_extract(const uint8_t *key, uintn key_size,
-                         const uint8_t *salt, uintn salt_size,
-                         uint8_t *prk_out, uintn prk_out_size)
+bool libspdm_hkdf_sha384_extract(const uint8_t *key, uintn key_size,
+                                 const uint8_t *salt, uintn salt_size,
+                                 uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(MBEDTLS_MD_SHA384, key, key_size, salt,
                            salt_size, prk_out, prk_out_size);
@@ -307,9 +307,9 @@ bool hkdf_sha384_extract(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha384_expand(const uint8_t *prk, uintn prk_size,
-                        const uint8_t *info, uintn info_size,
-                        uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha384_expand(const uint8_t *prk, uintn prk_size,
+                                const uint8_t *info, uintn info_size,
+                                uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(MBEDTLS_MD_SHA384, prk, prk_size, info, info_size,
                           out, out_size);
@@ -331,10 +331,10 @@ bool hkdf_sha384_expand(const uint8_t *prk, uintn prk_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract_and_expand(const uint8_t *key, uintn key_size,
-                                    const uint8_t *salt, uintn salt_size,
-                                    const uint8_t *info, uintn info_size,
-                                    uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha512_extract_and_expand(const uint8_t *key, uintn key_size,
+                                            const uint8_t *salt, uintn salt_size,
+                                            const uint8_t *info, uintn info_size,
+                                            uint8_t *out, uintn out_size)
 {
     return hkdf_md_extract_and_expand(MBEDTLS_MD_SHA512, key, key_size,
                                       salt, salt_size, info, info_size, out,
@@ -355,9 +355,9 @@ bool hkdf_sha512_extract_and_expand(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_extract(const uint8_t *key, uintn key_size,
-                         const uint8_t *salt, uintn salt_size,
-                         uint8_t *prk_out, uintn prk_out_size)
+bool libspdm_hkdf_sha512_extract(const uint8_t *key, uintn key_size,
+                                 const uint8_t *salt, uintn salt_size,
+                                 uint8_t *prk_out, uintn prk_out_size)
 {
     return hkdf_md_extract(MBEDTLS_MD_SHA512, key, key_size, salt,
                            salt_size, prk_out, prk_out_size);
@@ -377,9 +377,9 @@ bool hkdf_sha512_extract(const uint8_t *key, uintn key_size,
  * @retval false  Hkdf generation failed.
  *
  **/
-bool hkdf_sha512_expand(const uint8_t *prk, uintn prk_size,
-                        const uint8_t *info, uintn info_size,
-                        uint8_t *out, uintn out_size)
+bool libspdm_hkdf_sha512_expand(const uint8_t *prk, uintn prk_size,
+                                const uint8_t *info, uintn info_size,
+                                uint8_t *out, uintn out_size)
 {
     return hkdf_md_expand(MBEDTLS_MD_SHA512, prk, prk_size, info, info_size,
                           out, out_size);

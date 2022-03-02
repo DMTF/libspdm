@@ -23,10 +23,10 @@
  * @param nid cipher NID
  *
  * @return  Pointer to the Elliptic Curve context that has been initialized.
- *         If the allocations fails, ec_new_by_nid() returns NULL.
+ *         If the allocations fails, libspdm_ec_new_by_nid() returns NULL.
  *
  **/
-void *ec_new_by_nid(uintn nid)
+void *libspdm_ec_new_by_nid(uintn nid)
 {
     EC_KEY *ec_key;
     EC_GROUP *ec_group;
@@ -38,13 +38,13 @@ void *ec_new_by_nid(uintn nid)
         return NULL;
     }
     switch (nid) {
-    case CRYPTO_NID_SECP256R1:
+    case LIBSPDM_CRYPTO_NID_SECP256R1:
         openssl_nid = NID_X9_62_prime256v1;
         break;
-    case CRYPTO_NID_SECP384R1:
+    case LIBSPDM_CRYPTO_NID_SECP384R1:
         openssl_nid = NID_secp384r1;
         break;
-    case CRYPTO_NID_SECP521R1:
+    case LIBSPDM_CRYPTO_NID_SECP521R1:
         openssl_nid = NID_secp521r1;
         break;
     default:
@@ -69,7 +69,7 @@ void *ec_new_by_nid(uintn nid)
  * @param[in]  ec_context  Pointer to the EC context to be released.
  *
  **/
-void ec_free(void *ec_context)
+void libspdm_ec_free(void *ec_context)
 {
     EC_KEY_free((EC_KEY *)ec_context);
 }
@@ -89,8 +89,8 @@ void ec_free(void *ec_context)
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ec_set_pub_key(void *ec_context, const uint8_t *public_key,
-                    uintn public_key_size)
+bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
+                            uintn public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -181,8 +181,8 @@ done:
  * @retval  false  Invalid EC key component.
  *
  **/
-bool ec_get_pub_key(void *ec_context, uint8_t *public_key,
-                    uintn *public_key_size)
+bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
+                            uintn *public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -282,7 +282,7 @@ done:
  * @retval  false  EC key components are not valid.
  *
  **/
-bool ec_check_key(const void *ec_context)
+bool libspdm_ec_check_key(const void *ec_context)
 {
     EC_KEY *ec_key;
     bool ret_val;
@@ -330,8 +330,8 @@ bool ec_check_key(const void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ec_generate_key(void *ec_context, uint8_t *public,
-                     uintn *public_size)
+bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
+                             uintn *public_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -451,9 +451,9 @@ done:
  * @retval false  key_size is not large enough.
  *
  **/
-bool ec_compute_key(void *ec_context, const uint8_t *peer_public,
-                    uintn peer_public_size, uint8_t *key,
-                    uintn *key_size)
+bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
+                            uintn peer_public_size, uint8_t *key,
+                            uintn *key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -572,9 +572,9 @@ done:
  * @retval  false  sig_size is too small.
  *
  **/
-bool ecdsa_sign(void *ec_context, uintn hash_nid,
-                const uint8_t *message_hash, uintn hash_size,
-                uint8_t *signature, uintn *sig_size)
+bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
+                        const uint8_t *message_hash, uintn hash_size,
+                        uint8_t *signature, uintn *sig_size)
 {
     EC_KEY *ec_key;
     ECDSA_SIG *ecdsa_sig;
@@ -616,20 +616,20 @@ bool ecdsa_sign(void *ec_context, uintn hash_nid,
     zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
-    case CRYPTO_NID_SHA256:
-        if (hash_size != SHA256_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA384:
-        if (hash_size != SHA384_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA512:
-        if (hash_size != SHA512_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
         break;
@@ -686,9 +686,9 @@ bool ecdsa_sign(void *ec_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-bool ecdsa_verify(void *ec_context, uintn hash_nid,
-                  const uint8_t *message_hash, uintn hash_size,
-                  const uint8_t *signature, uintn sig_size)
+bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
+                          const uint8_t *message_hash, uintn hash_size,
+                          const uint8_t *signature, uintn sig_size)
 {
     int32_t result;
     EC_KEY *ec_key;
@@ -726,20 +726,20 @@ bool ecdsa_verify(void *ec_context, uintn hash_nid,
     }
 
     switch (hash_nid) {
-    case CRYPTO_NID_SHA256:
-        if (hash_size != SHA256_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA384:
-        if (hash_size != SHA384_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA512:
-        if (hash_size != SHA512_DIGEST_SIZE) {
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
         break;

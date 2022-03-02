@@ -74,9 +74,9 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -87,9 +87,9 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =
@@ -170,9 +170,9 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -183,9 +183,9 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request2.psk_hint_length =
@@ -258,9 +258,9 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -271,9 +271,9 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =
@@ -347,9 +347,9 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -360,9 +360,9 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =
@@ -438,9 +438,9 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -451,9 +451,9 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =
@@ -533,9 +533,9 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -546,9 +546,9 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =
@@ -620,9 +620,9 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data1,
-                                            &data_size1, NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
@@ -633,9 +633,9 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
     libspdm_reset_message_a(spdm_context);
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size =
-        sizeof(TEST_PSK_HINT_STRING);
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     m_libspdm_psk_exchange_request1.psk_hint_length =

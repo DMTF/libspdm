@@ -13,7 +13,7 @@
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_dh(void)
+return_status libspdm_validate_crypt_dh(void)
 {
     void *dh1;
     void *dh2;
@@ -27,7 +27,7 @@ return_status validate_crypt_dh(void)
     uint8_t ff_key2[256];
     uintn ff_key2_length;
 
-    my_print("\nCrypto DH Engine Testing:\n");
+    libspdm_my_print("\nCrypto DH Engine Testing:\n");
 
 
 
@@ -36,77 +36,77 @@ return_status validate_crypt_dh(void)
     ff_public_key2_length = sizeof(ff_public_key2);
     ff_key1_length = sizeof(ff_key1);
     ff_key2_length = sizeof(ff_key2);
-    my_print("- Context1 ... ");
-    dh1 = dh_new_by_nid(CRYPTO_NID_FFDHE2048);
+    libspdm_my_print("- Context1 ... ");
+    dh1 = libspdm_dh_new_by_nid(LIBSPDM_CRYPTO_NID_FFDHE2048);
     if (dh1 == NULL) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
-    my_print("Context2 ... ");
-    dh2 = dh_new_by_nid(CRYPTO_NID_FFDHE2048);
+    libspdm_my_print("Context2 ... ");
+    dh2 = libspdm_dh_new_by_nid(LIBSPDM_CRYPTO_NID_FFDHE2048);
     if (dh2 == NULL) {
-        my_print("[Fail]");
-        dh_free(dh1);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
         return RETURN_ABORTED;
     }
 
-    my_print("Generate key1 ... ");
-    status = dh_generate_key(dh1, ff_public_key1, &ff_public_key1_length);
+    libspdm_my_print("Generate key1 ... ");
+    status = libspdm_dh_generate_key(dh1, ff_public_key1, &ff_public_key1_length);
     if (!status || ff_public_key1_length != 256) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
-    my_print("Generate key2 ... ");
-    status = dh_generate_key(dh2, ff_public_key2, &ff_public_key2_length);
+    libspdm_my_print("Generate key2 ... ");
+    status = libspdm_dh_generate_key(dh2, ff_public_key2, &ff_public_key2_length);
     if (!status || ff_public_key2_length != 256) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
-    my_print("Compute key1 ... ");
-    status = dh_compute_key(dh1, ff_public_key2, ff_public_key2_length,
-                            ff_key1, &ff_key1_length);
+    libspdm_my_print("Compute key1 ... ");
+    status = libspdm_dh_compute_key(dh1, ff_public_key2, ff_public_key2_length,
+                                    ff_key1, &ff_key1_length);
     if (!status || ff_key1_length != 256) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
-    my_print("Compute key2 ... ");
-    status = dh_compute_key(dh2, ff_public_key1, ff_public_key1_length,
-                            ff_key2, &ff_key2_length);
+    libspdm_my_print("Compute key2 ... ");
+    status = libspdm_dh_compute_key(dh2, ff_public_key1, ff_public_key1_length,
+                                    ff_key2, &ff_key2_length);
     if (!status || ff_key2_length != 256) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
-    my_print("Compare Keys ... ");
+    libspdm_my_print("Compare Keys ... ");
     if (ff_key1_length != ff_key2_length) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
     if (const_compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
-        my_print("[Fail]");
-        dh_free(dh1);
-        dh_free(dh2);
+        libspdm_my_print("[Fail]");
+        libspdm_dh_free(dh1);
+        libspdm_dh_free(dh2);
         return RETURN_ABORTED;
     }
 
-    my_print("[Pass]\n");
-    dh_free(dh1);
-    dh_free(dh2);
+    libspdm_my_print("[Pass]\n");
+    libspdm_dh_free(dh1);
+    libspdm_dh_free(dh2);
 
     return RETURN_SUCCESS;
 }

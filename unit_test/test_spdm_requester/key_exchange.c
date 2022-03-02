@@ -427,9 +427,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -587,9 +587,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -797,7 +797,7 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                 spdm_context, &opaque_key_exchange_rsp_size,
                 ptr);
             ptr += opaque_key_exchange_rsp_size;
-            read_responder_public_certificate_chain(
+            libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
                 &data_size, NULL, NULL);
             copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
@@ -1034,7 +1034,7 @@ return_status libspdm_requester_key_exchange_test_receive_message(
                 spdm_context, &opaque_key_exchange_rsp_size,
                 ptr);
             ptr += opaque_key_exchange_rsp_size;
-            read_responder_public_certificate_chain(
+            libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
                 &data_size, NULL, NULL);
             copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
@@ -1238,9 +1238,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -1407,9 +1407,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -1576,9 +1576,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -1746,9 +1746,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -1907,9 +1907,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2068,9 +2068,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2238,9 +2238,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2400,9 +2400,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2553,9 +2553,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2687,9 +2687,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -2848,9 +2848,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3009,9 +3009,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3171,9 +3171,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3333,9 +3333,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3495,9 +3495,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3658,9 +3658,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3821,9 +3821,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -3984,9 +3984,9 @@ return_status libspdm_requester_key_exchange_test_receive_message(
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                m_libspdm_use_asym_algo, &data,
-                                                &data_size, NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo, &data,
+                                                        &data_size, NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer)
                  - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -4084,9 +4084,9 @@ void libspdm_test_requester_key_exchange_case1(void **state)
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4156,9 +4156,9 @@ void libspdm_test_requester_key_exchange_case2(void **state)
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4230,9 +4230,9 @@ void libspdm_test_requester_key_exchange_case3(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4299,9 +4299,9 @@ void libspdm_test_requester_key_exchange_case4(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4368,9 +4368,9 @@ void libspdm_test_requester_key_exchange_case5(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4437,9 +4437,9 @@ void libspdm_test_requester_key_exchange_case6(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4511,9 +4511,9 @@ void libspdm_test_requester_key_exchange_case7(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4582,9 +4582,9 @@ void libspdm_test_requester_key_exchange_case8(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4651,9 +4651,9 @@ void libspdm_test_requester_key_exchange_case9(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4722,9 +4722,10 @@ void libspdm_test_requester_key_exchange_case10(void **state) {
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain (m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                                             &data, &data_size,
-                                             &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
+                                                     m_libspdm_use_asym_algo,
+                                                     &data, &data_size,
+                                                     &hash, &hash_size);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
@@ -4803,9 +4804,9 @@ void libspdm_test_requester_key_exchange_case11(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4904,9 +4905,9 @@ void libspdm_test_requester_key_exchange_case12(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -4992,9 +4993,9 @@ void libspdm_test_requester_key_exchange_case13(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5080,9 +5081,9 @@ void libspdm_test_requester_key_exchange_case14(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5168,9 +5169,9 @@ void libspdm_test_requester_key_exchange_case15(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5247,9 +5248,9 @@ void libspdm_test_requester_key_exchange_case16(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5326,9 +5327,9 @@ void libspdm_test_requester_key_exchange_case17(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5405,9 +5406,9 @@ void libspdm_test_requester_key_exchange_case18(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5484,9 +5485,9 @@ void libspdm_test_requester_key_exchange_case19(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5574,9 +5575,9 @@ void libspdm_test_requester_key_exchange_case20(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5659,9 +5660,9 @@ void libspdm_test_requester_key_exchange_case21(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5755,9 +5756,9 @@ void libspdm_test_requester_key_exchange_case22(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5853,9 +5854,9 @@ void libspdm_test_requester_key_exchange_case23(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -5951,9 +5952,9 @@ void libspdm_test_requester_key_exchange_case24(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -6049,9 +6050,9 @@ void libspdm_test_requester_key_exchange_case25(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -6147,9 +6148,9 @@ void libspdm_test_requester_key_exchange_case26(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -6237,9 +6238,9 @@ void libspdm_test_requester_key_exchange_case27(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -6327,9 +6328,9 @@ void libspdm_test_requester_key_exchange_case28(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                            m_libspdm_use_asym_algo, &data,
-                                            &data_size, &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;

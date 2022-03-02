@@ -14,10 +14,10 @@
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA256 use.
  *
  * @return  Pointer to the HMAC_CTX context that has been initialized.
- *         If the allocations fails, hmac_sha256_new() returns NULL.
+ *         If the allocations fails, libspdm_hmac_sha256_new() returns NULL.
  *
  **/
-void *hmac_sha256_new(void)
+void *libspdm_hmac_sha256_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -29,14 +29,14 @@ void *hmac_sha256_new(void)
  * @param[in]  hmac_sha256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha256_free(void *hmac_sha256_ctx)
+void libspdm_hmac_sha256_free(void *hmac_sha256_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
- * calling to hmac_sha256_update().
+ * calling to libspdm_hmac_sha256_update().
  *
  * If hmac_sha256_ctx is NULL, then return false.
  *
@@ -48,8 +48,8 @@ void hmac_sha256_free(void *hmac_sha256_ctx)
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
-                         uintn key_size)
+bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
+                                 uintn key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -68,8 +68,8 @@ bool hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
  * @retval false  HMAC-SHA256 context copy failed.
  *
  **/
-bool hmac_sha256_duplicate(const void *hmac_sha256_ctx,
-                           void *new_hmac_sha256_ctx)
+bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx,
+                                   void *new_hmac_sha256_ctx)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -80,8 +80,8 @@ bool hmac_sha256_duplicate(const void *hmac_sha256_ctx,
  *
  * This function performs HMAC-SHA256 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * HMAC-SHA256 context should be initialized by hmac_sha256_new(), and should not be finalized
- * by hmac_sha256_final(). Behavior with invalid context is undefined.
+ * HMAC-SHA256 context should be initialized by libspdm_hmac_sha256_new(), and should not be finalized
+ * by libspdm_hmac_sha256_final(). Behavior with invalid context is undefined.
  *
  * If hmac_sha256_ctx is NULL, then return false.
  *
@@ -93,8 +93,8 @@ bool hmac_sha256_duplicate(const void *hmac_sha256_ctx,
  * @retval false  HMAC-SHA256 data digest failed.
  *
  **/
-bool hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
-                        uintn data_size)
+bool libspdm_hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
+                                uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -106,8 +106,8 @@ bool hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
  * This function completes HMAC-SHA256 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the HMAC-SHA256 context cannot
  * be used again.
- * HMAC-SHA256 context should be initialized by hmac_sha256_new(), and should not be finalized
- * by hmac_sha256_final(). Behavior with invalid HMAC-SHA256 context is undefined.
+ * HMAC-SHA256 context should be initialized by libspdm_hmac_sha256_new(), and should not be finalized
+ * by libspdm_hmac_sha256_final(). Behavior with invalid HMAC-SHA256 context is undefined.
  *
  * If hmac_sha256_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
@@ -120,7 +120,7 @@ bool hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
  * @retval false  HMAC-SHA256 digest computation failed.
  *
  **/
-bool hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value)
+bool libspdm_hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -146,9 +146,9 @@ bool hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha256_all(const void *data, uintn data_size,
-                     const uint8_t *key, uintn key_size,
-                     uint8_t *hmac_value)
+bool libspdm_hmac_sha256_all(const void *data, uintn data_size,
+                             const uint8_t *key, uintn key_size,
+                             uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -158,10 +158,10 @@ bool hmac_sha256_all(const void *data, uintn data_size,
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA384 use.
  *
  * @return  Pointer to the HMAC_CTX context that has been initialized.
- *         If the allocations fails, hmac_sha384_new() returns NULL.
+ *         If the allocations fails, libspdm_hmac_sha384_new() returns NULL.
  *
  **/
-void *hmac_sha384_new(void)
+void *libspdm_hmac_sha384_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -173,14 +173,14 @@ void *hmac_sha384_new(void)
  * @param[in]  hmac_sha384_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha384_free(void *hmac_sha384_ctx)
+void libspdm_hmac_sha384_free(void *hmac_sha384_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
- * calling to hmac_sha384_update().
+ * calling to libspdm_hmac_sha384_update().
  *
  * If hmac_sha384_ctx is NULL, then return false.
  * If this interface is not supported, then return false.
@@ -194,8 +194,8 @@ void hmac_sha384_free(void *hmac_sha384_ctx)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
-                         uintn key_size)
+bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
+                                 uintn key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -216,8 +216,8 @@ bool hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_duplicate(const void *hmac_sha384_ctx,
-                           void *new_hmac_sha384_ctx)
+bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx,
+                                   void *new_hmac_sha384_ctx)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -228,8 +228,8 @@ bool hmac_sha384_duplicate(const void *hmac_sha384_ctx,
  *
  * This function performs HMAC-SHA384 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * HMAC-SHA384 context should be initialized by hmac_sha384_new(), and should not be finalized
- * by hmac_sha384_final(). Behavior with invalid context is undefined.
+ * HMAC-SHA384 context should be initialized by libspdm_hmac_sha384_new(), and should not be finalized
+ * by libspdm_hmac_sha384_final(). Behavior with invalid context is undefined.
  *
  * If hmac_sha384_ctx is NULL, then return false.
  * If this interface is not supported, then return false.
@@ -243,8 +243,8 @@ bool hmac_sha384_duplicate(const void *hmac_sha384_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
-                        uintn data_size)
+bool libspdm_hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
+                                uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -256,8 +256,8 @@ bool hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
  * This function completes HMAC-SHA384 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the HMAC-SHA384 context cannot
  * be used again.
- * HMAC-SHA384 context should be initialized by hmac_sha384_new(), and should not be finalized
- * by hmac_sha384_final(). Behavior with invalid HMAC-SHA384 context is undefined.
+ * HMAC-SHA384 context should be initialized by libspdm_hmac_sha384_new(), and should not be finalized
+ * by libspdm_hmac_sha384_final(). Behavior with invalid HMAC-SHA384 context is undefined.
  *
  * If hmac_sha384_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
@@ -272,7 +272,7 @@ bool hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value)
+bool libspdm_hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -298,9 +298,9 @@ bool hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha384_all(const void *data, uintn data_size,
-                     const uint8_t *key, uintn key_size,
-                     uint8_t *hmac_value)
+bool libspdm_hmac_sha384_all(const void *data, uintn data_size,
+                             const uint8_t *key, uintn key_size,
+                             uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -310,10 +310,10 @@ bool hmac_sha384_all(const void *data, uintn data_size,
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SHA512 use.
  *
  * @return  Pointer to the HMAC_CTX context that has been initialized.
- *         If the allocations fails, hmac_sha512_new() returns NULL.
+ *         If the allocations fails, libspdm_hmac_sha512_new() returns NULL.
  *
  **/
-void *hmac_sha512_new(void)
+void *libspdm_hmac_sha512_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -325,14 +325,14 @@ void *hmac_sha512_new(void)
  * @param[in]  hmac_sha512_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sha512_free(void *hmac_sha512_ctx)
+void libspdm_hmac_sha512_free(void *hmac_sha512_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
- * calling to hmac_sha512_update().
+ * calling to libspdm_hmac_sha512_update().
  *
  * If hmac_sha512_ctx is NULL, then return false.
  * If this interface is not supported, then return false.
@@ -346,8 +346,8 @@ void hmac_sha512_free(void *hmac_sha512_ctx)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
-                         uintn key_size)
+bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
+                                 uintn key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -368,8 +368,8 @@ bool hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_duplicate(const void *hmac_sha512_ctx,
-                           void *new_hmac_sha512_ctx)
+bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx,
+                                   void *new_hmac_sha512_ctx)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -380,8 +380,8 @@ bool hmac_sha512_duplicate(const void *hmac_sha512_ctx,
  *
  * This function performs HMAC-SHA512 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * HMAC-SHA512 context should be initialized by hmac_sha512_new(), and should not be finalized
- * by hmac_sha512_final(). Behavior with invalid context is undefined.
+ * HMAC-SHA512 context should be initialized by libspdm_hmac_sha512_new(), and should not be finalized
+ * by libspdm_hmac_sha512_final(). Behavior with invalid context is undefined.
  *
  * If hmac_sha512_ctx is NULL, then return false.
  * If this interface is not supported, then return false.
@@ -395,8 +395,8 @@ bool hmac_sha512_duplicate(const void *hmac_sha512_ctx,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
-                        uintn data_size)
+bool libspdm_hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
+                                uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -408,8 +408,8 @@ bool hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
  * This function completes HMAC-SHA512 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the HMAC-SHA512 context cannot
  * be used again.
- * HMAC-SHA512 context should be initialized by hmac_sha512_new(), and should not be finalized
- * by hmac_sha512_final(). Behavior with invalid HMAC-SHA512 context is undefined.
+ * HMAC-SHA512 context should be initialized by libspdm_hmac_sha512_new(), and should not be finalized
+ * by libspdm_hmac_sha512_final(). Behavior with invalid HMAC-SHA512 context is undefined.
  *
  * If hmac_sha512_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
@@ -424,7 +424,7 @@ bool hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value)
+bool libspdm_hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -450,9 +450,9 @@ bool hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sha512_all(const void *data, uintn data_size,
-                     const uint8_t *key, uintn key_size,
-                     uint8_t *hmac_value)
+bool libspdm_hmac_sha512_all(const void *data, uintn data_size,
+                             const uint8_t *key, uintn key_size,
+                             uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
     return false;

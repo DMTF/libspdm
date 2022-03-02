@@ -36,9 +36,10 @@ void libspdm_test_requester_encap_certificate(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo =
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
 
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;

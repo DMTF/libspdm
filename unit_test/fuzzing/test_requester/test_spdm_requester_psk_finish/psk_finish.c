@@ -116,9 +116,10 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -137,8 +138,8 @@ void libspdm_test_requester_psk_finish_case1(void **State)
 #endif
     zero_mem(m_libspdm_local_psk_hint, 32);
     copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;

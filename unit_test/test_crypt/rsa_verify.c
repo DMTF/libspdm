@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#define RSA_MODULUS_LENGTH 512
+#define LIBSPDM_RSA_MODULUS_LENGTH 512
 
 
 /* RSA PKCS#1 Validation data from OpenSSL "Fips_rsa_selftest.c"*/
@@ -15,7 +15,7 @@
 
 /* public Modulus of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_n[] = {
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_n[] = {
     0xBB, 0xF8, 0x2F, 0x09, 0x06, 0x82, 0xCE, 0x9C, 0x23, 0x38, 0xAC, 0x2B,
     0x9D, 0xA8, 0x71, 0xF7, 0x36, 0x8D, 0x07, 0xEE, 0xD4, 0x10, 0x43, 0xA4,
     0x40, 0xD6, 0xB6, 0xF0, 0x74, 0x54, 0xF5, 0x1F, 0xB8, 0xDF, 0xBA, 0xAF,
@@ -32,12 +32,12 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_n[] = {
 
 /* public Exponent of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_e[] = { 0x11 };
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_e[] = { 0x11 };
 
 
 /* Private Exponent of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_d[] = {
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_d[] = {
     0xA5, 0xDA, 0xFC, 0x53, 0x41, 0xFA, 0xF2, 0x89, 0xC4, 0xB9, 0x88, 0xDB,
     0x30, 0xC1, 0xCD, 0xF8, 0x3F, 0x31, 0x25, 0x1E, 0x06, 0x68, 0xB4, 0x27,
     0x84, 0x81, 0x38, 0x01, 0x57, 0x96, 0x41, 0xB2, 0x94, 0x10, 0xB3, 0xC7,
@@ -54,13 +54,13 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_d[] = {
 
 /* Known Answer Test (KAT) data for RSA PKCS#1 Signing*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char m_rsa_sign_data[] =
+GLOBAL_REMOVE_IF_UNREFERENCED const char m_libspdm_rsa_sign_data[] =
     "OpenSSL FIPS 140-2 public key RSA KAT";
 
 
 /* Known signature for the above message, under SHA-1 digest*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_pkcs1_signature[] = {
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_pkcs1_signature[] = {
     0x71, 0xEE, 0x1A, 0xC0, 0xFE, 0x01, 0x93, 0x54, 0x79, 0x5C, 0xF2, 0x4C,
     0x4A, 0xFD, 0x1A, 0x05, 0x8F, 0x64, 0xB1, 0x6D, 0x61, 0x33, 0x8D, 0x9B,
     0xE7, 0xFD, 0x60, 0xA3, 0x83, 0xB5, 0xA3, 0x51, 0x55, 0x77, 0x90, 0xCF,
@@ -77,8 +77,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_rsa_pkcs1_signature[] = {
 
 /* Default public key 0x10001 = 65537*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_default_public_key[] = { 0x01, 0x00,
-                                                                 0x01 };
+GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00,
+                                                                         0x01 };
 
 /**
  * Validate Crypto RSA Interfaces.
@@ -87,10 +87,10 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_default_public_key[] = { 0x01, 0x00,
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_rsa(void)
+return_status libspdm_validate_crypt_rsa(void)
 {
     void *rsa;
-    uint8_t hash_value[SHA256_DIGEST_SIZE];
+    uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
     uintn hash_size;
     void *sha256_ctx;
     uint8_t *signature;
@@ -99,59 +99,59 @@ return_status validate_crypt_rsa(void)
     uintn key_size;
     uint8_t *KeyBuffer;
 
-    my_print("\nCrypto RSA Engine Testing: ");
+    libspdm_my_print("\nCrypto RSA Engine Testing: ");
 
 
     /* Generate & Initialize RSA context*/
 
-    rsa = rsa_new();
-    my_print("\n- Generate RSA context ... ");
+    rsa = libspdm_rsa_new();
+    libspdm_my_print("\n- Generate RSA context ... ");
     if (rsa == NULL) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
 
     /* Set/Get RSA key Components*/
 
-    my_print("Set/Get RSA key Components ... ");
+    libspdm_my_print("Set/Get RSA key Components ... ");
 
 
     /* Set/Get RSA key N*/
 
-    status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     key_size = 0;
-    status = rsa_get_key(rsa, RSA_KEY_N, NULL, &key_size);
-    if (status || key_size != sizeof(m_rsa_n)) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_N, NULL, &key_size);
+    if (status || key_size != sizeof(m_libspdm_rsa_n)) {
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     KeyBuffer = allocate_pool(key_size);
     if (KeyBuffer == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
-    status = rsa_get_key(rsa, RSA_KEY_N, KeyBuffer, &key_size);
-    if (!status || key_size != sizeof(m_rsa_n)) {
-        my_print("[Fail]");
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_N, KeyBuffer, &key_size);
+    if (!status || key_size != sizeof(m_libspdm_rsa_n)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(KeyBuffer, m_rsa_n, key_size) != 0) {
-        my_print("[Fail]");
+    if (const_compare_mem(KeyBuffer, m_libspdm_rsa_n, key_size) != 0) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -160,39 +160,39 @@ return_status validate_crypt_rsa(void)
 
     /* Set/Get RSA key E*/
 
-    status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, m_libspdm_rsa_e, sizeof(m_libspdm_rsa_e));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     key_size = 0;
-    status = rsa_get_key(rsa, RSA_KEY_E, NULL, &key_size);
-    if (status || key_size != sizeof(m_rsa_e)) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_E, NULL, &key_size);
+    if (status || key_size != sizeof(m_libspdm_rsa_e)) {
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     KeyBuffer = allocate_pool(key_size);
     if (KeyBuffer == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
-    status = rsa_get_key(rsa, RSA_KEY_E, KeyBuffer, &key_size);
-    if (!status || key_size != sizeof(m_rsa_e)) {
-        my_print("[Fail]");
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_E, KeyBuffer, &key_size);
+    if (!status || key_size != sizeof(m_libspdm_rsa_e)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(KeyBuffer, m_rsa_e, key_size) != 0) {
-        my_print("[Fail]");
+    if (const_compare_mem(KeyBuffer, m_libspdm_rsa_e, key_size) != 0) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -201,149 +201,149 @@ return_status validate_crypt_rsa(void)
 
     /* Clear/Get RSA key Components*/
 
-    my_print("Clear/Get RSA key Components ... ");
+    libspdm_my_print("Clear/Get RSA key Components ... ");
 
 
     /* Clear/Get RSA key N*/
 
-    status = rsa_set_key(rsa, RSA_KEY_N, NULL, 0);
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, NULL, 0);
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     key_size = 1;
-    status = rsa_get_key(rsa, RSA_KEY_N, NULL, &key_size);
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_N, NULL, &key_size);
     if (!status || key_size != 0) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
 
     /* Clear/Get RSA key E*/
 
-    status = rsa_set_key(rsa, RSA_KEY_E, NULL, 0);
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, NULL, 0);
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     key_size = 1;
-    status = rsa_get_key(rsa, RSA_KEY_E, NULL, &key_size);
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_E, NULL, &key_size);
     if (!status || key_size != 0) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
 
     /* Generate RSA key Components*/
 
-    my_print("Generate RSA key Components ... ");
+    libspdm_my_print("Generate RSA key Components ... ");
 
-    status = rsa_generate_key(rsa, RSA_MODULUS_LENGTH, NULL, 0);
+    status = libspdm_rsa_generate_key(rsa, LIBSPDM_RSA_MODULUS_LENGTH, NULL, 0);
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    key_size = RSA_MODULUS_LENGTH / 8;
+    key_size = LIBSPDM_RSA_MODULUS_LENGTH / 8;
     KeyBuffer = allocate_pool(key_size);
     if (KeyBuffer == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
-    status = rsa_get_key(rsa, RSA_KEY_E, KeyBuffer, &key_size);
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_E, KeyBuffer, &key_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     if (key_size != 3 ||
-        const_compare_mem(KeyBuffer, m_default_public_key, 3) != 0) {
-        my_print("[Fail]");
+        const_compare_mem(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    key_size = RSA_MODULUS_LENGTH / 8;
-    status = rsa_get_key(rsa, RSA_KEY_N, KeyBuffer, &key_size);
+    key_size = LIBSPDM_RSA_MODULUS_LENGTH / 8;
+    status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_N, KeyBuffer, &key_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (key_size != RSA_MODULUS_LENGTH / 8) {
-        my_print("[Fail]");
+    if (key_size != LIBSPDM_RSA_MODULUS_LENGTH / 8) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (!rsa_check_key(rsa)) {
-        my_print("[Fail]");
+    if (!libspdm_rsa_check_key(rsa)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
 
     /* Check invalid RSA key components*/
 
-    my_print("Check Invalid RSA key Components ... ");
+    libspdm_my_print("Check Invalid RSA key Components ... ");
 
-    status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (rsa_check_key(rsa)) {
-        my_print("[Fail]");
+    if (libspdm_rsa_check_key(rsa)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_N, KeyBuffer, key_size);
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, KeyBuffer, key_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (!rsa_check_key(rsa)) {
-        my_print("[Fail]");
+    if (!libspdm_rsa_check_key(rsa)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, m_libspdm_rsa_e, sizeof(m_libspdm_rsa_e));
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (rsa_check_key(rsa)) {
-        my_print("[Fail]");
+    if (libspdm_rsa_check_key(rsa)) {
+        libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -352,105 +352,105 @@ return_status validate_crypt_rsa(void)
 
     /* SHA-256 digest message for PKCS#1 signature*/
 
-    my_print("hash Original message ... ");
-    hash_size = SHA256_DIGEST_SIZE;
+    libspdm_my_print("hash Original message ... ");
+    hash_size = LIBSPDM_SHA256_DIGEST_SIZE;
     zero_mem(hash_value, hash_size);
-    sha256_ctx = sha256_new();
+    sha256_ctx = libspdm_sha256_new();
     if (sha256_ctx == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = sha256_init(sha256_ctx);
+    status = libspdm_sha256_init(sha256_ctx);
     if (!status) {
-        my_print("[Fail]");
-        sha256_free(sha256_ctx);
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_sha256_free(sha256_ctx);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = sha256_update(sha256_ctx, m_rsa_sign_data,
-                           ascii_str_len(m_rsa_sign_data));
+    status = libspdm_sha256_update(sha256_ctx, m_libspdm_rsa_sign_data,
+                                   libspdm_ascii_str_len(m_libspdm_rsa_sign_data));
     if (!status) {
-        my_print("[Fail]");
-        sha256_free(sha256_ctx);
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_sha256_free(sha256_ctx);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = sha256_final(sha256_ctx, hash_value);
+    status = libspdm_sha256_final(sha256_ctx, hash_value);
     if (!status) {
-        my_print("[Fail]");
-        sha256_free(sha256_ctx);
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_sha256_free(sha256_ctx);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    sha256_free(sha256_ctx);
+    libspdm_sha256_free(sha256_ctx);
 
 
     /* Sign RSA PKCS#1-encoded signature*/
 
-    my_print("PKCS#1 signature ... ");
+    libspdm_my_print("PKCS#1 signature ... ");
 
-    rsa_free(rsa);
+    libspdm_rsa_free(rsa);
 
-    rsa = rsa_new();
+    rsa = libspdm_rsa_new();
     if (rsa == NULL) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, m_libspdm_rsa_e, sizeof(m_libspdm_rsa_e));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_D, m_rsa_d, sizeof(m_rsa_d));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_D, m_libspdm_rsa_d, sizeof(m_libspdm_rsa_d));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     sig_size = 0;
-    status = rsa_pkcs1_sign_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                                     hash_size, NULL, &sig_size);
+    status = libspdm_rsa_pkcs1_sign_with_nid(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
+                                             hash_size, NULL, &sig_size);
     if (status || sig_size == 0) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     signature = allocate_pool(sig_size);
     if (signature == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
-    status = rsa_pkcs1_sign_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                                     hash_size, signature, &sig_size);
+    status = libspdm_rsa_pkcs1_sign_with_nid(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
+                                             hash_size, signature, &sig_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(signature);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    if (sig_size != sizeof(m_rsa_pkcs1_signature)) {
-        my_print("[Fail]");
+    if (sig_size != sizeof(m_libspdm_rsa_pkcs1_signature)) {
+        libspdm_my_print("[Fail]");
         free_pool(signature);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -458,13 +458,13 @@ return_status validate_crypt_rsa(void)
     /* Verify RSA PKCS#1-encoded signature*/
 
 
-    my_print("PKCS#1 signature Verification ... ");
+    libspdm_my_print("PKCS#1 signature Verification ... ");
 
-    status = rsa_pkcs1_verify_with_nid(rsa, CRYPTO_NID_SHA256, hash_value,
-                                       hash_size, signature, sig_size);
+    status = libspdm_rsa_pkcs1_verify_with_nid(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
+                                               hash_size, signature, sig_size);
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         free_pool(signature);
         return RETURN_ABORTED;
     }
@@ -474,58 +474,58 @@ return_status validate_crypt_rsa(void)
 
     /* Sign RSA PSS-encoded signature*/
 
-    my_print("PSS signature ... ");
+    libspdm_my_print("PSS signature ... ");
 
-    rsa_free(rsa);
+    libspdm_rsa_free(rsa);
 
-    rsa = rsa_new();
+    rsa = libspdm_rsa_new();
     if (rsa == NULL) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_N, m_rsa_n, sizeof(m_rsa_n));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_E, m_rsa_e, sizeof(m_rsa_e));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, m_libspdm_rsa_e, sizeof(m_libspdm_rsa_e));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
-    status = rsa_set_key(rsa, RSA_KEY_D, m_rsa_d, sizeof(m_rsa_d));
+    status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_D, m_libspdm_rsa_d, sizeof(m_libspdm_rsa_d));
     if (!status) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     sig_size = 0;
-    status = rsa_pss_sign(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                          NULL, &sig_size);
+    status = libspdm_rsa_pss_sign(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
+                                  NULL, &sig_size);
     if (status || sig_size == 0) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
     signature = allocate_pool(sig_size);
     if (signature == NULL) {
-        my_print("[Fail]");
-        rsa_free(rsa);
+        libspdm_my_print("[Fail]");
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
-    status = rsa_pss_sign(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                          signature, &sig_size);
+    status = libspdm_rsa_pss_sign(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
+                                  signature, &sig_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(signature);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -533,14 +533,14 @@ return_status validate_crypt_rsa(void)
     /* Verify RSA PSS-encoded signature*/
 
 
-    my_print("PSS signature Verification ... ");
+    libspdm_my_print("PSS signature Verification ... ");
 
-    status = rsa_pss_verify(rsa, CRYPTO_NID_SHA256, hash_value, hash_size,
-                            signature, sig_size);
+    status = libspdm_rsa_pss_verify(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
+                                    signature, sig_size);
     if (!status) {
-        my_print("[Fail]");
+        libspdm_my_print("[Fail]");
         free_pool(signature);
-        rsa_free(rsa);
+        libspdm_rsa_free(rsa);
         return RETURN_ABORTED;
     }
 
@@ -548,10 +548,10 @@ return_status validate_crypt_rsa(void)
 
     /* Release Resources*/
 
-    rsa_free(rsa);
-    my_print("Release RSA context ... [Pass]");
+    libspdm_rsa_free(rsa);
+    libspdm_my_print("Release RSA context ... [Pass]");
 
-    my_print("\n");
+    libspdm_my_print("\n");
 
     return RETURN_SUCCESS;
 }

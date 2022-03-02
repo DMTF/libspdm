@@ -64,9 +64,10 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                                            &data1, &data_size1,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo,
+                                                    &data1, &data_size1,
+                                                    NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
@@ -76,8 +77,8 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
@@ -134,9 +135,10 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                                            &data1, &data_size1,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo,
+                                                    &data1, &data_size1,
+                                                    NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
@@ -146,8 +148,8 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     spdm_context->local_context.mut_auth_requested = 0;
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;

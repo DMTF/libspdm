@@ -21,10 +21,10 @@
  * @param nid cipher NID
  *
  * @return  Pointer to the Montgomery-Curve Context that has been initialized.
- *         If the allocations fails, ecx_new_by_nid() returns NULL.
+ *         If the allocations fails, libspdm_ecx_new_by_nid() returns NULL.
  *
  **/
-void *ecx_new_by_nid(uintn nid)
+void *libspdm_ecx_new_by_nid(uintn nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -32,10 +32,10 @@ void *ecx_new_by_nid(uintn nid)
     int32_t openssl_pkey_type;
 
     switch (nid) {
-    case CRYPTO_NID_CURVE_X25519:
+    case LIBSPDM_CRYPTO_NID_CURVE_X25519:
         openssl_pkey_type = NID_X25519;
         break;
-    case CRYPTO_NID_CURVE_X448:
+    case LIBSPDM_CRYPTO_NID_CURVE_X448:
         openssl_pkey_type = NID_X448;
         break;
     default:
@@ -68,7 +68,7 @@ void *ecx_new_by_nid(uintn nid)
  * @param[in]  ecx_context  Pointer to the Ecx context to be released.
  *
  **/
-void ecx_free(const void *ecx_context)
+void libspdm_ecx_free(const void *ecx_context)
 {
     EVP_PKEY_free((EVP_PKEY *)ecx_context);
 }
@@ -99,8 +99,8 @@ void ecx_free(const void *ecx_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecx_generate_key(void *ecx_context, uint8_t *public,
-                      uintn *public_size)
+bool libspdm_ecx_generate_key(void *ecx_context, uint8_t *public,
+                              uintn *public_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -162,9 +162,9 @@ bool ecx_generate_key(void *ecx_context, uint8_t *public,
  * @retval false  key_size is not large enough.
  *
  **/
-bool ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
-                     uintn peer_public_size, uint8_t *key,
-                     uintn *key_size)
+bool libspdm_ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
+                             uintn peer_public_size, uint8_t *key,
+                             uintn *key_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;

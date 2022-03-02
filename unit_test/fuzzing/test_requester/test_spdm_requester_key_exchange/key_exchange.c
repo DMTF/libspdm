@@ -163,9 +163,10 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                                                          &opaque_key_exchange_rsp_size,
                                                          ptr);
         ptr += opaque_key_exchange_rsp_size;
-        read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                                                &data, &data_size,
-                                                NULL, NULL);
+        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                        m_libspdm_use_asym_algo,
+                                                        &data, &data_size,
+                                                        NULL, NULL);
         copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                  sizeof(m_libspdm_local_buffer) -
                  (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
@@ -259,9 +260,10 @@ void libspdm_test_requester_key_exchange_case1(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -324,9 +326,10 @@ void libspdm_test_requester_key_exchange_case2(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -396,9 +399,10 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            &hash, &hash_size);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;

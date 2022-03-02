@@ -25,7 +25,7 @@
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *sm2_dsa_new_by_nid(uintn nid)
+void *libspdm_sm2_dsa_new_by_nid(uintn nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY_CTX *key_ctx;
@@ -91,7 +91,7 @@ void *sm2_dsa_new_by_nid(uintn nid)
  * @param[in]  sm2_context  Pointer to the sm2 context to be released.
  *
  **/
-void sm2_dsa_free(void *sm2_context)
+void libspdm_sm2_dsa_free(void *sm2_context)
 {
     EVP_PKEY_free((EVP_PKEY *)sm2_context);
 }
@@ -109,8 +109,8 @@ void sm2_dsa_free(void *sm2_context)
  * @retval  false  Invalid sm2 public key component.
  *
  **/
-bool sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
-                         uintn public_key_size)
+bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
+                                 uintn public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -201,8 +201,8 @@ done:
  * @retval  false  Invalid sm2 key component.
  *
  **/
-bool sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
-                         uintn *public_key_size)
+bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
+                                 uintn *public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -303,7 +303,7 @@ done:
  * @retval  false  sm2 key components are not valid.
  *
  **/
-bool sm2_dsa_check_key(const void *sm2_context)
+bool libspdm_sm2_dsa_check_key(const void *sm2_context)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -356,8 +356,8 @@ bool sm2_dsa_check_key(const void *sm2_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
-                          uintn *public_size)
+bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
+                                  uintn *public_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -460,7 +460,7 @@ done:
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *sm2_key_exchange_new_by_nid(uintn nid)
+void *libspdm_sm2_key_exchange_new_by_nid(uintn nid)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return NULL;
@@ -472,7 +472,7 @@ void *sm2_key_exchange_new_by_nid(uintn nid)
  * @param[in]  sm2_context  Pointer to the sm2 context to be released.
  *
  **/
-void sm2_key_exchange_free(void *sm2_context)
+void libspdm_sm2_key_exchange_free(void *sm2_context)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
 }
@@ -493,10 +493,10 @@ void sm2_key_exchange_free(void *sm2_context)
  * @retval true   sm2 context is initialized.
  * @retval false  sm2 context is not initialized.
  **/
-bool sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
-                           const uint8_t *id_a, uintn id_a_size,
-                           const uint8_t *id_b, uintn id_b_size,
-                           bool is_initiator)
+bool libspdm_sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
+                                   const uint8_t *id_a, uintn id_a_size,
+                                   const uint8_t *id_b, uintn id_b_size,
+                                   bool is_initiator)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -529,8 +529,8 @@ bool sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
  * @retval false  public_size is not large enough.
  *
  **/
-bool sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
-                                   uintn *public_size)
+bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
+                                           uintn *public_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -563,10 +563,10 @@ bool sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
  * @retval false  sm2 exchanged key generation failed.
  *
  **/
-bool sm2_key_exchange_compute_key(void *sm2_context,
-                                  const uint8_t *peer_public,
-                                  uintn peer_public_size, uint8_t *key,
-                                  uintn *key_size)
+bool libspdm_sm2_key_exchange_compute_key(void *sm2_context,
+                                          const uint8_t *peer_public,
+                                          uintn peer_public_size, uint8_t *key,
+                                          uintn *key_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -722,10 +722,10 @@ static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
  * @retval  false  sig_size is too small.
  *
  **/
-bool sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
-                  const uint8_t *id_a, uintn id_a_size,
-                  const uint8_t *message, uintn size,
-                  uint8_t *signature, uintn *sig_size)
+bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
+                          const uint8_t *id_a, uintn id_a_size,
+                          const uint8_t *message, uintn size,
+                          uint8_t *signature, uintn *sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -759,7 +759,7 @@ bool sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
     zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
-    case CRYPTO_NID_SM3_256:
+    case LIBSPDM_CRYPTO_NID_SM3_256:
         break;
 
     default:
@@ -831,10 +831,10 @@ bool sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid sm2 context.
  *
  **/
-bool sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
-                    const uint8_t *id_a, uintn id_a_size,
-                    const uint8_t *message, uintn size,
-                    const uint8_t *signature, uintn sig_size)
+bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
+                            const uint8_t *id_a, uintn id_a_size,
+                            const uint8_t *message, uintn size,
+                            const uint8_t *signature, uintn sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -865,7 +865,7 @@ bool sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
     }
 
     switch (hash_nid) {
-    case CRYPTO_NID_SM3_256:
+    case LIBSPDM_CRYPTO_NID_SM3_256:
         break;
 
     default:

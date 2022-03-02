@@ -14,10 +14,10 @@
  * Allocates and initializes one HASH_CTX context for subsequent SHA256 use.
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
- *         If the allocations fails, sha256_new() returns NULL.
+ *         If the allocations fails, libspdm_sha256_hash_all() returns NULL.
  *
  **/
-void *sha256_new(void)
+void *libspdm_sha256_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -29,7 +29,7 @@ void *sha256_new(void)
  * @param[in]  sha256_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha256_free(void *sha256_ctx)
+void libspdm_sha256_free(void *sha256_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
@@ -46,7 +46,7 @@ void sha256_free(void *sha256_ctx)
  * @retval false  SHA-256 context initialization failed.
  *
  **/
-bool sha256_init(void *sha256_context)
+bool libspdm_sha256_init(void *sha256_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -65,8 +65,8 @@ bool sha256_init(void *sha256_context)
  * @retval false  SHA-256 context copy failed.
  *
  **/
-bool sha256_duplicate(const void *sha256_context,
-                      void *new_sha256_context)
+bool libspdm_sha256_duplicate(const void *sha256_context,
+                              void *new_sha256_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -77,8 +77,8 @@ bool sha256_duplicate(const void *sha256_context,
  *
  * This function performs SHA-256 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * SHA-256 context should be already correctly initialized by sha256_init(), and should not be finalized
- * by sha256_final(). Behavior with invalid context is undefined.
+ * SHA-256 context should be already correctly initialized by libspdm_sha256_init(), and should not be finalized
+ * by libspdm_sha256_final(). Behavior with invalid context is undefined.
  *
  * If sha256_context is NULL, then return false.
  *
@@ -90,8 +90,8 @@ bool sha256_duplicate(const void *sha256_context,
  * @retval false  SHA-256 data digest failed.
  *
  **/
-bool sha256_update(void *sha256_context, const void *data,
-                   uintn data_size)
+bool libspdm_sha256_update(void *sha256_context, const void *data,
+                           uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -103,8 +103,8 @@ bool sha256_update(void *sha256_context, const void *data,
  * This function completes SHA-256 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the SHA-256 context cannot
  * be used again.
- * SHA-256 context should be already correctly initialized by sha256_init(), and should not be
- * finalized by sha256_final(). Behavior with invalid SHA-256 context is undefined.
+ * SHA-256 context should be already correctly initialized by libspdm_sha256_init(), and should not be
+ * finalized by libspdm_sha256_final(). Behavior with invalid SHA-256 context is undefined.
  *
  * If sha256_context is NULL, then return false.
  * If hash_value is NULL, then return false.
@@ -117,7 +117,7 @@ bool sha256_update(void *sha256_context, const void *data,
  * @retval false  SHA-256 digest computation failed.
  *
  **/
-bool sha256_final(void *sha256_context, uint8_t *hash_value)
+bool libspdm_sha256_final(void *sha256_context, uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -141,8 +141,8 @@ bool sha256_final(void *sha256_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha256_hash_all(const void *data, uintn data_size,
-                     uint8_t *hash_value)
+bool libspdm_sha256_hash_all(const void *data, uintn data_size,
+                             uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -152,10 +152,10 @@ bool sha256_hash_all(const void *data, uintn data_size,
  * Allocates and initializes one HASH_CTX context for subsequent SHA384 use.
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
- *         If the allocations fails, sha384_new() returns NULL.
+ *         If the allocations fails, libspdm_sha384_new() returns NULL.
  *
  **/
-void *sha384_new(void)
+void *libspdm_sha384_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -167,7 +167,7 @@ void *sha384_new(void)
  * @param[in]  sha384_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha384_free(void *sha384_ctx)
+void libspdm_sha384_free(void *sha384_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
@@ -184,7 +184,7 @@ void sha384_free(void *sha384_ctx)
  * @retval false  SHA-384 context initialization failed.
  *
  **/
-bool sha384_init(void *sha384_context)
+bool libspdm_sha384_init(void *sha384_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -205,8 +205,8 @@ bool sha384_init(void *sha384_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha384_duplicate(const void *sha384_context,
-                      void *new_sha384_context)
+bool libspdm_sha384_duplicate(const void *sha384_context,
+                              void *new_sha384_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -217,8 +217,8 @@ bool sha384_duplicate(const void *sha384_context,
  *
  * This function performs SHA-384 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * SHA-384 context should be already correctly initialized by sha384_init(), and should not be finalized
- * by sha384_final(). Behavior with invalid context is undefined.
+ * SHA-384 context should be already correctly initialized by libspdm_sha384_init(), and should not be finalized
+ * by libspdm_sha384_final(). Behavior with invalid context is undefined.
  *
  * If sha384_context is NULL, then return false.
  *
@@ -230,8 +230,8 @@ bool sha384_duplicate(const void *sha384_context,
  * @retval false  SHA-384 data digest failed.
  *
  **/
-bool sha384_update(void *sha384_context, const void *data,
-                   uintn data_size)
+bool libspdm_sha384_update(void *sha384_context, const void *data,
+                           uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -243,8 +243,8 @@ bool sha384_update(void *sha384_context, const void *data,
  * This function completes SHA-384 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the SHA-384 context cannot
  * be used again.
- * SHA-384 context should be already correctly initialized by sha384_init(), and should not be
- * finalized by sha384_final(). Behavior with invalid SHA-384 context is undefined.
+ * SHA-384 context should be already correctly initialized by libspdm_sha384_init(), and should not be
+ * finalized by libspdm_sha384_final(). Behavior with invalid SHA-384 context is undefined.
  *
  * If sha384_context is NULL, then return false.
  * If hash_value is NULL, then return false.
@@ -257,7 +257,7 @@ bool sha384_update(void *sha384_context, const void *data,
  * @retval false  SHA-384 digest computation failed.
  *
  **/
-bool sha384_final(void *sha384_context, uint8_t *hash_value)
+bool libspdm_sha384_final(void *sha384_context, uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -281,8 +281,8 @@ bool sha384_final(void *sha384_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha384_hash_all(const void *data, uintn data_size,
-                     uint8_t *hash_value)
+bool libspdm_sha384_hash_all(const void *data, uintn data_size,
+                             uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -292,10 +292,10 @@ bool sha384_hash_all(const void *data, uintn data_size,
  * Allocates and initializes one HASH_CTX context for subsequent SHA512 use.
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
- *         If the allocations fails, sha512_new() returns NULL.
+ *         If the allocations fails, libspdm_sha512_new() returns NULL.
  *
  **/
-void *sha512_new(void)
+void *libspdm_sha512_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -307,7 +307,7 @@ void *sha512_new(void)
  * @param[in]  sha512_ctx  Pointer to the HASH_CTX context to be released.
  *
  **/
-void sha512_free(void *sha512_ctx)
+void libspdm_sha512_free(void *sha512_ctx)
 {
     LIBSPDM_ASSERT(false);
 }
@@ -324,7 +324,7 @@ void sha512_free(void *sha512_ctx)
  * @retval false  SHA-512 context initialization failed.
  *
  **/
-bool sha512_init(void *sha512_context)
+bool libspdm_sha512_init(void *sha512_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -345,8 +345,8 @@ bool sha512_init(void *sha512_context)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha512_duplicate(const void *sha512_context,
-                      void *new_sha512_context)
+bool libspdm_sha512_duplicate(const void *sha512_context,
+                              void *new_sha512_context)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -357,8 +357,8 @@ bool sha512_duplicate(const void *sha512_context,
  *
  * This function performs SHA-512 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * SHA-512 context should be already correctly initialized by sha512_init(), and should not be finalized
- * by sha512_final(). Behavior with invalid context is undefined.
+ * SHA-512 context should be already correctly initialized by libspdm_sha512_init(), and should not be finalized
+ * by libspdm_sha512_final(). Behavior with invalid context is undefined.
  *
  * If sha512_context is NULL, then return false.
  *
@@ -370,8 +370,8 @@ bool sha512_duplicate(const void *sha512_context,
  * @retval false  SHA-512 data digest failed.
  *
  **/
-bool sha512_update(void *sha512_context, const void *data,
-                   uintn data_size)
+bool libspdm_sha512_update(void *sha512_context, const void *data,
+                           uintn data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -383,8 +383,8 @@ bool sha512_update(void *sha512_context, const void *data,
  * This function completes SHA-512 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the SHA-512 context cannot
  * be used again.
- * SHA-512 context should be already correctly initialized by sha512_init(), and should not be
- * finalized by sha512_final(). Behavior with invalid SHA-512 context is undefined.
+ * SHA-512 context should be already correctly initialized by libspdm_sha512_init(), and should not be
+ * finalized by libspdm_sha512_final(). Behavior with invalid SHA-512 context is undefined.
  *
  * If sha512_context is NULL, then return false.
  * If hash_value is NULL, then return false.
@@ -397,7 +397,7 @@ bool sha512_update(void *sha512_context, const void *data,
  * @retval false  SHA-512 digest computation failed.
  *
  **/
-bool sha512_final(void *sha512_context, uint8_t *hash_value)
+bool libspdm_sha512_final(void *sha512_context, uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -421,8 +421,8 @@ bool sha512_final(void *sha512_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool sha512_hash_all(const void *data, uintn data_size,
-                     uint8_t *hash_value)
+bool libspdm_sha512_hash_all(const void *data, uintn data_size,
+                             uint8_t *hash_value)
 {
     LIBSPDM_ASSERT(false);
     return false;

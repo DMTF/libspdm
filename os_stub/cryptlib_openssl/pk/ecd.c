@@ -23,10 +23,10 @@
  * @param nid cipher NID
  *
  * @return  Pointer to the Edwards-Curve context that has been initialized.
- *         If the allocations fails, ecd_new_by_nid() returns NULL.
+ *         If the allocations fails, libspdm_ecd_new_by_nid() returns NULL.
  *
  **/
-void *ecd_new_by_nid(uintn nid)
+void *libspdm_ecd_new_by_nid(uintn nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -34,10 +34,10 @@ void *ecd_new_by_nid(uintn nid)
     int32_t openssl_pkey_type;
 
     switch (nid) {
-    case CRYPTO_NID_EDDSA_ED25519:
+    case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
         openssl_pkey_type = EVP_PKEY_ED25519;
         break;
-    case CRYPTO_NID_EDDSA_ED448:
+    case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
         openssl_pkey_type = EVP_PKEY_ED448;
         break;
     default:
@@ -70,7 +70,7 @@ void *ecd_new_by_nid(uintn nid)
  * @param[in]  ecd_context  Pointer to the Ed context to be released.
  *
  **/
-void ecd_free(void *ecd_context)
+void libspdm_ecd_free(void *ecd_context)
 {
     EVP_PKEY_free((EVP_PKEY *)ecd_context);
 }
@@ -89,8 +89,8 @@ void ecd_free(void *ecd_context)
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
-                     uintn public_key_size)
+bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
+                             uintn public_key_size)
 {
     /* TBD*/
     return false;
@@ -111,8 +111,8 @@ bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
-                     uintn *public_key_size)
+bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
+                             uintn *public_key_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -161,7 +161,7 @@ bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
  * @retval  false  Ed key components are not valid.
  *
  **/
-bool ecd_check_key(const void *ecd_context)
+bool libspdm_ecd_check_key(const void *ecd_context)
 {
     /* TBD*/
     return false;
@@ -187,8 +187,8 @@ bool ecd_check_key(const void *ecd_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
-                      uintn *public_key_size)
+bool libspdm_ecd_generate_key(void *ecd_context, uint8_t *public_key,
+                              uintn *public_key_size)
 {
     /* TBD*/
     return true;
@@ -227,10 +227,10 @@ bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
  * @retval  false  sig_size is too small.
  *
  **/
-bool eddsa_sign(const void *ecd_context, uintn hash_nid,
-                const uint8_t *context, uintn context_size,
-                const uint8_t *message, uintn size, uint8_t *signature,
-                uintn *sig_size)
+bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
+                        const uint8_t *context, uintn context_size,
+                        const uint8_t *message, uintn size, uint8_t *signature,
+                        uintn *sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
@@ -264,7 +264,7 @@ bool eddsa_sign(const void *ecd_context, uintn hash_nid,
     zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
-    case CRYPTO_NID_NULL:
+    case LIBSPDM_CRYPTO_NID_NULL:
         break;
 
     default:
@@ -317,10 +317,10 @@ bool eddsa_sign(const void *ecd_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-bool eddsa_verify(const void *ecd_context, uintn hash_nid,
-                  const uint8_t *context, uintn context_size,
-                  const uint8_t *message, uintn size,
-                  const uint8_t *signature, uintn sig_size)
+bool libspdm_eddsa_verify(const void *ecd_context, uintn hash_nid,
+                          const uint8_t *context, uintn context_size,
+                          const uint8_t *message, uintn size,
+                          const uint8_t *signature, uintn sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
@@ -351,7 +351,7 @@ bool eddsa_verify(const void *ecd_context, uintn hash_nid,
     }
 
     switch (hash_nid) {
-    case CRYPTO_NID_NULL:
+    case LIBSPDM_CRYPTO_NID_NULL:
         break;
 
     default:
