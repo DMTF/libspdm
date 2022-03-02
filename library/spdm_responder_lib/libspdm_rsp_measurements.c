@@ -52,10 +52,10 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
     ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
-        copy_mem(ptr,
-                 response_message_size - (ptr - (uint8_t*)response_message),
-                 spdm_context->local_context.opaque_measurement_rsp,
-                 spdm_context->local_context.opaque_measurement_rsp_size);
+        libspdm_copy_mem(ptr,
+                         response_message_size - (ptr - (uint8_t*)response_message),
+                         spdm_context->local_context.opaque_measurement_rsp,
+                         spdm_context->local_context.opaque_measurement_rsp_size);
         ptr += spdm_context->local_context.opaque_measurement_rsp_size;
     }
 
@@ -100,10 +100,10 @@ bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
     ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
-        copy_mem(ptr,
-                 response_message_size - (ptr - (uint8_t*)response_message),
-                 spdm_context->local_context.opaque_measurement_rsp,
-                 spdm_context->local_context.opaque_measurement_rsp_size);
+        libspdm_copy_mem(ptr,
+                         response_message_size - (ptr - (uint8_t*)response_message),
+                         spdm_context->local_context.opaque_measurement_rsp,
+                         spdm_context->local_context.opaque_measurement_rsp_size);
         ptr += spdm_context->local_context.opaque_measurement_rsp_size;
     }
 
@@ -276,7 +276,7 @@ return_status libspdm_get_response_measurements(void *context,
         spdm_response_size += measurements_no_sig_size;
     }
 
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
 
     measurements_index = spdm_request->header.param2;
     measurements_count = 0;

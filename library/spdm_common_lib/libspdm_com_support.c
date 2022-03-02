@@ -134,9 +134,9 @@ return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
     LIBSPDM_ASSERT(buffer_size <=
                    managed_buffer->max_buffer_size - managed_buffer->buffer_size);
 
-    copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
-             buffer_size,
-             buffer, buffer_size);
+    libspdm_copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
+                     buffer_size,
+                     buffer, buffer_size);
     managed_buffer->buffer_size += buffer_size;
     return RETURN_SUCCESS;
 }
@@ -162,7 +162,7 @@ void libspdm_reset_managed_buffer(void *m_buffer)
                    (managed_buffer->max_buffer_size ==
                     LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     managed_buffer->buffer_size = 0;
-    zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
+    libspdm_zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
 }
 
 /**

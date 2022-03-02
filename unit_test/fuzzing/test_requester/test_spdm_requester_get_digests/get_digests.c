@@ -30,8 +30,8 @@ return_status libspdm_device_receive_message(void *spdm_context,
     libspdm_test_context_t *spdm_test_context;
 
     spdm_test_context = libspdm_get_test_context();
-    copy_mem(response, *response_size, spdm_test_context->test_buffer,
-             spdm_test_context->test_buffer_size);
+    libspdm_copy_mem(response, *response_size, spdm_test_context->test_buffer,
+                     spdm_test_context->test_buffer_size);
     *response_size = spdm_test_context->test_buffer_size;
     return RETURN_SUCCESS;
 }
@@ -57,10 +57,10 @@ void libspdm_test_requester_get_diges(void **State)
         m_local_certificate_chain;
     spdm_context->local_context.peer_cert_chain_provision_size =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-            (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
-    zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     if (RETURN_NO_RESPONSE != status)
     {

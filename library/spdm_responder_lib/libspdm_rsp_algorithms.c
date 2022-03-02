@@ -354,7 +354,7 @@ return_status libspdm_get_response_algorithms(void *context,
 
     LIBSPDM_ASSERT(*response_size >= sizeof(libspdm_algorithms_response_mine_t));
     *response_size = sizeof(libspdm_algorithms_response_mine_t);
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

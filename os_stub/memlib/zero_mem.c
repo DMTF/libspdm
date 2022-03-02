@@ -5,7 +5,7 @@
  **/
 
 /** @file
- * zero_mem() implementation.
+ * libspdm_zero_mem() implementation.
  **/
 
 #include "base.h"
@@ -24,7 +24,7 @@
  * @return buffer.
  *
  **/
-void *zero_mem(void *buffer, uintn length)
+void *libspdm_zero_mem(void *buffer, uintn length)
 {
     volatile uint8_t *pointer;
 

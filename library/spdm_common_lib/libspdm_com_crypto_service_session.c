@@ -87,8 +87,8 @@ bool libspdm_calculate_th_for_exchange(
 
     th_data_buffer_capacity = *th_data_buffer_size;
     *th_data_buffer_size = libspdm_get_managed_buffer_size(&th_curr);
-    copy_mem(th_data_buffer, th_data_buffer_capacity,
-             libspdm_get_managed_buffer(&th_curr), *th_data_buffer_size);
+    libspdm_copy_mem(th_data_buffer, th_data_buffer_capacity,
+                     libspdm_get_managed_buffer(&th_curr), *th_data_buffer_size);
 
     return true;
 }
@@ -332,8 +332,8 @@ bool libspdm_calculate_th_for_finish(void *context,
 
     th_data_buffer_capacity = *th_data_buffer_size;
     *th_data_buffer_size = libspdm_get_managed_buffer_size(&th_curr);
-    copy_mem(th_data_buffer, th_data_buffer_capacity,
-             libspdm_get_managed_buffer(&th_curr), *th_data_buffer_size);
+    libspdm_copy_mem(th_data_buffer, th_data_buffer_capacity,
+                     libspdm_get_managed_buffer(&th_curr), *th_data_buffer_size);
 
     return true;
 }
@@ -653,7 +653,7 @@ libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
     libspdm_internal_dump_data(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    copy_mem(hmac, hash_size, hmac_data, hash_size);
+    libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -868,7 +868,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+    if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! verify_key_exchange_hmac - FAIL !!!\n"));
         return false;
@@ -1048,7 +1048,7 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
+    libspdm_copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
 
     return true;
 }
@@ -1294,7 +1294,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
+    if (libspdm_const_compare_mem(hmac, hmac_data, hash_size) != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
         return false;
     }
@@ -1376,7 +1376,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    copy_mem(hmac, hash_size, hmac_data, hash_size);
+    libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -1456,7 +1456,7 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+    if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_rsp_hmac - FAIL !!!\n"));
         return false;
     }
@@ -1517,7 +1517,7 @@ libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    copy_mem(hmac, hash_size, hmac_data, hash_size);
+    libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
 
     return true;
 }
@@ -1576,7 +1576,7 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+    if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
         return false;
@@ -1638,7 +1638,7 @@ libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
+    libspdm_copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
 
     return true;
 }
@@ -1696,7 +1696,7 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
     libspdm_internal_dump_data(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (const_compare_mem(hmac, hmac_data, hash_size) != 0) {
+    if (libspdm_const_compare_mem(hmac, hmac_data, hash_size) != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
         return false;

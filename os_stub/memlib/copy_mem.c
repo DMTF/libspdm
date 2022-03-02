@@ -5,7 +5,7 @@
  **/
 
 /** @file
- * copy_mem() implementation.
+ * libspdm_copy_mem() implementation.
  **/
 
 #include "base.h"
@@ -48,8 +48,8 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int copy_mem(void *restrict dst_buf, uintn dst_len,
-             const void *restrict src_buf, uintn src_len)
+int libspdm_copy_mem(void *restrict dst_buf, uintn dst_len,
+                     const void *restrict src_buf, uintn src_len)
 {
     volatile uint8_t* dst;
     const volatile uint8_t* src;
@@ -66,14 +66,14 @@ int copy_mem(void *restrict dst_buf, uintn dst_len,
 
     /* Gaurd against invalid source. Zero "dst" in this case. */
     if (src == NULL) {
-        zero_mem(dst_buf, dst_len);
+        libspdm_zero_mem(dst_buf, dst_len);
         LIBSPDM_ASSERT(0);
         return -1;
     }
 
     /* Guard against overlap case. Zero "dst" in these cases. */
     if ((src < dst && src + src_len > dst) || (dst < src && dst + src_len > src)) {
-        zero_mem(dst_buf, dst_len);
+        libspdm_zero_mem(dst_buf, dst_len);
         LIBSPDM_ASSERT(0);
         return -1;
     }
@@ -82,7 +82,7 @@ int copy_mem(void *restrict dst_buf, uintn dst_len,
     if (src_len > dst_len ||
         src_len > (SIZE_MAX >> 1)) {
 
-        zero_mem(dst_buf, dst_len);
+        libspdm_zero_mem(dst_buf, dst_len);
         LIBSPDM_ASSERT(0);
         return -1;
     }

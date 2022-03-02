@@ -157,8 +157,8 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
                 return RETURN_DEVICE_ERROR;
             }
         } else {
-            copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
-                     requester_nonce_in, SPDM_NONCE_SIZE);
+            libspdm_copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
+                             requester_nonce_in, SPDM_NONCE_SIZE);
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
         libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
@@ -166,14 +166,14 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         spdm_request.slot_id_param = slot_id_param;
 
         if (requester_nonce != NULL) {
-            copy_mem(requester_nonce, SPDM_NONCE_SIZE,
-                     spdm_request.nonce, SPDM_NONCE_SIZE);
+            libspdm_copy_mem(requester_nonce, SPDM_NONCE_SIZE,
+                             spdm_request.nonce, SPDM_NONCE_SIZE);
         }
     } else {
         spdm_request_size = sizeof(spdm_request.header);
 
         if (requester_nonce != NULL) {
-            zero_mem (requester_nonce, SPDM_NONCE_SIZE);
+            libspdm_zero_mem (requester_nonce, SPDM_NONCE_SIZE);
         }
     }
     status = libspdm_send_spdm_request(spdm_context, session_id,
@@ -183,7 +183,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
@@ -280,7 +280,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
-            copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
+            libspdm_copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
         opaque_length = *(uint16_t *)ptr;
@@ -349,7 +349,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
-            copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
+            libspdm_copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
         opaque_length = *(uint16_t *)ptr;
@@ -465,10 +465,10 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         }
 
         *measurement_record_length = measurement_record_data_length;
-        copy_mem(measurement_record,
-                 measurement_record_data_length,
-                 measurement_record_data,
-                 measurement_record_data_length);
+        libspdm_copy_mem(measurement_record,
+                         measurement_record_data_length,
+                         measurement_record_data,
+                         measurement_record_data_length);
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;

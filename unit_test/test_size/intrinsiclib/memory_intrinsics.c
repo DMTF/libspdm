@@ -28,7 +28,7 @@ void *memset(void *dest, int ch, size_t count)
 {
 
     /* NOTE: Here we use one base implementation for memset, instead of the direct
-     *       optimized set_mem() wrapper. Because the intrinsiclib has to be built
+     *       optimized libspdm_set_mem() wrapper. Because the intrinsiclib has to be built
      *       without whole program optimization option, and there will be some
      *       potential register usage errors when calling other optimized codes.*/
 
@@ -50,14 +50,14 @@ void *memset(void *dest, int ch, size_t count)
 
 void *memmove(void *dest, const void *src, size_t count)
 {
-    copy_mem(dest, count, src, count);
+    libspdm_copy_mem(dest, count, src, count);
     return dest;
 }
 
 /* Compare bytes in two buffers. */
 int memcmp(const void *buf1, const void *buf2, size_t count)
 {
-    return (int)const_compare_mem(buf1, buf2, count);
+    return (int)libspdm_const_compare_mem(buf1, buf2, count);
 }
 
 intn ascii_strcmp(const char *first_string, const char *second_string)

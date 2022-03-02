@@ -31,9 +31,9 @@ static void libspdm_secured_message_set_request_finished_key(void *spdm_secured_
 
     secured_message_context = spdm_secured_message_context;
     LIBSPDM_ASSERT(key_size == secured_message_context->hash_size);
-    copy_mem(secured_message_context->handshake_secret.request_finished_key,
-             sizeof(secured_message_context->handshake_secret.request_finished_key),
-             key,  secured_message_context->hash_size);
+    libspdm_copy_mem(secured_message_context->handshake_secret.request_finished_key,
+                     sizeof(secured_message_context->handshake_secret.request_finished_key),
+                     key,  secured_message_context->hash_size);
     secured_message_context->finished_key_ready = true;
 }
 
@@ -75,9 +75,9 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     spdm_context->local_context.slot_count = 1;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_local_psk_hint, 32);
+    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
@@ -88,7 +88,7 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
                                                      m_dummy_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
@@ -146,9 +146,9 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     spdm_context->local_context.slot_count = 1;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    zero_mem(m_local_psk_hint, 32);
-    copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    libspdm_zero_mem(m_local_psk_hint, 32);
+    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
@@ -159,7 +159,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
                                                      m_dummy_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
@@ -172,7 +172,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
 
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_spdm_psk_finish_request,
                                   sizeof(spdm_psk_finish_request_t));
-    set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
     libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                      libspdm_get_managed_buffer_size(&th_curr), request_finished_key, hash_size,
                      ptr);

@@ -187,7 +187,7 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
         return false;
     }
     *public_key_size = half_size * 2;
-    zero_mem(public_key, *public_key_size);
+    libspdm_zero_mem(public_key, *public_key_size);
 
     x_size = mbedtls_mpi_size(&ctx->Q.X);
     y_size = mbedtls_mpi_size(&ctx->Q.Y);
@@ -297,7 +297,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         return false;
     }
     *public_size = half_size * 2;
-    zero_mem(public, *public_size);
+    libspdm_zero_mem(public, *public_size);
 
     x_size = mbedtls_mpi_size(&ctx->Q.X);
     y_size = mbedtls_mpi_size(&ctx->Q.Y);
@@ -483,7 +483,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
         return false;
     }
     *sig_size = half_size * 2;
-    zero_mem(signature, *sig_size);
+    libspdm_zero_mem(signature, *sig_size);
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SHA256:

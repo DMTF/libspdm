@@ -43,11 +43,11 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
     portion_length = FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     spdm_test_context = libspdm_get_test_context();
 
-    copy_mem(response, *response_size, &spdm_transport_header, 1);
-    copy_mem((uint8_t *)response + 1, *response_size - 1,
-             (uint8_t *)spdm_test_context->test_buffer + LIBSPDM_TEST_MESSAGE_TYPE_SPDM +
-             FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
-             FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    libspdm_copy_mem(response, *response_size, &spdm_transport_header, 1);
+    libspdm_copy_mem((uint8_t *)response + 1, *response_size - 1,
+                     (uint8_t *)spdm_test_context->test_buffer + LIBSPDM_TEST_MESSAGE_TYPE_SPDM +
+                     FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                     FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     *response_size = portion_length + 1;
     calling_index++;
 
@@ -92,7 +92,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
 
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
@@ -141,7 +141,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
 
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
@@ -190,7 +190,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
     if (RETURN_NO_RESPONSE != status)

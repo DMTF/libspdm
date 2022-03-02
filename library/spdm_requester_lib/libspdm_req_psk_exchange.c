@@ -159,9 +159,9 @@ return_status libspdm_try_send_receive_psk_exchange(
     spdm_request.req_session_id = req_session_id;
 
     ptr = spdm_request.psk_hint;
-    copy_mem(ptr, sizeof(spdm_request.psk_hint),
-             spdm_context->local_context.psk_hint,
-             spdm_context->local_context.psk_hint_size);
+    libspdm_copy_mem(ptr, sizeof(spdm_request.psk_hint),
+                     spdm_context->local_context.psk_hint,
+                     spdm_context->local_context.psk_hint_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request.psk_hint_length));
     libspdm_internal_dump_data(ptr, spdm_request.psk_hint_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -172,8 +172,8 @@ return_status libspdm_try_send_receive_psk_exchange(
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        copy_mem(ptr, sizeof(spdm_request.context),
-                 requester_context_in, spdm_request.context_length);
+        libspdm_copy_mem(ptr, sizeof(spdm_request.context),
+                         requester_context_in, spdm_request.context_length);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientContextData (0x%x) - ",
                    spdm_request.context_length));
@@ -183,8 +183,8 @@ return_status libspdm_try_send_receive_psk_exchange(
         if (*requester_context_size > spdm_request.context_length) {
             *requester_context_size = spdm_request.context_length;
         }
-        copy_mem(requester_context, *requester_context_size,
-                 ptr, *requester_context_size);
+        libspdm_copy_mem(requester_context, *requester_context_size,
+                         ptr, *requester_context_size);
     }
     ptr += spdm_request.context_length;
 
@@ -201,7 +201,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
@@ -300,8 +300,8 @@ return_status libspdm_try_send_receive_psk_exchange(
         if (*responder_context_size > spdm_response.context_length) {
             *responder_context_size = spdm_response.context_length;
         }
-        copy_mem(responder_context, *responder_context_size,
-                 ptr, *responder_context_size);
+        libspdm_copy_mem(responder_context, *responder_context_size,
+                         ptr, *responder_context_size);
     }
 
     ptr += spdm_response.context_length;
@@ -359,8 +359,8 @@ return_status libspdm_try_send_receive_psk_exchange(
     }
 
     if (measurement_hash != NULL) {
-        copy_mem(measurement_hash, measurement_summary_hash_size,
-                 measurement_summary_hash, measurement_summary_hash_size);
+        libspdm_copy_mem(measurement_hash, measurement_summary_hash_size,
+                         measurement_summary_hash, measurement_summary_hash_size);
     }
 
     session_info->session_policy = session_policy;

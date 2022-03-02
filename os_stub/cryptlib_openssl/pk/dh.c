@@ -243,7 +243,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
         LIBSPDM_ASSERT((uintn)size <= final_pub_key_size);
 
         if (public_key != NULL) {
-            zero_mem(public_key, *public_key_size);
+            libspdm_zero_mem(public_key, *public_key_size);
             BN_bn2bin(dh_pub_key,
                       &public_key[0 + final_pub_key_size - size]);
         }

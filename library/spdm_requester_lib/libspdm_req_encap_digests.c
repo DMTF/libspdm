@@ -74,7 +74,7 @@ return_status libspdm_get_encap_response_digest(void *context,
                    hash_size * spdm_context->local_context.slot_count);
     *response_size = sizeof(spdm_digest_response_t) +
                      hash_size * spdm_context->local_context.slot_count;
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

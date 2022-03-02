@@ -114,7 +114,7 @@ return_status libspdm_get_response_psk_finish(void *context,
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_psk_finish_response_t));
     *response_size = sizeof(spdm_psk_finish_response_t);
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

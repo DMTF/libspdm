@@ -62,7 +62,7 @@ return_status libspdm_process_message(void *context, uint32_t **session_id,
     } else {
         session_id_ptr = NULL;
     }
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
 
     status = libspdm_build_response(spdm_context, session_id_ptr, is_app_message,
                                     response_size, response);

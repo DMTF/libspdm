@@ -231,7 +231,7 @@ return_status libspdm_get_response_finish(void *context, uintn request_size,
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_finish_response_t) + hmac_size);
     *response_size = sizeof(spdm_finish_response_t) + hmac_size;
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

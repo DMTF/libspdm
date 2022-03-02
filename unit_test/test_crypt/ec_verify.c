@@ -108,7 +108,7 @@ return_status libspdm_validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(key1, key2, key1_length) != 0) {
+    if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -195,7 +195,7 @@ return_status libspdm_validate_crypt_ec(void)
         return RETURN_ABORTED;
     }
 
-    if (const_compare_mem(key1, key2, key1_length) != 0) {
+    if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);

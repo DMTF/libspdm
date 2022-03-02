@@ -94,7 +94,7 @@ return_status libspdm_get_encap_response_challenge_auth(
     LIBSPDM_ASSERT(*response_size >= total_size);
     response_capacity = *response_size;
     *response_size = total_size;
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
@@ -128,10 +128,10 @@ return_status libspdm_get_encap_response_challenge_auth(
                        .opaque_challenge_auth_rsp_size;
     ptr += sizeof(uint16_t);
     if (spdm_context->local_context.opaque_challenge_auth_rsp != NULL) {
-        copy_mem(ptr,
-                 response_capacity - (ptr - (uint8_t*)response),
-                 spdm_context->local_context.opaque_challenge_auth_rsp,
-                 spdm_context->local_context.opaque_challenge_auth_rsp_size);
+        libspdm_copy_mem(ptr,
+                         response_capacity - (ptr - (uint8_t*)response),
+                         spdm_context->local_context.opaque_challenge_auth_rsp,
+                         spdm_context->local_context.opaque_challenge_auth_rsp_size);
         ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
     }
 

@@ -77,10 +77,10 @@ return_status do_authentication_via_spdm(void *spdm_context)
     uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     uint8_t auth_slot_mask;
 
-    zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     cert_chain_size = sizeof(cert_chain);
-    zero_mem(cert_chain, sizeof(cert_chain));
-    zero_mem(measurement_hash, sizeof(measurement_hash));
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = spdm_authentication(
         spdm_context, &slot_mask, &total_digest_buffer, 0,
         &cert_chain_size, cert_chain,

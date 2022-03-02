@@ -126,7 +126,7 @@ bool libspdm_ecx_generate_key(void *ecx_context, uint8_t *public,
         return false;
     }
     *public_size = final_pub_key_size;
-    zero_mem(public, *public_size);
+    libspdm_zero_mem(public, *public_size);
     result = EVP_PKEY_get_raw_public_key(pkey, public, public_size);
     if (result == 0) {
         return false;
@@ -195,7 +195,7 @@ bool libspdm_ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
         return false;
     }
     *key_size = final_key_size;
-    zero_mem(key, *key_size);
+    libspdm_zero_mem(key, *key_size);
 
     /* Derive key*/
     pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);

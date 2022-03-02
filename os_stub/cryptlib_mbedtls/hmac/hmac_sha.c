@@ -67,7 +67,7 @@ bool hmac_md_set_key(const mbedtls_md_type_t md_type, void *hmac_md_ctx,
         return false;
     }
 
-    zero_mem(hmac_md_ctx, sizeof(mbedtls_md_context_t));
+    libspdm_zero_mem(hmac_md_ctx, sizeof(mbedtls_md_context_t));
     mbedtls_md_init(hmac_md_ctx);
 
     md_info = mbedtls_md_info_from_type(md_type);
@@ -133,7 +133,7 @@ bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
         return false;
     }
 
-    zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
+    libspdm_zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
     mbedtls_md_init(new_hmac_md_ctx);
 
     md_info = mbedtls_md_info_from_type(md_type);
@@ -149,10 +149,10 @@ bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
     }
     /*Temporary solution to the problem of context clone.
      * There are not any standard function in mbedtls to clone a complete hmac context.*/
-    copy_mem(((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
-             hmac_md_get_blocksize(md_type) * 2,
-             ((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
-             hmac_md_get_blocksize(md_type) * 2);
+    libspdm_copy_mem(((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
+                     hmac_md_get_blocksize(md_type) * 2,
+                     ((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
+                     hmac_md_get_blocksize(md_type) * 2);
     return true;
 }
 

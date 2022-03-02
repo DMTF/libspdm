@@ -76,8 +76,8 @@ return_status libspdm_generate_encap_extended_error_response(
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
-    copy_mem(spdm_response + 1, *response_size - (sizeof(spdm_error_response_t)),
-             extended_error_data, extended_error_data_size);
+    libspdm_copy_mem(spdm_response + 1, *response_size - (sizeof(spdm_error_response_t)),
+                     extended_error_data, extended_error_data_size);
     *response_size =
         sizeof(spdm_error_response_t) + extended_error_data_size;
     return RETURN_SUCCESS;

@@ -46,7 +46,7 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     }
 
     *response_size = expected_response_size;
-    zero_mem(response, expected_response_size);
+    libspdm_zero_mem(response, expected_response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            response_size, response);
     if (RETURN_ERROR(status)) {

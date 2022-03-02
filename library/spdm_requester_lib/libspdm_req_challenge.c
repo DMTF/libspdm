@@ -101,15 +101,15 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
-                 requester_nonce_in, SPDM_NONCE_SIZE);
+        libspdm_copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
+                         requester_nonce_in, SPDM_NONCE_SIZE);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
     libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
-        copy_mem(requester_nonce, SPDM_NONCE_SIZE,
-                 spdm_request.nonce, SPDM_NONCE_SIZE);
+        libspdm_copy_mem(requester_nonce, SPDM_NONCE_SIZE,
+                         spdm_request.nonce, SPDM_NONCE_SIZE);
     }
 
     status = libspdm_send_spdm_request(spdm_context, NULL,
@@ -119,7 +119,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
@@ -212,7 +212,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
     if (responder_nonce != NULL) {
-        copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
+        libspdm_copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
     }
 
     measurement_summary_hash = ptr;
@@ -273,8 +273,8 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (measurement_hash != NULL) {
-        copy_mem(measurement_hash, measurement_summary_hash_size,
-                 measurement_summary_hash, measurement_summary_hash_size);
+        libspdm_copy_mem(measurement_hash, measurement_summary_hash_size,
+                         measurement_summary_hash, measurement_summary_hash_size);
     }
     if (slot_mask != NULL) {
         *slot_mask = spdm_response.header.param2;

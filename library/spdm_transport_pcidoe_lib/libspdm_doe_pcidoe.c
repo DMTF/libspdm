@@ -27,8 +27,8 @@
 uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
                                             uint8_t *sequence_number_buffer)
 {
-    copy_mem(sequence_number_buffer, PCI_DOE_SEQUENCE_NUMBER_COUNT,
-             &sequence_number, PCI_DOE_SEQUENCE_NUMBER_COUNT);
+    libspdm_copy_mem(sequence_number_buffer, PCI_DOE_SEQUENCE_NUMBER_COUNT,
+                     &sequence_number, PCI_DOE_SEQUENCE_NUMBER_COUNT);
     return PCI_DOE_SEQUENCE_NUMBER_COUNT;
 }
 
@@ -105,13 +105,13 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
             (uint32_t)*transport_message_size / sizeof(uint32_t);
     }
 
-    copy_mem((uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t),
-             *transport_message_size - sizeof(pci_doe_data_object_header_t),
-             message, message_size);
-    zero_mem((uint8_t *)transport_message +
-             sizeof(pci_doe_data_object_header_t) + message_size,
-             *transport_message_size -
-             sizeof(pci_doe_data_object_header_t) - message_size);
+    libspdm_copy_mem((uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t),
+                     *transport_message_size - sizeof(pci_doe_data_object_header_t),
+                     message, message_size);
+    libspdm_zero_mem((uint8_t *)transport_message +
+                     sizeof(pci_doe_data_object_header_t) + message_size,
+                     *transport_message_size -
+                     sizeof(pci_doe_data_object_header_t) - message_size);
     return RETURN_SUCCESS;
 }
 
@@ -199,10 +199,10 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
         if (*message_size + alignment - 1 >=
             transport_message_size -
             sizeof(pci_doe_data_object_header_t)) {
-            copy_mem(message, *message_size,
-                     (uint8_t *)transport_message +
-                     sizeof(pci_doe_data_object_header_t),
-                     *message_size);
+            libspdm_copy_mem(message, *message_size,
+                             (uint8_t *)transport_message +
+                             sizeof(pci_doe_data_object_header_t),
+                             *message_size);
             return RETURN_SUCCESS;
         }
         LIBSPDM_ASSERT(*message_size >=
@@ -214,9 +214,9 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
     }
     *message_size =
         transport_message_size - sizeof(pci_doe_data_object_header_t);
-    copy_mem(message, *message_size,
-             (uint8_t *)transport_message +
-             sizeof(pci_doe_data_object_header_t),
-             *message_size);
+    libspdm_copy_mem(message, *message_size,
+                     (uint8_t *)transport_message +
+                     sizeof(pci_doe_data_object_header_t),
+                     *message_size);
     return RETURN_SUCCESS;
 }

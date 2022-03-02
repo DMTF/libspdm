@@ -73,7 +73,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x2: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;
@@ -92,7 +92,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x3: {
         spdm_version_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;
@@ -109,7 +109,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x4: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
@@ -125,7 +125,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x5: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
@@ -143,7 +143,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         if (sub_index1 == 0) {
             spdm_error_response_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code = SPDM_ERROR;
@@ -157,7 +157,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         } else if (sub_index1 == 1) {
             libspdm_version_response_mine_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code =
@@ -180,7 +180,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x7: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
@@ -196,7 +196,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0x8: {
         spdm_error_response_data_response_not_ready_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 =
@@ -220,7 +220,7 @@ return_status libspdm_requester_get_version_test_receive_message(
             spdm_error_response_data_response_not_ready_t
                 spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code = SPDM_ERROR;
@@ -240,7 +240,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         } else if (sub_index2 == 1) {
             libspdm_version_response_mine_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code =
@@ -263,7 +263,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0xA: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;
@@ -283,7 +283,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0xB: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;
@@ -302,7 +302,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0xC: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;
@@ -321,7 +321,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0xD: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_GET_VERSION;
         spdm_response.header.param1 = 0;
@@ -344,7 +344,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         spdm_error_response_t spdm_response;
 
         if(error_code <= 0xff) {
-            zero_mem (&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code = SPDM_ERROR;
             spdm_response.header.param1 = (uint8_t) error_code;
@@ -370,7 +370,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     case 0xF: {
         libspdm_version_response_mine_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_VERSION;
         spdm_response.header.param1 = 0;

@@ -117,16 +117,16 @@ return_status libspdm_try_send_receive_key_exchange(
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        copy_mem(spdm_request.random_data, sizeof(spdm_request.random_data),
-                 requester_random_in, SPDM_RANDOM_DATA_SIZE);
+        libspdm_copy_mem(spdm_request.random_data, sizeof(spdm_request.random_data),
+                         requester_random_in, SPDM_RANDOM_DATA_SIZE);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientRandomData (0x%x) - ",
                    SPDM_RANDOM_DATA_SIZE));
     libspdm_internal_dump_data(spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_random != NULL) {
-        copy_mem(requester_random, SPDM_RANDOM_DATA_SIZE,
-                 spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
+        libspdm_copy_mem(requester_random, SPDM_RANDOM_DATA_SIZE,
+                         spdm_request.random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
     req_session_id = libspdm_allocate_req_session_id(spdm_context);
@@ -181,7 +181,7 @@ return_status libspdm_try_send_receive_key_exchange(
     }
 
     spdm_response_size = sizeof(spdm_response);
-    zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
@@ -321,8 +321,8 @@ return_status libspdm_try_send_receive_key_exchange(
     libspdm_internal_dump_data(spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (responder_random != NULL) {
-        copy_mem(responder_random, SPDM_RANDOM_DATA_SIZE,
-                 spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
+        libspdm_copy_mem(responder_random, SPDM_RANDOM_DATA_SIZE,
+                         spdm_response.random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerKey (0x%x):\n", dhe_key_size));
@@ -481,8 +481,8 @@ return_status libspdm_try_send_receive_key_exchange(
     }
 
     if (measurement_hash != NULL) {
-        copy_mem(measurement_hash, measurement_summary_hash_size,
-                 measurement_summary_hash, measurement_summary_hash_size);
+        libspdm_copy_mem(measurement_hash, measurement_summary_hash_size,
+                         measurement_summary_hash, measurement_summary_hash_size);
     }
     session_info->mut_auth_requested = spdm_response.mut_auth_requested;
     session_info->session_policy = session_policy;

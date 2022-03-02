@@ -194,8 +194,8 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
     }
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
-    zero_mem(&spdm_context->encap_context.last_encap_request_header,
-             sizeof(spdm_context->encap_context.last_encap_request_header));
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
@@ -212,8 +212,8 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
      *    2.2 GET_DIGEST (spdm_context->encap_context.req_slot_id == 0xFF)
      *    2.3 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
 
-    zero_mem(spdm_context->encap_context.request_op_code_sequence,
-             sizeof(spdm_context->encap_context.request_op_code_sequence));
+    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
+                     sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Session Mutual Auth*/
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
@@ -246,8 +246,8 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
     spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
-    zero_mem(&spdm_context->encap_context.last_encap_request_header,
-             sizeof(spdm_context->encap_context.last_encap_request_header));
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
@@ -264,8 +264,8 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
      *    1.2 GET_DIGEST/CHALLENGE (spdm_context->encap_context.req_slot_id == 0xFF)
      *    1.3 CHALLENGE (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
 
-    zero_mem(spdm_context->encap_context.request_op_code_sequence,
-             sizeof(spdm_context->encap_context.request_op_code_sequence));
+    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
+                     sizeof(spdm_context->encap_context.request_op_code_sequence));
     /* Basic Mutual Auth*/
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
@@ -305,16 +305,16 @@ void libspdm_init_key_update_encap_state(void *context)
     spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
-    zero_mem(&spdm_context->encap_context.last_encap_request_header,
-             sizeof(spdm_context->encap_context.last_encap_request_header));
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
 
-    zero_mem(spdm_context->encap_context.request_op_code_sequence,
-             sizeof(spdm_context->encap_context.request_op_code_sequence));
+    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
+                     sizeof(spdm_context->encap_context.request_op_code_sequence));
     spdm_context->encap_context.request_op_code_count = 1;
     spdm_context->encap_context.request_op_code_sequence[0] =
         SPDM_KEY_UPDATE;
@@ -384,7 +384,7 @@ return_status libspdm_get_response_encapsulated_request(
                                                   spdm_request->header.request_response_code);
 
     LIBSPDM_ASSERT(*response_size > sizeof(spdm_encapsulated_request_response_t));
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
 
     spdm_response = response;
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
@@ -502,7 +502,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
     }
 
     LIBSPDM_ASSERT(*response_size > ack_header_size);
-    zero_mem(response, *response_size);
+    libspdm_zero_mem(response, *response_size);
 
     spdm_response = response;
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;

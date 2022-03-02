@@ -20,7 +20,7 @@ struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
     lt = gmtime(tt);
 
     if (lt != NULL) {
-        copy_mem(tm_buf, sizeof(struct tm), lt, sizeof(struct tm));
+        libspdm_copy_mem(tm_buf, sizeof(struct tm), lt, sizeof(struct tm));
     }
 
     return ((lt == NULL) ? NULL : tm_buf);

@@ -228,7 +228,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
         return false;
     }
     *public_key_size = final_pub_key_size;
-    zero_mem(public_key, *public_key_size);
+    libspdm_zero_mem(public_key, *public_key_size);
 
     ret = mbedtls_dhm_make_public(dh_context, (uint32_t)*public_key_size,
                                   public_key, (uint32_t)*public_key_size,
@@ -325,10 +325,10 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
         return false;
     }
     if (return_size < dh_key_size) {
-        copy_mem(key + dh_key_size - return_size,
-                 key_capacity - (dh_key_size - return_size),
-                 key, return_size);
-        zero_mem(key, dh_key_size - return_size);
+        libspdm_copy_mem(key + dh_key_size - return_size,
+                         key_capacity - (dh_key_size - return_size),
+                         key, return_size);
+        libspdm_zero_mem(key, dh_key_size - return_size);
     }
 
     return true;

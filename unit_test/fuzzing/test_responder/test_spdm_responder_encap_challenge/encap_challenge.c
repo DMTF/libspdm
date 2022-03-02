@@ -60,9 +60,9 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
-    copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-             sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
-             data, data_size);
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -95,10 +95,10 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
 
     *(uint16_t *)ptr = 0;
     ptr += sizeof(uint16_t);
-    copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-             sizeof(m_libspdm_local_buffer) -
-             (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
-             spdm_response, (uintn)ptr - (uintn)spdm_response);
+    libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                     sizeof(m_libspdm_local_buffer) -
+                     (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
+                     spdm_response, (uintn)ptr - (uintn)spdm_response);
     m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer, m_libspdm_local_buffer_size,

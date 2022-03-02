@@ -115,7 +115,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x2: {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -140,7 +140,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x3: {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -165,7 +165,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x4: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
@@ -181,7 +181,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x5: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
@@ -199,7 +199,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
         if (sub_index1 == 0) {
             spdm_error_response_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code = SPDM_ERROR;
@@ -213,7 +213,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
         } else if (sub_index1 == 1) {
             spdm_algorithms_response_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code =
@@ -243,7 +243,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x7: {
         spdm_error_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
@@ -259,7 +259,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0x8: {
         spdm_error_response_data_response_not_ready_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ERROR;
         spdm_response.header.param1 =
@@ -284,7 +284,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
             spdm_error_response_data_response_not_ready_t
                 spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code = SPDM_ERROR;
@@ -304,7 +304,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
         } else if (sub_index2 == 1) {
             spdm_algorithms_response_t spdm_response;
 
-            zero_mem(&spdm_response, sizeof(spdm_response));
+            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
             spdm_response.header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
             spdm_response.header.request_response_code =
@@ -334,7 +334,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0xA: {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -358,7 +358,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0xB: {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -383,7 +383,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     case 0xC: {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem(&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -409,7 +409,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -433,7 +433,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -456,7 +456,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -480,7 +480,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -504,7 +504,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
      * {
      *   spdm_algorithms_response_t    spdm_response;*/
 
-    /*   zero_mem (&spdm_response, sizeof(spdm_response));
+    /*   libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
      *   spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
      *   spdm_response.header.request_response_code = SPDM_ALGORITHMS;
      *   spdm_response.header.param1 = 0;
@@ -525,7 +525,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -549,7 +549,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -573,7 +573,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -598,7 +598,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -623,7 +623,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         spdm_algorithms_response_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 0;
@@ -648,7 +648,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -688,7 +688,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -728,7 +728,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -768,7 +768,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -809,7 +809,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -850,7 +850,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -890,7 +890,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -931,7 +931,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -972,7 +972,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;
@@ -1013,7 +1013,7 @@ return_status libspdm_requester_negotiate_algorithm_test_receive_message(
     {
         libspdm_algorithms_response_spdm11_t spdm_response;
 
-        zero_mem (&spdm_response, sizeof(spdm_response));
+        libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
         spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response.header.request_response_code = SPDM_ALGORITHMS;
         spdm_response.header.param1 = 4;

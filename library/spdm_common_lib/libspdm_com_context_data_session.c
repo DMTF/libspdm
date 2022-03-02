@@ -40,8 +40,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         break;
     }
 
-    zero_mem(session_info,
-             OFFSET_OF(libspdm_session_info_t, secured_message_context));
+    libspdm_zero_mem(session_info,
+                     OFFSET_OF(libspdm_session_info_t, secured_message_context));
     libspdm_secured_message_init_context(
         session_info->secured_message_context);
     session_info->session_id = session_id;
