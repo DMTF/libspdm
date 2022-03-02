@@ -25,14 +25,14 @@
  *         If the allocations fails, dh_new() returns NULL.
  *
  **/
-void *dh_new_by_nid(uintn nid)
+void *libspdm_dh_new_by_nid(uintn nid)
 {
     switch (nid) {
-    case CRYPTO_NID_FFDHE2048:
+    case LIBSPDM_CRYPTO_NID_FFDHE2048:
         return DH_new_by_nid(NID_ffdhe2048);
-    case CRYPTO_NID_FFDHE3072:
+    case LIBSPDM_CRYPTO_NID_FFDHE3072:
         return DH_new_by_nid(NID_ffdhe3072);
-    case CRYPTO_NID_FFDHE4096:
+    case LIBSPDM_CRYPTO_NID_FFDHE4096:
         return DH_new_by_nid(NID_ffdhe4096);
     default:
         return NULL;
@@ -47,7 +47,7 @@ void *dh_new_by_nid(uintn nid)
  * @param[in]  dh_context  Pointer to the DH context to be released.
  *
  **/
-void dh_free(void *dh_context)
+void libspdm_dh_free(void *dh_context)
 {
 
     /* Free OpenSSL DH context*/
@@ -62,7 +62,7 @@ void dh_free(void *dh_context)
  * and sets DH context according to value of g and p.
  *
  * Before this function can be invoked, pseudorandom number generator must be correctly
- * initialized by random_seed().
+ * initialized by libspdm_random_seed().
  *
  * If dh_context is NULL, then return false.
  * If prime is NULL, then return false.
@@ -77,8 +77,8 @@ void dh_free(void *dh_context)
  * @retval false  PRNG fails to generate random prime number with prime_length.
  *
  **/
-bool dh_generate_parameter(void *dh_context, uintn generator,
-                           uintn prime_length, uint8_t *prime)
+bool libspdm_dh_generate_parameter(void *dh_context, uintn generator,
+                                   uintn prime_length, uint8_t *prime)
 {
     bool ret_val;
     BIGNUM *bn_p;
@@ -127,8 +127,8 @@ bool dh_generate_parameter(void *dh_context, uintn generator,
  * @retval false  value of prime is not a safe prime number.
  *
  **/
-bool dh_set_parameter(void *dh_context, uintn generator,
-                      uintn prime_length, const uint8_t *prime)
+bool libspdm_dh_set_parameter(void *dh_context, uintn generator,
+                              uintn prime_length, const uint8_t *prime)
 {
     DH *dh;
     BIGNUM *bn_p;
@@ -192,8 +192,8 @@ error:
  * @retval false  public_key_size is not large enough.
  *
  **/
-bool dh_generate_key(void *dh_context, uint8_t *public_key,
-                     uintn *public_key_size)
+bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
+                             uintn *public_key_size)
 {
     bool ret_val;
     DH *dh;
@@ -280,9 +280,9 @@ bool dh_generate_key(void *dh_context, uint8_t *public_key,
  * @retval false  key_size is not large enough.
  *
  **/
-bool dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
-                    uintn peer_public_key_size, uint8_t *key,
-                    uintn *key_size)
+bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
+                            uintn peer_public_key_size, uint8_t *key,
+                            uintn *key_size)
 {
     BIGNUM *bn;
     intn size;

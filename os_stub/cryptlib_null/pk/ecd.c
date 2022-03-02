@@ -22,10 +22,10 @@
  * @param nid cipher NID
  *
  * @return  Pointer to the Edwards-Curve context that has been initialized.
- *         If the allocations fails, ecd_new_by_nid() returns NULL.
+ *         If the allocations fails, libspdm_ecd_new_by_nid() returns NULL.
  *
  **/
-void *ecd_new_by_nid(uintn nid)
+void *libspdm_ecd_new_by_nid(uintn nid)
 {
     return NULL;
 }
@@ -36,7 +36,7 @@ void *ecd_new_by_nid(uintn nid)
  * @param[in]  ecd_context  Pointer to the Ed context to be released.
  *
  **/
-void ecd_free(void *ecd_context)
+void libspdm_ecd_free(void *ecd_context)
 {
 }
 
@@ -54,8 +54,8 @@ void ecd_free(void *ecd_context)
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
-                     uintn public_key_size)
+bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
+                             uintn public_key_size)
 {
     return false;
 }
@@ -75,8 +75,8 @@ bool ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
  * @retval  false  Invalid EC public key component.
  *
  **/
-bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
-                     uintn *public_key_size)
+bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
+                             uintn *public_key_size)
 {
     return false;
 }
@@ -94,7 +94,7 @@ bool ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
  * @retval  false  Ed key components are not valid.
  *
  **/
-bool ecd_check_key(const void *ecd_context)
+bool libspdm_ecd_check_key(const void *ecd_context)
 {
     return false;
 }
@@ -119,8 +119,8 @@ bool ecd_check_key(const void *ecd_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
-                      uintn *public_key_size)
+bool libspdm_ecd_generate_key(void *ecd_context, uint8_t *public_key,
+                              uintn *public_key_size)
 {
     return false;
 }
@@ -158,10 +158,10 @@ bool ecd_generate_key(void *ecd_context, uint8_t *public_key,
  * @retval  false  sig_size is too small.
  *
  **/
-bool eddsa_sign(const void *ecd_context, uintn hash_nid,
-                const uint8_t *context, uintn context_size,
-                const uint8_t *message, uintn size, uint8_t *signature,
-                uintn *sig_size)
+bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
+                        const uint8_t *context, uintn context_size,
+                        const uint8_t *message, uintn size, uint8_t *signature,
+                        uintn *sig_size)
 {
     return false;
 }
@@ -193,10 +193,10 @@ bool eddsa_sign(const void *ecd_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-bool eddsa_verify(const void *ecd_context, uintn hash_nid,
-                  const uint8_t *context, uintn context_size,
-                  const uint8_t *message, uintn size,
-                  const uint8_t *signature, uintn sig_size)
+bool libspdm_eddsa_verify(const void *ecd_context, uintn hash_nid,
+                          const uint8_t *context, uintn context_size,
+                          const uint8_t *message, uintn size,
+                          const uint8_t *signature, uintn sig_size)
 {
     return false;
 }

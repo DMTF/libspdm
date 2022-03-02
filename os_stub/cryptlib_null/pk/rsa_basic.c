@@ -8,9 +8,9 @@
  * RSA Asymmetric Cipher Wrapper Implementation.
  *
  * This file implements following APIs which provide basic capabilities for RSA:
- * 1) rsa_new
- * 2) rsa_free
- * 3) rsa_set_key
+ * 1) libspdm_rsa_new
+ * 2) libspdm_rsa_free
+ * 3) libspdm_rsa_set_key
  * 4) rsa_pkcs1_verify
  *
  * RFC 8017 - PKCS #1: RSA Cryptography Specifications version 2.2
@@ -22,10 +22,10 @@
  * Allocates and initializes one RSA context for subsequent use.
  *
  * @return  Pointer to the RSA context that has been initialized.
- *         If the allocations fails, rsa_new() returns NULL.
+ *         If the allocations fails, libspdm_rsa_new() returns NULL.
  *
  **/
-void *rsa_new(void)
+void *libspdm_rsa_new(void)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -37,7 +37,7 @@ void *rsa_new(void)
  * @param[in]  rsa_context  Pointer to the RSA context to be released.
  *
  **/
-void rsa_free(void *rsa_context)
+void libspdm_rsa_free(void *rsa_context)
 {
     LIBSPDM_ASSERT(false);
 }
@@ -64,8 +64,8 @@ void rsa_free(void *rsa_context)
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
-                 const uint8_t *big_number, uintn bn_size)
+bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
+                         const uint8_t *big_number, uintn bn_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -91,10 +91,10 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
-                               const uint8_t *message_hash,
-                               uintn hash_size, const uint8_t *signature,
-                               uintn sig_size)
+bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
+                                       const uint8_t *message_hash,
+                                       uintn hash_size, const uint8_t *signature,
+                                       uintn sig_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -122,9 +122,9 @@ bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
-                    const uint8_t *message_hash, uintn hash_size,
-                    const uint8_t *signature, uintn sig_size)
+bool libspdm_rsa_pss_verify(void *rsa_context, uintn hash_nid,
+                            const uint8_t *message_hash, uintn hash_size,
+                            const uint8_t *signature, uintn sig_size)
 {
     LIBSPDM_ASSERT(false);
     return false;

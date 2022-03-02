@@ -23,11 +23,11 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-bool read_responder_root_public_certificate(uint32_t base_hash_algo,
-                                            uint32_t base_asym_algo,
-                                            void **data, uintn *size,
-                                            void **hash,
-                                            uintn *hash_size)
+bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,
+                                                    uint32_t base_asym_algo,
+                                                    void **data, uintn *size,
+                                                    void **hash,
+                                                    uintn *hash_size)
 {
     bool res;
     void *file_data;
@@ -125,11 +125,11 @@ bool read_responder_root_public_certificate(uint32_t base_hash_algo,
     return true;
 }
 
-bool read_requester_root_public_certificate(uint32_t base_hash_algo,
-                                            uint16_t req_base_asym_alg,
-                                            void **data, uintn *size,
-                                            void **hash,
-                                            uintn *hash_size)
+bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
+                                                    uint16_t req_base_asym_alg,
+                                                    void **data, uintn *size,
+                                                    void **hash,
+                                                    uintn *hash_size)
 {
     bool res;
     void *file_data;
@@ -227,7 +227,7 @@ bool read_requester_root_public_certificate(uint32_t base_hash_algo,
     return true;
 }
 
-bool read_responder_public_certificate_chain(
+bool libspdm_read_responder_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
     uintn *size, void **hash, uintn *hash_size)
 {
@@ -315,8 +315,8 @@ bool read_responder_public_certificate_chain(
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                                        &root_cert_len);
+    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+                                                &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -347,7 +347,7 @@ bool read_responder_public_certificate_chain(
     return true;
 }
 
-bool read_requester_public_certificate_chain(
+bool libspdm_read_requester_public_certificate_chain(
     uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
     uintn *size, void **hash, uintn *hash_size)
 {
@@ -435,8 +435,8 @@ bool read_requester_public_certificate_chain(
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                                        &root_cert_len);
+    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+                                                &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -467,7 +467,7 @@ bool read_requester_public_certificate_chain(
     return true;
 }
 
-bool read_responder_root_public_certificate_by_size(
+bool libspdm_read_responder_root_public_certificate_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t chain_id,
     void **data, uintn *size, void **hash, uintn *hash_size)
 {
@@ -489,16 +489,16 @@ bool read_responder_root_public_certificate_by_size(
     }
 
     switch (chain_id) {
-    case TEST_CERT_SMALL:
+    case LIBSPDM_TEST_CERT_SMALL:
         file = "long_chains/Shorter1024B_ca.cert.der";
         break;
-    case TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
+    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
         file = "long_chains/ShorterMAXINT16_ca.cert.der";
         break;
-    case TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
+    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
         file = "long_chains/ShorterMAXUINT16_ca.cert.der";
         break;
-    case TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
+    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
         file = "long_chains/LongerMAXUINT16_ca.cert.der";
         break;
     default:
@@ -545,7 +545,7 @@ bool read_responder_root_public_certificate_by_size(
     return true;
 }
 
-bool read_responder_public_certificate_chain_by_size(
+bool libspdm_read_responder_public_certificate_chain_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t chain_id,
     void **data, uintn *size, void **hash, uintn *hash_size)
 {
@@ -569,16 +569,16 @@ bool read_responder_public_certificate_chain_by_size(
     }
 
     switch (chain_id) {
-    case TEST_CERT_SMALL: /* data_size smaller than 1024 Bytes*/
+    case LIBSPDM_TEST_CERT_SMALL: /* data_size smaller than 1024 Bytes*/
         file = "long_chains/Shorter1024B_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
+    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
         file = "long_chains/ShorterMAXINT16_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
+    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
         file = "long_chains/ShorterMAXUINT16_bundle_responder.certchain.der";
         break;
-    case TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
+    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
         file = "long_chains/LongerMAXUINT16_bundle_responder.certchain.der";
         break;
     default:
@@ -611,8 +611,8 @@ bool read_responder_public_certificate_chain_by_size(
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
-                                        &root_cert_len);
+    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+                                                &root_cert_len);
     if (!res) {
         free(file_data);
         free(cert_chain);

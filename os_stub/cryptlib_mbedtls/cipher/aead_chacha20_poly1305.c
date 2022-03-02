@@ -38,7 +38,7 @@
  * @retval false  AEAD ChaCha20Poly1305 authenticated encryption failed.
  *
  **/
-bool aead_chacha20_poly1305_encrypt(
+bool libspdm_aead_chacha20_poly1305_encrypt(
     const uint8_t *key, uintn key_size, const uint8_t *iv,
     uintn iv_size, const uint8_t *a_data, uintn a_data_size,
     const uint8_t *data_in, uintn data_in_size, uint8_t *tag_out,
@@ -115,7 +115,7 @@ bool aead_chacha20_poly1305_encrypt(
  * @retval false  AEAD ChaCha20Poly1305 authenticated decryption failed.
  *
  **/
-bool aead_chacha20_poly1305_decrypt(
+bool libspdm_aead_chacha20_poly1305_decrypt(
     const uint8_t *key, uintn key_size, const uint8_t *iv,
     uintn iv_size, const uint8_t *a_data, uintn a_data_size,
     const uint8_t *data_in, uintn data_in_size, const uint8_t *tag,

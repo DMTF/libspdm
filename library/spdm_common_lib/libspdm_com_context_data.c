@@ -380,26 +380,26 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
         status = false;
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
         if (!status) {
-            status = rsa_get_public_key_from_x509(data, data_size,
-                                                  &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+            status = libspdm_rsa_get_public_key_from_x509(data, data_size,
+                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_ECDSA_SUPPORT == 1
         if (!status) {
-            status = ec_get_public_key_from_x509(data, data_size,
-                                                 &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+            status = libspdm_ec_get_public_key_from_x509(data, data_size,
+                                                         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
         }
 #endif
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
         if (!status) {
-            status = ecd_get_public_key_from_x509(data, data_size,
-                                                  &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+            status = libspdm_ecd_get_public_key_from_x509(data, data_size,
+                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_SM2_DSA_SUPPORT == 1
         if (!status) {
-            status = sm2_get_public_key_from_x509(data, data_size,
-                                                  &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+            status = libspdm_sm2_get_public_key_from_x509(data, data_size,
+                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
         }
 #endif
         if (!status) {
@@ -2007,10 +2007,10 @@ return_status libspdm_init_context(void *context)
     }
 
 
-    /* The random_seed function may or may not be implemented.
+    /* The libspdm_random_seed function may or may not be implemented.
      * If unimplemented, the stub should always return success.*/
 
-    if (!random_seed(NULL, 0)) {
+    if (!libspdm_random_seed(NULL, 0)) {
         return RETURN_DEVICE_ERROR;
     }
 

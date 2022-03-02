@@ -14,10 +14,10 @@
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-SM3_256 use.
  *
  * @return  Pointer to the HMAC_CTX context that has been initialized.
- *         If the allocations fails, hmac_sm3_256_new() returns NULL.
+ *         If the allocations fails, libspdm_hmac_sm3_256_new() returns NULL.
  *
  **/
-void *hmac_sm3_256_new(void)
+void *libspdm_hmac_sm3_256_new(void)
 {
     return NULL;
 }
@@ -28,13 +28,13 @@ void *hmac_sm3_256_new(void)
  * @param[in]  hmac_sm3_256_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_sm3_256_free(void *hmac_sm3_256_ctx)
+void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx)
 {
 }
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
- * calling to hmac_sm3_256_update().
+ * calling to libspdm_hmac_sm3_256_update().
  *
  * If hmac_sm3_256_ctx is NULL, then return false.
  *
@@ -46,8 +46,8 @@ void hmac_sm3_256_free(void *hmac_sm3_256_ctx)
  * @retval false  The key is set unsuccessfully.
  *
  **/
-bool hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
-                          uintn key_size)
+bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
+                                  uintn key_size)
 {
     return false;
 }
@@ -65,8 +65,8 @@ bool hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
  * @retval false  HMAC-SM3_256 context copy failed.
  *
  **/
-bool hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
-                            void *new_hmac_sm3_256_ctx)
+bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
+                                    void *new_hmac_sm3_256_ctx)
 {
     return false;
 }
@@ -76,8 +76,8 @@ bool hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
  *
  * This function performs HMAC-SM3_256 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
- * by hmac_sm3_256_final(). Behavior with invalid context is undefined.
+ * HMAC-SM3_256 context should be initialized by libspdm_hmac_sm3_256_new(), and should not be finalized
+ * by libspdm_hmac_sm3_256_final(). Behavior with invalid context is undefined.
  *
  * If hmac_sm3_256_ctx is NULL, then return false.
  *
@@ -89,8 +89,8 @@ bool hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
  * @retval false  HMAC-SM3_256 data digest failed.
  *
  **/
-bool hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
-                         uintn data_size)
+bool libspdm_hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
+                                 uintn data_size)
 {
     return false;
 }
@@ -101,8 +101,8 @@ bool hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
  * This function completes HMAC-SM3_256 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the HMAC-SM3_256 context cannot
  * be used again.
- * HMAC-SM3_256 context should be initialized by hmac_sm3_256_new(), and should not be finalized
- * by hmac_sm3_256_final(). Behavior with invalid HMAC-SM3_256 context is undefined.
+ * HMAC-SM3_256 context should be initialized by libspdm_hmac_sm3_256_new(), and should not be finalized
+ * by libspdm_hmac_sm3_256_final(). Behavior with invalid HMAC-SM3_256 context is undefined.
  *
  * If hmac_sm3_256_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
@@ -115,7 +115,7 @@ bool hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
  * @retval false  HMAC-SM3_256 digest computation failed.
  *
  **/
-bool hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value)
+bool libspdm_hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value)
 {
     return false;
 }
@@ -140,9 +140,9 @@ bool hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool hmac_sm3_256_all(const void *data, uintn data_size,
-                      const uint8_t *key, uintn key_size,
-                      uint8_t *hmac_value)
+bool libspdm_hmac_sm3_256_all(const void *data, uintn data_size,
+                              const uint8_t *key, uintn key_size,
+                              uint8_t *hmac_value)
 {
     return false;
 }

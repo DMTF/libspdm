@@ -11,7 +11,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-#define TEST_PSK_HINT_STRING "TestPskHint"
+#define LIBSPDM_TEST_PSK_HINT_STRING "TestPskHint"
 
 uintn libspdm_get_max_buffer_size(void)
 {
@@ -72,8 +72,8 @@ void libspdm_test_responder_measurements_case2(void **State)
 
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
@@ -116,9 +116,10 @@ void libspdm_test_responder_measurements_case3(void **State)
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
     spdm_context->local_context.slot_count = SPDM_MAX_SLOT_COUNT;
     for (int i = 1; i < spdm_context->local_context.slot_count; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
@@ -161,9 +162,10 @@ void libspdm_test_responder_measurements_case4(void **State)
     spdm_context->local_context.opaque_measurement_rsp_size = 0;
     spdm_context->local_context.opaque_measurement_rsp = NULL;
 
-    read_responder_public_certificate_chain(m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
-                                            &data_size,
-                                            NULL, NULL);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
     spdm_context->local_context.slot_count = SPDM_MAX_SLOT_COUNT;
     for (int i = 1; i < spdm_context->local_context.slot_count; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
@@ -172,8 +174,8 @@ void libspdm_test_responder_measurements_case4(void **State)
 
     zero_mem(m_local_psk_hint, 32);
     copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-             TEST_PSK_HINT_STRING, sizeof(TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(TEST_PSK_HINT_STRING);
+             LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;

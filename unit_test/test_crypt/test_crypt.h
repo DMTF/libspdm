@@ -26,9 +26,9 @@
 bool libspdm_read_input_file(const char *file_name, void **file_data,
                              uintn *file_size);
 
-uintn ascii_str_len(const char *string);
+uintn libspdm_ascii_str_len(const char *string);
 
-void my_print(const char *message);
+void libspdm_my_print(const char *message);
 
 /**
  * Validate Crypto digest Interfaces.
@@ -37,7 +37,7 @@ void my_print(const char *message);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_digest(void);
+return_status libspdm_validate_crypt_digest(void);
 
 /**
  * Validate Crypto message Authentication Codes Interfaces.
@@ -46,7 +46,7 @@ return_status validate_crypt_digest(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_hmac(void);
+return_status libspdm_validate_crypt_hmac(void);
 
 /**
  * Validate Crypto HMAC Key Derivation Function Interfaces.
@@ -55,7 +55,7 @@ return_status validate_crypt_hmac(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_hkdf(void);
+return_status libspdm_validate_crypt_hkdf(void);
 
 /**
  * Validate Crypto AEAD Ciphers Interfaces.
@@ -64,7 +64,7 @@ return_status validate_crypt_hkdf(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_aead_cipher(void);
+return_status libspdm_validate_crypt_aead_cipher(void);
 
 /**
  * Validate Crypto RSA Interfaces.
@@ -73,7 +73,7 @@ return_status validate_crypt_aead_cipher(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_rsa(void);
+return_status libspdm_validate_crypt_rsa(void);
 
 /**
  * Validate Crypto RSA key Retrieving (from PEM & X509) & signature Interfaces.
@@ -82,7 +82,7 @@ return_status validate_crypt_rsa(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_rsa_2(void);
+return_status libspdm_validate_crypt_rsa_2(void);
 
 /**
  * Validate Crypto X509 certificate Verify
@@ -91,7 +91,7 @@ return_status validate_crypt_rsa_2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_x509(char *Path, uintn len);
+return_status libspdm_validate_crypt_x509(char *Path, uintn len);
 
 /**
  * Validate Crypto DH Interfaces.
@@ -100,7 +100,7 @@ return_status validate_crypt_x509(char *Path, uintn len);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_dh(void);
+return_status libspdm_validate_crypt_dh(void);
 
 /**
  * Validate Crypto EC Interfaces.
@@ -109,7 +109,7 @@ return_status validate_crypt_dh(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_ec(void);
+return_status libspdm_validate_crypt_ec(void);
 
 /**
  * Validate Crypto EC key Retrieving (from PEM & X509) & signature Interfaces.
@@ -118,7 +118,7 @@ return_status validate_crypt_ec(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_ec_2(void);
+return_status libspdm_validate_crypt_ec_2(void);
 
 /**
  * Validate Crypto Ed Interfaces.
@@ -127,7 +127,7 @@ return_status validate_crypt_ec_2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_ecd(void);
+return_status libspdm_validate_crypt_ecd(void);
 
 /**
  * Validate Crypto Ed key Retrieving (from PEM & X509) & signature Interfaces.
@@ -136,7 +136,7 @@ return_status validate_crypt_ecd(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_ecd_2(void);
+return_status libspdm_validate_crypt_ecd_2(void);
 
 /**
  * Validate Crypto MontgomeryCurve Interfaces.
@@ -145,7 +145,7 @@ return_status validate_crypt_ecd_2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_ecx(void);
+return_status libspdm_validate_crypt_ecx(void);
 
 /**
  * Validate Crypto sm2 Interfaces.
@@ -154,7 +154,7 @@ return_status validate_crypt_ecx(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_sm2(void);
+return_status libspdm_validate_crypt_sm2(void);
 
 /**
  * Validate Crypto sm2 key Retrieving (from PEM & X509) & signature Interfaces.
@@ -163,7 +163,7 @@ return_status validate_crypt_sm2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_sm2_2(void);
+return_status libspdm_validate_crypt_sm2_2(void);
 
 /**
  * Validate Crypto pseudorandom number generator interfaces.
@@ -172,6 +172,6 @@ return_status validate_crypt_sm2_2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status validate_crypt_prng(void);
+return_status libspdm_validate_crypt_prng(void);
 
 #endif

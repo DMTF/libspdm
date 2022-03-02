@@ -737,9 +737,9 @@ bool libspdm_verify_key_exchange_rsp_signature(
     if (!result) {
         return false;
     }
-    result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                           cert_chain_data_size, -1,
-                                           &cert_buffer, &cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
     if (!result) {
         return false;
     }
@@ -773,9 +773,9 @@ bool libspdm_verify_key_exchange_rsp_signature(
         if (!result) {
             return false;
         }
-        result = x509_get_cert_from_cert_chain(cert_chain_data,
-                                               cert_chain_data_size, -1,
-                                               &cert_buffer, &cert_buffer_size);
+        result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                       cert_chain_data_size, -1,
+                                                       &cert_buffer, &cert_buffer_size);
         if (!result) {
             return false;
         }
@@ -1144,10 +1144,10 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     if (!result) {
         return false;
     }
-    result = x509_get_cert_from_cert_chain(mut_cert_chain_data,
-                                           mut_cert_chain_data_size, -1,
-                                           &mut_cert_buffer,
-                                           &mut_cert_buffer_size);
+    result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
+                                                   mut_cert_chain_data_size, -1,
+                                                   &mut_cert_buffer,
+                                                   &mut_cert_buffer_size);
     if (!result) {
         return false;
     }
@@ -1183,10 +1183,10 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
-        result = x509_get_cert_from_cert_chain(mut_cert_chain_data,
-                                               mut_cert_chain_data_size, -1,
-                                               &mut_cert_buffer,
-                                               &mut_cert_buffer_size);
+        result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
+                                                       mut_cert_chain_data_size, -1,
+                                                       &mut_cert_buffer,
+                                                       &mut_cert_buffer_size);
         if (!result) {
             return false;
         }

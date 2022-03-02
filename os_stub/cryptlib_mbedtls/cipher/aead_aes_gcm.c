@@ -38,12 +38,12 @@
  * @retval false  AEAD AES-GCM authenticated encryption failed.
  *
  **/
-bool aead_aes_gcm_encrypt(const uint8_t *key, uintn key_size,
-                          const uint8_t *iv, uintn iv_size,
-                          const uint8_t *a_data, uintn a_data_size,
-                          const uint8_t *data_in, uintn data_in_size,
-                          uint8_t *tag_out, uintn tag_size,
-                          uint8_t *data_out, uintn *data_out_size)
+bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, uintn key_size,
+                                  const uint8_t *iv, uintn iv_size,
+                                  const uint8_t *a_data, uintn a_data_size,
+                                  const uint8_t *data_in, uintn data_in_size,
+                                  uint8_t *tag_out, uintn tag_size,
+                                  uint8_t *data_out, uintn *data_out_size)
 {
     mbedtls_gcm_context ctx;
     int32_t ret;
@@ -125,12 +125,12 @@ bool aead_aes_gcm_encrypt(const uint8_t *key, uintn key_size,
  * @retval false  AEAD AES-GCM authenticated decryption failed.
  *
  **/
-bool aead_aes_gcm_decrypt(const uint8_t *key, uintn key_size,
-                          const uint8_t *iv, uintn iv_size,
-                          const uint8_t *a_data, uintn a_data_size,
-                          const uint8_t *data_in, uintn data_in_size,
-                          const uint8_t *tag, uintn tag_size,
-                          uint8_t *data_out, uintn *data_out_size)
+bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, uintn key_size,
+                                  const uint8_t *iv, uintn iv_size,
+                                  const uint8_t *a_data, uintn a_data_size,
+                                  const uint8_t *data_in, uintn data_in_size,
+                                  const uint8_t *tag, uintn tag_size,
+                                  uint8_t *data_out, uintn *data_out_size)
 {
     mbedtls_gcm_context ctx;
     int32_t ret;

@@ -8,9 +8,9 @@
  * RSA Asymmetric Cipher Wrapper Implementation.
  *
  * This file implements following APIs which provide basic capabilities for RSA:
- * 1) rsa_new
- * 2) rsa_free
- * 3) rsa_set_key
+ * 1) libspdm_rsa_new
+ * 2) libspdm_rsa_free
+ * 3) libspdm_rsa_set_key
  * 4) rsa_pkcs1_verify
  *
  * RFC 8017 - PKCS #1: RSA Cryptography Specifications version 2.2
@@ -27,10 +27,10 @@
  * Allocates and initializes one RSA context for subsequent use.
  *
  * @return  Pointer to the RSA context that has been initialized.
- *         If the allocations fails, rsa_new() returns NULL.
+ *         If the allocations fails, libspdm_rsa_new() returns NULL.
  *
  **/
-void *rsa_new(void)
+void *libspdm_rsa_new(void)
 {
 
     /* Allocates & Initializes RSA context by OpenSSL RSA_new()*/
@@ -44,7 +44,7 @@ void *rsa_new(void)
  * @param[in]  rsa_context  Pointer to the RSA context to be released.
  *
  **/
-void rsa_free(void *rsa_context)
+void libspdm_rsa_free(void *rsa_context)
 {
 
     /* Free OpenSSL RSA context*/
@@ -74,8 +74,8 @@ void rsa_free(void *rsa_context)
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
-                 const uint8_t *big_number, uintn bn_size)
+bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
+                         const uint8_t *big_number, uintn bn_size)
 {
     RSA *rsa_key;
     bool status;
@@ -134,9 +134,9 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
 
     /* RSA public Modulus (N), public Exponent (e) and Private Exponent (d)*/
 
-    case RSA_KEY_N:
-    case RSA_KEY_E:
-    case RSA_KEY_D:
+    case LIBSPDM_RSA_KEY_N:
+    case LIBSPDM_RSA_KEY_E:
+    case LIBSPDM_RSA_KEY_D:
         if (bn_n == NULL) {
             bn_n = BN_new();
             bn_n_tmp = bn_n;
@@ -156,13 +156,13 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
         }
 
         switch (key_tag) {
-        case RSA_KEY_N:
+        case LIBSPDM_RSA_KEY_N:
             bn_n = BN_bin2bn(big_number, (uint32_t)bn_size, bn_n);
             break;
-        case RSA_KEY_E:
+        case LIBSPDM_RSA_KEY_E:
             bn_e = BN_bin2bn(big_number, (uint32_t)bn_size, bn_e);
             break;
-        case RSA_KEY_D:
+        case LIBSPDM_RSA_KEY_D:
             bn_d = BN_bin2bn(big_number, (uint32_t)bn_size, bn_d);
             break;
         default:
@@ -180,8 +180,8 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
 
     /* RSA Secret prime Factor of Modulus (p and q)*/
 
-    case RSA_KEY_P:
-    case RSA_KEY_Q:
+    case LIBSPDM_RSA_KEY_P:
+    case LIBSPDM_RSA_KEY_Q:
         if (bn_p == NULL) {
             bn_p = BN_new();
             bn_p_tmp = bn_p;
@@ -196,10 +196,10 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
         }
 
         switch (key_tag) {
-        case RSA_KEY_P:
+        case LIBSPDM_RSA_KEY_P:
             bn_p = BN_bin2bn(big_number, (uint32_t)bn_size, bn_p);
             break;
-        case RSA_KEY_Q:
+        case LIBSPDM_RSA_KEY_Q:
             bn_q = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q);
             break;
         default:
@@ -218,9 +218,9 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
     /* p's CRT Exponent (== d mod (p - 1)),  q's CRT Exponent (== d mod (q - 1)),
      * and CRT Coefficient (== 1/q mod p)*/
 
-    case RSA_KEY_DP:
-    case RSA_KEY_DQ:
-    case RSA_KEY_Q_INV:
+    case LIBSPDM_RSA_KEY_DP:
+    case LIBSPDM_RSA_KEY_DQ:
+    case LIBSPDM_RSA_KEY_Q_INV:
         if (bn_dp == NULL) {
             bn_dp = BN_new();
             bn_dp_tmp = bn_dp;
@@ -239,13 +239,13 @@ bool rsa_set_key(void *rsa_context, const rsa_key_tag_t key_tag,
         }
 
         switch (key_tag) {
-        case RSA_KEY_DP:
+        case LIBSPDM_RSA_KEY_DP:
             bn_dp = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dp);
             break;
-        case RSA_KEY_DQ:
+        case LIBSPDM_RSA_KEY_DQ:
             bn_dq = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dq);
             break;
-        case RSA_KEY_Q_INV:
+        case LIBSPDM_RSA_KEY_Q_INV:
             bn_q_inv = BN_bin2bn(big_number, (uint32_t)bn_size,
                                  bn_q_inv);
             break;
@@ -301,10 +301,10 @@ err:
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
-                               const uint8_t *message_hash,
-                               uintn hash_size, const uint8_t *signature,
-                               uintn sig_size)
+bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
+                                       const uint8_t *message_hash,
+                                       uintn hash_size, const uint8_t *signature,
+                                       uintn sig_size)
 {
     int32_t digest_type;
     uint8_t *sig_buf;
@@ -321,44 +321,44 @@ bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
     }
 
     switch (hash_nid) {
-    case CRYPTO_NID_SHA256:
+    case LIBSPDM_CRYPTO_NID_SHA256:
         digest_type = NID_sha256;
-        if (hash_size != SHA256_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA384:
+    case LIBSPDM_CRYPTO_NID_SHA384:
         digest_type = NID_sha384;
-        if (hash_size != SHA384_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA512:
+    case LIBSPDM_CRYPTO_NID_SHA512:
         digest_type = NID_sha512;
-        if (hash_size != SHA512_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_256:
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
         digest_type = NID_sha3_256;
-        if (hash_size != SHA3_256_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_384:
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
         digest_type = NID_sha3_384;
-        if (hash_size != SHA3_384_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_512:
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
         digest_type = NID_sha3_512;
-        if (hash_size != SHA3_512_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
         break;
@@ -395,9 +395,9 @@ bool rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
-                    const uint8_t *message_hash, uintn hash_size,
-                    const uint8_t *signature, uintn sig_size)
+bool libspdm_rsa_pss_verify(void *rsa_context, uintn hash_nid,
+                            const uint8_t *message_hash, uintn hash_size,
+                            const uint8_t *signature, uintn sig_size)
 {
     RSA *rsa;
     bool result;
@@ -420,44 +420,44 @@ bool rsa_pss_verify(void *rsa_context, uintn hash_nid,
     }
 
     switch (hash_nid) {
-    case CRYPTO_NID_SHA256:
+    case LIBSPDM_CRYPTO_NID_SHA256:
         evp_md = EVP_sha256();
-        if (hash_size != SHA256_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA384:
+    case LIBSPDM_CRYPTO_NID_SHA384:
         evp_md = EVP_sha384();
-        if (hash_size != SHA384_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA512:
+    case LIBSPDM_CRYPTO_NID_SHA512:
         evp_md = EVP_sha512();
-        if (hash_size != SHA512_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_256:
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
         evp_md = EVP_sha3_256();
-        if (hash_size != SHA3_256_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_384:
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
         evp_md = EVP_sha3_384();
-        if (hash_size != SHA3_384_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
             return false;
         }
         break;
 
-    case CRYPTO_NID_SHA3_512:
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
         evp_md = EVP_sha3_512();
-        if (hash_size != SHA3_512_DIGEST_SIZE) {
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
         break;
