@@ -10,8 +10,6 @@
 
 #include "internal_crypt_lib.h"
 
-int rand();
-
 /**
  * Sets up the seed value for the pseudorandom number generator.
  *

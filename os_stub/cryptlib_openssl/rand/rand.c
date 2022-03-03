@@ -15,7 +15,7 @@
 
 /* Default seed for Crypto Library*/
 
-uint8_t default_seed[] = "Crypto Library default seed";
+uint8_t libspdm_default_seed[] = "Crypto Library default seed";
 
 /**
  * Sets up the seed value for the pseudorandom number generator.
@@ -54,7 +54,7 @@ bool libspdm_random_seed(const uint8_t *seed, uintn seed_size)
     if (seed != NULL) {
         RAND_seed(seed, (uint32_t)seed_size);
     } else {
-        RAND_seed(default_seed, sizeof(default_seed));
+        RAND_seed(libspdm_default_seed, sizeof(libspdm_default_seed));
     }
 
     if (RAND_status() == 1) {

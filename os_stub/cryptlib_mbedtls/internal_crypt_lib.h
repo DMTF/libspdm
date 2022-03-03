@@ -24,6 +24,6 @@
 
 #include <mbedtls/config.h>
 
-int myrand(void *rng_state, unsigned char *output, size_t len);
+int libspdm_myrand(void *rng_state, unsigned char *output, size_t len);
 
 #endif
