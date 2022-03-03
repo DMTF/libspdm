@@ -54,7 +54,7 @@ bool libspdm_random_bytes(uint8_t *output, uintn size)
 
     while (size > 0) {
         /* Use rnglib to get random number*/
-        ret = get_random_number_64(&temp_rand);
+        ret = libspdm_get_random_number_64(&temp_rand);
 
         if (!ret) {
             return ret;
@@ -72,7 +72,7 @@ bool libspdm_random_bytes(uint8_t *output, uintn size)
     return ret;
 }
 
-int myrand(void *rng_state, unsigned char *output, size_t len)
+int libspdm_myrand(void *rng_state, unsigned char *output, size_t len)
 {
     bool result = libspdm_random_bytes(output, len);
 

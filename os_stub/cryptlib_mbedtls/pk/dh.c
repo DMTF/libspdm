@@ -232,7 +232,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
 
     ret = mbedtls_dhm_make_public(dh_context, (uint32_t)*public_key_size,
                                   public_key, (uint32_t)*public_key_size,
-                                  myrand, NULL);
+                                  libspdm_myrand, NULL);
     if (ret != 0) {
         return false;
     }
@@ -320,7 +320,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
 
     return_size = 0;
     ret = mbedtls_dhm_calc_secret(dh_context, key, *key_size, &return_size,
-                                  myrand, NULL);
+                                  libspdm_myrand, NULL);
     if (ret != 0) {
         return false;
     }

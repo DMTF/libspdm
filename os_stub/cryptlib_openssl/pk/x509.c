@@ -17,7 +17,7 @@
 
 /* OID*/
 
-static uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
+static uint8_t m_libspdm_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -79,8 +79,8 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, uintn cert_size,
  * @retval     false           This interface is not supported.
  *
  **/
-bool X509ConstructCertificateStackV(uint8_t **x509_stack,
-                                    VA_LIST args)
+bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
+                                                VA_LIST args)
 {
     uint8_t *cert;
     uintn cert_size;
@@ -173,7 +173,7 @@ bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
     bool result;
 
     VA_START(args, x509_stack);
-    result = X509ConstructCertificateStackV(x509_stack, args);
+    result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
     VA_END(args);
     return result;
 }
@@ -1433,8 +1433,8 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
 {
     return_status status;
     status = libspdm_x509_get_extension_data(cert, cert_size,
-                                             m_oid_ext_key_usage,
-                                             sizeof(m_oid_ext_key_usage), usage,
+                                             m_libspdm_oid_ext_key_usage,
+                                             sizeof(m_libspdm_oid_ext_key_usage), usage,
                                              usage_size);
     return status;
 }

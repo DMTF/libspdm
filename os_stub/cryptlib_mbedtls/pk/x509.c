@@ -19,9 +19,9 @@
 
 /* OID*/
 
-static uint8_t m_oid_common_name[] = { 0x55, 0x04, 0x03 };
-static uint8_t m_oid_organization_name[] = { 0x55, 0x04, 0x0A };
-static uint8_t m_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
+static uint8_t m_libspdm_oid_common_name[] = { 0x55, 0x04, 0x03 };
+static uint8_t m_libspdm_organization_name[] = { 0x55, 0x04, 0x0A };
+static uint8_t m_libspdm_oid_ext_key_usage[] = { 0x55, 0x1D, 0x25 };
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -60,8 +60,8 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, uintn cert_size,
     return ret == 0;
 }
 
-static bool X509ConstructCertificateStackV(uint8_t **x509_stack,
-                                           VA_LIST args)
+static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
+                                                       VA_LIST args)
 {
     uint8_t *cert;
     uintn cert_size;
@@ -128,7 +128,7 @@ bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
     bool result;
 
     VA_START(args, x509_stack);
-    result = X509ConstructCertificateStackV(x509_stack, args);
+    result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
     VA_END(args);
     return result;
 }
@@ -361,8 +361,8 @@ return_status libspdm_x509_get_common_name(const uint8_t *cert, uintn cert_size,
                                            uintn *common_name_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
-        cert, cert_size, (uint8_t *)m_oid_common_name,
-        sizeof(m_oid_common_name), common_name, common_name_size);
+        cert, cert_size, (uint8_t *)m_libspdm_oid_common_name,
+        sizeof(m_libspdm_oid_common_name), common_name, common_name_size);
 }
 
 /**
@@ -397,8 +397,8 @@ libspdm_x509_get_organization_name(const uint8_t *cert, uintn cert_size,
                                    uintn *name_buffer_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
-        cert, cert_size, (uint8_t *)m_oid_organization_name,
-        sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
+        cert, cert_size, (uint8_t *)m_libspdm_organization_name,
+        sizeof(m_libspdm_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -973,8 +973,8 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, uintn cert_size,
                                     uintn *common_name_size)
 {
     return libspdm_internal_x509_get_issuer_nid_name(cert, cert_size,
-                                                     (uint8_t *)m_oid_common_name,
-                                                     sizeof(m_oid_common_name),
+                                                     (uint8_t *)m_libspdm_oid_common_name,
+                                                     sizeof(m_libspdm_oid_common_name),
                                                      common_name, common_name_size);
 }
 
@@ -1010,8 +1010,8 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
                                          uintn *name_buffer_size)
 {
     return libspdm_internal_x509_get_issuer_nid_name(
-        cert, cert_size, (uint8_t *)m_oid_organization_name,
-        sizeof(m_oid_organization_name), name_buffer, name_buffer_size);
+        cert, cert_size, (uint8_t *)m_libspdm_organization_name,
+        sizeof(m_libspdm_organization_name), name_buffer, name_buffer_size);
 }
 
 /**
@@ -1081,9 +1081,9 @@ cleanup:
  *
  **/
 static return_status
-internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *oid,
-                                  uintn oid_size, uint8_t **find_extension_data,
-                                  uintn *find_extension_data_len)
+libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *oid,
+                                          uintn oid_size, uint8_t **find_extension_data,
+                                          uintn *find_extension_data_len)
 {
     uint8_t *ptr;
     uint8_t *extension_ptr;
@@ -1201,7 +1201,7 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, uintn cert_si
     }
 
     if (ret == 0) {
-        status = internal_x509_find_extension_data(
+        status = libspdm_internal_x509_find_extension_data(
             ptr, end, oid, oid_size, &ptr, &obj_len);
     }
 
@@ -1360,8 +1360,8 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
     }
 
     status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                             (uint8_t *)m_oid_ext_key_usage,
-                                             sizeof(m_oid_ext_key_usage), usage,
+                                             (uint8_t *)m_libspdm_oid_ext_key_usage,
+                                             sizeof(m_libspdm_oid_ext_key_usage), usage,
                                              usage_size);
 
     return status;
@@ -1370,8 +1370,8 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
 /**
  * Return 0 if before <= after, 1 otherwise
  **/
-static intn internal_x509_check_time(const mbedtls_x509_time *before,
-                                     const mbedtls_x509_time *after)
+static intn libspdm_internal_x509_check_time(const mbedtls_x509_time *before,
+                                             const mbedtls_x509_time *after)
 {
     if (before->year > after->year)
         return (1);
@@ -1400,7 +1400,7 @@ static intn internal_x509_check_time(const mbedtls_x509_time *before,
     return (0);
 }
 
-static int32_t internal_atoi(char *p_start, char *p_end)
+static int32_t libspdm_internal_atoi(char *p_start, char *p_end)
 {
     char *p = p_start;
     int32_t k = 0;
@@ -1453,17 +1453,17 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
 
     p = date_time_str;
 
-    year = internal_atoi(p, p + 4);
+    year = libspdm_internal_atoi(p, p + 4);
     p += 4;
-    month = internal_atoi(p, p + 2);
+    month = libspdm_internal_atoi(p, p + 2);
     p += 2;
-    day = internal_atoi(p, p + 2);
+    day = libspdm_internal_atoi(p, p + 2);
     p += 2;
-    hour = internal_atoi(p, p + 2);
+    hour = libspdm_internal_atoi(p, p + 2);
     p += 2;
-    minute = internal_atoi(p, p + 2);
+    minute = libspdm_internal_atoi(p, p + 2);
     p += 2;
-    second = internal_atoi(p, p + 2);
+    second = libspdm_internal_atoi(p, p + 2);
     p += 2;
     dt.year = (int)year;
     dt.mon = (int)month;
@@ -1511,8 +1511,8 @@ intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_tim
         0) {
         return 0;
     }
-    if (internal_x509_check_time((mbedtls_x509_time *)date_time1,
-                                 (mbedtls_x509_time *)date_time2) == 0) {
+    if (libspdm_internal_x509_check_time((mbedtls_x509_time *)date_time1,
+                                         (mbedtls_x509_time *)date_time2) == 0) {
         return -1;
     } else {
         return 1;

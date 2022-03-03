@@ -273,7 +273,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
     }
 
     ctx = ec_context;
-    ret = mbedtls_ecdh_gen_public(&ctx->grp, &ctx->d, &ctx->Q, myrand,
+    ret = mbedtls_ecdh_gen_public(&ctx->grp, &ctx->d, &ctx->Q, libspdm_myrand,
                                   NULL);
     if (ret != 0) {
         return false;
@@ -397,7 +397,7 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
     }
 
     ret = mbedtls_ecdh_compute_shared(&ctx->grp, &ctx->z, &ctx->Qp, &ctx->d,
-                                      myrand, NULL);
+                                      libspdm_myrand, NULL);
     if (ret != 0) {
         return false;
     }
@@ -512,7 +512,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
     mbedtls_mpi_init(&bn_s);
 
     ret = mbedtls_ecdsa_sign(&ctx->grp, &bn_r, &bn_s, &ctx->d, message_hash,
-                             hash_size, myrand, NULL);
+                             hash_size, libspdm_myrand, NULL);
     if (ret != 0) {
         return false;
     }

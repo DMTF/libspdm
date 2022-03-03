@@ -189,7 +189,7 @@ bool libspdm_rsa_generate_key(void *rsa_context, uintn modulus_length,
     }
 
     if (ret == 0) {
-        ret = mbedtls_rsa_gen_key(rsa, myrand, NULL,
+        ret = mbedtls_rsa_gen_key(rsa, libspdm_myrand, NULL,
                                   (uint32_t)modulus_length, pe);
     }
 
@@ -303,7 +303,7 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
 
     mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V15, md_alg);
 
-    ret = mbedtls_rsa_pkcs1_sign(rsa_context, myrand, NULL,
+    ret = mbedtls_rsa_pkcs1_sign(rsa_context, libspdm_myrand, NULL,
                                  MBEDTLS_RSA_PRIVATE, md_alg,
                                  (uint32_t)hash_size, message_hash,
                                  signature);
@@ -390,7 +390,7 @@ bool libspdm_rsa_pss_sign(void *rsa_context, uintn hash_nid,
 
     mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V21, md_alg);
 
-    ret = mbedtls_rsa_rsassa_pss_sign(rsa_context, myrand, NULL,
+    ret = mbedtls_rsa_rsassa_pss_sign(rsa_context, libspdm_myrand, NULL,
                                       MBEDTLS_RSA_PRIVATE, md_alg,
                                       (uint32_t)hash_size, message_hash,
                                       signature);

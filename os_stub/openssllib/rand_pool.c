@@ -39,7 +39,7 @@ static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
 
     while (length > 0) {
         /* Use rnglib to get random number*/
-        ret = get_random_number_64(&temp_rand);
+        ret = libspdm_get_random_number_64(&temp_rand);
 
         if (!ret) {
             return ret;
