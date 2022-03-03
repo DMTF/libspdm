@@ -82,7 +82,7 @@ return_status libspdm_get_response_challenge_auth(void *context,
     if (!libspdm_is_capabilities_flag_supported(spdm_context, false, 0,
                                                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         spdm_request->header.param2 > 0) {
-        return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+        return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                                                 SPDM_CHALLENGE, response_size, response);
     }
 

@@ -895,7 +895,7 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal (spdm_response->header.param2, SPDM_CHALLENGE);
     free(data1);
 }

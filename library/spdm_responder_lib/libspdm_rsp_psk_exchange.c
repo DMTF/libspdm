@@ -92,7 +92,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
                 return libspdm_generate_error_response(
                     spdm_context,
-                    SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+                    SPDM_ERROR_CODE_INVALID_REQUEST,
                     SPDM_PSK_EXCHANGE, response_size,
                     response);
             }
@@ -102,7 +102,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
             if (algo_size == 0) {
                 return libspdm_generate_error_response(
                     spdm_context,
-                    SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+                    SPDM_ERROR_CODE_INVALID_REQUEST,
                     SPDM_PSK_EXCHANGE, response_size,
                     response);
             }
@@ -112,14 +112,14 @@ return_status libspdm_get_response_psk_exchange(void *context,
         if (algo_size == 0) {
             return libspdm_generate_error_response(
                 spdm_context,
-                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+                SPDM_ERROR_CODE_INVALID_REQUEST,
                 SPDM_PSK_EXCHANGE, response_size, response);
         }
         if (spdm_context->connection_info.algorithm.key_schedule !=
             SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
             return libspdm_generate_error_response(
                 spdm_context,
-                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+                SPDM_ERROR_CODE_INVALID_REQUEST,
                 SPDM_PSK_EXCHANGE, response_size, response);
         }
     }
@@ -142,7 +142,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
             0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         spdm_request->header.param1 > 0) {
         return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
             SPDM_PSK_EXCHANGE, response_size, response);
     }
     slot_id = spdm_request->header.param2;
