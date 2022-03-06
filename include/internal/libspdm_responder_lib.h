@@ -12,6 +12,50 @@
 #include "internal/libspdm_common_lib.h"
 
 /**
+ * Process a SPDM request from a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the request is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  request_size                  size in bytes of the request data buffer.
+ * @param  request                      A pointer to a destination buffer to store the request.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM request is received successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
+ **/
+return_status libspdm_process_request(void *spdm_context,
+                                      uint32_t **session_id,
+                                      bool *is_app_message,
+                                      uintn request_size, const void *request);
+
+/**
+ * Build a SPDM response to a device.
+ *
+ * @param  spdm_context                  The SPDM context for the device.
+ * @param  session_id                    Indicate if the response is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
+ * @param  response_size                 size in bytes of the response data buffer.
+ * @param  response                     A pointer to a destination buffer to store the response.
+ *                                     The caller is responsible for having
+ *                                     either implicit or explicit ownership of the buffer.
+ *
+ * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
+ * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
+ *                                      Continue the dispatch without send response.
+ **/
+return_status libspdm_build_response(void *spdm_context, const uint32_t *session_id,
+                                     bool is_app_message,
+                                     uintn *response_size,
+                                     void **response);
+
+/**
  * Process the SPDM request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

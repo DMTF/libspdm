@@ -215,13 +215,10 @@ return_status libspdm_encode_secured_message(
                          sequence_num_in_header_size);
         record_header2->length =
             (uint16_t)(cipher_text_size + aead_tag_size);
-        enc_msg_header = (void *)(record_header2 + 1);
+
+        enc_msg_header = (void *)((uint8_t *)app_message - sizeof(spdm_secured_message_cipher_header_t));
         enc_msg_header->application_data_length =
             (uint16_t)app_message_size;
-        libspdm_copy_mem(enc_msg_header + 1,
-                         *secured_message_size
-                         - ((uint8_t*)(enc_msg_header + 1) - (uint8_t*)secured_message),
-                         app_message, app_message_size);
         result = libspdm_get_random_number(rand_count,
                                            (uint8_t *)enc_msg_header +
                                            sizeof(spdm_secured_message_cipher_header_t) +
@@ -233,7 +230,7 @@ return_status libspdm_encode_secured_message(
                          aead_pad_size);
 
         a_data = (uint8_t *)record_header1;
-        enc_msg = (uint8_t *)enc_msg_header;
+        enc_msg = (uint8_t *)(record_header2 + 1);
         dec_msg = (uint8_t *)enc_msg_header;
         tag = (uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
@@ -315,7 +312,7 @@ return_status libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, uintn secured_message_size,
     const void *secured_message, uintn *app_message_size,
-    void *app_message,
+    void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -341,7 +338,6 @@ return_status libspdm_decode_secured_message(
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
     libspdm_error_struct_t spdm_error;
-    uint8_t dec_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     return_status status;
 
     spdm_error.error_code = 0;
@@ -506,14 +502,14 @@ return_status libspdm_decode_secured_message(
             return RETURN_SECURITY_VIOLATION;
         }
         cipher_text_size = (record_header2->length - aead_tag_size);
-        if (cipher_text_size > sizeof(dec_message)) {
+        if (cipher_text_size > *app_message_size) {
             return RETURN_OUT_OF_RESOURCES;
         }
-        libspdm_zero_mem(dec_message, sizeof(dec_message));
+        libspdm_zero_mem(*app_message, *app_message_size);
         enc_msg_header = (void *)(record_header2 + 1);
         a_data = (uint8_t *)record_header1;
         enc_msg = (uint8_t *)enc_msg_header;
-        dec_msg = (uint8_t *)dec_message;
+        dec_msg = (uint8_t *)*app_message;
         enc_msg_header = (void *)dec_msg;
         tag = (uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
@@ -567,11 +563,7 @@ return_status libspdm_decode_secured_message(
         }
 
         LIBSPDM_ASSERT(*app_message_size >= plain_text_size);
-        if (*app_message_size < plain_text_size) {
-            *app_message_size = plain_text_size;
-            return RETURN_BUFFER_TOO_SMALL;
-        }
-        libspdm_copy_mem(app_message, *app_message_size, enc_msg_header + 1, plain_text_size);
+        *app_message = enc_msg_header + 1;
         *app_message_size = plain_text_size;
         break;
 
@@ -657,11 +649,7 @@ return_status libspdm_decode_secured_message(
 
         plain_text_size = record_header2->length - aead_tag_size;
         LIBSPDM_ASSERT(*app_message_size >= plain_text_size);
-        if (*app_message_size < plain_text_size) {
-            *app_message_size = plain_text_size;
-            return RETURN_BUFFER_TOO_SMALL;
-        }
-        libspdm_copy_mem(app_message, *app_message_size, record_header2 + 1, plain_text_size);
+        *app_message = record_header2 + 1;
         *app_message_size = plain_text_size;
         break;
 

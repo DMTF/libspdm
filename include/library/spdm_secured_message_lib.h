@@ -622,6 +622,8 @@ return_status libspdm_encode_secured_message(
  * @param  secured_message               A pointer to a source buffer to store the secured message.
  * @param  app_message_size               size in bytes of the application message data buffer.
  * @param  app_message                   A pointer to a destination buffer to store the application message.
+                                         On input, the app_message pointer shall point to a big enough buffer to hold the decrypted message
+                                         On output, the app_message pointer shall be inside of [app_message, app_message + app_message_size]
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
  *
  * @retval RETURN_SUCCESS               The application message is decoded successfully.
@@ -632,7 +634,7 @@ return_status libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, uintn secured_message_size,
     const void *secured_message, uintn *app_message_size,
-    void *app_message,
+    void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 
 /**

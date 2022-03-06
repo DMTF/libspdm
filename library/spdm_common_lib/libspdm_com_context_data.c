@@ -1865,6 +1865,34 @@ void libspdm_register_device_io_func(
 }
 
 /**
+ * Register SPDM device buffer management functions.
+ *
+ * This function must be called after libspdm_init_context, and before any SPDM communication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  acquire_sender_buffer         The fuction to acquire transport layer sender buffer.
+ * @param  release_sender_buffer         The fuction to release transport layer sender buffer.
+ * @param  acquire_receiver_buffer       The fuction to acquire transport layer receiver buffer.
+ * @param  release_receiver_buffer       The fuction to release transport layer receiver buffer.
+ **/
+void libspdm_register_device_buffer_func(
+    void *context,
+    libspdm_device_acquire_sender_buffer_func acquire_sender_buffer,
+    libspdm_device_release_sender_buffer_func release_sender_buffer,
+    libspdm_device_acquire_receiver_buffer_func acquire_receiver_buffer,
+    libspdm_device_release_receiver_buffer_func release_receiver_buffer)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    spdm_context->acquire_sender_buffer = acquire_sender_buffer;
+    spdm_context->release_sender_buffer = release_sender_buffer;
+    spdm_context->acquire_receiver_buffer = acquire_receiver_buffer;
+    spdm_context->release_receiver_buffer = release_receiver_buffer;
+    return;
+}
+
+/**
  * Register SPDM transport layer encode/decode functions for SPDM or APP messages.
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
@@ -1872,18 +1900,208 @@ void libspdm_register_device_io_func(
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  transport_encode_message       The fuction to encode an SPDM or APP message to a transport layer message.
  * @param  transport_decode_message       The fuction to decode an SPDM or APP message from a transport layer message.
+ * @param  transport_get_header_size      The fuction to get the maximum transport layer message header size.
  **/
 void libspdm_register_transport_layer_func(
     void *context,
-    const libspdm_transport_encode_message_func transport_encode_message,
-    const libspdm_transport_decode_message_func transport_decode_message)
+    libspdm_transport_encode_message_func  transport_encode_message,
+    libspdm_transport_decode_message_func  transport_decode_message,
+    libspdm_transport_get_header_size_func transport_get_header_size)
 {
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
     spdm_context->transport_encode_message = transport_encode_message;
     spdm_context->transport_decode_message = transport_decode_message;
+    spdm_context->transport_get_header_size = transport_get_header_size;
     return;
+}
+
+/**
+ * Get the size of required scratch buffer.
+ *
+ * The SPDM integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,
+ * then allocate enough scratch buffer and call libspdm_set_scratch_buffer().
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * 
+ * @return the size of required scratch buffer.
+ **/
+uintn libspdm_get_sizeof_required_scratch_buffer (
+    void *context)
+{
+    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+}
+
+/**
+ * Set the scratch buffer.
+ *
+ * This function must be called after libspdm_init_context, and before any SPDM communication.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  scratch_buffer           Buffer address of the scratch buffer.
+ * @param  scratch_buffer_size      Size of the scratch buffer.
+ * 
+ **/
+void libspdm_set_scratch_buffer (
+    void *context,
+    void *scratch_buffer,
+    uintn scratch_buffer_size)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    LIBSPDM_ASSERT (scratch_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    spdm_context->scratch_buffer = scratch_buffer;
+    spdm_context->scratch_buffer_size = scratch_buffer_size;
+}
+
+/**
+ * Get the scratch buffer.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  scratch_buffer           Buffer address of the scratch buffer.
+ * @param  scratch_buffer_size      Size of the scratch buffer.
+ * 
+ **/
+void libspdm_get_scratch_buffer (
+    void *context,
+    void **scratch_buffer,
+    uintn *scratch_buffer_size)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    LIBSPDM_ASSERT (spdm_context->scratch_buffer != NULL);
+    LIBSPDM_ASSERT (spdm_context->scratch_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    *scratch_buffer = spdm_context->scratch_buffer;
+    *scratch_buffer_size = spdm_context->scratch_buffer_size;
+}
+
+/**
+ * Acquire a device sender buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  max_msg_size                  size in bytes of the maximum size of sender buffer.
+ * @param  msg_buf_ptr                   A pointer to a sender buffer.
+ *
+ * @retval RETURN_SUCCESS               The sender buffer is acquired.
+ **/
+return_status libspdm_acquire_sender_buffer (
+    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr)
+{
+    return_status  status;
+
+    LIBSPDM_ASSERT (spdm_context->sender_buffer == NULL);
+    LIBSPDM_ASSERT (spdm_context->sender_buffer_size == 0);
+    status = spdm_context->acquire_sender_buffer (spdm_context, max_msg_size, msg_buf_ptr);
+    if (status != RETURN_SUCCESS) {
+        return status;
+    }
+    spdm_context->sender_buffer = *msg_buf_ptr;
+    spdm_context->sender_buffer_size = *max_msg_size;
+    return RETURN_SUCCESS;
+}
+
+/**
+ * Release a device sender buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  msg_buf_ptr                   A pointer to a sender buffer.
+ *
+ * @retval RETURN_SUCCESS               The sender buffer is Released.
+ **/
+void libspdm_release_sender_buffer (
+    libspdm_context_t *spdm_context, const void *msg_buf_ptr)
+{
+    if (msg_buf_ptr == NULL) {
+        return ;
+    }
+    LIBSPDM_ASSERT ((uintn)spdm_context->sender_buffer <= (uintn)msg_buf_ptr &&
+        (uintn)spdm_context->sender_buffer + spdm_context->sender_buffer_size > (uintn)msg_buf_ptr);
+    spdm_context->release_sender_buffer (spdm_context, spdm_context->sender_buffer);
+    spdm_context->sender_buffer = NULL;
+    spdm_context->sender_buffer_size = 0;
+}
+
+/**
+ * Get the sender buffer.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  receiver_buffer            Buffer address of the sender buffer.
+ * @param  receiver_buffer_size       Size of the sender buffer.
+ * 
+ **/
+void libspdm_get_sender_buffer (
+    libspdm_context_t *spdm_context,
+    void **sender_buffer,
+    uintn *sender_buffer_size)
+{
+    *sender_buffer = spdm_context->sender_buffer;
+    *sender_buffer_size = spdm_context->sender_buffer_size;
+}
+
+/**
+ * Acquire a device receiver buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  max_msg_size                  size in bytes of the maximum size of receiver buffer.
+ * @param  msg_buf_pt                    A pointer to a receiver buffer.
+ *
+ * @retval RETURN_SUCCESS               The receiver buffer is acquired.
+ **/
+return_status libspdm_acquire_receiver_buffer (
+    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr)
+{
+    return_status  status;
+
+    LIBSPDM_ASSERT (spdm_context->receiver_buffer == NULL);
+    LIBSPDM_ASSERT (spdm_context->receiver_buffer_size == 0);
+    status = spdm_context->acquire_receiver_buffer (spdm_context, max_msg_size, msg_buf_ptr);
+    if (status != RETURN_SUCCESS) {
+        return status;
+    }
+    spdm_context->receiver_buffer = *msg_buf_ptr;
+    spdm_context->receiver_buffer_size = *max_msg_size;
+    return RETURN_SUCCESS;
+}
+
+/**
+ * Release a device receiver buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  msg_buf_ptr                   A pointer to a receiver buffer.
+ *
+ * @retval RETURN_SUCCESS               The receiver buffer is Released.
+ **/
+void libspdm_release_receiver_buffer (
+    libspdm_context_t *spdm_context, const void *msg_buf_ptr)
+{
+    if (msg_buf_ptr == NULL) {
+        return ;
+    }
+    LIBSPDM_ASSERT ((uintn)spdm_context->receiver_buffer <= (uintn)msg_buf_ptr &&
+        (uintn)spdm_context->receiver_buffer + spdm_context->receiver_buffer_size > (uintn)msg_buf_ptr);
+    spdm_context->release_receiver_buffer (spdm_context, spdm_context->receiver_buffer);
+    spdm_context->receiver_buffer = NULL;
+    spdm_context->receiver_buffer_size = 0;
+}
+
+/**
+ * Get the receiver buffer.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  receiver_buffer            Buffer address of the receiver buffer.
+ * @param  receiver_buffer_size       Size of the receiver buffer.
+ * 
+ **/
+void libspdm_get_receiver_buffer (
+    libspdm_context_t *spdm_context,
+    void **receiver_buffer,
+    uintn *receiver_buffer_size)
+{
+    *receiver_buffer = spdm_context->receiver_buffer;
+    *receiver_buffer_size = spdm_context->receiver_buffer_size;
 }
 
 /**
@@ -2031,6 +2249,8 @@ void libspdm_reset_context(void *context)
 
     spdm_context = context;
     /*Clear all info about last connection*/
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     libspdm_zero_mem(&spdm_context->connection_info.version, sizeof(spdm_version_number_t));
     libspdm_zero_mem(&spdm_context->connection_info.capability,
                      sizeof(libspdm_device_capability_t));

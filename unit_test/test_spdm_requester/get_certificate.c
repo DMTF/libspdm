@@ -143,7 +143,7 @@ return_status libspdm_requester_get_certificate_test_send_message(
 
 return_status libspdm_requester_get_certificate_test_receive_message(
     void *spdm_context, uintn *response_size,
-    void *response, uint64_t timeout)
+    void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -154,8 +154,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x2: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -186,9 +186,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -197,14 +198,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -219,8 +220,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x3: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -251,9 +252,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -262,14 +264,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -283,31 +285,43 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x4: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return RETURN_SUCCESS;
 
     case 0x5: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return RETURN_SUCCESS;
@@ -315,23 +329,29 @@ return_status libspdm_requester_get_certificate_test_receive_message(
     case 0x6: {
         static uintn sub_index1 = 0;
         if (sub_index1 == 0) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
 
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
             sub_index1++;
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
             spdm_certificate_response_t *spdm_response;
-            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-            uintn temp_buf_size;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint16_t portion_length;
             uint16_t remainder_length;
             uintn count;
@@ -364,9 +384,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 remainder_length = 0;
             }
 
-            temp_buf_size = sizeof(spdm_certificate_response_t) +
+            spdm_response_size = sizeof(spdm_certificate_response_t) +
                             portion_length;
-            spdm_response = (void *)temp_buf;
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
@@ -377,15 +398,15 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             spdm_response->portion_length = portion_length;
             spdm_response->remainder_length = remainder_length;
             libspdm_copy_mem(spdm_response + 1,
-                             sizeof(temp_buf) - sizeof(*spdm_response),
+                             (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                              (uint8_t *)m_libspdm_local_certificate_chain +
                              LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
                              calling_index,
                              portion_length);
 
             libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false, temp_buf_size,
-                temp_buf, response_size, response);
+                spdm_context, NULL, false, false, spdm_response_size,
+                spdm_response, response_size, response);
 
             calling_index++;
             if (calling_index == count) {
@@ -399,37 +420,49 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x7: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return RETURN_SUCCESS;
 
     case 0x8: {
-        spdm_error_response_data_response_not_ready_t spdm_response;
+        spdm_error_response_data_response_not_ready_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 =
+        spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-        spdm_response.header.param2 = 0;
-        spdm_response.extend_error_data.rd_exponent = 1;
-        spdm_response.extend_error_data.rd_tm = 1;
-        spdm_response.extend_error_data.request_code =
+        spdm_response->header.param2 = 0;
+        spdm_response->extend_error_data.rd_exponent = 1;
+        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.request_code =
             SPDM_GET_CERTIFICATE;
-        spdm_response.extend_error_data.token = 0;
+        spdm_response->extend_error_data.token = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return RETURN_SUCCESS;
@@ -438,29 +471,35 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         static uintn sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
-                spdm_response;
+                *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
 
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code =
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code =
                 SPDM_GET_CERTIFICATE;
-            spdm_response.extend_error_data.token = 1;
+            spdm_response->extend_error_data.token = 1;
             sub_index2++;
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
         } else if (sub_index2 == 1) {
             spdm_certificate_response_t *spdm_response;
-            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-            uintn temp_buf_size;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint16_t portion_length;
             uint16_t remainder_length;
             uintn count;
@@ -493,9 +532,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 remainder_length = 0;
             }
 
-            temp_buf_size = sizeof(spdm_certificate_response_t) +
+            spdm_response_size = sizeof(spdm_certificate_response_t) +
                             portion_length;
-            spdm_response = (void *)temp_buf;
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
@@ -506,15 +546,15 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             spdm_response->portion_length = portion_length;
             spdm_response->remainder_length = remainder_length;
             libspdm_copy_mem(spdm_response + 1,
-                             sizeof(temp_buf) - sizeof(*spdm_response),
+                             (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                              (uint8_t *)m_libspdm_local_certificate_chain +
                              LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
                              calling_index,
                              portion_length);
 
             libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false, temp_buf_size,
-                temp_buf, response_size, response);
+                spdm_context, NULL, false, false, spdm_response_size,
+                spdm_response, response_size, response);
 
             calling_index++;
             if (calling_index == count) {
@@ -529,8 +569,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xA: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -561,9 +601,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -572,14 +613,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -594,8 +635,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xB: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -651,9 +692,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -662,14 +704,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -684,8 +726,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xC: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -716,9 +758,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -727,14 +770,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -749,8 +792,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xD: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -781,9 +824,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -792,14 +836,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -814,8 +858,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xE: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uint16_t get_cert_length;
@@ -848,9 +892,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -859,14 +904,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          get_cert_length * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -881,8 +926,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0xF: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -913,9 +958,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -924,14 +970,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -948,17 +994,23 @@ return_status libspdm_requester_get_certificate_test_receive_message(
     {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         if(error_code <= 0xff) {
-            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = (uint8_t) error_code;
-            spdm_response.header.param2 = 0;
+            libspdm_zero_mem (spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = (uint8_t) error_code;
+            spdm_response->header.param2 = 0;
 
             libspdm_transport_test_encode_message (spdm_context, NULL, false, false,
-                                                   sizeof(spdm_response), &spdm_response,
+                                                   spdm_response_size, spdm_response,
                                                    response_size, response);
         }
 
@@ -977,8 +1029,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x11: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1052,9 +1104,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1064,14 +1117,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->remainder_length = remainder_length;
         /* send certchain without root*/
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)cert_chain_without_root +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -1087,8 +1140,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x12: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1165,9 +1218,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1177,14 +1231,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->remainder_length = remainder_length;
         /* send certchain without root*/
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)cert_chain_without_root +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -1200,8 +1254,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x13: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1231,9 +1285,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1242,14 +1297,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -1264,8 +1319,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x14: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1296,9 +1351,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1307,14 +1363,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -1329,8 +1385,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x15: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1361,9 +1417,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1372,14 +1429,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -1394,8 +1451,8 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
     case 0x16: {
         spdm_certificate_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint16_t portion_length;
         uint16_t remainder_length;
         uintn count;
@@ -1415,7 +1472,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
         if (calling_index != count - 1) {
             portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-            /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+            /* Fail response: spdm_request.offset + spdm_response->portion_length + spdm_response->remainder_length !=
              * total_responder_cert_chain_buffer_length.*/
             remainder_length =
                 (uint16_t)(m_libspdm_local_certificate_chain_size - 1 -
@@ -1428,9 +1485,10 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             remainder_length = 0;
         }
 
-        temp_buf_size =
+        spdm_response_size =
             sizeof(spdm_certificate_response_t) + portion_length;
-        spdm_response = (void *)temp_buf;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
@@ -1439,14 +1497,14 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
         libspdm_copy_mem(spdm_response + 1,
-                         sizeof(temp_buf) - sizeof(*spdm_response),
+                         (uintn)(*response) + *response_size - (uintn)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
 
         calling_index++;
@@ -2798,13 +2856,13 @@ void libspdm_test_requester_get_certificate_case21(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, RETURN_DEVICE_ERROR);
     free(data);
 }
 
 /**
  * Test 22: Fail case, request a certificate chain,
- * spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+ * spdm_request.offset + spdm_response->portion_length + spdm_response->remainder_length !=
  * total_responder_cert_chain_buffer_length.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
@@ -2914,7 +2972,7 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case20),
         /* Fail response: responder return portion_length > spdm_request.length*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case21),
-        /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
+        /* Fail response: spdm_request.offset + spdm_response->portion_length + spdm_response->remainder_length !=
          * total_responder_cert_chain_buffer_length.*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case22),
     };

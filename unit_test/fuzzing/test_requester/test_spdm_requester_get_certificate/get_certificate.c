@@ -34,7 +34,7 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
 uintn calling_index = 0;
 
 return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
-                                             void *response, uint64_t timeout)
+                                             void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 

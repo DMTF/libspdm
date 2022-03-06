@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
+#include "library/spdm_transport_mctp_lib.h"
 
 /**
  * Send an SPDM or an APP request to a device.
@@ -18,6 +19,8 @@
  * @param  request                      A pointer to a destination buffer to store the request.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
+ *                                      For normal message, requester pointer point to transport_message + transport header size
+ *                                      For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
@@ -28,9 +31,14 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 {
     libspdm_context_t *spdm_context;
     return_status status;
-    uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *message;
     uintn message_size;
     uint64_t timeout;
+    uint8_t *scratch_buffer;
+    uintn scratch_buffer_size;
+    uintn transport_header_size;
+    uint8_t *sender_buffer;
+    uintn sender_buffer_size;
 
     spdm_context = context;
 
@@ -38,10 +46,34 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
                    (session_id != NULL) ? *session_id : 0x0, request_size));
     libspdm_internal_dump_hex(request, request_size);
 
-    message_size = sizeof(message);
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_get_sender_buffer (spdm_context, &sender_buffer, &sender_buffer_size);
+    message = sender_buffer;
+    message_size = sender_buffer_size;
+
+    if (session_id != NULL) {
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+           transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, &scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          request, request_size);
+        request = scratch_buffer + transport_header_size;
+    }
+
+    /* backup it to last_spdm_request, because the caller wants to compare it with response */
+    if (((spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY) {
+        libspdm_copy_mem (spdm_context->last_spdm_request,
+                        sizeof(spdm_context->last_spdm_request),
+                        request,
+                        request_size
+                        );
+        spdm_context->last_spdm_request_size = request_size;
+    }
+
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, true, request_size,
-        request, &message_size, message);
+        request, &message_size, &message);
     if (RETURN_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %p\n",
                        status));
@@ -79,11 +111,11 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 return_status libspdm_receive_response(void *context, const uint32_t *session_id,
                                        bool is_app_message,
                                        uintn *response_size,
-                                       void *response)
+                                       void **response)
 {
     libspdm_context_t *spdm_context;
     return_status status;
-    uint8_t message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *message;
     uintn message_size;
     uint32_t *message_session_id;
     bool is_message_app_message;
@@ -101,9 +133,10 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                   spdm_context->local_context.capability.st1;
     }
 
-    message_size = sizeof(message);
+    message = *response;
+    message_size = *response_size;
     status = spdm_context->receive_message(spdm_context, &message_size,
-                                           message, timeout);
+                                           &message, timeout);
     if (RETURN_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
@@ -156,7 +189,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     } else {
-        libspdm_internal_dump_hex(response, *response_size);
+        libspdm_internal_dump_hex(*response, *response_size);
     }
     return status;
 
@@ -236,7 +269,7 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
 return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
                                             uintn *response_size,
-                                            void *response)
+                                            void **response)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;

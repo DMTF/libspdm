@@ -30,12 +30,15 @@ return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_conte
                                                    uint8_t end_session_attributes)
 {
     return_status status;
-    spdm_end_session_request_t spdm_request;
+    spdm_end_session_request_t *spdm_request;
     uintn spdm_request_size;
-    libspdm_end_session_response_mine_t spdm_response;
+    libspdm_end_session_response_mine_t *spdm_response;
     uintn spdm_response_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
@@ -61,48 +64,68 @@ return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_conte
         end_session_attributes = 0;
     }
 
-    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
-    spdm_request.header.request_response_code = SPDM_END_SESSION;
-    spdm_request.header.param1 = end_session_attributes;
-    spdm_request.header.param2 = 0;
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
+
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
+    spdm_request->header.request_response_code = SPDM_END_SESSION;
+    spdm_request->header.param1 = end_session_attributes;
+    spdm_request->header.param2 = 0;
 
     spdm_request_size = sizeof(spdm_end_session_request_t);
     status = libspdm_send_spdm_request(spdm_context, &session_id,
-                                       spdm_request_size, &spdm_request);
+                                       spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context, message);
         return status;
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   SPDM_END_SESSION);
 
-    spdm_response_size = sizeof(spdm_response);
-    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
+    libspdm_release_sender_buffer (spdm_context, message);
+    spdm_request = (void *)spdm_context->last_spdm_request;
+
+    /* receive */
+
+    libspdm_acquire_receiver_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
+
+    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, &session_id, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
-        return status;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.request_response_code == SPDM_ERROR) {
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
             &spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,
             sizeof(libspdm_end_session_response_mine_t));
         if (RETURN_ERROR(status)) {
-            return status;
+            goto receive_done;
         }
-    } else if (spdm_response.header.request_response_code !=
+    } else if (spdm_response->header.request_response_code !=
                SPDM_END_SESSION_ACK) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
     if (spdm_response_size != sizeof(spdm_end_session_response_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
 
     session_info->end_session_attributes = end_session_attributes;
@@ -113,8 +136,11 @@ return_status libspdm_try_send_receive_end_session(libspdm_context_t *spdm_conte
     libspdm_free_session_id(spdm_context, session_id);
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
+    status = RETURN_SUCCESS;
 
-    return RETURN_SUCCESS;
+receive_done:
+    libspdm_release_receiver_buffer (spdm_context, message);
+    return status;
 }
 
 return_status libspdm_send_receive_end_session(libspdm_context_t *spdm_context,

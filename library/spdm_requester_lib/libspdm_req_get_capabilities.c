@@ -100,10 +100,13 @@ bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
 return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 {
     return_status status;
-    spdm_get_capabilities_request_t spdm_request;
+    spdm_get_capabilities_request_t *spdm_request;
     uintn spdm_request_size;
-    spdm_capabilities_response_t spdm_response;
+    spdm_capabilities_response_t *spdm_response;
     uintn spdm_response_size;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   SPDM_GET_CAPABILITIES);
@@ -112,105 +115,125 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
         return RETURN_UNSUPPORTED;
     }
 
-    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
-    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
-    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        spdm_request_size = sizeof(spdm_request);
-    } else if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        spdm_request_size = sizeof(spdm_request) -
-                            sizeof(spdm_request.data_transfer_size) -
-                            sizeof(spdm_request.max_spdm_msg_size);
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
+
+    libspdm_zero_mem(spdm_request, sizeof(spdm_get_capabilities_request_t));
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_request_size = sizeof(spdm_get_capabilities_request_t);
+    } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        spdm_request_size = sizeof(spdm_get_capabilities_request_t) -
+                            sizeof(spdm_request->data_transfer_size) -
+                            sizeof(spdm_request->max_spdm_msg_size);
     } else {
-        spdm_request_size = sizeof(spdm_request.header);
+        spdm_request_size = sizeof(spdm_request->header);
     }
-    spdm_request.header.request_response_code = SPDM_GET_CAPABILITIES;
-    spdm_request.header.param1 = 0;
-    spdm_request.header.param2 = 0;
-    spdm_request.ct_exponent =
+    spdm_request->header.request_response_code = SPDM_GET_CAPABILITIES;
+    spdm_request->header.param1 = 0;
+    spdm_request->header.param2 = 0;
+    spdm_request->ct_exponent =
         spdm_context->local_context.capability.ct_exponent;
-    spdm_request.flags = spdm_context->local_context.capability.flags;
-    spdm_request.data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
-    spdm_request.max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+    spdm_request->flags = spdm_context->local_context.capability.flags;
+    spdm_request->data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
+    spdm_request->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                                       &spdm_request);
+                                       spdm_request);
     if (RETURN_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context, message);
         return status;
     }
+    libspdm_release_sender_buffer (spdm_context, message);
+    spdm_request = (void *)spdm_context->last_spdm_request;
 
-    spdm_response_size = sizeof(spdm_response);
-    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
+    /* receive */
+
+    libspdm_acquire_receiver_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
+
+    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
-        return status;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.request_response_code == SPDM_ERROR) {
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_simple_error_response(
-            spdm_context, spdm_response.header.param1);
+            spdm_context, spdm_response->header.param1);
         if (RETURN_ERROR(status)) {
-            return status;
+            goto receive_done;
         }
-    } else if (spdm_response.header.request_response_code !=
+    } else if (spdm_response->header.request_response_code !=
                SPDM_CAPABILITIES) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t)) {
-            return RETURN_DEVICE_ERROR;
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
     } else {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t) -
-            sizeof(spdm_response.data_transfer_size) -
-            sizeof(spdm_response.max_spdm_msg_size)) {
-            return RETURN_DEVICE_ERROR;
+            sizeof(spdm_response->data_transfer_size) -
+            sizeof(spdm_response->max_spdm_msg_size)) {
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
     }
-    if (spdm_response_size > sizeof(spdm_response)) {
-        return RETURN_DEVICE_ERROR;
-    }
-    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response_size = sizeof(spdm_capabilities_response_t);
     } else {
         spdm_response_size = sizeof(spdm_capabilities_response_t) -
-                             sizeof(spdm_response.data_transfer_size) -
-                             sizeof(spdm_response.max_spdm_msg_size);
+                             sizeof(spdm_response->data_transfer_size) -
+                             sizeof(spdm_response->max_spdm_msg_size);
     }
 
     if (!libspdm_check_response_flag_compability(
-            spdm_response.flags, spdm_response.header.spdm_version)) {
-        return RETURN_DEVICE_ERROR;
+            spdm_response->flags, spdm_response->header.spdm_version)) {
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
 
 
     /* Cache data*/
 
-    status = libspdm_append_message_a(spdm_context, &spdm_request,
+    status = libspdm_append_message_a(spdm_context, spdm_request,
                                       spdm_request_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
 
-    status = libspdm_append_message_a(spdm_context, &spdm_response,
+    status = libspdm_append_message_a(spdm_context, spdm_response,
                                       spdm_response_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
 
     spdm_context->connection_info.capability.ct_exponent =
-        spdm_response.ct_exponent;
-    spdm_context->connection_info.capability.flags = spdm_response.flags;
+        spdm_response->ct_exponent;
+    spdm_context->connection_info.capability.flags = spdm_response->flags;
 
-    if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.data_transfer_size =
-            spdm_response.data_transfer_size;
+            spdm_response->data_transfer_size;
         spdm_context->connection_info.capability.max_spdm_msg_size =
-            spdm_response.max_spdm_msg_size;
+            spdm_response->max_spdm_msg_size;
     } else {
         spdm_context->connection_info.capability.data_transfer_size = 0;
         spdm_context->connection_info.capability.max_spdm_msg_size = 0;
@@ -218,8 +241,11 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    status = RETURN_SUCCESS;
 
-    return RETURN_SUCCESS;
+receive_done:
+    libspdm_release_receiver_buffer (spdm_context, message);
+    return status;
 }
 
 /**

@@ -20,7 +20,7 @@ void libspdm_test_decode_secured_message(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn app_message_size;
-    uint8_t app_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *app_message;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     libspdm_session_info_t *session_info;
     bool is_requester;
@@ -51,7 +51,7 @@ void libspdm_test_decode_secured_message(void **State)
     libspdm_decode_secured_message(secured_message_context, session_id, is_requester,
                                    spdm_test_context->test_buffer_size,
                                    spdm_test_context->test_buffer,
-                                   &app_message_size, app_message, &spdm_secured_message_callbacks);
+                                   &app_message_size, &app_message, &spdm_secured_message_callbacks);
 }
 
 libspdm_test_context_t m_libspdm_transport_mctp_test_context = {

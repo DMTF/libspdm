@@ -390,20 +390,44 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
 {
     return_status status;
     libspdm_context_t *spdm_context;
+    spdm_message_header_t *spdm_request;
+    uintn spdm_request_size;
     spdm_error_response_t *spdm_response;
+    uintn spdm_response_size;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
     spdm_context = context;
     spdm_response = response;
 
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
+    libspdm_copy_mem (spdm_request, spdm_request_size, request, request_size);
+    spdm_request_size = request_size;
+
     status = libspdm_send_request(spdm_context, session_id, is_app_message,
-                                  request_size, request);
+                                  spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context, message);
         return RETURN_DEVICE_ERROR;
     }
+    libspdm_release_sender_buffer (spdm_context, message);
+
+    /* receive */
+
+    libspdm_acquire_receiver_buffer (spdm_context, &message_size, &message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
 
     status = libspdm_receive_response(spdm_context, session_id, is_app_message,
-                                      response_size, response);
+                                      &spdm_response_size, &spdm_response);
     if (RETURN_ERROR(status)) {
+        libspdm_release_receiver_buffer (spdm_context, message);
         return RETURN_DEVICE_ERROR;
     }
 
@@ -411,9 +435,21 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
         if ((spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
             (session_id != NULL)) {
             libspdm_free_session_id(spdm_context, *session_id);
+            libspdm_release_receiver_buffer (spdm_context, message);
             return RETURN_SECURITY_VIOLATION;
         }
     }
+
+    if (*response_size >= spdm_response_size) {
+        libspdm_copy_mem (response, *response_size, spdm_response, spdm_response_size);
+        *response_size = spdm_response_size;
+    } else {
+        *response_size = spdm_response_size;
+        libspdm_release_receiver_buffer (spdm_context, message);
+        return RETURN_BUFFER_TOO_SMALL;
+    }
+
+    libspdm_release_receiver_buffer (spdm_context, message);
 
     return RETURN_SUCCESS;
 }
