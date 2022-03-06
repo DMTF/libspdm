@@ -285,11 +285,22 @@ typedef struct {
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
 
+    /*
+     * reserved for request and response in the main dispatch function in SPDM responder.
+     * this buffer is the transport message recived from spdm_context->receive_message()
+     * or sent to spdm_context->send_message().
+     * This message may be SPDM transport message or secured SPDM transport message.
+     **/
+    libspdm_device_acquire_sender_buffer_func acquire_sender_buffer;
+    libspdm_device_release_sender_buffer_func release_sender_buffer;
+    libspdm_device_acquire_receiver_buffer_func acquire_receiver_buffer;
+    libspdm_device_release_receiver_buffer_func release_receiver_buffer;
+
     /* Transport Layer infomration*/
 
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
-
+    libspdm_transport_get_header_size_func transport_get_header_size;
 
     /* command status*/
 
@@ -300,6 +311,16 @@ typedef struct {
 
     uint8_t last_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uintn last_spdm_request_size;
+
+    /* scratch buffer */
+    uint8_t *scratch_buffer;
+    uintn scratch_buffer_size;
+    /* sender buffer */
+    uint8_t *sender_buffer;
+    uintn sender_buffer_size;
+    /* receiver buffer */
+    uint8_t *receiver_buffer;
+    uintn receiver_buffer_size;
 
     /* Cache session_id in this spdm_message, only valid for secured message.*/
 
@@ -367,15 +388,6 @@ typedef struct {
     /* Register for the last KEY_UPDATE token and operation (responder only)*/
 
     uint8_t last_update_request[4];
-
-    /*
-     * reserved for request and response in the main
-     * dispatch function in SPDM responder
-     * this buffer is the transport message recived from spdm_context->receive_message()
-     * or sent to spdm_context->send_message(). This message may be SPDM transport message
-     * or secured SPDM transport message.
-     **/
-    uint8_t request_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     /**
      * The BIT0 control to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
@@ -1074,5 +1086,77 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           uintn req_ver_num,
                                           spdm_version_number_t *res_ver_set,
                                           uintn res_ver_num);
+
+/**
+ * Acquire a device sender buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  max_msg_size                  size in bytes of the maximum size of sender buffer.
+ * @param  msg_buf_ptr                   A pointer to a sender buffer.
+ *
+ * @retval RETURN_SUCCESS               The sender buffer is acquired.
+ **/
+return_status libspdm_acquire_sender_buffer (
+    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr);
+
+/**
+ * Release a device sender buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  msg_buf_ptr                   A pointer to a sender buffer.
+ *
+ * @retval RETURN_SUCCESS               The sender buffer is Released.
+ **/
+void libspdm_release_sender_buffer (
+    libspdm_context_t *spdm_context, const void *msg_buf_ptr);
+
+/**
+ * Get the sender buffer.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  sender_buffer            Buffer address of the sender buffer.
+ * @param  sender_buffer_size       Size of the sender buffer.
+ *
+ **/
+void libspdm_get_sender_buffer (
+    libspdm_context_t *spdm_context,
+    void **sender_buffer,
+    uintn *sender_buffer_size);
+
+/**
+ * Acquire a device receiver buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  max_msg_size                  size in bytes of the maximum size of receiver buffer.
+ * @param  msg_buf_pt                    A pointer to a receiver buffer.
+ *
+ * @retval RETURN_SUCCESS               The receiver buffer is acquired.
+ **/
+return_status libspdm_acquire_receiver_buffer (
+    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr);
+
+/**
+ * Release a device receiver buffer for transport layer message.
+ *
+ * @param  context                       A pointer to the SPDM context.
+ * @param  msg_buf_ptr                   A pointer to a receiver buffer.
+ *
+ * @retval RETURN_SUCCESS               The receiver buffer is Released.
+ **/
+void libspdm_release_receiver_buffer (
+    libspdm_context_t *spdm_context, const void *msg_buf_ptr);
+
+/**
+ * Get the receiver buffer.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  receiver_buffer            Buffer address of the receiver buffer.
+ * @param  receiver_buffer_size       Size of the receiver buffer.
+ *
+ **/
+void libspdm_get_receiver_buffer (
+    libspdm_context_t *spdm_context,
+    void **receiver_buffer,
+    uintn *receiver_buffer_size);
 
 #endif

@@ -20,7 +20,7 @@ uintn libspdm_get_max_buffer_size(void)
 }
 
 return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
-                                             void *response, uint64_t timeout)
+                                             void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     spdm_challenge_auth_response_t *spdm_response;
