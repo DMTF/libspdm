@@ -20,7 +20,7 @@ void libspdm_test_transport_mctp_encode_message(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn transport_message_size;
-    uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *transport_message;
     bool is_app_message;
     bool is_requester;
     spdm_test_context = *State;
@@ -35,7 +35,7 @@ void libspdm_test_transport_mctp_encode_message(void **State)
     libspdm_transport_mctp_encode_message(spdm_context, NULL, is_app_message, is_requester,
                                           spdm_test_context->test_buffer_size,
                                           spdm_test_context->test_buffer, &transport_message_size,
-                                          transport_message);
+                                          (void **)&transport_message);
 
 }
 

@@ -61,6 +61,8 @@ typedef struct {
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
     void *spdm_context;
+    void *scratch_buffer;
+    uintn scratch_buffer_size;
     uint32_t case_id;
 } libspdm_test_context_t;
 
