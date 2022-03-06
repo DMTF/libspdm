@@ -127,6 +127,8 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
     return_status status;
     libspdm_session_info_t *session_info;
     uint32_t *message_session_id;
+    uint8_t *decoded_message_ptr;
+    uintn decoded_message_size;
 
     spdm_context = context;
 
@@ -145,8 +147,8 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         sizeof(spdm_context->last_spdm_request);
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, is_app_message, true,
-        request_size, request, &spdm_context->last_spdm_request_size,
-        spdm_context->last_spdm_request);
+        request_size, request, &decoded_message_size,
+        (void **)&decoded_message_ptr);
     if (RETURN_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
@@ -160,6 +162,12 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         }
         return status;
     }
+    spdm_context->last_spdm_request_size = decoded_message_size;
+    libspdm_copy_mem (spdm_context->last_spdm_request,
+                      sizeof(spdm_context->last_spdm_request),
+                      decoded_message_ptr,
+                      decoded_message_size
+                      );
 
     if (!(*is_app_message)) {
 
@@ -307,10 +315,10 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
 return_status libspdm_build_response(void *context, const uint32_t *session_id,
                                      bool is_app_message,
                                      uintn *response_size,
-                                     void *response)
+                                     void **response)
 {
     libspdm_context_t *spdm_context;
-    uint8_t my_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *my_response;
     uintn my_response_size;
     return_status status;
     libspdm_get_spdm_response_func get_response_func;
@@ -318,23 +326,33 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     spdm_message_header_t *spdm_request;
     spdm_message_header_t *spdm_response;
     bool result;
+    uintn transport_header_size;
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
+
+    /* For secure message, setup my_response to scratch buffer
+     * For non-secure message, setup my_response to sender buffer*/
+    if (session_id != NULL) {
+        libspdm_get_scratch_buffer (spdm_context, (void **)&my_response, &my_response_size);
+    } else {
+        transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+        my_response = (uint8_t *)*response + transport_header_size;
+        my_response_size = *response_size - transport_header_size;
+    }
+    libspdm_zero_mem(my_response, my_response_size);
 
     if (spdm_context->last_spdm_error.error_code != 0) {
 
         /* Error in libspdm_process_request(), and we need send error message directly.*/
 
-        my_response_size = sizeof(my_response);
-        libspdm_zero_mem(my_response, sizeof(my_response));
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
             if((spdm_context->handle_error_return_policy & BIT0) == 0) {
                 status = libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
-                    response_size, response);
+                    &my_response_size, my_response);
             } else {
                 /**
                  * just ignore this message
@@ -390,7 +408,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         }
     }
 
-    if (response == NULL) {
+    if (*response == NULL) {
         return RETURN_INVALID_PARAMETER;
     }
     if (response_size == NULL) {
@@ -408,8 +426,6 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         return RETURN_NOT_READY;
     }
 
-    my_response_size = sizeof(my_response);
-    libspdm_zero_mem(my_response, sizeof(my_response));
     get_response_func = NULL;
     if (!is_app_message) {
         get_response_func =
