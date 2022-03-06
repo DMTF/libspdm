@@ -48,8 +48,8 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int libspdm_copy_mem(void *restrict dst_buf, uintn dst_len,
-                     const void *restrict src_buf, uintn src_len)
+int libspdm_copy_mem(void *dst_buf, uintn dst_len,
+                     const void *src_buf, uintn src_len)
 {
     volatile uint8_t* dst;
     const volatile uint8_t* src;

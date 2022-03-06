@@ -51,8 +51,8 @@
  * @return   0 on success. non-zero on error.
  *
  **/
-int libspdm_copy_mem(void *restrict dst_buf, uintn dst_len,
-                     const void *restrict src_buf, uintn src_len);
+int libspdm_copy_mem(void *dst_buf, uintn dst_len,
+                     const void *src_buf, uintn src_len);
 
 /**
  * Fills a target buffer with a byte value, and returns the target buffer.
