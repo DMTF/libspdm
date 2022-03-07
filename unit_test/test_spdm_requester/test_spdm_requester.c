@@ -13,11 +13,14 @@ int libspdm_requester_negotiate_algorithms_test_main(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 int libspdm_requester_get_digests_test_main(void);
+int libspdm_requester_encap_digests_test_main(void);
 int libspdm_requester_get_certificate_test_main(void);
+int libspdm_requester_encap_certificate_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 int libspdm_requester_challenge_test_main(void);
+int libspdm_requester_encap_challenge_auth_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
@@ -36,12 +39,12 @@ int libspdm_requester_psk_finish_test_main(void);
 
 int libspdm_requester_heartbeat_test_main(void);
 int libspdm_requester_key_update_test_main(void);
+int libspdm_requester_encap_key_update_test_main(void);
 int libspdm_requester_end_session_test_main(void);
 
 int main(void)
 {
     int return_value = 0;
-
     if (libspdm_requester_get_version_test_main() != 0) {
         return_value = 1;
     }
@@ -58,14 +61,22 @@ int main(void)
     if (libspdm_requester_get_digests_test_main() != 0) {
         return_value = 1;
     }
-
+    if (libspdm_requester_encap_digests_test_main() != 0) {
+        return_value = 1;
+    }
     if (libspdm_requester_get_certificate_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_encap_certificate_test_main() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     if (libspdm_requester_challenge_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_encap_challenge_auth_test_main() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
@@ -107,7 +118,9 @@ int main(void)
     if (libspdm_requester_key_update_test_main() != 0) {
         return_value = 1;
     }
-
+    if (libspdm_requester_encap_key_update_test_main() != 0) {
+        return_value = 1;
+    }
     if (libspdm_requester_end_session_test_main() != 0) {
         return_value = 1;
     }
