@@ -27,6 +27,7 @@ SET(src_test_spdm_responder
     heartbeat.c
     key_update.c
     end_session.c
+    encap_get_certificate.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
