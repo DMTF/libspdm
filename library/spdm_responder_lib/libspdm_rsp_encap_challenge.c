@@ -36,7 +36,9 @@ return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_contex
         return RETURN_DEVICE_ERROR;
     }
 
-    LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_challenge_request_t));
+    if(*encap_request_size < sizeof(spdm_challenge_request_t)) {
+        return RETURN_SECURITY_VIOLATION;
+    }
     *encap_request_size = sizeof(spdm_challenge_request_t);
 
     spdm_request = encap_request;
