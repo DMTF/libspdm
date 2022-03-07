@@ -43,6 +43,14 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_SUCCESS \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_SUCCESS, LIBSPDM_SOURCE_SUCCESS, 0x0000)
 
+#define LIBSPDM_RET_ON_ERR(status) \
+    do { \
+        if (LIBSPDM_STATUS_IS_ERROR(status)) { \
+            return (status); \
+        } \
+    } \
+    while (0)
+
 /* Core errors. */
 
 /* Unable to complete operation due to unsupported capabilities by the caller. */
@@ -68,6 +76,14 @@ typedef uint32_t libspdm_return_t;
 /* The received message contains one or more invalid message fields. */
 #define LIBSPDM_STATUS_INVALID_MESS_FIELD \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0005)
+
+/* The received message's size is invalid. */
+#define LIBSPDM_STATUS_INVALID_MESS_SIZE \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0006)
+
+/* Unable to derive a common set of versions, algorithms, etc. */
+#define LIBSPDM_STATUS_NEGOTIATION_FAIL \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0007)
 
 /* Cryptography errors. */
 

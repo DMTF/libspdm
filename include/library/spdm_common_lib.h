@@ -21,6 +21,7 @@
 #include "library/spdm_crypt_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_device_secret_lib.h"
+#include "library/spdm_return_status.h"
 
 
 /* Connection: When a host sends messgages to a device, they create a connection.
