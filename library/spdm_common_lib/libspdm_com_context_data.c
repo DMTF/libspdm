@@ -1875,8 +1875,8 @@ void libspdm_register_device_io_func(
  **/
 void libspdm_register_transport_layer_func(
     void *context,
-    const libspdm_transport_encode_message_func transport_encode_message,
-    const libspdm_transport_decode_message_func transport_decode_message)
+    libspdm_transport_encode_message_func transport_encode_message,
+    libspdm_transport_decode_message_func transport_decode_message)
 {
     libspdm_context_t *spdm_context;
 
