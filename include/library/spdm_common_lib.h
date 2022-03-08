@@ -23,7 +23,6 @@
 #include "library/spdm_device_secret_lib.h"
 #include "library/spdm_return_status.h"
 
-
 /* Connection: When a host sends messgages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
  *             The host may create multiple connections with multiple devices at same time.
@@ -35,8 +34,7 @@
  *          A session can be unique identified by a session ID, returned from the device.
  *          The message exchange in a session is cipher text.*/
 
-
-#define LIBSPDM_STATUS_SUCCESS 0
+/* #define LIBSPDM_STATUS_SUCCESS 0 */
 #define LIBSPDM_STATUS_ERROR BIT31
 #define LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES (LIBSPDM_STATUS_ERROR + 0x10)
 #define LIBSPDM_STATUS_ERROR_DEVICE_ERROR (LIBSPDM_STATUS_ERROR + 0x11)
@@ -47,6 +45,7 @@
 #define LIBSPDM_STATUS_ERROR_NO_CERT_PROVISION (LIBSPDM_STATUS_ERROR + 0x32)
 #define LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE (LIBSPDM_STATUS_ERROR + 0x40)
 #define LIBSPDM_STATUS_ERROR_NO_MUTUAL_AUTH (LIBSPDM_STATUS_ERROR + 0x41)
+
 
 typedef enum {
 

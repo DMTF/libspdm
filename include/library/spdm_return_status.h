@@ -9,7 +9,8 @@
  * [23:16] - source
  * [15:00] - code
  **/
-typedef uint32_t libspdm_return_t;
+/* TODO: Change to uint32_t once conversion has completed */
+typedef uintn libspdm_return_t;
 
 /* Returns 1 if severity is LIBSPDM_SEVERITY_SUCCESS else it returns 0. */
 #define LIBSPDM_STATUS_IS_SUCCESS(status) \
@@ -37,7 +38,7 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_SOURCE_RNG 0x06
 
 #define LIBSPDM_STATUS_CONSTRUCT(severity, source, code) \
-    (((severity) << 28) | ((source) << 16) | (code))
+    ((libspdm_return_t)(((severity) << 28) | ((source) << 16) | (code)))
 
 /* Success status is always 0x00000000. */
 #define LIBSPDM_STATUS_SUCCESS \
@@ -74,11 +75,11 @@ typedef uint32_t libspdm_return_t;
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0004)
 
 /* The received message contains one or more invalid message fields. */
-#define LIBSPDM_STATUS_INVALID_MESS_FIELD \
+#define LIBSPDM_STATUS_INVALID_MSG_FIELD \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0005)
 
 /* The received message's size is invalid. */
-#define LIBSPDM_STATUS_INVALID_MESS_SIZE \
+#define LIBSPDM_STATUS_INVALID_MSG_SIZE \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0006)
 
 /* Unable to derive a common set of versions, algorithms, etc. */

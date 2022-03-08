@@ -27,7 +27,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
                                          uint8_t *version_number_entry_count,
                                          spdm_version_number_t *version_number_entry)
 {
-    return_status status;
+    libspdm_return_t status;
     bool result;
     spdm_get_version_request_t spdm_request;
     libspdm_version_response_max_t spdm_response;
@@ -51,43 +51,45 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request.header.request_response_code);
 
-    LIBSPDM_RET_ON_ERR(libspdm_send_spdm_request(spdm_context, NULL,
-                                                 sizeof(spdm_request), &spdm_request));
+    status = libspdm_send_spdm_request(spdm_context, NULL,
+                                       sizeof(spdm_request), &spdm_request);
+    LIBSPDM_RET_ON_ERR(status);
 
     spdm_response_size = sizeof(spdm_response);
     libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-    LIBSPDM_RET_ON_ERR(libspdm_receive_spdm_response(
-                       spdm_context, NULL, &spdm_response_size, &spdm_response));
+
+    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size, &spdm_response);
+    LIBSPDM_RET_ON_ERR(status);
 
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return LIBSPDM_STATUS_INVALID_MESS_SIZE;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_response.header.spdm_version != SPDM_MESSAGE_VERSION_10) {
-        return LIBSPDM_STATUS_INVALID_MESS_FIELD;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        LIBSPDM_RET_ON_ERR(libspdm_handle_simple_error_response(
-            spdm_context, spdm_response.header.param1));
+        status = libspdm_handle_simple_error_response(spdm_context, spdm_response.header.param1);
+        LIBSPDM_RET_ON_ERR(status);
     } else if (spdm_response.header.request_response_code != SPDM_VERSION) {
-        return LIBSPDM_STATUS_INVALID_MESS_FIELD;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size < sizeof(spdm_version_response_t)) {
-        return LIBSPDM_STATUS_INVALID_MESS_SIZE;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_response_size > sizeof(spdm_response)) {
-        return LIBSPDM_STATUS_INVALID_MESS_SIZE;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_response.version_number_entry_count > LIBSPDM_MAX_VERSION_COUNT) {
-        return LIBSPDM_STATUS_INVALID_MESS_FIELD;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response.version_number_entry_count == 0) {
-        return LIBSPDM_STATUS_INVALID_MESS_FIELD;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size <
         sizeof(spdm_version_response_t) +
         spdm_response.version_number_entry_count *
         sizeof(spdm_version_number_t)) {
-        return LIBSPDM_STATUS_INVALID_MESS_SIZE;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     spdm_response_size = sizeof(spdm_version_response_t) +
                          spdm_response.version_number_entry_count *
@@ -96,8 +98,9 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
 
     /* Cache data*/
 
-    LIBSPDM_RET_ON_ERR(libspdm_append_message_a(spdm_context, &spdm_request,
-                                                sizeof(spdm_request)));
+    status = libspdm_append_message_a(spdm_context, &spdm_request,
+                                      sizeof(spdm_request));
+    LIBSPDM_RET_ON_ERR(status);
 
     status = libspdm_append_message_a(spdm_context, &spdm_response,
                                       spdm_response_size);
