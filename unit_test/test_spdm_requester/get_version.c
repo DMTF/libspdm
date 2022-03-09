@@ -25,35 +25,35 @@ return_status libspdm_requester_get_version_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     case 0x2:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xC:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xD:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xE:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xF:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -68,7 +68,7 @@ return_status libspdm_requester_get_version_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
 
     case 0x2: {
         libspdm_version_response_mine_t spdm_response;
@@ -87,7 +87,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
         spdm_version_response_t spdm_response;
@@ -104,7 +104,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
         spdm_error_response_t spdm_response;
@@ -120,7 +120,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
         spdm_error_response_t spdm_response;
@@ -136,7 +136,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
         static uintn sub_index1 = 0;
@@ -175,7 +175,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         }
         sub_index1++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
         spdm_error_response_t spdm_response;
@@ -191,7 +191,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t spdm_response;
@@ -212,7 +212,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
         static uintn sub_index2 = 0;
@@ -258,7 +258,7 @@ return_status libspdm_requester_get_version_test_receive_message(
         }
         sub_index2++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA: {
         libspdm_version_response_mine_t spdm_response;
@@ -278,7 +278,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xB: {
         libspdm_version_response_mine_t spdm_response;
@@ -297,7 +297,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
         libspdm_version_response_mine_t spdm_response;
@@ -316,7 +316,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xD: {
         libspdm_version_response_mine_t spdm_response;
@@ -335,7 +335,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xE:
     {
@@ -365,7 +365,7 @@ return_status libspdm_requester_get_version_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xF: {
         libspdm_version_response_mine_t spdm_response;
@@ -387,7 +387,7 @@ return_status libspdm_requester_get_version_test_receive_message(
                                               &spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -395,7 +395,7 @@ return_status libspdm_requester_get_version_test_receive_message(
 
 /**
  * Test 1: when no VERSION message is received, and the client returns a device error.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case1(void **state)
 {
@@ -408,12 +408,12 @@ void libspdm_test_requester_get_version_case1(void **state)
     spdm_test_context->case_id = 0x1;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
  * Test 2: receiving a correct VERSION message with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 void libspdm_test_requester_get_version_case2(void **state)
 {
@@ -426,12 +426,12 @@ void libspdm_test_requester_get_version_case2(void **state)
     spdm_test_context->case_id = 0x2;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
 /**
  * Test 3: receiving a correct VERSION message header, but with 0 versions available.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case3(void **state)
 {
@@ -444,12 +444,12 @@ void libspdm_test_requester_get_version_case3(void **state)
     spdm_test_context->case_id = 0x3;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
  * Test 4: receiving an InvalidRequest ERROR message from the responder.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case4(void **state)
 {
@@ -462,12 +462,12 @@ void libspdm_test_requester_get_version_case4(void **state)
     spdm_test_context->case_id = 0x4;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
- * Test 5: receiving an Busy ERROR message correct VERSION message from the responder.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Test 5: receiving a Busy ERROR message correct VERSION message from the responder.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case5(void **state)
 {
@@ -480,13 +480,13 @@ void libspdm_test_requester_get_version_case5(void **state)
     spdm_test_context->case_id = 0x5;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
  * Test 6: on the first try, receiving a Busy ERROR message, and on retry, receiving
  * a correct VERSION message with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 void libspdm_test_requester_get_version_case6(void **state)
 {
@@ -499,15 +499,13 @@ void libspdm_test_requester_get_version_case6(void **state)
     spdm_test_context->case_id = 0x6;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
 /**
  * Test 7: receiving a RequestResynch ERROR message from the responder.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and the
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD, and the
  * internal state should be reset.
- * Note: As from 1.1.c, this is an unexpected behavior, as the responder should not
- * respond a GET_VERSION message with a RequestResynch. It should expect a GET_VERSION.
  **/
 void libspdm_test_requester_get_version_case7(void **state)
 {
@@ -520,16 +518,14 @@ void libspdm_test_requester_get_version_case7(void **state)
     spdm_test_context->case_id = 0x7;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 /**
  * Test 8: receiving a ResponseNotReady ERROR message from the responder.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
- * Note: As from 1.0.0, this is an unexpected behavior, as the responder should not
- * respond a GET_VERSION message with a ResponseNotReady.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case8(void **state)
 {
@@ -542,7 +538,7 @@ void libspdm_test_requester_get_version_case8(void **state)
     spdm_test_context->case_id = 0x8;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
@@ -570,7 +566,7 @@ void libspdm_test_requester_get_version_case9(void **state)
  * Test 10: receiving a VERSION message with a larger list of available versions than indicated.
  * The presence of only two versions are indicated, but the VERSION message presents a list
  * with 3 versions: 1.0, 1.1 and 1.2.
- * Expected behavior: client returns a status of RETURN_SUCCESS, but truncate the message
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS, but truncate the message
  * to consider only the two first versions, as indicated in the message.
  **/
 void libspdm_test_requester_get_version_case10(void **state)
@@ -584,13 +580,13 @@ void libspdm_test_requester_get_version_case10(void **state)
     spdm_test_context->case_id = 0xA;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
 /**
- * Test 11: receiving a correct VERSION message with available version 10.0 and 10.1, but
+ * Test 11: receiving a correct VERSION message with available version 1.0 and 1.1, but
  * the requester do not have compatible versions with the responder.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_NEGOTIATION_FAIL.
  **/
 void libspdm_test_requester_get_version_case11(void **state)
 {
@@ -603,13 +599,13 @@ void libspdm_test_requester_get_version_case11(void **state)
     spdm_test_context->case_id = 0xB;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
 /**
  * Test 12: receiving a VERSION message in SPDM version 1.1 (in the header), but correct
  * 1.0-version format, with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case12(void **state)
 {
@@ -622,14 +618,14 @@ void libspdm_test_requester_get_version_case12(void **state)
     spdm_test_context->case_id = 0xC;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
  * Test 13: receiving a VERSION message with wrong SPDM request_response_code (in this
  * case, GET_VERSION 0x84 instead of VERSION 0x04). The remaining data is a correct
  * VERSION message, with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case13(void **state)
 {
@@ -642,7 +638,7 @@ void libspdm_test_requester_get_version_case13(void **state)
     spdm_test_context->case_id = 0xD;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
@@ -651,7 +647,7 @@ void libspdm_test_requester_get_version_case13(void **state)
  * (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
  * However, for having specific test cases, it is excluded from this case:
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_version_case14(void **state) {
     return_status status;
@@ -667,7 +663,7 @@ void libspdm_test_requester_get_version_case14(void **state) {
     while(error_code <= 0xff) {
         /* no additional state control is necessary as a new GET_VERSION resets the state*/
         status = libspdm_get_version (spdm_context, NULL, NULL);
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_INVALID_MSG_FIELD, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
@@ -686,7 +682,7 @@ void libspdm_test_requester_get_version_case14(void **state) {
  * Test 15: receiving a VERSION message with unordered vesion list.
  * Requester list:5.5, 4.5, 0.9, 1.0, 1.1
  * Responder list:4.2, 5.2, 1.2, 1.1, 1.0
- * Expected behavior: client returns a status of RETURN_SUCCESS and right negotiated version 1.1.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS and right negotiated version 1.1.
  **/
 void libspdm_test_requester_get_version_case15(void **state)
 {
@@ -704,7 +700,7 @@ void libspdm_test_requester_get_version_case15(void **state)
     spdm_context->local_context.version.spdm_version[3] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[4] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
 }
