@@ -67,10 +67,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     if (spdm_response.header.spdm_version != SPDM_MESSAGE_VERSION_10) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    if (spdm_response.header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_simple_error_response(spdm_context, spdm_response.header.param1);
-        LIBSPDM_RET_ON_ERR(status);
-    } else if (spdm_response.header.request_response_code != SPDM_VERSION) {
+    if (spdm_response.header.request_response_code != SPDM_VERSION) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size < sizeof(spdm_version_response_t)) {
