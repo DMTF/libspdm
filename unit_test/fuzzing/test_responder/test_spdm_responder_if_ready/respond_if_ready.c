@@ -28,15 +28,15 @@ void libspdm_test_responder_respond_if_ready(void **State)
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_get_digest_request_t m_spdm_get_digest_request = {
+    spdm_get_digest_request_t spdm_test_get_digest_request = {
         { SPDM_MESSAGE_VERSION_11, SPDM_GET_DIGESTS, 0, 0 },
     };
-    uintn m_spdm_get_digest_request_size = sizeof(spdm_message_header_t);
+    uintn spdm_test_get_digest_request_size = sizeof(spdm_message_header_t);
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -49,16 +49,16 @@ void libspdm_test_responder_respond_if_ready(void **State)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.local_cert_chain_provision[0] =
-        m_local_certificate_chain;
+        local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+    libspdm_set_mem(local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     spdm_context->local_context.slot_count = 1;
 
-    spdm_context->last_spdm_request_size = m_spdm_get_digest_request_size;
+    spdm_context->last_spdm_request_size = spdm_test_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
-                     &m_spdm_get_digest_request,  m_spdm_get_digest_request_size);
+                     &spdm_test_get_digest_request,  spdm_test_get_digest_request_size);
 
     spdm_context->cache_spdm_request_size =
         spdm_context->last_spdm_request_size;
@@ -90,10 +90,9 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     m_libspdm_responder_if_ready_test_context.test_buffer_size =
         test_buffer_size;
 
-    libspdm_unit_test_group_setup(&State);
-
     /* Success Case*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_respond_if_ready(&State);
-
     libspdm_unit_test_group_teardown(&State);
+
 }
