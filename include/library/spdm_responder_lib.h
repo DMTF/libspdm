@@ -51,7 +51,7 @@ typedef return_status (*libspdm_get_response_func)(
  * @param  get_response_func              The function to process the encapsuled message.
  **/
 void libspdm_register_get_response_func(
-    void *spdm_context, const libspdm_get_response_func get_response_func);
+    void *spdm_context, libspdm_get_response_func get_response_func);
 
 /**
  * Process a SPDM request from a device.
