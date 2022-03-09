@@ -384,6 +384,11 @@ void libspdm_test_responder_finish_case8(void **State)
     /* session_transcript.message_k is 0*/
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, &m_spdm_finish_request, sizeof(spdm_finish_request_t));
+    /* The caller need guarantee the version is correct, both of MajorVersion and MinorVersion should be less than 10.*/
+    if (((m_spdm_finish_request.header.spdm_version & 0xF) >= 10) ||
+        (((m_spdm_finish_request.header.spdm_version >> 4) & 0xF) >= 10)) {
+        m_spdm_finish_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    }
     libspdm_requester_data_sign(
         m_spdm_finish_request.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo, false,
