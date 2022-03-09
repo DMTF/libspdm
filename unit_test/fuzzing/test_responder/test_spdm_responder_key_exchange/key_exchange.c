@@ -37,8 +37,8 @@ void libspdm_test_responder_key_exchange_case1(void **State)
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     void *data;
     uintn data_size;
 
@@ -49,9 +49,9 @@ void libspdm_test_responder_key_exchange_case1(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -74,7 +74,7 @@ void libspdm_test_responder_key_exchange_case1(void **State)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    ptr = m_spdm_key_exchange_request.exchange_data;
+    ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
                                   false);
@@ -90,16 +90,16 @@ void libspdm_test_responder_key_exchange_case1(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
 void libspdm_test_responder_key_exchange_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -113,9 +113,9 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
@@ -137,7 +137,7 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     spdm_context->local_context.slot_count = 1;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    ptr = m_spdm_key_exchange_request.exchange_data;
+    ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
                                   false);
@@ -153,16 +153,16 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
 void libspdm_test_responder_key_exchange_case3(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -171,9 +171,9 @@ void libspdm_test_responder_key_exchange_case3(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_MAX;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -199,8 +199,8 @@ void libspdm_test_responder_key_exchange_case3(void **State)
 
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
@@ -210,8 +210,8 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     void *data;
     uintn data_size;
 
@@ -222,9 +222,9 @@ void libspdm_test_responder_key_exchange_case4(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -253,7 +253,7 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 1;
 
-    ptr = m_spdm_key_exchange_request.exchange_data;
+    ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
                                   false);
@@ -269,8 +269,8 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
@@ -280,8 +280,8 @@ void libspdm_test_responder_key_exchange_case5(void **State)
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     void *data;
     uintn data_size;
 
@@ -292,9 +292,9 @@ void libspdm_test_responder_key_exchange_case5(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -321,7 +321,7 @@ void libspdm_test_responder_key_exchange_case5(void **State)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    ptr = m_spdm_key_exchange_request.exchange_data;
+    ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
                                   false);
@@ -337,16 +337,16 @@ void libspdm_test_responder_key_exchange_case5(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
 void libspdm_test_responder_key_exchange_case6(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
-    libspdm_key_exchange_request_mine_t m_spdm_key_exchange_request;
-    uintn m_spdm_key_exchange_request_size;
+    libspdm_key_exchange_request_mine_t *spdm_test_key_exchange_request;
+    uintn spdm_test_key_exchange_request_size;
     libspdm_context_t *spdm_context;
     uintn response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -359,9 +359,9 @@ void libspdm_test_responder_key_exchange_case6(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-    m_spdm_key_exchange_request =
-        *(libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
-    m_spdm_key_exchange_request_size = spdm_test_context->test_buffer_size;
+    spdm_test_key_exchange_request =
+        (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
+    spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
@@ -383,7 +383,7 @@ void libspdm_test_responder_key_exchange_case6(void **State)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    ptr = m_spdm_key_exchange_request.exchange_data;
+    ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
                                   false);
@@ -399,8 +399,8 @@ void libspdm_test_responder_key_exchange_case6(void **State)
     ptr += opaque_key_exchange_req_size;
     response_size = sizeof(response);
 
-    libspdm_get_response_key_exchange(spdm_context, m_spdm_key_exchange_request_size,
-                                      &m_spdm_key_exchange_request, &response_size, response);
+    libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
+                                      spdm_test_key_exchange_request, &response_size, response);
     free(data);
 }
 
