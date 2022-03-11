@@ -70,8 +70,8 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_simple_error_response(spdm_context, spdm_response.header.param1);
 
-        // TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-        // uses the new error codes.
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
         if (status == RETURN_DEVICE_ERROR) {
             return LIBSPDM_STATUS_ERROR_PEER;
         }
@@ -166,8 +166,8 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
-                                  uint8_t *version_number_entry_count,
-                                  spdm_version_number_t *version_number_entry)
+                                     uint8_t *version_number_entry_count,
+                                     spdm_version_number_t *version_number_entry)
 {
     uintn retry;
     libspdm_return_t status;
