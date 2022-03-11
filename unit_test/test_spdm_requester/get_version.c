@@ -214,50 +214,7 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x9: {
-        static uintn sub_index2 = 0;
-        if (sub_index2 == 0) {
-            spdm_error_response_data_response_not_ready_t
-                spdm_response;
-
-            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code =
-                SPDM_GET_VERSION;
-            spdm_response.extend_error_data.token = 1;
-
-            libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
-                response_size, response);
-        } else if (sub_index2 == 1) {
-            libspdm_version_response_mine_t spdm_response;
-
-            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code =
-                SPDM_VERSION;
-            spdm_response.header.param1 = 0;
-            spdm_response.header.param2 = 0;
-            spdm_response.version_number_entry_count = 2;
-            spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-            spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-
-            libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
-                response_size, response);
-        }
-        sub_index2++;
-    }
+    case 0x9:
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA: {
@@ -542,24 +499,10 @@ void libspdm_test_requester_get_version_case8(void **state)
 }
 
 /**
- * Test 9: on the first try, receiving a ResponseNotReady ERROR message, and on retry,
- * receiving a correct VERSION message with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
- * Note: The responder should not
- * respond a GET_VERSION message with a ResponseNotReady.
+ * Test 9: Can be populated with new test.
  **/
 void libspdm_test_requester_get_version_case9(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x9;
-
-    status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 /**
