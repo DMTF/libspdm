@@ -147,3 +147,19 @@ if [[ $2 = "ON" ]]; then
     llvm-cov export -format lcov -instr-profile coverage.prof ${object_parameters[*]} > coverage.info
     genhtml coverage.info --output-directory $fuzzing_out/coverage_log
 fi
+
+function walk_dir(){
+    for file in `ls $1`
+    do
+        libfuzzer_banner=$file
+        leak=`find $1"/"$file -name '*leak*' |wc -l`
+        timeout=`find $1"/"$file -name '*timeout*' |wc -l`
+        crash=`find $1"/"$file -name '*crash*' |wc -l`
+        echo $libfuzzer_banner,$leak,$timeout,$crash >> $fuzzing_out"/SummaryList.csv"
+    done
+}
+echo libfuzzer_banner,leak,timeout,crash > $fuzzing_out"/SummaryList.csv"
+walk_dir $fuzzing_out
+
+sed -i '/SummaryList.csv/d' $fuzzing_out"/SummaryList.csv"
+sed -i '/coverage_log/d' $fuzzing_out"/SummaryList.csv"
