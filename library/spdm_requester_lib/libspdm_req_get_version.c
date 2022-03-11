@@ -67,7 +67,18 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     if (spdm_response.header.spdm_version != SPDM_MESSAGE_VERSION_10) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    if (spdm_response.header.request_response_code != SPDM_VERSION) {
+    if (spdm_response.header.request_response_code == SPDM_ERROR) {
+        status = libspdm_handle_simple_error_response(spdm_context, spdm_response.header.param1);
+
+        // TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+        // uses the new error codes.
+        if (status == RETURN_DEVICE_ERROR) {
+            return LIBSPDM_STATUS_ERROR_PEER;
+        }
+        else if (status == RETURN_NO_RESPONSE) {
+            return LIBSPDM_STATUS_BUSY_PEER;
+        }
+    } else if (spdm_response.header.request_response_code != SPDM_VERSION) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size < sizeof(spdm_version_response_t)) {
@@ -91,7 +102,6 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     spdm_response_size = sizeof(spdm_version_response_t) +
                          spdm_response.version_number_entry_count *
                          sizeof(spdm_version_number_t);
-
 
     /* Cache data*/
 
@@ -167,7 +177,7 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
     do {
         status = libspdm_try_get_version(spdm_context,
                                          version_number_entry_count, version_number_entry);
-        if (RETURN_NO_RESPONSE != status) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
     } while (retry-- != 0);

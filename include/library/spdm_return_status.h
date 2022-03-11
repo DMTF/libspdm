@@ -86,6 +86,14 @@ typedef uintn libspdm_return_t;
 #define LIBSPDM_STATUS_NEGOTIATION_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0007)
 
+/* Received a Busy error message. */
+#define LIBSPDM_STATUS_BUSY_PEER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0008)
+
+/* Received an unexpected error message. */
+#define LIBSPDM_STATUS_ERROR_PEER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0009)
+
 /* Cryptography errors. */
 
 /* Verification of the provided signature failed. */
@@ -109,7 +117,6 @@ typedef uintn libspdm_return_t;
 /* Unable to receive message from peer. */
 #define LIBSPDM_STATUS_RECEIVE_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPSM_SOURCE_TRANSPORT, 0x0001)
-
 
 /* Random number generation errors. */
 

@@ -16,7 +16,7 @@ typedef struct {
 } libspdm_version_response_mine_t;
 #pragma pack()
 
-return_status libspdm_requester_get_version_test_send_message(
+libspdm_return_t libspdm_requester_get_version_test_send_message(
     void *spdm_context, uintn request_size, const void *request,
     uint64_t timeout)
 {
@@ -59,7 +59,7 @@ return_status libspdm_requester_get_version_test_send_message(
     }
 }
 
-return_status libspdm_requester_get_version_test_receive_message(
+libspdm_return_t libspdm_requester_get_version_test_receive_message(
     void *spdm_context, uintn *response_size,
     void *response, uint64_t timeout)
 {
@@ -399,7 +399,7 @@ return_status libspdm_requester_get_version_test_receive_message(
  **/
 void libspdm_test_requester_get_version_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -417,7 +417,7 @@ void libspdm_test_requester_get_version_case1(void **state)
  **/
 void libspdm_test_requester_get_version_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -435,7 +435,7 @@ void libspdm_test_requester_get_version_case2(void **state)
  **/
 void libspdm_test_requester_get_version_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -449,11 +449,11 @@ void libspdm_test_requester_get_version_case3(void **state)
 
 /**
  * Test 4: receiving an InvalidRequest ERROR message from the responder.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  **/
 void libspdm_test_requester_get_version_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -462,16 +462,16 @@ void libspdm_test_requester_get_version_case4(void **state)
     spdm_test_context->case_id = 0x4;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 /**
  * Test 5: receiving a Busy ERROR message correct VERSION message from the responder.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_BUSY_PEER.
  **/
 void libspdm_test_requester_get_version_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -480,7 +480,7 @@ void libspdm_test_requester_get_version_case5(void **state)
     spdm_test_context->case_id = 0x5;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
 }
 
 /**
@@ -490,7 +490,7 @@ void libspdm_test_requester_get_version_case5(void **state)
  **/
 void libspdm_test_requester_get_version_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -504,12 +504,12 @@ void libspdm_test_requester_get_version_case6(void **state)
 
 /**
  * Test 7: receiving a RequestResynch ERROR message from the responder.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD, and the
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER, and the
  * internal state should be reset.
  **/
 void libspdm_test_requester_get_version_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -518,18 +518,18 @@ void libspdm_test_requester_get_version_case7(void **state)
     spdm_test_context->case_id = 0x7;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 /**
  * Test 8: receiving a ResponseNotReady ERROR message from the responder.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  **/
 void libspdm_test_requester_get_version_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -538,19 +538,19 @@ void libspdm_test_requester_get_version_case8(void **state)
     spdm_test_context->case_id = 0x8;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 /**
  * Test 9: on the first try, receiving a ResponseNotReady ERROR message, and on retry,
  * receiving a correct VERSION message with available version 1.0 and 1.1.
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  * Note: The responder should not
  * respond a GET_VERSION message with a ResponseNotReady.
  **/
 void libspdm_test_requester_get_version_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -559,7 +559,7 @@ void libspdm_test_requester_get_version_case9(void **state)
     spdm_test_context->case_id = 0x9;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 /**
@@ -571,7 +571,7 @@ void libspdm_test_requester_get_version_case9(void **state)
  **/
 void libspdm_test_requester_get_version_case10(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -590,7 +590,7 @@ void libspdm_test_requester_get_version_case10(void **state)
  **/
 void libspdm_test_requester_get_version_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -609,7 +609,7 @@ void libspdm_test_requester_get_version_case11(void **state)
  **/
 void libspdm_test_requester_get_version_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -629,7 +629,7 @@ void libspdm_test_requester_get_version_case12(void **state)
  **/
 void libspdm_test_requester_get_version_case13(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -647,10 +647,10 @@ void libspdm_test_requester_get_version_case13(void **state)
  * (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
  * However, for having specific test cases, it is excluded from this case:
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
- * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  **/
 void libspdm_test_requester_get_version_case14(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     uint16_t error_code;
@@ -663,7 +663,7 @@ void libspdm_test_requester_get_version_case14(void **state) {
     while(error_code <= 0xff) {
         /* no additional state control is necessary as a new GET_VERSION resets the state*/
         status = libspdm_get_version (spdm_context, NULL, NULL);
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_INVALID_MSG_FIELD, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
@@ -686,7 +686,7 @@ void libspdm_test_requester_get_version_case14(void **state) {
  **/
 void libspdm_test_requester_get_version_case15(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
