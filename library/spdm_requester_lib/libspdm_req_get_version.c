@@ -18,10 +18,22 @@ typedef struct {
 /**
  * This function sends GET_VERSION and receives VERSION.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  version_count        The number of SPDM versions that the Responder supports.
+ * @param  VersionNumberEntries The list of SPDM versions that the Responder supports.
  *
- * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_VERSION was sent and VERSION was received.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the VERSION response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The VERSION response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
  **/
 libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
                                          uint8_t *version_number_entry_count,
@@ -156,14 +168,25 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
 }
 
 /**
- * This function sends GET_VERSION and receives VERSION.
+ * This function sends GET_VERSION and receives VERSION. It may retry GET_VERSION multiple times
+ * if the Responder replies with a Busy error.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  version_count                 version_count from the VERSION response.
- * @param  VersionNumberEntries         VersionNumberEntries from the VERSION response.
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  version_count        The number of SPDM versions that the Responder supports.
+ * @param  VersionNumberEntries The list of SPDM versions that the Responder supports.
  *
- * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_VERSION was sent and VERSION was received.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the VERSION response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The VERSION response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
  **/
 libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
                                      uint8_t *version_number_entry_count,
