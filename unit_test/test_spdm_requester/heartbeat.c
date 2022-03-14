@@ -1116,7 +1116,7 @@ void libspdm_test_requester_heartbeat_case7(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
     free(data);

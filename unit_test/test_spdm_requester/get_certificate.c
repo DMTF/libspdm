@@ -1949,7 +1949,7 @@ void libspdm_test_requester_get_certificate_case7(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

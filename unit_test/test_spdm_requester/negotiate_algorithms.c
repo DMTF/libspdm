@@ -1234,7 +1234,7 @@ void libspdm_test_requester_negotiate_algorithms_case7(void **state)
     libspdm_reset_message_a(spdm_context);
 
     status = libspdm_negotiate_algorithms(spdm_context);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

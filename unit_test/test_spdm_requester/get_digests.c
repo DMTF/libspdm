@@ -931,7 +931,7 @@ void libspdm_test_requester_get_digests_case7(void **state)
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status =
         libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
