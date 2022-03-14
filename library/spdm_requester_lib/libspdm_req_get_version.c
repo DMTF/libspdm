@@ -32,6 +32,8 @@ typedef struct {
  *         The Responder returned an unexpected error.
  * @retval LIBSPDM_STATUS_BUSY_PEER
  *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
  * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
  *         The Requester and Responder do not support a common SPDM version.
  **/
@@ -188,6 +190,8 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
  *         The Responder returned an unexpected error.
  * @retval LIBSPDM_STATUS_BUSY_PEER
  *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
  * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
  *         The Requester and Responder do not support a common SPDM version.
  **/
