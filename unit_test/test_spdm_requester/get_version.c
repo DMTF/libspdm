@@ -25,7 +25,7 @@ libspdm_return_t libspdm_requester_get_version_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
@@ -68,7 +68,7 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x2: {
         libspdm_version_response_mine_t spdm_response;
@@ -365,7 +365,7 @@ void libspdm_test_requester_get_version_case1(void **state)
     spdm_test_context->case_id = 0x1;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
 
 /**
@@ -461,7 +461,7 @@ void libspdm_test_requester_get_version_case6(void **state)
 
 /**
  * Test 7: receiving a RequestResynch ERROR message from the responder.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER, and the
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_RESYNCH_PEER, and the
  * internal state should be reset.
  **/
 void libspdm_test_requester_get_version_case7(void **state)
@@ -475,7 +475,7 @@ void libspdm_test_requester_get_version_case7(void **state)
     spdm_test_context->case_id = 0x7;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
