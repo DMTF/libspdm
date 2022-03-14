@@ -104,9 +104,9 @@ static bool validate_responder_capability(uint32_t capabilities_flag,
  *         The Responder returned an unexpected error.
  * @retval LIBSPDM_STATUS_BUSY_PEER
  *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
- *         The Requester and Responder do not support a common SPDM version.
- * @retval LIBSPDM_STATUS_BUFFER_EXHAUST
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
 libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
@@ -250,9 +250,9 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
  *         The Responder returned an unexpected error.
  * @retval LIBSPDM_STATUS_BUSY_PEER
  *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
- *         The Requester and Responder do not support a common SPDM version.
- * @retval LIBSPDM_STATUS_BUFFER_EXHAUST
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
