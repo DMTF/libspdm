@@ -203,13 +203,13 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
     /* Cache data*/
 
     status = libspdm_append_message_a(spdm_context, &spdm_request, spdm_request_size);
-    // TODO: Replace with LIBSPDM_RET_ON_ERR.
+    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
     if (RETURN_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
     status = libspdm_append_message_a(spdm_context, &spdm_response, spdm_response_size);
-    // TODO: Replace with LIBSPDM_RET_ON_ERR.
+    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
     if (RETURN_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
