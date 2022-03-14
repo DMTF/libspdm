@@ -7,18 +7,16 @@
 #include "internal/libspdm_requester_lib.h"
 
 /**
- * This function checks the compability of the received CAPABILITES flag.
- * Some flags are mutually inclusive/exclusive.
+ * This function validates the Responder's capabilities.
  *
- * @param  capabilities_flag             The received CAPABILITIES Flag.
- * @param  version                      The SPMD message version.
+ * @param  capabilities_flag The Responder's CAPABILITIES.Flags field.
+ * @param  version           The SPDM message version.
  *
- *
- * @retval True                         The received Capabilities flag is valid.
- * @retval False                        The received Capabilities flag is invalid.
+ * @retval true  The field is valid.
+ * @retval false The field is invalid.
  **/
-bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
-                                             uint8_t version)
+static bool validate_responder_capability(uint32_t capabilities_flag,
+                                          uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
@@ -33,8 +31,7 @@ bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
     uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
     /*uint8_t hbeat_cap = (uint8_t)(capabilities_flag>>13)&0x01;
      * uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;*/
-    uint8_t handshake_in_the_clear_cap =
-        (uint8_t)(capabilities_flag >> 15) & 0x01;
+    uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
     uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
 
     switch (version) {
@@ -42,8 +39,7 @@ bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
         return true;
 
     case SPDM_MESSAGE_VERSION_11:
-    case SPDM_MESSAGE_VERSION_12:
-    {
+    case SPDM_MESSAGE_VERSION_12: {
         /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
         if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
             return false;
@@ -81,35 +77,49 @@ bool libspdm_check_response_flag_compability(uint32_t capabilities_flag,
         if (meas_cap == 3 || psk_cap == 3) {
             return false;
         }
-    }
+
         return true;
+    }
 
     default:
-        return true;
+        LIBSPDM_ASSERT(false);
+        return false;
     }
 }
 
 /**
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_context A pointer to the SPDM context.
  *
- * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CAPABILITIES was sent and CAPABILITIES was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CAPABILITIES due to Requester's state. Send GET_VERSION first.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CAPABILITIES response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CAPABILITIES response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
+ * @retval LIBSPDM_STATUS_BUFFER_EXHAUST
+ *         The buffer used to store transcripts is exhausted.
  **/
-return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
+libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_get_capabilities_request_t spdm_request;
     uintn spdm_request_size;
     spdm_capabilities_response_t spdm_response;
     uintn spdm_response_size;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  SPDM_GET_CAPABILITIES);
-    if (spdm_context->connection_info.connection_state !=
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
-        return RETURN_UNSUPPORTED;
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_CAPABILITIES);
+    if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
@@ -126,53 +136,57 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
     spdm_request.header.request_response_code = SPDM_GET_CAPABILITIES;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
-    spdm_request.ct_exponent =
-        spdm_context->local_context.capability.ct_exponent;
+    spdm_request.ct_exponent = spdm_context->local_context.capability.ct_exponent;
     spdm_request.flags = spdm_context->local_context.capability.flags;
     spdm_request.data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
     spdm_request.max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
-    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
-                                       &spdm_request);
-    if (RETURN_ERROR(status)) {
-        return status;
-    }
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, &spdm_request);
+    LIBSPDM_RET_ON_ERR(status);
 
     spdm_response_size = sizeof(spdm_response);
     libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-    status = libspdm_receive_spdm_response(
-        spdm_context, NULL, &spdm_response_size, &spdm_response);
-    if (RETURN_ERROR(status)) {
-        return status;
-    }
+    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size, &spdm_response);
+    LIBSPDM_RET_ON_ERR(status);
+
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response.header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_simple_error_response(
             spdm_context, spdm_response.header.param1);
-        if (RETURN_ERROR(status)) {
-            return status;
+
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            return LIBSPDM_STATUS_ERROR_PEER;
         }
+        else if (status == RETURN_NO_RESPONSE) {
+            return LIBSPDM_STATUS_BUSY_PEER;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            return LIBSPDM_STATUS_RESYNCH_PEER;
+        }
+
     } else if (spdm_response.header.request_response_code !=
                SPDM_CAPABILITIES) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t)) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
     } else {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t) -
             sizeof(spdm_response.data_transfer_size) -
             sizeof(spdm_response.max_spdm_msg_size)) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
     }
     if (spdm_response_size > sizeof(spdm_response)) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response_size = sizeof(spdm_capabilities_response_t);
@@ -182,24 +196,22 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
                              sizeof(spdm_response.max_spdm_msg_size);
     }
 
-    if (!libspdm_check_response_flag_compability(
-            spdm_response.flags, spdm_response.header.spdm_version)) {
-        return RETURN_DEVICE_ERROR;
+    if (!validate_responder_capability(spdm_response.flags, spdm_response.header.spdm_version)) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-
 
     /* Cache data*/
 
-    status = libspdm_append_message_a(spdm_context, &spdm_request,
-                                      spdm_request_size);
+    status = libspdm_append_message_a(spdm_context, &spdm_request, spdm_request_size);
+    // TODO: Replace with LIBSPDM_RET_ON_ERR.
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    status = libspdm_append_message_a(spdm_context, &spdm_response,
-                                      spdm_response_size);
+    status = libspdm_append_message_a(spdm_context, &spdm_response, spdm_response_size);
+    // TODO: Replace with LIBSPDM_RET_ON_ERR.
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
     spdm_context->connection_info.capability.ct_exponent =
@@ -216,30 +228,44 @@ return_status libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
         spdm_context->connection_info.capability.max_spdm_msg_size = 0;
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
- * This function sends GET_CAPABILITIES and receives CAPABILITIES.
+ * This function sends GET_CAPABILITIES and receives CAPABILITIES. It may retry GET_CAPABILITIES
+ * multiple times if the Responder replies with a Busy error.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_context A pointer to the SPDM context.
  *
- * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CAPABILITIES was sent and CAPABILITIES was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CAPABILITIES due to Requester's state. Send GET_VERSION first.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CAPABILITIES response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CAPABILITIES response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
+ * @retval LIBSPDM_STATUS_BUFFER_EXHAUST
+ *         The buffer used to store transcripts is exhausted.
  **/
-return_status libspdm_get_capabilities(libspdm_context_t *spdm_context)
+libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
 {
     uintn retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
         status = libspdm_try_get_capabilities(spdm_context);
-        if (RETURN_NO_RESPONSE != status) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
     } while (retry-- != 0);

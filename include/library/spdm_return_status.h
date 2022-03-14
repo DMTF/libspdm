@@ -94,6 +94,14 @@ typedef uintn libspdm_return_t;
 #define LIBSPDM_STATUS_ERROR_PEER \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0009)
 
+/* Received a RequestResynch error message. */
+#define LIBSPDM_STATUS_RESYNCH_PEER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000a)
+
+/* Unable to append new data to buffer due to resource exhaustion. */
+#define LIBSPDM_STATUS_BUFFER_FULL \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000b)
+
 /* Cryptography errors. */
 
 /* Verification of the provided signature failed. */
