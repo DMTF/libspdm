@@ -1122,7 +1122,7 @@ void libspdm_test_requester_end_session_case7(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_send_receive_end_session(spdm_context, session_id, 0);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
     free(data);
