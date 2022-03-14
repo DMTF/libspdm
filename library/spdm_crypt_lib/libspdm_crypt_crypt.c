@@ -3892,6 +3892,9 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
  **/
 bool libspdm_get_random_number(uintn size, uint8_t *rand)
 {
+    if (size == 0) {
+        return true;
+    }
     return libspdm_random_bytes(rand, size);
 }
 
