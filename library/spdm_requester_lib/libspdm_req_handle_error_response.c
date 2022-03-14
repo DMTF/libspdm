@@ -99,6 +99,7 @@ return_status libspdm_handle_simple_error_response(void *context,
     if (error_code == SPDM_ERROR_CODE_REQUEST_RESYNCH) {
         spdm_context->connection_info.connection_state =
             LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+        return LIBSPDM_STATUS_RESYNCH_PEER;
     }
 
     return RETURN_DEVICE_ERROR;
