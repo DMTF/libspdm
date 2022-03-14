@@ -169,7 +169,6 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
         else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
             return LIBSPDM_STATUS_RESYNCH_PEER;
         }
-
     } else if (spdm_response.header.request_response_code !=
                SPDM_CAPABILITIES) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;

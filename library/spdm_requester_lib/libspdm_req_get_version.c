@@ -90,6 +90,9 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
         else if (status == RETURN_NO_RESPONSE) {
             return LIBSPDM_STATUS_BUSY_PEER;
         }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            return LIBSPDM_STATUS_RESYNCH_PEER;
+        }
     } else if (spdm_response.header.request_response_code != SPDM_VERSION) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
