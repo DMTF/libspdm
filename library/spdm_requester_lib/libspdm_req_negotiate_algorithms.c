@@ -98,7 +98,7 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
     spdm_request.measurement_specification = spdm_context->local_context.algorithm.measurement_spec;
     if (spdm_request.header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request.other_params_support =
-        spdm_context->local_context.algorithm.other_params_support;
+            spdm_context->local_context.algorithm.other_params_support;
     }
     spdm_request.base_asym_algo = spdm_context->local_context.algorithm.base_asym_algo;
     spdm_request.base_hash_algo = spdm_context->local_context.algorithm.base_hash_algo;
