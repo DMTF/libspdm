@@ -76,6 +76,11 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                      hash_data);
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    /* The caller need guarantee the version is correct, both of MajorVersion and MinorVersion should be less than 10.*/
+    if (((spdm_response->header.spdm_version & 0xF) >= 10) ||
+        (((spdm_response->header.spdm_version >> 4) & 0xF) >= 10)) {
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    }
     libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                                 SPDM_CHALLENGE_AUTH, m_libspdm_use_asym_algo,
                                 m_libspdm_use_hash_algo, false,
