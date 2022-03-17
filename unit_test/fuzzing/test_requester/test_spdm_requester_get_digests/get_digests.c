@@ -28,15 +28,35 @@ return_status libspdm_device_receive_message(void *spdm_context,
                                              uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
+    uint8_t spdm_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uintn spdm_response_size;
+    uint8_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
-    libspdm_copy_mem(response, *response_size, spdm_test_context->test_buffer,
-                     spdm_test_context->test_buffer_size);
-    *response_size = spdm_test_context->test_buffer_size;
+    test_message_header_size = 1;
+    spdm_response_size = spdm_test_context->test_buffer_size - test_message_header_size;
+    if (spdm_response_size < LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
+        libspdm_copy_mem((uint8_t *)spdm_response, sizeof(spdm_response),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+                         spdm_response_size);
+    } else {
+        libspdm_copy_mem((uint8_t *)spdm_response, sizeof(spdm_response),
+                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size);
+    }
+    if (spdm_response_size < LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size,
+                                              spdm_response, response_size, response);
+    } else {
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - LIBSPDM_TEST_ALIGNMENT,
+                                              spdm_response, response_size, response);
+    }
     return RETURN_SUCCESS;
 }
 
-void libspdm_test_requester_get_diges(void **State)
+void libspdm_test_requester_get_digests(void **State)
 {
     return_status status;
     libspdm_test_context_t *spdm_test_context;
@@ -47,6 +67,8 @@ void libspdm_test_requester_get_diges(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -88,7 +110,7 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_setup(&State);
 
     /* Successful response*/
-    libspdm_test_requester_get_diges(&State);
+    libspdm_test_requester_get_digests(&State);
 
     libspdm_unit_test_group_teardown(&State);
 }
