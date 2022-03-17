@@ -48,8 +48,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     uintn spdm_response_size;
     spdm_version_number_t common_version;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
     spdm_request.header.request_response_code = SPDM_GET_VERSION;
@@ -65,8 +64,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request.header.request_response_code);
 
-    status = libspdm_send_spdm_request(spdm_context, NULL,
-                                       sizeof(spdm_request), &spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, NULL, sizeof(spdm_request), &spdm_request);
     LIBSPDM_RET_ON_ERR(status);
 
     spdm_response_size = sizeof(spdm_response);

@@ -517,8 +517,7 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
  * @retval true  digest verification pass.
  * @retval false digest verification fail.
  **/
-bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
-                                 void *digest, uintn digest_count)
+bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context, void *digest, uintn digest_count)
 {
     uintn hash_size;
     uint8_t *hash_buffer;
@@ -528,13 +527,10 @@ bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
     uintn index;
     bool result;
 
-    cert_chain_buffer =
-        spdm_context->local_context.peer_cert_chain_provision;
-    cert_chain_buffer_size =
-        spdm_context->local_context.peer_cert_chain_provision_size;
+    cert_chain_buffer = spdm_context->local_context.peer_cert_chain_provision;
+    cert_chain_buffer_size = spdm_context->local_context.peer_cert_chain_provision_size;
     if ((cert_chain_buffer != NULL) && (cert_chain_buffer_size != 0)) {
-        hash_size = libspdm_get_hash_size(
-            spdm_context->connection_info.algorithm.base_hash_algo);
+        hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
         hash_buffer = digest;
 
         result = libspdm_hash_all(
