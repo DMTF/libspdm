@@ -155,7 +155,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     if (req_or_res == 1) {
         *(uint8_t *)test_buffer = LIBSPDM_TEST_MESSAGE_TYPE_SPDM;
-        libspdm_copy_mem((uint8_t *)test_buffer + 1, max_buffer_size - 1, data, size);
+        if (size == max_buffer_size) {
+            libspdm_copy_mem((uint8_t *)test_buffer + 1, max_buffer_size - 1, data, size - 1);
+        } else {
+            libspdm_copy_mem((uint8_t *)test_buffer + 1, max_buffer_size - 1, data, size);
+        }
     }
     else{
         libspdm_copy_mem(test_buffer, max_buffer_size, data, size);
