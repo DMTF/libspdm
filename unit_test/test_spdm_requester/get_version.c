@@ -61,7 +61,7 @@ libspdm_return_t libspdm_requester_get_version_test_send_message(
 
 libspdm_return_t libspdm_requester_get_version_test_receive_message(
     void *spdm_context, uintn *response_size,
-    void *response, uint64_t timeout)
+    void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -71,69 +71,93 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x2: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
-        spdm_version_response_t spdm_response;
+        spdm_version_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 0;
+        spdm_response_size = sizeof(spdm_version_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -141,36 +165,48 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     case 0x6: {
         static uintn sub_index1 = 0;
         if (sub_index1 == 0) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
 
-            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            libspdm_zero_mem(spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
         } else if (sub_index1 == 1) {
-            libspdm_version_response_mine_t spdm_response;
+            libspdm_version_response_mine_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
 
-            libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(libspdm_version_response_mine_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            libspdm_zero_mem(spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code =
+            spdm_response->header.request_response_code =
                 SPDM_VERSION;
-            spdm_response.header.param1 = 0;
-            spdm_response.header.param2 = 0;
-            spdm_response.version_number_entry_count = 2;
-            spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-            spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            spdm_response->header.param1 = 0;
+            spdm_response->header.param2 = 0;
+            spdm_response->version_number_entry_count = 2;
+            spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
         }
         sub_index1++;
@@ -178,38 +214,50 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
-        spdm_error_response_data_response_not_ready_t spdm_response;
+        spdm_error_response_data_response_not_ready_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 =
+        spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-        spdm_response.header.param2 = 0;
-        spdm_response.extend_error_data.rd_exponent = 1;
-        spdm_response.extend_error_data.rd_tm = 1;
-        spdm_response.extend_error_data.request_code = SPDM_GET_VERSION;
-        spdm_response.extend_error_data.token = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->extend_error_data.rd_exponent = 1;
+        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.request_code = SPDM_GET_VERSION;
+        spdm_response->extend_error_data.token = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -218,78 +266,102 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xB: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0] = 0xA0 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0xA1 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0xA0 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0xA1 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xD: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_GET_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 2;
-        spdm_response.version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_GET_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -298,16 +370,22 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
+
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         if(error_code <= 0xff) {
-            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = (uint8_t) error_code;
+            libspdm_zero_mem (spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = (uint8_t) error_code;
 
             libspdm_transport_test_encode_message (spdm_context, NULL, false, false,
-                                                   sizeof(spdm_response), &spdm_response,
+                                                   spdm_response_size, spdm_response,
                                                    response_size, response);
         }
 
@@ -325,23 +403,29 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0xF: {
-        libspdm_version_response_mine_t spdm_response;
+        libspdm_version_response_mine_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
 
-        libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response.header.request_response_code = SPDM_VERSION;
-        spdm_response.header.param1 = 0;
-        spdm_response.header.param2 = 0;
-        spdm_response.version_number_entry_count = 5;
-        spdm_response.version_number_entry[0] = 0x42 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[1] = 0x52 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[3] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-        spdm_response.version_number_entry[4] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 5;
+        spdm_response->version_number_entry[0] = 0x42 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x52 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[3] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[4] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, sizeof(spdm_response),
-                                              &spdm_response,
+                                              false, spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;

@@ -50,13 +50,17 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
 {
     bool result;
     libspdm_return_t status;
-    spdm_get_digest_request_t spdm_request;
-    libspdm_digests_response_max_t spdm_response;
+    spdm_get_digest_request_t *spdm_request;
+    uintn spdm_request_size;
+    libspdm_digests_response_max_t *spdm_response;
     uintn spdm_response_size;
     uintn digest_size;
     uintn digest_count;
     uintn index;
     libspdm_context_t *spdm_context;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -70,110 +74,143 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
+    
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
 
-    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
-    spdm_request.header.request_response_code = SPDM_GET_DIGESTS;
-    spdm_request.header.param1 = 0;
-    spdm_request.header.param2 = 0;
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
+    spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
+    spdm_request->header.param1 = 0;
+    spdm_request->header.param2 = 0;
+    spdm_request_size = sizeof(spdm_get_digest_request_t);
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context);
+        return status;
+    }
+    libspdm_release_sender_buffer (spdm_context);
+    spdm_request = (void *)spdm_context->last_spdm_request;
 
-    status = libspdm_send_spdm_request(spdm_context, NULL, sizeof(spdm_request), &spdm_request);
-    LIBSPDM_RET_ON_ERR(status);
+    /* receive */
 
-    spdm_response_size = sizeof(spdm_response);
-    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
-    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size, &spdm_response);
-    LIBSPDM_RET_ON_ERR(status);
+    libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
 
+    libspdm_zero_mem(spdm_response, spdm_response_size);
+    status = libspdm_receive_spdm_response(
+        spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        goto receive_done;
+    }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
     }
-    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
     }
-    if (spdm_response.header.request_response_code == SPDM_ERROR) {
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
             spdm_context, NULL,
             &spdm_response_size,
-            &spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
+            (void **)&spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
             sizeof(libspdm_digests_response_max_t));
 
         /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
          * uses the new error codes. */
         if (status == RETURN_DEVICE_ERROR) {
-            return LIBSPDM_STATUS_ERROR_PEER;
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
         }
         else if (status == RETURN_NO_RESPONSE) {
-            return LIBSPDM_STATUS_BUSY_PEER;
+            status = LIBSPDM_STATUS_BUSY_PEER;
+            goto receive_done;
         }
         else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-            return LIBSPDM_STATUS_RESYNCH_PEER;
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
+            goto receive_done;
         }
     } else if (spdm_response.header.request_response_code != SPDM_DIGESTS) {
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_digest_response_t)) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;        
     }
     if (spdm_response_size > sizeof(spdm_response)) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
     }
 
     digest_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     if (slot_mask != NULL) {
-        *slot_mask = spdm_response.header.param2;
+        *slot_mask = spdm_response->header.param2;
     }
 
     digest_count = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        if (spdm_response.header.param2 & (1 << index)) {
+        if (spdm_response->header.param2 & (1 << index)) {
             digest_count++;
         }
     }
     if (digest_count == 0) {
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
     }
 
     if (spdm_response_size < sizeof(spdm_digest_response_t) + digest_count * digest_size) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
     }
     spdm_response_size = sizeof(spdm_digest_response_t) + digest_count * digest_size;
 
     /* Cache data*/
 
-    status = libspdm_append_message_b(spdm_context, &spdm_request, sizeof(spdm_request));
-    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
+    status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
     if (RETURN_ERROR(status)) {
-        return LIBSPDM_STATUS_BUFFER_FULL;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
+        goto receive_done;
     }
 
-    status = libspdm_append_message_b(spdm_context, &spdm_response, spdm_response_size);
-    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
+    status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
     if (RETURN_ERROR(status)) {
-        return LIBSPDM_STATUS_BUFFER_FULL;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
+        goto receive_done;
     }
 
     for (index = 0; index < digest_count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
-        libspdm_internal_dump_data(&spdm_response.digest[digest_size * index], digest_size);
+        libspdm_internal_dump_data(&spdm_response->digest[digest_size * index], digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
-    result = libspdm_verify_peer_digests(spdm_context, spdm_response.digest, digest_count);
+    result = libspdm_verify_peer_digests(spdm_context, spdm_response->digest, digest_count);
     if (!result) {
         spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-        return LIBSPDM_STATUS_VERIF_FAIL;
+        status = LIBSPDM_STATUS_VERIF_FAIL;
+        goto receive_done;
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (total_digest_buffer != NULL) {
         libspdm_copy_mem(total_digest_buffer, digest_size * digest_count,
-                         spdm_response.digest, digest_size * digest_count);
+                         spdm_response->digest, digest_size * digest_count);
     }
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
-    return LIBSPDM_STATUS_SUCCESS;
+  receive_done:
+    libspdm_release_receiver_buffer (spdm_context);
+    return status;
 }
 
 /**

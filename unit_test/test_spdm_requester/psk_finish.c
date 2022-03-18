@@ -95,7 +95,7 @@ return_status libspdm_requester_psk_finish_test_send_message(void *spdm_context,
 
 return_status libspdm_requester_psk_finish_test_receive_message(
     void *spdm_context, uintn *response_size,
-    void *response, uint64_t timeout)
+    void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -106,14 +106,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x2: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -121,9 +124,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -139,14 +149,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x3: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -154,9 +167,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -170,20 +190,35 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x4: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
                                               false, false,
-                                              sizeof(spdm_response),
-                                              &spdm_response,
+                                              spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -197,20 +232,35 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x5: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
                                               false, false,
-                                              sizeof(spdm_response),
-                                              &spdm_response,
+                                              spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -226,20 +276,36 @@ return_status libspdm_requester_psk_finish_test_receive_message(
     case 0x6: {
         static uintn sub_index1 = 0;
         if (sub_index1 == 0) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
+
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             session_id = 0xFFFFFFFF;
-            spdm_response.header.spdm_version =
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(
                 spdm_context, &session_id, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
             sub_index1++;
             session_info = libspdm_get_session_info_via_session_id(
@@ -253,14 +319,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             .response_handshake_sequence_number--;
         } else if (sub_index1 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-            uintn temp_buf_size;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
-            temp_buf_size = sizeof(spdm_psk_finish_response_t);
-            spdm_response = (void *)temp_buf;
+            spdm_response_size = sizeof(spdm_psk_finish_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
@@ -269,9 +338,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(
                 spdm_context, &session_id, false, false,
-                temp_buf_size, temp_buf, response_size,
+                spdm_response_size, spdm_response, response_size,
                 response);
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -287,20 +364,35 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x7: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
                                               false, false,
-                                              sizeof(spdm_response),
-                                              &spdm_response,
+                                              spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -314,25 +406,40 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x8: {
-        spdm_error_response_data_response_not_ready_t spdm_response;
+        spdm_error_response_data_response_not_ready_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-        spdm_response.header.param2 = 0;
-        spdm_response.extend_error_data.rd_exponent = 1;
-        spdm_response.extend_error_data.rd_tm = 1;
-        spdm_response.extend_error_data.request_code = SPDM_PSK_FINISH;
-        spdm_response.extend_error_data.token = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->extend_error_data.rd_exponent = 1;
+        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.request_code = SPDM_PSK_FINISH;
+        spdm_response->extend_error_data.token = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
                                               false, false,
-                                              sizeof(spdm_response),
-                                              &spdm_response,
+                                              spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -349,26 +456,42 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         static uintn sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
-                spdm_response;
+            *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
+
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             session_id = 0xFFFFFFFF;
-            spdm_response.header.spdm_version =
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code =
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code =
                 SPDM_PSK_FINISH;
-            spdm_response.extend_error_data.token = 1;
+            spdm_response->extend_error_data.token = 1;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(
                 spdm_context, &session_id, false, false,
-                sizeof(spdm_response), &spdm_response,
+                spdm_response_size, spdm_response,
                 response_size, response);
             sub_index2++;
             session_info = libspdm_get_session_info_via_session_id(
@@ -382,14 +505,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             .response_handshake_sequence_number--;
         } else if (sub_index2 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-            uintn temp_buf_size;
+            uintn spdm_response_size;
+            uintn transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
-            temp_buf_size = sizeof(spdm_psk_finish_response_t);
-            spdm_response = (void *)temp_buf;
+            spdm_response_size = sizeof(spdm_psk_finish_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
@@ -398,9 +524,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(
                 spdm_context, &session_id, false, false,
-                temp_buf_size, temp_buf, response_size,
+                spdm_response_size, spdm_response, response_size,
                 response);
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -419,21 +553,37 @@ return_status libspdm_requester_psk_finish_test_receive_message(
     {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t      *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
 
-        if(error_code <= 0xff) {
-            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = (uint8_t) error_code;
-            spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+        if(error_code <= 0xff) {
+            libspdm_zero_mem (spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = (uint8_t) error_code;
+            spdm_response->header.param2 = 0;
+
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message (spdm_context, &session_id, false, false,
-                                                   sizeof(spdm_response), &spdm_response,
+                                                   spdm_response_size, spdm_response,
                                                    response_size, response);
             session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
             ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
@@ -454,14 +604,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
     case 0xB: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -469,9 +622,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -487,14 +647,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xC: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -502,9 +665,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -520,14 +690,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xD: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -535,9 +708,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -553,14 +733,17 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xE: {
         spdm_psk_finish_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        uintn temp_buf_size;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
-        temp_buf_size = sizeof(spdm_psk_finish_response_t);
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code =
@@ -568,9 +751,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, temp_buf_size,
-                                              temp_buf, response_size,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
                                               response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -585,21 +775,36 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xF: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
-        spdm_response.header.param2 = 0;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+        spdm_response->header.param2 = 0;
+
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
                                               false, false,
-                                              sizeof(spdm_response),
-                                              &spdm_response,
+                                              spdm_response_size,
+                                              spdm_response,
                                               response_size, response);
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);

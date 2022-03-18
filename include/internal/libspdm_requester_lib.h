@@ -53,7 +53,7 @@ return_status libspdm_handle_simple_error_response(void *context,
  **/
 return_status libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
-    uintn *response_size, void *response,
+    uintn *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,
     uintn expected_response_size);
 
@@ -384,6 +384,8 @@ return_status libspdm_get_encap_response_key_update(void *context,
  * @param  request                      A pointer to a destination buffer to store the request.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
+ *                                      For normal message, requester pointer point to transport_message + transport header size
+ *                                      For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
@@ -403,6 +405,8 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  * @param  response                     A pointer to a destination buffer to store the response.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
+ *                                      For normal message, response pointer still point to original transport_message.
+ *                                      For secured message, response pointer will point to the scratch buffer in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
@@ -410,6 +414,6 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
 return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
                                             uintn *response_size,
-                                            void *response);
+                                            void **response);
 
 #endif

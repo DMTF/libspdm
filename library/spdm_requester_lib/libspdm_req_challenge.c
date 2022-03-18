@@ -54,8 +54,9 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 {
     return_status status;
     bool result;
-    spdm_challenge_request_t spdm_request;
-    libspdm_challenge_auth_response_max_t spdm_response;
+    spdm_challenge_request_t *spdm_request;
+    uintn spdm_request_size;
+    libspdm_challenge_auth_response_max_t *spdm_response;
     uintn spdm_response_size;
     uint8_t *ptr;
     void *cert_chain_hash;
@@ -69,6 +70,9 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     uintn signature_size;
     libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
@@ -92,81 +96,103 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
-    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
-    spdm_request.header.request_response_code = SPDM_CHALLENGE;
-    spdm_request.header.param1 = slot_id;
-    spdm_request.header.param2 = measurement_hash_type;
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
+
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
+    spdm_request->header.request_response_code = SPDM_CHALLENGE;
+    spdm_request->header.param1 = slot_id;
+    spdm_request->header.param2 = measurement_hash_type;
+    spdm_request_size = sizeof(spdm_challenge_request_t);
     if (requester_nonce_in == NULL) {
-        if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request.nonce)) {
+        if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
+            libspdm_release_sender_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
     } else {
-        libspdm_copy_mem(spdm_request.nonce, sizeof(spdm_request.nonce),
+        libspdm_copy_mem(spdm_request->nonce, sizeof(spdm_request->nonce),
                          requester_nonce_in, SPDM_NONCE_SIZE);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
-    libspdm_internal_dump_data(spdm_request.nonce, SPDM_NONCE_SIZE);
+    libspdm_internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
         libspdm_copy_mem(requester_nonce, SPDM_NONCE_SIZE,
-                         spdm_request.nonce, SPDM_NONCE_SIZE);
+                         spdm_request->nonce, SPDM_NONCE_SIZE);
     }
 
     status = libspdm_send_spdm_request(spdm_context, NULL,
-                                       sizeof(spdm_request), &spdm_request);
+                                       spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
+    libspdm_release_sender_buffer (spdm_context);
+    spdm_request = (void *)spdm_context->last_spdm_request;
 
-    spdm_response_size = sizeof(spdm_response);
-    libspdm_zero_mem(&spdm_response, sizeof(spdm_response));
+    /* receive */
+
+    libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
+
+    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, NULL, &spdm_response_size, &spdm_response);
+        spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
     if (RETURN_ERROR(status)) {
-        return status;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.spdm_version != spdm_request.header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response.header.request_response_code == SPDM_ERROR) {
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
             spdm_context, NULL,
             &spdm_response_size,
-            &spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
+            (void **)&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
             sizeof(libspdm_challenge_auth_response_max_t));
         if (RETURN_ERROR(status)) {
-            return status;
+            goto receive_done;
         }
-    } else if (spdm_response.header.request_response_code !=
+    } else if (spdm_response->header.request_response_code !=
                SPDM_CHALLENGE_AUTH) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_challenge_auth_response_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
-    if (spdm_response_size > sizeof(spdm_response)) {
-        return RETURN_DEVICE_ERROR;
-    }
-    auth_attribute = spdm_response.header.param1;
-    if (spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
+    auth_attribute = spdm_response->header.param1;
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != 0xF) {
-            return RETURN_DEVICE_ERROR;
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
-        if (spdm_response.header.param2 != 0) {
-            return RETURN_DEVICE_ERROR;
+        if (spdm_response->header.param2 != 0) {
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
     } else {
-        if ((spdm_response.header.spdm_version >= SPDM_MESSAGE_VERSION_11 &&
+        if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11 &&
              (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
-            (spdm_response.header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
+            (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
              auth_attribute != slot_id)) {
-            return RETURN_DEVICE_ERROR;
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
-        if ((spdm_response.header.param2 & (1 << slot_id)) == 0) {
-            return RETURN_DEVICE_ERROR;
+        if ((spdm_response->header.param2 & (1 << slot_id)) == 0) {
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
     }
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
@@ -174,7 +200,8 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-            return RETURN_DEVICE_ERROR;
+            status = RETURN_DEVICE_ERROR;
+            goto receive_done;
         }
     }
     hash_size = libspdm_get_hash_size(
@@ -188,10 +215,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         hash_size + SPDM_NONCE_SIZE +
         measurement_summary_hash_size +
         sizeof(uint16_t)) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_DEVICE_ERROR;
+        goto receive_done;
     }
 
-    ptr = spdm_response.cert_chain_hash;
+    ptr = spdm_response->cert_chain_hash;
 
     cert_chain_hash = ptr;
     ptr += hash_size;
@@ -203,7 +231,8 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     if (!result) {
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
 
     nonce = ptr;
@@ -225,32 +254,36 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
     ptr += sizeof(uint16_t);
 
     /* Cache data*/
 
-    status = libspdm_append_message_c(spdm_context, &spdm_request,
-                                      sizeof(spdm_request));
+    status = libspdm_append_message_c(spdm_context, spdm_request,
+                                      spdm_request_size);
     if (RETURN_ERROR(status)) {
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
     if (spdm_response_size <
         sizeof(spdm_challenge_auth_response_t) + hash_size +
         SPDM_NONCE_SIZE + measurement_summary_hash_size +
         sizeof(uint16_t) + opaque_length + signature_size) {
-        return RETURN_DEVICE_ERROR;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
     spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
                          hash_size + SPDM_NONCE_SIZE +
                          measurement_summary_hash_size + sizeof(uint16_t) +
                          opaque_length + signature_size;
-    status = libspdm_append_message_c(spdm_context, &spdm_response,
+    status = libspdm_append_message_c(spdm_context, spdm_response,
                                       spdm_response_size - signature_size);
     if (RETURN_ERROR(status)) {
         libspdm_reset_message_c(spdm_context);
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
 
     opaque = ptr;
@@ -267,7 +300,8 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         libspdm_reset_message_c(spdm_context);
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-        return RETURN_SECURITY_VIOLATION;
+        status = RETURN_SECURITY_VIOLATION;
+        goto receive_done;
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
@@ -277,10 +311,13 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                          measurement_summary_hash, measurement_summary_hash_size);
     }
     if (slot_mask != NULL) {
-        *slot_mask = spdm_response.header.param2;
+        *slot_mask = spdm_response->header.param2;
     }
 
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
+        /* we must release it here, because libspdm_encapsulated_request() will acquire again. */
+        libspdm_release_receiver_buffer (spdm_context);
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));
         status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
@@ -292,12 +329,18 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                 LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             return RETURN_SECURITY_VIOLATION;
         }
+        spdm_context->connection_info.connection_state =
+            LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+        return RETURN_SUCCESS;
     }
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    status = RETURN_SUCCESS;
 
-    return RETURN_SUCCESS;
+receive_done:
+    libspdm_release_receiver_buffer (spdm_context);
+    return status;
 }
 
 /**

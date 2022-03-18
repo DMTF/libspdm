@@ -19,7 +19,7 @@ void libspdm_test_transport_pci_doe_decode_message(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uintn transport_message_size;
-    uint8_t transport_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *transport_message;
     bool is_app_message;
     bool is_requester;
 
@@ -34,7 +34,7 @@ void libspdm_test_transport_pci_doe_decode_message(void **State)
                                              spdm_test_context->test_buffer_size,
                                              spdm_test_context->test_buffer,
                                              &transport_message_size,
-                                             transport_message);
+                                             (void **)&transport_message);
 }
 
 libspdm_test_context_t m_libspdm_transport_pci_doe_test_context = {

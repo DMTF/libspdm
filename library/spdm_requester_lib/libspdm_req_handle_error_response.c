@@ -24,38 +24,64 @@
 return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
                                                  const uint32_t *session_id,
                                                  uintn *response_size,
-                                                 void *response,
+                                                 void **response,
                                                  uint8_t expected_response_code,
                                                  uintn expected_response_size)
 {
     return_status status;
-    spdm_response_if_ready_request_t spdm_request;
+    spdm_response_if_ready_request_t *spdm_request;
+    uintn spdm_request_size;
     spdm_message_header_t *spdm_response;
+    uint8_t *message;
+    uintn message_size;
+    uintn transport_header_size;
 
-    spdm_response = response;
+    /* the response might be in response buffer in normal SPDM message
+     * or it is in scratch buffer in case of secure SPDM message
+     * the response buffer is in acquired state, so we release it*/
+    libspdm_release_receiver_buffer (spdm_context);
+
+    /* now we can get sender buffer */
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size;
 
     spdm_context->crypto_request = true;
-    spdm_request.header.spdm_version = libspdm_get_connection_version (spdm_context);
-    spdm_request.header.request_response_code = SPDM_RESPOND_IF_READY;
-    spdm_request.header.param1 = spdm_context->error_data.request_code;
-    spdm_request.header.param2 = spdm_context->error_data.token;
+    spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
+    spdm_request->header.request_response_code = SPDM_RESPOND_IF_READY;
+    spdm_request->header.param1 = spdm_context->error_data.request_code;
+    spdm_request->header.param2 = spdm_context->error_data.token;
+    spdm_request_size = sizeof(spdm_response_if_ready_request_t);
     status = libspdm_send_spdm_request(spdm_context, session_id,
-                                       sizeof(spdm_request), &spdm_request);
+                                       spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context);
+        /* need acquire response buffer, so that the caller can release it */
+        libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
         return status;
     }
+    libspdm_release_sender_buffer (spdm_context);
+    spdm_request = (void *)spdm_context->last_spdm_request;
 
-    *response_size = expected_response_size;
-    libspdm_zero_mem(response, expected_response_size);
+    /* receive
+     * do not release response buffer in case of error, because caller will release it*/
+
+    libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
+    LIBSPDM_ASSERT (*response_size >= transport_header_size);
+
+    libspdm_zero_mem(*response, *response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            response_size, response);
     if (RETURN_ERROR(status)) {
         return status;
     }
+    spdm_response = (void *)(*response);
     if (*response_size < sizeof(spdm_message_header_t)) {
         return RETURN_DEVICE_ERROR;
     }
-    if (spdm_response->spdm_version != spdm_request.header.spdm_version) {
+    if (spdm_response->spdm_version != spdm_request->header.spdm_version) {
         return RETURN_DEVICE_ERROR;
     }
     if (spdm_response->request_response_code != expected_response_code) {
@@ -123,7 +149,7 @@ return_status libspdm_handle_simple_error_response(void *context,
 return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
                                                 const uint32_t *session_id,
                                                 uintn *response_size,
-                                                void *response,
+                                                void **response,
                                                 uint8_t original_request_code,
                                                 uint8_t expected_response_code,
                                                 uintn expected_response_size)
@@ -136,7 +162,7 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
         return RETURN_DEVICE_ERROR;
     }
 
-    spdm_response = response;
+    spdm_response = *response;
     extend_error_data =
         (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
     LIBSPDM_ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
@@ -188,13 +214,13 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
  **/
 return_status libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
-    uintn *response_size, void *response,
+    uintn *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,
     uintn expected_response_size)
 {
     spdm_message_header_t *spdm_response;
 
-    spdm_response = response;
+    spdm_response = *response;
     LIBSPDM_ASSERT(spdm_response->request_response_code == SPDM_ERROR);
 
     if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&

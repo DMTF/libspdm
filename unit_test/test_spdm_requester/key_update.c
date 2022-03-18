@@ -140,7 +140,7 @@ return_status libspdm_requester_key_update_test_send_message(
         return RETURN_DEVICE_ERROR;
     case 0x2: {
         return_status status;
-        uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t *decoded_message;
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
@@ -149,7 +149,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
-        decoded_message_size = sizeof(decoded_message);
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -166,7 +165,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
                                                        request, &decoded_message_size,
-                                                       decoded_message);
+                                                       (void **)&decoded_message);
         if (RETURN_ERROR(status)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -180,7 +179,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -189,7 +188,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -207,7 +205,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -224,7 +222,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -233,7 +231,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -251,7 +248,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -268,7 +265,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -277,7 +274,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -295,7 +291,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -312,7 +308,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -321,7 +317,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -339,7 +334,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -359,7 +354,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index != 1) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
@@ -368,7 +363,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -386,7 +380,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -412,7 +406,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x14:
     case 0x15: {
         return_status status;
-        uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t *decoded_message;
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
@@ -421,7 +415,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
-        decoded_message_size = sizeof(decoded_message);
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -438,7 +431,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
                                                        request, &decoded_message_size,
-                                                       decoded_message);
+                                                       (void **)&decoded_message);
         if (RETURN_ERROR(status)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -452,7 +445,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index < 2) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
@@ -461,7 +454,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -479,7 +471,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -498,7 +490,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index%2 == 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
@@ -507,7 +499,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -525,7 +516,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -543,7 +534,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x19:
     case 0x1A: {
         return_status status;
-        uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t *decoded_message;
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
@@ -552,7 +543,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
-        decoded_message_size = sizeof(decoded_message);
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -569,7 +559,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
                                                        request, &decoded_message_size,
-                                                       decoded_message);
+                                                       (void **)&decoded_message);
         if (RETURN_ERROR(status)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -580,7 +570,7 @@ return_status libspdm_requester_key_update_test_send_message(
         return RETURN_SUCCESS;
     case 0x1B: {
         return_status status;
-        uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t *decoded_message;
         uintn decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
@@ -589,7 +579,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
-        decoded_message_size = sizeof(decoded_message);
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -606,7 +595,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
                                                        request, &decoded_message_size,
-                                                       decoded_message);
+                                                       (void **)&decoded_message);
         if (RETURN_ERROR(status)) {
             return RETURN_DEVICE_ERROR;
         }
@@ -620,7 +609,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -629,7 +618,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -647,7 +635,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -664,7 +652,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -673,7 +661,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -691,7 +678,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -708,7 +695,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index > 0) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
@@ -717,7 +704,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -735,7 +721,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -755,7 +741,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
         if(sub_index != 1) {
             return_status status;
-            uint8_t decoded_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t *decoded_message;
             uintn decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
@@ -764,7 +750,6 @@ return_status libspdm_requester_key_update_test_send_message(
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
-            decoded_message_size = sizeof(decoded_message);
 
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
@@ -782,7 +767,7 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            true,
                                                            request_size,
                                                            request, &decoded_message_size,
-                                                           decoded_message);
+                                                           (void **)&decoded_message);
             if (RETURN_ERROR(status)) {
                 return RETURN_DEVICE_ERROR;
             }
@@ -805,7 +790,7 @@ return_status libspdm_requester_key_update_test_send_message(
 
 return_status libspdm_requester_key_update_test_receive_message(
     void *spdm_context, uintn *response_size,
-    void *response, uint64_t timeout)
+    void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -817,9 +802,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x2: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -829,22 +822,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -858,9 +858,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x3: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -870,22 +878,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -897,9 +912,17 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x4: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -908,14 +931,21 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -925,9 +955,17 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x5: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -936,14 +974,21 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -966,17 +1011,33 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -984,18 +1045,34 @@ return_status libspdm_requester_key_update_test_receive_message(
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1003,18 +1080,34 @@ return_status libspdm_requester_key_update_test_receive_message(
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1028,9 +1121,17 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x7: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -1039,14 +1140,21 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1056,9 +1164,17 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x8: {
-        spdm_error_response_data_response_not_ready_t spdm_response;
+        spdm_error_response_data_response_not_ready_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -1067,19 +1183,26 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-        spdm_response.header.param2 = 0;
-        spdm_response.extend_error_data.rd_exponent = 1;
-        spdm_response.extend_error_data.rd_tm = 1;
-        spdm_response.extend_error_data.request_code = SPDM_KEY_UPDATE;
-        spdm_response.extend_error_data.token = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->extend_error_data.rd_exponent = 1;
+        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
+        spdm_response->extend_error_data.token = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1103,23 +1226,39 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_error_response_data_response_not_ready_t
-                spdm_response;
+            *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code =
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code =
                 SPDM_KEY_UPDATE;
-            spdm_response.extend_error_data.token = 1;
+            spdm_response->extend_error_data.token = 1;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1127,18 +1266,34 @@ return_status libspdm_requester_key_update_test_receive_message(
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1146,18 +1301,34 @@ return_status libspdm_requester_key_update_test_receive_message(
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1176,6 +1347,16 @@ return_status libspdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
@@ -1183,22 +1364,28 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_error_response_t spdm_response;
-
         if(error_code <= 0xff) {
             /* skip SPDM_ERROR_CODE_DECRYPT_ERROR, because this case will free context*/
             if(error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
                 error_code++;
             }
-            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = (uint8_t) error_code;
-            spdm_response.header.param2 = 0;
+            libspdm_zero_mem (spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = (uint8_t) error_code;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1226,9 +1413,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0xB: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1238,22 +1433,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1267,9 +1469,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0xC: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1279,23 +1489,30 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         /*wrong response code*/
-        spdm_response.header.request_response_code =
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1309,9 +1526,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0xD: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1321,22 +1546,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1350,9 +1582,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0xE: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1362,22 +1602,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1391,9 +1638,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0xF: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1403,23 +1658,30 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             /*wrong token*/
-            spdm_response.header.param2 = m_libspdm_last_token + 1;
+            spdm_response->header.param2 = m_libspdm_last_token + 1;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1433,9 +1695,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x10: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1445,23 +1715,30 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
             /*wrong operation code*/
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1486,18 +1763,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1506,16 +1799,32 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 1) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-            spdm_response.header.param2 = 0;
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+            spdm_response->header.param2 = 0;
+
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1542,18 +1851,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1562,16 +1887,32 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
+
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1598,18 +1939,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1618,17 +1975,33 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 1) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version =
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1637,18 +2010,34 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1675,18 +2064,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1695,16 +2100,32 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 1) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-            spdm_response.header.param2 = 0;
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+            spdm_response->header.param2 = 0;
+
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1731,18 +2152,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1751,21 +2188,37 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else {
-            spdm_error_response_data_response_not_ready_t spdm_response;
+            spdm_error_response_data_response_not_ready_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code = SPDM_KEY_UPDATE;
-            spdm_response.extend_error_data.token = 0;
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
+            spdm_response->extend_error_data.token = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1792,18 +2245,34 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
 
         if (sub_index == 0) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1812,21 +2281,37 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 1) {
-            spdm_error_response_data_response_not_ready_t spdm_response;
+            spdm_error_response_data_response_not_ready_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code = SPDM_KEY_UPDATE;
-            spdm_response.extend_error_data.token = 0;
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
+            spdm_response->extend_error_data.token = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1835,18 +2320,34 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         }
         else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -1879,18 +2380,34 @@ return_status libspdm_requester_key_update_test_receive_message(
                 error_code++;
             }
             if (sub_index%2 == 0) {
-                spdm_key_update_response_t spdm_response;
+                spdm_key_update_response_t *spdm_response;
+                uintn spdm_response_size;
+                uintn transport_header_size;
+                uint8_t *scratch_buffer;
+                uintn scratch_buffer_size;
 
-                spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-                spdm_response.header.request_response_code =
+                spdm_response_size = sizeof(spdm_key_update_response_t);
+                transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+                spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+                spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+                spdm_response->header.request_response_code =
                     SPDM_KEY_UPDATE_ACK;
-                spdm_response.header.param1 =
+                spdm_response->header.param1 =
                     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-                spdm_response.header.param2 = m_libspdm_last_token;
+                spdm_response->header.param2 = m_libspdm_last_token;
 
+                /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+                 * transport_message is always in sender buffer. */
+                libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                            &scratch_buffer_size);
+                libspdm_copy_mem (scratch_buffer + transport_header_size,
+                                  scratch_buffer_size - transport_header_size,
+                                  spdm_response, spdm_response_size);
+                spdm_response = (void *)(scratch_buffer + transport_header_size);
                 libspdm_transport_test_encode_message(spdm_context,
                                                       &session_id, false, false,
-                                                      sizeof(spdm_response), &spdm_response,
+                                                      spdm_response_size, spdm_response,
                                                       response_size, response);
                 /* WALKAROUND: If just use single context to encode
                  * message and then decode message */
@@ -1899,17 +2416,33 @@ return_status libspdm_requester_key_update_test_receive_message(
                 ->application_secret.response_data_sequence_number--;
             }
             else {
-                spdm_error_response_t spdm_response;
+                spdm_error_response_t *spdm_response;
+                uintn spdm_response_size;
+                uintn transport_header_size;
+                uint8_t *scratch_buffer;
+                uintn scratch_buffer_size;
 
-                libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-                spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-                spdm_response.header.request_response_code = SPDM_ERROR;
-                spdm_response.header.param1 = (uint8_t) error_code;
-                spdm_response.header.param2 = 0;
+                spdm_response_size = sizeof(spdm_error_response_t);
+                transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+                spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
+                libspdm_zero_mem (spdm_response, spdm_response_size);
+                spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+                spdm_response->header.request_response_code = SPDM_ERROR;
+                spdm_response->header.param1 = (uint8_t) error_code;
+                spdm_response->header.param2 = 0;
+
+                /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+                 * transport_message is always in sender buffer. */
+                libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                            &scratch_buffer_size);
+                libspdm_copy_mem (scratch_buffer + transport_header_size,
+                                  scratch_buffer_size - transport_header_size,
+                                  spdm_response, spdm_response_size);
+                spdm_response = (void *)(scratch_buffer + transport_header_size);
                 libspdm_transport_test_encode_message(spdm_context,
                                                       &session_id, false, false,
-                                                      sizeof(spdm_response), &spdm_response,
+                                                      spdm_response_size, spdm_response,
                                                       response_size, response);
                 /* WALKAROUND: If just use single context to encode
                  * message and then decode message */
@@ -1940,9 +2473,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x18: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1952,27 +2493,34 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.request_response_code =
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong response code*/
-            spdm_response.header.request_response_code =
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -1986,9 +2534,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x19: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -1998,23 +2554,30 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             /*wrong token*/
-            spdm_response.header.param2 = m_libspdm_last_token + 1;
+            spdm_response->header.param2 = m_libspdm_last_token + 1;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -2028,9 +2591,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x1A: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -2040,23 +2611,30 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
             SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong operation code*/
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -2070,9 +2648,17 @@ return_status libspdm_requester_key_update_test_receive_message(
     case 0x1B: {
         static uintn sub_index = 0;
 
-        spdm_key_update_response_t spdm_response;
+        spdm_key_update_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
 
@@ -2082,25 +2668,32 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
             /* as it is using single context, the keys were updated
              * in the requester and do not need to be updated before
              * sending the response */
         }
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t
@@ -2112,14 +2705,22 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1C: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2155,14 +2756,21 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
 
         /*restore new key*/
         libspdm_copy_mem(secured_message_context->application_secret
@@ -2183,14 +2791,22 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1D: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
+
+        spdm_response_size = sizeof(spdm_key_update_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2229,14 +2845,21 @@ return_status libspdm_requester_key_update_test_receive_message(
         /* once the sequence number is used, it should be increased for next BUSY nessage.*/
         m_libspdm_last_rsp_sequence_number++;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
 
         /*restore new key*/
         libspdm_copy_mem(secured_message_context->application_secret
@@ -2273,7 +2896,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context = session_info->secured_message_context;
 
         if (sub_index == 0) {
-            spdm_error_response_t spdm_response;
+            spdm_error_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
+
+            spdm_response_size = sizeof(spdm_error_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
             uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
@@ -2305,15 +2936,23 @@ return_status libspdm_requester_key_update_test_receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            spdm_response.header.spdm_version =
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response.header.param2 = 0;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
 
             /*restore new key*/
@@ -2332,36 +2971,68 @@ return_status libspdm_requester_key_update_test_receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
         } else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -2374,14 +3045,22 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1F: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2417,14 +3096,21 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
 
         /*restore new key*/
         libspdm_copy_mem(secured_message_context->application_secret
@@ -2445,14 +3131,22 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x20: {
-        spdm_error_response_data_response_not_ready_t spdm_response;
+        spdm_error_response_data_response_not_ready_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
+
+        spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2488,19 +3182,26 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 =
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 =
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-        spdm_response.header.param2 = 0;
-        spdm_response.extend_error_data.rd_exponent = 1;
-        spdm_response.extend_error_data.rd_tm = 1;
-        spdm_response.extend_error_data.request_code = SPDM_KEY_UPDATE;
-        spdm_response.extend_error_data.token = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->extend_error_data.rd_exponent = 1;
+        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
+        spdm_response->extend_error_data.token = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
 
         /*restore new key*/
         libspdm_copy_mem(secured_message_context->application_secret
@@ -2538,11 +3239,19 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_error_response_data_response_not_ready_t
-                spdm_response;
+            *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
             uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
             uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
             uint64_t curr_rsp_sequence_number;
+
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             /*use previous key to send*/
             libspdm_copy_mem(curr_rsp_enc_key, sizeof(curr_rsp_enc_key),
@@ -2570,21 +3279,29 @@ return_status libspdm_requester_key_update_test_receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            spdm_response.header.spdm_version =
+            spdm_response->header.spdm_version =
                 SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 =
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 =
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
-            spdm_response.header.param2 = 0;
-            spdm_response.extend_error_data.rd_exponent = 1;
-            spdm_response.extend_error_data.rd_tm = 1;
-            spdm_response.extend_error_data.request_code =
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.request_code =
                 SPDM_KEY_UPDATE;
-            spdm_response.extend_error_data.token = 1;
+            spdm_response->extend_error_data.token = 1;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
 
             /*restore new key*/
@@ -2603,36 +3320,68 @@ return_status libspdm_requester_key_update_test_receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
         } else if (sub_index == 2) {
-            spdm_key_update_response_t spdm_response;
+            spdm_key_update_response_t *spdm_response;
+            uintn spdm_response_size;
+            uintn transport_header_size;
+            uint8_t *scratch_buffer;
+            uintn scratch_buffer_size;
 
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code =
+            spdm_response_size = sizeof(spdm_key_update_response_t);
+            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code =
                 SPDM_KEY_UPDATE_ACK;
-            spdm_response.header.param1 =
+            spdm_response->header.param1 =
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
-            spdm_response.header.param2 = m_libspdm_last_token;
+            spdm_response->header.param2 = m_libspdm_last_token;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
             /* WALKAROUND: If just use single context to encode
              * message and then decode message */
@@ -2650,12 +3399,20 @@ return_status libspdm_requester_key_update_test_receive_message(
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
 
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
         uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
         uint64_t curr_rsp_sequence_number;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2696,15 +3453,23 @@ return_status libspdm_requester_key_update_test_receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            libspdm_zero_mem (&spdm_response, sizeof(spdm_response));
-            spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response.header.request_response_code = SPDM_ERROR;
-            spdm_response.header.param1 = (uint8_t) error_code;
-            spdm_response.header.param2 = 0;
+            libspdm_zero_mem (spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = (uint8_t) error_code;
+            spdm_response->header.param2 = 0;
 
+            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+             * transport_message is always in sender buffer. */
+            libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
+                                        &scratch_buffer_size);
+            libspdm_copy_mem (scratch_buffer + transport_header_size,
+                              scratch_buffer_size - transport_header_size,
+                              spdm_response, spdm_response_size);
+            spdm_response = (void *)(scratch_buffer + transport_header_size);
             libspdm_transport_test_encode_message(spdm_context,
                                                   &session_id, false, false,
-                                                  sizeof(spdm_response), &spdm_response,
+                                                  spdm_response_size, spdm_response,
                                                   response_size, response);
 
             /*restore new key*/
@@ -2741,9 +3506,17 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x23: {
-        spdm_error_response_t spdm_response;
+        spdm_error_response_t *spdm_response;
+        uintn spdm_response_size;
+        uintn transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
+        uint8_t *scratch_buffer;
+        uintn scratch_buffer_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
         session_info = libspdm_get_session_info_via_session_id(
@@ -2752,14 +3525,21 @@ return_status libspdm_requester_key_update_test_receive_message(
             return RETURN_DEVICE_ERROR;
         }
 
-        spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response.header.request_response_code = SPDM_ERROR;
-        spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
-        spdm_response.header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+        spdm_response->header.param2 = 0;
 
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
         libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, sizeof(spdm_response),
-                                              &spdm_response, response_size, response);
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size, response);
         /* WALKAROUND: If just use single context to encode
          * message and then decode message */
         ((libspdm_secured_message_context_t

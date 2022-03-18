@@ -79,7 +79,7 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
 }
 
 return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
-                                             void *response, uint64_t timeout)
+                                             void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t test_message_header_size;
@@ -141,6 +141,11 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
                          sizeof(uint16_t) + opaque_key_exchange_rsp_size + signature_size +
                          hmac_size;
         spdm_response = (void *)temp_buf;
+        /* The caller need guarantee the version is correct, both of MajorVersion and MinorVersion should be less than 10.*/
+        if (((spdm_response->header.spdm_version & 0xF) >= 10) ||
+            (((spdm_response->header.spdm_version >> 4) & 0xF) >= 10)) {
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        }
 
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);

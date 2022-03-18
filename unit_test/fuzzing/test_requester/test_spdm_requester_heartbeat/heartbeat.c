@@ -50,10 +50,11 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
 }
 
 return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
-                                             void *response, uint64_t timeout)
+                                             void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    spdm_heartbeat_response_t *spdm_response;
+    uint8_t spdm_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uintn spdm_response_size;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     uint8_t libspdm_test_message_header_size;
@@ -61,13 +62,14 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
     spdm_test_context = libspdm_get_test_context();
     session_id = 0xFFFFFFFF;
     libspdm_test_message_header_size = 1;
+    spdm_response_size = spdm_test_context->test_buffer_size - libspdm_test_message_header_size;
 
-    libspdm_copy_mem(&spdm_response, sizeof(spdm_response),
+    libspdm_copy_mem((uint8_t *)spdm_response, sizeof(spdm_response),
                      (uint8_t *)spdm_test_context->test_buffer + libspdm_test_message_header_size,
-                     spdm_test_context->test_buffer_size);
+                     spdm_response_size);
 
     libspdm_transport_test_encode_message(spdm_context, &session_id, false, false,
-                                          spdm_test_context->test_buffer_size, &spdm_response,
+                                          spdm_response_size, spdm_response,
                                           response_size, response);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
