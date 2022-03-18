@@ -73,6 +73,11 @@ bool libspdm_init_test_buffer(const char *file_name, uintn max_buffer_size,
     file_size = ftell(file);
     rewind(file);
 
+    if (file_size == 0) {
+        printf("\033[1;33m file_size of the seed file is 0, so exit.\033[0m \n");
+        free(buffer);
+        exit(1);
+    }
     file_size = file_size > max_buffer_size ? max_buffer_size : file_size;
     return_status = libspdm_judge_requster_name(file_name);
     if (return_status == 1) {
@@ -147,6 +152,11 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     max_buffer_size = libspdm_get_max_buffer_size();
     test_buffer = allocate_zero_pool(max_buffer_size);
     if (test_buffer == NULL) {
+        return 0;
+    }
+    if (size == 0) {
+        printf("\033[1;33m file_size of the seed file is 0, so exit.\033[0m \n");
+        free(test_buffer);
         return 0;
     }
     if (size > max_buffer_size) {
