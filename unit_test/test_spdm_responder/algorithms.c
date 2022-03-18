@@ -286,7 +286,8 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
             0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -414,7 +415,8 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
             0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -494,7 +496,8 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
             0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -576,7 +579,8 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
             0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -657,7 +661,8 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
             0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -1711,11 +1716,13 @@ void libspdm_test_responder_algorithms_case20(void **state) {
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512 |
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
     spdm_context->local_context.algorithm.base_asym_algo =
-        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+        //SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 |
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
     spdm_context->local_context.algorithm.dhe_named_group =
-        SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 |
+        //SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 |
+        SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048 |
         SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1 |
         SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
     spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
@@ -1762,7 +1769,8 @@ void libspdm_test_responder_algorithms_case20(void **state) {
                       spdm_context->connection_info.algorithm.base_hash_algo);
 
     assert_int_equal (spdm_response->base_asym_sel,
-                      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
+                      //SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
+                      SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384);
     assert_int_equal (spdm_response->base_asym_sel,
                       spdm_context->connection_info.algorithm.base_asym_algo);
 
@@ -1838,7 +1846,8 @@ int libspdm_responder_algorithms_test_main(void)
     m_libspdm_negotiate_algorithm_request3.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     m_libspdm_negotiate_algorithm_request4.spdm_request_version10.base_asym_algo =
-        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+        //SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
     m_libspdm_negotiate_algorithm_request4.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     m_libspdm_negotiate_algorithm_request5.spdm_request_version10.base_asym_algo =
@@ -1886,7 +1895,8 @@ int libspdm_responder_algorithms_test_main(void)
     m_libspdm_negotiate_algorithm_request15.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     m_libspdm_negotiate_algorithm_request16.spdm_request_version10.base_asym_algo =
-        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+        //SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 |
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 |
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 |

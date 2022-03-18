@@ -72,15 +72,16 @@ return_status libspdm_cryptest_main(void)
         return status;
     }
 
-    status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
-    if (RETURN_ERROR(status)) {
-        return status;
-    }
+    // skip ecp
+    // status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
+    // if (RETURN_ERROR(status)) {
+    //     return status;
+    // }
 
-    status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
-    if (RETURN_ERROR(status)) {
-        return status;
-    }
+    // status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
+    // if (RETURN_ERROR(status)) {
+    //     return status;
+    // }
 
     status = libspdm_validate_crypt_x509("rsa2048", sizeof("rsa2048"));
     if (RETURN_ERROR(status)) {
