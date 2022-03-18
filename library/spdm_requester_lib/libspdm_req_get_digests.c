@@ -104,7 +104,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+    if (RETURN_ERROR(status)) {
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
@@ -144,10 +144,10 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    if (spdm_response_size > sizeof(spdm_response)) {
-        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-        goto receive_done;
-    }
+    // if (spdm_response_size > sizeof(spdm_response)) {
+    //     status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    //     goto receive_done;
+    // }
 
     digest_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     if (slot_mask != NULL) {
@@ -208,7 +208,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     status = LIBSPDM_STATUS_SUCCESS;
 
-  receive_done:
+receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
