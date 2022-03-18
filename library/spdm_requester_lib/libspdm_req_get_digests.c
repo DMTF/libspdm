@@ -144,10 +144,6 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    // if (spdm_response_size > sizeof(spdm_response)) {
-    //     status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-    //     goto receive_done;
-    // }
 
     digest_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     if (slot_mask != NULL) {
