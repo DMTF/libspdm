@@ -78,10 +78,10 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
     status = libspdm_send_spdm_request(spdm_context, &session_id,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
@@ -128,7 +128,7 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
     status = RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

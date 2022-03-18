@@ -163,7 +163,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
 
         if (requester_nonce_in == NULL) {
             if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
-                libspdm_release_sender_buffer (spdm_context, message);
+                libspdm_release_sender_buffer (spdm_context);
                 return RETURN_DEVICE_ERROR;
             }
         } else {
@@ -189,10 +189,10 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     status = libspdm_send_spdm_request(spdm_context, session_id,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -523,7 +523,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     status = RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

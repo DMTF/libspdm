@@ -1103,12 +1103,11 @@ return_status libspdm_acquire_sender_buffer (
  * Release a device sender buffer for transport layer message.
  *
  * @param  context                       A pointer to the SPDM context.
- * @param  msg_buf_ptr                   A pointer to a sender buffer.
  *
  * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
 void libspdm_release_sender_buffer (
-    libspdm_context_t *spdm_context, const void *msg_buf_ptr);
+    libspdm_context_t *spdm_context);
 
 /**
  * Get the sender buffer.
@@ -1139,12 +1138,11 @@ return_status libspdm_acquire_receiver_buffer (
  * Release a device receiver buffer for transport layer message.
  *
  * @param  context                       A pointer to the SPDM context.
- * @param  msg_buf_ptr                   A pointer to a receiver buffer.
  *
  * @retval RETURN_SUCCESS               The receiver buffer is Released.
  **/
 void libspdm_release_receiver_buffer (
-    libspdm_context_t *spdm_context, const void *msg_buf_ptr);
+    libspdm_context_t *spdm_context);
 
 /**
  * Get the receiver buffer.

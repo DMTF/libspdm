@@ -151,10 +151,10 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
     spdm_request->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -262,7 +262,7 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

@@ -109,7 +109,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     spdm_request_size = sizeof(spdm_challenge_request_t);
     if (requester_nonce_in == NULL) {
         if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -127,10 +127,10 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     status = libspdm_send_spdm_request(spdm_context, NULL,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -316,7 +316,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         /* we must release it here, because libspdm_encapsulated_request() will acquire again. */
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));
         status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
@@ -339,7 +339,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     status = RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

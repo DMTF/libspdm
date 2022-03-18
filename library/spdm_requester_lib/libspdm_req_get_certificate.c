@@ -119,10 +119,10 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                                            spdm_request_size,
                                            spdm_request);
         if (RETURN_ERROR(status)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             goto done;
         }
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         spdm_request = (void *)spdm_context->last_spdm_request;
 
         /* receive */
@@ -137,16 +137,16 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                                                &spdm_response_size,
                                                (void **)&spdm_response);
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             goto done;
         }
         if (spdm_response_size < sizeof(spdm_message_header_t)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
@@ -158,34 +158,34 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                 SPDM_CERTIFICATE,
                 sizeof(libspdm_certificate_response_max_t));
             if (RETURN_ERROR(status)) {
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 goto done;
             }
         } else if (spdm_response->header.request_response_code !=
                    SPDM_CERTIFICATE) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if (spdm_response_size < sizeof(spdm_certificate_response_t)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if ((spdm_response->portion_length > spdm_request->length) ||
             (spdm_response->portion_length == 0)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK) != slot_id) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
         if (spdm_response_size < sizeof(spdm_certificate_response_t) +
             spdm_response->portion_length) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
@@ -194,7 +194,7 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                                                        spdm_response->remainder_length;
         } else if (spdm_request->offset + spdm_response->portion_length +
                    spdm_response->remainder_length != total_responder_cert_chain_buffer_length) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_DEVICE_ERROR;
             goto done;
         }
@@ -208,14 +208,14 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
         status = libspdm_append_message_b(spdm_context, spdm_request,
                                           spdm_request_size);
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_SECURITY_VIOLATION;
             goto done;
         }
         status = libspdm_append_message_b(spdm_context, spdm_response,
                                           spdm_response_size);
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_SECURITY_VIOLATION;
             goto done;
         }
@@ -229,14 +229,14 @@ return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                                                spdm_response->cert_chain,
                                                spdm_response->portion_length);
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             status = RETURN_SECURITY_VIOLATION;
             goto done;
         }
         spdm_context->connection_info.connection_state =
             LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
 
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
     } while (remainder_length != 0);
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {

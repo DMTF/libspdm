@@ -39,14 +39,7 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     /* the response might be in response buffer in normal SPDM message
      * or it is in scratch buffer in case of secure SPDM message
      * the response buffer is in acquired state, so we release it*/
-    if (session_id == NULL) {
-        libspdm_release_receiver_buffer (spdm_context, *response);
-    } else {
-        void *receiver_buffer;
-        uintn receiver_buffer_size;
-        libspdm_get_receiver_buffer (spdm_context, &receiver_buffer, &receiver_buffer_size);
-        libspdm_release_receiver_buffer (spdm_context, receiver_buffer);
-    }
+    libspdm_release_receiver_buffer (spdm_context);
 
     /* now we can get sender buffer */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
@@ -64,12 +57,12 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     status = libspdm_send_spdm_request(spdm_context, session_id,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         /* need acquire response buffer, so that the caller can release it */
         libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive
