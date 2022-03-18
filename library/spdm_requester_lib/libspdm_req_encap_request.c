@@ -254,10 +254,10 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, session_id, spdm_request_size,
             spdm_request);
         if (RETURN_ERROR(status)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             return status;
         }
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         spdm_get_encapsulated_request_request = (void *)spdm_context->last_spdm_request;
 
         /* receive */
@@ -273,30 +273,30 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             (void **)&spdm_response);
         libspdm_encapsulated_request_response = (void *)spdm_response;
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
         if (libspdm_encapsulated_request_response->header
             .request_response_code !=
             SPDM_ENCAPSULATED_REQUEST) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         if (libspdm_encapsulated_request_response->header.spdm_version !=
             spdm_get_encapsulated_request_request->header.spdm_version) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_response_size <
             sizeof(spdm_encapsulated_request_response_t)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_response_size ==
             sizeof(spdm_encapsulated_request_response_t)) {
 
             /* Done*/
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_SUCCESS;
         }
         request_id = libspdm_encapsulated_request_response->header.param1;
@@ -315,7 +315,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         spdm_context->last_spdm_request_size = encapsulated_request_size;
         encapsulated_request = (void *)spdm_context->last_spdm_request;
 
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
     }
 
     while (true) {
@@ -349,7 +349,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             encapsulated_request, &encapsulated_response_size,
             encapsulated_response);
         if (RETURN_ERROR(status)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
 
@@ -360,10 +360,10 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, session_id, spdm_request_size,
             spdm_request);
         if (RETURN_ERROR(status)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             return status;
         }
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         spdm_deliver_encapsulated_response_request = (void *)spdm_context->last_spdm_request;
 
         /* receive */
@@ -380,18 +380,18 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             (void **)&spdm_response);
         spdm_encapsulated_response_ack_response = (void *)spdm_response;
         if (RETURN_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
         if (spdm_encapsulated_response_ack_response->header
             .request_response_code !=
             SPDM_ENCAPSULATED_RESPONSE_ACK) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_encapsulated_response_ack_response->header.spdm_version !=
             spdm_deliver_encapsulated_response_request->header.spdm_version) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         if (spdm_encapsulated_response_ack_response->header.spdm_version >=
@@ -401,7 +401,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             ack_header_size = sizeof(spdm_message_header_t);
         }
         if (spdm_response_size < ack_header_size) {
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
 
@@ -409,7 +409,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             SPDM_MESSAGE_VERSION_12) {
             if (spdm_encapsulated_response_ack_response->ack_request_id !=
                 spdm_deliver_encapsulated_response_request->header.param1) {
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 return RETURN_DEVICE_ERROR;
             }
         }
@@ -417,10 +417,10 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         switch (spdm_encapsulated_response_ack_response->header.param2) {
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT:
             if (spdm_response_size == ack_header_size) {
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 return RETURN_SUCCESS;
             } else {
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 return RETURN_DEVICE_ERROR;
             }
             break;
@@ -435,19 +435,19 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                     if (*req_slot_id_param >=
                         spdm_context->local_context
                         .slot_count) {
-                        libspdm_release_receiver_buffer (spdm_context, message);
+                        libspdm_release_receiver_buffer (spdm_context);
                         return RETURN_DEVICE_ERROR;
                     }
                 }
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 return RETURN_SUCCESS;
             } else {
-                libspdm_release_receiver_buffer (spdm_context, message);
+                libspdm_release_receiver_buffer (spdm_context);
                 return RETURN_DEVICE_ERROR;
             }
             break;
         default:
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
         request_id =
@@ -465,7 +465,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         spdm_context->last_spdm_request_size = encapsulated_request_size;
         encapsulated_request = (void *)spdm_context->last_spdm_request;
 
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
     }
 
     return RETURN_SUCCESS;

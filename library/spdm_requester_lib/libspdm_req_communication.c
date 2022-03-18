@@ -412,10 +412,10 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
     status = libspdm_send_request(spdm_context, session_id, is_app_message,
                                   spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return RETURN_DEVICE_ERROR;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
 
     /* receive */
 
@@ -427,7 +427,7 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
     status = libspdm_receive_response(spdm_context, session_id, is_app_message,
                                       &spdm_response_size, (void **)&spdm_response);
     if (RETURN_ERROR(status)) {
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
         return RETURN_DEVICE_ERROR;
     }
 
@@ -435,7 +435,7 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
         if ((spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
             (session_id != NULL)) {
             libspdm_free_session_id(spdm_context, *session_id);
-            libspdm_release_receiver_buffer (spdm_context, message);
+            libspdm_release_receiver_buffer (spdm_context);
             return RETURN_SECURITY_VIOLATION;
         }
     }
@@ -445,11 +445,11 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
         *response_size = spdm_response_size;
     } else {
         *response_size = spdm_response_size;
-        libspdm_release_receiver_buffer (spdm_context, message);
+        libspdm_release_receiver_buffer (spdm_context);
         return RETURN_BUFFER_TOO_SMALL;
     }
 
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
 
     return RETURN_SUCCESS;
 }

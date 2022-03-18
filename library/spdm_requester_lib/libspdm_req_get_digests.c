@@ -80,10 +80,10 @@ return_status libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     status = libspdm_send_spdm_request(spdm_context, NULL,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -192,7 +192,7 @@ return_status libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     status = RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

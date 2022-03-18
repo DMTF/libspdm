@@ -123,7 +123,7 @@ return_status libspdm_try_send_receive_key_exchange(
     spdm_request->header.param2 = slot_id;
     if (requester_random_in == NULL) {
         if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request->random_data)) {
-            libspdm_release_sender_buffer (spdm_context, message);
+            libspdm_release_sender_buffer (spdm_context);
             return RETURN_DEVICE_ERROR;
         }
     } else {
@@ -155,7 +155,7 @@ return_status libspdm_try_send_receive_key_exchange(
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.dhe_named_group, true);
     if (dhe_context == NULL) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return RETURN_DEVICE_ERROR;
     }
 
@@ -166,7 +166,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return RETURN_DEVICE_ERROR;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
@@ -189,10 +189,10 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         return status;
     }
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -529,7 +529,7 @@ return_status libspdm_try_send_receive_key_exchange(
     status = RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 

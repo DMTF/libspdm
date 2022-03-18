@@ -96,7 +96,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
     status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)spdm_request,
                                       spdm_request_size - hmac_size);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
@@ -104,7 +104,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
     result = libspdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
                                                     spdm_request->verify_data);
     if (!result) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
@@ -114,7 +114,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
                                       spdm_request_size - hmac_size,
                                       hmac_size);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto error;
     }
@@ -122,14 +122,14 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
     status = libspdm_send_spdm_request(spdm_context, &session_id,
                                        spdm_request_size, spdm_request);
     if (RETURN_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context, message);
+        libspdm_release_sender_buffer (spdm_context);
         goto error;
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   SPDM_PSK_FINISH);
 
-    libspdm_release_sender_buffer (spdm_context, message);
+    libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
@@ -202,11 +202,11 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
         LIBSPDM_SESSION_STATE_ESTABLISHED);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
     return RETURN_SUCCESS;
 
 receive_done:
-    libspdm_release_receiver_buffer (spdm_context, message);
+    libspdm_release_receiver_buffer (spdm_context);
 error:
     if (RETURN_NO_RESPONSE != status) {
         libspdm_free_session_id(spdm_context, session_id);

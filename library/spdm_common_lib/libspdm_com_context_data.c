@@ -2007,19 +2007,12 @@ return_status libspdm_acquire_sender_buffer (
  * Release a device sender buffer for transport layer message.
  *
  * @param  context                       A pointer to the SPDM context.
- * @param  msg_buf_ptr                   A pointer to a sender buffer.
  *
  * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
 void libspdm_release_sender_buffer (
-    libspdm_context_t *spdm_context, const void *msg_buf_ptr)
+    libspdm_context_t *spdm_context)
 {
-    if (msg_buf_ptr == NULL) {
-        return;
-    }
-    LIBSPDM_ASSERT ((uintn)spdm_context->sender_buffer <= (uintn)msg_buf_ptr &&
-                    (uintn)spdm_context->sender_buffer + spdm_context->sender_buffer_size >
-                    (uintn)msg_buf_ptr);
     spdm_context->release_sender_buffer (spdm_context, spdm_context->sender_buffer);
     spdm_context->sender_buffer = NULL;
     spdm_context->sender_buffer_size = 0;
@@ -2071,19 +2064,12 @@ return_status libspdm_acquire_receiver_buffer (
  * Release a device receiver buffer for transport layer message.
  *
  * @param  context                       A pointer to the SPDM context.
- * @param  msg_buf_ptr                   A pointer to a receiver buffer.
  *
  * @retval RETURN_SUCCESS               The receiver buffer is Released.
  **/
 void libspdm_release_receiver_buffer (
-    libspdm_context_t *spdm_context, const void *msg_buf_ptr)
+    libspdm_context_t *spdm_context)
 {
-    if (msg_buf_ptr == NULL) {
-        return;
-    }
-    LIBSPDM_ASSERT ((uintn)spdm_context->receiver_buffer <= (uintn)msg_buf_ptr &&
-                    (uintn)spdm_context->receiver_buffer + spdm_context->receiver_buffer_size >
-                    (uintn)msg_buf_ptr);
     spdm_context->release_receiver_buffer (spdm_context, spdm_context->receiver_buffer);
     spdm_context->receiver_buffer = NULL;
     spdm_context->receiver_buffer_size = 0;
