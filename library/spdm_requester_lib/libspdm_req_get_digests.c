@@ -16,20 +16,34 @@ typedef struct {
 #pragma pack()
 
 /**
- * This function sends GET_DIGESTS and receives DIGESTS.
+ * This function sends GET_DIGESTS and receives DIGESTS *
  *
- * If the peer certificate chain is deployed,
- * this function also verifies the digest with the certificate chain.
+ * @param  context             A pointer to the SPDM context.
+ * @param  slot_mask           Bitmask of the slots that contain certificates.
+ * @param  total_digest_buffer A pointer to a destination buffer to store the digests.
  *
- * TotalDigestSize = sizeof(digest) * count in slot_mask
- *
- * @param  spdm_context        A pointer to the SPDM context.
- * @param  slot_mask           The slots which deploy the CertificateChain.
- * @param  total_digest_buffer A pointer to a destination buffer to store the digest buffer.
- *
- * @retval RETURN_SUCCESS               The digests are got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_DIGETS was sent and DIGESTS was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_DIGESTS due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_DIGESTS because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the DIGESTS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The DIGESTS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         The digest of the stored certificate chain does not match the digest returned by
+ *         the Responder.
+ *         Note: This return value may be removed in the future.
  **/
 libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
                                         void *total_digest_buffer)
@@ -171,13 +185,32 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
  *
  * TotalDigestSize = sizeof(digest) * count in slot_mask
  *
- * @param  spdm_context             A pointer to the SPDM context.
- * @param  slot_mask                     The slots which deploy the CertificateChain.
- * @param  total_digest_buffer            A pointer to a destination buffer to store the digest buffer.
+ * @param  context             A pointer to the SPDM context.
+ * @param  slot_mask           Bitmask of the slots that contain certificates.
+ * @param  total_digest_buffer A pointer to a destination buffer to store the digests.
  *
- * @retval RETURN_SUCCESS               The digests are got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_DIGETS was sent and DIGESTS was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_DIGESTS due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_DIGESTS because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the DIGESTS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The DIGESTS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         The digest of the stored certificate chain does not match the digest returned by
+ *         the Responder.
+ *         Note: This return value may be removed in the future.
  **/
 libspdm_return_t libspdm_get_digest(void *context, uint8_t *slot_mask, void *total_digest_buffer)
 {
