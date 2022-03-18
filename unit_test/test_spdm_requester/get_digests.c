@@ -122,7 +122,7 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         temp_buf_size = sizeof(spdm_digest_response_t) +
-                               libspdm_get_hash_size(m_libspdm_use_hash_algo);
+                        libspdm_get_hash_size(m_libspdm_use_hash_algo);
         spdm_response = (void *)temp_buf;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -1054,8 +1054,7 @@ void libspdm_test_requester_get_digests_case13(void **state)
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 }
 
@@ -1163,9 +1162,8 @@ void libspdm_test_requester_get_digests_case16(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    status =
-        libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_FULL);
 #endif
 }
 

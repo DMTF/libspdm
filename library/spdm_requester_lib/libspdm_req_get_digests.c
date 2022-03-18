@@ -31,7 +31,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask, void *total_digest_buffer)
+libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
+                                        void *total_digest_buffer)
 {
     bool result;
     libspdm_return_t status;
