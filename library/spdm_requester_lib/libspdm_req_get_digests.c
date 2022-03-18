@@ -74,7 +74,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-    
+
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     LIBSPDM_ASSERT (message_size >= transport_header_size);
@@ -136,13 +136,13 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
             status = LIBSPDM_STATUS_RESYNCH_PEER;
             goto receive_done;
         }
-    } else if (spdm_response.header.request_response_code != SPDM_DIGESTS) {
+    } else if (spdm_response->header.request_response_code != SPDM_DIGESTS) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_digest_response_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-        goto receive_done;        
+        goto receive_done;
     }
     if (spdm_response_size > sizeof(spdm_response)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
