@@ -157,9 +157,64 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
                                          const char *password,
                                          void **ec_context)
 {
-    LIBSPDM_ASSERT(false);
-    return false;
+    bool status;
+    BIO *pem_bio;
+
+
+    /* Check input parameters.*/
+
+    if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
+        return false;
+    }
+
+
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
+
+    if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
+        return false;
+    }
+    if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
+        return false;
+    }
+    if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
+        return false;
+    }
+
+    status = false;
+
+
+    /* Read encrypted PEM data.*/
+
+    pem_bio = BIO_new(BIO_s_mem());
+    if (pem_bio == NULL) {
+        goto done;
+    }
+
+    if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
+        goto done;
+    }
+
+
+    /* Retrieve EC Private key from encrypted PEM data.*/
+
+    *ec_context =
+        PEM_read_bio_ECPrivateKey(pem_bio, NULL,
+                                  (pem_password_cb *)&PasswordCallback,
+                                  (void *)password);
+    if (*ec_context != NULL) {
+        status = true;
+    }
+
+done:
+
+    /* Release Resources.*/
+
+    BIO_free(pem_bio);
+
+    return status;
 }
+
 
 /**
  * Retrieve the Ed Private key from the password-protected PEM key data.

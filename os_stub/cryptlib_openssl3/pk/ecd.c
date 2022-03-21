@@ -43,18 +43,16 @@ void *libspdm_ecd_new_by_nid(uintn nid)
     default:
         return NULL;
     }
-printf("error 1 /n");
+
     pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
     if (pkey_ctx == NULL) {
         return NULL;
     }
-printf("error 2 /n");
     result = EVP_PKEY_keygen_init(pkey_ctx);
     if (result <= 0) {
         EVP_PKEY_CTX_free(pkey_ctx);
         return NULL;
     }
-printf("error 3 /n");
     pkey = NULL;
     result = EVP_PKEY_keygen(pkey_ctx, &pkey);
     if (result <= 0) {
@@ -62,7 +60,7 @@ printf("error 3 /n");
         return NULL;
     }
     EVP_PKEY_CTX_free(pkey_ctx);
-printf("error 4 /n");
+
     return (void *)pkey;
 }
 

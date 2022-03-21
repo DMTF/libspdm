@@ -1573,9 +1573,61 @@ done:
 bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
                                          void **ec_context)
 {
-    LIBSPDM_ASSERT(false);
-    return false;
+    bool res;
+    EVP_PKEY *pkey;
+    X509 *x509_cert;
+
+
+    /* Check input parameters.*/
+
+    if (cert == NULL || ec_context == NULL) {
+        return false;
+    }
+
+    pkey = NULL;
+    x509_cert = NULL;
+
+
+    /* Read DER-encoded X509 Certificate and Construct X509 object.*/
+
+    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!res)) {
+        res = false;
+        goto done;
+    }
+
+    res = false;
+
+
+    /* Retrieve and check EVP_PKEY data from X509 Certificate.*/
+
+    pkey = X509_get_pubkey(x509_cert);
+    if ((pkey == NULL) || (EVP_PKEY_id(pkey) != EVP_PKEY_EC)) {
+        goto done;
+    }
+
+
+    /* Duplicate EC context from the retrieved EVP_PKEY.*/
+
+    if ((*ec_context = EC_KEY_dup(EVP_PKEY_get0_EC_KEY(pkey))) != NULL) {
+        res = true;
+    }
+
+done:
+
+    /* Release Resources.*/
+
+    if (x509_cert != NULL) {
+        X509_free(x509_cert);
+    }
+
+    if (pkey != NULL) {
+        EVP_PKEY_free(pkey);
+    }
+
+    return res;
 }
+
 
 /**
  * Retrieve the Ed public key from one DER-encoded X509 certificate.

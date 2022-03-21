@@ -12,6 +12,8 @@
 
 #include "prov/der_digests.h"
 
+#include "prov/der_ecx.h"
+#include "prov/der_ec.h"
 /* Well known OIDs precompiled */
 
 /*
@@ -158,3 +160,91 @@ const unsigned char ossl_der_oid_id_KMACWithSHAKE256[DER_OID_SZ_id_KMACWithSHAKE
     DER_OID_V_id_KMACWithSHAKE256
 };
 
+
+
+
+const unsigned char ossl_der_oid_id_X25519[DER_OID_SZ_id_X25519] = {
+    DER_OID_V_id_X25519
+};
+
+
+const unsigned char ossl_der_oid_id_X448[DER_OID_SZ_id_X448] = {
+    DER_OID_V_id_X448
+};
+
+const unsigned char ossl_der_oid_id_Ed25519[DER_OID_SZ_id_Ed25519] = {
+    DER_OID_V_id_Ed25519
+};
+
+
+const unsigned char ossl_der_oid_id_Ed448[DER_OID_SZ_id_Ed448] = {
+    DER_OID_V_id_Ed448
+};
+
+
+
+const unsigned char ossl_der_oid_ecdsa_with_SHA1[DER_OID_SZ_ecdsa_with_SHA1] = {
+   DER_OID_V_ecdsa_with_SHA1 
+};
+
+const unsigned char ossl_der_oid_prime256v1[DER_OID_SZ_prime256v1];
+
+/*
+ * ecdsa-with-SHA224 OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *      us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 1 }
+ */
+const unsigned char ossl_der_oid_ecdsa_with_SHA224[DER_OID_SZ_ecdsa_with_SHA224] = {
+    DER_OID_V_ecdsa_with_SHA224
+};
+
+/*
+ * ecdsa-with-SHA256 OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *      us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 2 }
+ */
+const unsigned char ossl_der_oid_ecdsa_with_SHA256[DER_OID_SZ_ecdsa_with_SHA256] = {
+    DER_OID_V_ecdsa_with_SHA256
+};
+
+/*
+ * ecdsa-with-SHA384 OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *      us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 3 }
+ */
+const unsigned char ossl_der_oid_ecdsa_with_SHA384[DER_OID_SZ_ecdsa_with_SHA384] = {
+    DER_OID_V_ecdsa_with_SHA384
+};
+
+/*
+ * ecdsa-with-SHA512 OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *      us(840) ansi-X9-62(10045) signatures(4) ecdsa-with-SHA2(3) 4 }
+ */
+const unsigned char ossl_der_oid_ecdsa_with_SHA512[DER_OID_SZ_ecdsa_with_SHA512] = {
+    DER_OID_V_ecdsa_with_SHA512
+};
+
+/*
+ * id-ecdsa-with-sha3-224 OBJECT IDENTIFIER ::= { sigAlgs 9 }
+ */
+const unsigned char ossl_der_oid_id_ecdsa_with_sha3_224[DER_OID_SZ_id_ecdsa_with_sha3_224] = {
+    DER_OID_V_id_ecdsa_with_sha3_224
+};
+
+/*
+ * id-ecdsa-with-sha3-256 OBJECT IDENTIFIER ::= { sigAlgs 10 }
+ */
+const unsigned char ossl_der_oid_id_ecdsa_with_sha3_256[DER_OID_SZ_id_ecdsa_with_sha3_256] = {
+    DER_OID_V_id_ecdsa_with_sha3_256
+};
+
+/*
+ * id-ecdsa-with-sha3-384 OBJECT IDENTIFIER ::= { sigAlgs 11 }
+ */
+const unsigned char ossl_der_oid_id_ecdsa_with_sha3_384[DER_OID_SZ_id_ecdsa_with_sha3_384] = {
+    DER_OID_V_id_ecdsa_with_sha3_384
+};
+
+/*
+ * id-ecdsa-with-sha3-512 OBJECT IDENTIFIER ::= { sigAlgs 12 }
+ */
+const unsigned char ossl_der_oid_id_ecdsa_with_sha3_512[DER_OID_SZ_id_ecdsa_with_sha3_512] = {
+    DER_OID_V_id_ecdsa_with_sha3_512
+};

@@ -41,6 +41,7 @@ typedef int64_t INT64;
 #  define OPENSSL_SYS_UEFI 1
 # endif
 # define OPENSSL_CONFIGURED_API 10101
+//# define OPENSSL_CONFIGURED_API 30002
 # ifndef OPENSSL_RAND_SEED_NONE
 #  define OPENSSL_RAND_SEED_NONE
 # endif
@@ -128,21 +129,21 @@ typedef int64_t INT64;
 # ifndef OPENSSL_NO_DTLS1_2
 #  define OPENSSL_NO_DTLS1_2
 # endif
-# ifndef OPENSSL_NO_EC
-#  define OPENSSL_NO_EC
-# endif
+// # ifndef OPENSSL_NO_EC
+// #  define OPENSSL_NO_EC
+// # endif
 # ifndef OPENSSL_NO_EC2M
 #  define OPENSSL_NO_EC2M
 # endif
 # ifndef OPENSSL_NO_EC_NISTP_64_GCC_128
 #  define OPENSSL_NO_EC_NISTP_64_GCC_128
 # endif
-# ifndef OPENSSL_NO_ECDH
-#  define OPENSSL_NO_ECDH
-# endif
-# ifndef OPENSSL_NO_ECDSA
-#  define OPENSSL_NO_ECDSA
-# endif
+// # ifndef OPENSSL_NO_ECDH
+// #  define OPENSSL_NO_ECDH
+// # endif
+// # ifndef OPENSSL_NO_ECDSA
+// #  define OPENSSL_NO_ECDSA
+// # endif
 # ifndef OPENSSL_NO_EGD
 #  define OPENSSL_NO_EGD
 # endif
