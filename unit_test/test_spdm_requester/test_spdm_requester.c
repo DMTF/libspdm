@@ -41,6 +41,7 @@ int libspdm_requester_heartbeat_test_main(void);
 int libspdm_requester_key_update_test_main(void);
 int libspdm_requester_encap_key_update_test_main(void);
 int libspdm_requester_end_session_test_main(void);
+int libspdm_requester_encap_request_test_main(void);
 
 int main(void)
 {
@@ -125,5 +126,8 @@ int main(void)
         return_value = 1;
     }
 
+    if (libspdm_requester_encap_request_test_main() != 0) {
+        return_value = 1;
+    }
     return return_value;
 }
