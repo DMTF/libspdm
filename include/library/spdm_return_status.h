@@ -54,16 +54,9 @@ typedef uintn libspdm_return_t;
 
 /* Core errors. */
 
-/* Unable to complete operation due to unsupported capabilities by the caller. */
-#define LIBSPDM_STATUS_UNSUPPORTED_CAP_LOCAL \
-    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0000)
-
-/* Unable to complete operation due to unsupported capabilities by the peer. */
-#define LIBSPDM_STATUS_UNSUPPORTED_CAP_PEER \
-    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0001)
-
-/* Unable to complete operation due to unsupported capabilities by both the caller and the peer. */
-#define LIBSPDM_STATUS_UNSUPPORTED_CAP_BOTH \
+/* Unable to complete operation due to unsupported capabilities by either the caller, the peer,
+ * or both. */
+#define LIBSPDM_STATUS_UNSUPPORTED_CAP \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0002)
 
 /* Unable to complete operation due to caller's state. */
@@ -104,10 +97,9 @@ typedef uintn libspdm_return_t;
 
 /* Cryptography errors. */
 
-/* Verification of the provided signature failed. */
-#define LIBSPDM_STATUS_SIG_VERIF_FAIL \
+/* Verification of the provided signature digest or signature failed. */
+#define LIBSPDM_STATUS_VERIF_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0000)
-
 
 /* Certificate parsing errors. */
 
