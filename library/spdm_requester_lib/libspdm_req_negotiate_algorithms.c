@@ -193,11 +193,11 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
         goto receive_done;
     }
 
-    if (spdm_response->ext_asym_sel_count > 1) {
+    if (spdm_response->ext_asym_sel_count > 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-    if (spdm_response->ext_hash_sel_count > 1) {
+    if (spdm_response->ext_hash_sel_count > 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -234,7 +234,7 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
-            if (ext_alg_count > 1) {
+            if (ext_alg_count > 0) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
