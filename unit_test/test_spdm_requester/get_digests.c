@@ -11,6 +11,9 @@
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
+static size_t m_libspdm_local_buffer_size;
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+
 libspdm_return_t libspdm_requester_get_digests_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -62,6 +65,15 @@ libspdm_return_t libspdm_requester_get_digests_test_send_message(
     case 0x15:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x16:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x17: {
+        uint8_t *ptr = (uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         &ptr[1], request_size - 1);
+        m_libspdm_local_buffer_size += (request_size - 1);
+    }
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
@@ -687,6 +699,49 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         }
     }
         return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x17: {
+        spdm_digest_response_t *spdm_response;
+        uint8_t *digest;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
+            m_libspdm_use_hash_algo;
+        spdm_response_size = sizeof(spdm_digest_response_t) +
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.request_response_code = SPDM_DIGESTS;
+        spdm_response->header.param2 = 0;
+        libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                        (uint8_t)(0xFF));
+
+        digest = (void *)(spdm_response + 1);
+        /*send all eight certchains digest
+         * but only No.7 is right*/
+        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
+                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
+        spdm_response->header.param2 |= (0xFF << 0);
+
+        spdm_response_size = sizeof(spdm_digest_response_t) +
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         spdm_response, spdm_response_size);
+        m_libspdm_local_buffer_size += spdm_response_size;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return RETURN_SUCCESS;
 
     default:
         return RETURN_DEVICE_ERROR;
@@ -1468,6 +1523,57 @@ void libspdm_test_requester_get_digests_case22(void **state) {
     }
 }
 
+/**
+ * Test 23: a request message is successfully sent and a response message is successfully received.
+ * Buffer B already has arbitrary data.
+ * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is
+ * received, buffer B appends the exchanged GET_DIGESTS and DIGESTS messages.
+ **/
+void libspdm_test_requester_get_digests_case23(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t arbitrary_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
+    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+                    (uint8_t)(0xFF));
+    libspdm_reset_message_b(spdm_context);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /*filling B with arbitrary data*/
+    arbitrary_size = 8;
+    libspdm_set_mem(spdm_context->transcript.message_b.buffer, arbitrary_size, (uint8_t) 0xEE);
+    spdm_context->transcript.message_b.buffer_size = arbitrary_size;
+#endif
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
+                     arbitrary_size + m_libspdm_local_buffer_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_b.buffer + arbitrary_size,
+                        m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+#endif
+}
+
 libspdm_test_context_t m_libspdm_requester_get_digests_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -1524,6 +1630,8 @@ int libspdm_requester_get_digests_test_main(void)
          * cmocka_unit_test(libspdm_test_requester_get_digests_case21),
          * Unexpected errors*/
         cmocka_unit_test(libspdm_test_requester_get_digests_case22),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_get_digests_case23),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_get_digests_test_context);

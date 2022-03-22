@@ -303,6 +303,59 @@ void libspdm_test_responder_version_case7(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 8: receiving a correct GET_VERSION from the requester. Buffers A, B and C
+ * already have arbitrary data.
+ * Expected behavior: the responder accepts the request and produces a valid VERSION
+ * response message, buffers A, B and C should be first reset, and then buffer A
+ * receives only the exchanged GET_VERSION and VERSION messages.
+ **/
+void libspdm_test_responder_version_case8(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_version_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+
+    /*filling buffers with arbitrary data*/
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, 10, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = 10;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_set_mem(spdm_context->transcript.message_b.buffer, 8, (uint8_t) 0xEE);
+    spdm_context->transcript.message_b.buffer_size = 8;
+    libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
+    spdm_context->transcript.message_c.buffer_size = 12;
+#endif
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_version(
+        spdm_context, m_libspdm_get_version_request1_size, &m_libspdm_get_version_request1,
+        &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_version_response_t) +
+                     LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT * sizeof(spdm_version_number_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_VERSION);
+
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     m_libspdm_get_version_request1_size + response_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer,
+                        &m_libspdm_get_version_request1, m_libspdm_get_version_request1_size);
+    assert_memory_equal(
+        spdm_context->transcript.message_a.buffer + m_libspdm_get_version_request1_size,
+        response, response_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
+    assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
+}
+
 libspdm_test_context_t m_libspdm_responder_version_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -322,6 +375,8 @@ int libspdm_responder_version_test_main(void)
         cmocka_unit_test(libspdm_test_responder_version_case5),
         /* Invalid request*/
         cmocka_unit_test(libspdm_test_responder_version_case6),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_responder_version_case8),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_version_test_context);

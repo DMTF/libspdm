@@ -1129,6 +1129,50 @@ void libspdm_test_responder_capabilities_case22(void **state)
                      SPDM_CAPABILITIES);
 }
 
+void libspdm_test_responder_capabilities_case23(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+    size_t arbitrary_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    /*filling A with arbitrary data*/
+    arbitrary_size = 10;
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, arbitrary_size, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = arbitrary_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request4_size,
+        &m_libspdm_get_capabilities_request4, &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
+    spdm_response = (void *)response;
+    assert_int_equal(m_libspdm_get_capabilities_request4.header.spdm_version,
+                     spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CAPABILITIES);
+
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     arbitrary_size + m_libspdm_get_capabilities_request4_size + response_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size,
+                        &m_libspdm_get_capabilities_request4,
+                        m_libspdm_get_capabilities_request4_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size +
+                        m_libspdm_get_capabilities_request4_size,
+                        response, response_size);
+}
+
 libspdm_test_context_t m_libspdm_responder_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -1181,6 +1225,8 @@ int libspdm_responder_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_responder_capabilities_case21),
         /* cert_cap cleared and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)*/
         cmocka_unit_test(libspdm_test_responder_capabilities_case22),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_responder_capabilities_case23),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_capabilities_test_context);

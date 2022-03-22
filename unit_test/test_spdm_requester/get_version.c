@@ -16,6 +16,9 @@ typedef struct {
 } libspdm_version_response_mine_t;
 #pragma pack()
 
+static size_t m_libspdm_local_buffer_size;
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+
 libspdm_return_t libspdm_requester_get_version_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -53,6 +56,15 @@ libspdm_return_t libspdm_requester_get_version_test_send_message(
     case 0xE:
         return LIBSPDM_STATUS_SUCCESS;
     case 0xF:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x10: {
+        uint8_t *ptr = (uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         &ptr[1], request_size - 1);
+        m_libspdm_local_buffer_size += (request_size - 1);
+    }
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
@@ -429,6 +441,39 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x10: {
+        libspdm_version_response_mine_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(libspdm_version_response_mine_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+        spdm_response_size = 10;
+
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         (uint8_t *)spdm_response, spdm_response_size);
+        m_libspdm_local_buffer_size += spdm_response_size;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -732,6 +777,48 @@ void libspdm_test_requester_get_version_case15(void **state)
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
 }
 
+/**
+ * Test 16: receiving a correct VERSION message with available version 1.0 and 1.1.
+ * Buffers A, B and C already have arbitrary data.
+ * Expected behavior: client returns a status of RETURN_SUCCESS, buffers A, B and C
+ * should be first reset, and then buffer A receives only the exchanged GET_VERSION
+ * and VERSION messages.
+ **/
+void libspdm_test_requester_get_version_case16(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+
+    /*filling buffers with arbitrary data*/
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, 10, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = 10;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_set_mem(spdm_context->transcript.message_b.buffer, 8, (uint8_t) 0xEE);
+    spdm_context->transcript.message_b.buffer_size = 8;
+    libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
+    spdm_context->transcript.message_c.buffer_size = 12;
+#endif
+
+    status = libspdm_get_version(spdm_context, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     m_libspdm_local_buffer_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer,
+                        m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
+    assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#endif
+}
+
 libspdm_test_context_t m_libspdm_requester_get_version_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -767,6 +854,8 @@ int libspdm_requester_get_version_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_version_case14),
         /* Successful response for unordered version set*/
         cmocka_unit_test(libspdm_test_requester_get_version_case15),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_get_version_case16),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_get_version_test_context);
