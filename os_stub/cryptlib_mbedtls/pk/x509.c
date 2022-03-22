@@ -1414,8 +1414,8 @@ return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
 /**
  * Return 0 if before <= after, 1 otherwise
  **/
-static intn libspdm_internal_x509_check_time(const mbedtls_x509_time *before,
-                                             const mbedtls_x509_time *after)
+static int32_t libspdm_internal_x509_check_time(const mbedtls_x509_time *before,
+                                                const mbedtls_x509_time *after)
 {
     if (before->year > after->year)
         return (1);
@@ -1546,7 +1546,7 @@ cleanup:
  * @retval  1      If date_time1 > date_time2
  * @retval  -1     If date_time1 < date_time2
  **/
-intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
+int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
     if (date_time1 == NULL || date_time2 == NULL) {
         return -2;

@@ -38,16 +38,16 @@ static size_t ascii_str_len(const char *string)
  * @retval  The number of characters in the passphrase or 0 if an error occurred.
  *
  **/
-intn PasswordCallback(char *buf, const intn size, const intn flag, const void *key)
+int PasswordCallback(char *buf, const int size, const int flag, const void *key)
 {
-    intn key_length;
+    int key_length;
 
     libspdm_zero_mem((void *)buf, (size_t)size);
     if (key != NULL) {
 
         /* Duplicate key phrase directly.*/
 
-        key_length = (intn)ascii_str_len((char *)key);
+        key_length = (int)ascii_str_len((char *)key);
         key_length = (key_length > size) ? size : key_length;
         libspdm_copy_mem(buf, size, key, (size_t)key_length);
         return key_length;

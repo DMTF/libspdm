@@ -452,7 +452,7 @@ typedef char *VA_LIST;
                __alignof(parameter), &parameter)
 #define VA_ARG(marker, TYPE)                                                   \
     (*(TYPE *)((marker += _INT_SIZE_OF(TYPE) +                             \
-                          ((-(intn)marker) & (sizeof(TYPE) - 1))) -        \
+                          ((-(size_t)marker) & (sizeof(TYPE) - 1))) -        \
                _INT_SIZE_OF(TYPE)))
 #define VA_END(marker) (marker = (VA_LIST)0)
 #define VA_COPY(dest, start) ((void)((dest) = (start)))
@@ -819,7 +819,7 @@ typedef size_t return_status;
  * @retval false         The high bit of status_code is clear.
  *
  **/
-#define RETURN_ERROR(status_code) (((intn)(return_status)(status_code)) < 0)
+#define RETURN_ERROR(status_code) (((return_status)(status_code) & MAX_BIT) != 0)
 
 
 /* The operation completed successfully.*/

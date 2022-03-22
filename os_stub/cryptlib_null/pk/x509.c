@@ -732,7 +732,7 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
  * @retval  1      If date_time1 > date_time2
  * @retval  -1     If date_time1 < date_time2
  **/
-intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
+int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
     LIBSPDM_ASSERT(false);
     return -3;

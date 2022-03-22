@@ -213,8 +213,8 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
     BIGNUM *bn_y;
     int32_t openssl_nid;
     size_t half_size;
-    intn x_size;
-    intn y_size;
+    int x_size;
+    int y_size;
 
     if (sm2_context == NULL || public_key_size == NULL) {
         return false;
@@ -368,8 +368,8 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
     BIGNUM *bn_y;
     int32_t openssl_nid;
     size_t half_size;
-    intn x_size;
-    intn y_size;
+    int x_size;
+    int y_size;
 
     if (sm2_context == NULL || public_size == NULL) {
         return false;

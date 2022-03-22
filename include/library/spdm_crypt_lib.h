@@ -1257,7 +1257,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    uint8_t *buffer, const intn len, char *name_buffer,
+    uint8_t *buffer, const size_t len, char *name_buffer,
     size_t *name_buffer_size, uint8_t *oid,
     size_t *oid_size);
 
@@ -1289,7 +1289,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status
-libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
+libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                   char *name_buffer,
                                   size_t *name_buffer_size,
                                   uint8_t *oid, size_t *oid_size);

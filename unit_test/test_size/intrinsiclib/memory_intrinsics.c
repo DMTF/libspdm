@@ -60,7 +60,7 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
     return (int)libspdm_const_compare_mem(buf1, buf2, count);
 }
 
-intn ascii_strcmp(const char *first_string, const char *second_string)
+int ascii_strcmp(const char *first_string, const char *second_string)
 {
     while ((*first_string != '\0') && (*first_string == *second_string)) {
         first_string++;

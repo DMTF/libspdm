@@ -3915,7 +3915,7 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
                                                   const uint8_t *to,
                                                   size_t to_size)
 {
-    intn ret;
+    int32_t ret;
     return_status status;
     uint8_t f0[64];
     uint8_t t0[64];
@@ -4520,7 +4520,7 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    uint8_t *buffer, const intn len, char *name_buffer,
+    uint8_t *buffer, const size_t len, char *name_buffer,
     size_t *name_buffer_size, uint8_t *oid,
     size_t *oid_size)
 {
@@ -4611,7 +4611,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status
-libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
+libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                   char *name_buffer,
                                   size_t *name_buffer_size,
                                   uint8_t *oid, size_t *oid_size)
