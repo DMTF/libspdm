@@ -35,40 +35,40 @@
 
 bool libspdm_read_responder_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
-    uintn *size, void **hash, uintn *hash_size);
+    size_t *size, void **hash, size_t *hash_size);
 
 bool libspdm_read_requester_public_certificate_chain(
     uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
-    uintn *size, void **hash, uintn *hash_size);
+    size_t *size, void **hash, size_t *hash_size);
 
 bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,
                                                     uint32_t base_asym_algo,
-                                                    void **data, uintn *size,
+                                                    void **data, size_t *size,
                                                     void **hash,
-                                                    uintn *hash_size);
+                                                    size_t *hash_size);
 
 bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
                                                     uint16_t req_base_asym_alg,
-                                                    void **data, uintn *size,
+                                                    void **data, size_t *size,
                                                     void **hash,
-                                                    uintn *hash_size);
+                                                    size_t *hash_size);
 
 bool libspdm_read_responder_public_certificate_chain_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t CertId,
-    void **data, uintn *size, void **hash,
-    uintn *hash_size);
+    void **data, size_t *size, void **hash,
+    size_t *hash_size);
 
 bool libspdm_read_responder_root_public_certificate_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t CertId,
-    void **data, uintn *size, void **hash,
-    uintn *hash_size);
+    void **data, size_t *size, void **hash,
+    size_t *hash_size);
 
 
 /* External*/
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size);
+                             size_t *file_size);
 
-void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
 
 #endif

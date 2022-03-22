@@ -13,37 +13,37 @@ spdm_challenge_request_t m_libspdm_challenge_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
-uintn m_libspdm_challenge_request1_size = sizeof(m_libspdm_challenge_request1);
+size_t m_libspdm_challenge_request1_size = sizeof(m_libspdm_challenge_request1);
 
 spdm_challenge_request_t m_libspdm_challenge_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
-uintn m_libspdm_challenge_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+size_t m_libspdm_challenge_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 spdm_challenge_request_t m_libspdm_challenge_request3 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, SPDM_MAX_SLOT_COUNT,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
-uintn m_libspdm_challenge_request3_size = sizeof(m_libspdm_challenge_request3);
+size_t m_libspdm_challenge_request3_size = sizeof(m_libspdm_challenge_request3);
 
 spdm_challenge_request_t m_libspdm_challenge_request4 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 1,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
 };
-uintn m_libspdm_challenge_request4_size = sizeof(m_libspdm_challenge_request4);
+size_t m_libspdm_challenge_request4_size = sizeof(m_libspdm_challenge_request4);
 
 spdm_challenge_request_t m_libspdm_challenge_request5 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH },
 };
-uintn m_libspdm_challenge_request5_size = sizeof(m_libspdm_challenge_request5);
+size_t m_libspdm_challenge_request5_size = sizeof(m_libspdm_challenge_request5);
 
 spdm_challenge_request_t m_libspdm_challenge_request6 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH },
 };
-uintn m_libspdm_challenge_request6_size = sizeof(m_libspdm_challenge_request6);
+size_t m_libspdm_challenge_request6_size = sizeof(m_libspdm_challenge_request6);
 
 uint8_t m_opaque_challenge_auth_rsp[9] = "openspdm";
 
@@ -58,11 +58,11 @@ void libspdm_test_responder_challenge_auth_case1(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -131,11 +131,11 @@ void libspdm_test_responder_challenge_auth_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -194,11 +194,11 @@ void libspdm_test_responder_challenge_auth_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -259,11 +259,11 @@ void libspdm_test_responder_challenge_auth_case4(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -325,11 +325,11 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     spdm_error_data_response_not_ready_t *error_data;
 
     spdm_test_context = *state;
@@ -398,11 +398,11 @@ void libspdm_test_responder_challenge_auth_case6(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -461,11 +461,11 @@ void libspdm_test_responder_challenge_auth_case7(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -515,11 +515,11 @@ void libspdm_test_responder_challenge_auth_case8(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -569,11 +569,11 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -625,11 +625,11 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -679,11 +679,11 @@ void libspdm_test_responder_challenge_auth_case11(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -736,11 +736,11 @@ void libspdm_test_responder_challenge_auth_case12(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -795,11 +795,11 @@ void libspdm_test_responder_challenge_auth_case13(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -855,11 +855,11 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
-    uintn data_size1;
+    size_t data_size1;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;

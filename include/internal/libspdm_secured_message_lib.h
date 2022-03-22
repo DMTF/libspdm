@@ -48,11 +48,11 @@ typedef struct {
     uint16_t dhe_named_group;
     uint16_t aead_cipher_suite;
     uint16_t key_schedule;
-    uintn hash_size;
-    uintn dhe_key_size;
-    uintn aead_key_size;
-    uintn aead_iv_size;
-    uintn aead_tag_size;
+    size_t hash_size;
+    size_t dhe_key_size;
+    size_t aead_key_size;
+    size_t aead_iv_size;
+    size_t aead_tag_size;
     bool use_psk;
     bool finished_key_ready;
     libspdm_session_state_t session_state;
@@ -62,7 +62,7 @@ typedef struct {
     libspdm_session_info_struct_application_secret_t application_secret_backup;
     bool requester_backup_valid;
     bool responder_backup_valid;
-    uintn psk_hint_size;
+    size_t psk_hint_size;
     const void *psk_hint;
 
     /* Cache the error in libspdm_decode_secured_message. It is handled in libspdm_build_response.*/

@@ -88,7 +88,7 @@ bool libspdm_sm3_256_duplicate(const void *sm3_context, void *new_sm3_context)
  *
  **/
 bool libspdm_sm3_256_update(void *sm3_context, const void *data,
-                            uintn data_size)
+                            size_t data_size)
 {
     return false;
 }
@@ -136,7 +136,7 @@ bool libspdm_sm3_256_final(void *sm3_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sm3_256_hash_all(const void *data, uintn data_size,
+bool libspdm_sm3_256_hash_all(const void *data, size_t data_size,
                               uint8_t *hash_value)
 {
     return false;

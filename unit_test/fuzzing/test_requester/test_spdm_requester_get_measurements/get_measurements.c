@@ -13,19 +13,19 @@
 
 uint8_t libspdm_test_message_header;
 static uint8_t m_libspdm_local_psk_hint[32];
-static uintn m_libspdm_local_buffer_size;
+static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-uintn libspdm_test_get_measurement_request_size(const void *spdm_context, const void *buffer,
-                                                uintn buffer_size)
+size_t libspdm_test_get_measurement_request_size(const void *spdm_context, const void *buffer,
+                                                 size_t buffer_size)
 {
     const spdm_get_measurements_request_t *spdm_request;
-    uintn message_size;
+    size_t message_size;
 
     spdm_request = buffer;
     message_size = sizeof(spdm_message_header_t);
@@ -61,11 +61,11 @@ uintn libspdm_test_get_measurement_request_size(const void *spdm_context, const 
     return message_size;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
                                           const void *request, uint64_t timeout)
 {
-    uintn header_size;
-    uintn message_size;
+    size_t header_size;
+    size_t message_size;
 
     m_libspdm_local_buffer_size = 0;
     header_size = sizeof(libspdm_test_message_header_t);
@@ -77,7 +77,7 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -106,9 +106,9 @@ void libspdm_test_requester_get_measurement_case1(void **State)
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -179,9 +179,9 @@ void libspdm_test_requester_get_measurement_case2(void **State)
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -251,9 +251,9 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -338,9 +338,9 @@ void libspdm_test_requester_get_measurement_case4(void **State)
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -405,7 +405,7 @@ libspdm_test_context_t m_libspdm_requester_get_measurements_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -435,12 +435,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

@@ -41,7 +41,7 @@ void libspdm_register_get_encap_response_func(void *context,
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    spdm_context->get_encap_response_func = (uintn)get_encap_response_func;
+    spdm_context->get_encap_response_func = (size_t)get_encap_response_func;
 
     return;
 }
@@ -56,7 +56,7 @@ void libspdm_register_get_encap_response_func(void *context,
 libspdm_get_encap_response_func
 libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0;
          index < sizeof(m_libspdm_get_encap_response_struct) /
@@ -85,9 +85,9 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
 return_status libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
-                                                   uintn encap_request_size,
+                                                   size_t encap_request_size,
                                                    void *encap_request,
-                                                   uintn *encap_response_size,
+                                                   size_t *encap_response_size,
                                                    void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
@@ -149,27 +149,27 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 {
     return_status status;
     uint8_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     spdm_get_encapsulated_request_request_t
     *spdm_get_encapsulated_request_request;
     spdm_deliver_encapsulated_response_request_t
     *spdm_deliver_encapsulated_response_request;
     uint8_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     spdm_encapsulated_request_response_t *libspdm_encapsulated_request_response;
     spdm_encapsulated_response_ack_response_t
     *spdm_encapsulated_response_ack_response;
     libspdm_session_info_t *session_info;
     uint8_t request_id;
     void *encapsulated_request;
-    uintn encapsulated_request_size;
+    size_t encapsulated_request_size;
     void *encapsulated_response;
-    uintn encapsulated_response_size;
-    uintn ack_header_size;
+    size_t encapsulated_response_size;
+    size_t ack_header_size;
 
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     spdm_get_digest_request_t *get_digests;

@@ -25,17 +25,17 @@
 
 bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,
                                                     uint32_t base_asym_algo,
-                                                    void **data, uintn *size,
+                                                    void **data, size_t *size,
                                                     void **hash,
-                                                    uintn *hash_size)
+                                                    size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
-    uintn digest_size;
+    size_t digest_size;
 
     *data = NULL;
     *size = 0;
@@ -127,17 +127,17 @@ bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,
 
 bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
                                                     uint16_t req_base_asym_alg,
-                                                    void **data, uintn *size,
+                                                    void **data, size_t *size,
                                                     void **hash,
-                                                    uintn *hash_size)
+                                                    size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
-    uintn digest_size;
+    size_t digest_size;
 
     *data = NULL;
     *size = 0;
@@ -229,17 +229,17 @@ bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
 
 bool libspdm_read_responder_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
-    uintn *size, void **hash, uintn *hash_size)
+    size_t *size, void **hash, size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
     uint8_t *root_cert;
-    uintn root_cert_len;
-    uintn digest_size;
+    size_t root_cert_len;
+    size_t digest_size;
     bool is_device_cert_model;
 
     /*defalut is true*/
@@ -355,17 +355,17 @@ bool libspdm_read_responder_public_certificate_chain(
 
 bool libspdm_read_requester_public_certificate_chain(
     uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
-    uintn *size, void **hash, uintn *hash_size)
+    size_t *size, void **hash, size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
     uint8_t *root_cert;
-    uintn root_cert_len;
-    uintn digest_size;
+    size_t root_cert_len;
+    size_t digest_size;
     bool is_device_cert_model;
 
     /*defalut is true*/
@@ -481,15 +481,15 @@ bool libspdm_read_requester_public_certificate_chain(
 
 bool libspdm_read_responder_root_public_certificate_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t chain_id,
-    void **data, uintn *size, void **hash, uintn *hash_size)
+    void **data, size_t *size, void **hash, size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
-    uintn digest_size;
+    size_t digest_size;
 
     *data = NULL;
     *size = 0;
@@ -559,17 +559,17 @@ bool libspdm_read_responder_root_public_certificate_by_size(
 
 bool libspdm_read_responder_public_certificate_chain_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t chain_id,
-    void **data, uintn *size, void **hash, uintn *hash_size)
+    void **data, size_t *size, void **hash, size_t *hash_size)
 {
     bool res;
     void *file_data;
-    uintn file_size;
+    size_t file_size;
     spdm_cert_chain_t *cert_chain;
-    uintn cert_chain_size;
+    size_t cert_chain_size;
     char *file;
     uint8_t *root_cert;
-    uintn root_cert_len;
-    uintn digest_size;
+    size_t root_cert_len;
+    size_t digest_size;
     bool is_device_cert_model;
 
     /*defalut is true*/

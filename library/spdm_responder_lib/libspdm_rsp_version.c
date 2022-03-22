@@ -32,9 +32,9 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_version(void *context, uintn request_size,
+return_status libspdm_get_response_version(void *context, size_t request_size,
                                            const void *request,
-                                           uintn *response_size,
+                                           size_t *response_size,
                                            void *response)
 {
     const spdm_get_version_request_t *spdm_request;

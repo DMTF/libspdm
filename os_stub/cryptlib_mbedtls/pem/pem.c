@@ -16,9 +16,9 @@
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
 
-static uintn ascii_str_len(const char *string)
+static size_t ascii_str_len(const char *string)
 {
-    uintn length;
+    size_t length;
 
     LIBSPDM_ASSERT(string != NULL);
     if (string == NULL) {
@@ -49,7 +49,7 @@ static uintn ascii_str_len(const char *string)
  *
  **/
 bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **rsa_context)
 {
@@ -57,7 +57,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
     mbedtls_pk_context pk;
     mbedtls_rsa_context *rsa;
     uint8_t *new_pem_data;
-    uintn password_len;
+    size_t password_len;
 
     if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
         return false;
@@ -134,7 +134,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size,
+bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_size,
                                          const char *password,
                                          void **ec_context)
 {
@@ -142,7 +142,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
     mbedtls_pk_context pk;
     mbedtls_ecdh_context *ecdh;
     uint8_t *new_pem_data;
-    uintn password_len;
+    size_t password_len;
 
     if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
         return false;
@@ -225,7 +225,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
  *
  **/
 bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **ecd_context)
 {
@@ -250,7 +250,7 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
  *
  **/
 bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **sm2_context)
 {

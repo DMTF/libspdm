@@ -31,6 +31,8 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
+#include <stddef.h>
+
 /* Processor specific defines*/
 
 

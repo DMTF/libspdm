@@ -18,17 +18,17 @@ return_status libspdm_validate_crypt_ec(void)
     void *ec1;
     void *ec2;
     uint8_t public1[66 * 2];
-    uintn public1_length;
+    size_t public1_length;
     uint8_t public2[66 * 2];
-    uintn public2_length;
+    size_t public2_length;
     uint8_t key1[66];
-    uintn key1_length;
+    size_t key1_length;
     uint8_t key2[66];
-    uintn key2_length;
+    size_t key2_length;
     uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     uint8_t signature[66 * 2];
-    uintn sig_size;
+    size_t sig_size;
     bool status;
 
     libspdm_my_print("\nCrypto EC-DH key Exchange Testing:\n");

@@ -23,7 +23,7 @@
  *         If the allocations fails, libspdm_ecx_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_ecx_new_by_nid(uintn nid)
+void *libspdm_ecx_new_by_nid(size_t nid)
 {
     return NULL;
 }
@@ -65,7 +65,7 @@ void libspdm_ecx_free(const void *ecx_context)
  *
  **/
 bool libspdm_ecx_generate_key(void *ecx_context, uint8_t *public,
-                              uintn *public_size)
+                              size_t *public_size)
 {
     return false;
 }
@@ -98,8 +98,8 @@ bool libspdm_ecx_generate_key(void *ecx_context, uint8_t *public,
  *
  **/
 bool libspdm_ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
-                             uintn peer_public_size, uint8_t *key,
-                             uintn *key_size)
+                             size_t peer_public_size, uint8_t *key,
+                             size_t *key_size)
 {
     return false;
 }

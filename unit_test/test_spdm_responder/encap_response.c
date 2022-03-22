@@ -10,13 +10,13 @@
 spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_ENCAPSULATED_REQUEST, 0, 0}
 };
-uintn m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
+size_t m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
 
 spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t1 =
 {
     {SPDM_MESSAGE_VERSION_11, SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, 0}
 };
-uintn m_libspdm_m_deliver_encapsulated_response_request_t1_size =
+size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t1);
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -30,9 +30,9 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn data_size;
+    size_t data_size;
     void *data;
-    uintn response_size;
+    size_t response_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -91,9 +91,9 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn data_size;
+    size_t data_size;
     void *data;
-    uintn response_size;
+    size_t response_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -149,7 +149,7 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -195,7 +195,7 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -242,9 +242,9 @@ void libspdm_test_get_response_encapsulated_request_case5(void **State)
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn data_size;
+    size_t data_size;
     void *data;
-    uintn response_size;
+    size_t response_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -304,9 +304,9 @@ void libspdm_test_get_response_encapsulated_request_case6(void **State)
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn data_size;
+    size_t data_size;
     void *data;
-    uintn response_size;
+    size_t response_size;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
 
@@ -380,10 +380,10 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
     spdm_digest_response_t *spdm_response_tequester_digest;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_tequester_size;
-    uintn spdm_response_tequester_digest_size;
-    uintn data_size;
-    uintn response_size;
+    size_t spdm_response_tequester_size;
+    size_t spdm_response_tequester_digest_size;
+    size_t data_size;
+    size_t response_size;
     uint8_t *digest;
     void *data;
 
@@ -468,16 +468,16 @@ void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
     spdm_certificate_response_t *spdm_response_tequester_certificate;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_tequester_size;
-    uintn data_size;
-    uintn response_size;
+    size_t spdm_response_tequester_size;
+    size_t data_size;
+    size_t response_size;
     void *data;
     uint16_t portion_length;
     uint16_t remainder_length;
-    static uintn calling_index = 0;
+    static size_t calling_index = 0;
 
     static void *libspdm_local_certificate_chain;
-    static uintn libspdm_local_certificate_chain_size;
+    static size_t libspdm_local_certificate_chain_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -560,9 +560,9 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
     spdm_key_update_response_t *spdm_response_tequester_key_update;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_tequester_size;
-    uintn data_size;
-    uintn response_size;
+    size_t spdm_response_tequester_size;
+    size_t data_size;
+    size_t response_size;
     void *data;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
@@ -644,7 +644,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -679,7 +679,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn response_size;
+    size_t response_size;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
@@ -712,8 +712,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn response_size;
-    uintn data_size;
+    size_t response_size;
+    size_t data_size;
     void *data;
 
     spdm_test_context = *State;
@@ -759,16 +759,16 @@ void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
     spdm_certificate_response_t *spdm_response_tequester_certificate;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_tequester_size;
-    uintn data_size;
-    uintn response_size;
+    size_t spdm_response_tequester_size;
+    size_t data_size;
+    size_t response_size;
     void *data;
     uint16_t portion_length;
     uint16_t remainder_length;
-    static uintn calling_index = 0;
+    static size_t calling_index = 0;
 
     static void *libspdm_local_certificate_chain;
-    static uintn libspdm_local_certificate_chain_size;
+    static size_t libspdm_local_certificate_chain_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;

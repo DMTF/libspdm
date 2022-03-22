@@ -23,7 +23,7 @@
  **/
 return_status
 libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                     uintn *encap_request_size,
+                                     size_t *encap_request_size,
                                      void *encap_request)
 {
     spdm_get_digest_request_t *spdm_request;
@@ -81,16 +81,16 @@ libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_digest(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     bool result;
     const spdm_digest_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t *digest;
-    uintn digest_size;
-    uintn digest_count;
-    uintn index;
+    size_t digest_size;
+    size_t digest_count;
+    size_t index;
     return_status status;
 
     spdm_response = encap_response;

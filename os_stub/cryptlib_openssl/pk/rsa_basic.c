@@ -75,7 +75,7 @@ void libspdm_rsa_free(void *rsa_context)
  *
  **/
 bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
-                         const uint8_t *big_number, uintn bn_size)
+                         const uint8_t *big_number, size_t bn_size)
 {
     RSA *rsa_key;
     bool status;
@@ -301,10 +301,10 @@ err:
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
+bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
                                        const uint8_t *message_hash,
-                                       uintn hash_size, const uint8_t *signature,
-                                       uintn sig_size)
+                                       size_t hash_size, const uint8_t *signature,
+                                       size_t sig_size)
 {
     int32_t digest_type;
     uint8_t *sig_buf;
@@ -395,9 +395,9 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid RSA context.
  *
  **/
-bool libspdm_rsa_pss_verify(void *rsa_context, uintn hash_nid,
-                            const uint8_t *message_hash, uintn hash_size,
-                            const uint8_t *signature, uintn sig_size)
+bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
+                            const uint8_t *message_hash, size_t hash_size,
+                            const uint8_t *signature, size_t sig_size)
 {
     RSA *rsa;
     bool result;
@@ -415,7 +415,7 @@ bool libspdm_rsa_pss_verify(void *rsa_context, uintn hash_nid,
 
     rsa = rsa_context;
     size = RSA_size(rsa);
-    if (sig_size != (uintn)size) {
+    if (sig_size != (size_t)size) {
         return false;
     }
 
@@ -476,7 +476,7 @@ bool libspdm_rsa_pss_verify(void *rsa_context, uintn hash_nid,
         free_pool(buffer);
         return false;
     }
-    LIBSPDM_ASSERT(sig_size == (uintn)size);
+    LIBSPDM_ASSERT(sig_size == (size_t)size);
 
     result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
                                         buffer, RSA_PSS_SALTLEN_DIGEST);

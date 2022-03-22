@@ -47,7 +47,7 @@ void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx)
  *
  **/
 bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
-                                  uintn key_size)
+                                  size_t key_size)
 {
     return false;
 }
@@ -90,7 +90,7 @@ bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
  *
  **/
 bool libspdm_hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data,
-                                 uintn data_size)
+                                 size_t data_size)
 {
     return false;
 }
@@ -140,8 +140,8 @@ bool libspdm_hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sm3_256_all(const void *data, uintn data_size,
-                              const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sm3_256_all(const void *data, size_t data_size,
+                              const uint8_t *key, size_t key_size,
                               uint8_t *hmac_value)
 {
     return false;

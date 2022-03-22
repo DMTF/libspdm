@@ -21,7 +21,7 @@
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_sm2_dsa_new_by_nid(uintn nid)
+void *libspdm_sm2_dsa_new_by_nid(size_t nid)
 {
     return NULL;
 }
@@ -50,7 +50,7 @@ void libspdm_sm2_dsa_free(void *sm2_context)
  *
  **/
 bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
-                                 uintn public_key_size)
+                                 size_t public_key_size)
 {
     return false;
 }
@@ -70,7 +70,7 @@ bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
  *
  **/
 bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
-                                 uintn *public_key_size)
+                                 size_t *public_key_size)
 {
     return false;
 }
@@ -121,7 +121,7 @@ bool libspdm_sm2_dsa_check_key(const void *sm2_context)
  *
  **/
 bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
-                                  uintn *public_size)
+                                  size_t *public_size)
 {
     return false;
 }
@@ -137,7 +137,7 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_sm2_key_exchange_new_by_nid(uintn nid)
+void *libspdm_sm2_key_exchange_new_by_nid(size_t nid)
 {
     return NULL;
 }
@@ -168,9 +168,9 @@ void libspdm_sm2_key_exchange_free(void *sm2_context)
  * @retval true   sm2 context is initialized.
  * @retval false  sm2 context is not initialized.
  **/
-bool libspdm_sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
-                                   const uint8_t *id_a, uintn id_a_size,
-                                   const uint8_t *id_b, uintn id_b_size,
+bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_nid,
+                                   const uint8_t *id_a, size_t id_a_size,
+                                   const uint8_t *id_b, size_t id_b_size,
                                    bool is_initiator)
 {
     return false;
@@ -204,7 +204,7 @@ bool libspdm_sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
  *
  **/
 bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
-                                           uintn *public_size)
+                                           size_t *public_size)
 {
     return false;
 }
@@ -238,8 +238,8 @@ bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
  **/
 bool libspdm_sm2_key_exchange_compute_key(void *sm2_context,
                                           const uint8_t *peer_public,
-                                          uintn peer_public_size, uint8_t *key,
-                                          uintn *key_size)
+                                          size_t peer_public_size, uint8_t *key,
+                                          size_t *key_size)
 {
     return false;
 }
@@ -274,10 +274,10 @@ bool libspdm_sm2_key_exchange_compute_key(void *sm2_context,
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
-                          const uint8_t *id_a, uintn id_a_size,
-                          const uint8_t *message, uintn size,
-                          uint8_t *signature, uintn *sig_size)
+bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
+                          const uint8_t *id_a, size_t id_a_size,
+                          const uint8_t *message, size_t size,
+                          uint8_t *signature, size_t *sig_size)
 {
     return false;
 }
@@ -306,10 +306,10 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid sm2 context.
  *
  **/
-bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
-                            const uint8_t *id_a, uintn id_a_size,
-                            const uint8_t *message, uintn size,
-                            const uint8_t *signature, uintn sig_size)
+bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
+                            const uint8_t *id_a, size_t id_a_size,
+                            const uint8_t *message, size_t size,
+                            const uint8_t *signature, size_t sig_size)
 {
     return false;
 }

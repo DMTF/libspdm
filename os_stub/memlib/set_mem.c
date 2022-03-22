@@ -20,7 +20,7 @@
  * @return buffer.
  *
  **/
-void *libspdm_set_mem(void *buffer, uintn length, uint8_t value)
+void *libspdm_set_mem(void *buffer, size_t length, uint8_t value)
 {
     volatile uint8_t *pointer;
 

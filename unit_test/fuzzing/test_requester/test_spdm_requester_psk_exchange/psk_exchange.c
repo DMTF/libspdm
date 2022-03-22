@@ -13,13 +13,13 @@
 
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
-static uintn m_libspdm_local_buffer_size;
+static size_t m_libspdm_local_buffer_size;
 
-uintn libspdm_test_get_psk_exchange_request_size(const void *spdm_context, const void *buffer,
-                                                 uintn buffer_size)
+size_t libspdm_test_get_psk_exchange_request_size(const void *spdm_context, const void *buffer,
+                                                  size_t buffer_size)
 {
     const spdm_psk_exchange_request_t *spdm_request;
-    uintn message_size;
+    size_t message_size;
 
     spdm_request = buffer;
     message_size = sizeof(spdm_message_header_t);
@@ -46,16 +46,16 @@ uintn libspdm_test_get_psk_exchange_request_size(const void *spdm_context, const
     return message_size;
 }
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
                                           const void *request, uint64_t timeout)
 {
-    uintn header_size;
-    uintn message_size;
+    size_t header_size;
+    size_t message_size;
 
     header_size = sizeof(libspdm_test_message_header_t);
     m_libspdm_local_buffer_size = 0;
@@ -67,7 +67,7 @@ return_status libspdm_device_send_message(void *spdm_context, uintn request_size
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     spdm_psk_exchange_response_t *spdm_response;
@@ -75,23 +75,23 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
     uint32_t hash_size;
     uint32_t hmac_size;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_rsp_size;
+    size_t opaque_psk_exchange_rsp_size;
     void *data;
-    uintn data_size;
+    size_t data_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *cert_buffer;
-    uintn cert_buffer_size;
+    size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     libspdm_large_managed_buffer_t th_curr;
     uint8_t bin_str2[128];
-    uintn bin_str2_size;
+    size_t bin_str2_size;
     uint8_t bin_str7[128];
-    uintn bin_str7_size;
+    size_t bin_str7_size;
     uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
     uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t test_message_header_size;
-    uintn temp_buf_size;
+    size_t temp_buf_size;
 
     spdm_test_context = libspdm_get_test_context();
     test_message_header_size = 1;
@@ -126,8 +126,8 @@ return_status libspdm_device_receive_message(void *spdm_context, uintn *response
     libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                      sizeof(m_libspdm_local_buffer) -
                      (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
-                     spdm_response, (uintn)ptr - (uintn)spdm_response);
-    m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+                     spdm_response, (size_t)ptr - (size_t)spdm_response);
+    m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
@@ -178,9 +178,9 @@ void libspdm_test_requester_psk_exchange_case1(void **State)
     uint8_t heartbeat_period;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -231,9 +231,9 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
     uint8_t heartbeat_period;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -282,7 +282,7 @@ libspdm_test_context_t m_libspdm_requester_psk_exchange_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -301,12 +301,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

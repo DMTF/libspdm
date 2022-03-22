@@ -32,7 +32,7 @@
  *
  **/
 intn libspdm_const_compare_mem(const void *destination_buffer,
-                               const void *source_buffer, uintn length)
+                               const void *source_buffer, size_t length)
 {
     const volatile uint8_t *pointer_dst;
     const volatile uint8_t *pointer_src;

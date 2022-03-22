@@ -51,16 +51,16 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     bool result;
     libspdm_return_t status;
     spdm_get_digest_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_digests_response_max_t *spdm_response;
-    uintn spdm_response_size;
-    uintn digest_size;
-    uintn digest_count;
-    uintn index;
+    size_t spdm_response_size;
+    size_t digest_size;
+    size_t digest_count;
+    size_t index;
     libspdm_context_t *spdm_context;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -248,7 +248,7 @@ receive_done:
 libspdm_return_t libspdm_get_digest(void *context, uint8_t *slot_mask, void *total_digest_buffer)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     libspdm_return_t status;
 
     spdm_context = context;

@@ -14,13 +14,13 @@
 void *hmac_md_new(void);
 void hmac_md_free(const void *hmac_md_ctx);
 bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
-                     const uint8_t *key, uintn key_size);
+                     const uint8_t *key, size_t key_size);
 bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx);
 bool hmac_md_update(void *hmac_md_ctx, const void *data,
-                    uintn data_size);
+                    size_t data_size);
 bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value);
 bool hmac_md_all(const EVP_MD *md, const void *data,
-                 uintn data_size, const uint8_t *key, uintn key_size,
+                 size_t data_size, const uint8_t *key, size_t key_size,
                  uint8_t *hmac_value);
 
 /**
@@ -61,7 +61,7 @@ void libspdm_hmac_sha3_256_free(void *hmac_sha3_256_ctx)
  *
  **/
 bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key,
-                                   uintn key_size)
+                                   size_t key_size)
 {
     return hmac_md_set_key(EVP_sha3_256(), hmac_sha3_256_ctx, key, key_size);
 }
@@ -104,7 +104,7 @@ bool libspdm_hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx,
  *
  **/
 bool libspdm_hmac_sha3_256_update(void *hmac_sha3_256_ctx, const void *data,
-                                  uintn data_size)
+                                  size_t data_size)
 {
     return hmac_md_update(hmac_sha3_256_ctx, data, data_size);
 }
@@ -154,8 +154,8 @@ bool libspdm_hmac_sha3_256_final(void *hmac_sha3_256_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha3_256_all(const void *data, uintn data_size,
-                               const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha3_256_all(const void *data, size_t data_size,
+                               const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha3_256(), data, data_size, key, key_size,
@@ -202,7 +202,7 @@ void libspdm_hmac_sha3_384_free(void *hmac_sha3_384_ctx)
  *
  **/
 bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key,
-                                   uintn key_size)
+                                   size_t key_size)
 {
     return hmac_md_set_key(EVP_sha3_384(), hmac_sha3_384_ctx, key, key_size);
 }
@@ -249,7 +249,7 @@ bool libspdm_hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx,
  *
  **/
 bool libspdm_hmac_sha3_384_update(void *hmac_sha3_384_ctx, const void *data,
-                                  uintn data_size)
+                                  size_t data_size)
 {
     return hmac_md_update(hmac_sha3_384_ctx, data, data_size);
 }
@@ -301,8 +301,8 @@ bool libspdm_hmac_sha3_384_final(void *hmac_sha3_384_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha3_384_all(const void *data, uintn data_size,
-                               const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha3_384_all(const void *data, size_t data_size,
+                               const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha3_384(), data, data_size, key, key_size,
@@ -349,7 +349,7 @@ void libspdm_hmac_sha3_512_free(void *hmac_sha3_512_ctx)
  *
  **/
 bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key,
-                                   uintn key_size)
+                                   size_t key_size)
 {
     return hmac_md_set_key(EVP_sha3_512(), hmac_sha3_512_ctx, key, key_size);
 }
@@ -396,7 +396,7 @@ bool libspdm_hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx,
  *
  **/
 bool libspdm_hmac_sha3_512_update(void *hmac_sha3_512_ctx, const void *data,
-                                  uintn data_size)
+                                  size_t data_size)
 {
     return hmac_md_update(hmac_sha3_512_ctx, data, data_size);
 }
@@ -448,8 +448,8 @@ bool libspdm_hmac_sha3_512_final(void *hmac_sha3_512_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha3_512_all(const void *data, uintn data_size,
-                               const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha3_512_all(const void *data, size_t data_size,
+                               const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
     return hmac_md_all(EVP_sha3_512(), data, data_size, key, key_size,

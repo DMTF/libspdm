@@ -12,11 +12,11 @@
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_internal_dump_hex_str(const uint8_t *data, uintn size)
+void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
 {
-    uintn index;
+    size_t index;
     for (index = 0; index < size; index++) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x", (uintn)data[index]));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x", (size_t)data[index]));
     }
 }
 
@@ -26,11 +26,11 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, uintn size)
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_internal_dump_data(const uint8_t *data, uintn size)
+void libspdm_internal_dump_data(const uint8_t *data, size_t size)
 {
-    uintn index;
+    size_t index;
     for (index = 0; index < size; index++) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x ", (uintn)data[index]));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x ", (size_t)data[index]));
     }
 }
 
@@ -40,11 +40,11 @@ void libspdm_internal_dump_data(const uint8_t *data, uintn size)
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_internal_dump_hex(const uint8_t *data, uintn size)
+void libspdm_internal_dump_hex(const uint8_t *data, size_t size)
 {
-    uintn index;
-    uintn count;
-    uintn left;
+    size_t index;
+    size_t count;
+    size_t left;
 
 #define COLUME_SIZE (16 * 2)
 
@@ -100,7 +100,7 @@ void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
  * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
  **/
 return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
-                                            uintn buffer_size)
+                                            size_t buffer_size)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
@@ -172,7 +172,7 @@ void libspdm_reset_managed_buffer(void *m_buffer)
  *
  * @return the size of managed buffer.
  **/
-uintn libspdm_get_managed_buffer_size(void *m_buffer)
+size_t libspdm_get_managed_buffer_size(void *m_buffer)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
@@ -215,7 +215,7 @@ void *libspdm_get_managed_buffer(void *m_buffer)
  * @param  libspdm_managed_buffer_t                The managed buffer.
  * @param  max_buffer_size                The maximum size in bytes of the managed buffer.
  **/
-void libspdm_init_managed_buffer(void *m_buffer, uintn max_buffer_size)
+void libspdm_init_managed_buffer(void *m_buffer, size_t max_buffer_size)
 {
     libspdm_managed_buffer_t *managed_buffer;
 

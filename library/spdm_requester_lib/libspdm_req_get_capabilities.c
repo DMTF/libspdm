@@ -113,12 +113,12 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 {
     libspdm_return_t status;
     spdm_get_capabilities_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     spdm_capabilities_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_CAPABILITIES);
     if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
@@ -291,7 +291,7 @@ receive_done:
  **/
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
 {
-    uintn retry;
+    size_t retry;
     libspdm_return_t status;
 
     spdm_context->crypto_request = false;

@@ -41,7 +41,7 @@
  *                    based on the format string specified by format.
  *
  **/
-void libspdm_debug_print(uintn error_level, const char *format, ...);
+void libspdm_debug_print(size_t error_level, const char *format, ...);
 
 /**
  * Prints an assert message containing a filename, line number, and description.
@@ -64,7 +64,7 @@ void libspdm_debug_print(uintn error_level, const char *format, ...);
  * @param  description  The pointer to the description of the assert condition.
  *
  **/
-void libspdm_debug_assert(const char *file_name, uintn line_number,
+void libspdm_debug_assert(const char *file_name, size_t line_number,
                           const char *description);
 
 /**

@@ -9,7 +9,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -18,7 +18,7 @@ void libspdm_test_transport_mctp_decode_message(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn transport_message_size;
+    size_t transport_message_size;
     uint8_t *transport_message;
     bool is_app_message;
     bool is_requester;
@@ -42,7 +42,7 @@ libspdm_test_context_t m_libspdm_transport_mctp_test_context = {
     false,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

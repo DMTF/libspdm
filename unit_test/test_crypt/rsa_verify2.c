@@ -477,12 +477,12 @@ return_status libspdm_validate_crypt_rsa_2(void)
     void *rsa_priv_key;
     void *rsa_pub_key;
     uint8_t *signature;
-    uintn sig_size;
+    size_t sig_size;
     /* uint8_t          *subject;
-     * uintn          subject_size;
+     * size_t          subject_size;
      * return_status  return_status;
      * char          common_name[64];
-     * uintn          common_name_size;*/
+     * size_t          common_name_size;*/
 
     libspdm_my_print("\nCrypto RSA key Retrieving Testing: ");
 

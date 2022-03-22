@@ -33,7 +33,7 @@ uint8_t libspdm_default_seed[] = "Crypto Library default seed";
  * @retval false  Pseudorandom number generator does not have enough entropy for random generation.
  *
  **/
-bool libspdm_random_seed(const uint8_t *seed, uintn seed_size)
+bool libspdm_random_seed(const uint8_t *seed, size_t seed_size)
 {
     if (seed_size > INT_MAX) {
         return false;
@@ -76,7 +76,7 @@ bool libspdm_random_seed(const uint8_t *seed, uintn seed_size)
  * @retval false  Pseudorandom number generator fails to generate due to lack of entropy.
  *
  **/
-bool libspdm_random_bytes(uint8_t *output, uintn size)
+bool libspdm_random_bytes(uint8_t *output, size_t size)
 {
 
     /* Check input parameters.*/

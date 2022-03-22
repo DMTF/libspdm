@@ -64,9 +64,9 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     bool result;
     return_status status;
     spdm_get_measurements_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_measurements_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint32_t measurement_record_data_length;
     uint8_t *measurement_record_data;
     spdm_measurement_block_common_header_t *measurement_block_header;
@@ -77,13 +77,13 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     uint16_t opaque_length;
     void *opaque;
     void *signature;
-    uintn signature_size;
+    size_t signature_size;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -560,7 +560,7 @@ return_status libspdm_get_measurement(void *context, const uint32_t *session_id,
                                       void *measurement_record)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;
@@ -617,7 +617,7 @@ return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_
                                          void *requester_nonce,
                                          void *responder_nonce) {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;

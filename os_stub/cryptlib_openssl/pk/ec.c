@@ -26,7 +26,7 @@
  *         If the allocations fails, libspdm_ec_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_ec_new_by_nid(uintn nid)
+void *libspdm_ec_new_by_nid(size_t nid)
 {
     EC_KEY *ec_key;
     EC_GROUP *ec_group;
@@ -90,7 +90,7 @@ void libspdm_ec_free(void *ec_context)
  *
  **/
 bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
-                            uintn public_key_size)
+                            size_t public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -99,7 +99,7 @@ bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
     BIGNUM *bn_y;
     EC_POINT *ec_point;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
 
     if (ec_context == NULL || public_key == NULL) {
         return false;
@@ -182,7 +182,7 @@ done:
  *
  **/
 bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
-                            uintn *public_key_size)
+                            size_t *public_key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -191,7 +191,7 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
     BIGNUM *bn_x;
     BIGNUM *bn_y;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
     intn x_size;
     intn y_size;
 
@@ -250,7 +250,7 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
         ret_val = false;
         goto done;
     }
-    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
     if (public_key != NULL) {
         libspdm_zero_mem(public_key, *public_key_size);
@@ -331,7 +331,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  *
  **/
 bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
-                             uintn *public_size)
+                             size_t *public_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -340,7 +340,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
     BIGNUM *bn_x;
     BIGNUM *bn_y;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
     intn x_size;
     intn y_size;
 
@@ -402,7 +402,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         ret_val = false;
         goto done;
     }
-    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
     if (public != NULL) {
         libspdm_zero_mem(public, *public_size);
@@ -452,8 +452,8 @@ done:
  *
  **/
 bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
-                            uintn peer_public_size, uint8_t *key,
-                            uintn *key_size)
+                            size_t peer_public_size, uint8_t *key,
+                            size_t *key_size)
 {
     EC_KEY *ec_key;
     const EC_GROUP *ec_group;
@@ -462,7 +462,7 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
     BIGNUM *bn_y;
     EC_POINT *ec_point;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
     intn size;
 
     if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
@@ -520,7 +520,7 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
         goto done;
     }
 
-    if (*key_size < (uintn)size) {
+    if (*key_size < (size_t)size) {
         *key_size = size;
         ret_val = false;
         goto done;
@@ -572,9 +572,9 @@ done:
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
-                        const uint8_t *message_hash, uintn hash_size,
-                        uint8_t *signature, uintn *sig_size)
+bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
+                        const uint8_t *message_hash, size_t hash_size,
+                        uint8_t *signature, size_t *sig_size)
 {
     EC_KEY *ec_key;
     ECDSA_SIG *ecdsa_sig;
@@ -608,7 +608,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
     default:
         return false;
     }
-    if (*sig_size < (uintn)(half_size * 2)) {
+    if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
     }
@@ -653,7 +653,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
         ECDSA_SIG_free(ecdsa_sig);
         return false;
     }
-    LIBSPDM_ASSERT((uintn)r_size <= half_size && (uintn)s_size <= half_size);
+    LIBSPDM_ASSERT((size_t)r_size <= half_size && (size_t)s_size <= half_size);
 
     BN_bn2bin(bn_r, &signature[0 + half_size - r_size]);
     BN_bn2bin(bn_s, &signature[half_size + half_size - s_size]);
@@ -686,9 +686,9 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
-                          const uint8_t *message_hash, uintn hash_size,
-                          const uint8_t *signature, uintn sig_size)
+bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
+                          const uint8_t *message_hash, size_t hash_size,
+                          const uint8_t *signature, size_t sig_size)
 {
     int32_t result;
     EC_KEY *ec_key;
@@ -721,7 +721,7 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
     default:
         return false;
     }
-    if (sig_size != (uintn)(half_size * 2)) {
+    if (sig_size != (size_t)(half_size * 2)) {
         return false;
     }
 

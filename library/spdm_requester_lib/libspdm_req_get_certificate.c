@@ -44,25 +44,25 @@ typedef struct {
  **/
 return_status libspdm_try_get_certificate(void *context, uint8_t slot_id,
                                           uint16_t length,
-                                          uintn *cert_chain_size,
+                                          size_t *cert_chain_size,
                                           void *cert_chain,
                                           void **trust_anchor,
-                                          uintn *trust_anchor_size)
+                                          size_t *trust_anchor_size)
 {
     bool result;
     return_status status;
     spdm_get_certificate_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_certificate_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     libspdm_large_managed_buffer_t certificate_chain_buffer;
     libspdm_context_t *spdm_context;
     uint16_t total_responder_cert_chain_buffer_length;
-    uintn cert_chain_capacity;
+    size_t cert_chain_capacity;
     uint16_t remainder_length;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
@@ -346,7 +346,7 @@ done:
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_certificate(void *context, uint8_t slot_id,
-                                      uintn *cert_chain_size,
+                                      size_t *cert_chain_size,
                                       void *cert_chain)
 {
     return libspdm_get_certificate_choose_length(context, slot_id,
@@ -377,10 +377,10 @@ return_status libspdm_get_certificate(void *context, uint8_t slot_id,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_certificate_ex(void *context, uint8_t slot_id,
-                                         uintn *cert_chain_size,
+                                         size_t *cert_chain_size,
                                          void *cert_chain,
                                          void **trust_anchor,
-                                         uintn *trust_anchor_size)
+                                         size_t *trust_anchor_size)
 {
     return libspdm_get_certificate_choose_length_ex(context, slot_id,
                                                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
@@ -412,11 +412,11 @@ return_status libspdm_get_certificate_ex(void *context, uint8_t slot_id,
 return_status libspdm_get_certificate_choose_length(void *context,
                                                     uint8_t slot_id,
                                                     uint16_t length,
-                                                    uintn *cert_chain_size,
+                                                    size_t *cert_chain_size,
                                                     void *cert_chain)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;
@@ -459,13 +459,13 @@ return_status libspdm_get_certificate_choose_length(void *context,
 return_status libspdm_get_certificate_choose_length_ex(void *context,
                                                        uint8_t slot_id,
                                                        uint16_t length,
-                                                       uintn *cert_chain_size,
+                                                       size_t *cert_chain_size,
                                                        void *cert_chain,
                                                        void **trust_anchor,
-                                                       uintn *trust_anchor_size)
+                                                       size_t *trust_anchor_size)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;

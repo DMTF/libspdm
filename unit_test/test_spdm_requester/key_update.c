@@ -17,9 +17,9 @@ static void libspdm_set_standard_key_update_test_state(
     libspdm_context_t *spdm_context, uint32_t *session_id)
 {
     void                   *data;
-    uintn data_size;
+    size_t data_size;
     void                   *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t    *session_info;
 
     spdm_context->connection_info.connection_state =
@@ -104,12 +104,12 @@ static void libspdm_set_standard_key_update_test_secrets(
     request_data_sequence_number = 0;
 }
 
-static void libspdm_compute_secret_update(uintn hash_size,
+static void libspdm_compute_secret_update(size_t hash_size,
                                           const uint8_t *in_secret, uint8_t *out_secret,
-                                          uintn out_secret_size)
+                                          size_t out_secret_size)
 {
     uint8_t m_bin_str9[128];
-    uintn m_bin_str9_size;
+    size_t m_bin_str9_size;
     uint16_t length;
 
     length = (uint16_t) hash_size;
@@ -129,7 +129,7 @@ static void libspdm_compute_secret_update(uintn hash_size,
 }
 
 return_status libspdm_requester_key_update_test_send_message(
-    void *spdm_context, uintn request_size, const void *request,
+    void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -141,7 +141,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x2: {
         return_status status;
         uint8_t *decoded_message;
-        uintn decoded_message_size;
+        size_t decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
         bool is_app_message;
@@ -175,12 +175,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x3: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -218,12 +218,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x4: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -261,12 +261,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x5: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -304,12 +304,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x6: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -350,12 +350,12 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x8:
         return RETURN_SUCCESS;
     case 0x9: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index != 1) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
             bool is_app_message;
@@ -407,7 +407,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x15: {
         return_status status;
         uint8_t *decoded_message;
-        uintn decoded_message_size;
+        size_t decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
         bool is_app_message;
@@ -441,12 +441,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x16: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index < 2) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
             bool is_app_message;
@@ -484,14 +484,14 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x17: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "send message: %d\n", sub_index));
 
         if(sub_index%2 == 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
             bool is_app_message;
@@ -535,7 +535,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x1A: {
         return_status status;
         uint8_t *decoded_message;
-        uintn decoded_message_size;
+        size_t decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
         bool is_app_message;
@@ -571,7 +571,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x1B: {
         return_status status;
         uint8_t *decoded_message;
-        uintn decoded_message_size;
+        size_t decoded_message_size;
         uint32_t session_id;
         uint32_t              *message_session_id;
         bool is_app_message;
@@ -605,12 +605,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x1C: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -648,12 +648,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x1D: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -691,12 +691,12 @@ return_status libspdm_requester_key_update_test_send_message(
     }
         return RETURN_SUCCESS;
     case 0x1E: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index > 0) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t              *message_session_id;
             bool is_app_message;
@@ -737,12 +737,12 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x20:
         return RETURN_SUCCESS;
     case 0x21: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         if(sub_index != 1) {
             return_status status;
             uint8_t *decoded_message;
-            uintn decoded_message_size;
+            size_t decoded_message_size;
             uint32_t session_id;
             uint32_t *message_session_id;
             bool is_app_message;
@@ -789,7 +789,7 @@ return_status libspdm_requester_key_update_test_send_message(
 }
 
 return_status libspdm_requester_key_update_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -800,15 +800,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_DEVICE_ERROR;
 
     case 0x2: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -856,15 +856,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x3: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -913,12 +913,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -956,12 +956,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -998,7 +998,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x6: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -1012,10 +1012,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1046,10 +1046,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1081,10 +1081,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1122,12 +1122,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1165,12 +1165,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1212,7 +1212,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x9: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -1227,10 +1227,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         if (sub_index == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1267,10 +1267,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1302,10 +1302,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             ->application_secret.response_data_sequence_number--;
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1348,10 +1348,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1411,15 +1411,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xB: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1467,15 +1467,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xC: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1524,15 +1524,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xD: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1580,15 +1580,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xE: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1636,15 +1636,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0xF: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1693,15 +1693,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x10: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1750,7 +1750,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x11: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -1764,10 +1764,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1800,10 +1800,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1838,7 +1838,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x12: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -1852,10 +1852,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1888,10 +1888,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1926,7 +1926,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x13: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -1940,10 +1940,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1976,10 +1976,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2011,10 +2011,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2051,7 +2051,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x14: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -2065,10 +2065,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2101,10 +2101,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2139,7 +2139,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x15: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -2153,10 +2153,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2189,10 +2189,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else {
             spdm_error_response_data_response_not_ready_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2232,7 +2232,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x16: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -2246,10 +2246,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2282,10 +2282,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 1) {
             spdm_error_response_data_response_not_ready_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2321,10 +2321,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         }
         else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2361,7 +2361,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x17: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         uint32_t session_id;
@@ -2381,10 +2381,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             }
             if (sub_index%2 == 0) {
                 spdm_key_update_response_t *spdm_response;
-                uintn spdm_response_size;
-                uintn transport_header_size;
+                size_t spdm_response_size;
+                size_t transport_header_size;
                 uint8_t *scratch_buffer;
-                uintn scratch_buffer_size;
+                size_t scratch_buffer_size;
 
                 spdm_response_size = sizeof(spdm_key_update_response_t);
                 transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2417,10 +2417,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             }
             else {
                 spdm_error_response_t *spdm_response;
-                uintn spdm_response_size;
-                uintn transport_header_size;
+                size_t spdm_response_size;
+                size_t transport_header_size;
                 uint8_t *scratch_buffer;
-                uintn scratch_buffer_size;
+                size_t scratch_buffer_size;
 
                 spdm_response_size = sizeof(spdm_error_response_t);
                 transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2471,15 +2471,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x18: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2532,15 +2532,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x19: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2589,15 +2589,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1A: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2646,15 +2646,15 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1B: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         spdm_key_update_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2706,12 +2706,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x1C: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -2792,12 +2792,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x1D: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -2880,7 +2880,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x1E: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -2897,10 +2897,10 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         if (sub_index == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2972,10 +2972,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -3006,10 +3006,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             .response_data_sequence_number--;
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -3046,12 +3046,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x1F: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -3132,12 +3132,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x20: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -3222,7 +3222,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x21: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
 
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
@@ -3240,10 +3240,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         if (sub_index == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
             uint8_t curr_rsp_salt[LIBSPDM_MAX_AEAD_IV_SIZE];
@@ -3321,10 +3321,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             .response_data_sequence_number = curr_rsp_sequence_number;
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -3355,10 +3355,10 @@ return_status libspdm_requester_key_update_test_receive_message(
             .response_data_sequence_number--;
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -3400,10 +3400,10 @@ return_status libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         libspdm_secured_message_context_t *secured_message_context;
         uint8_t curr_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -3507,12 +3507,12 @@ return_status libspdm_requester_key_update_test_receive_message(
 
     case 0x23: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);

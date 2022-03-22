@@ -29,7 +29,7 @@
  **/
 return_status libspdm_send_request(void *spdm_context, const uint32_t *session_id,
                                    bool is_app_message,
-                                   uintn request_size, const void *request);
+                                   size_t request_size, const void *request);
 
 /**
  * Receive an SPDM or an APP response from a device.
@@ -52,7 +52,7 @@ return_status libspdm_send_request(void *spdm_context, const uint32_t *session_i
 return_status libspdm_receive_response(void *spdm_context,
                                        const uint32_t *session_id,
                                        bool is_app_message,
-                                       uintn *response_size,
+                                       size_t *response_size,
                                        void **response);
 
 /**
@@ -112,7 +112,7 @@ return_status libspdm_get_digest(void *spdm_context, uint8_t *slot_mask,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_certificate(void *spdm_context, uint8_t slot_id,
-                                      uintn *cert_chain_size,
+                                      size_t *cert_chain_size,
                                       void *cert_chain);
 
 /**
@@ -138,10 +138,10 @@ return_status libspdm_get_certificate(void *spdm_context, uint8_t slot_id,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_certificate_ex(void *context, uint8_t slot_id,
-                                         uintn *cert_chain_size,
+                                         size_t *cert_chain_size,
                                          void *cert_chain,
                                          void **trust_anchor,
-                                         uintn *trust_anchor_size);
+                                         size_t *trust_anchor_size);
 
 /**
  * This function sends GET_CERTIFICATE
@@ -167,7 +167,7 @@ return_status libspdm_get_certificate_ex(void *context, uint8_t slot_id,
 return_status libspdm_get_certificate_choose_length(void *spdm_context,
                                                     uint8_t slot_id,
                                                     uint16_t length,
-                                                    uintn *cert_chain_size,
+                                                    size_t *cert_chain_size,
                                                     void *cert_chain);
 
 /**
@@ -196,10 +196,10 @@ return_status libspdm_get_certificate_choose_length(void *spdm_context,
 return_status libspdm_get_certificate_choose_length_ex(void *context,
                                                        uint8_t slot_id,
                                                        uint16_t length,
-                                                       uintn *cert_chain_size,
+                                                       size_t *cert_chain_size,
                                                        void *cert_chain,
                                                        void **trust_anchor,
-                                                       uintn *trust_anchor_size);
+                                                       size_t *trust_anchor_size);
 
 /**
  * This function sends CHALLENGE
@@ -398,11 +398,11 @@ return_status libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash,
                                        const void *requester_random_in,
-                                       uintn requester_random_in_size,
+                                       size_t requester_random_in_size,
                                        void *requester_random,
-                                       uintn *requester_random_size,
+                                       size_t *requester_random_size,
                                        void *responder_random,
-                                       uintn *responder_random_size);
+                                       size_t *responder_random_size);
 
 /**
  * This function sends END_SESSION
@@ -449,9 +449,9 @@ return_status libspdm_stop_session(void *spdm_context, uint32_t session_id,
 return_status libspdm_send_receive_data(void *spdm_context,
                                         const uint32_t *session_id,
                                         bool is_app_message,
-                                        const void *request, uintn request_size,
+                                        const void *request, size_t request_size,
                                         void *response,
-                                        uintn *response_size);
+                                        size_t *response_size);
 
 /**
  * This function sends HEARTBEAT
@@ -519,8 +519,8 @@ return_status libspdm_send_receive_encap_request(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 typedef return_status (*libspdm_get_encap_response_func)(
-    void *spdm_context, uintn spdm_request_size,
-    void *spdm_request, uintn *spdm_response_size,
+    void *spdm_context, size_t spdm_request_size,
+    void *spdm_request, size_t *spdm_response_size,
     void *spdm_response);
 
 /**
@@ -555,7 +555,7 @@ void libspdm_register_get_encap_response_func(void *spdm_context,
  **/
 return_status libspdm_generate_encap_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
-    uintn *spdm_response_size, void *spdm_response);
+    size_t *spdm_response_size, void *spdm_response);
 
 /**
  * Generate encapsulated ERROR message with extended error data.
@@ -578,7 +578,7 @@ return_status libspdm_generate_encap_error_response(
  **/
 return_status libspdm_generate_encap_extended_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
-    uintn extended_error_data_size, const uint8_t *extended_error_data,
-    uintn *spdm_response_size, void *spdm_response);
+    size_t extended_error_data_size, const uint8_t *extended_error_data,
+    size_t *spdm_response_size, void *spdm_response);
 
 #endif

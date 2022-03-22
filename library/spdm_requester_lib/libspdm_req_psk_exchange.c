@@ -65,18 +65,18 @@ return_status libspdm_try_send_receive_psk_exchange(
     uint32_t *session_id, uint8_t *heartbeat_period,
     void *measurement_hash,
     const void *requester_context_in,
-    uintn requester_context_in_size,
+    size_t requester_context_in_size,
     void *requester_context,
-    uintn *requester_context_size,
+    size_t *requester_context_size,
     void *responder_context,
-    uintn *responder_context_size)
+    size_t *responder_context_size)
 {
     bool result;
     return_status status;
     libspdm_psk_exchange_request_mine_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_psk_exchange_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint32_t measurement_summary_hash_size;
     uint32_t hmac_size;
     uint8_t *ptr;
@@ -85,13 +85,13 @@ return_status libspdm_try_send_receive_psk_exchange(
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     libspdm_session_info_t *session_info;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
     uint8_t th1_hash_data[64];
     uint8_t th2_hash_data[64];
     uint32_t algo_size;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
@@ -202,7 +202,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_psk_exchange_req_size;
 
-    spdm_request_size = (uintn)ptr - (uintn)spdm_request;
+    spdm_request_size = (size_t)ptr - (size_t)spdm_request;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                                        spdm_request);
     if (RETURN_ERROR(status)) {
@@ -454,7 +454,7 @@ return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
                                                 uint8_t *heartbeat_period,
                                                 void *measurement_hash)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;
@@ -503,13 +503,13 @@ return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_conte
                                                    uint8_t *heartbeat_period,
                                                    void *measurement_hash,
                                                    const void *requester_context_in,
-                                                   uintn requester_context_in_size,
+                                                   size_t requester_context_in_size,
                                                    void *requester_context,
-                                                   uintn *requester_context_size,
+                                                   size_t *requester_context_size,
                                                    void *responder_context,
-                                                   uintn *responder_context_size)
+                                                   size_t *responder_context_size)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;

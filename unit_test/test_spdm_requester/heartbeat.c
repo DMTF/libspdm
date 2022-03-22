@@ -13,7 +13,7 @@ static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 void libspdm_secured_message_set_response_data_encryption_key(
-    void *spdm_secured_message_context, const void *key, uintn key_size)
+    void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -26,7 +26,7 @@ void libspdm_secured_message_set_response_data_encryption_key(
 
 void libspdm_secured_message_set_response_data_salt(
     void *spdm_secured_message_context, const void *salt,
-    uintn salt_size)
+    size_t salt_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -38,7 +38,7 @@ void libspdm_secured_message_set_response_data_salt(
 }
 
 return_status libspdm_requester_heartbeat_test_send_message(void *spdm_context,
-                                                            uintn request_size,
+                                                            size_t request_size,
                                                             const void *request,
                                                             uint64_t timeout)
 {
@@ -76,7 +76,7 @@ return_status libspdm_requester_heartbeat_test_send_message(void *spdm_context,
 }
 
 return_status libspdm_requester_heartbeat_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -88,12 +88,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x2: {
         spdm_heartbeat_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
@@ -131,12 +131,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x3: {
         spdm_heartbeat_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
@@ -173,12 +173,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -215,12 +215,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -256,15 +256,15 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x6: {
-        static uintn sub_index1 = 0;
+        static size_t sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -301,12 +301,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             .response_data_sequence_number--;
         } else if (sub_index1 == 1) {
             spdm_heartbeat_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_heartbeat_response_t);
@@ -347,12 +347,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -389,12 +389,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -435,16 +435,16 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x9: {
-        static uintn sub_index2 = 0;
+        static size_t sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -487,12 +487,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             .response_data_sequence_number--;
         } else if (sub_index2 == 1) {
             spdm_heartbeat_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_heartbeat_response_t);
@@ -536,12 +536,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t      *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
 
@@ -586,12 +586,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         return RETURN_SUCCESS;
     case 0xB: {
         spdm_heartbeat_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
@@ -629,12 +629,12 @@ return_status libspdm_requester_heartbeat_test_receive_message(
 
     case 0xC: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -681,9 +681,9 @@ void libspdm_test_requester_heartbeat_case1(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -750,9 +750,9 @@ void libspdm_test_requester_heartbeat_case2(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -842,9 +842,9 @@ void libspdm_test_requester_heartbeat_case3(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -934,9 +934,9 @@ void libspdm_test_requester_heartbeat_case4(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1026,9 +1026,9 @@ void libspdm_test_requester_heartbeat_case5(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1118,9 +1118,9 @@ void libspdm_test_requester_heartbeat_case6(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1210,9 +1210,9 @@ void libspdm_test_requester_heartbeat_case7(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1304,9 +1304,9 @@ void libspdm_test_requester_heartbeat_case8(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1396,9 +1396,9 @@ void libspdm_test_requester_heartbeat_case9(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1487,9 +1487,9 @@ void libspdm_test_requester_heartbeat_case10(void **state) {
     libspdm_context_t  *spdm_context;
     uint32_t session_id;
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t    *session_info;
     uint16_t error_code;
 
@@ -1584,9 +1584,9 @@ void libspdm_test_requester_heartbeat_case11(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1699,9 +1699,9 @@ void libspdm_test_requester_heartbeat_case12(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;

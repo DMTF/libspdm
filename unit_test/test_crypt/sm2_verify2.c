@@ -95,7 +95,7 @@ return_status libspdm_validate_crypt_sm2_2(void)
     void *sm2_pub_key;
     uint8_t message[] = "Sm2Test";
     uint8_t signature[32 * 2];
-    uintn sig_size;
+    size_t sig_size;
 
     libspdm_my_print("\nCrypto sm2 key Retrieving Testing: ");
 

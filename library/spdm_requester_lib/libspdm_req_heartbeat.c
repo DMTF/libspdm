@@ -30,15 +30,15 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
 {
     return_status status;
     spdm_heartbeat_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_heartbeat_response_mine_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -134,7 +134,7 @@ receive_done:
 
 return_status libspdm_heartbeat(void *context, uint32_t session_id)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
     libspdm_context_t *spdm_context;
 

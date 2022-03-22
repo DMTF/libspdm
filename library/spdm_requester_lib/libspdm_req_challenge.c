@@ -55,24 +55,24 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     return_status status;
     bool result;
     spdm_challenge_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_challenge_auth_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t *ptr;
     void *cert_chain_hash;
-    uintn hash_size;
-    uintn measurement_summary_hash_size;
+    size_t hash_size;
+    size_t measurement_summary_hash_size;
     void *nonce;
     void *measurement_summary_hash;
     uint16_t opaque_length;
     void *opaque;
     void *signature;
-    uintn signature_size;
+    size_t signature_size;
     libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
@@ -368,7 +368,7 @@ return_status libspdm_challenge(void *context, uint8_t slot_id,
                                 uint8_t *slot_mask)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;
@@ -417,7 +417,7 @@ return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
                                    void *responder_nonce)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context = context;

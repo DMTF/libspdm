@@ -11,7 +11,7 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 
-typedef uintn size_t;
+typedef size_t size_t;
 
 #if defined(__GNUC__) || defined(__clang__)
 #define GLOBAL_USED __attribute__((used))
@@ -75,9 +75,9 @@ int strcmp(const char *s1, const char *s2)
     return (int)ascii_strcmp(s1, s2);
 }
 
-uintn ascii_strlen(const char *string)
+size_t ascii_strlen(const char *string)
 {
-    uintn length;
+    size_t length;
 
     if (string == NULL) {
         return 0;

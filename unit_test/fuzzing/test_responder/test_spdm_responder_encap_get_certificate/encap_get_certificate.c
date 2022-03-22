@@ -11,7 +11,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -25,17 +25,17 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     spdm_certificate_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     bool need_continue;
 
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
 
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -73,9 +73,9 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn encap_request_size;
+    size_t encap_request_size;
     void *data;
-    uintn data_size;
+    size_t data_size;
 
     spdm_get_certificate_request_t *spdm_request;
 
@@ -111,7 +111,7 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
     #endif
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -131,12 +131,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

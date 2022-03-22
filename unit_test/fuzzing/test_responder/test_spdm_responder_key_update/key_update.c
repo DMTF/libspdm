@@ -90,13 +90,13 @@ static void libspdm_set_standard_key_update_test_secrets(
     .request_data_sequence_number = 0;
 }
 
-static void libspdm_compute_secret_update(uintn hash_size,
+static void libspdm_compute_secret_update(size_t hash_size,
                                           const uint8_t *in_secret,
                                           uint8_t *out_secret,
-                                          uintn out_secret_size)
+                                          size_t out_secret_size)
 {
     uint8_t m_bin_str9[128];
-    uintn m_bin_str9_size;
+    size_t m_bin_str9_size;
     uint16_t length;
 
     length = (uint16_t)hash_size;
@@ -114,7 +114,7 @@ static void libspdm_compute_secret_update(uintn hash_size,
                         m_bin_str9_size, out_secret, out_secret_size);
 }
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -131,7 +131,7 @@ void libspdm_test_responder_key_update(void **State)
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     libspdm_secured_message_context_t *secured_message_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
@@ -159,7 +159,7 @@ void libspdm_test_responder_key_update(void **State)
                                     &response_size, response);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

@@ -10,26 +10,26 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
 return_status libspdm_device_send_message(void *spdm_context,
-                                          uintn request_size, const void *request,
+                                          size_t request_size, const void *request,
                                           uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
 return_status libspdm_device_receive_message(void *spdm_context,
-                                             uintn *response_size,
+                                             size_t *response_size,
                                              void **response,
                                              uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t spdm_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
@@ -97,7 +97,7 @@ libspdm_test_context_t m_libspdm_requester_get_diges_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -115,12 +115,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

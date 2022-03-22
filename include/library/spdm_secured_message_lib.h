@@ -54,7 +54,7 @@ typedef enum {
  *
  * @return the size in bytes of the SPDM secured message context.
  **/
-uintn libspdm_secured_message_get_context_size(void);
+size_t libspdm_secured_message_get_context_size(void);
 
 /**
  * Initialize an SPDM secured message context.
@@ -140,7 +140,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
  */
 void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
                                           const void *psk_hint,
-                                          uintn psk_hint_size);
+                                          size_t psk_hint_size);
 
 /**
  * Import the DHE Secret to an SPDM secured message context.
@@ -154,7 +154,7 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
 return_status
 libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                           const void *dhe_secret,
-                                          uintn dhe_secret_size);
+                                          size_t dhe_secret_size);
 
 /**
  * Export the export_master_secret from an SPDM secured message context.
@@ -167,7 +167,7 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
  */
 return_status libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
-    uintn *export_master_secret_size);
+    size_t *export_master_secret_size);
 
 #define LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION 1
 
@@ -197,7 +197,7 @@ typedef struct {
 return_status
 libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                             void *SessionKeys,
-                                            uintn *SessionKeysSize);
+                                            size_t *SessionKeysSize);
 
 /**
  * Import the SessionKeys from an SPDM secured message context.
@@ -211,7 +211,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
 return_status
 libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                             const void *SessionKeys,
-                                            uintn SessionKeysSize);
+                                            size_t SessionKeysSize);
 
 /**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
@@ -259,7 +259,7 @@ void libspdm_secured_message_dhe_free(uint16_t dhe_named_group,
 bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
                                               void *dhe_context,
                                               uint8_t *public_key,
-                                              uintn *public_key_size);
+                                              size_t *public_key_size);
 
 /**
  * Computes exchanged common key,
@@ -280,7 +280,7 @@ bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
  **/
 bool libspdm_secured_message_dhe_compute_key(
     uint16_t dhe_named_group, void *dhe_context,
-    const uint8_t *peer_public, uintn peer_public_size,
+    const uint8_t *peer_public, size_t peer_public_size,
     void *spdm_secured_message_context);
 
 /**
@@ -351,7 +351,7 @@ bool libspdm_hmac_duplicate_with_request_finished_key(
 bool libspdm_hmac_update_with_request_finished_key(
     void *spdm_secured_message_context,
     void *hmac_ctx, const void *data,
-    uintn data_size);
+    size_t data_size);
 
 /**
  * Completes computation of the HMAC digest value, with request_finished_key.
@@ -380,7 +380,7 @@ bool libspdm_hmac_final_with_request_finished_key(
  **/
 bool
 libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
-                                           const void *data, uintn data_size,
+                                           const void *data, size_t data_size,
                                            uint8_t *hmac_value);
 
 /**
@@ -444,7 +444,7 @@ bool libspdm_hmac_duplicate_with_response_finished_key(
 bool libspdm_hmac_update_with_response_finished_key(
     void *spdm_secured_message_context,
     void *hmac_ctx, const void *data,
-    uintn data_size);
+    size_t data_size);
 
 /**
  * Completes computation of the HMAC digest value, with response_finished_key.
@@ -473,7 +473,7 @@ bool libspdm_hmac_final_with_response_finished_key(
  **/
 bool libspdm_hmac_all_with_response_finished_key(
     void *spdm_secured_message_context, const void *data,
-    uintn data_size, uint8_t *hmac_value);
+    size_t data_size, uint8_t *hmac_value);
 
 /**
  * This function concatenates binary data, which is used as info in HKDF expand later.
@@ -489,10 +489,10 @@ bool libspdm_hmac_all_with_response_finished_key(
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_bin_concat(const char *label, uintn label_size,
+return_status libspdm_bin_concat(const char *label, size_t label_size,
                                  const uint8_t *context, uint16_t length,
-                                 uintn hash_size, uint8_t *out_bin,
-                                 uintn *out_bin_size);
+                                 size_t hash_size, uint8_t *out_bin,
+                                 size_t *out_bin_size);
 
 /**
  * This function generates SPDM HandshakeKey for a session.
@@ -607,8 +607,8 @@ typedef struct {
  **/
 return_status libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester, uintn app_message_size,
-    const void *app_message, uintn *secured_message_size,
+    bool is_requester, size_t app_message_size,
+    const void *app_message, size_t *secured_message_size,
     void *secured_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 
@@ -632,8 +632,8 @@ return_status libspdm_encode_secured_message(
  **/
 return_status libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester, uintn secured_message_size,
-    const void *secured_message, uintn *app_message_size,
+    bool is_requester, size_t secured_message_size,
+    const void *secured_message, size_t *app_message_size,
     void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 

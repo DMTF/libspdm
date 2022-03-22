@@ -9,10 +9,10 @@
 #include <stdio.h>
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size)
+                             size_t *file_size)
 {
     FILE *fp_in;
-    uintn temp_result;
+    size_t temp_result;
 
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
         printf("Unable to open file %s\n", file_name);

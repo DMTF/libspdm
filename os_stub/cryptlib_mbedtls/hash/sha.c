@@ -116,7 +116,7 @@ bool libspdm_sha256_duplicate(const void *sha256_context,
  *
  **/
 bool libspdm_sha256_update(void *sha256_context, const void *data,
-                           uintn data_size)
+                           size_t data_size)
 {
     int32_t ret;
 
@@ -192,7 +192,7 @@ bool libspdm_sha256_final(void *sha256_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha256_hash_all(const void *data, uintn data_size,
+bool libspdm_sha256_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
     int32_t ret;
@@ -320,7 +320,7 @@ bool libspdm_sha384_duplicate(const void *sha384_context,
  *
  **/
 bool libspdm_sha384_update(void *sha384_context, const void *data,
-                           uintn data_size)
+                           size_t data_size)
 {
     int32_t ret;
 
@@ -396,7 +396,7 @@ bool libspdm_sha384_final(void *sha384_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha384_hash_all(const void *data, uintn data_size,
+bool libspdm_sha384_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
     int32_t ret;
@@ -524,7 +524,7 @@ bool libspdm_sha512_duplicate(const void *sha512_context,
  *
  **/
 bool libspdm_sha512_update(void *sha512_context, const void *data,
-                           uintn data_size)
+                           size_t data_size)
 {
     int32_t ret;
 
@@ -600,7 +600,7 @@ bool libspdm_sha512_final(void *sha512_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha512_hash_all(const void *data, uintn data_size,
+bool libspdm_sha512_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
     int32_t ret;

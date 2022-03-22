@@ -104,9 +104,9 @@ return_status libspdm_validate_crypt_ec_2(void)
     void *ec_priv_key;
     void *ec_pub_key;
     uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     uint8_t signature[66 * 2];
-    uintn sig_size;
+    size_t sig_size;
 
     libspdm_my_print("\nCrypto EC key Retrieving Testing: ");
 

@@ -20,7 +20,7 @@
 bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context, uint8_t version)
 {
     uint8_t local_ver;
-    uintn index;
+    size_t index;
 
     for (index = 0;
          index < spdm_context->local_context.version.spdm_version_count;
@@ -143,9 +143,9 @@ bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_capabilities(void *context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response)
 {
     const spdm_get_capabilities_request_t *spdm_request;

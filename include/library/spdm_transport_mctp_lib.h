@@ -40,8 +40,8 @@
  **/
 return_status libspdm_transport_mctp_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    bool is_requester, uintn message_size, const void *message,
-    uintn *transport_message_size, void **transport_message);
+    bool is_requester, size_t message_size, const void *message,
+    size_t *transport_message_size, void **transport_message);
 
 /**
  * Decode an SPDM or APP message from a transport layer message.
@@ -76,8 +76,8 @@ return_status libspdm_transport_mctp_encode_message(
 return_status libspdm_transport_mctp_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
-    uintn transport_message_size, const void *transport_message,
-    uintn *message_size, void **message);
+    size_t transport_message_size, const void *transport_message,
+    size_t *message_size, void **message);
 
 /**
  * Return the maximum transport layer message header size.

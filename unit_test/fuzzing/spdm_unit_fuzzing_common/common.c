@@ -10,10 +10,10 @@ libspdm_test_context_t *m_libspdm_test_context;
 
 bool m_send_receive_buffer_acquired = false;
 uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-uintn m_send_receive_buffer_size;
+size_t m_send_receive_buffer_size;
 
 return_status spdm_device_acquire_sender_buffer (
-    void *context, uintn *max_msg_size, void **msg_buf_ptr)
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
     *max_msg_size = sizeof(m_send_receive_buffer);
@@ -33,7 +33,7 @@ void spdm_device_release_sender_buffer (
 }
 
 return_status spdm_device_acquire_receiver_buffer (
-    void *context, uintn *max_msg_size, void **msg_buf_ptr)
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
     *max_msg_size = sizeof(m_send_receive_buffer);
@@ -62,7 +62,7 @@ void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context)
     m_libspdm_test_context = spdm_test_context;
 }
 
-uintn libspdm_unit_test_group_setup(void **State)
+size_t libspdm_unit_test_group_setup(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     void *spdm_context;
@@ -71,7 +71,7 @@ uintn libspdm_unit_test_group_setup(void **State)
     spdm_test_context->spdm_context =
         (void *)malloc(libspdm_get_context_size());
     if (spdm_test_context->spdm_context == NULL) {
-        return (uintn)-1;
+        return (size_t)-1;
     }
     spdm_context = spdm_test_context->spdm_context;
 
@@ -100,7 +100,7 @@ uintn libspdm_unit_test_group_setup(void **State)
     return 0;
 }
 
-uintn libspdm_unit_test_group_teardown(void **State)
+size_t libspdm_unit_test_group_teardown(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -111,10 +111,10 @@ uintn libspdm_unit_test_group_teardown(void **State)
 }
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size)
+                             size_t *file_size)
 {
     FILE *fp_in;
-    uintn temp_result;
+    size_t temp_result;
 
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
         printf("Unable to open file %s\n", file_name);
@@ -146,29 +146,29 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     return true;
 }
 
-void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < buffer_size; index++) {
         printf("%02x", buffer[index]);
     }
 }
 
-void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < buffer_size; index++) {
         printf("%02x ", buffer[index]);
     }
 }
 
-void libspdm_dump_hex(const uint8_t *data, uintn size)
+void libspdm_dump_hex(const uint8_t *data, size_t size)
 {
-    uintn index;
-    uintn count;
-    uintn left;
+    size_t index;
+    size_t count;
+    size_t left;
 
 #define COLUME_SIZE (16 * 2)
 

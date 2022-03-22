@@ -138,10 +138,7 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef uint64_t uintn;
+#include <stddef.h>
 
 /* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
  * 8 bytes on supported 64-bit processor instructions)*/

@@ -20,18 +20,18 @@ typedef struct {
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
 };
-uintn m_libspdm_psk_finish_request1_size = sizeof(m_libspdm_psk_finish_request1);
+size_t m_libspdm_psk_finish_request1_size = sizeof(m_libspdm_psk_finish_request1);
 
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
 };
-uintn m_libspdm_psk_finish_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+size_t m_libspdm_psk_finish_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 static uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
 
 static void libspdm_secured_message_set_request_finished_key(
-    void *spdm_secured_message_context, const void *key, uintn key_size)
+    void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -54,11 +54,11 @@ void libspdm_test_responder_psk_finish_case1(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -161,11 +161,11 @@ void libspdm_test_responder_psk_finish_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -268,11 +268,11 @@ void libspdm_test_responder_psk_finish_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -381,11 +381,11 @@ void libspdm_test_responder_psk_finish_case4(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -495,11 +495,11 @@ void libspdm_test_responder_psk_finish_case5(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -617,11 +617,11 @@ void libspdm_test_responder_psk_finish_case6(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -723,11 +723,11 @@ void libspdm_test_responder_psk_finish_case7(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -853,11 +853,11 @@ void libspdm_test_responder_psk_finish_case8(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -965,11 +965,11 @@ void libspdm_test_responder_psk_finish_case9(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -1076,11 +1076,11 @@ void libspdm_test_responder_psk_finish_case10(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
@@ -1177,11 +1177,11 @@ void libspdm_test_responder_psk_finish_case11(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     uint8_t zero_data[LIBSPDM_MAX_HASH_SIZE];
@@ -1284,11 +1284,11 @@ void libspdm_test_responder_psk_finish_case12(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -1397,11 +1397,11 @@ void libspdm_test_responder_psk_finish_case13(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_finish_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
     libspdm_large_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];

@@ -24,9 +24,9 @@
 #include "hal/library/cryptlib.h"
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size);
+                             size_t *file_size);
 
-uintn libspdm_ascii_str_len(const char *string);
+size_t libspdm_ascii_str_len(const char *string);
 
 void libspdm_my_print(const char *message);
 
@@ -91,7 +91,7 @@ return_status libspdm_validate_crypt_rsa_2(void);
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_x509(char *Path, uintn len);
+return_status libspdm_validate_crypt_x509(char *Path, size_t len);
 
 /**
  * Validate Crypto DH Interfaces.

@@ -58,7 +58,7 @@ void libspdm_secured_message_dhe_free(uint16_t dhe_named_group,
 bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
                                               void *dhe_context,
                                               uint8_t *public_key,
-                                              uintn *public_key_size)
+                                              size_t *public_key_size)
 {
     return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key,
                                     public_key_size);
@@ -84,12 +84,12 @@ bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
  **/
 bool libspdm_secured_message_dhe_compute_key(
     uint16_t dhe_named_group, void *dhe_context,
-    const uint8_t *peer_public, uintn peer_public_size,
+    const uint8_t *peer_public, size_t peer_public_size,
     void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
     uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
-    uintn final_key_size;
+    size_t final_key_size;
     bool ret;
 
     secured_message_context = spdm_secured_message_context;

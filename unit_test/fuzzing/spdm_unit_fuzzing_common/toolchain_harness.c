@@ -19,9 +19,9 @@ uint8_t req_or_res = 0;
 #include <klee/klee.h>
 #endif
 
-uintn libspdm_alignment_size(uintn size, uint8_t req_or_res)
+size_t libspdm_alignment_size(size_t size, uint8_t req_or_res)
 {
-    uintn alignment;
+    size_t alignment;
     alignment = LIBSPDM_TEST_ALIGNMENT;
 
     if (((size) & (alignment - 1)) == 3)
@@ -34,13 +34,13 @@ uintn libspdm_alignment_size(uintn size, uint8_t req_or_res)
     return size;
 }
 
-bool libspdm_init_test_buffer(const char *file_name, uintn max_buffer_size,
-                              void **test_buffer, uintn *buffer_size)
+bool libspdm_init_test_buffer(const char *file_name, size_t max_buffer_size,
+                              void **test_buffer, size_t *buffer_size)
 {
     void *buffer;
     FILE *file;
-    uintn file_size;
-    uintn BytesRead;
+    size_t file_size;
+    size_t BytesRead;
     uint8_t return_status;
 
     /* 1. Allocate buffer*/
@@ -146,7 +146,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 #endif
 {
     void *test_buffer;
-    uintn max_buffer_size;
+    size_t max_buffer_size;
 
     /* 1. Initialize test_buffer*/
     max_buffer_size = libspdm_get_max_buffer_size();
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 {
     bool res;
     void *test_buffer;
-    uintn test_buffer_size;
+    size_t test_buffer_size;
     char *file_name;
 
     if (argc <= 1) {
