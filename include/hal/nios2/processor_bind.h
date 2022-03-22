@@ -34,10 +34,7 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef uint32_t uintn __attribute__((aligned(4)));
+#include <stddef.h>
 
 /* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
  * 8 bytes on supported 64-bit processor instructions)*/
@@ -68,10 +65,10 @@ typedef int32_t intn __attribute__((aligned(4)));
 #define MAX_ALLOC_ADDRESS MAX_ADDRESS
 
 
-/* Maximum legal NIOS2 intn and uintn values.*/
+/* Maximum legal NIOS2 intn and size_t values.*/
 
 #define MAX_INTN ((intn)0x7FFFFFFF)
-#define MAX_UINTN ((uintn)0xFFFFFFFF)
+#define MAX_UINTN ((size_t)0xFFFFFFFF)
 
 
 /* The stack alignment required for NIOS2*/
@@ -94,7 +91,7 @@ typedef int32_t intn __attribute__((aligned(4)));
  * @return The pointer to the first instruction of a function given a function pointer.
  *
  **/
-#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
+#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(size_t)(function_pointer)
 
 #ifndef __USER_LABEL_PREFIX__
 #define __USER_LABEL_PREFIX__

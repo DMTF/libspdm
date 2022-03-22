@@ -10,10 +10,10 @@ libspdm_test_context_t *m_spdm_test_context;
 
 bool m_send_receive_buffer_acquired = false;
 uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-uintn m_send_receive_buffer_size;
+size_t m_send_receive_buffer_size;
 
 return_status spdm_device_acquire_sender_buffer (
-    void *context, uintn *max_msg_size, void **msg_buf_ptr)
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
     *max_msg_size = sizeof(m_send_receive_buffer);
@@ -33,7 +33,7 @@ void spdm_device_release_sender_buffer (
 }
 
 return_status spdm_device_acquire_receiver_buffer (
-    void *context, uintn *max_msg_size, void **msg_buf_ptr)
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
     *max_msg_size = sizeof(m_send_receive_buffer);

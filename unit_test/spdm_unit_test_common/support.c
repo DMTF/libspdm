@@ -6,29 +6,29 @@
 
 #include "spdm_unit_test.h"
 
-void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < buffer_size; index++) {
         printf("%02x", buffer[index]);
     }
 }
 
-void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size)
+void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < buffer_size; index++) {
         printf("%02x ", buffer[index]);
     }
 }
 
-void libspdm_dump_hex(const uint8_t *data, uintn size)
+void libspdm_dump_hex(const uint8_t *data, size_t size)
 {
-    uintn index;
-    uintn count;
-    uintn left;
+    size_t index;
+    size_t count;
+    size_t left;
 
 #define COLUME_SIZE (16 * 2)
 
@@ -48,10 +48,10 @@ void libspdm_dump_hex(const uint8_t *data, uintn size)
 }
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size)
+                             size_t *file_size)
 {
     FILE *fp_in;
-    uintn temp_result;
+    size_t temp_result;
 
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
         printf("Unable to open file %s\n", file_name);
@@ -84,7 +84,7 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
 }
 
 bool libspdm_write_output_file(const char *file_name, const void *file_data,
-                               uintn file_size)
+                               size_t file_size)
 {
     FILE *fp_out;
 

@@ -39,10 +39,10 @@
  *
  **/
 bool libspdm_aead_chacha20_poly1305_encrypt(
-    const uint8_t *key, uintn key_size, const uint8_t *iv,
-    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
-    const uint8_t *data_in, uintn data_in_size, uint8_t *tag_out,
-    uintn tag_size, uint8_t *data_out, uintn *data_out_size)
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, uint8_t *tag_out,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_chachapoly_context ctx;
     int32_t ret;
@@ -116,10 +116,10 @@ bool libspdm_aead_chacha20_poly1305_encrypt(
  *
  **/
 bool libspdm_aead_chacha20_poly1305_decrypt(
-    const uint8_t *key, uintn key_size, const uint8_t *iv,
-    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
-    const uint8_t *data_in, uintn data_in_size, const uint8_t *tag,
-    uintn tag_size, uint8_t *data_out, uintn *data_out_size)
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, const uint8_t *tag,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_chachapoly_context ctx;
     int32_t ret;

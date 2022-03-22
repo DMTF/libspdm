@@ -30,7 +30,7 @@
 return_status libspdm_process_request(void *spdm_context,
                                       uint32_t **session_id,
                                       bool *is_app_message,
-                                      uintn request_size, const void *request);
+                                      size_t request_size, const void *request);
 
 /**
  * Build a SPDM response to a device.
@@ -52,7 +52,7 @@ return_status libspdm_process_request(void *spdm_context,
  **/
 return_status libspdm_build_response(void *spdm_context, const uint32_t *session_id,
                                      bool is_app_message,
-                                     uintn *response_size,
+                                     size_t *response_size,
                                      void **response);
 
 /**
@@ -73,8 +73,8 @@ return_status libspdm_build_response(void *spdm_context, const uint32_t *session
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 typedef return_status (*libspdm_get_spdm_response_func)(
-    void *spdm_context, uintn request_size, const void *request,
-    uintn *response_size, void *response);
+    void *spdm_context, size_t request_size, const void *request,
+    size_t *response_size, void *response);
 
 /**
  * Build the response when the response state is incorrect.
@@ -94,7 +94,7 @@ typedef return_status (*libspdm_get_spdm_response_func)(
  **/
 return_status libspdm_responder_handle_response_state(void *spdm_context,
                                                       uint8_t request_code,
-                                                      uintn *response_size,
+                                                      size_t *response_size,
                                                       void *response);
 
 /**
@@ -115,9 +115,9 @@ return_status libspdm_responder_handle_response_state(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_respond_if_ready(void *spdm_context,
-                                                    uintn request_size,
+                                                    size_t request_size,
                                                     const void *request,
-                                                    uintn *response_size,
+                                                    size_t *response_size,
                                                     void *response);
 
 /**
@@ -138,8 +138,8 @@ return_status libspdm_get_response_respond_if_ready(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_version(void *spdm_context,
-                                           uintn request_size, const void *request,
-                                           uintn *response_size,
+                                           size_t request_size, const void *request,
+                                           size_t *response_size,
                                            void *response);
 
 /**
@@ -160,9 +160,9 @@ return_status libspdm_get_response_version(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_capabilities(void *spdm_context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response);
 
 /**
@@ -183,9 +183,9 @@ return_status libspdm_get_response_capabilities(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_algorithms(void *spdm_context,
-                                              uintn request_size,
+                                              size_t request_size,
                                               const void *request,
-                                              uintn *response_size,
+                                              size_t *response_size,
                                               void *response);
 
 /**
@@ -209,8 +209,8 @@ return_status libspdm_get_response_algorithms(void *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 return_status libspdm_get_response_digests(void *spdm_context,
-                                           uintn request_size, const void *request,
-                                           uintn *response_size,
+                                           size_t request_size, const void *request,
+                                           size_t *response_size,
                                            void *response);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
@@ -236,9 +236,9 @@ return_status libspdm_get_response_digests(void *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 return_status libspdm_get_response_certificate(void *spdm_context,
-                                               uintn request_size,
+                                               size_t request_size,
                                                const void *request,
-                                               uintn *response_size,
+                                               size_t *response_size,
                                                void *response);
 
 #endif /* ENABLE_SPDM_GET_CERTIFICATE*/
@@ -264,9 +264,9 @@ return_status libspdm_get_response_certificate(void *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 return_status libspdm_get_response_challenge_auth(void *spdm_context,
-                                                  uintn request_size,
+                                                  size_t request_size,
                                                   const void *request,
-                                                  uintn *response_size,
+                                                  size_t *response_size,
                                                   void *response);
 
 #endif /* #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
@@ -292,9 +292,9 @@ return_status libspdm_get_response_challenge_auth(void *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 return_status libspdm_get_response_measurements(void *spdm_context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
@@ -317,9 +317,9 @@ return_status libspdm_get_response_measurements(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_key_exchange(void *spdm_context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response);
 
 /**
@@ -340,8 +340,8 @@ return_status libspdm_get_response_key_exchange(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_finish(void *spdm_context,
-                                          uintn request_size, const void *request,
-                                          uintn *response_size,
+                                          size_t request_size, const void *request,
+                                          size_t *response_size,
                                           void *response);
 
 /**
@@ -362,9 +362,9 @@ return_status libspdm_get_response_finish(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_psk_exchange(void *spdm_context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response);
 
 /**
@@ -385,9 +385,9 @@ return_status libspdm_get_response_psk_exchange(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_psk_finish(void *spdm_context,
-                                              uintn request_size,
+                                              size_t request_size,
                                               const void *request,
-                                              uintn *response_size,
+                                              size_t *response_size,
                                               void *response);
 
 /**
@@ -408,9 +408,9 @@ return_status libspdm_get_response_psk_finish(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_end_session(void *spdm_context,
-                                               uintn request_size,
+                                               size_t request_size,
                                                const void *request,
-                                               uintn *response_size,
+                                               size_t *response_size,
                                                void *response);
 
 /**
@@ -431,9 +431,9 @@ return_status libspdm_get_response_end_session(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_heartbeat(void *spdm_context,
-                                             uintn request_size,
+                                             size_t request_size,
                                              const void *request,
-                                             uintn *response_size,
+                                             size_t *response_size,
                                              void *response);
 
 /**
@@ -454,9 +454,9 @@ return_status libspdm_get_response_heartbeat(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_key_update(void *spdm_context,
-                                              uintn request_size,
+                                              size_t request_size,
                                               const void *request,
-                                              uintn *response_size,
+                                              size_t *response_size,
                                               void *response);
 
 /**
@@ -477,8 +477,8 @@ return_status libspdm_get_response_key_update(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_encapsulated_request(
-    void *spdm_context, uintn request_size, const void *request,
-    uintn *response_size, void *response);
+    void *spdm_context, size_t request_size, const void *request,
+    size_t *response_size, void *response);
 
 /**
  * Process the SPDM ENCAPSULATED_RESPONSE_ACK request and return the response.
@@ -498,8 +498,8 @@ return_status libspdm_get_response_encapsulated_request(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_encapsulated_response_ack(
-    void *spdm_context, uintn request_size, const void *request,
-    uintn *response_size, void *response);
+    void *spdm_context, size_t request_size, const void *request,
+    size_t *response_size, void *response);
 
 /**
  * Get the SPDM encapsulated GET_DIGESTS request.
@@ -516,7 +516,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
  **/
 return_status
 libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                     uintn *encap_request_size,
+                                     size_t *encap_request_size,
                                      void *encap_request);
 
 /**
@@ -534,7 +534,7 @@ libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 return_status libspdm_process_encap_response_digest(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
@@ -554,7 +554,7 @@ return_status libspdm_process_encap_response_digest(
  **/
 return_status
 libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
-                                          uintn *encap_request_size,
+                                          size_t *encap_request_size,
                                           void *encap_request);
 
 /**
@@ -570,7 +570,7 @@ libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_certificate(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**
@@ -587,7 +587,7 @@ return_status libspdm_process_encap_response_certificate(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
-                                                  uintn *encap_request_size,
+                                                  size_t *encap_request_size,
                                                   void *encap_request);
 
 /**
@@ -603,7 +603,7 @@ return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_contex
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_challenge_auth(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**
@@ -621,7 +621,7 @@ return_status libspdm_process_encap_response_challenge_auth(
  **/
 return_status
 libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
-                                     uintn *encap_request_size,
+                                     size_t *encap_request_size,
                                      void *encap_request);
 
 /**
@@ -637,7 +637,7 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_key_update(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
 /**

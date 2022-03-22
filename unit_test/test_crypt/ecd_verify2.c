@@ -72,7 +72,7 @@ return_status libspdm_validate_crypt_ecd_2(void)
     void *ecd_pub_key;
     uint8_t message[] = "EdDsaTest";
     uint8_t signature[57 * 2];
-    uintn sig_size;
+    size_t sig_size;
 
     libspdm_my_print("\nCrypto Ed key Retrieving Testing: ");
 

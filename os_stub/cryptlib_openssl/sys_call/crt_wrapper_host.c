@@ -107,4 +107,17 @@ gid_t getegid(void)
     return 0;
 }
 
+#ifdef __GNUC__
+/* Below is only required in GCC build.
+ * MSVC does not like it.*/
 int errno = 0;
+#endif
+
+int GetLastError()
+{
+    return 0;
+}
+
+void SetLastError(int e)
+{
+}

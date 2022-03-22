@@ -67,10 +67,10 @@ return_status libspdm_try_send_receive_key_exchange(
     bool result;
     return_status status;
     libspdm_key_exchange_request_mine_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_key_exchange_response_max_t *spdm_response;
-    uintn spdm_response_size;
-    uintn dhe_key_size;
+    size_t spdm_response_size;
+    size_t dhe_key_size;
     uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
@@ -83,11 +83,11 @@ return_status libspdm_try_send_receive_key_exchange(
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     libspdm_session_info_t *session_info;
-    uintn opaque_key_exchange_req_size;
+    size_t opaque_key_exchange_req_size;
     uint8_t th1_hash_data[64];
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
 
@@ -182,7 +182,7 @@ return_status libspdm_try_send_receive_key_exchange(
     LIBSPDM_ASSERT_RETURN_ERROR(status);
     ptr += opaque_key_exchange_req_size;
 
-    spdm_request_size = (uintn)ptr - (uintn)spdm_request;
+    spdm_request_size = (size_t)ptr - (size_t)spdm_request;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                                        spdm_request);
     if (RETURN_ERROR(status)) {
@@ -554,7 +554,7 @@ return_status libspdm_send_receive_key_exchange(
     uint8_t *heartbeat_period,
     uint8_t *req_slot_id_param, void *measurement_hash)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;
@@ -599,7 +599,7 @@ return_status libspdm_send_receive_key_exchange_ex(
     void *requester_random,
     void *responder_random)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;

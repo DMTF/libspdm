@@ -71,7 +71,7 @@ void libspdm_test_responder_encap_key_update_case1(void **state)
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
-    uintn spdm_response_size = sizeof(spdm_key_update_response_t);
+    size_t spdm_response_size = sizeof(spdm_key_update_response_t);
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;
@@ -116,7 +116,7 @@ void libspdm_test_responder_encap_key_update_case2(void **state)
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
-    uintn spdm_response_size = sizeof(spdm_key_update_response_t);
+    size_t spdm_response_size = sizeof(spdm_key_update_response_t);
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;
@@ -153,7 +153,7 @@ void libspdm_test_responder_encap_key_update_case3(void **state)
         spdm_context, &session_id);
 
     spdm_key_update_response_t spdm_response;
-    uintn spdm_response_size = sizeof(spdm_key_update_response_t);
+    size_t spdm_response_size = sizeof(spdm_key_update_response_t);
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code =    SPDM_KEY_UPDATE_ACK;
@@ -189,7 +189,7 @@ void libspdm_test_responder_encap_key_update_case4(void **state)
         spdm_context, &session_id);
 
     spdm_key_update_response_t spdm_response;
-    uintn spdm_response_size = sizeof(spdm_key_update_response_t);
+    size_t spdm_response_size = sizeof(spdm_key_update_response_t);
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_ERROR;
@@ -231,7 +231,7 @@ void libspdm_test_responder_encap_key_update_case5(void **state)
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
-    uintn spdm_response_size = sizeof(spdm_key_update_response_t);
+    size_t spdm_response_size = sizeof(spdm_key_update_response_t);
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;

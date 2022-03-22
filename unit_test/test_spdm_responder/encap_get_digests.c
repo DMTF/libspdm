@@ -24,7 +24,7 @@ void test_spdm_responder_encap_get_digests_case1(void **state)
     spdm_digest_response_t *spdm_response;
     uint8_t *digest;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -81,7 +81,7 @@ void test_spdm_responder_encap_get_digests_case2(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_error_response_t spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -147,7 +147,7 @@ void test_spdm_responder_encap_get_digests_case3(void **state)
 
     spdm_digest_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE] = {0};
-    uintn spdm_response_size;
+    size_t spdm_response_size;
 
     spdm_response_size = 0;
     spdm_response = (void *)temp_buf;
@@ -187,7 +187,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
     spdm_digest_response_t *spdm_response;
     uint8_t *digest;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn spdm_response_size;
+    size_t spdm_response_size;
 
     spdm_response_size = sizeof(spdm_digest_response_t) +
                          libspdm_get_hash_size(m_libspdm_use_hash_algo);
@@ -222,7 +222,7 @@ void test_spdm_responder_encap_get_digests_case5(void **state)
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE] = {0};
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     bool need_continue;
 
     spdm_test_context = *state;

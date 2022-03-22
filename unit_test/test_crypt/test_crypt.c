@@ -6,9 +6,9 @@
 
 #include "test_crypt.h"
 
-uintn libspdm_ascii_str_len(const char *string)
+size_t libspdm_ascii_str_len(const char *string)
 {
-    uintn length;
+    size_t length;
 
     LIBSPDM_ASSERT(string != NULL);
     if (string == NULL) {

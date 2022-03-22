@@ -88,7 +88,7 @@ void *libspdm_get_session_info_via_session_id(const void *context,
 {
     const libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uintn index;
+    size_t index;
 
     if (session_id == INVALID_SESSION_ID) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
@@ -166,7 +166,7 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id,
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uintn index;
+    size_t index;
 
     spdm_context = context;
 
@@ -213,7 +213,7 @@ uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
 {
     uint16_t req_session_id;
     libspdm_session_info_t *session_info;
-    uintn index;
+    size_t index;
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
@@ -239,7 +239,7 @@ uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context)
 {
     uint16_t rsp_session_id;
     const libspdm_session_info_t *session_info;
-    uintn index;
+    size_t index;
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
@@ -264,7 +264,7 @@ void libspdm_free_session_id(void *context, uint32_t session_id)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uintn index;
+    size_t index;
 
     spdm_context = context;
 

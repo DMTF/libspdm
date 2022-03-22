@@ -13,9 +13,9 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
                                                        uint32_t *session_id)
 {
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -56,11 +56,11 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
     free(data);
 }
 
-static void libspdm_compute_secret_update(uintn hash_size, const uint8_t *in_secret,
-                                          uint8_t *out_secret, uintn out_secret_size)
+static void libspdm_compute_secret_update(size_t hash_size, const uint8_t *in_secret,
+                                          uint8_t *out_secret, size_t out_secret_size)
 {
     uint8_t m_bin_str9[128];
-    uintn m_bin_str9_size;
+    size_t m_bin_str9_size;
     uint16_t length;
 
     length = (uint16_t)hash_size;
@@ -106,18 +106,18 @@ static void libspdm_set_standard_key_update_test_secrets(
     secured_message_context->application_secret.request_data_sequence_number = 0;
 }
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
                                           const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     static uint8_t sub_index = 0;
@@ -229,7 +229,7 @@ libspdm_test_context_t m_libspdm_requester_key_update_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

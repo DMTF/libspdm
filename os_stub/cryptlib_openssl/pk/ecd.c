@@ -26,7 +26,7 @@
  *         If the allocations fails, libspdm_ecd_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_ecd_new_by_nid(uintn nid)
+void *libspdm_ecd_new_by_nid(size_t nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
@@ -90,7 +90,7 @@ void libspdm_ecd_free(void *ecd_context)
  *
  **/
 bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
-                             uintn public_key_size)
+                             size_t public_key_size)
 {
     /* TBD*/
     return false;
@@ -112,7 +112,7 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
  *
  **/
 bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
-                             uintn *public_key_size)
+                             size_t *public_key_size)
 {
     EVP_PKEY *pkey;
     int32_t result;
@@ -188,7 +188,7 @@ bool libspdm_ecd_check_key(const void *ecd_context)
  *
  **/
 bool libspdm_ecd_generate_key(void *ecd_context, uint8_t *public_key,
-                              uintn *public_key_size)
+                              size_t *public_key_size)
 {
     /* TBD*/
     return true;
@@ -227,14 +227,14 @@ bool libspdm_ecd_generate_key(void *ecd_context, uint8_t *public_key,
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
-                        const uint8_t *context, uintn context_size,
-                        const uint8_t *message, uintn size, uint8_t *signature,
-                        uintn *sig_size)
+bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
+                        const uint8_t *context, size_t context_size,
+                        const uint8_t *message, size_t size, uint8_t *signature,
+                        size_t *sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
-    uintn half_size;
+    size_t half_size;
     int32_t result;
 
     if (ecd_context == NULL || message == NULL) {
@@ -256,7 +256,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
     default:
         return false;
     }
-    if (*sig_size < (uintn)(half_size * 2)) {
+    if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
     }
@@ -317,14 +317,14 @@ bool libspdm_eddsa_sign(const void *ecd_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid Ed context.
  *
  **/
-bool libspdm_eddsa_verify(const void *ecd_context, uintn hash_nid,
-                          const uint8_t *context, uintn context_size,
-                          const uint8_t *message, uintn size,
-                          const uint8_t *signature, uintn sig_size)
+bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
+                          const uint8_t *context, size_t context_size,
+                          const uint8_t *message, size_t size,
+                          const uint8_t *signature, size_t sig_size)
 {
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
-    uintn half_size;
+    size_t half_size;
     int32_t result;
 
     if (ecd_context == NULL || message == NULL || signature == NULL) {
@@ -346,7 +346,7 @@ bool libspdm_eddsa_verify(const void *ecd_context, uintn hash_nid,
     default:
         return false;
     }
-    if (sig_size != (uintn)(half_size * 2)) {
+    if (sig_size != (size_t)(half_size * 2)) {
         return false;
     }
 

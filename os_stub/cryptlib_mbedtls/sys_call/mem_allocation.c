@@ -20,7 +20,7 @@
 typedef struct {
     uint32_t signature;
     uint32_t reserved;
-    uintn size;
+    size_t size;
 } CRYPTMEM_HEAD;
 
 #define CRYPTMEM_OVERHEAD sizeof(CRYPTMEM_HEAD)
@@ -33,13 +33,13 @@ typedef struct {
 void *my_calloc(size_t num, size_t size)
 {
     CRYPTMEM_HEAD *pool_hdr;
-    uintn new_size;
+    size_t new_size;
     void *data;
 
 
     /* Adjust the size by the buffer header overhead*/
 
-    new_size = (uintn)(size * num) + CRYPTMEM_OVERHEAD;
+    new_size = (size_t)(size * num) + CRYPTMEM_OVERHEAD;
 
     data = allocate_zero_pool(new_size);
     if (data != NULL) {

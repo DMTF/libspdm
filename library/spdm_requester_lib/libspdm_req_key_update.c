@@ -38,15 +38,15 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
     return_status status;
     return_status temp_status;
     spdm_key_update_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_key_update_response_mine_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -327,7 +327,7 @@ return_status libspdm_key_update(void *context, uint32_t session_id,
                                  bool single_direction)
 {
     libspdm_context_t *spdm_context;
-    uintn retry;
+    size_t retry;
     return_status status;
     bool key_updated;
 

@@ -28,7 +28,7 @@
  *
  **/
 bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **rsa_context)
 {
@@ -53,7 +53,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size,
+bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_size,
                                          const char *password,
                                          void **ec_context)
 {
@@ -79,7 +79,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
  *
  **/
 bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **ecd_context)
 {
@@ -105,7 +105,7 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
  *
  **/
 bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
-                                          uintn pem_size,
+                                          size_t pem_size,
                                           const char *password,
                                           void **sm2_context)
 {

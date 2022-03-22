@@ -30,26 +30,26 @@ libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
-uintn m_libspdm_psk_exchange_request1_size = sizeof(m_libspdm_psk_exchange_request1);
+size_t m_libspdm_psk_exchange_request1_size = sizeof(m_libspdm_psk_exchange_request1);
 
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
-uintn m_libspdm_psk_exchange_request2_size = sizeof(spdm_psk_exchange_request_t);
+size_t m_libspdm_psk_exchange_request2_size = sizeof(spdm_psk_exchange_request_t);
 
 void libspdm_test_responder_psk_exchange_case1(void **state)
 {
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -139,13 +139,13 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -226,13 +226,13 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -315,13 +315,13 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -405,13 +405,13 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
     spdm_error_data_response_not_ready_t *error_data;
 
     spdm_test_context = *state;
@@ -501,13 +501,13 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -589,13 +589,13 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     uint8_t *ptr;
-    uintn opaque_psk_exchange_req_size;
+    size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;

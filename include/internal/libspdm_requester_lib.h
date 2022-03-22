@@ -53,9 +53,9 @@ return_status libspdm_handle_simple_error_response(void *context,
  **/
 return_status libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
-    uintn *response_size, void **response,
+    size_t *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,
-    uintn expected_response_size);
+    size_t expected_response_size);
 
 /**
  * This function sends GET_VERSION and receives VERSION.
@@ -220,11 +220,11 @@ return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_conte
                                                    uint8_t *heartbeat_period,
                                                    void *measurement_hash,
                                                    const void *requester_context_in,
-                                                   uintn requester_context_in_size,
+                                                   size_t requester_context_in_size,
                                                    void *requester_context,
-                                                   uintn *requester_context_size,
+                                                   size_t *requester_context_size,
                                                    void *responder_context,
-                                                   uintn *responder_context_size);
+                                                   size_t *responder_context_size);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
@@ -297,9 +297,9 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_digest(void *context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response);
 
 /**
@@ -322,9 +322,9 @@ return_status libspdm_get_encap_response_digest(void *context,
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 return_status libspdm_get_encap_response_certificate(void *context,
-                                                     uintn request_size,
+                                                     size_t request_size,
                                                      void *request,
-                                                     uintn *response_size,
+                                                     size_t *response_size,
                                                      void *response);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
@@ -347,8 +347,8 @@ return_status libspdm_get_encap_response_certificate(void *context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_challenge_auth(
-    void *context, uintn request_size, void *request,
-    uintn *response_size, void *response);
+    void *context, size_t request_size, void *request,
+    size_t *response_size, void *response);
 
 /**
  * Process the SPDM encapsulated KEY_UPDATE request and return the response.
@@ -368,9 +368,9 @@ return_status libspdm_get_encap_response_challenge_auth(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_key_update(void *context,
-                                                    uintn request_size,
+                                                    size_t request_size,
                                                     void *request,
-                                                    uintn *response_size,
+                                                    size_t *response_size,
                                                     void *response);
 
 /**
@@ -392,7 +392,7 @@ return_status libspdm_get_encap_response_key_update(void *context,
  **/
 return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
                                         const uint32_t *session_id,
-                                        uintn request_size, const void *request);
+                                        size_t request_size, const void *request);
 
 /**
  * Receive an SPDM response from a device.
@@ -413,7 +413,7 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  **/
 return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
-                                            uintn *response_size,
+                                            size_t *response_size,
                                             void **response);
 
 #endif

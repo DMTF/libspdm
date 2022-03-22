@@ -23,26 +23,26 @@
  **/
 return_status libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester, uintn app_message_size,
-    const void *app_message, uintn *secured_message_size,
+    bool is_requester, size_t app_message_size,
+    const void *app_message, size_t *secured_message_size,
     void *secured_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uintn total_secured_message_size;
-    uintn plain_text_size;
-    uintn cipher_text_size;
-    uintn aead_pad_size;
-    uintn aead_tag_size;
-    uintn aead_key_size;
-    uintn aead_iv_size;
+    size_t total_secured_message_size;
+    size_t plain_text_size;
+    size_t cipher_text_size;
+    size_t aead_pad_size;
+    size_t aead_tag_size;
+    size_t aead_key_size;
+    size_t aead_iv_size;
     uint8_t *a_data;
     uint8_t *enc_msg;
     uint8_t *dec_msg;
     uint8_t *tag;
     spdm_secured_message_a_data_header1_t *record_header1;
     spdm_secured_message_a_data_header2_t *record_header2;
-    uintn record_header_size;
+    size_t record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
     bool result;
     uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -311,24 +311,24 @@ return_status libspdm_encode_secured_message(
  **/
 return_status libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester, uintn secured_message_size,
-    const void *secured_message, uintn *app_message_size,
+    bool is_requester, size_t secured_message_size,
+    const void *secured_message, size_t *app_message_size,
     void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uintn plain_text_size;
-    uintn cipher_text_size;
-    uintn aead_tag_size;
-    uintn aead_key_size;
-    uintn aead_iv_size;
+    size_t plain_text_size;
+    size_t cipher_text_size;
+    size_t aead_tag_size;
+    size_t aead_key_size;
+    size_t aead_iv_size;
     uint8_t *a_data;
     uint8_t *enc_msg;
     uint8_t *dec_msg;
     uint8_t *tag;
     spdm_secured_message_a_data_header1_t *record_header1;
     spdm_secured_message_a_data_header2_t *record_header2;
-    uintn record_header_size;
+    size_t record_header_size;
     spdm_secured_message_cipher_header_t *enc_msg_header;
     bool result;
     uint8_t key[LIBSPDM_MAX_AEAD_KEY_SIZE];

@@ -44,7 +44,7 @@ bool need_session_info_for_data(libspdm_data_type_t data_type)
  **/
 return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter, void *data,
-                               uintn data_size)
+                               size_t data_size)
 {
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -521,10 +521,10 @@ return_status libspdm_set_data(void *context, libspdm_data_type_t data_type,
  **/
 return_status libspdm_get_data(void *context, libspdm_data_type_t data_type,
                                const libspdm_data_parameter_t *parameter,
-                               void *data, uintn *data_size)
+                               void *data, size_t *data_size)
 {
     libspdm_context_t *spdm_context;
-    uintn target_data_size;
+    size_t target_data_size;
     void *target_data;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
@@ -1033,7 +1033,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_a(void *context, const void *message,
-                                       uintn message_size)
+                                       size_t message_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -1053,7 +1053,7 @@ return_status libspdm_append_message_a(void *context, const void *message,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_b(void *context, const void *message,
-                                       uintn message_size)
+                                       size_t message_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -1116,7 +1116,7 @@ return_status libspdm_append_message_b(void *context, const void *message,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_c(void *context, const void *message,
-                                       uintn message_size)
+                                       size_t message_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -1179,7 +1179,7 @@ return_status libspdm_append_message_c(void *context, const void *message,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_mut_b(void *context, const void *message,
-                                           uintn message_size)
+                                           size_t message_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -1230,7 +1230,7 @@ return_status libspdm_append_message_mut_b(void *context, const void *message,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_mut_c(void *context, const void *message,
-                                           uintn message_size)
+                                           size_t message_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -1284,7 +1284,7 @@ return_status libspdm_append_message_mut_c(void *context, const void *message,
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 return_status libspdm_append_message_m(void *context, void *session_info,
-                                       const void *message, uintn message_size)
+                                       const void *message, size_t message_size)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *spdm_session_info;
@@ -1404,7 +1404,7 @@ return_status libspdm_append_message_m(void *context, void *session_info,
  **/
 return_status libspdm_append_message_k(void *context, void *session_info,
                                        bool is_requester, const void *message,
-                                       uintn message_size)
+                                       size_t message_size)
 {
     libspdm_session_info_t *spdm_session_info;
 
@@ -1418,7 +1418,7 @@ return_status libspdm_append_message_k(void *context, void *session_info,
         libspdm_context_t *spdm_context;
         void *secured_message_context;
         uint8_t *cert_chain_buffer;
-        uintn cert_chain_buffer_size;
+        size_t cert_chain_buffer_size;
         bool result;
         uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
@@ -1674,7 +1674,7 @@ return_status libspdm_append_message_k(void *context, void *session_info,
  **/
 return_status libspdm_append_message_f(void *context, void *session_info,
                                        bool is_requester, const void *message,
-                                       uintn message_size)
+                                       size_t message_size)
 {
     libspdm_session_info_t *spdm_session_info;
 
@@ -1688,7 +1688,7 @@ return_status libspdm_append_message_f(void *context, void *session_info,
         libspdm_context_t *spdm_context;
         void *secured_message_context;
         uint8_t *mut_cert_chain_buffer;
-        uintn mut_cert_chain_buffer_size;
+        size_t mut_cert_chain_buffer_size;
         bool result;
         uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
@@ -2003,7 +2003,7 @@ void libspdm_register_transport_layer_func(
  *
  * @return the size of required scratch buffer.
  **/
-uintn libspdm_get_sizeof_required_scratch_buffer (
+size_t libspdm_get_sizeof_required_scratch_buffer (
     void *context)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -2022,7 +2022,7 @@ uintn libspdm_get_sizeof_required_scratch_buffer (
 void libspdm_set_scratch_buffer (
     void *context,
     void *scratch_buffer,
-    uintn scratch_buffer_size)
+    size_t scratch_buffer_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -2043,7 +2043,7 @@ void libspdm_set_scratch_buffer (
 void libspdm_get_scratch_buffer (
     void *context,
     void **scratch_buffer,
-    uintn *scratch_buffer_size)
+    size_t *scratch_buffer_size)
 {
     libspdm_context_t *spdm_context;
 
@@ -2064,7 +2064,7 @@ void libspdm_get_scratch_buffer (
  * @retval RETURN_SUCCESS               The sender buffer is acquired.
  **/
 return_status libspdm_acquire_sender_buffer (
-    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr)
+    libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     return_status status;
 
@@ -2105,7 +2105,7 @@ void libspdm_release_sender_buffer (
 void libspdm_get_sender_buffer (
     libspdm_context_t *spdm_context,
     void **sender_buffer,
-    uintn *sender_buffer_size)
+    size_t *sender_buffer_size)
 {
     *sender_buffer = spdm_context->sender_buffer;
     *sender_buffer_size = spdm_context->sender_buffer_size;
@@ -2121,7 +2121,7 @@ void libspdm_get_sender_buffer (
  * @retval RETURN_SUCCESS               The receiver buffer is acquired.
  **/
 return_status libspdm_acquire_receiver_buffer (
-    libspdm_context_t *spdm_context, uintn *max_msg_size, void **msg_buf_ptr)
+    libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     return_status status;
 
@@ -2162,7 +2162,7 @@ void libspdm_release_receiver_buffer (
 void libspdm_get_receiver_buffer (
     libspdm_context_t *spdm_context,
     void **receiver_buffer,
-    uintn *receiver_buffer_size)
+    size_t *receiver_buffer_size)
 {
     *receiver_buffer = spdm_context->receiver_buffer;
     *receiver_buffer_size = spdm_context->receiver_buffer_size;
@@ -2229,8 +2229,8 @@ return_status libspdm_init_context(void *context)
 {
     libspdm_context_t *spdm_context;
     void *secured_message_context;
-    uintn SecuredMessageContextSize;
-    uintn index;
+    size_t SecuredMessageContextSize;
+    size_t index;
 
     spdm_context = context;
     libspdm_zero_mem(spdm_context, sizeof(libspdm_context_t));
@@ -2277,11 +2277,11 @@ return_status libspdm_init_context(void *context)
     spdm_context->connection_info.peer_used_leaf_cert_public_key = NULL;
 #endif
 
-    secured_message_context = (void *)((uintn)(spdm_context + 1));
+    secured_message_context = (void *)((size_t)(spdm_context + 1));
     SecuredMessageContextSize = libspdm_secured_message_get_context_size();
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         spdm_context->session_info[index].secured_message_context =
-            (void *)((uintn)secured_message_context +
+            (void *)((size_t)secured_message_context +
                      SecuredMessageContextSize * index);
         libspdm_secured_message_init_context(
             spdm_context->session_info[index]
@@ -2309,7 +2309,7 @@ return_status libspdm_init_context(void *context)
 void libspdm_reset_context(void *context)
 {
     libspdm_context_t *spdm_context;
-    uintn index;
+    size_t index;
 
     spdm_context = context;
     /*Clear all info about last connection*/
@@ -2345,7 +2345,7 @@ void libspdm_reset_context(void *context)
  *
  * @return the size in bytes of the SPDM context.
  **/
-uintn libspdm_get_context_size(void)
+size_t libspdm_get_context_size(void)
 {
     return sizeof(libspdm_context_t) +
            libspdm_secured_message_get_context_size() * LIBSPDM_MAX_SESSION_COUNT;
@@ -2370,11 +2370,11 @@ uint8_t libspdm_get_version_from_version_number(const spdm_version_number_t ver)
  * @param  ver_set                    A pointer to the version set.
  * @param  ver_num                    Version number.
  */
-void libspdm_version_number_sort(spdm_version_number_t *ver_set, uintn ver_num)
+void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
 {
-    uintn index;
-    uintn index_sort;
-    uintn index_max;
+    size_t index;
+    size_t index_sort;
+    size_t index_max;
     spdm_version_number_t version;
 
     /* Select sort */
@@ -2410,12 +2410,12 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, uintn ver_num)
  */
 bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           spdm_version_number_t *req_ver_set,
-                                          uintn req_ver_num,
+                                          size_t req_ver_num,
                                           spdm_version_number_t *res_ver_set,
-                                          uintn res_ver_num)
+                                          size_t res_ver_num)
 {
-    uintn req_index;
-    uintn res_index;
+    size_t req_index;
+    size_t res_index;
 
     if (req_ver_set == NULL || req_ver_num == 0 || res_ver_set == NULL || res_ver_num == 0) {
         return false;

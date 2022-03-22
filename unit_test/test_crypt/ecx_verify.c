@@ -18,13 +18,13 @@ return_status libspdm_validate_crypt_ecx(void)
     void *ecx1;
     void *ecx2;
     uint8_t public1[56];
-    uintn public1_length;
+    size_t public1_length;
     uint8_t public2[56];
-    uintn public2_length;
+    size_t public2_length;
     uint8_t key1[56];
-    uintn key1_length;
+    size_t key1_length;
     uint8_t key2[56];
-    uintn key2_length;
+    size_t key2_length;
     bool Status;
 
     libspdm_my_print("\nCrypto Montgomery Curve key Exchange Testing:\n");

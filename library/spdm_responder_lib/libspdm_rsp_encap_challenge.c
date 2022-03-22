@@ -22,7 +22,7 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
-                                                  uintn *encap_request_size,
+                                                  size_t *encap_request_size,
                                                   void *encap_request)
 {
     spdm_challenge_request_t *spdm_request;
@@ -89,22 +89,22 @@ return_status libspdm_get_encap_request_challenge(libspdm_context_t *spdm_contex
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_challenge_auth(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     bool result;
     const spdm_challenge_auth_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t *ptr;
     void *cert_chain_hash;
-    uintn hash_size;
-    uintn measurement_summary_hash_size;
+    size_t hash_size;
+    size_t measurement_summary_hash_size;
     void *nonce;
     void *measurement_summary_hash;
     uint16_t opaque_length;
     void *opaque;
     void *signature;
-    uintn signature_size;
+    size_t signature_size;
     uint8_t auth_attribute;
     return_status status;
 

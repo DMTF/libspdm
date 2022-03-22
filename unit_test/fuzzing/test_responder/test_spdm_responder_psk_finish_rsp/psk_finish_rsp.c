@@ -9,7 +9,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -25,7 +25,7 @@ typedef struct {
 } libspdm_psk_finish_request_mine_t;
 
 static void libspdm_secured_message_set_request_finished_key(void *spdm_secured_message_context,
-                                                             const void *key, uintn key_size)
+                                                             const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -41,10 +41,10 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     uint8_t m_local_psk_hint[32];
@@ -104,12 +104,12 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_psk_finish_request_mine_t *spdm_test_psk_finish_request;
-    uintn spdm_test_psk_finish_request_size;
+    size_t spdm_test_psk_finish_request_size;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_large_managed_buffer_t th_curr;
     static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -184,7 +184,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     free(data1);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

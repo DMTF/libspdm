@@ -7,7 +7,7 @@
 #include "spdm_requester.h"
 
 return_status libspdm_requester_send_message(const void *spdm_context,
-                                             uintn message_size, const void *message,
+                                             size_t message_size, const void *message,
                                              uint64_t timeout)
 {
     /* Dummy*/
@@ -15,7 +15,7 @@ return_status libspdm_requester_send_message(const void *spdm_context,
 }
 
 return_status libspdm_requester_receive_message(const void *spdm_context,
-                                                uintn *message_size,
+                                                size_t *message_size,
                                                 void *message,
                                                 uint64_t timeout)
 {

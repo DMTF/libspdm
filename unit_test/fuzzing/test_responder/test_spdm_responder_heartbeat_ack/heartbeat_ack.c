@@ -9,7 +9,7 @@
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_responder_lib.h"
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -23,10 +23,10 @@ void libspdm_test_responder_heartbeat(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
     uint8_t m_local_psk_hint[32];
@@ -88,7 +88,7 @@ void libspdm_test_responder_heartbeat(void **State)
     free(data1);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

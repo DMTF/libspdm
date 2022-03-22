@@ -20,7 +20,7 @@ static void libspdm_test_common_context_data_case1(void **state)
     libspdm_context_t *spdm_context;
     void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
-    uintn data_return_size = 0;
+    size_t data_return_size = 0;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -54,7 +54,7 @@ static void libspdm_test_common_context_data_case2(void **state)
     void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
     void *current_return_data = NULL;
-    uintn data_return_size = 0;
+    size_t data_return_size = 0;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -105,7 +105,7 @@ static void libspdm_test_common_context_data_case3(void **state)
     void *data = NULL;
     void *return_data = NULL;
     void *current_return_data = NULL;
-    uintn data_return_size = 0;
+    size_t data_return_size = 0;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -157,7 +157,7 @@ static void libspdm_test_common_context_data_case4(void **state)
     libspdm_context_t *spdm_context;
     void *data = (void *)&libspdm_opaque_data;
     void *return_data = NULL;
-    uintn data_return_size = 0;
+    size_t data_return_size = 0;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -193,14 +193,14 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     void *trust_anchor;
-    uintn trust_anchor_size;
+    size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
 
@@ -248,22 +248,22 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     void *data_test;
-    uintn data_size_test;
+    size_t data_size_test;
     void *hash_test;
-    uintn hash_size_test;
+    size_t hash_size_test;
     uint8_t *root_cert_test;
-    uintn root_cert_size_test;
+    size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
-    uintn trust_anchor_size;
+    size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
 
@@ -333,22 +333,22 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     void *data_test;
-    uintn data_size_test;
+    size_t data_size_test;
     void *hash_test;
-    uintn hash_size_test;
+    size_t hash_size_test;
     uint8_t *root_cert_test;
-    uintn root_cert_size_test;
+    size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
-    uintn trust_anchor_size;
+    size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
 
@@ -435,22 +435,22 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     void *data_test;
-    uintn data_size_test;
+    size_t data_size_test;
     void *hash_test;
-    uintn hash_size_test;
+    size_t hash_size_test;
     uint8_t *root_cert_test;
-    uintn root_cert_size_test;
+    size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
     void *trust_anchor;
-    uintn trust_anchor_size;
+    size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
 
@@ -535,11 +535,11 @@ static void libspdm_test_set_data_case9(void **state)
     libspdm_context_t *spdm_context;
 
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
 
     uint8_t root_cert_index;
 

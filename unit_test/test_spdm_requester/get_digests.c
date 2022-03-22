@@ -12,7 +12,7 @@
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 libspdm_return_t libspdm_requester_get_digests_test_send_message(
-    void *spdm_context, uintn request_size, const void *request,
+    void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -69,7 +69,7 @@ libspdm_return_t libspdm_requester_get_digests_test_send_message(
 }
 
 libspdm_return_t libspdm_requester_get_digests_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -82,8 +82,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x2: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -118,8 +118,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x3: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -150,8 +150,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -171,8 +171,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -191,11 +191,11 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
-        static uintn sub_index1 = 0;
+        static size_t sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -213,8 +213,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         } else if (sub_index1 == 1) {
             spdm_digest_response_t *spdm_response;
             uint8_t *digest;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_hash_algo =
@@ -247,8 +247,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -268,8 +268,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -292,12 +292,12 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
-        static uintn sub_index2 = 0;
+        static size_t sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -322,8 +322,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         } else if (sub_index2 == 1) {
             spdm_digest_response_t *spdm_response;
             uint8_t *digest;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_hash_algo =
@@ -362,8 +362,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0xC: {
         spdm_digest_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -387,8 +387,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0xD: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -419,8 +419,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0xE: {
         spdm_digest_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_digest_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -444,8 +444,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x10: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -477,8 +477,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x11: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -511,10 +511,10 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x12: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn digest_count;
-        uintn spdm_response_size;
-        uintn transport_header_size;
-        uintn index;
+        size_t digest_count;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        size_t index;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -550,10 +550,10 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x13: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn digest_count;
-        uintn spdm_response_size;
-        uintn transport_header_size;
-        uintn index;
+        size_t digest_count;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        size_t index;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -596,8 +596,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
     case 0x14: {
         spdm_digest_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -621,8 +621,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x15: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -656,8 +656,8 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);

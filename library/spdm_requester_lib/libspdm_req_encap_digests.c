@@ -26,14 +26,14 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_digest(void *context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response)
 {
     spdm_get_digest_request_t *spdm_request;
     spdm_digest_response_t *spdm_response;
-    uintn index;
+    size_t index;
     uint32_t hash_size;
     uint8_t *digest;
     libspdm_context_t *spdm_context;

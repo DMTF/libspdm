@@ -11,7 +11,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -21,7 +21,7 @@ libspdm_test_context_t m_libspdm_responder_encap_challenge_test_context = {
     false,
 };
 
-static uintn m_libspdm_local_buffer_size;
+static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 
 void libspdm_test_responder_encap_challenge_case1(void **State)
@@ -31,10 +31,10 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     spdm_challenge_auth_response_t *spdm_response;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *ptr;
-    uintn spdm_response_size;
-    uintn sig_size;
+    size_t spdm_response_size;
+    size_t sig_size;
     void *data;
-    uintn data_size;
+    size_t data_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -98,8 +98,8 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                      sizeof(m_libspdm_local_buffer) -
                      (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
-                     spdm_response, (uintn)ptr - (uintn)spdm_response);
-    m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+                     spdm_response, (size_t)ptr - (size_t)spdm_response);
+    m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                      hash_data);
@@ -121,9 +121,9 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn encap_request_size;
+    size_t encap_request_size;
     void *data;
-    uintn data_size;
+    size_t data_size;
 
     spdm_challenge_request_t *spdm_request;
     spdm_request = malloc(sizeof(spdm_challenge_request_t));
@@ -158,7 +158,7 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
     #endif
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -178,12 +178,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

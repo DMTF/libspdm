@@ -26,7 +26,7 @@ extern "C" {
 #error OPENSSL_ALGORITHM_DEFINES no longer supported
 #endif
 
-typedef uintn UINTN;
+typedef size_t UINTN;
 typedef intn INTN;
 typedef uint8_t UINT8;
 typedef int8_t INT8;

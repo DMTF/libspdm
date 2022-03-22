@@ -21,8 +21,8 @@
  */
 bool libspdm_calculate_th_for_exchange(
     void *context, void *spdm_session_info, const uint8_t *cert_chain_buffer,
-    uintn cert_chain_buffer_size,
-    uintn *th_data_buffer_size, void *th_data_buffer)
+    size_t cert_chain_buffer_size,
+    size_t *th_data_buffer_size, void *th_data_buffer)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -31,7 +31,7 @@ bool libspdm_calculate_th_for_exchange(
     return_status status;
     libspdm_large_managed_buffer_t th_curr;
     bool result;
-    uintn th_data_buffer_capacity;
+    size_t th_data_buffer_capacity;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -105,7 +105,7 @@ bool libspdm_calculate_th_for_exchange(
  */
 bool libspdm_calculate_th_hash_for_exchange(
     void *context, void *spdm_session_info,
-    uintn *th_hash_buffer_size, void *th_hash_buffer)
+    size_t *th_hash_buffer_size, void *th_hash_buffer)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -159,7 +159,7 @@ bool libspdm_calculate_th_hash_for_exchange(
  */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
     void *context, void *spdm_session_info, bool is_requester,
-    uintn *th_hmac_buffer_size, void *th_hmac_buffer)
+    size_t *th_hmac_buffer_size, void *th_hmac_buffer)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -230,10 +230,10 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
 bool libspdm_calculate_th_for_finish(void *context,
                                      void *spdm_session_info,
                                      const uint8_t *cert_chain_buffer,
-                                     uintn cert_chain_buffer_size,
+                                     size_t cert_chain_buffer_size,
                                      const uint8_t *mut_cert_chain_buffer,
-                                     uintn mut_cert_chain_buffer_size,
-                                     uintn *th_data_buffer_size,
+                                     size_t mut_cert_chain_buffer_size,
+                                     size_t *th_data_buffer_size,
                                      void *th_data_buffer)
 {
     libspdm_context_t *spdm_context;
@@ -244,7 +244,7 @@ bool libspdm_calculate_th_for_finish(void *context,
     return_status status;
     libspdm_large_managed_buffer_t th_curr;
     bool result;
-    uintn th_data_buffer_capacity;
+    size_t th_data_buffer_capacity;
 
     spdm_context = context;
     session_info = spdm_session_info;
@@ -350,7 +350,7 @@ bool libspdm_calculate_th_for_finish(void *context,
  */
 bool libspdm_calculate_th_hash_for_finish(void *context,
                                           void *spdm_session_info,
-                                          uintn *th_hash_buffer_size,
+                                          size_t *th_hash_buffer_size,
                                           void *th_hash_buffer)
 {
     libspdm_context_t *spdm_context;
@@ -405,7 +405,7 @@ bool libspdm_calculate_th_hash_for_finish(void *context,
  */
 bool libspdm_calculate_th_hmac_for_finish_rsp(void *context,
                                               void *spdm_session_info,
-                                              uintn *th_hmac_buffer_size,
+                                              size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer)
 {
     libspdm_context_t *spdm_context;
@@ -462,7 +462,7 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(void *context,
  */
 bool libspdm_calculate_th_hmac_for_finish_req(void *context,
                                               void *spdm_session_info,
-                                              uintn *th_hmac_buffer_size,
+                                              size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer)
 {
     libspdm_context_t *spdm_context;
@@ -525,13 +525,13 @@ libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     bool result;
-    uintn signature_size;
-    uintn hash_size;
+    size_t signature_size;
+    size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     signature_size = libspdm_get_asym_signature_size(
@@ -610,12 +610,12 @@ libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                        uint8_t *hmac)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
     bool result;
 
@@ -673,19 +673,19 @@ bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
     const void *sign_data, const intn sign_data_size)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
     uint8_t *cert_chain_data;
-    uintn cert_chain_data_size;
+    size_t cert_chain_data_size;
     uint8_t *cert_buffer;
-    uintn cert_buffer_size;
+    size_t cert_buffer_size;
     void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -820,16 +820,16 @@ bool libspdm_verify_key_exchange_rsp_signature(
 bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *hmac_data,
-                                          uintn hmac_data_size)
+                                          size_t hmac_data_size)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -894,15 +894,15 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uintn signature_size;
-    uintn hash_size;
+    size_t signature_size;
+    size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     signature_size = libspdm_get_req_asym_signature_size(
@@ -988,16 +988,16 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
                                       libspdm_session_info_t *session_info,
                                       void *hmac)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1069,21 +1069,21 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
                                          const void *sign_data,
                                          const intn sign_data_size)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
     uint8_t *mut_cert_chain_data;
-    uintn mut_cert_chain_data_size;
+    size_t mut_cert_chain_data_size;
     uint8_t *mut_cert_buffer;
-    uintn mut_cert_buffer_size;
+    size_t mut_cert_buffer_size;
     void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1231,18 +1231,18 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
                                     libspdm_session_info_t *session_info,
-                                    const uint8_t *hmac, uintn hmac_size)
+                                    const uint8_t *hmac, size_t hmac_size)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1317,15 +1317,15 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
                                       uint8_t *hmac)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1394,18 +1394,18 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
                                     libspdm_session_info_t *session_info,
-                                    const void *hmac_data, uintn hmac_data_size)
+                                    const void *hmac_data, size_t hmac_data_size)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1481,11 +1481,11 @@ libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                        uint8_t *hmac)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1536,14 +1536,14 @@ libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
 bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *hmac_data,
-                                          uintn hmac_data_size)
+                                          size_t hmac_data_size)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1601,12 +1601,12 @@ libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
                                        libspdm_session_info_t *session_info,
                                        void *hmac)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1656,14 +1656,14 @@ libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
                                         libspdm_session_info_t *session_info,
-                                        const uint8_t *hmac, uintn hmac_size)
+                                        const uint8_t *hmac, size_t hmac_size)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1721,14 +1721,14 @@ return_status libspdm_calculate_th1_hash(void *context,
                                          uint8_t *th1_hash_data)
 {
     libspdm_context_t *spdm_context;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     spdm_context = context;
@@ -1802,16 +1802,16 @@ return_status libspdm_calculate_th2_hash(void *context,
                                          uint8_t *th2_hash_data)
 {
     libspdm_context_t *spdm_context;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
-    uintn cert_chain_buffer_size;
+    size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
-    uintn mut_cert_chain_buffer_size;
+    size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn th_curr_data_size;
+    size_t th_curr_data_size;
 #endif
 
     spdm_context = context;

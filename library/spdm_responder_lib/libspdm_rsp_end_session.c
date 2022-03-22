@@ -24,9 +24,9 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_end_session(void *context,
-                                               uintn request_size,
+                                               size_t request_size,
                                                const void *request,
-                                               uintn *response_size,
+                                               size_t *response_size,
                                                void *response)
 {
     spdm_end_session_response_t *spdm_response;

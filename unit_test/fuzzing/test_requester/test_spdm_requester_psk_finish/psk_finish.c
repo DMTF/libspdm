@@ -25,7 +25,7 @@ static void libspdm_secured_message_set_dummy_finished_key(void *spdm_secured_me
 }
 
 void libspdm_secured_message_set_response_handshake_encryption_key(
-    void *spdm_secured_message_context, const void *key, uintn key_size)
+    void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -38,7 +38,7 @@ void libspdm_secured_message_set_response_handshake_encryption_key(
 }
 
 void libspdm_secured_message_set_response_handshake_salt(void *spdm_secured_message_context,
-                                                         const void *salt, uintn salt_size)
+                                                         const void *salt, size_t salt_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -49,23 +49,23 @@ void libspdm_secured_message_set_response_handshake_salt(void *spdm_secured_mess
                      salt, secured_message_context->aead_iv_size);
 }
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
                                           const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn temp_buf_size;
+    size_t temp_buf_size;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     uint8_t m_libspdm_test_message_header_size;
@@ -99,9 +99,9 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     m_libspdm_test_message_header = LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
@@ -182,7 +182,7 @@ libspdm_test_context_t m_libspdm_requester_psk_finish_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -197,12 +197,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

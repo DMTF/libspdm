@@ -20,7 +20,7 @@
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 typedef return_status (*libspdm_get_encap_request_func)(
-    libspdm_context_t *spdm_context, uintn *encap_request_size,
+    libspdm_context_t *spdm_context, size_t *encap_request_size,
     void *encap_request);
 
 /**
@@ -36,7 +36,7 @@ typedef return_status (*libspdm_get_encap_request_func)(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 typedef return_status (*libspdm_process_encap_response_func)(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
 typedef struct {
@@ -66,7 +66,7 @@ libspdm_encap_response_struct_t m_libspdm_encap_response_struct[] = {
 libspdm_encap_response_struct_t *
 libspdm_get_encap_struct_via_op_code(uint8_t request_op_code)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < ARRAY_SIZE(m_libspdm_encap_response_struct); index++) {
         if (m_libspdm_encap_response_struct[index].request_op_code ==
@@ -116,8 +116,8 @@ void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
  * @retval RETURN_UNSUPPORTED           Do not know how to process the request.
  **/
 return_status libspdm_process_encapsulated_response(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
-    const void *encap_response, uintn *encap_request_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
+    const void *encap_response, size_t *encap_request_size,
     void *encap_request)
 {
     return_status status;
@@ -338,13 +338,13 @@ void libspdm_init_key_update_encap_state(void *context)
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_encapsulated_request(
-    void *context, uintn request_size, const void *request,
-    uintn *response_size, void *response)
+    void *context, size_t request_size, const void *request,
+    size_t *response_size, void *response)
 {
     spdm_encapsulated_request_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     void *encap_request;
-    uintn encap_request_size;
+    size_t encap_request_size;
     return_status status;
     const spdm_get_encapsulated_request_request_t *spdm_request;
 
@@ -433,19 +433,19 @@ return_status libspdm_get_response_encapsulated_request(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_encapsulated_response_ack(
-    void *context, uintn request_size, const void *request,
-    uintn *response_size, void *response)
+    void *context, size_t request_size, const void *request,
+    size_t *response_size, void *response)
 {
     const spdm_deliver_encapsulated_response_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     spdm_encapsulated_response_ack_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     const void *encap_response;
-    uintn encap_response_size;
+    size_t encap_response_size;
     void *encap_request;
-    uintn encap_request_size;
+    size_t encap_request_size;
     return_status status;
-    uintn ack_header_size;
+    size_t ack_header_size;
 
     spdm_context = context;
     spdm_request = request;

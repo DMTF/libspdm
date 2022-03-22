@@ -27,7 +27,7 @@
  * @retval false  Pseudorandom number generator does not have enough entropy for random generation.
  *
  **/
-bool libspdm_random_seed(const uint8_t *seed, uintn seed_size)
+bool libspdm_random_seed(const uint8_t *seed, size_t seed_size)
 {
     /* TBD*/
     return true;
@@ -45,7 +45,7 @@ bool libspdm_random_seed(const uint8_t *seed, uintn seed_size)
  * @retval false  Pseudorandom number generator fails to generate due to lack of entropy.
  *
  **/
-bool libspdm_random_bytes(uint8_t *output, uintn size)
+bool libspdm_random_bytes(uint8_t *output, size_t size)
 {
     bool ret;
     uint64_t temp_rand;

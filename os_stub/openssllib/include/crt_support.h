@@ -15,6 +15,7 @@
 #include <base.h>
 #include "library/memlib.h"
 #include "library/debuglib.h"
+#include <stddef.h>
 
 #define OPENSSLDIR ""
 #define ENGINESDIR ""
@@ -100,10 +101,10 @@
 
 /* Basic types mapping*/
 
-typedef uintn size_t;
-typedef uintn u_int;
-typedef intn ssize_t;
+typedef size_t u_int;
+#ifdef __GNUC__
 typedef intn time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */
+#endif
 typedef uint8_t __uint8_t;
 typedef uint8_t sa_family_t;
 typedef uint8_t u_char;
@@ -132,18 +133,6 @@ struct tm {
     long tm_gmtoff; /* offset from CUT in seconds */
     char *tm_zone; /* timezone abbreviation */
 };
-
-struct timeval {
-    long tv_sec; /* time value, in seconds */
-    long tv_usec; /* time value, in microseconds */
-};
-
-struct sockaddr {
-    __uint8_t sa_len; /* total length */
-    sa_family_t sa_family; /* address family */
-    char sa_data[14]; /* actually longer; address value */
-};
-
 
 /* Global variables*/
 
@@ -211,7 +200,6 @@ int strcasecmp(const char *s1, const char *s2);
 int sprintf(char *string, char *format, ...);
 #define localtime(timer) NULL
 #define assert(expression)
-#define offsetof(type, member) OFFSET_OF(type, member)
 int atoi(const char *nptr);
 #define gettimeofday(tvp, tz)                                                  \
     do {                                                                   \

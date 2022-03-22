@@ -10,13 +10,13 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-static uintn m_libspdm_local_buffer_size;
+static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 void libspdm_secured_message_set_response_finished_key(
-    void *spdm_secured_message_context, const void *key, uintn key_size)
+    void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -29,7 +29,7 @@ void libspdm_secured_message_set_response_finished_key(
 }
 
 return_status libspdm_requester_finish_test_send_message(void *spdm_context,
-                                                         uintn request_size,
+                                                         size_t request_size,
                                                          const void *request,
                                                          uint64_t timeout)
 {
@@ -84,7 +84,7 @@ return_status libspdm_requester_finish_test_send_message(void *spdm_context,
         m_libspdm_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x9: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
         if (sub_index == 0) {
             m_libspdm_local_buffer_size = 0;
             libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
@@ -172,7 +172,7 @@ return_status libspdm_requester_finish_test_send_message(void *spdm_context,
 }
 
 return_status libspdm_requester_finish_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -188,14 +188,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -259,14 +259,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -326,8 +326,8 @@ return_status libspdm_requester_finish_test_receive_message(
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -347,8 +347,8 @@ return_status libspdm_requester_finish_test_receive_message(
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -367,11 +367,11 @@ return_status libspdm_requester_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x6: {
-        static uintn sub_index1 = 0;
+        static size_t sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -394,14 +394,14 @@ return_status libspdm_requester_finish_test_receive_message(
             uint32_t hmac_size;
             uint8_t *ptr;
             void *data;
-            uintn data_size;
+            size_t data_size;
             uint8_t *cert_buffer;
-            uintn cert_buffer_size;
+            size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
             libspdm_large_managed_buffer_t th_curr;
             uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_asym_algo =
@@ -469,8 +469,8 @@ return_status libspdm_requester_finish_test_receive_message(
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -490,8 +490,8 @@ return_status libspdm_requester_finish_test_receive_message(
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -515,12 +515,12 @@ return_status libspdm_requester_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x9: {
-        static uintn sub_index2 = 0;
+        static size_t sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -549,14 +549,14 @@ return_status libspdm_requester_finish_test_receive_message(
             uint32_t hmac_size;
             uint8_t *ptr;
             void *data;
-            uintn data_size;
+            size_t data_size;
             uint8_t *cert_buffer;
-            uintn cert_buffer_size;
+            size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
             libspdm_large_managed_buffer_t th_curr;
             uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_asym_algo =
@@ -627,8 +627,8 @@ return_status libspdm_requester_finish_test_receive_message(
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -665,14 +665,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -736,14 +736,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -807,14 +807,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -878,14 +878,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -950,14 +950,14 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1021,15 +1021,15 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1103,8 +1103,8 @@ return_status libspdm_requester_finish_test_receive_message(
         spdm_finish_response_t *spdm_response;
         uint32_t hmac_size;
         uint8_t *ptr;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1148,8 +1148,8 @@ return_status libspdm_requester_finish_test_receive_message(
         uint8_t *ptr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         uint8_t zero_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1196,15 +1196,15 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1283,15 +1283,15 @@ return_status libspdm_requester_finish_test_receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *cert_buffer;
-        uintn cert_buffer_size;
+        size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         libspdm_large_managed_buffer_t th_curr;
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
@@ -1365,8 +1365,8 @@ return_status libspdm_requester_finish_test_receive_message(
 
     case 0x15: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -1402,9 +1402,9 @@ void libspdm_test_requester_finish_case1(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1496,9 +1496,9 @@ void libspdm_test_requester_finish_case2(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1593,9 +1593,9 @@ void libspdm_test_requester_finish_case3(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1686,9 +1686,9 @@ void libspdm_test_requester_finish_case4(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1780,9 +1780,9 @@ void libspdm_test_requester_finish_case5(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1874,9 +1874,9 @@ void libspdm_test_requester_finish_case6(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1972,9 +1972,9 @@ void libspdm_test_requester_finish_case7(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2067,9 +2067,9 @@ void libspdm_test_requester_finish_case8(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2161,9 +2161,9 @@ void libspdm_test_requester_finish_case9(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2260,9 +2260,9 @@ void libspdm_test_requester_finish_case10(void **state) {
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t    *session_info;
     uint16_t error_code;
 
@@ -2359,9 +2359,9 @@ void libspdm_test_requester_finish_case11(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2478,9 +2478,9 @@ void libspdm_test_requester_finish_case12(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2574,9 +2574,9 @@ void libspdm_test_requester_finish_case13(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2667,9 +2667,9 @@ void libspdm_test_requester_finish_case14(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2761,9 +2761,9 @@ void libspdm_test_requester_finish_case15(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2855,9 +2855,9 @@ void libspdm_test_requester_finish_case16(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2964,9 +2964,9 @@ void libspdm_test_requester_finish_case17(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -3069,9 +3069,9 @@ void libspdm_test_requester_finish_case18(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -3175,9 +3175,9 @@ void libspdm_test_requester_finish_case19(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -3281,9 +3281,9 @@ void libspdm_test_requester_finish_case20(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -3385,9 +3385,9 @@ void libspdm_test_requester_finish_case21(void **state)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;

@@ -10,7 +10,7 @@
  * [15:00] - code
  **/
 /* TODO: Change to uint32_t once conversion has completed */
-typedef uintn libspdm_return_t;
+typedef size_t libspdm_return_t;
 
 /* Returns 1 if severity is LIBSPDM_SEVERITY_SUCCESS else it returns 0. */
 #define LIBSPDM_STATUS_IS_SUCCESS(status) \

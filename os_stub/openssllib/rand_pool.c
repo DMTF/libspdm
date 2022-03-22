@@ -16,23 +16,23 @@
  * This is a shim layer to rnglib.
  *
  * @param[in]   length        size of the buffer, in bytes,  to fill with.
- * @param[out]  RandBuffer    Pointer to the buffer to store the random result.
+ * @param[out]  rand_buffer    Pointer to the buffer to store the random result.
  *
  * @retval true        Random bytes generation succeeded.
  * @retval false       Failed to request random bytes.
  *
  **/
-static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
+static bool rand_get_bytes(size_t length, uint8_t *rand_buffer)
 {
     bool ret;
     uint64_t temp_rand;
 
     ret = false;
 
-    if (RandBuffer == NULL) {
+    if (rand_buffer == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "[OPENSSL_RAND_POOL] NULL RandBuffer. No random numbers are generated and your system is not secure\n"));
-        LIBSPDM_ASSERT(RandBuffer !=
+                       "[OPENSSL_RAND_POOL] NULL rand_buffer. No random numbers are generated and your system is not secure\n"));
+        LIBSPDM_ASSERT(rand_buffer !=
                        NULL); /* Since we can't generate random numbers, we should assert. Otherwise we will just blow up later.*/
         return ret;
     }
@@ -45,11 +45,11 @@ static bool rand_get_bytes(uintn length, uint8_t *RandBuffer)
             return ret;
         }
         if (length >= sizeof(temp_rand)) {
-            *((uint64_t *)RandBuffer) = temp_rand;
-            RandBuffer += sizeof(uint64_t);
+            *((uint64_t *)rand_buffer) = temp_rand;
+            rand_buffer += sizeof(uint64_t);
             length -= sizeof(temp_rand);
         } else {
-            libspdm_copy_mem(RandBuffer, length, &temp_rand, length);
+            libspdm_copy_mem(rand_buffer, length, &temp_rand, length);
             length = 0;
         }
     }

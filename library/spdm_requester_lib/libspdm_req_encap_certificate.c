@@ -26,20 +26,20 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_certificate(void *context,
-                                                     uintn request_size,
+                                                     size_t request_size,
                                                      void *request,
-                                                     uintn *response_size,
+                                                     size_t *response_size,
                                                      void *response)
 {
     spdm_get_certificate_request_t *spdm_request;
     spdm_certificate_response_t *spdm_response;
     uint16_t offset;
     uint16_t length;
-    uintn remainder_length;
+    size_t remainder_length;
     uint8_t slot_id;
     libspdm_context_t *spdm_context;
     return_status status;
-    uintn response_capacity;
+    size_t response_capacity;
 
     spdm_context = context;
     spdm_request = request;
@@ -92,7 +92,7 @@ return_status libspdm_get_encap_response_certificate(void *context,
             response_size, response);
     }
 
-    if ((uintn)(offset + length) >
+    if ((size_t)(offset + length) >
         spdm_context->local_context
         .local_cert_chain_provision_size[slot_id]) {
         length = (uint16_t)(

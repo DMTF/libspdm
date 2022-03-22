@@ -36,17 +36,17 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
 {
     return_status status;
     libspdm_psk_finish_request_mine_t *spdm_request;
-    uintn spdm_request_size;
-    uintn hmac_size;
+    size_t spdm_request_size;
+    size_t hmac_size;
     libspdm_psk_finish_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     libspdm_session_state_t session_state;
     bool result;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
@@ -217,7 +217,7 @@ error:
 return_status libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                               uint32_t session_id)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;

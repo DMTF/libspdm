@@ -38,7 +38,7 @@
  **/
 typedef return_status (*libspdm_get_response_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    uintn request_size, const void *request, uintn *response_size,
+    size_t request_size, const void *request, size_t *response_size,
     void *response);
 
 /**
@@ -88,7 +88,7 @@ return_status libspdm_responder_dispatch_message(void *spdm_context);
 return_status libspdm_generate_error_response(const void *spdm_context,
                                               uint8_t error_code,
                                               uint8_t error_data,
-                                              uintn *spdm_response_size,
+                                              size_t *spdm_response_size,
                                               void *spdm_response);
 
 /**
@@ -112,8 +112,8 @@ return_status libspdm_generate_error_response(const void *spdm_context,
  **/
 return_status libspdm_generate_extended_error_response(
     const void *context, uint8_t error_code, uint8_t error_data,
-    uintn extended_error_data_size, const uint8_t *extended_error_data,
-    uintn *spdm_response_size, void *spdm_response);
+    size_t extended_error_data_size, const uint8_t *extended_error_data,
+    size_t *spdm_response_size, void *spdm_response);
 
 /**
  * Notify the session state to a session APP.

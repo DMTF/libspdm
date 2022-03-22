@@ -14,7 +14,7 @@ spdm_get_digest_request_t m_spdm_get_digests_request1 = {
         SPDM_GET_DIGESTS,
     },
 };
-uintn m_spdm_get_digests_request1_size = sizeof(m_spdm_get_digests_request1);
+size_t m_spdm_get_digests_request1_size = sizeof(m_spdm_get_digests_request1);
 
 spdm_get_digest_request_t m_spdm_get_digests_request2 = {
     {
@@ -22,7 +22,7 @@ spdm_get_digest_request_t m_spdm_get_digests_request2 = {
         SPDM_GET_DIGESTS,
     },
 };
-uintn m_spdm_get_digests_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+size_t m_spdm_get_digests_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 static uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -35,7 +35,7 @@ void test_spdm_requester_challenge_auth_case1(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_digest_response_t *spdm_response;
 
@@ -91,7 +91,7 @@ void test_spdm_requester_challenge_auth_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_digest_response_t *spdm_response;
 
@@ -138,7 +138,7 @@ void test_spdm_requester_challenge_auth_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_digest_response_t *spdm_response;
@@ -197,7 +197,7 @@ void test_spdm_requester_challenge_auth_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     return_status status;
     spdm_digest_response_t *spdm_response;

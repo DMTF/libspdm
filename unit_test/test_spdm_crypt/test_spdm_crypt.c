@@ -35,9 +35,9 @@ uint8_t m_libspdm_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
 
 void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 {
-    uintn common_name_size;
+    size_t common_name_size;
     char common_name[64];
-    uintn dmtf_oid_size;
+    size_t dmtf_oid_size;
     uint8_t dmtf_oid[64];
     return_status ret;
 
@@ -77,12 +77,12 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 
 void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 {
-    uintn common_name_size;
+    size_t common_name_size;
     char common_name[64];
-    uintn dmtf_oid_size;
+    size_t dmtf_oid_size;
     uint8_t dmtf_oid[64];
     uint8_t *file_buffer;
-    uintn file_buffer_size;
+    size_t file_buffer_size;
     return_status ret;
     bool status;
 
@@ -169,7 +169,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
 {
     bool status;
     uint8_t *file_buffer;
-    uintn file_buffer_size;
+    size_t file_buffer_size;
 
     status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);

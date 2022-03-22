@@ -26,7 +26,7 @@
 return_status libspdm_generate_encap_error_response(const void *context,
                                                     uint8_t error_code,
                                                     uint8_t error_data,
-                                                    uintn *response_size,
+                                                    size_t *response_size,
                                                     void *response)
 {
     spdm_error_response_t *spdm_response;
@@ -64,8 +64,8 @@ return_status libspdm_generate_encap_error_response(const void *context,
  **/
 return_status libspdm_generate_encap_extended_error_response(
     const void *context, uint8_t error_code, uint8_t error_data,
-    uintn extended_error_data_size, const uint8_t *extended_error_data,
-    uintn *response_size, void *response)
+    size_t extended_error_data_size, const uint8_t *extended_error_data,
+    size_t *response_size, void *response)
 {
     spdm_error_response_t *spdm_response;
     LIBSPDM_ASSERT(*response_size >=

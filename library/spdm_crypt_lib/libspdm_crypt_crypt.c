@@ -104,7 +104,7 @@ uint32_t libspdm_get_hash_size(uint32_t base_hash_algo)
  *
  * @return hash cipher ID
  **/
-uintn libspdm_get_hash_nid(uint32_t base_hash_algo)
+size_t libspdm_get_hash_nid(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -691,7 +691,7 @@ bool libspdm_hash_duplicate(uint32_t base_hash_algo,
  * @retval false  hash data digest failed.
  **/
 bool libspdm_hash_update(uint32_t base_hash_algo, void *hash_context,
-                         const void *data, uintn data_size)
+                         const void *data, size_t data_size)
 {
     libspdm_hash_update_func hash_function;
     hash_function = libspdm_get_hash_update_func(base_hash_algo);
@@ -744,7 +744,7 @@ bool libspdm_hash_final(uint32_t base_hash_algo, void *hash_context,
  * @retval false  hash computation failed.
  **/
 bool libspdm_hash_all(uint32_t base_hash_algo, const void *data,
-                      uintn data_size, uint8_t *hash_value)
+                      size_t data_size, uint8_t *hash_value)
 {
     libspdm_hash_all_func hash_function;
     hash_function = libspdm_get_hash_all_func(base_hash_algo);
@@ -864,7 +864,7 @@ libspdm_hash_all_func libspdm_spdm_measurement_hash_func(uint32_t measurement_ha
  * @retval false  hash computation failed.
  **/
 bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
-                                  const void *data, uintn data_size,
+                                  const void *data, size_t data_size,
                                   uint8_t *hash_value)
 {
     libspdm_hash_all_func hash_function;
@@ -1393,7 +1393,7 @@ void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx)
  **/
 bool libspdm_hmac_init(uint32_t base_hash_algo,
                        void *hmac_ctx, const uint8_t *key,
-                       uintn key_size)
+                       size_t key_size)
 {
     libspdm_hmac_set_key_func hmac_function;
     hmac_function = libspdm_get_hmac_init_func(base_hash_algo);
@@ -1447,7 +1447,7 @@ bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
  **/
 bool libspdm_hmac_update(uint32_t base_hash_algo,
                          void *hmac_ctx, const void *data,
-                         uintn data_size)
+                         size_t data_size)
 {
     libspdm_hmac_update_func hmac_function;
     hmac_function = libspdm_get_hmac_update_func(base_hash_algo);
@@ -1502,8 +1502,8 @@ bool libspdm_hmac_final(uint32_t base_hash_algo,
  * @retval false  HMAC computation failed.
  **/
 bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
-                      uintn data_size, const uint8_t *key,
-                      uintn key_size, uint8_t *hmac_value)
+                      size_t data_size, const uint8_t *key,
+                      size_t key_size, uint8_t *hmac_value)
 {
     libspdm_hmac_all_func hmac_function;
     hmac_function = libspdm_get_hmac_all_func(base_hash_algo);
@@ -1595,8 +1595,8 @@ libspdm_hkdf_expand_func get_spdm_hkdf_expand_func(uint32_t base_hash_algo)
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
-                         uintn prk_size, const uint8_t *info,
-                         uintn info_size, uint8_t *out, uintn out_size)
+                         size_t prk_size, const uint8_t *info,
+                         size_t info_size, uint8_t *out, size_t out_size)
 {
     libspdm_hkdf_expand_func hkdf_expand_function;
     hkdf_expand_function = get_spdm_hkdf_expand_func(base_hash_algo);
@@ -1611,8 +1611,8 @@ typedef struct {
     bool is_requester;
     uint8_t op_code;
     void    *context;
-    uintn context_size;
-    uintn zero_pad_size;
+    size_t context_size;
+    size_t zero_pad_size;
 } libspdm_signing_context_str_t;
 
 libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
@@ -1642,9 +1642,9 @@ libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
-    uintn *context_size)
+    size_t *context_size)
 {
-    uintn index;
+    size_t index;
 
     /* It is introduced in SPDM 1.2*/
     LIBSPDM_ASSERT((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11);
@@ -1675,7 +1675,7 @@ libspdm_create_signing_context (
     bool is_requester,
     void *spdm_signing_context)
 {
-    uintn index;
+    size_t index;
     char *context_str;
 
     /* It is introduced in SPDM 1.2*/
@@ -1819,7 +1819,7 @@ libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
  **/
 bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            const uint8_t *cert,
-                                           uintn cert_size,
+                                           size_t cert_size,
                                            void **context)
 {
     libspdm_asym_get_public_key_from_x509_func get_public_key_from_x509_function;
@@ -1937,60 +1937,60 @@ bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
 }
 
 bool
-libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, uintn hash_nid,
-                                        const uint8_t *param, uintn param_size,
+libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
+                                        const uint8_t *param, size_t param_size,
                                         const uint8_t *message,
-                                        uintn message_size,
+                                        size_t message_size,
                                         const uint8_t *signature,
-                                        uintn sig_size)
+                                        size_t sig_size)
 {
     return libspdm_rsa_pkcs1_verify_with_nid (context, hash_nid,
                                               message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_rsa_pss_verify_wrap (void *context, uintn hash_nid,
-                             const uint8_t *param, uintn param_size,
+libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
+                             const uint8_t *param, size_t param_size,
                              const uint8_t *message,
-                             uintn message_size,
+                             size_t message_size,
                              const uint8_t *signature,
-                             uintn sig_size)
+                             size_t sig_size)
 {
     return libspdm_rsa_pss_verify (context, hash_nid,
                                    message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_ecdsa_verify_wrap (void *context, uintn hash_nid,
-                           const uint8_t *param, uintn param_size,
+libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
+                           const uint8_t *param, size_t param_size,
                            const uint8_t *message,
-                           uintn message_size,
+                           size_t message_size,
                            const uint8_t *signature,
-                           uintn sig_size)
+                           size_t sig_size)
 {
     return libspdm_ecdsa_verify (context, hash_nid,
                                  message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_eddsa_verify_wrap (void *context, uintn hash_nid,
-                           const uint8_t *param, uintn param_size,
+libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
+                           const uint8_t *param, size_t param_size,
                            const uint8_t *message,
-                           uintn message_size,
+                           size_t message_size,
                            const uint8_t *signature,
-                           uintn sig_size)
+                           size_t sig_size)
 {
     return libspdm_eddsa_verify (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_sm2_dsa_verify_wrap (void *context, uintn hash_nid,
-                             const uint8_t *param, uintn param_size,
+libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
+                             const uint8_t *param, size_t param_size,
                              const uint8_t *message,
-                             uintn message_size,
+                             size_t message_size,
                              const uint8_t *signature,
-                             uintn sig_size)
+                             size_t sig_size)
 {
     return libspdm_sm2_dsa_verify (context, hash_nid, param, param_size,
                                    message, message_size, signature, sig_size);
@@ -2075,19 +2075,19 @@ bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
-    uintn message_size, const uint8_t *signature,
-    uintn sig_size)
+    size_t message_size, const uint8_t *signature,
+    size_t sig_size)
 {
     libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -2175,20 +2175,20 @@ bool libspdm_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
-    uintn hash_size, const uint8_t *signature,
-    uintn sig_size)
+    size_t hash_size, const uint8_t *signature,
+    size_t sig_size)
 {
     libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint8_t full_message_hash[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -2332,7 +2332,7 @@ libspdm_get_asym_get_private_key_from_pem(uint32_t base_asym_algo)
  **/
 bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
                                            const uint8_t *pem_data,
-                                           uintn pem_size,
+                                           size_t pem_size,
                                            const char *password,
                                            void **context)
 {
@@ -2347,55 +2347,55 @@ bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
 }
 
 bool
-libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, uintn hash_nid,
-                                      const uint8_t *param, uintn param_size,
+libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, size_t hash_nid,
+                                      const uint8_t *param, size_t param_size,
                                       const uint8_t *message,
-                                      uintn message_size, uint8_t *signature,
-                                      uintn *sig_size)
+                                      size_t message_size, uint8_t *signature,
+                                      size_t *sig_size)
 {
     return libspdm_rsa_pkcs1_sign_with_nid (context, hash_nid,
                                             message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_rsa_pss_sign_wrap (void *context, uintn hash_nid,
-                           const uint8_t *param, uintn param_size,
+libspdm_rsa_pss_sign_wrap (void *context, size_t hash_nid,
+                           const uint8_t *param, size_t param_size,
                            const uint8_t *message,
-                           uintn message_size, uint8_t *signature,
-                           uintn *sig_size)
+                           size_t message_size, uint8_t *signature,
+                           size_t *sig_size)
 {
     return libspdm_rsa_pss_sign (context, hash_nid,
                                  message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_ecdsa_sign_wrap (void *context, uintn hash_nid,
-                         const uint8_t *param, uintn param_size,
+libspdm_ecdsa_sign_wrap (void *context, size_t hash_nid,
+                         const uint8_t *param, size_t param_size,
                          const uint8_t *message,
-                         uintn message_size, uint8_t *signature,
-                         uintn *sig_size)
+                         size_t message_size, uint8_t *signature,
+                         size_t *sig_size)
 {
     return libspdm_ecdsa_sign (context, hash_nid,
                                message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_eddsa_sign_wrap (void *context, uintn hash_nid,
-                         const uint8_t *param, uintn param_size,
+libspdm_eddsa_sign_wrap (void *context, size_t hash_nid,
+                         const uint8_t *param, size_t param_size,
                          const uint8_t *message,
-                         uintn message_size, uint8_t *signature,
-                         uintn *sig_size)
+                         size_t message_size, uint8_t *signature,
+                         size_t *sig_size)
 {
     return libspdm_eddsa_sign (context, hash_nid, param, param_size,
                                message, message_size, signature, sig_size);
 }
 
 bool
-libspdm_sm2_dsa_sign_wrap (void *context, uintn hash_nid,
-                           const uint8_t *param, uintn param_size,
+libspdm_sm2_dsa_sign_wrap (void *context, size_t hash_nid,
+                           const uint8_t *param, size_t param_size,
                            const uint8_t *message,
-                           uintn message_size, uint8_t *signature,
-                           uintn *sig_size)
+                           size_t message_size, uint8_t *signature,
+                           size_t *sig_size)
 {
     return libspdm_sm2_dsa_sign (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
@@ -2484,19 +2484,19 @@ bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
-    uintn message_size, uint8_t *signature,
-    uintn *sig_size)
+    size_t message_size, uint8_t *signature,
+    size_t *sig_size)
 {
     libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -2588,20 +2588,20 @@ bool libspdm_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
-    uintn hash_size, uint8_t *signature,
-    uintn *sig_size)
+    size_t hash_size, uint8_t *signature,
+    size_t *sig_size)
 {
     libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint8_t full_message_hash[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -2715,7 +2715,7 @@ libspdm_get_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg)
  **/
 bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
-                                               uintn cert_size,
+                                               size_t cert_size,
                                                void **context)
 {
     libspdm_asym_get_public_key_from_x509_func get_public_key_from_x509_function;
@@ -2800,19 +2800,19 @@ bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message, uintn message_size,
-    const uint8_t *signature, uintn sig_size)
+    const uint8_t *message, size_t message_size,
+    const uint8_t *signature, size_t sig_size)
 {
     libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -2900,20 +2900,20 @@ bool libspdm_req_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message_hash, uintn hash_size,
-    const uint8_t *signature, uintn sig_size)
+    const uint8_t *message_hash, size_t hash_size,
+    const uint8_t *signature, size_t sig_size)
 {
     libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint8_t full_message_hash[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -3015,7 +3015,7 @@ libspdm_get_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg)
  **/
 bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
                                                const uint8_t *pem_data,
-                                               uintn pem_size,
+                                               size_t pem_size,
                                                const char *password,
                                                void **context)
 {
@@ -3064,19 +3064,19 @@ bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message, uintn message_size,
-    uint8_t *signature, uintn *sig_size)
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size)
 {
     libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -3168,20 +3168,20 @@ bool libspdm_req_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message_hash, uintn hash_size,
-    uint8_t *signature, uintn *sig_size)
+    const uint8_t *message_hash, size_t hash_size,
+    uint8_t *signature, size_t *sig_size)
 {
     libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint8_t full_message_hash[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uintn hash_nid;
+    size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
     void *param;
-    uintn param_size;
+    size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -3291,7 +3291,7 @@ uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group)
  *
  * @return DHE cipher ID
  **/
-uintn libspdm_get_dhe_nid(uint16_t dhe_named_group)
+size_t libspdm_get_dhe_nid(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -3371,7 +3371,7 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
                       uint16_t dhe_named_group, bool is_initiator)
 {
     libspdm_dhe_new_by_nid_func new_function;
-    uintn nid;
+    size_t nid;
     void *context;
 
     new_function = libspdm_get_dhe_new(dhe_named_group);
@@ -3549,7 +3549,7 @@ libspdm_dhe_generate_key_func libspdm_get_dhe_generate_key(uint16_t dhe_named_gr
  **/
 bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
                               uint8_t *public_key,
-                              uintn *public_key_size)
+                              size_t *public_key_size)
 {
     libspdm_dhe_generate_key_func generate_key_function;
     generate_key_function = libspdm_get_dhe_generate_key(dhe_named_group);
@@ -3623,8 +3623,8 @@ libspdm_dhe_compute_key_func libspdm_get_dhe_compute_key(uint16_t dhe_named_grou
  **/
 bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
                              const uint8_t *peer_public,
-                             uintn peer_public_size, uint8_t *key,
-                             uintn *key_size)
+                             size_t peer_public_size, uint8_t *key,
+                             size_t *key_size)
 {
     libspdm_dhe_compute_key_func compute_key_function;
     compute_key_function = libspdm_get_dhe_compute_key(dhe_named_group);
@@ -3780,12 +3780,12 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
  **/
 bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
-                             uintn key_size, const uint8_t *iv,
-                             uintn iv_size, const uint8_t *a_data,
-                             uintn a_data_size, const uint8_t *data_in,
-                             uintn data_in_size, uint8_t *tag_out,
-                             uintn tag_size, uint8_t *data_out,
-                             uintn *data_out_size)
+                             size_t key_size, const uint8_t *iv,
+                             size_t iv_size, const uint8_t *a_data,
+                             size_t a_data_size, const uint8_t *data_in,
+                             size_t data_in_size, uint8_t *tag_out,
+                             size_t tag_size, uint8_t *data_out,
+                             size_t *data_out_size)
 {
     libspdm_aead_encrypt_func aead_enc_function;
     aead_enc_function = libspdm_get_aead_enc_func(aead_cipher_suite);
@@ -3866,12 +3866,12 @@ libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_suite)
  **/
 bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
-                             uintn key_size, const uint8_t *iv,
-                             uintn iv_size, const uint8_t *a_data,
-                             uintn a_data_size, const uint8_t *data_in,
-                             uintn data_in_size, const uint8_t *tag,
-                             uintn tag_size, uint8_t *data_out,
-                             uintn *data_out_size)
+                             size_t key_size, const uint8_t *iv,
+                             size_t iv_size, const uint8_t *a_data,
+                             size_t a_data_size, const uint8_t *data_in,
+                             size_t data_in_size, const uint8_t *tag,
+                             size_t tag_size, uint8_t *data_out,
+                             size_t *data_out_size)
 {
     libspdm_aead_decrypt_func aead_dec_function;
     aead_dec_function = libspdm_get_aead_dec_func(aead_cipher_suite);
@@ -3890,7 +3890,7 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
  * @param  size                         size of random bytes to generate.
  * @param  rand                         Pointer to buffer to receive random value.
  **/
-bool libspdm_get_random_number(uintn size, uint8_t *rand)
+bool libspdm_get_random_number(size_t size, uint8_t *rand)
 {
     if (size == 0) {
         return true;
@@ -3911,16 +3911,16 @@ bool libspdm_get_random_number(uintn size, uint8_t *rand)
  * @retval  false  verification fail.
  **/
 static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
-                                                  uintn from_size,
+                                                  size_t from_size,
                                                   const uint8_t *to,
-                                                  uintn to_size)
+                                                  size_t to_size)
 {
     intn ret;
     return_status status;
     uint8_t f0[64];
     uint8_t t0[64];
-    uintn f0_size;
-    uintn t0_size;
+    size_t f0_size;
+    size_t t0_size;
 
     f0_size = 64;
     t0_size = 64;
@@ -4098,7 +4098,7 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
  * @retval  true   verify pass
  * @retval  false  verify fail
  **/
-bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size,
+bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_size,
                                             uint32_t base_asym_algo,
                                             uint32_t base_hash_algo)
 {
@@ -4106,7 +4106,7 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size
     uint8_t cert_signature_algo_oid[LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN];
     /*signature algo OID from libspdm stored*/
     uint8_t libspdm_signature_algo_oid[LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN];
-    uintn oid_len;
+    size_t oid_len;
     bool status;
     return_status ret;
 
@@ -4152,13 +4152,13 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size
  *                                       2. cert basic_constraints CA is false;
  * @retval  false  verify fail
  **/
-bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, uintn cert_size)
+bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert_size)
 {
     bool status;
     return_status ret;
     /*basic_constraints from cert*/
     uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_LEN];
-    uintn len;
+    size_t len;
 
     len = BASIC_CONSTRAINTS_LEN;
 
@@ -4190,15 +4190,15 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, uintn cert_
  * @retval  false  verify fail,two case: 1. return is not RETURN_SUCCESS or RETURN_NOT_FOUND;
  *                                       2. m_libspdm_hardware_identity_oid is found in AliasCert model;
  **/
-bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, uintn cert_size,
+bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size,
                                            bool is_device_cert_model)
 {
     bool status;
     return_status ret;
     bool find_sucessful;
     uint8_t spdm_extension[SPDM_EXTENDSION_LEN];
-    uintn index;
-    uintn len;
+    size_t index;
+    size_t len;
 
     len = SPDM_EXTENDSION_LEN;
 
@@ -4253,20 +4253,20 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, uintn cert_size,
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
-bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
+bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo,
                                     uint32_t base_hash_algo,
                                     bool is_device_cert_model)
 {
     uint8_t end_cert_from[64];
-    uintn end_cert_from_len;
+    size_t end_cert_from_len;
     uint8_t end_cert_to[64];
-    uintn end_cert_to_len;
-    uintn asn1_buffer_len;
+    size_t end_cert_to_len;
+    size_t asn1_buffer_len;
     bool status;
-    uintn cert_version;
+    size_t cert_version;
     return_status ret;
-    uintn value;
+    size_t value;
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
     void *rsa_context;
 #endif
@@ -4454,12 +4454,12 @@ cleanup:
  * @retval  true   Certificate is self-signed.
  * @retval  false  Certificate is not self-signed.
  **/
-bool libspdm_is_root_certificate(const uint8_t *cert, uintn cert_size)
+bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
 {
     uint8_t issuer_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
-    uintn issuer_name_len;
+    size_t issuer_name_len;
     uint8_t subject_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
-    uintn subject_name_len;
+    size_t subject_name_len;
     bool result;
 
     if (cert == NULL || cert_size == 0) {
@@ -4521,12 +4521,12 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const intn len, char *name_buffer,
-    uintn *name_buffer_size, uint8_t *oid,
-    uintn *oid_size)
+    size_t *name_buffer_size, uint8_t *oid,
+    size_t *oid_size)
 {
     uint8_t *ptr;
     int32_t length;
-    uintn obj_len;
+    size_t obj_len;
     int32_t ret;
 
     length = (int32_t)len;
@@ -4549,8 +4549,8 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
         return RETURN_NOT_FOUND;
     }
     /* CopyData to OID*/
-    if (*oid_size < (uintn)obj_len) {
-        *oid_size = (uintn)obj_len;
+    if (*oid_size < (size_t)obj_len) {
+        *oid_size = (size_t)obj_len;
         return RETURN_BUFFER_TOO_SMALL;
     }
     if (oid != NULL) {
@@ -4570,8 +4570,8 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
         return RETURN_NOT_FOUND;
     }
 
-    if (*name_buffer_size < (uintn)obj_len + 1) {
-        *name_buffer_size = (uintn)obj_len + 1;
+    if (*name_buffer_size < (size_t)obj_len + 1) {
+        *name_buffer_size = (size_t)obj_len + 1;
         return RETURN_BUFFER_TOO_SMALL;
     }
 
@@ -4613,11 +4613,11 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
 return_status
 libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
                                   char *name_buffer,
-                                  uintn *name_buffer_size,
-                                  uint8_t *oid, uintn *oid_size)
+                                  size_t *name_buffer_size,
+                                  uint8_t *oid, size_t *oid_size)
 {
     return_status status;
-    uintn extension_data_size;
+    size_t extension_data_size;
 
     extension_data_size = 0;
     status = libspdm_x509_get_extension_data(cert, cert_size,
@@ -4658,14 +4658,14 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
-bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_data_size,
+bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_device_cert_model)
 {
     uint8_t *root_cert_buffer;
-    uintn root_cert_buffer_size;
+    size_t root_cert_buffer_size;
     uint8_t *leaf_cert_buffer;
-    uintn leaf_cert_buffer_size;
+    size_t leaf_cert_buffer_size;
 
     if (cert_chain_data_size >
         MAX_UINT16 - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
@@ -4723,17 +4723,17 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_d
  **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
-                                             uintn cert_chain_buffer_size,
+                                             size_t cert_chain_buffer_size,
                                              bool is_device_cert_model)
 {
     uint8_t *cert_chain_data;
-    uintn cert_chain_data_size;
+    size_t cert_chain_data_size;
     uint8_t *first_cert_buffer;
-    uintn first_cert_buffer_size;
-    uintn hash_size;
+    size_t first_cert_buffer_size;
+    size_t hash_size;
     uint8_t calc_root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *leaf_cert_buffer;
-    uintn leaf_cert_buffer_size;
+    size_t leaf_cert_buffer_size;
     bool result;
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
@@ -4828,12 +4828,12 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
 bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       uint32_t base_asym_alg,
                                                       uint8_t *cert_chain_data,
-                                                      uintn cert_chain_data_size,
+                                                      size_t cert_chain_data_size,
                                                       void **public_key)
 {
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *cert_buffer;
-    uintn cert_buffer_size;
+    size_t cert_buffer_size;
     bool result;
 
     hash_size = libspdm_get_hash_size(base_hash_algo);

@@ -11,12 +11,12 @@
 spdm_heartbeat_request_t m_libspdm_heartbeat_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
 };
-uintn m_libspdm_heartbeat_request1_size = sizeof(m_libspdm_heartbeat_request1);
+size_t m_libspdm_heartbeat_request1_size = sizeof(m_libspdm_heartbeat_request1);
 
 spdm_heartbeat_request_t m_libspdm_heartbeat_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
 };
-uintn m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+size_t m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
 static uint8_t m_libspdm_local_psk_hint[32];
 
@@ -25,11 +25,11 @@ void libspdm_test_responder_heartbeat_case1(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -103,11 +103,11 @@ void libspdm_test_responder_heartbeat_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -184,11 +184,11 @@ void libspdm_test_responder_heartbeat_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -267,11 +267,11 @@ void libspdm_test_responder_heartbeat_case4(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -351,11 +351,11 @@ void libspdm_test_responder_heartbeat_case5(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
     spdm_error_data_response_not_ready_t *error_data;
@@ -441,11 +441,11 @@ void libspdm_test_responder_heartbeat_case6(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -523,11 +523,11 @@ void libspdm_test_responder_heartbeat_case7(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
     void *data1;
-    uintn data_size1;
+    size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 

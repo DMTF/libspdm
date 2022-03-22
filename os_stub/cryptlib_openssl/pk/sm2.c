@@ -25,7 +25,7 @@
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_sm2_dsa_new_by_nid(uintn nid)
+void *libspdm_sm2_dsa_new_by_nid(size_t nid)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY_CTX *key_ctx;
@@ -110,7 +110,7 @@ void libspdm_sm2_dsa_free(void *sm2_context)
  *
  **/
 bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
-                                 uintn public_key_size)
+                                 size_t public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -120,7 +120,7 @@ bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
     BIGNUM *bn_y;
     EC_POINT *ec_point;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
 
     if (sm2_context == NULL || public_key == NULL) {
         return false;
@@ -202,7 +202,7 @@ done:
  *
  **/
 bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
-                                 uintn *public_key_size)
+                                 size_t *public_key_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -212,7 +212,7 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
     BIGNUM *bn_x;
     BIGNUM *bn_y;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
     intn x_size;
     intn y_size;
 
@@ -271,7 +271,7 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
         ret_val = false;
         goto done;
     }
-    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
     if (public_key != NULL) {
         libspdm_zero_mem(public_key, *public_key_size);
@@ -357,7 +357,7 @@ bool libspdm_sm2_dsa_check_key(const void *sm2_context)
  *
  **/
 bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
-                                  uintn *public_size)
+                                  size_t *public_size)
 {
     EVP_PKEY *pkey;
     EC_KEY *ec_key;
@@ -367,7 +367,7 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
     BIGNUM *bn_x;
     BIGNUM *bn_y;
     int32_t openssl_nid;
-    uintn half_size;
+    size_t half_size;
     intn x_size;
     intn y_size;
 
@@ -430,7 +430,7 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
         ret_val = false;
         goto done;
     }
-    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
+    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
     if (public != NULL) {
         libspdm_zero_mem(public, *public_size);
@@ -460,7 +460,7 @@ done:
  *         If the allocations fails, sm2_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_sm2_key_exchange_new_by_nid(uintn nid)
+void *libspdm_sm2_key_exchange_new_by_nid(size_t nid)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return NULL;
@@ -493,9 +493,9 @@ void libspdm_sm2_key_exchange_free(void *sm2_context)
  * @retval true   sm2 context is initialized.
  * @retval false  sm2 context is not initialized.
  **/
-bool libspdm_sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
-                                   const uint8_t *id_a, uintn id_a_size,
-                                   const uint8_t *id_b, uintn id_b_size,
+bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_nid,
+                                   const uint8_t *id_a, size_t id_a_size,
+                                   const uint8_t *id_b, size_t id_b_size,
                                    bool is_initiator)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
@@ -530,7 +530,7 @@ bool libspdm_sm2_key_exchange_init(const void *sm2_context, uintn hash_nid,
  *
  **/
 bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
-                                           uintn *public_size)
+                                           size_t *public_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
@@ -565,16 +565,16 @@ bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
  **/
 bool libspdm_sm2_key_exchange_compute_key(void *sm2_context,
                                           const uint8_t *peer_public,
-                                          uintn peer_public_size, uint8_t *key,
-                                          uintn *key_size)
+                                          size_t peer_public_size, uint8_t *key,
+                                          size_t *key_size)
 {
     /* current openssl only supports ECDH with SM2 curve, but does not support SM2-key-exchange.*/
     return false;
 }
 
 static void ecc_signature_der_to_bin(uint8_t *der_signature,
-                                     uintn der_sig_size,
-                                     uint8_t *signature, uintn sig_size)
+                                     size_t der_sig_size,
+                                     uint8_t *signature, size_t sig_size)
 {
     uint8_t der_r_size;
     uint8_t der_s_size;
@@ -587,12 +587,12 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
     half_size = (uint8_t)(sig_size / 2);
 
     LIBSPDM_ASSERT(der_signature[0] == 0x30);
-    LIBSPDM_ASSERT((uintn)(der_signature[1] + 2) == der_sig_size);
+    LIBSPDM_ASSERT((size_t)(der_signature[1] + 2) == der_sig_size);
     LIBSPDM_ASSERT(der_signature[2] == 0x02);
     der_r_size = der_signature[3];
     LIBSPDM_ASSERT(der_signature[4 + der_r_size] == 0x02);
     der_s_size = der_signature[5 + der_r_size];
-    LIBSPDM_ASSERT(der_sig_size == (uintn)(der_r_size + der_s_size + 6));
+    LIBSPDM_ASSERT(der_sig_size == (size_t)(der_r_size + der_s_size + 6));
 
     if (der_signature[4] != 0) {
         r_size = der_r_size;
@@ -618,11 +618,11 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
                      bn_s, s_size);
 }
 
-static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
+static void ecc_signature_bin_to_der(uint8_t *signature, size_t sig_size,
                                      uint8_t *der_signature,
-                                     uintn *der_sig_size_in_out)
+                                     size_t *der_sig_size_in_out)
 {
-    uintn der_sig_size;
+    size_t der_sig_size;
     uint8_t der_r_size;
     uint8_t der_s_size;
     uint8_t *bn_r;
@@ -722,18 +722,18 @@ static void ecc_signature_bin_to_der(uint8_t *signature, uintn sig_size,
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
-                          const uint8_t *id_a, uintn id_a_size,
-                          const uint8_t *message, uintn size,
-                          uint8_t *signature, uintn *sig_size)
+bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
+                          const uint8_t *id_a, size_t id_a_size,
+                          const uint8_t *message, size_t size,
+                          uint8_t *signature, size_t *sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
-    uintn half_size;
+    size_t half_size;
     int32_t result;
     uint8_t der_signature[32 * 2 + 8];
-    uintn der_sig_size;
+    size_t der_sig_size;
 
     if (sm2_context == NULL || message == NULL) {
         return false;
@@ -751,7 +751,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
     default:
         return false;
     }
-    if (*sig_size < (uintn)(half_size * 2)) {
+    if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
     }
@@ -831,18 +831,18 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid sm2 context.
  *
  **/
-bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
-                            const uint8_t *id_a, uintn id_a_size,
-                            const uint8_t *message, uintn size,
-                            const uint8_t *signature, uintn sig_size)
+bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
+                            const uint8_t *id_a, size_t id_a_size,
+                            const uint8_t *message, size_t size,
+                            const uint8_t *signature, size_t sig_size)
 {
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
-    uintn half_size;
+    size_t half_size;
     int32_t result;
     uint8_t der_signature[32 * 2 + 8];
-    uintn der_sig_size;
+    size_t der_sig_size;
 
     if (sm2_context == NULL || message == NULL || signature == NULL) {
         return false;
@@ -860,7 +860,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
     default:
         return false;
     }
-    if (sig_size != (uintn)(half_size * 2)) {
+    if (sig_size != (size_t)(half_size * 2)) {
         return false;
     }
 

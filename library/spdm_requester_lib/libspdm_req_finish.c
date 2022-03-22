@@ -39,19 +39,19 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
 {
     return_status status;
     libspdm_finish_request_mine_t *spdm_request;
-    uintn spdm_request_size;
-    uintn signature_size;
-    uintn hmac_size;
+    size_t spdm_request_size;
+    size_t signature_size;
+    size_t hmac_size;
     libspdm_finish_response_mine_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     libspdm_session_info_t *session_info;
     uint8_t *ptr;
     bool result;
     uint8_t th2_hash_data[64];
     libspdm_session_state_t session_state;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
@@ -313,7 +313,7 @@ return_status libspdm_send_receive_finish(libspdm_context_t *spdm_context,
                                           uint32_t session_id,
                                           uint8_t req_slot_id_param)
 {
-    uintn retry;
+    size_t retry;
     return_status status;
 
     spdm_context->crypto_request = true;

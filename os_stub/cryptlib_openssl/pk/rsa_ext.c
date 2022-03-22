@@ -51,11 +51,11 @@
  *
  **/
 bool libspdm_rsa_get_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
-                         uint8_t *big_number, uintn *bn_size)
+                         uint8_t *big_number, size_t *bn_size)
 {
     RSA *rsa_key;
     BIGNUM *bn_key;
-    uintn size;
+    size_t size;
 
 
     /* Check input parameters.*/
@@ -175,9 +175,9 @@ bool libspdm_rsa_get_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
  * @retval  false  Invalid RSA key component tag.
  *
  **/
-bool libspdm_rsa_generate_key(void *rsa_context, uintn modulus_length,
+bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
                               const uint8_t *public_exponent,
-                              uintn public_exponent_size)
+                              size_t public_exponent_size)
 {
     BIGNUM *bn_e;
     bool ret_val;
@@ -239,7 +239,7 @@ done:
  **/
 bool libspdm_rsa_check_key(void *rsa_context)
 {
-    uintn reason;
+    size_t reason;
 
 
     /* Check input parameters.*/
@@ -289,13 +289,13 @@ bool libspdm_rsa_check_key(void *rsa_context)
  * @retval  false  This interface is not supported.
  *
  **/
-bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
+bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, size_t hash_nid,
                                      const uint8_t *message_hash,
-                                     uintn hash_size, uint8_t *signature,
-                                     uintn *sig_size)
+                                     size_t hash_size, uint8_t *signature,
+                                     size_t *sig_size)
 {
     RSA *rsa;
-    uintn size;
+    size_t size;
     int32_t digest_type;
 
 
@@ -398,9 +398,9 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, uintn hash_nid,
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_rsa_pss_sign(void *rsa_context, uintn hash_nid,
-                          const uint8_t *message_hash, uintn hash_size,
-                          uint8_t *signature, uintn *sig_size)
+bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
+                          const uint8_t *message_hash, size_t hash_size,
+                          uint8_t *signature, size_t *sig_size)
 {
     RSA *rsa;
     bool result;
@@ -415,7 +415,7 @@ bool libspdm_rsa_pss_sign(void *rsa_context, uintn hash_nid,
     rsa = (RSA *)rsa_context;
     size = RSA_size(rsa);
 
-    if (*sig_size < (uintn)size) {
+    if (*sig_size < (size_t)size) {
         *sig_size = size;
         return false;
     }
@@ -486,7 +486,7 @@ bool libspdm_rsa_pss_sign(void *rsa_context, uintn hash_nid,
     if (size <= 0) {
         return false;
     } else {
-        LIBSPDM_ASSERT(*sig_size == (uintn)size);
+        LIBSPDM_ASSERT(*sig_size == (size_t)size);
         return true;
     }
 }
