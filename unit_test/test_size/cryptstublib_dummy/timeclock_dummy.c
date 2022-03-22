@@ -8,7 +8,7 @@
 #include "hal/library/debuglib.h"
 
 #ifdef __GNUC__
-typedef intn time_t;
+typedef size_t time_t;
 #endif
 
 /* Structures Definitions*/

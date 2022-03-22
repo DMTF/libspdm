@@ -49,6 +49,6 @@
 
 /* Maximum legal arc intn values.*/
 
-#define MAX_INTN ((intn)0x7FFFFFFF)
+#define MAX_INTN 0x7FFFFFFF
 
 #endif

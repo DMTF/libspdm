@@ -198,7 +198,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
     bool ret_val;
     DH *dh;
     BIGNUM *dh_pub_key;
-    intn size;
+    int size;
     size_t final_pub_key_size;
 
 
@@ -285,7 +285,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
                             size_t *key_size)
 {
     BIGNUM *bn;
-    intn size;
+    int size;
     DH *dh;
     size_t final_key_size;
 

@@ -192,8 +192,8 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
     BIGNUM *bn_y;
     int32_t openssl_nid;
     size_t half_size;
-    intn x_size;
-    intn y_size;
+    int x_size;
+    int y_size;
 
     if (ec_context == NULL || public_key_size == NULL) {
         return false;
@@ -341,8 +341,8 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
     BIGNUM *bn_y;
     int32_t openssl_nid;
     size_t half_size;
-    intn x_size;
-    intn y_size;
+    int x_size;
+    int y_size;
 
     if (ec_context == NULL || public_size == NULL) {
         return false;
@@ -463,7 +463,7 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
     EC_POINT *ec_point;
     int32_t openssl_nid;
     size_t half_size;
-    intn size;
+    int size;
 
     if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
         key == NULL) {
@@ -582,8 +582,8 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
     uint8_t half_size;
     BIGNUM *bn_r;
     BIGNUM *bn_s;
-    intn r_size;
-    intn s_size;
+    int r_size;
+    int s_size;
 
     if (ec_context == NULL || message_hash == NULL) {
         return false;

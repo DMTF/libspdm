@@ -39,7 +39,7 @@ void libspdm_debug_assert(const char *file_name, size_t line_number,
 
 #if (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP)
     {
-        volatile intn ___i = 1;
+        volatile int32_t ___i = 1;
         while (___i)
             ;
     }

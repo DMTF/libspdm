@@ -376,7 +376,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
 {
     return_status status;
     int32_t index;
-    intn length;
+    int length;
     X509_NAME_ENTRY *entry;
     ASN1_STRING *entry_data;
     uint8_t *utf8_name;
@@ -1234,9 +1234,9 @@ cleanup:
  * @retval  1      If date_time1 > date_time2
  * @retval  -1     If date_time1 < date_time2
  **/
-intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
+int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
-    return (intn)ASN1_TIME_compare(date_time1, date_time2);
+    return (int32_t)ASN1_TIME_compare(date_time1, date_time2);
 }
 
 /**
@@ -1320,7 +1320,7 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_s
                                               size_t *extension_data_size)
 {
     return_status status;
-    intn i;
+    int i;
     bool res;
     X509 *x509_cert;
     const STACK_OF(X509_EXTENSION) * extensions;
