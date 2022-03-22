@@ -38,6 +38,9 @@
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP |                    \
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)
 
+static size_t m_libspdm_local_buffer_size;
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+
 libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -107,6 +110,15 @@ libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     case 0x1E:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1F:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x20: {
+        uint8_t *ptr = (uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
+                         request_size - 1);
+        m_libspdm_local_buffer_size += (request_size - 1);
+    }
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
@@ -870,6 +882,39 @@ libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
     case 0x1F:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
 
+    case 0x20: {
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t) -
+                             sizeof(spdm_response->data_transfer_size) -
+                             sizeof(spdm_response->max_spdm_msg_size);
+
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         (uint8_t *)spdm_response, spdm_response_size);
+        m_libspdm_local_buffer_size += spdm_response_size;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -1528,6 +1573,44 @@ void libspdm_test_requester_get_capabilities_case31(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
+void libspdm_test_requester_get_capabilities_case32(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t arbitrary_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    /*filling A with arbitrary data*/
+    arbitrary_size = 10;
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, arbitrary_size, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = arbitrary_size;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG_VERSION_11;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.capability.ct_exponent, 0);
+    assert_int_equal(spdm_context->connection_info.capability.flags,
+                     LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11);
+    libspdm_dump_hex(spdm_context->transcript.message_a.buffer,
+                     spdm_context->transcript.message_a.buffer_size);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     arbitrary_size + m_libspdm_local_buffer_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size,
+                        m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+}
+
 libspdm_test_context_t m_libspdm_requester_get_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -1603,6 +1686,8 @@ int libspdm_requester_get_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case30),
         /* ReceiveResponse timeout */
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case31),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case32),
 
     };
 

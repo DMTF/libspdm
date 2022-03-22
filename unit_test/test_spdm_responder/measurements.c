@@ -1503,6 +1503,92 @@ void libspdm_test_responder_measurements_case23(void **state)
 #endif
 }
 
+/**
+ * Test 24: receiving a correct GET_MEASUREMENTS from the requester that does not request a
+ * signature. Buffer M already has arbitrary data.
+ * Expected behavior: the responder accepts the request and produces a valid
+ * MEASUREMENTS response message, and buffer M appends the exchanged GET_MEASUREMENTS and MEASUREMENTS
+ * messages.
+ **/
+void libspdm_test_responder_measurements_case24(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_measurements_response_t *spdm_response;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t arbitrary_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x18;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    libspdm_reset_message_m(spdm_context, NULL);
+    spdm_context->local_context.opaque_measurement_rsp_size = 0;
+    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    spdm_context->last_spdm_request_session_id_valid = 0;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /*filling M buffer with arbitrary data*/
+    arbitrary_size = 18;
+    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_size, (uint8_t) 0xFF);
+    spdm_context->transcript.message_m.buffer_size = arbitrary_size;
+#endif
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_measurements_request7.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request7_size,
+        &m_libspdm_get_measurements_request7, &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_measurements_response_t) + LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER*
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      sizeof(spdm_measurements_secure_version_number_t)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) + LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      sizeof(spdm_measurements_device_mode_t)) +
+                     SPDM_NONCE_SIZE + sizeof(uint16_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->number_of_blocks, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     arbitrary_size + m_libspdm_get_measurements_request7_size +
+                     sizeof(spdm_measurements_response_t) + LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER*
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      sizeof(spdm_measurements_secure_version_number_t)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) + LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      sizeof(spdm_measurements_device_mode_t)) +
+                     SPDM_NONCE_SIZE + sizeof(uint16_t));
+
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     arbitrary_size + m_libspdm_get_measurements_request7_size + response_size);
+    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size,
+                        &m_libspdm_get_measurements_request7,
+                        m_libspdm_get_measurements_request7_size);
+    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size
+                        + m_libspdm_get_measurements_request7_size,
+                        response, response_size);
+#endif
+}
+
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -1560,6 +1646,8 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case22),
         /* Successful response to get a session based measurement with signature*/
         cmocka_unit_test(libspdm_test_responder_measurements_case23),
+        /* Buffer verification */
+        cmocka_unit_test(libspdm_test_responder_measurements_case24),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);

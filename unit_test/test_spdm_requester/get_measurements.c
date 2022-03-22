@@ -396,6 +396,15 @@ return_status libspdm_requester_get_measurements_test_send_message(
                          app_message, app_message_size - 3);
         m_libspdm_local_buffer_size += app_message_size - 3;
         return RETURN_SUCCESS;
+    case 0x23:
+        m_libspdm_local_buffer_size = 0;
+        message_size = libspdm_test_get_measurement_request_size(
+            spdm_context, (uint8_t *)request + header_size,
+            request_size - header_size);
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         (uint8_t *)request + header_size, message_size);
+        m_libspdm_local_buffer_size += message_size;
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -2667,6 +2676,60 @@ return_status libspdm_requester_get_measurements_test_receive_message(
         ->application_secret.response_data_sequence_number--;
     }
         return RETURN_SUCCESS;
+
+    case 0x23: {
+        spdm_measurements_response_t *spdm_response;
+        spdm_measurement_block_dmtf_t *measurment_block;
+        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        size_t temp_buf_size;
+        uint8_t *ptr;
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.measurement_hash_algo =
+            m_libspdm_use_measurement_hash_algo;
+        temp_buf_size = sizeof(spdm_measurements_response_t) +
+                        sizeof(spdm_measurement_block_dmtf_t) +
+                        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
+                        SPDM_NONCE_SIZE + sizeof(uint16_t);
+        spdm_response = (void *)temp_buf;
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->number_of_blocks = 1;
+        libspdm_write_uint24(spdm_response->measurement_record_length,
+                             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
+                                        libspdm_get_measurement_hash_size(
+                                            m_libspdm_use_measurement_hash_algo)));
+        measurment_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurment_block,
+                        sizeof(spdm_measurement_block_dmtf_t) +
+                        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo),
+                        1);
+        measurment_block->measurement_block_common_header.measurement_specification =
+            SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        measurment_block->measurement_block_common_header.measurement_size =
+            (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
+                       libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+
+        ptr = (uint8_t *)spdm_response +
+              sizeof(spdm_measurements_response_t) +
+              sizeof(spdm_measurement_block_dmtf_t) +
+              libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo);
+        libspdm_get_random_number(SPDM_NONCE_SIZE,ptr);
+        *(uint16_t *)(ptr + SPDM_NONCE_SIZE) = 0;
+
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         temp_buf, temp_buf_size);
+        m_libspdm_local_buffer_size += temp_buf_size;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, temp_buf_size,
+                                              temp_buf, response_size,
+                                              response);
+    }
+        return RETURN_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -5299,6 +5362,94 @@ void libspdm_test_requester_get_measurements_case34(void **state)
     free(data);
 }
 
+/**
+ * Test 35: a request message is successfully sent and a response message is successfully received.
+ * Buffer M already has arbitrary data. No signature is requested.
+ * Expected Behavior: requester returns the status RETURN_SUCCESS and a MEASUREMENTS message is
+ * received, buffer M appends the exchanged GET_MEASUREMENTS and MEASUREMENTS messages.
+ **/
+void libspdm_test_requester_get_measurements_case35(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t number_of_block;
+    uint32_t measurement_record_length;
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
+    uint8_t request_attribute;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t arbitrary_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
+    libspdm_reset_message_m(spdm_context, NULL);
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
+    request_attribute = 0; /*do not request signature*/
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /*filling M buffer with arbitrary data*/
+    arbitrary_size = 18;
+    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_size, (uint8_t) 0xFF);
+    spdm_context->transcript.message_m.buffer_size = arbitrary_size;
+#endif
+
+    measurement_record_length = sizeof(measurement_record);
+    status = libspdm_get_measurement(spdm_context, NULL, request_attribute, 1,
+                                     0, NULL, &number_of_block,
+                                     &measurement_record_length,
+                                     measurement_record);
+    assert_int_equal(status, RETURN_SUCCESS);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     arbitrary_size + m_libspdm_local_buffer_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size,
+                        m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_requester_get_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -5377,6 +5528,8 @@ int libspdm_requester_get_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_measurements_case33),
         /* Successful response to get a session based measurement with signature*/
         cmocka_unit_test(libspdm_test_requester_get_measurements_case34),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_get_measurements_case35),
     };
 
     libspdm_setup_test_context(
