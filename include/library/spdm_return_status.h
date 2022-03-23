@@ -97,9 +97,13 @@ typedef size_t libspdm_return_t;
 
 /* Cryptography errors. */
 
+/* Generic failure originating from the cryptography module. */
+#define LIBSPDM_STATUS_CRYPTO_ERROR \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0000)
+
 /* Verification of the provided signature digest or signature failed. */
 #define LIBSPDM_STATUS_VERIF_FAIL \
-    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0000)
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0001)
 
 /* Certificate parsing errors. */
 
