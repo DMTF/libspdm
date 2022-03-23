@@ -19,7 +19,7 @@ typedef struct {
 
 /**
  * This function sends GET_CERTIFICATE and receives CERTIFICATE.
-
+ *
  * This function verify the integrity of the certificate chain.
  * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
  *
