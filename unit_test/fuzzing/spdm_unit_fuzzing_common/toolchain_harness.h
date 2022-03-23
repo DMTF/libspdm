@@ -22,8 +22,6 @@ void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size);
 
 size_t libspdm_get_max_buffer_size(void);
 
-uint8_t libspdm_judge_requster_name(const char *file_name);
-
-size_t libspdm_alignment_size(size_t size, uint8_t req_or_res);
+size_t libspdm_alignment_size(size_t size);
 
 #endif

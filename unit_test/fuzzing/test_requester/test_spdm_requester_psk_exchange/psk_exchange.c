@@ -72,6 +72,9 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
 {
     spdm_psk_exchange_response_t *spdm_response;
     libspdm_test_context_t *spdm_test_context;
+    size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
     uint32_t hash_size;
     uint32_t hmac_size;
     uint8_t *ptr;
@@ -89,15 +92,18 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
     size_t bin_str7_size;
     uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
     uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t test_message_header_size;
-    size_t temp_buf_size;
 
     spdm_test_context = libspdm_get_test_context();
-    test_message_header_size = 1;
-    libspdm_copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
-                     (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-                     spdm_test_context->test_buffer_size);
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_response_size);
 
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
@@ -111,9 +117,8 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
     hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     opaque_psk_exchange_rsp_size =
         libspdm_get_opaque_data_version_selection_data_size(spdm_context);
-    temp_buf_size = sizeof(spdm_psk_exchange_response_t) + 0 + LIBSPDM_PSK_CONTEXT_LENGTH +
-                    opaque_psk_exchange_rsp_size + hmac_size;
-    spdm_response = (void *)temp_buf;
+    spdm_response_size = sizeof(spdm_psk_exchange_response_t) + 0 + LIBSPDM_PSK_CONTEXT_LENGTH +
+                         opaque_psk_exchange_rsp_size + hmac_size;
 
     ptr = (void *)(spdm_response + 1);
     /* libspdm_zero_mem (ptr, hash_size);
@@ -165,8 +170,10 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                          &th_curr), response_finished_key, hash_size, ptr);
     ptr += hmac_size;
 
-    libspdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buf_size, temp_buf,
-                                          response_size, response);
+    libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                          spdm_response_size,
+                                          spdm_response, response_size, response);
+
     return RETURN_SUCCESS;
 }
 

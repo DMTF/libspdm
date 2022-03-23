@@ -109,13 +109,11 @@ void libspdm_test_requester_encap_key_update(void **State)
     libspdm_secured_message_context_t *secured_message_context;
     size_t request_size;
     size_t response_size;
-    uint8_t test_message_header_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
-    test_message_header_size = 1;
     spdm_context = spdm_test_context->spdm_context;
 
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
@@ -137,8 +135,7 @@ void libspdm_test_requester_encap_key_update(void **State)
 
     response_size = sizeof(response);
     libspdm_get_encap_response_key_update(spdm_context, request_size,
-                                          (uint8_t *)spdm_test_context->test_buffer +
-                                          test_message_header_size,
+                                          (uint8_t *)spdm_test_context->test_buffer,
                                           &response_size, response);
 }
 

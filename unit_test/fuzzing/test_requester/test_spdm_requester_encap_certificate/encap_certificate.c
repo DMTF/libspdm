@@ -22,13 +22,11 @@ void libspdm_test_requester_encap_certificate(void **State)
     libspdm_context_t *spdm_context;
     size_t request_size;
     size_t response_size;
-    uint8_t test_message_header_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
     size_t data_size;
 
     spdm_test_context = *State;
-    test_message_header_size = 1;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -52,8 +50,7 @@ void libspdm_test_requester_encap_certificate(void **State)
 
     response_size = sizeof(response);
     libspdm_get_encap_response_certificate(spdm_context, request_size,
-                                           (uint8_t *)spdm_test_context->test_buffer +
-                                           test_message_header_size,
+                                           (uint8_t *)spdm_test_context->test_buffer,
                                            &response_size, response);
     free(data);
 }

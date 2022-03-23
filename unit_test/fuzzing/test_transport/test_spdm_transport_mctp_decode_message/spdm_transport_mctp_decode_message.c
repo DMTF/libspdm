@@ -29,7 +29,7 @@ void libspdm_test_transport_mctp_decode_message(void **State)
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
-    transport_message_size = sizeof(transport_message);
+    transport_message_size = spdm_test_context->test_buffer_size;
 
     libspdm_transport_mctp_decode_message(spdm_context, NULL, &is_app_message, is_requester,
                                           spdm_test_context->test_buffer_size,

@@ -46,7 +46,7 @@ void libspdm_test_decode_secured_message(void **State)
     secured_message_context->session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
     secured_message_context->session_state = LIBSPDM_SESSION_STATE_HANDSHAKING;
 
-    app_message_size = sizeof(app_message);
+    app_message_size = spdm_test_context->test_buffer_size;
 
     libspdm_decode_secured_message(secured_message_context, session_id, is_requester,
                                    spdm_test_context->test_buffer_size,
