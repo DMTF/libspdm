@@ -82,11 +82,25 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    uint8_t test_message_header_size;
+    spdm_key_exchange_response_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
+
+    spdm_test_context = libspdm_get_test_context();
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_response_size);
 
     switch (m_libspdm_test_case_id) {
     case 0x01: {
-        spdm_key_exchange_response_t *spdm_response;
         size_t dhe_key_size;
         uint32_t hash_size;
         size_t signature_size;
@@ -110,18 +124,9 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
         size_t bin_str2_size;
         uint8_t bin_str7[128];
         size_t bin_str7_size;
-        size_t temp_buff_size;
         uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
-        spdm_test_context = libspdm_get_test_context();
-        test_message_header_size = 1;
-        temp_buff_size = sizeof(spdm_psk_finish_response_t);
-        libspdm_copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
-                         (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-                         spdm_test_context->test_buffer_size);
 
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -137,10 +142,9 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(spdm_context);
-        temp_buff_size = sizeof(spdm_key_exchange_response_t) + dhe_key_size + 0 +
-                         sizeof(uint16_t) + opaque_key_exchange_rsp_size + signature_size +
-                         hmac_size;
-        spdm_response = (void *)temp_buf;
+        spdm_response_size = sizeof(spdm_key_exchange_response_t) + dhe_key_size + 0 +
+                             sizeof(uint16_t) + opaque_key_exchange_rsp_size + signature_size +
+                             hmac_size;
         /* The caller need guarantee the version is correct, both of MajorVersion and MinorVersion should be less than 10.*/
         if (((spdm_response->header.spdm_version & 0xF) >= 10) ||
             (((spdm_response->header.spdm_version >> 4) & 0xF) >= 10)) {
@@ -230,18 +234,17 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                              &th_curr), response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
-        libspdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buff_size,
-                                              temp_buf, response_size, response);
         break;
     }
     case 0x02: {
-        spdm_test_context = libspdm_get_test_context();
-        libspdm_copy_mem(response, *response_size,
-                         spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
-        *response_size = spdm_test_context->test_buffer_size;
         break;
     }
     }
+
+    libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                          spdm_response_size,
+                                          spdm_response, response_size, response);
+
     return RETURN_SUCCESS;
 }
 

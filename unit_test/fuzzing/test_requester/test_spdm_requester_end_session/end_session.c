@@ -50,18 +50,24 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    libspdm_session_info_t *session_info;
-    uint8_t spdm_response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t *spdm_response;
     size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
     uint32_t session_id;
-    uint8_t test_message_header_size;
+    libspdm_session_info_t *session_info;
 
     session_id = 0xFFFFFFFF;
-    test_message_header_size = 1;
     spdm_test_context = libspdm_get_test_context();
-    spdm_response_size = spdm_test_context->test_buffer_size - test_message_header_size;
-    libspdm_copy_mem((uint8_t *)spdm_response, sizeof(spdm_response),
-                     (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
                      spdm_response_size);
 
     libspdm_transport_test_encode_message(spdm_context, &session_id, false, false,

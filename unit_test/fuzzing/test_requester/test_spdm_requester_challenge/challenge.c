@@ -19,25 +19,45 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                          const void *request, uint64_t timeout)
+{
+    uint8_t *ptr;
+
+    ptr = (uint8_t *)request;
+    m_libspdm_local_buffer_size = 0;
+    libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
+                     request_size - 1);
+    m_libspdm_local_buffer_size += (request_size - 1);
+
+    return RETURN_SUCCESS;
+}
+
 return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     spdm_challenge_auth_response_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
     void *data;
     size_t data_size;
     uint8_t *ptr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     size_t sig_size;
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    size_t temp_buf_size;
-    size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
-    test_message_header_size = 1;
-    libspdm_copy_mem((uint8_t *)temp_buf, sizeof(temp_buf),
-                     (uint8_t *)spdm_test_context->test_buffer + test_message_header_size,
-                     spdm_test_context->test_buffer_size);
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_response_size);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
@@ -49,10 +69,10 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
         m_libspdm_use_asym_algo;
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-    temp_buf_size = sizeof(spdm_challenge_auth_response_t) +
-                    libspdm_get_hash_size(m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 +
-                    sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-    spdm_response = (void *)temp_buf;
+    spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                         libspdm_get_hash_size(m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 +
+                         sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size(
+        m_libspdm_use_asym_algo);
 
     ptr = (void *)(spdm_response + 1);
     libspdm_hash_all(
@@ -88,22 +108,9 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                 &sig_size);
     ptr += sig_size;
 
-    libspdm_transport_test_encode_message(spdm_context, NULL, false, false, temp_buf_size, temp_buf,
+    libspdm_transport_test_encode_message(spdm_context, NULL, false, false, spdm_response_size,
+                                          spdm_response,
                                           response_size, response);
-
-    return RETURN_SUCCESS;
-}
-
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
-{
-    uint8_t *ptr;
-
-    ptr = (uint8_t *)request;
-    m_libspdm_local_buffer_size = 0;
-    libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
-                     request_size - 1);
-    m_libspdm_local_buffer_size += (request_size - 1);
 
     return RETURN_SUCCESS;
 }

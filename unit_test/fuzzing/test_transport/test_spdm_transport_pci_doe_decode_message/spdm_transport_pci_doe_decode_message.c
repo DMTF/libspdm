@@ -28,7 +28,7 @@ void libspdm_test_transport_pci_doe_decode_message(void **State)
     is_requester = spdm_test_context->is_requester;
     is_app_message = false;
 
-    transport_message_size = sizeof(transport_message);
+    transport_message_size = spdm_test_context->test_buffer_size;
 
     libspdm_transport_pci_doe_decode_message(spdm_context, NULL, &is_app_message, is_requester,
                                              spdm_test_context->test_buffer_size,

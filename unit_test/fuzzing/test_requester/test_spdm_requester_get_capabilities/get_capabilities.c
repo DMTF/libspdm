@@ -26,11 +26,27 @@ return_status libspdm_device_receive_message(void *spdm_context,
                                              uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
+    uint8_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
-    libspdm_copy_mem(response, *response_size, spdm_test_context->test_buffer,
-                     spdm_test_context->test_buffer_size);
-    *response_size = spdm_test_context->test_buffer_size;
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_response_size);
+
+    libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                          spdm_response_size,
+                                          spdm_response, response_size, response);
+
     return RETURN_SUCCESS;
 }
 
@@ -41,6 +57,10 @@ void libspdm_test_requester_get_capabilities(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     libspdm_get_capabilities(spdm_context);
 }
