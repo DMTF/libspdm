@@ -1959,7 +1959,7 @@ void libspdm_test_requester_get_certificate_case6(void **state)
 
 /**
  * Test 7: force responder to send an ERROR message with code SPDM_ERROR_CODE_REQUEST_RESYNCH
- * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_RESYNCH_PEER, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case7(void **state)
 {
@@ -2018,7 +2018,7 @@ void libspdm_test_requester_get_certificate_case7(void **state)
 
 /**
  * Test 8: force responder to send an ERROR message with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
- * Expected Behavior: get a RETURN_NO_RESPONSE
+ * Expected Behavior: get a LIBSPDM_STATUS_BUSY_PEER
  **/
 void libspdm_test_requester_get_certificate_case8(void **state)
 {
@@ -2066,7 +2066,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     free(data);
 }
 
@@ -2202,7 +2202,7 @@ void libspdm_test_requester_get_certificate_case10(void **state)
 
 /**
  * Test 11: Normal procedure, but the retrieved certificate chain has an invalid signature
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case11(void **state)
 {
@@ -2257,7 +2257,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2271,7 +2271,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
 
 /**
  * Test 12: Normal procedure, but the retrieved root certificate does not match
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case12(void **state)
 {
@@ -2330,7 +2330,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2567,7 +2567,7 @@ void libspdm_test_requester_get_certificate_case15(void **state)
  * (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
  * However, for having specific test cases, it is excluded from this case:
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  **/
 void libspdm_test_requester_get_certificate_case16(void **state) {
     libspdm_return_t status;
@@ -2613,7 +2613,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
         libspdm_zero_mem (cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0,
