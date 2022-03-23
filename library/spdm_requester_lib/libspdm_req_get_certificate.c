@@ -466,7 +466,6 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
     size_t retry;
     libspdm_return_t status;
 
-
     spdm_context = context;
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
