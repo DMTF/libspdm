@@ -2018,7 +2018,7 @@ void libspdm_test_requester_get_certificate_case7(void **state)
 
 /**
  * Test 8: force responder to send an ERROR message with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
- * Expected Behavior: get a LIBSPDM_STATUS_BUSY_PEER
+ * Expected Behavior: get a LIBSPDM_STATUS_ERROR_PEER
  **/
 void libspdm_test_requester_get_certificate_case8(void **state)
 {
@@ -2066,7 +2066,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
@@ -2739,13 +2739,13 @@ void libspdm_test_requester_get_certificate_case18(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
 
 /**
  * Test 19: Normal procedure, but one certificate in the retrieved certificate chain past its expiration date.
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case19(void **state)
 {
@@ -2802,7 +2802,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2868,7 +2868,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -2926,7 +2926,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -2934,7 +2934,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
  * Test 22: Fail case, request a certificate chain,
  * spdm_request.offset + spdm_response->portion_length + spdm_response->remainder_length !=
  * total_responder_cert_chain_buffer_length.
- * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
+ * Expected Behavior:returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_certificate_case22(void **state)
 {
@@ -2986,13 +2986,13 @@ void libspdm_test_requester_get_certificate_case22(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
 /**
  * Test 23: test the Alias Cert model, hardware identify OID is found in AliasCert model cert
- * Expected Behavior: return RETURN_SECURITY_VIOLATION
+ * Expected Behavior: return LIBSPDM_STATUS_VERIF_FAIL
  **/
 void libspdm_test_requester_get_certificate_case23(void **state)
 {
@@ -3047,7 +3047,7 @@ void libspdm_test_requester_get_certificate_case23(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
 
