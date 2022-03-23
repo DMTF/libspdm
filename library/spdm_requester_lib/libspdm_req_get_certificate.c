@@ -152,7 +152,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
                 sizeof(libspdm_certificate_response_max_t));
 
             /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-            * uses the new error codes. */
+             * uses the new error codes. */
             if (status == RETURN_DEVICE_ERROR) {
                 libspdm_release_receiver_buffer (spdm_context);
                 status = LIBSPDM_STATUS_ERROR_PEER;
