@@ -57,7 +57,6 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
     cert_chain->length = (uint16_t)cert_chain_size;
     cert_chain->reserved = 0;
 
-
     /* Get Root Certificate and calculate hash value*/
 
     res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
@@ -96,49 +95,49 @@ return_status libspdm_requester_get_certificate_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xC:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xD:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xE:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xF:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x10:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x11:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x12:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x13:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x14:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x15:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x16:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x17: {
         static uint16_t req_cnt = 0;
         uint8_t *ptr = (uint8_t *)request;
@@ -153,9 +152,9 @@ return_status libspdm_requester_get_certificate_test_send_message(
 
         req_cnt++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x18:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -236,7 +235,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
         spdm_certificate_response_t *spdm_response;
@@ -302,7 +301,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
@@ -323,7 +322,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
@@ -344,7 +343,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
         static size_t sub_index1 = 0;
@@ -437,7 +436,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             }
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
@@ -458,7 +457,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -485,7 +484,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
         static size_t sub_index2 = 0;
@@ -585,7 +584,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             }
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA: {
         spdm_certificate_response_t *spdm_response;
@@ -651,7 +650,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xB: {
         spdm_certificate_response_t *spdm_response;
@@ -742,7 +741,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
         spdm_certificate_response_t *spdm_response;
@@ -808,7 +807,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xD: {
         spdm_certificate_response_t *spdm_response;
@@ -874,7 +873,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xE: {
         spdm_certificate_response_t *spdm_response;
@@ -942,7 +941,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xF: {
         spdm_certificate_response_t *spdm_response;
@@ -1010,7 +1009,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x10:
     {
@@ -1047,7 +1046,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x11: {
         spdm_certificate_response_t *spdm_response;
@@ -1158,7 +1157,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x12: {
         spdm_certificate_response_t *spdm_response;
@@ -1272,7 +1271,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x13: {
         spdm_certificate_response_t *spdm_response;
@@ -1337,7 +1336,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x14: {
         spdm_certificate_response_t *spdm_response;
@@ -1403,7 +1402,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x15: {
         spdm_certificate_response_t *spdm_response;
@@ -1469,7 +1468,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x16: {
         spdm_certificate_response_t *spdm_response;
@@ -1537,7 +1536,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x17: {
         spdm_certificate_response_t *spdm_response;
@@ -1673,7 +1672,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     default:
         return RETURN_DEVICE_ERROR;
@@ -1682,11 +1681,11 @@ return_status libspdm_requester_get_certificate_test_receive_message(
 
 /**
  * Test 1: message could not be sent
- * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_SEND_FAIL, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -1730,7 +1729,7 @@ void libspdm_test_requester_get_certificate_case1(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -1743,7 +1742,7 @@ void libspdm_test_requester_get_certificate_case1(void **state)
  **/
 void libspdm_test_requester_get_certificate_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -1798,7 +1797,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -1813,11 +1812,11 @@ void libspdm_test_requester_get_certificate_case2(void **state)
 
 /**
  * Test 3: simulate wrong connection_state when sending GET_CERTIFICATE (missing SPDM_GET_DIGESTS_RECEIVE_FLAG and SPDM_GET_CAPABILITIES_RECEIVE_FLAG)
- * Expected Behavior: get a RETURN_UNSUPPORTED, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_INVALID_STATE_LOCAL, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -1861,7 +1860,7 @@ void libspdm_test_requester_get_certificate_case3(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -1870,11 +1869,11 @@ void libspdm_test_requester_get_certificate_case3(void **state)
 
 /**
  * Test 4: force responder to send an ERROR message with code SPDM_ERROR_CODE_INVALID_REQUEST
- * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_ERROR_PEER, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -1918,7 +1917,7 @@ void libspdm_test_requester_get_certificate_case4(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -1927,11 +1926,11 @@ void libspdm_test_requester_get_certificate_case4(void **state)
 
 /**
  * Test 5: force responder to send an ERROR message with code SPDM_ERROR_CODE_BUSY
- * Expected Behavior: get a RETURN_NO_RESPONSE, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_BUSY_PEER, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -1975,7 +1974,7 @@ void libspdm_test_requester_get_certificate_case5(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -1988,7 +1987,7 @@ void libspdm_test_requester_get_certificate_case5(void **state)
  **/
 void libspdm_test_requester_get_certificate_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2034,7 +2033,7 @@ void libspdm_test_requester_get_certificate_case6(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2048,11 +2047,11 @@ void libspdm_test_requester_get_certificate_case6(void **state)
 
 /**
  * Test 7: force responder to send an ERROR message with code SPDM_ERROR_CODE_REQUEST_RESYNCH
- * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
+ * Expected Behavior: get a LIBSPDM_STATUS_RESYNCH_PEER, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
 void libspdm_test_requester_get_certificate_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2107,11 +2106,11 @@ void libspdm_test_requester_get_certificate_case7(void **state)
 
 /**
  * Test 8: force responder to send an ERROR message with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
- * Expected Behavior: get a RETURN_NO_RESPONSE
+ * Expected Behavior: get a LIBSPDM_STATUS_ERROR_PEER
  **/
 void libspdm_test_requester_get_certificate_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2155,7 +2154,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
@@ -2165,7 +2164,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
  **/
 void libspdm_test_requester_get_certificate_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2212,7 +2211,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2230,7 +2229,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
  **/
 void libspdm_test_requester_get_certificate_case10(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2277,7 +2276,7 @@ void libspdm_test_requester_get_certificate_case10(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2291,11 +2290,11 @@ void libspdm_test_requester_get_certificate_case10(void **state)
 
 /**
  * Test 11: Normal procedure, but the retrieved certificate chain has an invalid signature
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2346,7 +2345,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2360,11 +2359,11 @@ void libspdm_test_requester_get_certificate_case11(void **state)
 
 /**
  * Test 12: Normal procedure, but the retrieved root certificate does not match
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2419,7 +2418,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2437,7 +2436,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
  **/
 void libspdm_test_requester_get_certificate_case13(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2488,7 +2487,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2506,7 +2505,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
  **/
 void libspdm_test_requester_get_certificate_case14(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2561,8 +2560,8 @@ void libspdm_test_requester_get_certificate_case14(void **state)
     status = libspdm_get_certificate_choose_length(
         spdm_context, 0, get_cert_length, &cert_chain_size, cert_chain);
     /* It may fail because the spdm does not support too many messages.
-     * assert_int_equal (status, RETURN_SUCCESS);*/
-    if (status == RETURN_SUCCESS) {
+     * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
+    if (status == LIBSPDM_STATUS_SUCCESS) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         count = (data_size + get_cert_length - 1) / get_cert_length;
         assert_int_equal(
@@ -2581,7 +2580,7 @@ void libspdm_test_requester_get_certificate_case14(void **state)
  **/
 void libspdm_test_requester_get_certificate_case15(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2635,8 +2634,8 @@ void libspdm_test_requester_get_certificate_case15(void **state)
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
     /* It may fail because the spdm does not support too long message.
-     * assert_int_equal (status, RETURN_SUCCESS);*/
-    if (status == RETURN_SUCCESS) {
+     * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
+    if (status == LIBSPDM_STATUS_SUCCESS) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2656,10 +2655,10 @@ void libspdm_test_requester_get_certificate_case15(void **state)
  * (namely, 0x00, 0x0b, 0x0c, 0x3f, 0xfd, 0xfe).
  * However, for having specific test cases, it is excluded from this case:
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
- * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_ERROR_PEER.
  **/
 void libspdm_test_requester_get_certificate_case16(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t cert_chain_size;
@@ -2702,7 +2701,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
         libspdm_zero_mem (cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
         /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0,
@@ -2730,7 +2729,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
  **/
 void libspdm_test_requester_get_certificate_case17(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2774,7 +2773,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
@@ -2784,7 +2783,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
  **/
 void libspdm_test_requester_get_certificate_case18(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2828,17 +2827,17 @@ void libspdm_test_requester_get_certificate_case18(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
 
 /**
  * Test 19: Normal procedure, but one certificate in the retrieved certificate chain past its expiration date.
- * Expected Behavior: get a RETURN_SECURITY_VIOLATION, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case19(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2891,7 +2890,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -2909,7 +2908,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
  **/
 void libspdm_test_requester_get_certificate_case20(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -2957,7 +2956,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -2967,7 +2966,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
  **/
 void libspdm_test_requester_get_certificate_case21(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -3015,7 +3014,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -3023,11 +3022,11 @@ void libspdm_test_requester_get_certificate_case21(void **state)
  * Test 22: Fail case, request a certificate chain,
  * spdm_request.offset + spdm_response->portion_length + spdm_response->remainder_length !=
  * total_responder_cert_chain_buffer_length.
- * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
+ * Expected Behavior:returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 void libspdm_test_requester_get_certificate_case22(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -3075,7 +3074,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -3087,7 +3086,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
  **/
 void libspdm_test_requester_get_certificate_case23(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;
@@ -3137,7 +3136,7 @@ void libspdm_test_requester_get_certificate_case23(void **state)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
@@ -3208,7 +3207,7 @@ void libspdm_test_requester_get_certificate_case24(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
 
